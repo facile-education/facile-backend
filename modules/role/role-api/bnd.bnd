@@ -1,0 +1,8 @@
+Bundle-Name: role-api
+Bundle-SymbolicName: role.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.role.service,\
+	com.weprode.nero.role.constants
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../role-service/service.xml
