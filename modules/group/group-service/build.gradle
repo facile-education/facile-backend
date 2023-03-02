@@ -1,0 +1,11 @@
+dependencies {
+	compile project(":modules:group:group-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+}
+
+buildService {
+	apiDir = "../group-api/src/main/java"
+}
+
+group = "com.weprode.nero.group"

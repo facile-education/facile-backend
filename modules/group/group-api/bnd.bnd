@@ -1,0 +1,10 @@
+Bundle-Name: group-api
+Bundle-SymbolicName: com.weprode.nero.group.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.group.exception,\
+	com.weprode.nero.group.model,\
+	com.weprode.nero.group.service,\
+	com.weprode.nero.group.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../group-service/service.xml
