@@ -1,0 +1,11 @@
+dependencies {
+	compile project(":modules:user:user-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+}
+
+buildService {
+	apiDir = "../user-api/src/main/java"
+}
+
+group = "com.weprode.nero.user"
