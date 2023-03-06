@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.organization.model.OrgCiteScolaire">
+		<field name="parentENTStructureUAI" type="String" />
+		<field name="childENTStructureUAI" type="String" />
+	</model>
+	<model name="com.weprode.nero.organization.model.OrgDetails">
+		<field name="orgId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="orgName" type="String" />
+		<field name="eduLevel" type="String" />
+		<field name="role" type="int" />
+		<field name="type" type="int" />
+		<field name="isArchive" type="boolean" />
+	</model>
+	<model name="com.weprode.nero.organization.model.OrgMapping">
+		<field name="organizationId" type="long" />
+		<field name="entStructureUAI" type="String" />
+	</model>
+	<model name="com.weprode.nero.organization.model.OrgMembership">
+		<field name="orgMemberId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="fullYear" type="boolean" />
+	</model>
+</model-hints>

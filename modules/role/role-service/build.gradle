@@ -1,5 +1,6 @@
 dependencies {
 	compile project(":modules:role:role-api")
+	compile project(":modules:commons")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 }

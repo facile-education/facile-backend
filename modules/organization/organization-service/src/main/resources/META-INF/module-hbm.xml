@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.weprode.nero.organization.model.OrgCiteScolaire" />
+	<import class="com.weprode.nero.organization.model.OrgDetails" />
+	<import class="com.weprode.nero.organization.model.OrgMapping" />
+	<import class="com.weprode.nero.organization.model.OrgMembership" />
+	<class name="com.weprode.nero.organization.model.impl.OrgCiteScolaireImpl" table="Organization_OrgCiteScolaire">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="childENTStructureUAI" type="java.lang.String">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="parentENTStructureUAI" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com.weprode.nero.organization.model.impl.OrgDetailsImpl" table="Organization_OrgDetails">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="orgId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoolId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="orgName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="eduLevel" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" column="role_" name="role" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" column="type_" name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isArchive" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+	</class>
+	<class name="com.weprode.nero.organization.model.impl.OrgMappingImpl" table="Organization_OrgMapping">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="entStructureUAI" type="java.lang.String">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="organizationId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.weprode.nero.organization.model.impl.OrgMembershipImpl" table="Organization_OrgMembership">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="orgMemberId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="startDate" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="endDate" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fullYear" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+	</class>
+</hibernate-mapping>

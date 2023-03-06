@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 
@@ -20,17 +21,6 @@ import static com.liferay.portal.kernel.security.auth.GuestOrUserUtil.getGuestOr
 
 @JSONWebService
 public class RoleUtilsServiceImpl {
-
-	// TODO Move JSON constants to one file
-	private static final String LABEL = "label";
-	private static final String ROLE_ID = "roleId";
-	private static final String ROLE_CODE = "roleCode";
-	private static final String ROLES = "roles";
-	private static final String SUCCESS = "success";
-	private static final String ERROR = "error";
-	private static final String DISPLAY_TEXT = "displayText";
-	private static final String IS_FOR_CLASS = "isForClass";
-	private static final String NOT_ALLOWED_EXCEPTION = "NOT_ALLOWED_EXCEPTION";
 
     private static final Log logger = LogFactoryUtil.getLog(RoleUtilsServiceImpl.class);
 
@@ -49,8 +39,8 @@ public class RoleUtilsServiceImpl {
 				throw new RolePermissionsException();
 			}
 		} catch (Exception e) {
-			result.put(ERROR, NOT_ALLOWED_EXCEPTION);
-			result.put(SUCCESS, false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
@@ -61,11 +51,11 @@ public class RoleUtilsServiceImpl {
 				roles.put(jsonRole);
 			}
 
-			result.put(ROLES, roles);
-			result.put(SUCCESS, true);
+			result.put(JSONConstants.ROLES, roles);
+			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error while fetching schools for manual user creation", e);
-			result.put(SUCCESS, false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		
 		return result;
@@ -86,8 +76,8 @@ public class RoleUtilsServiceImpl {
 				throw new RolePermissionsException();
 			}
 		} catch (Exception e) {
-			result.put(ERROR, NOT_ALLOWED_EXCEPTION);
-			result.put(SUCCESS, false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
@@ -98,12 +88,12 @@ public class RoleUtilsServiceImpl {
 				JSONObject jsonRole = getRoleAsJSON(role, adminUser);
 				localUsersRoles.put(jsonRole);
 			}
-			result.put(ROLES, localUsersRoles);
-			result.put(SUCCESS, true);
+			result.put(JSONConstants.ROLES, localUsersRoles);
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error while fetching schools for manual user creation", e);
-			result.put(SUCCESS, false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 
 		return result;
@@ -126,8 +116,8 @@ public class RoleUtilsServiceImpl {
 				throw new RolePermissionsException();
 			}
 		} catch (Exception e) {
-			result.put(ERROR, NOT_ALLOWED_EXCEPTION);
-			result.put(SUCCESS, false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
@@ -136,32 +126,32 @@ public class RoleUtilsServiceImpl {
 
 			for (Role role : RoleUtilsLocalServiceUtil.getUserSearchableRoles(user)) {
 				final JSONObject curr = JSONFactoryUtil.createJSONObject();
-				curr.put(ROLE_ID, role.getRoleId());
-				curr.put(DISPLAY_TEXT, LanguageUtil.get(user.getLocale(), role.getName()));
-				curr.put(IS_FOR_CLASS, (role.getName().equals(NeroRoleConstants.NATIONAL_1) || role.getName().equals(NeroRoleConstants.NATIONAL_2) ||
+				curr.put(JSONConstants.ROLE_ID, role.getRoleId());
+				curr.put(JSONConstants.DISPLAY_TEXT, LanguageUtil.get(user.getLocale(), role.getName()));
+				curr.put(JSONConstants.IS_FOR_CLASS, (role.getName().equals(NeroRoleConstants.NATIONAL_1) || role.getName().equals(NeroRoleConstants.NATIONAL_2) ||
 					role.getName().equals(NeroRoleConstants.NATIONAL_3) || role.getName().equals(NeroRoleConstants.MAIN_TEACHER)));
 				roleList.put(curr);
 			}
 
 			Role schoolAdmin = RoleUtilsLocalServiceUtil.getSchoolAdminRole();
 			JSONObject schoolAdminRole = JSONFactoryUtil.createJSONObject();
-			schoolAdminRole.put(ROLE_ID, schoolAdmin.getRoleId());
-			schoolAdminRole.put(DISPLAY_TEXT, "Administrateur local");
-			schoolAdminRole.put(IS_FOR_CLASS, false);
+			schoolAdminRole.put(JSONConstants.ROLE_ID, schoolAdmin.getRoleId());
+			schoolAdminRole.put(JSONConstants.DISPLAY_TEXT, "Administrateur local");
+			schoolAdminRole.put(JSONConstants.IS_FOR_CLASS, false);
 			roleList.put(schoolAdminRole);
 
 			Role entAdmin = RoleUtilsLocalServiceUtil.getEntAdminRole();
 			JSONObject entAdminRole = JSONFactoryUtil.createJSONObject();
-			entAdminRole.put(ROLE_ID, entAdmin.getRoleId());
-			entAdminRole.put(DISPLAY_TEXT, "Administrateur ENT");
-			entAdminRole.put(IS_FOR_CLASS, false);
+			entAdminRole.put(JSONConstants.ROLE_ID, entAdmin.getRoleId());
+			entAdminRole.put(JSONConstants.DISPLAY_TEXT, "Administrateur ENT");
+			entAdminRole.put(JSONConstants.IS_FOR_CLASS, false);
 			roleList.put(entAdminRole);
 			
-			result.put(SUCCESS, true);
-			result.put(ROLES, roleList);
+			result.put(JSONConstants.SUCCESS, true);
+			result.put(JSONConstants.ROLES, roleList);
 		} catch (Exception e) {
 			logger.error("Error fetching schools", e);
-			result.put(SUCCESS, false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
 	}
@@ -169,9 +159,9 @@ public class RoleUtilsServiceImpl {
 	private JSONObject getRoleAsJSON(Role role, User user) {
 		JSONObject jsonRole = JSONFactoryUtil.createJSONObject();
 
-		jsonRole.put(ROLE_ID, role.getRoleId());
-		jsonRole.put(ROLE_CODE, role.getName());
-		jsonRole.put(LABEL, role.getTitle(user.getLocale()));
+		jsonRole.put(JSONConstants.ROLE_ID, role.getRoleId());
+		jsonRole.put(JSONConstants.ROLE_CODE, role.getName());
+		jsonRole.put(JSONConstants.LABEL, role.getTitle(user.getLocale()));
 
 		return jsonRole;
 	}

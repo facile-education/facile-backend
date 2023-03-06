@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findUserOrganizations">
+        <![CDATA[
+			SELECT o.*
+			FROM Organization_ o
+			JOIN Organization_OrgDetails od ON o.organizationId = od.orgId
+			JOIN Users_Orgs uo ON uo.organizationId = o.organizationId
+			WHERE uo.userId = ?
+		]]>
+    </sql>
+    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findOrganizationsByParentId">
+        <![CDATA[
+			SELECT o.*
+			FROM Organization_ o
+			JOIN Organization_OrgDetails od ON o.organizationId = od.orgId
+			WHERE o.parentOrganizationId = ?
+		]]>
+    </sql>
+    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findOrganizationsByType">
+        <![CDATA[
+			SELECT o.*
+			FROM Organization_ o
+			JOIN Organization_OrgDetails od ON o.organizationId = od.orgId
+			WHERE od.type_ = ?
+		]]>
+    </sql>
+</custom-sql>

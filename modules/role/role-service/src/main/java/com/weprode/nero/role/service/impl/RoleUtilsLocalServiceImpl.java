@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.base.RoleUtilsLocalServiceBaseImpl;
@@ -339,16 +340,15 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	}
 
 	public boolean isSchoolAdmin(User user) {
-		// TODO Organization
-//		try {
-//			 for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
-//			 	if (isSchoolAdmin(user, school.getOrganizationId())) {
-//			 		return true;
-//			 	}
-//			 }
-//		} catch (Exception e) {
-//			logger.debug(e);
-//		}
+		try {
+			 for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
+			 	if (isSchoolAdmin(user, school.getOrganizationId())) {
+			 		return true;
+			 	}
+			 }
+		} catch (Exception e) {
+			logger.debug(e);
+		}
 		return false;
 	}
 
@@ -374,16 +374,15 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	}
 	
 	public boolean isGARAdmin(User user) {
-		// TODO Organization
-//		try {
-//			 for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
-//			 	if(UserGroupRoleLocalServiceUtil.hasUserGroupRole(user.getUserId(), school.getGroupId(), getGarAdminRole().getRoleId())) {
-//			 		return true;
-//			 	}
-//			 }
-//		} catch (Exception e) {
-//			logger.debug(e);
-//		}
+		try {
+			 for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
+			 	if(UserGroupRoleLocalServiceUtil.hasUserGroupRole(user.getUserId(), school.getGroupId(), getGarAdminRole().getRoleId())) {
+			 		return true;
+			 	}
+			 }
+		} catch (Exception e) {
+			logger.debug(e);
+		}
 
 		return false;
 	}
