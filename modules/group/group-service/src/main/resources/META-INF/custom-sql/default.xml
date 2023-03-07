@@ -1,28 +1,21 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findUserOrganizations">
+    <sql id="com.weprode.nero.group.service.persistence.GroupUtilsFinder.findUserGroups">
         <![CDATA[
-			SELECT o.*
-			FROM Organization_ o
-			JOIN Organization_OrgDetails od ON o.organizationId = od.orgId
-			JOIN Users_Orgs uo ON uo.organizationId = o.organizationId
-			WHERE uo.userId = ?
+			SELECT g.*
+			FROM Group_ g
+			JOIN Group_CommunityInfos ci ON ci.groupId = g.groupId
+			JOIN Users_Groups ug ON ci.groupId = ug.groupId
+			WHERE ug.userId = ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findOrganizationsByParentId">
+    <sql id="com.weprode.nero.group.service.persistence.GroupUtilsFinder.findSchoolGroups">
         <![CDATA[
-			SELECT o.*
-			FROM Organization_ o
-			JOIN Organization_OrgDetails od ON o.organizationId = od.orgId
-			WHERE o.parentOrganizationId = ?
-		]]>
-    </sql>
-    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findOrganizationsByType">
-        <![CDATA[
-			SELECT o.*
-			FROM Organization_ o
-			JOIN Organization_OrgDetails od ON o.organizationId = od.orgId
-			WHERE od.type_ = ?
+			SELECT g.*
+			FROM Group_ g
+			JOIN Group_CommunityInfos ci ON ci.groupId = g.groupId
+			JOIN Users_Orgs uo ON uo.userId = ci.creatorId
+			WHERE uo.organizationId = ?
 		]]>
     </sql>
 </custom-sql>
