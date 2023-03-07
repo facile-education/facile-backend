@@ -635,43 +635,44 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	 	return agentsRoleIds;
 	 }*/
 
-/*	 public String displayUserRoles(User user) {
+	 public String displayUserRoles(User user) {
 		
-	 	String roleStr = "";
+	 	String roleStr;
 		
 	 	if (isStudent(user)) {
-	 		roleStr = "El\u00E8ve";
+	 		roleStr = getStudentRole().getName();
 	 	} else if (isParent(user)) {
-	 		roleStr = "Responsable l\u00E9gal";
+	 		roleStr = getParentRole().getName();
 	 	} else if (isTeacher(user)) {
-	 		roleStr = "Enseignant\u00B7te";
+	 		roleStr = getTeacherRole().getName();
 	 	} else if (isInfirmiere(user)) {
-	 		roleStr = "Infirmier\u00B7\u00E8re";
+	 		roleStr = getInfirmiereRole().getName();
 	 	} else if (isAssistantTechnique(user)) {
-	 		roleStr = "Assistant\u00B7te technique";
+	 		roleStr = getAssistantTechniqueRole().getName();
 	 	} else if (isCaissierComptable(user)) {
-	 		roleStr = "Caissier\u00B7\u00E8re comptable ";
+	 		roleStr = getCaissierComptableRole().getName();
 	 	} else if (isConseillerOrientation(user)) {
-	 		roleStr = "Conseiller\u00B7\u00E8re d\u0027orientation";
+	 		roleStr = getConseillerOrientationRole().getName();
 	 	} else if (isConseillerSocial(user)) {
-	 		roleStr = "Conseiller\u00B7\u00E8re social\u00B7e";
+	 		roleStr = getConseillerSocialRole().getName();
 	 	} else if (isBibliothecaire(user)) {
-	 		roleStr = "Biblioth\u00E9caire";
+	 		roleStr = getBibliothecaireRole().getName();
 	 	} else if (isPsychologue(user)) {
-	 		roleStr = "Psychologue";
+	 		roleStr = getPsychologueRole().getName();
 	 	} else if (isSecretariat(user)) {
-	 		roleStr = "Secr\u00E9taire";
+	 		roleStr = getSecretariatRole().getName();
 	 	} else {
 	 		roleStr = "Personnel";
 	 	}
+
 	 	if (isDoyen(user)) {
-	 		roleStr += ", Doyen\u00B7enne";
+	 		roleStr += ", " + getDoyenRole().getName();
 	 	}
 	 	if (isSchoolAdmin(user)) {
-	 		roleStr += ", Admin. ENTA";
+	 		roleStr += ", " + getSchoolAdminRole().getName();
 	 	}
 	 	return roleStr;
-	 }*/
+	 }
 
 /*	 public List<Role> getUserEntRoles (User user) {
 

@@ -35,6 +35,16 @@ public class RoleUtilsLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.role.service.impl.RoleUtilsLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+
+	/**
+	 * Get the User Profile
+	 */
+	public static String displayUserRoles(
+		com.liferay.portal.kernel.model.User user) {
+
+		return getService().displayUserRoles(user);
+	}
+
 	public static com.liferay.portal.kernel.model.Role getAcademicRole() {
 		return getService().getAcademicRole();
 	}
@@ -184,9 +194,6 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().getTeacherRole();
 	}
 
-	/**
-	 * Get the User Profile
-	 */
 	public static List<com.liferay.portal.kernel.model.Role>
 		getUserSearchableRoles(com.liferay.portal.kernel.model.User user) {
 
