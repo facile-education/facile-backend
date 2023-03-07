@@ -30,7 +30,6 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.organization.service.persistence.OrgCiteScolairePersistence;
 import com.weprode.nero.organization.service.persistence.OrgDetailsPersistence;
 import com.weprode.nero.organization.service.persistence.OrgMappingPersistence;
-import com.weprode.nero.organization.service.persistence.OrgMembershipPersistence;
 import com.weprode.nero.organization.service.persistence.OrgUtilsFinder;
 
 import java.lang.reflect.Field;
@@ -137,9 +136,6 @@ public abstract class UserOrgsLocalServiceBaseImpl
 
 	@Reference
 	protected OrgMappingPersistence orgMappingPersistence;
-
-	@Reference
-	protected OrgMembershipPersistence orgMembershipPersistence;
 
 	@Reference
 	protected OrgUtilsFinder orgUtilsFinder;

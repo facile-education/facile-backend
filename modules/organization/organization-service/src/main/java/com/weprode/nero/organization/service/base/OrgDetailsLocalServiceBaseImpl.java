@@ -45,7 +45,6 @@ import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.persistence.OrgCiteScolairePersistence;
 import com.weprode.nero.organization.service.persistence.OrgDetailsPersistence;
 import com.weprode.nero.organization.service.persistence.OrgMappingPersistence;
-import com.weprode.nero.organization.service.persistence.OrgMembershipPersistence;
 import com.weprode.nero.organization.service.persistence.OrgUtilsFinder;
 
 import java.io.Serializable;
@@ -466,9 +465,6 @@ public abstract class OrgDetailsLocalServiceBaseImpl
 
 	@Reference
 	protected OrgMappingPersistence orgMappingPersistence;
-
-	@Reference
-	protected OrgMembershipPersistence orgMembershipPersistence;
 
 	@Reference
 	protected OrgUtilsFinder orgUtilsFinder;

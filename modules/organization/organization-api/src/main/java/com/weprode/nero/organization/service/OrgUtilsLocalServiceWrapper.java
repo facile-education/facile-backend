@@ -14,8 +14,6 @@
 
 package com.weprode.nero.organization.service;
 
-import com.liferay.portal.kernel.model.Organization;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceWrapper;
 
 /**
@@ -40,12 +38,14 @@ public class OrgUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public java.util.List<Organization> getAllSchools() {
+	public java.util.List<com.liferay.portal.kernel.model.Organization>
+		getAllSchools() {
+
 		return _orgUtilsLocalService.getAllSchools();
 	}
 
 	@Override
-	public Organization getOrCreateOrganization(
+	public com.liferay.portal.kernel.model.Organization getOrCreateOrganization(
 			long companyId, String orgName, long schoolId, int type)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
@@ -55,7 +55,8 @@ public class OrgUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public Organization getOrCreateRootOrg(long companyId)
+	public com.liferay.portal.kernel.model.Organization getOrCreateRootOrg(
+			long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
@@ -63,7 +64,8 @@ public class OrgUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public Organization getOrCreateSchool(long companyId, String name)
+	public com.liferay.portal.kernel.model.Organization getOrCreateSchool(
+			long companyId, String name)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
@@ -71,7 +73,7 @@ public class OrgUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public Organization getOrCreateSchool(
+	public com.liferay.portal.kernel.model.Organization getOrCreateSchool(
 			long companyId, String schoolName, String entStructureUAI)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
@@ -81,7 +83,10 @@ public class OrgUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public String getOrgColor(User user, Organization org) {
+	public String getOrgColor(
+		com.liferay.portal.kernel.model.User user,
+		com.liferay.portal.kernel.model.Organization org) {
+
 		return _orgUtilsLocalService.getOrgColor(user, org);
 	}
 
@@ -96,33 +101,40 @@ public class OrgUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public java.util.List<Organization> getSchoolClasses(
-		long schoolId, Boolean withArchives) {
+	public java.util.List<com.liferay.portal.kernel.model.Organization>
+		getSchoolClasses(long schoolId, Boolean withArchives) {
 
 		return _orgUtilsLocalService.getSchoolClasses(schoolId, withArchives);
 	}
 
 	@Override
-	public java.util.List<Organization> getSchoolOrganizations(
-		long schoolId, java.util.List<Integer> types,
-		java.util.List<Integer> roles, Boolean withArchives) {
+	public java.util.List<com.liferay.portal.kernel.model.Organization>
+		getSchoolOrganizations(
+			long schoolId, java.util.List<Integer> types,
+			java.util.List<Integer> roles, Boolean withArchives) {
 
 		return _orgUtilsLocalService.getSchoolOrganizations(
 			schoolId, types, roles, withArchives);
 	}
 
 	@Override
-	public Organization getSchoolPATsOrganization(long schoolId) {
+	public com.liferay.portal.kernel.model.Organization
+		getSchoolPATsOrganization(long schoolId) {
+
 		return _orgUtilsLocalService.getSchoolPATsOrganization(schoolId);
 	}
 
 	@Override
-	public Organization getSchoolPersonalsOrganization(long schoolId) {
+	public com.liferay.portal.kernel.model.Organization
+		getSchoolPersonalsOrganization(long schoolId) {
+
 		return _orgUtilsLocalService.getSchoolPersonalsOrganization(schoolId);
 	}
 
 	@Override
-	public Organization getSchoolTeachersOrganization(long schoolId) {
+	public com.liferay.portal.kernel.model.Organization
+		getSchoolTeachersOrganization(long schoolId) {
+
 		return _orgUtilsLocalService.getSchoolTeachersOrganization(schoolId);
 	}
 

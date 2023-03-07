@@ -16,8 +16,6 @@ package com.weprode.nero.organization.service;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.model.Organization;
-import com.liferay.portal.kernel.model.User;
 
 import java.util.List;
 
@@ -44,39 +42,48 @@ public class OrgUtilsLocalServiceUtil {
 		return getService().formatOrgName(name, withSchoolName);
 	}
 
-	public static List<Organization> getAllSchools() {
+	public static List<com.liferay.portal.kernel.model.Organization>
+		getAllSchools() {
+
 		return getService().getAllSchools();
 	}
 
-	public static Organization getOrCreateOrganization(
-			long companyId, String orgName, long schoolId, int type)
+	public static com.liferay.portal.kernel.model.Organization
+			getOrCreateOrganization(
+				long companyId, String orgName, long schoolId, int type)
 		throws PortalException, SystemException {
 
 		return getService().getOrCreateOrganization(
 			companyId, orgName, schoolId, type);
 	}
 
-	public static Organization getOrCreateRootOrg(long companyId)
+	public static com.liferay.portal.kernel.model.Organization
+			getOrCreateRootOrg(long companyId)
 		throws PortalException, SystemException {
 
 		return getService().getOrCreateRootOrg(companyId);
 	}
 
-	public static Organization getOrCreateSchool(long companyId, String name)
+	public static com.liferay.portal.kernel.model.Organization
+			getOrCreateSchool(long companyId, String name)
 		throws PortalException, SystemException {
 
 		return getService().getOrCreateSchool(companyId, name);
 	}
 
-	public static Organization getOrCreateSchool(
-			long companyId, String schoolName, String entStructureUAI)
+	public static com.liferay.portal.kernel.model.Organization
+			getOrCreateSchool(
+				long companyId, String schoolName, String entStructureUAI)
 		throws PortalException, SystemException {
 
 		return getService().getOrCreateSchool(
 			companyId, schoolName, entStructureUAI);
 	}
 
-	public static String getOrgColor(User user, Organization org) {
+	public static String getOrgColor(
+		com.liferay.portal.kernel.model.User user,
+		com.liferay.portal.kernel.model.Organization org) {
+
 		return getService().getOrgColor(user, org);
 	}
 
@@ -89,29 +96,36 @@ public class OrgUtilsLocalServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static List<Organization> getSchoolClasses(
-		long schoolId, Boolean withArchives) {
+	public static List<com.liferay.portal.kernel.model.Organization>
+		getSchoolClasses(long schoolId, Boolean withArchives) {
 
 		return getService().getSchoolClasses(schoolId, withArchives);
 	}
 
-	public static List<Organization> getSchoolOrganizations(
-		long schoolId, List<Integer> types, List<Integer> roles,
-		Boolean withArchives) {
+	public static List<com.liferay.portal.kernel.model.Organization>
+		getSchoolOrganizations(
+			long schoolId, List<Integer> types, List<Integer> roles,
+			Boolean withArchives) {
 
 		return getService().getSchoolOrganizations(
 			schoolId, types, roles, withArchives);
 	}
 
-	public static Organization getSchoolPATsOrganization(long schoolId) {
+	public static com.liferay.portal.kernel.model.Organization
+		getSchoolPATsOrganization(long schoolId) {
+
 		return getService().getSchoolPATsOrganization(schoolId);
 	}
 
-	public static Organization getSchoolPersonalsOrganization(long schoolId) {
+	public static com.liferay.portal.kernel.model.Organization
+		getSchoolPersonalsOrganization(long schoolId) {
+
 		return getService().getSchoolPersonalsOrganization(schoolId);
 	}
 
-	public static Organization getSchoolTeachersOrganization(long schoolId) {
+	public static com.liferay.portal.kernel.model.Organization
+		getSchoolTeachersOrganization(long schoolId) {
+
 		return getService().getSchoolTeachersOrganization(schoolId);
 	}
 

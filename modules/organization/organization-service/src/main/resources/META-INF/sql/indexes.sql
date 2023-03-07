@@ -5,6 +5,3 @@ create index IX_C69415B1 on Organization_OrgDetails (schoolId, type_, role_, isA
 create index IX_5A9D8D45 on Organization_OrgDetails (type_);
 
 create index IX_2415D9BE on Organization_OrgMapping (organizationId);
-
-create index IX_AACCC716 on Organization_OrgMembership (groupId);
-create index IX_FEA2E41C on Organization_OrgMembership (userId, groupId);

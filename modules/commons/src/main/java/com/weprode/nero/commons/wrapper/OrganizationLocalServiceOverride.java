@@ -10,7 +10,6 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
-import com.weprode.nero.organization.service.OrgMembershipLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -31,7 +30,7 @@ public class OrganizationLocalServiceOverride extends OrganizationLocalServiceWr
 	public Organization deleteOrganization(long organizationId) throws PortalException {
 
 		// Remove organization related data
-		deleteOrganizationData(getOrganization(organizationId));
+		deleteOrganizationData(organizationId);
 
 		return super.deleteOrganization(organizationId);
 	}
@@ -40,45 +39,39 @@ public class OrganizationLocalServiceOverride extends OrganizationLocalServiceWr
 	public Organization deleteOrganization(Organization organization) throws PortalException {
 
 		// Remove organization related content
-		deleteOrganizationData(organization);
+		deleteOrganizationData(organization.getOrganizationId());
 
 		return super.deleteOrganization(organization);
 	}
 
-	private void deleteOrganizationData (Organization organization) throws PortalException {
+	private void deleteOrganizationData (long organizationId) throws PortalException {
 
-		logger.debug("Clean up community infos for organizationId " + organization.getOrganizationId());
+		logger.debug("Clean up community infos for organizationId " + organizationId);
 
-		logger.info("Deleting organizationId "+ organization.getOrganizationId());
+		logger.info("Deleting organizationId "+ organizationId);
 
-		boolean isSchool = OrgDetailsLocalServiceUtil.isSchool(organization.getOrganizationId());
+		boolean isSchool = OrgDetailsLocalServiceUtil.isSchool(organizationId);
 
 		// Organization details
 		try {
-			OrgDetailsLocalServiceUtil.deleteOrgDetails(organization.getOrganizationId());
+			OrgDetailsLocalServiceUtil.deleteOrgDetails(organizationId);
 		} catch (Exception e) {
 			logger.error("Could not remove orgDetails");
 		}
 
-		try {
-			OrgMembershipLocalServiceUtil.removeOrgMemberships(organization.getGroupId());
-		} catch (Exception e) {
-			logger.error("Could not remove orgMemberships");
-		}
-
 		if (isSchool) {
 			try {
-				OrgMappingLocalServiceUtil.deleteOrgMapping(organization.getOrganizationId());
+				OrgMappingLocalServiceUtil.deleteOrgMapping(organizationId);
 			} catch (Exception e) {
 				logger.error("Could not remove orgMapping");
 			}
 		}
 
 		// Remove organization members
-		long[] userIds = UserLocalServiceUtil.getOrganizationUserIds(organization.getOrganizationId());
+		long[] userIds = UserLocalServiceUtil.getOrganizationUserIds(organizationId);
 		if (userIds != null && userIds.length > 0) {
-			logger.info("Removing "+userIds.length+" members from organizationId "+organization.getOrganizationId()+"...");
-			UserLocalServiceUtil.unsetOrganizationUsers(organization.getOrganizationId(), userIds);
+			logger.info("Removing "+userIds.length+" members from organizationId "+organizationId+"...");
+			UserLocalServiceUtil.unsetOrganizationUsers(organizationId, userIds);
 		}
 	}
 
