@@ -2,6 +2,7 @@ Bundle-Name: group-api
 Bundle-SymbolicName: com.weprode.nero.group.api
 Bundle-Version: 1.0.0
 Export-Package:\
+    com.weprode.nero.group.constants,\
 	com.weprode.nero.group.exception,\
 	com.weprode.nero.group.model,\
 	com.weprode.nero.group.service,\

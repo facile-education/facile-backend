@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.group.model.CommunityInfos">
+		<field name="communityInfosId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="status" type="int" />
+		<field name="creatorId" type="long" />
+		<field name="creationDate" type="Date" />
+		<field name="expirationDate" type="Date" />
+		<field name="isPedagogical" type="boolean" />
+		<field name="isContactList" type="boolean" />
+		<field name="color" type="String" />
+	</model>
+	<model name="com.weprode.nero.group.model.GroupMembership">
+		<field name="membershipId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="fullYear" type="boolean" />
+	</model>
+	<model name="com.weprode.nero.group.model.MembershipActivity">
+		<field name="membershipActivityId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="actionUserId" type="long" />
+		<field name="targetUserIds" type="String" />
+		<field name="incoming" type="boolean" />
+		<field name="movementDate" type="Date" />
+	</model>
+</model-hints>

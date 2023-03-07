@@ -4,4 +4,68 @@
 <service-builder dependency-injector="ds" package-path="com.weprode.nero.group">
 	<namespace>Group</namespace>
 
+	<entity name="GroupUtils" local-service="true" remote-service="true" />
+
+	<entity name="CommunityInfos" local-service="true" remote-service="true">
+
+		<column name="communityInfosId" type="long" primary="true" />
+		<column name="groupId" type="long" />
+		<column name="status" type="int" />
+		<column name="creatorId" type="long" />
+		<column name="creationDate" type="Date" />
+		<column name="expirationDate" type="Date" />
+		<column name="isPedagogical" type="boolean" />
+		<column name="isContactList" type="boolean" />
+		<column name="color" type="String" />
+
+		<finder return-type="CommunityInfos" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+
+		<finder return-type="Collection" name="creatorId_status">
+			<finder-column name="creatorId" />
+			<finder-column name="status" />
+		</finder>
+
+		<finder return-type="Collection" name="expirationDate">
+			<finder-column name="expirationDate" comparator="=" />
+		</finder>
+
+	</entity>
+
+	<entity name="GroupActivity" local-service="true" remote-service="false"/>
+
+	<entity name="MembershipActivity" local-service="true" remote-service="false">
+		<column name="membershipActivityId" type="long" primary="true" />
+		<column name="groupId" type="long" />
+		<column name="actionUserId" type="long" />
+		<column name="targetUserIds" type="String" />
+		<column name="incoming" type="boolean" />
+		<column name="movementDate" type="Date" />
+
+		<finder return-type="Collection" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+
+	<entity name="GroupMembership" local-service="true" remote-service="false">
+		<column name="membershipId" type="long" primary="true" />
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="startDate" type="Date" />
+		<column name="endDate" type="Date" />
+		<column name="fullYear" type="boolean" />
+
+		<finder return-type="Collection" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+		<finder return-type="Collection" name="userId_groupId">
+			<finder-column name="userId" />
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+
 </service-builder>

@@ -10,4 +10,6 @@ public class NeroSystemProperties {
 
 	public static final String GVE_VOLEES = "gve.volees";
 
+	public static final String MAIL_NO_REPLY_USER_ID = "mail.no.reply.user.id";
+
 }
