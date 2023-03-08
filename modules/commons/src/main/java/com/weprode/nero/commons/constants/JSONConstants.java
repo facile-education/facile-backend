@@ -8,6 +8,7 @@ public class JSONConstants {
 
     // Global
     public static final String DISPLAY_TEXT = "displayText";
+    public static final String DISPLAY_NAME = "displayName";
     public static final String LABEL = "label";
     public static final String CREATION_DATE = "creationDate";
     public static final String EXPIRATION_DATE = "expirationDate";
@@ -16,18 +17,35 @@ public class JSONConstants {
     public static final String STATUS = "status";
     public static final String TYPE = "type";
     public static final String RESULTS = "results";
+    public static final String AFFECTATION_DATE = "affectationDate";
+    public static final String AFFECTATIONS = "affectations";
 
     // User
+    public static final String USER = "user";
+    public static final String USERS = "users";
     public static final String USER_ID = "userId";
+    public static final String EMAIL = "email";
     public static final String USER_NAME = "userName";
 
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
+    public static final String FULL_NAME = "screenName";
     public static final String SCREEN_NAME = "screenName";
+    public static final String ADMIN_NAME = "adminName";
     public static final String IS_ADMIN = "isAdmin";
+    public static final String IS_SCHOOL_ADMIN = "isSchoolAdmin";
+    public static final String ADMINS = "admins";
+    public static final String IS_NEWS_DELEGATE = "isNewsDelegate";
     public static final String IS_TEACHER = "isTeacher";
+    public static final String IS_DIRECTION = "isDirection";
     public static final String IS_PARENT = "isParent";
     public static final String IS_STUDENT = "isStudent";
+    public static final String TEACHER_ID = "teacherId";
+    public static final String STUDENT_ID = "studentId";
+    public static final String TEACHERS = "teachers";
+    public static final String STUDENTS = "students";
+    public static final String NB_TOTAL_USERS = "nbTotalUsers";
+    public static final String CANDIDATES = "candidates";
 
     // Organization
     public static final String ORG_ID = "orgId";
@@ -46,12 +64,12 @@ public class JSONConstants {
     public static final String IS_SCHOOL = "isSchool";
     public static final String IS_SUBJECT = "isSubject";
     public static final String NB_MEMBERS = "nbMembers";
+    public static final String MEMBERS = "members";
 
     // Role
     public static final String ROLE_ID = "roleId";
     public static final String ROLE_CODE = "roleCode";
     public static final String ROLES = "roles";
-    public static final String IS_FOR_CLASS = "isForClass";
 
     // School
     public static final String SCHOOL_ID = "schoolId";
@@ -60,6 +78,10 @@ public class JSONConstants {
 
     // Volee
     public static final String VOLEES = "volees";
+
+    // Classe
+    public static final String IS_FOR_CLASS = "isForClass";
+    public static final String CLASS_NAME = "className";
 
     // Activity
     public static final String ACTIVITIES = "activities";

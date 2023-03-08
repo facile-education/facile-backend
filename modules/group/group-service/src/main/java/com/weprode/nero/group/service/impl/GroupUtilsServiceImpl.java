@@ -27,6 +27,7 @@ import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.comparator.UserLastNameCaseInsensitiveComparator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -146,7 +147,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             JSONArray groupsArray = JSONFactoryUtil.createJSONArray();
             DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
-            // TODO User
+            // TODO Preferences
             // UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             // long schoolId = userProperties.getEtabId();
             long schoolId = 0;
@@ -296,11 +297,9 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 roleIds.add(roleId);
             }
 
-            // TODO User
-            // OrderByComparator obc = new UserLastNameCaseInsensitiveComparator(true);
-            OrderByComparator obc = null;
+            OrderByComparator obc = new UserLastNameCaseInsensitiveComparator(true);
 
-            // TODO User
+            // TODO Contacts
             List<User> results = new ArrayList<>();
             // List<User> results = ContactLocalServiceUtil.directorySearch(user, query, new ArrayList<Long>(), schoolIds, roleIds,
             //        null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);

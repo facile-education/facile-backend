@@ -17,8 +17,8 @@ import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.organization.service.base.UserOrgsLocalServiceBaseImpl;
-import com.weprode.nero.organization.service.persistence.OrgUtilsFinder;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(UserOrgsLocalServiceImpl.class);
 
     public Organization getEtabRatachement(User user) {
-        // TODO User
+        // TODO Preferences
 //        try {
 //            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
 //            if (userProperties != null && userProperties.getEtabId() != 0) {
@@ -294,9 +294,8 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
             List<Long> roleIds = new ArrayList<>();
             roleIds.add(RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId());
 
-            // TODO User
-//            return UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null,
-//                    QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+            return UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null,
+                    QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
         } catch (Exception e) {
             logger.error("Error fetching teachers for school " + schoolId, e);
         }
@@ -319,8 +318,7 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
                 roleIds.add(RoleUtilsLocalServiceUtil.getParentRole().getRoleId());
             }
 
-            // TODO User
-            // return UserSearchLocalServiceUtil.countUsers("", orgIds, null, roleIds, null);
+            return UserSearchLocalServiceUtil.countUsers("", orgIds, null, roleIds, null);
         } catch (Exception e) {
             logger.error("Error counting members for orgId " + orgId, e);
         }

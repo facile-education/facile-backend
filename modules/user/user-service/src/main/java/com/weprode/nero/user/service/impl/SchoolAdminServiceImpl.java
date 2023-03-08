@@ -1,0 +1,216 @@
+package com.weprode.nero.user.service.impl;
+
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.SchoolAdminLocalServiceUtil;
+import com.weprode.nero.user.service.base.SchoolAdminServiceBaseImpl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
+
+    private static final Log logger = LogFactoryUtil.getLog(SchoolAdminServiceImpl.class);
+
+    @JSONWebService(value = "get-school-delegates", method = "GET")
+    public JSONObject getSchoolDelegates(long schoolId) {
+        JSONObject result = JSONFactoryUtil.createJSONObject();
+
+        JSONArray jsonAdmins = JSONFactoryUtil.createJSONArray();
+        try {
+            User user = getGuestOrUser();
+            logger.info("User " + user.getUserId() + " fetches all admins and delegates for school " + schoolId);
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+
+            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
+                    || RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+        } catch (Exception e) {
+            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        }
+
+        try {
+            List<User> allAdmins = new ArrayList<>(SchoolAdminLocalServiceUtil.getSchoolAdmins(schoolId));
+
+            // TODO News
+            /* List<User> schoolDelegates = BlogEntryDelegateLocalServiceUtil.getSchoolDelegates(schoolId);
+            // Avoid duplicates
+            for (User schoolDelegate : schoolDelegates) {
+                if (!allAdmins.contains(schoolDelegate)) {
+                    allAdmins.add(schoolDelegate);
+                }
+            }*/
+            
+            for (User admin : allAdmins) {
+                JSONObject adminJSON = JSONFactoryUtil.createJSONObject();
+                adminJSON.put(JSONConstants.USER_ID, admin.getUserId());
+                adminJSON.put(JSONConstants.LAST_NAME, admin.getLastName());
+                adminJSON.put(JSONConstants.FIRST_NAME, admin.getFirstName());
+                adminJSON.put(JSONConstants.DISPLAY_NAME, admin.getFullName());
+                adminJSON.put(JSONConstants.IS_DIRECTION, RoleUtilsLocalServiceUtil.isDirectionMember(admin));
+                adminJSON.put(JSONConstants.IS_SCHOOL_ADMIN, RoleUtilsLocalServiceUtil.isSchoolAdmin(admin, schoolId));
+                // TODO News
+                adminJSON.put(JSONConstants.IS_NEWS_DELEGATE, false);
+                // adminJSON.put(JSONConstants.IS_NEWS_DELEGATE, BlogEntryDelegateLocalServiceUtil.isUserDelegate(admin));
+                jsonAdmins.put(adminJSON);
+            }
+
+            result.put(JSONConstants.SUCCESS, true);
+            result.put(JSONConstants.ADMINS, jsonAdmins);
+        } catch (Exception e) {
+            logger.error("Error while fetching school admins for schoolId " + schoolId, e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+        
+        return result;
+    }
+
+    @JSONWebService(value = "get-delegation-candidates", method = "GET")
+    public JSONObject getDelegationCandidates(long schoolId, String filter) {
+        JSONObject result = JSONFactoryUtil.createJSONObject();
+
+        try {
+            User user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+            logger.info("User " + user.getUserId() + " fetches all delegation candidates for school " + schoolId);
+
+            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
+                    || RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+        } catch (Exception e) {
+            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        }
+
+        try {
+            // Returned list of the school delegation candidates
+            // minus the existing school delegates
+            // minus the school's admins
+            // TODO News
+            List<User> delegationCandidates = new ArrayList<>();
+            List<User> schoolDelegates = new ArrayList<>();
+            /*List<User> delegationCandidates = BlogEntryDelegateLocalServiceUtil.getSchoolDelegationCandidates(schoolId, filter);
+            List<User> schoolDelegates = BlogEntryDelegateLocalServiceUtil.getSchoolDelegates(schoolId);*/
+            List<User> schoolAdmins = SchoolAdminLocalServiceUtil.getSchoolAdmins(schoolId);
+
+            JSONArray jsonCandidates = JSONFactoryUtil.createJSONArray();
+            for (User candidate : delegationCandidates) {
+                if (!schoolDelegates.contains(candidate) && !schoolAdmins.contains(candidate)) {
+                    JSONObject jsonCandidate = JSONFactoryUtil.createJSONObject();
+                    jsonCandidate.put(JSONConstants.USER_ID, candidate.getUserId());
+                    jsonCandidate.put(JSONConstants.LAST_NAME, candidate.getLastName());
+                    jsonCandidate.put(JSONConstants.FIRST_NAME, candidate.getFirstName());
+                    jsonCandidate.put(JSONConstants.FULL_NAME, candidate.getFullName());
+                    jsonCandidates.put(jsonCandidate);
+                }
+            }
+            result.put(JSONConstants.CANDIDATES, jsonCandidates);
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error while saving school admins for schoolId " + schoolId, e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+        
+        return result;
+    }
+
+    @JSONWebService(value = "add-school-admin", method = "GET")
+    public JSONObject addSchoolAdmin(long userId, long schoolId) {
+        JSONObject result = JSONFactoryUtil.createJSONObject();
+
+        try {
+            User user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+            logger.info("User " + user.getUserId() + " adds user " + userId + " as school admin for school " + schoolId);
+
+            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
+                    || RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+        } catch (Exception e) {
+            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        }
+
+        try {
+            SchoolAdminLocalServiceUtil.addSchoolAdmin(schoolId, userId);
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error while saving school admins for schoolId " + schoolId, e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+        
+        return result;
+    }
+    
+    @JSONWebService(value = "remove-school-admin", method = "GET")
+    public JSONObject removeSchoolAdmin(long userId, long schoolId) {
+
+        JSONObject result = JSONFactoryUtil.createJSONObject();
+
+        try {
+            User user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+            logger.info("User " + user.getUserId() + " removes user " + userId + " from school admin for school " + schoolId);
+
+            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
+                    || RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+        } catch (Exception e) {
+            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        }
+
+        try {
+            SchoolAdminLocalServiceUtil.removeSchoolAdmin(schoolId, userId);
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error while fetching school admins for schoolId " + schoolId, e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+        
+        return result;
+    }
+
+}

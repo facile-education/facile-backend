@@ -4,4 +4,87 @@
 <service-builder dependency-injector="ds" package-path="com.weprode.nero.user">
 	<namespace>User</namespace>
 
+	<entity name="UserSearch" local-service="true" remote-service="true" />
+
+	<entity name="UserPassword" local-service="false" remote-service="true" />
+
+	<entity name="UserContact" local-service="true" remote-service="false">
+		<column name="contactId" type="long" primary="true" />
+		<column name="userId" type="long"/>
+
+		<column name="middleNames" type="String"/>
+		<column name="birthName" type="String"/>
+		<column name="address" type="String"/>
+		<column name="isAddressAuthorized" type="boolean"/>
+		<column name="mail" type="String"/>
+		<column name="isMailAuthorized" type="boolean"/>
+		<column name="mobilePhone" type="String"/>
+		<column name="mobilePhoneSMS" type="String"/>
+		<column name="homePhone" type="String"/>
+		<column name="proPhone" type="String"/>
+		<column name="familyLink" type="String"/>
+
+		<finder return-type="Contact" name="userId">
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+
+	<entity name="LDAPMapping" local-service="true" remote-service="false">
+		<column name="UserId" type="long" primary="true" />
+		<column name="EntPersonJointure" type="String" />
+		<column name="UID" type="String" />
+		<column name="INE" type="String" />
+		<column name="EntEleveStructRattachId" type="String" />
+
+		<finder return-type="LDAPMapping" name="UID">
+			<finder-column name="UID"/>
+		</finder>
+
+		<finder return-type="Collection" name="EntEleveStructRattachId">
+			<finder-column name="EntEleveStructRattachId"/>
+		</finder>
+
+		<finder return-type="LDAPMapping" name="EntPersonJointure">
+			<finder-column name="EntPersonJointure"/>
+		</finder>
+	</entity>
+
+	<entity name="UserUtils" local-service="true" remote-service="false"/>
+
+	<entity name="UserRelationship" local-service="true" remote-service="false">
+		<column name="childUserId" type="long" primary="true" />
+		<column name="parentUserId" type="long" primary="true" />
+
+		<finder return-type="Collection" name="childUserId">
+			<finder-column name="childUserId"/>
+		</finder>
+
+		<finder return-type="Collection" name="parentUserId">
+			<finder-column name="parentUserId"/>
+		</finder>
+	</entity>
+
+	<!-- old but not ready to be removed yet -->
+	<entity name="UserManagement" local-service="true" remote-service="true" />
+
+	<entity name="Affectation" local-service="true" remote-service="true">
+		<column name="affectationId" type="long" primary="true" />
+		<column name="userId" type="long" />
+		<column name="orgId" type="long" />
+		<column name="schoolId" type="long" />
+		<column name="type" type="int" />
+		<column name="adminUserId" type="long"/>
+		<column name="affectationDate" type="Date"/>
+		<column name="expirationDate" type="Date"/>
+
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+		<finder return-type="Collection" name="schoolId">
+			<finder-column name="schoolId" />
+		</finder>
+	</entity>
+
+	<entity name="SchoolAdmin" local-service="true" remote-service="true" />
+
 </service-builder>
