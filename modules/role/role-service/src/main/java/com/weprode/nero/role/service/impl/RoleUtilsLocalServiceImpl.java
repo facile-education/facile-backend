@@ -674,9 +674,8 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	 	return roleStr;
 	 }
 
-/*	 public List<Role> getUserEntRoles (User user) {
-
-	 	List<Role> userEntRoles = new ArrayList<Role>();
+	 public List<Role> getUserEntRoles(User user) {
+	 	List<Role> userEntRoles = new ArrayList<>();
 
 	 	if (isStudent(user)) {
 	 		userEntRoles.add(getStudentRole());
@@ -719,7 +718,7 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	 	}
 
 	 	return userEntRoles;
-	 }*/
+	 }
 
 /*	public JSONObject getAllEntRolesAsJson(User user, boolean addEmptyRole) {
 

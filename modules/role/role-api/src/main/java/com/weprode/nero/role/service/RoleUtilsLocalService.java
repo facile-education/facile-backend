@@ -156,6 +156,9 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public Role getTeacherRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Role> getUserEntRoles(User user);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Role> getUserSearchableRoles(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -210,6 +210,13 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.liferay.portal.kernel.model.Role> getUserEntRoles(
+		com.liferay.portal.kernel.model.User user) {
+
+		return _roleUtilsLocalService.getUserEntRoles(user);
+	}
+
+	@Override
 	public java.util.List<com.liferay.portal.kernel.model.Role>
 		getUserSearchableRoles(com.liferay.portal.kernel.model.User user) {
 

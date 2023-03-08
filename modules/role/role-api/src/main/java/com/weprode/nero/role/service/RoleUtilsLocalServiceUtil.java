@@ -194,6 +194,12 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().getTeacherRole();
 	}
 
+	public static List<com.liferay.portal.kernel.model.Role> getUserEntRoles(
+		com.liferay.portal.kernel.model.User user) {
+
+		return getService().getUserEntRoles(user);
+	}
+
 	public static List<com.liferay.portal.kernel.model.Role>
 		getUserSearchableRoles(com.liferay.portal.kernel.model.User user) {
 
