@@ -1,5 +1,5 @@
 Bundle-Name: role-api
-Bundle-SymbolicName: role.api
+Bundle-SymbolicName: com.weprode.nero.role.api
 Bundle-Version: 1.0.0
 Export-Package:\
 	com.weprode.nero.role.service,\
