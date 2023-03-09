@@ -25,6 +25,7 @@ public class JSONConstants {
     public static final String USERS = "users";
     public static final String USER_ID = "userId";
     public static final String EMAIL = "email";
+    public static final String MAIL = "mail";
     public static final String USER_NAME = "userName";
 
     public static final String FIRST_NAME = "firstName";
@@ -40,12 +41,33 @@ public class JSONConstants {
     public static final String IS_DIRECTION = "isDirection";
     public static final String IS_PARENT = "isParent";
     public static final String IS_STUDENT = "isStudent";
+    public static final String IS_ADMINISTRATOR = "isAdministrator";
+    public static final String IS_ENT_ADMIN = "isENTAdmin";
+    public static final String IS_LOCAL_ADMIN = "isLocalAdmin";
+    public static final String IS_PERSONAL = "isPersonal";
+    public static final String IS_DOYEN = "isDoyen";
+    public static final String IS_DIRECTION_MEMBER = "isDirectionMember";
+    public static final String IS_SECRETARIAT = "isSecretariat";
     public static final String TEACHER_ID = "teacherId";
     public static final String STUDENT_ID = "studentId";
     public static final String TEACHERS = "teachers";
     public static final String STUDENTS = "students";
     public static final String NB_TOTAL_USERS = "nbTotalUsers";
     public static final String CANDIDATES = "candidates";
+    public static final String CHILDREN = "children";
+    public static final String PICTURE = "picture";
+    public static final String THEME_COLOR = "themeColor";
+    public static final String HAS_WEBDAV_ENABLED = "hasWebdavEnabled";
+    public static final String MOBILE_PHONE = "mobilePhone";
+    public static final String SMS_PHONE = "SMSPhone";
+    public static final String HOME_PHONE = "homePhone";
+    public static final String PRO_PHONE = "proPhone";
+    public static final String ADDRESS = "address";
+    public static final String REPORT_FREQUENCY = "reportFrequency";
+    public static final String IS_LOCAL_USER = "isLocalUser";
+    public static final String IS_WEBDAV_ENABLED = "isWebdavEnabled";
+    public static final String WEBDAV_URL = "webdavUrl";
+
 
     // Organization
     public static final String ORG_ID = "orgId";
@@ -75,6 +97,9 @@ public class JSONConstants {
     public static final String SCHOOL_ID = "schoolId";
     public static final String SCHOOL_NAME = "schoolName";
     public static final String SCHOOLS = "schools";
+    public static final String IS_PREFERED = "isPrefered";
+    public static final String USER_SCHOOLS = "userSchools";
+
 
     // Volee
     public static final String VOLEES = "volees";

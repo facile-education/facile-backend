@@ -49,7 +49,7 @@
 		</finder>
 	</entity>
 
-	<entity name="UserUtils" local-service="true" remote-service="false"/>
+	<entity name="UserUtils" local-service="true" remote-service="true"/>
 
 	<entity name="UserRelationship" local-service="true" remote-service="false">
 		<column name="childUserId" type="long" primary="true" />
