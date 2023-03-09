@@ -2,6 +2,7 @@ Bundle-Name: user-api
 Bundle-SymbolicName: com.weprode.nero.user.api
 Bundle-Version: 1.0.0
 Export-Package:\
+    com.weprode.nero.user.comparator,\
 	com.weprode.nero.user.exception,\
 	com.weprode.nero.user.model,\
 	com.weprode.nero.user.service,\
