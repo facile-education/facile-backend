@@ -1,5 +1,6 @@
 package com.weprode.nero.organization.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -19,10 +20,15 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.organization.service.base.UserOrgsLocalServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.organization.model.UserOrgs",
+        service = AopService.class
+)
 public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(UserOrgsLocalServiceImpl.class);

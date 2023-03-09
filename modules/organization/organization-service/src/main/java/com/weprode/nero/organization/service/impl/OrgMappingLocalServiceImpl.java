@@ -1,5 +1,6 @@
 package com.weprode.nero.organization.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -9,7 +10,12 @@ import com.weprode.nero.organization.exception.NoSuchOrgMappingException;
 import com.weprode.nero.organization.model.OrgMapping;
 import com.weprode.nero.organization.service.base.OrgMappingLocalServiceBaseImpl;
 import com.weprode.nero.organization.service.persistence.OrgMappingUtil;
+import org.osgi.service.component.annotations.Component;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.organization.model.OrgMapping",
+        service = AopService.class
+)
 public class OrgMappingLocalServiceImpl extends OrgMappingLocalServiceBaseImpl {
     
     private static final Log logger = LogFactoryUtil.getLog(OrgMappingLocalServiceImpl.class);

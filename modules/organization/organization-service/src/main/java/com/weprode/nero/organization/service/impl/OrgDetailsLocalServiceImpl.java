@@ -1,16 +1,22 @@
 package com.weprode.nero.organization.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.model.OrgDetails;
 import com.weprode.nero.organization.service.base.OrgDetailsLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * The implementation of the organization details local service.
  *
  * @author Cedric Lecarpentier
  */
+@Component(
+        property = "model.class.name=com.weprode.nero.organization.model.OrgDetails",
+        service = AopService.class
+)
 public class OrgDetailsLocalServiceImpl extends OrgDetailsLocalServiceBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(OrgDetailsLocalServiceImpl.class);
 

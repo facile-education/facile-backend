@@ -1,6 +1,7 @@
 package com.weprode.nero.organization.service.impl;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchOrganizationException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -24,12 +25,17 @@ import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.base.OrgUtilsLocalServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.organization.model.OrgUtils",
+        service = AopService.class
+)
 public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(OrgUtilsLocalServiceImpl.class);
 

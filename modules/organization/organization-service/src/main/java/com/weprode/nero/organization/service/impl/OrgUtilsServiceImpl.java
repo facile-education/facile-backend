@@ -16,14 +16,24 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.organization.service.OrgUtilsService;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.organization.service.base.OrgUtilsServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component(
+        property = {
+                "json.web.service.context.name=organization",
+                "json.web.service.context.path=OrgUtils"
+        },
+        service = OrgUtilsService.class
+)
 public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
+
     private static final Log logger = LogFactoryUtil.getLog(OrgUtilsServiceImpl.class);
 
     @JSONWebService(value = "get-visibility-schools", method = "GET")
