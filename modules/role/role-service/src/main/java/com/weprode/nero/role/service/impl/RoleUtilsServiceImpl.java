@@ -16,18 +16,27 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsService;
+import com.weprode.nero.role.service.base.RoleUtilsServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import static com.liferay.portal.kernel.security.auth.GuestOrUserUtil.getGuestOrUser;
 
-@JSONWebService
-public class RoleUtilsServiceImpl {
+@Component(
+		property = {
+				"json.web.service.context.name=role",
+				"json.web.service.context.path=RoleUtils"
+		},
+		service = RoleUtilsService.class
+)
+public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(RoleUtilsServiceImpl.class);
 
 	@JSONWebService(value = "get-main-roles", method = "GET")
 	public JSONObject getMainRoles() {
-		
 		JSONObject result = JSONFactoryUtil.createJSONObject();
+
 		User agent;
 		try {
 			agent = getGuestOrUser();
@@ -63,8 +72,8 @@ public class RoleUtilsServiceImpl {
 
 	@JSONWebService(value = "get-local-user-roles", method = "GET")
 	public JSONObject getLocalUserRoles() {
-
 		JSONObject result = JSONFactoryUtil.createJSONObject();
+
 		User adminUser;
 		try {
 			adminUser = getGuestOrUser();
@@ -102,7 +111,6 @@ public class RoleUtilsServiceImpl {
 	// Used in app manager (includes admin roles and if role can be apply to a class org)
 	@JSONWebService(value = "get-broadcast-roles", method = "GET")
 	public JSONObject getBroadcastRoles() {
-
 		JSONObject result = JSONFactoryUtil.createJSONObject();
 
 		User user;
@@ -153,6 +161,7 @@ public class RoleUtilsServiceImpl {
 			logger.error("Error fetching schools", e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
+
 		return result;
 	}
 
