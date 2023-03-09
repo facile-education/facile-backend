@@ -1,10 +1,16 @@
 package com.weprode.nero.user.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.weprode.nero.user.exception.NoSuchContactException;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.base.UserContactLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.user.model.UserContact",
+        service = AopService.class
+)
 public class UserContactLocalServiceImpl extends UserContactLocalServiceBaseImpl {
 
     public UserContact addUserContact() throws SystemException {

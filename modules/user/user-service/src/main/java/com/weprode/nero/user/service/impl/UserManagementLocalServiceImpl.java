@@ -3,6 +3,7 @@ package com.weprode.nero.user.service.impl;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -18,11 +19,16 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserManagementLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import javax.mail.internet.InternetAddress;
 import java.util.Calendar;
 import java.util.Date;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.user.model.UserManagement",
+        service = AopService.class
+)
 public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(UserManagementLocalServiceImpl.class);

@@ -1,5 +1,6 @@
 package com.weprode.nero.user.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -15,11 +16,16 @@ import com.weprode.nero.user.model.Affectation;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
 import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
 import com.weprode.nero.user.service.base.AffectationLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.user.model.Affectation",
+        service = AopService.class
+)
 public class AffectationLocalServiceImpl extends AffectationLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(AffectationLocalServiceImpl.class);

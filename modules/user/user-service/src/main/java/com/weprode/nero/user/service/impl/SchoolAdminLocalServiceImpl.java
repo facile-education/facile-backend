@@ -1,5 +1,6 @@
 package com.weprode.nero.user.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -12,10 +13,15 @@ import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.SchoolAdminLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.user.model.SchoolAdmin",
+        service = AopService.class
+)
 public class SchoolAdminLocalServiceImpl extends SchoolAdminLocalServiceBaseImpl {
 
     private final Log logger = LogFactoryUtil.getLog(SchoolAdminLocalServiceImpl.class);

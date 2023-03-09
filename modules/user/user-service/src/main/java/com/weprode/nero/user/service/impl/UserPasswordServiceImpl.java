@@ -15,10 +15,19 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
+import com.weprode.nero.user.service.UserPasswordService;
 import com.weprode.nero.user.service.base.UserPasswordServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import javax.mail.internet.InternetAddress;
 
+@Component(
+        property = {
+                "json.web.service.context.name=user",
+                "json.web.service.context.path=UserPassword"
+        },
+        service = UserPasswordService.class
+)
 public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(UserPasswordServiceImpl.class);

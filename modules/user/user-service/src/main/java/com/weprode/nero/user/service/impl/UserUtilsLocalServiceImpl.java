@@ -1,5 +1,6 @@
 package com.weprode.nero.user.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.exception.UserPasswordException;
 import com.liferay.portal.kernel.log.Log;
@@ -13,11 +14,16 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserUtilsLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.*;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.user.model.UserUtils",
+        service = AopService.class
+)
 public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(UserUtilsLocalServiceImpl.class);

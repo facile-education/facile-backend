@@ -16,12 +16,20 @@ import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchService;
 import com.weprode.nero.user.service.base.UserSearchServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@JSONWebService
+@Component(
+        property = {
+                "json.web.service.context.name=user",
+                "json.web.service.context.path=UserSearch"
+        },
+        service = UserSearchService.class
+)
 public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(UserSearchServiceImpl.class);

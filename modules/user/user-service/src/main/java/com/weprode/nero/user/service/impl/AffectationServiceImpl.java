@@ -20,12 +20,21 @@ import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.Affectation;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
+import com.weprode.nero.user.service.AffectationService;
 import com.weprode.nero.user.service.base.AffectationServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Component(
+        property = {
+                "json.web.service.context.name=user",
+                "json.web.service.context.path=Affectation"
+        },
+        service = AffectationService.class
+)
 public class AffectationServiceImpl extends AffectationServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(AffectationServiceImpl.class);

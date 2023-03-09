@@ -12,11 +12,20 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.SchoolAdminLocalServiceUtil;
+import com.weprode.nero.user.service.SchoolAdminService;
 import com.weprode.nero.user.service.base.SchoolAdminServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component(
+        property = {
+                "json.web.service.context.name=user",
+                "json.web.service.context.path=SchoolAdmin"
+        },
+        service = SchoolAdminService.class
+)
 public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(SchoolAdminServiceImpl.class);

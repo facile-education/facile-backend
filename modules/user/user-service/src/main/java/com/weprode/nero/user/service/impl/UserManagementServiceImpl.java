@@ -21,13 +21,22 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.comparator.UserLastNameCaseInsensitiveComparator;
 import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
+import com.weprode.nero.user.service.UserManagementService;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserManagementServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component(
+        property = {
+                "json.web.service.context.name=user",
+                "json.web.service.context.path=UserManagement"
+        },
+        service = UserManagementService.class
+)
 public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(UserManagementServiceImpl.class);   
