@@ -1,11 +1,13 @@
 package com.weprode.nero.group.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.group.model.GroupMembership;
 import com.weprode.nero.group.service.base.GroupMembershipLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,6 +16,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.group.model.GroupMembership",
+        service = AopService.class
+)
 public class GroupMembershipLocalServiceImpl extends GroupMembershipLocalServiceBaseImpl {
 
     private final Log logger = LogFactoryUtil.getLog(GroupMembershipLocalServiceImpl.class);

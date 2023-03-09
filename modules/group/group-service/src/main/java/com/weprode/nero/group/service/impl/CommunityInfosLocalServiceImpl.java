@@ -1,5 +1,6 @@
 package com.weprode.nero.group.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -11,10 +12,15 @@ import com.weprode.nero.group.model.CommunityInfos;
 import com.weprode.nero.group.service.base.CommunityInfosLocalServiceBaseImpl;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component(
+        property = "model.class.name=com.nero.group.model.CommunityInfos",
+        service = AopService.class
+)
 public class CommunityInfosLocalServiceImpl extends CommunityInfosLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(CommunityInfosLocalServiceImpl.class);

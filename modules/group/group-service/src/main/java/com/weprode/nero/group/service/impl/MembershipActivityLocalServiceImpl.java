@@ -1,5 +1,6 @@
 package com.weprode.nero.group.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -15,6 +16,7 @@ import com.weprode.nero.group.model.MembershipActivity;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.MembershipActivityLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,6 +25,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.group.model.MembershipActivity",
+        service = AopService.class
+)
 public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalServiceBaseImpl {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";

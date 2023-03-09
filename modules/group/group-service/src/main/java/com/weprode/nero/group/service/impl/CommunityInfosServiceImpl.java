@@ -18,9 +18,11 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.group.model.CommunityInfos;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
+import com.weprode.nero.group.service.CommunityInfosService;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.CommunityInfosServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,6 +30,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component(
+        property = {
+                "json.web.service.context.name=groupe",
+                "json.web.service.context.path=CommunityInfos"
+        },
+        service = CommunityInfosService.class
+)
 public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(CommunityInfosServiceImpl.class);

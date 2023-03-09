@@ -20,6 +20,7 @@ import com.weprode.nero.group.model.CommunityInfos;
 import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.GroupActivityLocalServiceUtil;
+import com.weprode.nero.group.service.GroupUtilsService;
 import com.weprode.nero.group.service.base.GroupUtilsServiceBaseImpl;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.model.OrgDetails;
@@ -28,6 +29,7 @@ import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.comparator.UserLastNameCaseInsensitiveComparator;
+import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,6 +37,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Component(
+        property = {
+                "json.web.service.context.name=group",
+                "json.web.service.context.path=GroupUtils"
+        },
+        service = GroupUtilsService.class
+)
 public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(GroupUtilsServiceImpl.class);

@@ -4,6 +4,7 @@ import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -15,6 +16,7 @@ import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupUtilsLocalServiceBaseImpl;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,6 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.group.model.GroupUtils",
+        service = AopService.class
+)
 public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(GroupUtilsLocalServiceImpl.class);

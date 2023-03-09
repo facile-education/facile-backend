@@ -1,5 +1,6 @@
 package com.weprode.nero.group.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -11,9 +12,14 @@ import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.model.MembershipActivity;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupActivityLocalServiceBaseImpl;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.*;
 
+@Component(
+        property = "model.class.name=com.weprode.nero.group.model.GroupActivity",
+        service = AopService.class
+)
 public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(GroupActivityLocalServiceImpl.class);

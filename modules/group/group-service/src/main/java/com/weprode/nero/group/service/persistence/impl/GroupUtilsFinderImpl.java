@@ -13,12 +13,14 @@ import com.liferay.portal.kernel.service.persistence.BasePersistence;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.weprode.nero.group.model.GroupUtils;
 import com.weprode.nero.group.service.persistence.GroupUtilsFinder;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Component(service = GroupUtilsFinder.class)
 public class GroupUtilsFinderImpl extends GroupUtilsFinderBaseImpl
         implements GroupUtilsFinder {
 
