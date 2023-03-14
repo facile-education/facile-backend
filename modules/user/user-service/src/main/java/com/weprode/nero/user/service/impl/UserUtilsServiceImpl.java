@@ -80,15 +80,15 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
         // Roles
         result.put(JSONConstants.IS_ADMINISTRATOR, RoleUtilsLocalServiceUtil.isAdministrator(user));
-//        result.put(JSONConstants.IS_ENT_ADMIN, RoleUtilsLocalServiceUtil.isENTAdmin(user));
-//        result.put(JSONConstants.IS_LOCAL_ADMIN, RoleUtilsLocalServiceUtil.isSchoolAdmin(user));
-//        result.put(JSONConstants.IS_STUDENT, RoleUtilsLocalServiceUtil.isStudent(user));
-//        result.put(JSONConstants.IS_PARENT, RoleUtilsLocalServiceUtil.isParent(user));
-//        result.put(JSONConstants.IS_TEACHER, RoleUtilsLocalServiceUtil.isTeacher(user));
-//        result.put(JSONConstants.IS_PERSONAL, RoleUtilsLocalServiceUtil.isPersonal(user));
-//        result.put(JSONConstants.IS_DOYEN, RoleUtilsLocalServiceUtil.isDoyen(user));
-//        result.put(JSONConstants.IS_DIRECTION_MEMBER, RoleUtilsLocalServiceUtil.isDirectionMember(user));
-//        result.put(JSONConstants.IS_SECRETARIAT, RoleUtilsLocalServiceUtil.isSecretariat(user));
+        result.put(JSONConstants.IS_ENT_ADMIN, RoleUtilsLocalServiceUtil.isENTAdmin(user));
+        result.put(JSONConstants.IS_LOCAL_ADMIN, RoleUtilsLocalServiceUtil.isSchoolAdmin(user));
+        result.put(JSONConstants.IS_STUDENT, RoleUtilsLocalServiceUtil.isStudent(user));
+        result.put(JSONConstants.IS_PARENT, RoleUtilsLocalServiceUtil.isParent(user));
+        result.put(JSONConstants.IS_TEACHER, RoleUtilsLocalServiceUtil.isTeacher(user));
+        result.put(JSONConstants.IS_PERSONAL, RoleUtilsLocalServiceUtil.isPersonal(user));
+        result.put(JSONConstants.IS_DOYEN, RoleUtilsLocalServiceUtil.isDoyen(user));
+        result.put(JSONConstants.IS_DIRECTION_MEMBER, RoleUtilsLocalServiceUtil.isDirectionMember(user));
+        result.put(JSONConstants.IS_SECRETARIAT, RoleUtilsLocalServiceUtil.isSecretariat(user));
 
         // Children
         List<User> children = UserRelationshipLocalServiceUtil.getChildren(user.getUserId());
