@@ -111,6 +111,15 @@ public class JSONConstants {
     // Activity
     public static final String ACTIVITIES = "activities";
 
+    // Menu
+    public static final String MENU = "menu";
+    public static final String EXPANDED = "expanded";
+    public static final String ICON = "icon";
+    public static final String I18N_KEY = "i18nKey";
+    public static final String IS_LANDING_PAGE = "isLandingPage";
+    public static final String POSITION = "position";
+    public static final String COMPONENT = "component";
+
     // Success
     public static final String SUCCESS = "success";
 

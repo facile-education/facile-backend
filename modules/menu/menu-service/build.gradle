@@ -1,0 +1,12 @@
+dependencies {
+	compile project(":modules:menu:menu-api")
+	compile project(":modules:commons")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+}
+
+buildService {
+	apiDir = "../menu-api/src/main/java"
+}
+
+group = "com.weprode.nero.menu"

@@ -1,0 +1,8 @@
+Bundle-Name: menu-api
+Bundle-SymbolicName: com.weprode.nero.menu.api
+Bundle-Version: 1.0.0
+Export-Package:\
+    com.weprode.nero.menu.enums,\
+	com.weprode.nero.menu.service
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../menu-service/service.xml
