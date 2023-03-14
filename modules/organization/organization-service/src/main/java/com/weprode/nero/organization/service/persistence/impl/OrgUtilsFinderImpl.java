@@ -19,7 +19,7 @@ import org.osgi.service.component.annotations.Reference;
 import java.util.List;
 
 @Component(service = OrgUtilsFinder.class)
-public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
+public class OrgUtilsFinderImpl extends BasePersistenceImpl<OrgUtils>
         implements OrgUtilsFinder {
 
     private static final Log logger = LogFactoryUtil.getLog(OrgUtilsFinderImpl.class);
@@ -81,7 +81,7 @@ public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
             QueryPos qPos = QueryPos.getInstance(q);
             qPos.add(userId);
 
-            return (List<Organization>) QueryUtil.list(q, getDialect(), begin, end);
+            return (List<Organization>) QueryUtil.list(q, getDialect(), begin, end, false);
 
         } catch (Exception e) {
             logger.error("Error when getting user's organizations : userId=" + userId +
@@ -126,7 +126,7 @@ public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
             QueryPos qPos = QueryPos.getInstance(q);
             qPos.add(schoolId);
 
-            return (List<Organization>) QueryUtil.list(q, getDialect(), begin, end);
+            return (List<Organization>) QueryUtil.list(q, getDialect(), begin, end, false);
         } catch (Exception e) {
             logger.error("Error when getting school's organizations : schoolId="+schoolId+", types="+types.toString()+", roles="+roles.toString(), e);
         } finally {
@@ -157,7 +157,7 @@ public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
             QueryPos qPos = QueryPos.getInstance(q);
             qPos.add(type);
 
-            return (List<Organization>) QueryUtil.list(q, getDialect(), begin, end);
+            return (List<Organization>) QueryUtil.list(q, getDialect(), begin, end, false);
         } catch (Exception e) {
             logger.error("Custom query failed", e);
         } finally {

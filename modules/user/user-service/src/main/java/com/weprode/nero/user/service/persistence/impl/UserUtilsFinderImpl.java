@@ -9,6 +9,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
+import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.weprode.nero.user.model.UserUtils;
@@ -22,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component(service = UserUtilsFinder.class)
-public class UserUtilsFinderImpl extends UserUtilsFinderBaseImpl
+public class UserUtilsFinderImpl extends BasePersistenceImpl<UserUtils>
         implements UserUtilsFinder {
 
     private static final Log logger = LogFactoryUtil.getLog(UserUtilsFinderImpl.class);
@@ -37,10 +38,10 @@ public class UserUtilsFinderImpl extends UserUtilsFinderBaseImpl
 
     public static final String COUNT_USERS =
             UserUtilsFinder.class.getName() +
-                    "countUsers";
+                    ".countUsers";
     public static final String FIND_USERS =
             UserUtilsFinder.class.getName() +
-                    "findUsers";
+                    ".findUsers";
 
     public static final String JOIN_STRING = "[$JOIN$]";
     public static final String WHERE_STRING = "[$WHERE$]";
@@ -153,7 +154,7 @@ public class UserUtilsFinderImpl extends UserUtilsFinderBaseImpl
 
             q.addEntity("u", PortalClassLoaderUtil.getClassLoader().loadClass(USER_CLASS_NAME));
 
-            return (List<User>) QueryUtil.list(q, getDialect(), start, stop);
+            return (List<User>) QueryUtil.list(q, getDialect(), start, stop, false);
         } catch (Exception e) {
             logger.error("Error when executing custom SQL query.", e);
         } finally {

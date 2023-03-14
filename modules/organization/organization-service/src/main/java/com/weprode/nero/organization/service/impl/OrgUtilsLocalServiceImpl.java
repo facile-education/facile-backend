@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.organization.constants.OrgConstants;
+import com.weprode.nero.organization.exception.NoSuchOrgDetailsException;
 import com.weprode.nero.organization.model.OrgDetails;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
@@ -61,7 +62,18 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
     }
 
     public Organization getOrCreateRootOrg(long companyId) throws PortalException, SystemException {
-        return OrganizationLocalServiceUtil.getOrganization(companyId, PropsUtil.get(NeroSystemProperties.ROOT_ORGANIZATION_NAME));
+        String orgRootName = PropsUtil.get(NeroSystemProperties.ROOT_ORGANIZATION_NAME);
+
+        try {
+            return OrganizationLocalServiceUtil.getOrganization(companyId, orgRootName);
+        } catch (NoSuchOrganizationException e) {
+            // Do not create org root ?
+            long defUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
+            return OrganizationLocalServiceUtil.addOrganization(defUserId, OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
+                    orgRootName, OrganizationConstants.TYPE_ORGANIZATION,
+                    RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
+                    StringPool.BLANK, true, new ServiceContext());
+        }
     }
 
     public Organization getOrCreateSchool(long companyId, String name) throws PortalException, SystemException {
@@ -167,15 +179,15 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
         }
 
         // Create or update OrgDetails
-        OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(org.getOrganizationId());
-        if (orgDetails == null) {
-            OrgDetailsLocalServiceUtil.createOrgDetails(org.getOrganizationId(), schoolId, orgName, "", OrgConstants.NO_ROLE, type, false);
-        } else {
+        try {
+            OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(org.getOrganizationId());
             // Update type if necessary
             if (orgDetails.getType() != type) {
                 orgDetails.setType(type);
                 OrgDetailsLocalServiceUtil.updateOrgDetails(orgDetails);
             }
+        } catch (NoSuchOrgDetailsException e) {
+            OrgDetailsLocalServiceUtil.createOrgDetails(org.getOrganizationId(), schoolId, orgName, "", OrgConstants.NO_ROLE, type, false);
         }
 
         return org;
