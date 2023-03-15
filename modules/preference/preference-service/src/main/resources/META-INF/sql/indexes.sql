@@ -1,0 +1,1 @@
+create index IX_6D954610 on Preference_UserProperties (etabId, manualAccount);

@@ -16,13 +16,13 @@ import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.model.Subject;
 import com.weprode.nero.eel.synchronization.service.SubjectLocalServiceUtil;
 import com.weprode.nero.eel.synchronization.service.TeacherSubjectLocalServiceUtil;
-import com.weprode.nero.group.model.CommunityInfos;
-import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.model.OrgMapping;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.LDAPMapping;
@@ -44,9 +44,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
-
-import static com.liferay.portal.security.ldap.constants.LegacyLDAPPropsKeys.LDAP_FACTORY_INITIAL;
-import static com.liferay.portal.security.ldap.constants.LegacyLDAPPropsKeys.LDAP_REFERRAL;
 
 /**
  * Main class for GVE synchronization process
@@ -205,12 +202,6 @@ public class GVESynchronizationManager {
 
                 String className = school.getName() + " - " + classResult.getName().substring(3);
                 Organization classOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(companyId, className, school.getOrganizationId(), OrgConstants.CLASS_TYPE);
-
-                // Classes orgs should not be accessible from groups service -> deactivate docs
-                CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(classOrg.getGroupId());
-                communityInfos.setIsPedagogical(true);
-                CommunityInfosLocalServiceUtil.updateCommunityInfos(communityInfos);
-
 
                 newClassOrgIds.add(classOrg.getOrganizationId());
 
@@ -375,11 +366,6 @@ public class GVESynchronizationManager {
                 String voleeName = school.getName() + " - " + volee;
                 Organization voleeOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(companyId, voleeName, school.getOrganizationId(), OrgConstants.VOLEE_TYPE);
 
-                // Volees orgs should not be accessible from groups service -> deactivate docs
-                CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(voleeOrg.getGroupId());
-                communityInfos.setIsPedagogical(false);
-                CommunityInfosLocalServiceUtil.updateCommunityInfos(communityInfos);
-
                 String classDn = classResult.getName() + "," + classesDn;
 
                 // Fetch current members in LDAP
@@ -438,10 +424,9 @@ public class GVESynchronizationManager {
     private void registerStudentToSchool(User student, Organization school) {
         // Set rattach school
         try {
-            // TODO Preferences
-            /*UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(student.getUserId());
+            UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(student.getUserId());
             userProp.setEtabId(school.getOrganizationId());
-            UserPropertiesLocalServiceUtil.updateUserProperties(userProp);*/
+            UserPropertiesLocalServiceUtil.updateUserProperties(userProp);
         } catch (Exception e) {
             logger.debug(e);
         }
@@ -454,10 +439,9 @@ public class GVESynchronizationManager {
     private void registerTeacherToSchool(User teacher, Organization school) {
         // Set rattach school
         try {
-            // TODO Preferences
-            /*UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(teacher.getUserId());
+            UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(teacher.getUserId());
             userProp.setEtabId(school.getOrganizationId());
-            UserPropertiesLocalServiceUtil.updateUserProperties(userProp);*/
+            UserPropertiesLocalServiceUtil.updateUserProperties(userProp);
         } catch (Exception e) {
             logger.debug(e);
         }
@@ -477,10 +461,9 @@ public class GVESynchronizationManager {
 
         // Set rattach school
         try {
-            // TODO Preferences
-            /*UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(personal.getUserId());
+            UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(personal.getUserId());
             userProp.setEtabId(school.getOrganizationId());
-            UserPropertiesLocalServiceUtil.updateUserProperties(userProp);*/
+            UserPropertiesLocalServiceUtil.updateUserProperties(userProp);
         } catch (Exception e) {
             logger.debug(e);
         }
@@ -1011,9 +994,6 @@ public class GVESynchronizationManager {
                 user.setReminderQueryAnswer("@new@");
                 UserLocalServiceUtil.updateUser(user);
 
-                // Create default user properties
-                createUserProperties(user);
-
                 // Create default user notifications
                 // TODO Preferences
                 /*NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
@@ -1027,7 +1007,6 @@ public class GVESynchronizationManager {
                 LDAPMapping ldapMapping = LDAPMappingLocalServiceUtil.createLDAPMapping(user.getUserId());
                 ldapMapping.setUID(uid.replace("NBDS-", ""));
                 LDAPMappingLocalServiceUtil.updateLDAPMapping(ldapMapping);
-
             } catch (Exception e) {
                 logger.error("Problem adding user with screen name " + shortCn + " and email address " + mail, e);
                 return null;
@@ -1079,17 +1058,6 @@ public class GVESynchronizationManager {
         }*/
     }
 
-    private void createUserProperties(User user) {
-        try {
-            // TODO Preferences
-            /*UserProperties up = UserPropertiesLocalServiceUtil.addUserProperties(user.getUserId());
-            up.setManualAccount(false);
-            UserPropertiesLocalServiceUtil.updateUserProperties(up);*/
-        } catch (Exception e) {
-            logger.error("Error while updating user properties for user "+user.getUserId());
-        }
-    }
-
     private void createContactProperties(User user) {
         try {
             String suffix = PropsUtil.get(NeroSystemProperties.DEFAUT_MAIL_SUFFIX);
@@ -1109,7 +1077,6 @@ public class GVESynchronizationManager {
             logger.error("Error while updating user contact properties for user "+user.getUserId());
         }
     }
-
 
     private void createServiceNotifications(User user) {
 
@@ -2486,15 +2453,15 @@ public class GVESynchronizationManager {
     private void setSynchroDate(User user) {
         // Add user in the 'done' list
         processedUserIds.add(user.getUserId());
+
         try {
             if (user.getStatus() == WorkflowConstants.STATUS_INACTIVE) {
                 UserLocalServiceUtil.updateStatus(user.getUserId(), WorkflowConstants.STATUS_APPROVED, new ServiceContext());
                 logger.info("Reactivating user " + user.getFullName());
             }
-            // TODO Preferences
-            /*UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
+            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             userProperties.setLastSynchroDate(new Date());
-            UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);*/
+            UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
         } catch (Exception e) {
             logger.error("Error setting synchro date to user " + user.getUserId(), e);
         }
@@ -2519,11 +2486,10 @@ public class GVESynchronizationManager {
                     continue;
                 }
                 logger.info("Student " + student.getFullName() + " may be deactivated");
-                // TODO Preferences
-                /*UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(student.getUserId());
+                UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(student.getUserId());
                 if (userProperties.getManualAccount()) {
                     continue;
-                }*/
+                }
                 UserLocalServiceUtil.updateStatus(student.getUserId(), WorkflowConstants.STATUS_INACTIVE, new ServiceContext());
                 logger.info("Deactivated student " + student.getUserId());
                 List<User> parents = UserRelationshipLocalServiceUtil.getParents(student.getUserId());

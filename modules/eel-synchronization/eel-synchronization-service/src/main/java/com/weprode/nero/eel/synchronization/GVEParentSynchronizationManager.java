@@ -21,6 +21,8 @@ import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.*;
@@ -529,12 +531,11 @@ public class GVEParentSynchronizationManager {
             // Set rattach school
             Organization school = null;
             try {
-                // TODO Preferences
-                /*long childRattachSchoolId = UserPropertiesLocalServiceUtil.getUserProperties(student.getUserId()).getEtabId();
+                long childRattachSchoolId = UserPropertiesLocalServiceUtil.getUserProperties(student.getUserId()).getEtabId();
                 school = OrganizationLocalServiceUtil.getOrganization(childRattachSchoolId);
                 UserProperties parentProps = UserPropertiesLocalServiceUtil.getUserProperties(parent.getUserId());
                 parentProps.setEtabId(childRattachSchoolId);
-                UserPropertiesLocalServiceUtil.updateUserProperties(parentProps);*/
+                UserPropertiesLocalServiceUtil.updateUserProperties(parentProps);
             } catch (Exception e) {
                 logger.debug(e);
             }

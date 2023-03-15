@@ -18,7 +18,10 @@ import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.organization.service.base.UserOrgsLocalServiceBaseImpl;
+import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
@@ -34,27 +37,26 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(UserOrgsLocalServiceImpl.class);
 
     public Organization getEtabRatachement(User user) {
-        // TODO Preferences
-//        try {
-//            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
-//            if (userProperties != null && userProperties.getEtabId() != 0) {
-//                return OrganizationLocalServiceUtil.getOrganization(userProperties.getEtabId());
-//            }
-//
-//            // Else: some parents do not have the ENTPersonStructRattach attribute
-//            // Get rattach school from their first child
-//            List<User> children = UserRelationshipLocalServiceUtil.getChildren(user.getUserId());
-//            if (children != null) {
-//                for (User child : children) {
-//                    UserProperties childProperties = UserPropertiesLocalServiceUtil.getUserProperties(child.getUserId());
-//                    if (childProperties != null && childProperties.getEtabId() != 0) {
-//                        return OrganizationLocalServiceUtil.getOrganization(childProperties.getEtabId());
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            logger.error("Error fetching rattach school for user " + user.getFullName() + e.getMessage());
-//        }
+        try {
+            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
+            if (userProperties != null && userProperties.getEtabId() != 0) {
+                return OrganizationLocalServiceUtil.getOrganization(userProperties.getEtabId());
+            }
+
+            // Else: some parents do not have the ENTPersonStructRattach attribute
+            // Get rattach school from their first child
+            List<User> children = UserRelationshipLocalServiceUtil.getChildren(user.getUserId());
+            if (children != null) {
+                for (User child : children) {
+                    UserProperties childProperties = UserPropertiesLocalServiceUtil.getUserProperties(child.getUserId());
+                    if (childProperties != null && childProperties.getEtabId() != 0) {
+                        return OrganizationLocalServiceUtil.getOrganization(childProperties.getEtabId());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error fetching rattach school for user " + user.getFullName() + e.getMessage());
+        }
 
         return null;
     }

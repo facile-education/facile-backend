@@ -1,0 +1,13 @@
+dependencies {
+	compile project(":modules:preference:preference-api")
+	compile project(":modules:commons")
+	compile project(":modules:user:user-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+}
+
+buildService {
+	apiDir = "../preference-api/src/main/java"
+}
+
+group = "com.weprode.nero.preference"

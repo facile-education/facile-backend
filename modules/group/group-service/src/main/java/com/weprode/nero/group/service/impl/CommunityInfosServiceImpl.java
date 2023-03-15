@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 
 @Component(
         property = {
-                "json.web.service.context.name=groupe",
+                "json.web.service.context.name=group",
                 "json.web.service.context.path=CommunityInfos"
         },
         service = CommunityInfosService.class
@@ -95,7 +95,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                     groupNameMap, descriptionMap, GroupConstants.TYPE_SITE_PRIVATE, true,
                     GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, friendlyUrl, true, true, new ServiceContext());
 
-            CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(createdGroup.getGroupId());
+            CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.createCommunity(createdGroup.getGroupId(), user.getUserId());
 
             communityInfos.setCreationDate(new Date());
             communityInfos.setCreatorId(user.getUserId());
@@ -253,7 +253,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             // Date expireDate = ConfigurationLocalServiceUtil.getConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
 
             Group group = GroupLocalServiceUtil.getGroup(groupId);
-            group.setName(groupName);
+            group.setName(groupName, user.getLocale());
             group.setDescription(description);
             GroupLocalServiceUtil.updateGroup(group);
 
@@ -378,7 +378,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             boolean success = false;
             while (!success && nbTry < 500) {
                 try {
-                    group.setName(group.getName() + " (archived)" + (nbTry > 1 ? " (" + nbTry + ")" : ""));
+                    group.setName(group.getName(LocaleUtil.getDefault()) + " (archived)" + (nbTry > 1 ? " (" + nbTry + ")" : ""), LocaleUtil.getDefault());
                     GroupLocalServiceUtil.updateGroup(group);
                     success = true;
                 } catch (SystemException e) {
