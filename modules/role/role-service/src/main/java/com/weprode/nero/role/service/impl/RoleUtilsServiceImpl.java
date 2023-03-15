@@ -135,7 +135,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 			for (Role role : RoleUtilsLocalServiceUtil.getUserSearchableRoles(user)) {
 				final JSONObject curr = JSONFactoryUtil.createJSONObject();
 				curr.put(JSONConstants.ROLE_ID, role.getRoleId());
-				curr.put(JSONConstants.DISPLAY_TEXT, LanguageUtil.get(user.getLocale(), role.getName()));
+				curr.put(JSONConstants.DISPLAY_TEXT, LanguageUtil.get(user.getLocale(), role.getTitle()));
 				curr.put(JSONConstants.IS_FOR_CLASS, (role.getName().equals(NeroRoleConstants.NATIONAL_1) || role.getName().equals(NeroRoleConstants.NATIONAL_2) ||
 					role.getName().equals(NeroRoleConstants.NATIONAL_3) || role.getName().equals(NeroRoleConstants.MAIN_TEACHER)));
 				roleList.put(curr);
