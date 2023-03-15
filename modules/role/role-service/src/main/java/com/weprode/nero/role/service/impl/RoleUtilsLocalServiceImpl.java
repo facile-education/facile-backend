@@ -640,36 +640,36 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	 	String roleStr;
 		
 	 	if (isStudent(user)) {
-	 		roleStr = getStudentRole().getName();
+	 		roleStr = getStudentRole().getTitle(user.getLocale());
 	 	} else if (isParent(user)) {
-	 		roleStr = getParentRole().getName();
+	 		roleStr = getParentRole().getTitle(user.getLocale());
 	 	} else if (isTeacher(user)) {
-	 		roleStr = getTeacherRole().getName();
+	 		roleStr = getTeacherRole().getTitle(user.getLocale());
 	 	} else if (isInfirmiere(user)) {
-	 		roleStr = getInfirmiereRole().getName();
+	 		roleStr = getInfirmiereRole().getTitle(user.getLocale());
 	 	} else if (isAssistantTechnique(user)) {
-	 		roleStr = getAssistantTechniqueRole().getName();
+	 		roleStr = getAssistantTechniqueRole().getTitle(user.getLocale());
 	 	} else if (isCaissierComptable(user)) {
-	 		roleStr = getCaissierComptableRole().getName();
+	 		roleStr = getCaissierComptableRole().getTitle(user.getLocale());
 	 	} else if (isConseillerOrientation(user)) {
-	 		roleStr = getConseillerOrientationRole().getName();
+	 		roleStr = getConseillerOrientationRole().getTitle(user.getLocale());
 	 	} else if (isConseillerSocial(user)) {
-	 		roleStr = getConseillerSocialRole().getName();
+	 		roleStr = getConseillerSocialRole().getTitle(user.getLocale());
 	 	} else if (isBibliothecaire(user)) {
-	 		roleStr = getBibliothecaireRole().getName();
+	 		roleStr = getBibliothecaireRole().getTitle(user.getLocale());
 	 	} else if (isPsychologue(user)) {
-	 		roleStr = getPsychologueRole().getName();
+	 		roleStr = getPsychologueRole().getTitle(user.getLocale());
 	 	} else if (isSecretariat(user)) {
-	 		roleStr = getSecretariatRole().getName();
+	 		roleStr = getSecretariatRole().getTitle(user.getLocale());
 	 	} else {
 	 		roleStr = "Personnel";
 	 	}
 
 	 	if (isDoyen(user)) {
-	 		roleStr += ", " + getDoyenRole().getName();
+	 		roleStr += ", " + getDoyenRole().getTitle(user.getLocale());
 	 	}
 	 	if (isSchoolAdmin(user)) {
-	 		roleStr += ", " + getSchoolAdminRole().getName();
+	 		roleStr += ", " + getSchoolAdminRole().getTitle(user.getLocale());
 	 	}
 	 	return roleStr;
 	 }
