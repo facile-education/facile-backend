@@ -15,6 +15,7 @@ public class NeroSystemProperties {
 	public static final String MAIL_NO_REPLY = "ent.mail.noreply";
 	public static final String MAIL_NO_REPLY_USER_ID = "ent.mail.noreply.userId";
 	public static final String DEFAUT_MAIL_SUFFIX = "ent.mail.academic.suffix";
+	public static final String CONFIRMATION_SENDER_ID = "ent.mailSender.use.forward";
 
 	public static final String PARENT_SYNCHRO_FOLDER = "synchro.drop.folder";
 }

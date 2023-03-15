@@ -15,6 +15,8 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.*;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
@@ -85,8 +87,7 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             UserLocalServiceUtil.updateUser(user);
 
             // Create default user properties
-            // TODO Preferences
-            // UserPropertiesLocalServiceUtil.addUserProperties(user.getUserId());
+            UserPropertiesLocalServiceUtil.addUserProperties(user.getUserId());
 
             // Create default user notifications
             // TODO Preferences
@@ -131,10 +132,9 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
 
         try {
             // Set user as manually created
-            // TODO Preferences
-            /*UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(createdUser.getUserId());
+            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(createdUser.getUserId());
             userProperties.setManualAccount(true);
-            UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);*/
+            UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
 
             long[] roleIds = new long[1];
             roleIds[0] = roleId;
@@ -168,10 +168,9 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             }
 
             // Update rattach school in user properties
-            // TODO Preferences
-            /*UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(userId);
+            UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(userId);
             userProp.setEtabId(schoolId);
-            UserPropertiesLocalServiceUtil.updateUserProperties(userProp);*/
+            UserPropertiesLocalServiceUtil.updateUserProperties(userProp);
 
             // School teachers
             if (RoleUtilsLocalServiceUtil.isTeacher(user)) {

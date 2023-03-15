@@ -27,6 +27,8 @@ import com.weprode.nero.organization.model.OrgDetails;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.comparator.UserLastNameCaseInsensitiveComparator;
 import org.osgi.service.component.annotations.Component;
@@ -156,10 +158,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             JSONArray groupsArray = JSONFactoryUtil.createJSONArray();
             DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
-            // TODO Preferences
-            // UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
-            // long schoolId = userProperties.getEtabId();
-            long schoolId = 0;
+            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
+            long schoolId = userProperties.getEtabId();
 
             List<Group> communities = new ArrayList<>();
             if (RoleUtilsLocalServiceUtil.isDirectionMember(user) && allCommunities) {
@@ -174,8 +174,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     JSONObject jsonGroup = JSONFactoryUtil.createJSONObject();
                     CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(group.getGroupId());
                     jsonGroup.put(JSONConstants.GROUP_ID, group.getGroupId());
-                    jsonGroup.put(JSONConstants.GROUP_NAME, group.getName());
-                    jsonGroup.put(JSONConstants.DESCRIPTION, group.getDescription());
+                    jsonGroup.put(JSONConstants.GROUP_NAME, group.getName(user.getLocale()));
+                    jsonGroup.put(JSONConstants.DESCRIPTION, group.getDescription(user.getLocale()));
                     jsonGroup.put(JSONConstants.STATUS, communityInfos.getStatus());
                     String color = communityInfos.getColor() != null && !communityInfos.getColor().isEmpty() ? communityInfos.getColor() : "#4353B3";
                     jsonGroup.put(JSONConstants.COLOR, color);

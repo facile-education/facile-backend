@@ -1,0 +1,10 @@
+Bundle-Name: preference-api
+Bundle-SymbolicName: com.weprode.nero.preference.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.preference.exception,\
+	com.weprode.nero.preference.model,\
+	com.weprode.nero.preference.service,\
+	com.weprode.nero.preference.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../preference-service/service.xml

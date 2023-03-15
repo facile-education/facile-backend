@@ -16,6 +16,8 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.UserContactLocalServiceUtil;
@@ -54,13 +56,11 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
             return result;
         }
 
-        // TODO Preferences
-        // UserProperties userProperties = null;
+        UserProperties userProperties = null;
         String portraitUrl = "";
 
         try {
-            // TODO Preferences
-            // userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
+            userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             portraitUrl = UserConstants.getPortraitURL(PortalUtil.getPathImage(), user.isMale(),
                     user.getPortraitId(), user.getUserUuid());
         } catch (Exception e) {
@@ -74,9 +74,8 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         result.put(JSONConstants.LAST_NAME, user.getLastName());
         result.put(JSONConstants.FIRST_NAME, user.getFirstName());
         result.put(JSONConstants.PICTURE, portraitUrl);
-        // TODO Preferences
-        /*result.put(JSONConstants.THEME_COLOR, userProperties.getThemeColor());
-        result.put(JSONConstants.HAS_WEBDAV_ENABLED, userProperties.getWebdavActivated());*/
+        result.put(JSONConstants.THEME_COLOR, userProperties.getThemeColor());
+        result.put(JSONConstants.HAS_WEBDAV_ENABLED, userProperties.getWebdavActivated());
 
         // Roles
         result.put(JSONConstants.IS_ADMINISTRATOR, RoleUtilsLocalServiceUtil.isAdministrator(user));
@@ -112,8 +111,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
                 JSONObject userSchoolJson = JSONFactoryUtil.createJSONObject();
                 userSchoolJson.put(JSONConstants.SCHOOL_ID, userSchool.getOrganizationId());
                 userSchoolJson.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
-                // TODO Preferences
-                // userSchoolJson.put(JSONConstants.IS_PREFERED, (userProperties.getPreferedSchoolId() == userSchool.getOrganizationId()));
+                userSchoolJson.put(JSONConstants.IS_PREFERED, (userProperties.getPreferedSchoolId() == userSchool.getOrganizationId()));
                 if (RoleUtilsLocalServiceUtil.isSchoolAdmin(user, userSchool.getOrganizationId()) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                     userSchoolJson.put(JSONConstants.IS_ADMIN, true);
                 }
@@ -156,11 +154,11 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
             // TODO Preferences
             /* NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
             //result.put("", userNotificationConfig.setActivate(frequency != NONE);
-            result.put(JSONConstants.REPORT_FREQUENCY, userNotificationConfig.getDigestPeriod());
+            result.put(JSONConstants.REPORT_FREQUENCY, userNotificationConfig.getDigestPeriod());*/
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             result.put(JSONConstants.IS_LOCAL_USER, userProperties.isManualAccount());
-            result.put(JSONConstants.IS_WEBDAV_ENABLED, userProperties.isWebdavActivated());*/
+            result.put(JSONConstants.IS_WEBDAV_ENABLED, userProperties.isWebdavActivated());
             // TODO Documents
             // result.put(JSONConstants.WEBDAV_URL, DocumentsLocalServiceUtil.getWebDavUrl(user));
 

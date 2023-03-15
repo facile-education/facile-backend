@@ -15,6 +15,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.*;
 import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.LDAPMappingLocalServiceUtil;
 import com.weprode.nero.user.service.UserContactLocalServiceUtil;
@@ -70,10 +71,10 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 				serviceContext);
 
 		// Create default user properties
-		// TODO preferences
-		// UserPropertiesLocalServiceUtil.createUserProperties(user.getUserId());
+		UserPropertiesLocalServiceUtil.createUserProperties(user.getUserId());
 
 		// Create default user notifications
+		// TODO Preferences
 		// NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
 		return user;
 	}
@@ -147,13 +148,12 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			logger.error("Could not delete the notify configuration for user id "+userId);
 		}*/
 
-		// TODO Preferences
-		/* try {
+		try {
 			logger.debug("Clean up user properties for userId " + userId);
 			UserPropertiesLocalServiceUtil.deleteUserProperties(userId);
 		} catch (Exception e) {
 			logger.error("Could not delete user properties for userid " + userId);
-		}*/
+		}
 
 		// Cleanup user relationships
 		try {

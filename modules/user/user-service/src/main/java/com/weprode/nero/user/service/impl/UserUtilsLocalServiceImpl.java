@@ -12,6 +12,8 @@ import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserUtilsLocalServiceBaseImpl;
 import org.osgi.service.component.annotations.Component;
@@ -243,17 +245,16 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
             List<User> allUsers = UserLocalServiceUtil.getUsers(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
             for (User user : allUsers) {
-                //TODO Preferences
-                /*UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
+                UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
                 if (userProperties.getManualAccount()) {
                     continue;
                 }
                 if (!user.isActive() && userProperties.getLastSynchroDate() != null
-                        && userProperties.getLastSynchroDate().before(threeMonthInPast)) {*/
+                        && userProperties.getLastSynchroDate().before(threeMonthInPast)) {
                     logger.info("Purging user account " + user.getFullName() + " - " + user.getUserId());
                     UserLocalServiceUtil.deleteUser(user);
                     count ++;
-                // }
+                }
             }
         } catch (Exception e) {
             logger.error("Error in purging obsolete users", e);

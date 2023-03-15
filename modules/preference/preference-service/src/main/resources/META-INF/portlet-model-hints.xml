@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.preference.model.UserProperties">
+		<field name="userId" type="long" />
+		<field name="manualAccount" type="boolean" />
+		<field name="hideMenu" type="boolean" />
+		<field name="themeColor" type="String" />
+		<field name="etabId" type="long" />
+		<field name="preferedSchoolId" type="long" />
+		<field name="webdavActivated" type="boolean" />
+		<field name="termsOfUseAgreedDate" type="Date" />
+		<field name="lastSynchroDate" type="Date" />
+	</model>
+</model-hints>
