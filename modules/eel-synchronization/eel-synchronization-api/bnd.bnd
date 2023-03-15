@@ -1,0 +1,10 @@
+Bundle-Name: eel-synchronization-api
+Bundle-SymbolicName: com.weprode.nero.eel.synchronization.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.eel.synchronization.exception,\
+	com.weprode.nero.eel.synchronization.model,\
+	com.weprode.nero.eel.synchronization.service,\
+	com.weprode.nero.eel.synchronization.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../eel-synchronization-service/service.xml

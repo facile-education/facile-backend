@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.weprode.nero.eel.synchronization.model.ParentSynchro" />
+	<import class="com.weprode.nero.eel.synchronization.model.Subject" />
+	<import class="com.weprode.nero.eel.synchronization.model.TeacherSubject" />
+	<class name="com.weprode.nero.eel.synchronization.model.impl.ParentSynchroImpl" table="EELSynchro_ParentSynchro">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoolId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="startDate" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="endDate" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="lineCount" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="errorCount" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.weprode.nero.eel.synchronization.model.impl.SubjectImpl" table="EELSynchro_Subject">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="subjectId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com.weprode.nero.eel.synchronization.model.impl.TeacherSubjectImpl" table="EELSynchro_TeacherSubject">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="teacherSubjectId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="teacherId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="subjectId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoolId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+</hibernate-mapping>

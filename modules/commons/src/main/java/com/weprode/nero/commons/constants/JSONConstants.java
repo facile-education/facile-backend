@@ -7,6 +7,7 @@ public class JSONConstants {
     }
 
     // Global
+    public static final String NAME = "name";
     public static final String DISPLAY_TEXT = "displayText";
     public static final String DISPLAY_NAME = "displayName";
     public static final String LABEL = "label";
@@ -107,6 +108,10 @@ public class JSONConstants {
     // Classe
     public static final String IS_FOR_CLASS = "isForClass";
     public static final String CLASS_NAME = "className";
+
+    // Subject
+    public static final String SUBJECT_ID = "subjectId";
+    public static final String SUBJECTS= "subjects";
 
     // Activity
     public static final String ACTIVITIES = "activities";
