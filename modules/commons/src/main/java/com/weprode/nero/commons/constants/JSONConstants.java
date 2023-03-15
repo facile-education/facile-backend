@@ -31,7 +31,7 @@ public class JSONConstants {
 
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
-    public static final String FULL_NAME = "screenName";
+    public static final String FULL_NAME = "fullName";
     public static final String SCREEN_NAME = "screenName";
     public static final String ADMIN_NAME = "adminName";
     public static final String IS_ADMIN = "isAdmin";

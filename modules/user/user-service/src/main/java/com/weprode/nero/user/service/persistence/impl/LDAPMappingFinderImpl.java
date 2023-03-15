@@ -22,7 +22,7 @@ public class LDAPMappingFinderImpl extends LDAPMappingFinderBaseImpl
 
     public static final String FIND_MAX_UID =
             LDAPMappingFinder.class.getName() +
-                    "findMaxUid";
+                    ".findMaxUid";
 
     public Long findMaxUid() {
         Session session = null;
