@@ -48,3 +48,5 @@ sast:
 include:
 - template: Auto-DevOps.gitlab-ci.yml
 - template: Jobs/SAST.gitlab-ci.yml
+services:
+  - docker:dind
