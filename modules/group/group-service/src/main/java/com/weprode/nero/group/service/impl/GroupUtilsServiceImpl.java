@@ -9,6 +9,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -16,6 +17,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.group.model.CommunityInfos;
 import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
@@ -189,9 +191,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     jsonGroup.put(JSONConstants.IS_ADMIN, RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), group.getGroupId()));
                     jsonGroup.put(JSONConstants.NB_MEMBERS, UserLocalServiceUtil.getGroupUsersCount(group.getGroupId(), WorkflowConstants.STATUS_APPROVED));
                     // Return the group documentId
-                    // TODO Documents
-                    // Folder groupRootFolder = FolderUtilLocalServiceUtil.getOrCreateGroupRootFolder(group.getGroupId());
-                    // jsonGroup.put("rootFolderId", groupRootFolder.getFolderId());
+                    Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(group.getGroupId());
+                    jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
                     groupsArray.put(jsonGroup);
                 }
             }
@@ -253,9 +254,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     // Members : do not count parents for classes and cours
                     jsonGroup.put(JSONConstants.NB_MEMBERS, UserOrgsLocalServiceUtil.countOrgMembers(org.getOrganizationId()));
                     // Return the group documentId
-                    // TODO Documents
-                    // Folder groupRootFolder = FolderUtilLocalServiceUtil.getOrCreateGroupRootFolder(org.getGroupId());
-                    // jsonGroup.put("rootFolderId", groupRootFolder.getFolderId());
+                    Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(org.getGroupId());
+                    jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
 
                     groupsArray.put(jsonGroup);
                 }

@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupUtilsLocalServiceBaseImpl;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
@@ -217,8 +218,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
         logger.info("Deleting document activity ...");
 
         try {
-            // TODO Documents
-            // ActivityLocalServiceUtil.deleteGroupActivity(groupId);
+            ActivityLocalServiceUtil.deleteGroupActivity(groupId);
         } catch (Exception e) {
             logger.error("Could not delete document activity for groupId "+groupId, e);
         }

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.document.model.Activity">
+		<field name="activityId" type="long" />
+		<field name="fileEntryId" type="long" />
+		<field name="folderId" type="long" />
+		<field name="userId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="fileName" type="String" />
+		<field name="folderName" type="String" />
+		<field name="type" type="int" />
+		<field name="modificationDate" type="Date" />
+	</model>
+	<model name="com.weprode.nero.document.model.EditionLock">
+		<field name="fileId" type="long" />
+		<field name="userId" type="long" />
+		<field name="editionDate" type="Date" />
+	</model>
+	<model name="com.weprode.nero.document.model.LoolToken">
+		<field name="loolTokenId" type="long" />
+		<field name="userId" type="long" />
+		<field name="token" type="String" />
+	</model>
+	<model name="com.weprode.nero.document.model.Version">
+		<field name="fileVersionId" type="long" />
+		<field name="dlFileEntryId" type="long" />
+		<field name="versionNumber" type="double" />
+		<field name="comment" type="String" />
+		<field name="downloadCount" type="long" />
+		<field name="viewCount" type="long" />
+	</model>
+</model-hints>

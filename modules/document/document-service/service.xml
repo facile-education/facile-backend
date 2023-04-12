@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.document">
+	<namespace>Document</namespace>
+
+	<entity name="DocumentUtils" local-service="true" remote-service="true"/>
+
+	<entity name="Groups" local-service="true" remote-service="true"/>
+
+	<entity name="FolderUtils" local-service="true" remote-service="true"/>
+
+	<entity name="FileUtils" local-service="true" remote-service="true"/>
+
+	<entity name="Clipboard" local-service="false" remote-service="true" />
+
+	<entity name="Trash" local-service="false" remote-service="true" />
+
+	<entity name="PermissionUtils" local-service="true" remote-service="true"/>
+
+	<entity name="Scratch" local-service="false" remote-service="true" />
+
+	<entity name="Mindmap" local-service="false" remote-service="true" />
+
+	<entity name="Geogebra" local-service="false" remote-service="true" />
+
+	<entity name="WYSIWYG" local-service="false" remote-service="true" />
+
+	<entity name="Version" local-service="true" remote-service="true">
+		<column name="fileVersionId" type="long" primary="true" />
+		<column name="dlFileEntryId" type="long"/>
+		<column name="versionNumber" type="double"/>
+		<column name="comment" type="String"/>
+		<column name="downloadCount" type="long"/>
+		<column name="viewCount" type="long"/>
+
+		<finder return-type="Version" name="dlFileEntryId_versionNumber">
+			<finder-column name="dlFileEntryId" />
+			<finder-column name="versionNumber" />
+		</finder>
+
+		<finder return-type="Collection" name="dlFileEntryId">
+			<finder-column name="dlFileEntryId" />
+		</finder>
+	</entity>
+
+	<entity name="LoolToken" local-service="true" remote-service="false" cache-enabled="false">
+		<column name="loolTokenId" type="long" primary="true" />
+		<column name="userId" type="long"/>
+		<column name="token" type="String"/>
+
+		<finder return-type="LoolToken" name="token">
+			<finder-column name="token" />
+		</finder>
+
+	</entity>
+
+	<entity name="EditionLock" local-service="true" remote-service="false" cache-enabled="false">
+		<column name="fileId" type="long" primary="true" />
+		<column name="userId" type="long"/>
+		<column name="editionDate" type="Date" />
+
+		<finder return-type="EditionLock" name="fileId_userId">
+			<finder-column name="fileId" />
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+
+	<entity name="Activity" local-service="true" remote-service="false">
+		<column name="activityId" type="long" primary="true"/>
+		<column name="fileEntryId" type="long"/>
+		<column name="folderId" type="long" />
+		<column name="userId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="fileName" type="String" />
+		<column name="folderName" type="String" />
+		<column name="type" type="int" />
+		<column name="modificationDate" type="Date" />
+
+		<finder return-type="Collection" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+
+	<entity name="WopiUtils" local-service="false" remote-service="true" />
+
+</service-builder>
