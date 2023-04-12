@@ -2,6 +2,7 @@ package com.weprode.nero.commons.wrapper;
 
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -13,6 +14,7 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 
 import com.liferay.portal.kernel.service.*;
+import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
@@ -219,10 +221,9 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 		}
 
 		// Get SENDING BOX dlfolder
-		DLFolder sendingBox = null;
+		DLFolder sendingBox;
 		try {
-			// TODO Documents
-			// sendingBox = DLFolderLocalServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SENDING_BOX_FOLDER_NAME);
+			sendingBox = DLFolderLocalServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SENDING_BOX_FOLDER_NAME);
 		} catch (Exception exc) {
 			logger.error("Could not get sending box for user "+userId);
 			return;
@@ -282,11 +283,10 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			User user = UserLocalServiceUtil.getUser(userId);
 			List<DLFolder> dlFolderList = DLFolderLocalServiceUtil.getFolders(user.getGroupId(), 0, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 			for (DLFolder dlFolder : dlFolderList) {
-				// TODO Documents
-				// if (dlFolder.getName().equals(DocumentConstants.DROP_BOX_FOLDER_NAME) || dlFolder.getName().equals(DocumentConstants.SCHOOL_BAG_FOLDER_NAME)) {
+				if (dlFolder.getName().equals(DocumentConstants.DROP_BOX_FOLDER_NAME) || dlFolder.getName().equals(DocumentConstants.SCHOOL_BAG_FOLDER_NAME)) {
 					logger.info("Deleting folder "+dlFolder.getName());
 					DLFolderLocalServiceUtil.deleteFolder(dlFolder.getFolderId());
-				// }
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Unable to get user's DLFolders", e);

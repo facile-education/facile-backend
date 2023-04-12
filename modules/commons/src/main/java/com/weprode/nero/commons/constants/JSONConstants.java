@@ -7,12 +7,17 @@ public class JSONConstants {
     }
 
     // Global
+    public static final String ID = "id";
     public static final String NAME = "name";
+    public static final String DATE = "date";
+    public static final String URL = "url";
     public static final String DISPLAY_TEXT = "displayText";
     public static final String DISPLAY_NAME = "displayName";
     public static final String LABEL = "label";
+    public static final String CREATOR = "creator";
     public static final String CREATION_DATE = "creationDate";
     public static final String EXPIRATION_DATE = "expirationDate";
+    public static final String LAST_MODIFIED_DATE = "lastModifiedDate";
     public static final String DESCRIPTION = "description";
     public static final String COLOR = "color";
     public static final String STATUS = "status";
@@ -20,6 +25,10 @@ public class JSONConstants {
     public static final String RESULTS = "results";
     public static final String AFFECTATION_DATE = "affectationDate";
     public static final String AFFECTATIONS = "affectations";
+    public static final String MESSAGE = "message";
+    public static final String PRIVATE = "private";
+    public static final String IS_ALLOWED = "isAllowed";
+    public static final String CONTENT = "content";
 
     // User
     public static final String USER = "user";
@@ -91,6 +100,7 @@ public class JSONConstants {
 
     // Role
     public static final String ROLE_ID = "roleId";
+    public static final String ROLE_NAME = "roleName";
     public static final String ROLE_CODE = "roleCode";
     public static final String ROLES = "roles";
 
@@ -100,7 +110,6 @@ public class JSONConstants {
     public static final String SCHOOLS = "schools";
     public static final String IS_PREFERED = "isPrefered";
     public static final String USER_SCHOOLS = "userSchools";
-
 
     // Volee
     public static final String VOLEES = "volees";
@@ -125,13 +134,76 @@ public class JSONConstants {
     public static final String POSITION = "position";
     public static final String COMPONENT = "component";
 
+    // Document library
+    public static final String FILE_NAME = "fileName";
+    public static final String SIZE = "size";
+    public static final String PERMISSION_MATRIX = "permissionMatrix";
+    public static final String PERMISSIONS = "permissions";
+    public static final String IS_WRITABLE = "isWritable";
+    public static final String EDITABLE = "editable";
+    public static final String READ_ONLY = "readOnly";
+    public static final String VERSION = "version";
+    public static final String EXTENSION = "extension";
+    public static final String UPLOADED_FILE = "uploadedFile";
+    public static final String FIRST_CREATED_FOLDER = "firstCreatedFolder";
+    public static final String IS_GROUP_ROOT_FOLDER = "isGroupRootFolder";
+    public static final String IS_GROUP_FILE = "isGroupFile";
+    public static final String IS_SUB_ENTITY = "isSubEntity";
+    public static final String URL_WEBDAV = "urlWebdav";
+    public static final String FAILED_ENTITY_LIST = "failedEntityList";
+    public static final String FAILED_ENTITIES_LIST = "failedEntitiesList";
+    public static final String FOLDERS_IN_CONFLICT = "foldersInConflict";
+    public static final String FILES_IN_CONFLICT = "filesInConflict";
+    public static final String ROOT_FOLDER_ID = "rootFolderId";
+    public static final String BREADCRUMB = "breadcrumb";
+    public static final String BREAD_CRUMB = "breadCrumb";
+    public static final String FILE = "file";
+    public static final String FILES = "files";
+    public static final String FILE_ENTRY_ID = "fileEntryId";
+    public static final String FILE_VERSIONS = "fileVersions";
+    public static final String FILE_VERSION_ID = "fileVersionId";
+    public static final String IS_CURRENT_VERSION = "isCurrentVersion";
+    public static final String FOLDER = "folder";
+    public static final String FOLDERS = "folders";
+    public static final String CREATED_FOLDER = "createdFolder";
+    public static final String SUB_FOLDERS = "subFolders";
+    public static final String HAS_SUB_FOLDERS = "hasSubFolders";
+    public static final String ZIP_URL = "zipUrl";
+    public static final String MAX_UPLOAD_SIZE = "maxUploadSize";
+    public static final String HAS_MINDMAP_BROADCASTED = "hasMindmapBroadcasted";
+    public static final String HAS_GEOGEBRA_BROADCASTED = "hasGeogebraBroadcasted";
+    public static final String HAS_SCRATCH_BROADCASTED = "hasScratchBroadcasted";
+    public static final String SCRATCH_FILES = "scratchFiles";
+    public static final String TYPE_OF_VIEW = "typeOfView";
+    public static final String FILE_URL = "fileUrl";
+    public static final String VIEW_COUNT = "viewCount";
+    public static final String DOWNLOAD_COUNT = "downloadCount";
+    public static final String STATUS_BY_USER_NAME = "statusByUserName";
+    
+    // WOPI
+    public static final String WOPI_OWNER_ID = "OwnerId";
+    public static final String WOPI_USER_ID = "UserId";
+    public static final String WOPI_USER_INFO = "UserInfo";
+    public static final String WOPI_USER_FRIENDLY_NAME = "UserFriendlyName";
+    public static final String WOPI_USER_CAN_WRITE = "UserCanWrite";
+    public static final String WOPI_SUPPORTS_UPDATE = "SupportsUpdate";
+    public static final String WOPI_BASE_FILE_NAME = "BaseFileName";
+    public static final String WOPI_SIZE = "Size";
+    public static final String WOPI_LAST_MODIFIED_TIME = "LastModifiedTime";
+    public static final String WOPI_SHA256 = "SHA256";
+    public static final String WOPI_VERSION = "Version";
+
     // Success
     public static final String SUCCESS = "success";
 
     // Errors
     public static final String ERROR = "error";
+    public static final String ERROR_MSG = "error_msg";
     public static final String ERROR_CODE = "errorCode";
     public static final String AUTH_EXCEPTION = "AUTH_EXCEPTION";
     public static final String NOT_ALLOWED_EXCEPTION = "NOT_ALLOWED_EXCEPTION";
+    public static final String UNKNOWN = "unknown";
+    public static final String FILE_SIZE_EXCEPTION = "fileSizeException";
+    public static final String DUPLICATE_FILE_EXCEPTION = "DuplicateFileException";
 
 }

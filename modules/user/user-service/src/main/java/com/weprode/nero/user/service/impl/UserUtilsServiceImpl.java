@@ -14,6 +14,7 @@ import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.preference.model.UserProperties;
@@ -159,8 +160,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             result.put(JSONConstants.IS_LOCAL_USER, userProperties.isManualAccount());
             result.put(JSONConstants.IS_WEBDAV_ENABLED, userProperties.isWebdavActivated());
-            // TODO Documents
-            // result.put(JSONConstants.WEBDAV_URL, DocumentsLocalServiceUtil.getWebDavUrl(user));
+            result.put(JSONConstants.WEBDAV_URL, DocumentUtilsLocalServiceUtil.getWebDavUrl(user));
 
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

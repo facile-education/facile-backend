@@ -1,0 +1,571 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.weprode.nero.document.service.impl;
+
+import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
+import com.liferay.document.library.kernel.exception.NoSuchFolderException;
+import com.liferay.document.library.kernel.exception.FileNameException;
+import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.model.DLFolderConstants;
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
+import com.liferay.portal.aop.AopService;
+
+import com.liferay.portal.kernel.exception.NoSuchResourcePermissionException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.weprode.nero.document.constants.DocumentConstants;
+import com.weprode.nero.document.constants.PermissionConstants;
+import com.weprode.nero.document.service.ActivityLocalServiceUtil;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.base.FolderUtilsLocalServiceBaseImpl;
+
+import com.weprode.nero.document.utils.DLAppUtil;
+import com.weprode.nero.document.utils.FileNameUtil;
+import com.weprode.nero.document.utils.ZipUtil;
+import com.weprode.nero.group.constants.ActivityConstants;
+import org.osgi.service.component.annotations.Component;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+@Component(
+	property = "model.class.name=com.weprode.nero.document.model.FolderUtils",
+	service = AopService.class
+)
+public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl {
+
+	private static final Log logger = LogFactoryUtil.getLog(FolderUtilsLocalServiceImpl.class);
+
+	public Folder getUserRootFolder(long userId) throws PortalException, SystemException {
+		User user = UserLocalServiceUtil.getUser(userId);
+
+		Folder rootFolder;
+		try {
+			rootFolder = DLAppServiceUtil.getFolder(user.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SCHOOL_BAG_FOLDER_NAME);
+		} catch (NoSuchFolderException e) {
+			logger.info("Root folder does not exists for user " + userId + ". Creating it...");
+			rootFolder = DLAppServiceUtil.addFolder(
+					user.getGroupId(),
+					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+					DocumentConstants.SCHOOL_BAG_FOLDER_NAME,
+					"Dossier personnel de l'utilsateur",
+					new ServiceContext()
+			);
+		}
+
+		return rootFolder;
+	}
+
+	public Folder getSendingBox(long userId) throws PortalException, SystemException {
+		final User user = UserLocalServiceUtil.getUser(userId);
+
+		Folder folder;
+		try {
+			folder = DLAppServiceUtil.getFolder(user.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SENDING_BOX_FOLDER_NAME);
+		} catch (NoSuchFolderException e) {
+			folder = DLAppServiceUtil.addFolder(
+					user.getGroupId(),
+					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+					DocumentConstants.SENDING_BOX_FOLDER_NAME,
+					"Boite d envoi tmp",
+					new ServiceContext());
+			PermissionUtilsLocalServiceUtil.setViewPermissionForRessources(folder);
+		}
+
+		return folder;
+	}
+
+	public Folder getIMBox(long userId) throws PortalException, SystemException {
+		final User user = UserLocalServiceUtil.getUser(userId);
+
+		Folder folder;
+		try {
+			folder = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.IM_BOX_FOLDER_NAME);
+		} catch (NoSuchFolderException e) {
+			folder = DLAppServiceUtil.addFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.IM_BOX_FOLDER_NAME, "PJs de messagerie", new ServiceContext());
+			PermissionUtilsLocalServiceUtil.setViewPermissionForRessources(folder);
+		}
+
+		return folder;
+	}
+
+	public Folder getTmpFolder(long userId) throws PortalException, SystemException {
+		final User user = UserLocalServiceUtil.getUser(userId);
+
+		Folder tmpFolder;
+		try {
+			tmpFolder = DLAppServiceUtil.getFolder(user.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.TMP_FILE_FOLDER_NAME);
+		} catch (NoSuchFolderException e) {
+			tmpFolder = DLAppServiceUtil.addFolder(
+					user.getGroupId(),
+					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+					DocumentConstants.TMP_FILE_FOLDER_NAME,
+					"Fichiers temporaires",
+					new ServiceContext());
+		}
+
+		return tmpFolder;
+	}
+
+	// TODO Progression
+	/* public static Folder getProgressionFolder(long userId) throws PortalException, SystemException {
+		Folder fol;
+
+		final User user = UserLocalServiceUtil.getUser(userId);
+		try {
+			fol = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.PROGRESSION_FOLDER_NAME);
+		} catch (NoSuchFolderException e) {
+			fol = DLAppServiceUtil.addFolder(
+					user.getGroup().getGroupId(),
+					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+					DocumentConstants.PROGRESSION_FOLDER_NAME,
+					"Dossier pour les documents des progression",
+					new ServiceContext());
+		}
+
+		return fol;
+	}*/
+
+	// TODO CDT
+	/*public static Folder getHomeworkFolder(long userId) {
+		Folder folder = null;
+
+		User user;
+		Folder rootFolder;
+		try {
+			user = UserLocalServiceUtil.getUser(userId);
+			rootFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(userId);
+
+			try {
+				folder = DLAppServiceUtil.getFolder(user.getGroupId(), rootFolder.getFolderId(), DocumentConstants.HOMEWORK_FOLDER_NAME);
+			} catch (NoSuchFolderException e) {
+				folder = DLAppServiceUtil.addFolder(
+						user.getGroupId(),
+						rootFolder.getFolderId(),
+						DocumentConstants.HOMEWORK_FOLDER_NAME,
+						"Devoirs rendus via le service Cours et Devoirs",
+						new ServiceContext());
+			}
+		} catch (Exception e) {
+			logger.debug(e);
+		}
+
+		return folder;
+	}*/
+
+	// TODO News
+	/*public static Folder getNewsFolder(long groupId, boolean createIt) throws PortalException, SystemException {
+		Folder rootFolder = null;
+
+		try {
+			rootFolder = DLAppServiceUtil.getFolder(groupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.ACTU_IMG_FOLDER_NAME);
+		} catch (Exception e) {
+			if (createIt) {
+				rootFolder = DLAppServiceUtil.addFolder(
+						groupId,
+						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+						DocumentConstants.ACTU_IMG_FOLDER_NAME,
+						"Dossier pour les images des actualites.",
+						new ServiceContext());
+			}
+		}
+
+		return rootFolder;
+	}*/
+
+	/**
+	 * Return the path of a folder until the Root folder (folderId = 0 excluded) containing also the current folder
+	 * Example: folder 'test' may have path 'monCartable / folder1 / test'
+	 */
+	public List<Folder> getFolderPath(Folder folder) throws SystemException, PortalException {
+		List<Folder> breadcrumb = new ArrayList<>();
+
+		breadcrumb.add(folder);
+
+		while (folder.getParentFolderId() != 0) {
+			folder = folder.getParentFolder();
+			breadcrumb.add(folder);
+		}
+
+		// Revert list to have the right path
+		Collections.reverse(breadcrumb);
+
+		return breadcrumb;
+	}
+
+	public List<Folder> getFolderPath(long folderId) throws SystemException, PortalException {
+		Folder folder = DLAppServiceUtil.getFolder(folderId);
+		return getFolderPath(folder);
+	}
+
+	public String downloadFolder(Folder folder, User user) throws PortalException, SystemException, IOException {
+		String result = "";
+
+		// Set default permissions
+		ServiceContext serviceContext = new ServiceContext();
+		serviceContext.setAddGroupPermissions(true);
+
+		String zipName = folder.getName();
+
+		Folder temporaryFF = getTmpFolder(user.getUserId());
+
+		long[] fileIdArray = new long[0];
+		long[] folderIdArray = new long[1];
+		folderIdArray[0] = folder.getFolderId();
+
+		ByteArrayOutputStream baos = null;
+
+		try {
+			baos = ZipUtil.createZipStream(folderIdArray, fileIdArray);
+			if (zipName.toLowerCase().endsWith(".zip")) {
+				zipName = zipName.substring(0, zipName.length() - 4);
+			}
+
+			FileEntry zipFile = DLAppUtil.addFileEntry(user, temporaryFF, zipName + ".zip", baos.toByteArray(), DocumentConstants.MODE_RENAME);
+
+			assert zipFile != null;
+			result = FileUtilsLocalServiceUtil.getDownloadUrl(zipFile);
+		} finally {
+			try {
+				assert baos != null;
+				baos.close();
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
+
+		return result;
+	}
+
+	public int getFolderSize(Folder folder) throws SystemException, PortalException {
+		int size = 0;
+
+		// Add size of all subFolders
+		List<Folder> subFolders = DLAppServiceUtil.getFolders(folder.getGroupId(), folder.getFolderId());
+		for (Folder subFolder: subFolders){
+			size += getFolderSize(subFolder);
+		}
+
+		// Add size of all presents files in the folder
+		List<FileEntry> files = DLAppServiceUtil.getFileEntries(folder.getGroupId(), folder.getFolderId());
+		for (FileEntry file: files){
+			size += file.getSize();
+		}
+
+		return size;
+	}
+
+	public Folder getFolderByName(Folder parentFolder, String name) throws PortalException {
+		List<Folder> subFolders = DLAppServiceUtil.getFolders(parentFolder.getGroupId(), parentFolder.getFolderId());
+
+		for (Folder subFolder : subFolders) {
+			if (subFolder.getName().equals(name)) {
+				return subFolder;
+			}
+		}
+
+		throw new NoSuchFolderException("Cannot find folder " + name + " in folder " + parentFolder.getFolderId());
+	}
+
+	public Folder createFolder (User user, long targetFolderId, String name) throws SystemException, PortalException {
+		Folder parentFolder = DLAppServiceUtil.getFolder(targetFolderId);
+
+		return DLAppUtil.addFolder(user.getUserId(), parentFolder.getGroupId(), targetFolderId, name, DocumentConstants.MODE_NORMAL);
+	}
+
+	public Folder renameFolder (long userId, Folder originFolder, String newName) throws SystemException, PortalException {
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, originFolder, PermissionConstants.ADD_OBJECT)) {    // handle this permission as the RENAME permission (update)
+
+			boolean finished = false;
+			int count = 0;
+			String suffix = "";
+			String folderTitle = FileNameUtil.getValidName(newName);
+			Folder renamedFolder = null;
+
+			while (!finished && count < DocumentConstants.NB_RENAMED_VERSIONS) {
+				try {
+					renamedFolder = DLAppServiceUtil.updateFolder(
+							originFolder.getFolderId(),
+							folderTitle + suffix,
+							originFolder.getDescription(),
+							new ServiceContext()
+					);
+					finished = true;
+				} catch (DuplicateFolderNameException e) {
+					count++;
+					suffix = " (" + count + ")";
+				}
+			}
+
+			if (renamedFolder == null) {
+				throw new PortalException("Reach max renamed versions allowed");
+			}
+
+			// Register activity
+			ActivityLocalServiceUtil.addActivity(0, renamedFolder.getFolderId(), userId, renamedFolder.getGroupId(), "", renamedFolder.getName(), ActivityConstants.TYPE_FOLDER_MODIFICATION);
+
+			return renamedFolder;
+		} else {
+			throw new NoSuchResourcePermissionException();
+		}
+	}
+
+	public Folder moveFolder(long userId, Folder folder, long targetFolderId, int mode) throws PortalException, SystemException {
+		logger.info("User " + userId + " moves folder " + folder.getName() + " to destination folder " + targetFolderId + " in mode " + mode);
+
+		ServiceContext serviceContext = new ServiceContext();
+		serviceContext.setScopeGroupId(folder.getGroupId());
+		final Folder destFolder = DLAppServiceUtil.getFolder(targetFolderId);
+
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE)
+				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
+
+			boolean success = false;
+			int nbTry = 0;
+			String originalTitle = folder.getName();
+			String suffix = "";
+
+			// rename folder if needed
+			while (!success && nbTry < DocumentConstants.NB_RENAMED_VERSIONS) {
+				try {
+					nbTry++;
+					folder = DLAppServiceUtil.moveFolder(folder.getFolderId(), targetFolderId, serviceContext);
+					logger.info("Successfully moved folder " + folder.getName() + " (id " + folder.getFolderId() + ")");
+					success = true;
+
+					// Apply parent folder permissions
+					PermissionUtilsLocalServiceUtil.setParentPermissionToFolder(folder);
+
+					// Register activity
+					ActivityLocalServiceUtil.addActivity(0, folder.getFolderId(), userId, folder.getGroupId(), "", folder.getName(), ActivityConstants.TYPE_FOLDER_MOVE);
+
+				} catch (Exception e) {
+					logger.error("An error happened during folder move at nbTry=" + nbTry, e);
+
+					if (mode == DocumentConstants.MODE_NORMAL) {
+						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
+						for (DLFolder dlFolder : dlFolders) {
+							Folder subFolder = DLAppServiceUtil.getFolder(dlFolder.getFolderId());
+							if (subFolder.getName().equals(folder.getName())) {
+								if (isParentFolder(subFolder, folder)) {
+									mode = DocumentConstants.MODE_RENAME;
+								} else {
+									throw new FileNameException();
+								}
+							}
+						}
+					} else if (mode == DocumentConstants.MODE_RENAME) {
+						suffix = " (" + nbTry + ")";
+						DLAppServiceUtil.updateFolder(
+								folder.getFolderId(),
+								originalTitle + suffix,
+								folder.getDescription(),
+								serviceContext
+						);
+					} else if (mode == DocumentConstants.MODE_REPLACE) {
+						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
+						for (DLFolder dlFolder : dlFolders) {
+							Folder subFolder = DLAppServiceUtil.getFolder(dlFolder.getFolderId());
+							if (subFolder.getName().equals(folder.getName())) {
+								FolderUtilsLocalServiceUtil.deleteFolder(userId, subFolder.getFolderId());
+							}
+						}
+					} else if (mode == DocumentConstants.MODE_MERGE) {
+						// Return the folder which already exist
+						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
+						for (DLFolder dlFolder : dlFolders) {
+							Folder subFolder = DLAppServiceUtil.getFolder(dlFolder.getFolderId());
+							if (subFolder.getName().equals(folder.getName())) {
+								FolderUtilsLocalServiceUtil.copyFolder(userId, folder.getFolderId(), targetFolderId, DocumentConstants.MODE_MERGE);
+								FolderUtilsLocalServiceUtil.deleteFolder(userId, folder.getFolderId());
+							}
+						}
+					} else {
+						logger.error("No mode existing with value " + mode);
+					}
+				}
+			}
+
+			return null;
+		} else {
+			throw new NoSuchResourcePermissionException();
+		}
+	}
+
+	public Folder copyFolder(long userId, long folderId, long destFolderId, int mode) throws PortalException, SystemException {
+
+		final Folder folder = DLAppServiceUtil.getFolder(folderId);
+		final Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
+
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
+
+			long currFolderId = destFolder.getFolderId();
+			while (currFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+				if (currFolderId == folderId)
+					return null;
+				currFolderId = DLAppServiceUtil.getFolder(currFolderId).getParentFolderId();
+			}
+
+			// Add permissions
+			ServiceContext serviceContext = new ServiceContext();
+			serviceContext.setAddGroupPermissions(true);
+
+			Folder newFolder = DLAppUtil.addFolder(userId, destFolder.getGroupId(), destFolder.getFolderId(), folder.getName(), mode);
+
+			List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(folder.getGroupId(), folderId);
+			for (DLFolder dlFolder : dlFolders) {
+				copyFolder(userId, dlFolder.getFolderId(), newFolder.getFolderId(), DocumentConstants.MODE_RENAME);
+			}
+			List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(folder.getGroupId(), folderId);
+			for (FileEntry fileEntry : fileEntries) {
+				try {
+					FileUtilsLocalServiceUtil.copyFileEntry(userId, fileEntry.getFileEntryId(), newFolder.getFolderId(), true, DocumentConstants.MODE_RENAME);
+				} catch (IOException e) {
+					logger.error(e);
+				}
+			}
+
+			// Apply parent folder permissions
+			PermissionUtilsLocalServiceUtil.setParentPermissionToFolder(newFolder);
+
+			return newFolder;
+		} else {
+			throw new NoSuchResourcePermissionException();
+		}
+	}
+
+	public void deleteFolder(long userId, long folderId) throws PortalException, SystemException {
+
+		// Recursively delete all files and folder to delete all linked stuff (like dropbox entry, indexes, etc..)
+		Folder folder = DLAppServiceUtil.getFolder(folderId);
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE)) {
+
+			List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(folder.getGroupId(), folderId);
+			for (FileEntry file : fileList) {
+				FileUtilsLocalServiceUtil.deleteFile(userId, file.getFileEntryId());
+			}
+
+			List<Folder> subFolders = DLAppServiceUtil.getFolders(folder.getGroupId(), folderId);
+			for (Folder subFolder : subFolders) {
+				deleteFolder(userId, subFolder.getFolderId());
+			}
+
+			Folder parentFolder = folder.getParentFolder();
+
+			// Delete linked objects
+			// indexers, favorite, others...??
+
+			// delete folder
+			DLAppServiceUtil.deleteFolder(folderId);
+
+			// Update parentFolder lastPostDate because it lost a subFolder (liferay doesn't handle that behaviour)
+			DLFolderLocalServiceUtil.updateLastPostDate(parentFolder.getFolderId(), new Date());
+
+			// Register activity
+			ActivityLocalServiceUtil.addActivity(0, folder.getFolderId(), userId, folder.getGroupId(), "", folder.getName(), ActivityConstants.TYPE_FOLDER_DELETION);
+		} else {
+			throw new NoSuchResourcePermissionException();
+		}
+	}
+
+	private boolean isParentFolder (Folder potentialParentFolder, Folder potentialChildFolder) {
+		if (potentialChildFolder.getParentFolderId() == potentialParentFolder.getFolderId()) {
+			return true;
+		} else {
+			if (potentialChildFolder.getParentFolderId() == 0) {
+				return false;
+			} else {
+				try {
+					return isParentFolder(potentialParentFolder, potentialChildFolder.getParentFolder());
+				} catch (Exception e) {
+					return false;
+				}
+			}
+		}
+	}
+
+	public Folder getOrCreateGroupRootFolder(long groupId) throws PortalException {
+		Folder groupRootFolder = null;
+
+		try {
+			groupRootFolder = DLAppServiceUtil.getFolder(groupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.GROUP_FOLDER_NAME);
+		} catch (NoSuchFolderException noSuchFolder) {
+			try {
+				Group group = GroupLocalServiceUtil.getGroup(groupId);
+				logger.info("Creating root folder for group " + group.getName(LocaleUtil.getDefault()));
+				Folder createdFolder = DLAppServiceUtil.addFolder(
+						groupId,
+						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+						DocumentConstants.GROUP_FOLDER_NAME,
+						"Espace de groupe.",
+						new ServiceContext());
+				PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(createdFolder);
+
+				return createdFolder;
+			} catch (Exception e) {
+				logger.error("Error creating root folder for group " + groupId, e);
+			}
+		}
+
+		return groupRootFolder;
+	}
+
+	public Folder getGroupNewsFolder(long groupId) throws PortalException, SystemException {
+		Folder folder;
+
+		Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(groupId);
+		try {
+			folder = DLAppServiceUtil.getFolder(groupId, groupRootFolder.getFolderId(), DocumentConstants.NEWS_FOLDER_NAME);
+		} catch (NoSuchFolderException e) {
+			folder = DLAppServiceUtil.addFolder(
+					groupId,
+					groupRootFolder.getFolderId(),
+					DocumentConstants.NEWS_FOLDER_NAME,
+					"Dossier pour les pièces jointes d'actualités",
+					new ServiceContext());
+		}
+
+		return folder;
+	}
+
+	public boolean isGroupFolder (Folder folder) {
+		try {
+			Group folderGroup = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+			return folderGroup.isOrganization() || folderGroup.isRegularSite();
+		} catch (Exception e) {
+			logger.error("Error determining if folder " + folder.getFolderId() + " belongs to a group or not : " + e.getMessage());
+		}
+
+		return false;
+	}
+}

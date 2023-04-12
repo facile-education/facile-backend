@@ -7,6 +7,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.document.model.Activity;
+import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.model.MembershipActivity;
@@ -73,8 +75,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }*/
 
                 // Document activity
-                // TODO Documents
-                /*if (containDocs) {
+                if (containDocs) {
                     List<Activity> activityList;
                     if (allHistory) {
                         activityList = ActivityLocalServiceUtil.getGroupsHistory(user.getUserId(), groupIds, minDate, maxDate);
@@ -88,7 +89,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                         GroupActivity docActivity = new GroupActivity(activity.getActivityId(), 0, activity.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_ACTIVITY);
                         groupActivities.add(docActivity);
                     }
-                }*/
+                }
 
                 // Membership activity
                 if (containMembership) {
@@ -201,9 +202,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_ACTIVITY) {
 
-                // TODO Documents
-                // Activity activity = ActivityLocalServiceUtil.getActivity(groupActivity.getActivityId());
-                // jsonActivity = ActivityLocalServiceUtil.convertActivityToJson(activity);
+                Activity activity = ActivityLocalServiceUtil.getActivity(groupActivity.getActivityId());
+                jsonActivity = ActivityLocalServiceUtil.convertActivityToJson(activity);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_MEMBERSHIP) {
                 MembershipActivity membershipActivity = MembershipActivityLocalServiceUtil.getMembershipActivity(groupActivity.getActivityId());
