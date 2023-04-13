@@ -43,6 +43,13 @@ public class SideMenuLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.weprode.nero.menu.enums.MenuEntry> getSchoolMenu(
+		long schoolId) {
+
+		return _sideMenuLocalService.getSchoolMenu(schoolId);
+	}
+
+	@Override
 	public java.util.List<com.weprode.nero.menu.enums.MenuEntry> getUserMenu(
 		com.liferay.portal.kernel.model.User user) {
 

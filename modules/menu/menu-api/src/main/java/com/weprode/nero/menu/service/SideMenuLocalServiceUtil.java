@@ -45,6 +45,12 @@ public class SideMenuLocalServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static List<com.weprode.nero.menu.enums.MenuEntry> getSchoolMenu(
+		long schoolId) {
+
+		return getService().getSchoolMenu(schoolId);
+	}
+
 	public static List<com.weprode.nero.menu.enums.MenuEntry> getUserMenu(
 		com.liferay.portal.kernel.model.User user) {
 

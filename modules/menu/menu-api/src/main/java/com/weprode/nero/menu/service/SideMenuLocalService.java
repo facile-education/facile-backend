@@ -59,6 +59,9 @@ public interface SideMenuLocalService extends BaseLocalService {
 	public String getOSGiServiceIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<MenuEntry> getSchoolMenu(long schoolId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MenuEntry> getUserMenu(User user);
 
 }
