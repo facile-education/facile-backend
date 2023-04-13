@@ -71,6 +71,7 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
     private JSONObject getEntryAsJSON(MenuEntry menuEntry) {
         JSONObject entry = JSONFactoryUtil.createJSONObject();
 
+        entry.put(JSONConstants.ID, menuEntry.getId());
         entry.put(JSONConstants.ICON, menuEntry.getIcon());
         entry.put(JSONConstants.I18N_KEY, menuEntry.getKey());
         entry.put(JSONConstants.POSITION, menuEntry.getPosition());
