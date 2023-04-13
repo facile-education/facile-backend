@@ -30,6 +30,34 @@ public class JSONConstants {
     public static final String IS_ALLOWED = "isAllowed";
     public static final String CONTENT = "content";
 
+    // Applications
+    public static final String SERVICE = "service";
+    public static final String SERVICES = "services";
+    public static final String APPLICATION_ID = "applicationId";
+    public static final String APPLICATION_NAME = "applicationName";
+    public static final String APPLICATION_URL = "applicationUrl";
+    public static final String RULES = "rules";
+    public static final String ORG_IDS = "orgIds";
+    public static final String ROLE_IDS = "roleIds";
+    public static final String GROUP_IDS = "groupIds";
+    public static final String MENU_ENTRY_ID = "menuEntryId";
+    public static final String PORTLET_ID = "portletId";
+    public static final String PORTLETS = "portlets";
+    public static final String APPLICATION_KEY = "applicationKey";
+    public static final String CATEGORY = "category";
+    public static final String IMAGE = "image";
+    public static final String HAS_CUSTOM_URL = "hasCustomUrl";
+    public static final String EXPORT_USER = "exportUser";
+    public static final String EXPORT_PARENT = "exportParent";
+    public static final String EXPORT_STUDENT = "exportStudent";
+    public static final String EXPORT_TEACHER = "exportTeacher";
+    public static final String EXPORT_OTHER = "exportOther";
+    public static final String HAS_GLOBAL_URL = "hasGlobalUrl";
+    public static final String GLOBAL_URL = "globalUrl";
+    public static final String AUTHORIZED_SCHOOLS = "authorizedSchools";
+    public static final String DEFAULT_ROLES = "defaultRoles";
+    public static final String IS_BROADCASTED = "isBroadcasted";
+
     // User
     public static final String USER = "user";
     public static final String USERS = "users";
