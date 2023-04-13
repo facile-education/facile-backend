@@ -123,7 +123,9 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
 
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
                 throw new AuthException();
-            } else if (!RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            } else if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
+                    && !RoleUtilsLocalServiceUtil.isPersonal(user)
+                    && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
                 result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;

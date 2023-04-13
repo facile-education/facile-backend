@@ -1,0 +1,14 @@
+dependencies {
+	compile project(":modules:application:application-api")
+	compile project(":modules:commons")
+	compile project(":modules:role:role-api")
+	compile project(":modules:menu:menu-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+}
+
+buildService {
+	apiDir = "../application-api/src/main/java"
+}
+
+group = "com.weprode.nero.application"

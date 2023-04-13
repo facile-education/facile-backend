@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
@@ -72,10 +73,9 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		long maxUploadSize = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAX_UPLOAD_SIZE));
 		result.put(JSONConstants.MAX_UPLOAD_SIZE, maxUploadSize);
 
-		//TODO Application manager
-		/*result.put(JSONConstants.HAS_MINDMAP_BROADCASTED, ServiceBroadcastLocalServiceUtil.isServiceBroadcastedToUser(user.getUserId(), "mindmap"));
-		result.put(JSONConstants.HAS_GEOGEBRA_BROADCASTED, ServiceBroadcastLocalServiceUtil.isServiceBroadcastedToUser(user.getUserId(), "geogebra"));
-		result.put(JSONConstants.HAS_SCRATCH_BROADCASTED, ServiceBroadcastLocalServiceUtil.isServiceBroadcastedToUser(user.getUserId(), "scratch"));*/
+		result.put(JSONConstants.HAS_MINDMAP_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "mindmap"));
+		result.put(JSONConstants.HAS_GEOGEBRA_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "geogebra"));
+		result.put(JSONConstants.HAS_SCRATCH_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "scratch"));
 		result.put(JSONConstants.SUCCESS, true);
 
 		return result;

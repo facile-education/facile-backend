@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.application.model.Application">
+		<field name="applicationId" type="long" />
+		<field name="applicationName" type="String" />
+		<field name="applicationKey" type="String" />
+		<field name="categoryName" type="String" />
+		<field name="image" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="hasCustomUrl" type="boolean" />
+		<field name="hasGlobalUrl" type="boolean" />
+		<field name="globalUrl" type="String">
+			<hint name="max-length">200</hint>
+		</field>
+		<field name="exportUser" type="boolean" />
+		<field name="exportParent" type="boolean" />
+		<field name="exportStudent" type="boolean" />
+		<field name="exportTeacher" type="boolean" />
+		<field name="exportOther" type="boolean" />
+		<field name="menuEntryId" type="long" />
+	</model>
+	<model name="com.weprode.nero.application.model.AuthorizedSchool">
+		<field name="authorizedSchoolId" type="long" />
+		<field name="applicationId" type="long" />
+		<field name="schoolId" type="long" />
+	</model>
+	<model name="com.weprode.nero.application.model.Broadcast">
+		<field name="broadcastId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="applicationId" type="long" />
+		<field name="isBroadcasted" type="boolean" />
+		<field name="applicationUrl" type="String" />
+	</model>
+	<model name="com.weprode.nero.application.model.BroadcastRule">
+		<field name="broadcastRuleId" type="long" />
+		<field name="applicationId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="roleId" type="long" />
+		<field name="orgId" type="long" />
+		<field name="groupId" type="long" />
+	</model>
+	<model name="com.weprode.nero.application.model.DefaultRole">
+		<field name="defaultRoleId" type="long" />
+		<field name="roleId" type="long" />
+		<field name="applicationId" type="long" />
+	</model>
+</model-hints>
