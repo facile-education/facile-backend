@@ -1,0 +1,7 @@
+Bundle-Name: maintenance-api
+Bundle-SymbolicName: com.weprode.nero.maintenance.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.maintenance.service
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../maintenance-service/service.xml

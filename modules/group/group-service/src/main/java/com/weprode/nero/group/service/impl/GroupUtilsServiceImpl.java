@@ -248,7 +248,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     jsonGroup.put(JSONConstants.IS_CLASS, orgDetails.getType() == OrgConstants.CLASS_TYPE);
                     jsonGroup.put(JSONConstants.IS_SCHOOL, orgDetails.getType() == OrgConstants.SCHOOL_TYPE);
                     jsonGroup.put(JSONConstants.IS_SUBJECT, orgDetails.getType() == OrgConstants.SUBJECT_TYPE);
-                    jsonGroup.put(JSONConstants.IS_ADMIN, RoleUtilsLocalServiceUtil.isTeacher(user));
+                    jsonGroup.put(JSONConstants.IS_ADMIN, false);
                     // Members : do not count parents for classes and cours
                     jsonGroup.put(JSONConstants.NB_MEMBERS, UserOrgsLocalServiceUtil.countOrgMembers(org.getOrganizationId()));
                     // Return the group documentId
@@ -393,7 +393,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                             jsonMember.put(JSONConstants.IS_TEACHER, RoleUtilsLocalServiceUtil.isTeacher(member));
                             jsonMember.put(JSONConstants.IS_PARENT, RoleUtilsLocalServiceUtil.isParent(member));
                             jsonMember.put(JSONConstants.IS_STUDENT, RoleUtilsLocalServiceUtil.isStudent(member));
-                            jsonMember.put(JSONConstants.IS_ADMIN, RoleUtilsLocalServiceUtil.isTeacher(user));
+                            jsonMember.put(JSONConstants.IS_ADMIN, false);
                             jsonMembers.put(jsonMember);
                         }
                     }
