@@ -22,6 +22,8 @@ import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.*;
 import org.osgi.service.component.annotations.Component;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component(
@@ -114,7 +116,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
                 // Teachers see their pending renvois
                 // TODO HHC
-                /* if (containPendingFirings) {
+                /* if (!allHistory && containPendingFirings) {
                     List<Renvoi> pendingRenvois = RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId());
 
                     if (!pendingRenvois.isEmpty()) logger.info("Got "+pendingRenvois.size()+" pending renvois");
@@ -158,7 +160,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                     if (!givenHomeworks.isEmpty()) logger.info("Got "+givenHomeworks.size()+" homeworks");
 
                     for (Homework givenHomework : givenHomeworks) {
-                        if (givenHomework.getFromDate().after(minDate) && givenHomework.getFromDate().before(maxDate)) {
+                        if (givenHomework.getFromDate().after(minDate) && givenHomework.getFromDate().before(maxDate) && groupIds.contains(givenHomework.getGroupId())) {
                             GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getFromDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
                             groupActivities.add(homeworkActivity);
                         }
@@ -172,8 +174,10 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                     for (CDTSession session : sessions) {
                         // Get modificationDate
                         Date modificationDate = SessionTeacherLocalServiceUtil.getLastModificationDate(session.getSessionId(), minDate, maxDate);
-                        GroupActivity sessionActivity = new GroupActivity(session.getSessionId(), 0, modificationDate, ActivityConstants.ACTIVITY_TYPE_SESSION);
-                        groupActivities.add(sessionActivity);
+                        if (modificationDate != null) {
+                            GroupActivity sessionActivity = new GroupActivity(session.getSessionId(), 0, modificationDate, ActivityConstants.ACTIVITY_TYPE_SESSION);
+                            groupActivities.add(sessionActivity);
+                        }
                     }
                 }
 
@@ -228,7 +232,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
                 Homework homework = HomeworkLocalServiceUtil.getHomework(groupActivity.getActivityId());
                 User teacher = UserLocalServiceUtil.getUser(homework.getTeacherId());
-                jsonActivity.put(JSONConstants.MODIFICATION_DATE, homework.getFromDate());
+                jsonActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getFromDate()));
                 jsonActivity.put(JSONConstants.AUTHOR, teacher.getFullName());
                 String target;
                 if (homework.getIsCustomStudentList()) {
@@ -242,7 +246,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_SESSION) {
 
                 CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(groupActivity.getActivityId());
-                jsonActivity.put(JSONConstants.MODIFICATION_DATE, groupActivity.getActivityDate());
+                jsonActivity.put(JSONConstants.MODIFICATION_DATE, df.format(groupActivity.getActivityDate()));
                 User lastEditor = SessionTeacherLocalServiceUtil.getLastEditor(session.getSessionId(), groupActivity.getActivityDate());
                 jsonActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
                 jsonActivity.put(JSONConstants.TARGET, session.getTitle());
@@ -255,4 +259,5 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         return jsonActivity;
     }
 
+    public DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 }

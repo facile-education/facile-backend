@@ -217,7 +217,8 @@ public class SessionTeacherLocalServiceImpl
 		Date lastModificationDate = null;
 
 		for (SessionTeacher sessionTeacher : SessionTeacherLocalServiceUtil.getSessionTeachers(sessionId)) {
-			if (sessionTeacher.getModificationDate().after(minDate)
+			if (sessionTeacher.getModificationDate() != null
+					&& sessionTeacher.getModificationDate().after(minDate)
 					&& sessionTeacher.getModificationDate().before(maxDate)
 					&& (lastModificationDate == null ||	(sessionTeacher.getModificationDate().after(lastModificationDate)))) {
 				lastModificationDate = sessionTeacher.getModificationDate();
