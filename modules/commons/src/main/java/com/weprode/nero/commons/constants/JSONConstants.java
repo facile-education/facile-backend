@@ -6,6 +6,12 @@ public class JSONConstants {
         throw new IllegalStateException("Constants class");
     }
 
+    // Date formats
+    public static final String FRENCH_FORMAT = "dd/MM/yyyy";
+    public static final String FULL_FRENCH_FORMAT = "dd/MM/yyyy HH:mm";
+    public static final String ENGLISH_FORMAT = "yyyy-MM-dd";
+    public static final String FULL_ENGLISH_FORMAT = "yyyy-MM-dd HH:mm";
+
     // Global
     public static final String ID = "id";
     public static final String NAME = "name";
@@ -29,6 +35,7 @@ public class JSONConstants {
     public static final String PRIVATE = "private";
     public static final String IS_ALLOWED = "isAllowed";
     public static final String CONTENT = "content";
+    public static final String CONFIGURATION = "configuration";
 
     // Applications
     public static final String SERVICE = "service";
@@ -89,6 +96,7 @@ public class JSONConstants {
     public static final String TEACHER_ID = "teacherId";
     public static final String STUDENT_ID = "studentId";
     public static final String TEACHERS = "teachers";
+    public static final String TEACHER = "teacher";
     public static final String STUDENTS = "students";
     public static final String NB_TOTAL_USERS = "nbTotalUsers";
     public static final String CANDIDATES = "candidates";
@@ -149,9 +157,13 @@ public class JSONConstants {
     // Subject
     public static final String SUBJECT_ID = "subjectId";
     public static final String SUBJECTS= "subjects";
+    public static final String SUBJECT= "subject";
 
     // Activity
     public static final String ACTIVITIES = "activities";
+    public static final String MODIFICATION_DATE = "modificationDate";
+    public static final String AUTHOR = "author";
+    public static final String TARGET = "target";
 
     // Menu
     public static final String MENU = "menu";
@@ -220,6 +232,46 @@ public class JSONConstants {
     public static final String WOPI_LAST_MODIFIED_TIME = "LastModifiedTime";
     public static final String WOPI_SHA256 = "SHA256";
     public static final String WOPI_VERSION = "Version";
+
+    // Session
+    public static final String SESSION_ID = "sessionId";
+    public static final String SESSIONS = "sessions";
+    public static final String SCHOOLLIFE_SESSIONS = "schoollifeSessions";
+    public static final String SESSION_DETAILS = "sessionDetails";
+    public static final String START_DATE = "startDate";
+    public static final String END_DATE = "endDate";
+    public static final String ROOM = "room";
+    public static final String HAS_DESCRIPTION = "hasDescription";
+    public static final String IS_MANUAL = "isManual";
+    public static final String IS_PUBLISH = "isPublish";
+    public static final String TITLE = "title";
+    public static final String IS_CURRENT_USER_TEACHER = "isCurrentUserTeacher";
+    public static final String HAS_HOMEWORK = "hasHomework";
+    public static final String SUBSTITUTE_ID = "substituteId";
+    public static final String SUBSTITUTE = "substitute";
+    public static final String IS_SAME_SLOT = "isSameSlot";
+    public static final String NEXT_SESSIONS = "nextSessions";
+    public static final String START_DAY_TIME = "startDayTime";
+    public static final String END_DAY_TIME = "endDayTime";
+    public static final String START_DATE_PROJECT = "startDateProject";
+    public static final String START_DATE_SCHOOL = "startDateSchool";
+    public static final String END_DATE_SCHOOL = "endDateSchool";
+    public static final String SCHOOL_DAYS = "schoolDays";
+
+    // Homework
+    public static final String HOMEWORK_ID = "homeworkId";
+    public static final String ESTIMATED_TIME = "estimatedTime";
+    public static final String FROM_DATE = "fromDate";
+    public static final String TO_DATE = "toDate";
+    public static final String SOURCE_SESSION_ID = "sourceSessionId";
+    public static final String TARGET_SESSION_ID = "targetSessionId";
+    public static final String IS_SENT = "isSent";
+    public static final String SENT_DATE = "sentDate";
+    public static final String SENT_FILE_ID = "sentFileId";
+    public static final String IS_DONE = "isDone";
+    public static final String SELECTED_STUDENTS = "selectedStudents";
+    public static final String IS_WHOLE_CLASS = "isWholeClass";
+    public static final String DONE_STUDENTS = "doneStudents";
 
     // Success
     public static final String SUCCESS = "success";

@@ -18,6 +18,10 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.model.CDTSession;
+import com.weprode.nero.schedule.model.ScheduleConfiguration;
+import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.user.model.LDAPMapping;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.LDAPMappingLocalServiceUtil;
@@ -130,7 +134,7 @@ public class ExportUtils {
     private static String exportSacoche(String userRole, List<User> userList, ResourceBundle messages) throws SystemException {
         StringBuilder file = new StringBuilder();
 
-        SimpleDateFormat classicDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat classicDateFormat = new SimpleDateFormat(JSONConstants.FRENCH_FORMAT);
 
         // Nom* ; Prénom ; Date de naissance ; Sexe ; Division* ; Login ; ( * -> obligatoire)
         file.append(messages.getString(NOM)).append(";").append(messages.getString(PRENOM)).append(";")
@@ -585,8 +589,7 @@ public class ExportUtils {
             //file.append(messages.getString("date_jour")+ ";" +messages.getString("heure_debut") + ";" + messages.getString("heure_fin")
             // 	+ ";" + messages.getString("ressource") + ";" + messages.getString("description") + ";" + messages.getString("type") + "\n");
 
-            // TODO CDT
-            /*Configuration conf = ConfigurationLocalServiceUtil.getSchoolConfiguration(etabId);
+            ScheduleConfiguration conf = ScheduleConfigurationLocalServiceUtil.getSchoolConfiguration(etabId);
 
             List<CDTSession> sessions = CDTSessionLocalServiceUtil.getSchoolSessions(etabId,
                     conf.getStartSessionsDate(), conf.getEndSessionsDate());
@@ -594,14 +597,14 @@ public class ExportUtils {
 
             for (CDTSession session : sessions) {
                 if (!session.getRoom().isEmpty()) {
-                    SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat dayFormat = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
                     SimpleDateFormat hourFormat = new SimpleDateFormat("HH'h'mm");
 
                     // Type A = lesson
                     file.append(dayFormat.format(new Date()) + ";" + hourFormat.format(session.getSessionStart()) + ";" +
                             hourFormat.format(session.getSessionEnd()) + ";"+session.getRoom()+";"+ session.getTitle() +";A\n");
                 }
-            }*/
+            }
         }
 
         return file.toString();

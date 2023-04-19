@@ -14,6 +14,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.util.Validator;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.model.ParentSynchro;
 import com.weprode.nero.eel.synchronization.service.ParentSynchroLocalServiceUtil;
@@ -970,7 +971,7 @@ public class GVEParentSynchronizationManager {
     }
 
     private byte[] createCsvReport(List<String> errorLines) {
-        DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat sdf = new SimpleDateFormat(JSONConstants.FRENCH_FORMAT);
 
         StringBuilder result = new StringBuilder("Creation des comptes parents du " + sdf.format(new Date()) + "\n\n");
 

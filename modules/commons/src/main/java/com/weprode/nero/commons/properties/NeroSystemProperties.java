@@ -21,4 +21,5 @@ public class NeroSystemProperties {
 	public static final String CONFIRMATION_SENDER_ID = "ent.mailSender.use.forward";
 
 	public static final String PARENT_SYNCHRO_FOLDER = "synchro.drop.folder";
+	public static final String SCHEDULE_SYNCHRO_FOLDER = "synchro.schedule.drop.folder";
 }

@@ -31,8 +31,6 @@ import java.util.List;
 )
 public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalServiceBaseImpl {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
-
     private static final Log logger = LogFactoryUtil.getLog(MembershipActivityLocalServiceImpl.class);
 
     public MembershipActivity addMembershipActivity(long groupId, long actionUserId, List<Long> targetUserIds, boolean incoming) {
@@ -266,7 +264,7 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
     public JSONObject convertMembershipActivityToJson(MembershipActivity membershipActivity) {
         JSONObject jsonMembershipActivity = JSONFactoryUtil.createJSONObject();
 
-        DateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        DateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
         try {
             jsonMembershipActivity.put("activityId", membershipActivity.getMembershipActivityId());

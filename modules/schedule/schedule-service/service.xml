@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.schedule">
+	<namespace>Schedule</namespace>
+
+	<entity name="CDTSession" local-service="true" remote-service="true">
+		<column name="sessionId" type="long" primary="true" />
+		<column name="sessionStart" type="Date" />
+		<column name="sessionEnd" type="Date" />
+		<column name="weekId" type="long" />
+		<column name="published" type="boolean" />
+		<column name="title" type="String" />
+		<column name="fullCoursName" type="String" />
+		<column name="description" type="String" />
+		<column name="room" type="String" />
+		<column name="subject" type="String" />
+		<column name="schoolId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="isManual" type="boolean" />
+
+		<!-- Get all subClass CDTSessions for given school -->
+		<finder return-type="Collection" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+
+	<!-- Store all parent classes for sub-classes sessions -->
+	<entity name="SessionParentClass" local-service="true" remote-service="false">
+		<column name="sessionParentClassId" type="long" primary="true"/>
+		<column name="sessionId" type="long" />
+		<column name="groupId" type="long" />
+
+		<finder return-type="Collection" name="sessionId">
+			<finder-column name="sessionId" />
+		</finder>
+		<finder return-type="Collection" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+		<finder return-type="Collection" name="sessionId_groupId">
+			<finder-column name="sessionId" />
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+
+	<!-- Manage which teacher operates for a given session -->
+	<entity name="SessionTeacher" local-service="true" remote-service="true">
+		<column name="sessionTeacherId" type="long" primary="true"/>
+		<column name="sessionId" type="long" />
+		<column name="teacherId" type="long" />
+		<column name="status" type="int" />
+		<column name="substituteId" type="long" />
+		<column name="modificationDate" type="Date" />
+
+		<!-- Teacher view : get all sessions related to a teacher -->
+		<finder return-type="Collection" name="teacherId">
+			<finder-column name="teacherId" />
+		</finder>
+		<!-- Get teacher from session id-->
+		<finder return-type="Collection" name="sessionId">
+			<finder-column name="sessionId" />
+		</finder>
+		<!-- Get session teacher from session id and teacher id -->
+		<finder return-type="SessionTeacher" name="sessionId_teacherId">
+			<finder-column name="sessionId" />
+			<finder-column name="teacherId" />
+		</finder>
+		<!-- Get substituted teacher from session id and substitute id -->
+		<finder return-type="SessionTeacher" name="sessionId_substituteId">
+			<finder-column name="sessionId" />
+			<finder-column name="substituteId" />
+		</finder>
+	</entity>
+
+	<!-- Manage which student has a given session (subClass sessions) -->
+	<entity name="SessionStudent" local-service="true" remote-service="false">
+		<column name="sessionStudentId" type="long" primary="true"/>
+		<column name="sessionId" type="long" />
+		<column name="studentId" type="long" />
+
+		<finder return-type="Collection" name="sessionId">
+			<finder-column name="sessionId" />
+		</finder>
+		<finder return-type="Collection" name="studentId">
+			<finder-column name="studentId" />
+		</finder>
+		<finder return-type="Collection" name="sessionId_studentId">
+			<finder-column name="sessionId" />
+			<finder-column name="studentId" />
+		</finder>
+	</entity>
+
+	<!-- Manage homeworks -->
+	<entity name="Homework" local-service="true" remote-service="true">
+		<column name="homeworkId" type="long" primary="true"/>
+		<!-- 1=SIMPLE ; 2=EXERCICE, 3=FREE, 4=AUDIO, 5=EDX -->
+		<column name="type" type="long"/>
+		<column name="sourceSessionId" type="long" />
+		<column name="targetSessionId" type="long" />
+		<column name="targetWeekId" type="int" />
+		<column name="targetDate" type="Date" />
+		<column name="groupId" type="long" />
+		<column name="teacherId" type="long" />
+		<column name="description" type="String" />
+		<column name="estimatedTime" type="long" />
+		<column name="fromDate" type="Date" />
+		<column name="isCustomStudentList" type="boolean" />
+
+		<!-- Teacher view : get homeworks given for a given session -->
+		<finder return-type="Collection" name="targetSessionId">
+			<finder-column name="targetSessionId" />
+		</finder>
+
+		<!-- Teacher view : get homeworks given during a given session -->
+		<finder return-type="Collection" name="sourceSessionId">
+			<finder-column name="sourceSessionId" />
+		</finder>
+
+		<!-- Calendar panel : get 'free date' homeworks given for a given week -->
+		<finder return-type="Collection" name="targetWeekId">
+			<finder-column name="targetWeekId" />
+		</finder>
+	</entity>
+
+	<!-- Manage user-specific homeworks -->
+	<entity name="StudentHomework" local-service="true" remote-service="false">
+		<column name="studentHomeworkId" type="long" primary="true"/>
+		<column name="homeworkId" type="long"/>
+		<column name="studentId" type="long"/>
+		<column name="isDone" type="boolean" />
+		<column name="isSent" type="boolean" />
+		<column name="sentDate" type="Date" />
+		<column name="sentFileId" type="long" />
+
+		<finder return-type="Collection" name="homeworkId">
+			<finder-column name="homeworkId" />
+		</finder>
+		<finder return-type="Collection" name="studentId">
+			<finder-column name="studentId" />
+		</finder>
+		<finder return-type="Collection" name="studentId_homeworkId">
+			<finder-column name="studentId" />
+			<finder-column name="homeworkId" />
+		</finder>
+	</entity>
+
+	<entity name="TeacherGroupColor" local-service="true" remote-service="false">
+		<column name="teacherGroupColorId" type="long" primary="true"/>
+		<column name="teacherId" type="long"/>
+		<column name="groupId" type="long"/>
+		<column name="color" type="String" />
+
+		<finder return-type="Collection" name="teacherId">
+			<finder-column name="teacherId" />
+		</finder>
+
+		<finder return-type="Collection" name="teacherId_groupId">
+			<finder-column name="teacherId" />
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+
+	<entity name="SubjectGroupColor" local-service="true" remote-service="false">
+		<column name="subjectGroupColorId" type="long" primary="true"/>
+		<column name="subject" type="String"/>
+		<column name="groupId" type="long"/>
+		<column name="color" type="String" />
+
+		<finder return-type="Collection" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+
+		<finder return-type="Collection" name="groupId_subject">
+			<finder-column name="groupId" />
+			<finder-column name="subject" />
+		</finder>
+	</entity>
+
+	<!-- Weekly schedule -->
+	<entity name="WeeklySchedule" local-service="true" remote-service="false">
+		<column name="schoolId" type="long" primary="true" />
+		<column name="dayId" type="int" primary="true" />
+
+		<!-- Get opening days for a given school -->
+		<finder return-type="Collection" name="schoolId">
+			<finder-column name="schoolId" />
+		</finder>
+	</entity>
+
+	<!-- Daily schedule -->
+	<entity name="DailySchedule" local-service="true" remote-service="false">
+		<column name="schoolId" type="long" primary="true" />
+		<column name="sessionId" type="int" primary="true" />
+		<column name="sessionStartHour" type="String" />
+		<column name="sessionEndHour" type="String" />
+
+		<!-- Get session hours for a given school -->
+		<finder return-type="Collection" name="schoolId">
+			<finder-column name="schoolId" />
+		</finder>
+	</entity>
+
+	<!-- Global schedule -->
+	<entity name="ScheduleConfiguration" local-service="true" remote-service="true">
+		<column name="schoolId" type="long" primary="true"/>
+		<column name="startDayTime" type="String" />
+		<column name="endDayTime" type="String" />
+		<column name="startSessionsDate" type="Date" />
+		<column name="endSessionsDate" type="Date" />
+	</entity>
+
+</service-builder>

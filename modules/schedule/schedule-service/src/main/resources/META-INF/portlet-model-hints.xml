@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.schedule.model.CDTSession">
+		<field name="sessionId" type="long" />
+		<field name="sessionStart" type="Date" />
+		<field name="sessionEnd" type="Date" />
+		<field name="weekId" type="long" />
+		<field name="published" type="boolean" />
+		<field name="title" type="String">
+			<hint name="max-length">250</hint>
+		</field>
+		<field name="fullCoursName" type="String" />
+		<field name="description" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="room" type="String" />
+		<field name="subject" type="String" />
+		<field name="schoolId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="isManual" type="boolean" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.DailySchedule">
+		<field name="schoolId" type="long" />
+		<field name="sessionId" type="int" />
+		<field name="sessionStartHour" type="String" />
+		<field name="sessionEndHour" type="String" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.Homework">
+		<field name="homeworkId" type="long" />
+		<field name="type" type="long" />
+		<field name="sourceSessionId" type="long" />
+		<field name="targetSessionId" type="long" />
+		<field name="targetWeekId" type="int" />
+		<field name="targetDate" type="Date" />
+		<field name="groupId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="description" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="estimatedTime" type="long" />
+		<field name="fromDate" type="Date" />
+		<field name="isCustomStudentList" type="boolean" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.ScheduleConfiguration">
+		<field name="schoolId" type="long" />
+		<field name="startDayTime" type="String" />
+		<field name="endDayTime" type="String" />
+		<field name="startSessionsDate" type="Date" />
+		<field name="endSessionsDate" type="Date" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.SessionParentClass">
+		<field name="sessionParentClassId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="groupId" type="long" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.SessionStudent">
+		<field name="sessionStudentId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="studentId" type="long" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.SessionTeacher">
+		<field name="sessionTeacherId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="status" type="int" />
+		<field name="substituteId" type="long" />
+		<field name="modificationDate" type="Date" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.StudentHomework">
+		<field name="studentHomeworkId" type="long" />
+		<field name="homeworkId" type="long" />
+		<field name="studentId" type="long" />
+		<field name="isDone" type="boolean" />
+		<field name="isSent" type="boolean" />
+		<field name="sentDate" type="Date" />
+		<field name="sentFileId" type="long" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.SubjectGroupColor">
+		<field name="subjectGroupColorId" type="long" />
+		<field name="subject" type="String" />
+		<field name="groupId" type="long" />
+		<field name="color" type="String" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.TeacherGroupColor">
+		<field name="teacherGroupColorId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="color" type="String" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.WeeklySchedule">
+		<field name="schoolId" type="long" />
+		<field name="dayId" type="int" />
+	</model>
+</model-hints>

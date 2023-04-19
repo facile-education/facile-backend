@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.service.*;
 import com.liferay.portal.kernel.util.*;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.ldap.util.LDAPUtil;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.model.Subject;
 import com.weprode.nero.eel.synchronization.service.SubjectLocalServiceUtil;
@@ -28,6 +29,11 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.LDAPMapping;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.*;
+import com.weprode.nero.schedule.model.CDTSession;
+import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
+import com.weprode.nero.schedule.service.SessionParentClassLocalServiceUtil;
+import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
@@ -174,8 +180,7 @@ public class GVESynchronizationManager {
         synchronizeRole(school, "cn=ENT-SECRETAIRES,ou=ENT-PAT,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.SECRETAIRE);
 
         synchronizeHoraires(school, schoolId);
-        // TODO Cdt
-        // createHoraires(school);
+        createHoraires(school);
 
         synchronizeUserOrgs();
 
@@ -336,7 +341,6 @@ public class GVESynchronizationManager {
                 }
             }
         }
-
     }
 
     private void synchronizeVolees(Organization school, String classesDn) throws NamingException {
@@ -685,7 +689,6 @@ public class GVESynchronizationManager {
             }
         } catch (NamingException e) {
             logger.error("LDAP error when synchronizing school " + schoolId, e);
-            // throw e;
         } catch (Exception e) {
             logger.error("Error while synchronizing school " + schoolId, e);
         }
@@ -917,7 +920,7 @@ public class GVESynchronizationManager {
                         logger.error("Error while creating user from fullCn="+fullCn+", sn="+sn+", givenName="+givenName+", mail="+mail, e);
                     }
                 } else {
-                    //_log.info("Found a user with same mail in DB -> using it");
+                    logger.debug("Found a user with same mail in DB -> using it");
                     cnUserMap.put(fullCn, candidate);
                     return candidate;
                 }
@@ -1193,7 +1196,8 @@ public class GVESynchronizationManager {
             if (attrs.get(MEMBER) != null) {
                 for (int i = 0 ; i < attrs.get(MEMBER).size(); i++) {
                     String memberCn = attrs.get(MEMBER).get(i).toString();
-                    //_log.info("Found member " + memberCn);
+                    logger.debug("Found member " + memberCn);
+
                     // Teachers are processed through csv files
                     // Here we take care of students
                     if (memberCn.contains("ELEVES")) {
@@ -1226,7 +1230,7 @@ public class GVESynchronizationManager {
 
         // Parse input directory
         // If multiple files for given schoolId, archive old ones and return the latest
-        File horairesDir = new File("/home/entnero/horaires");
+        File horairesDir = new File(PropsUtil.get(NeroSystemProperties.SCHEDULE_SYNCHRO_FOLDER));
         File[] filesTab = horairesDir.listFiles();
         if (filesTab != null && filesTab.length > 0) {
 
@@ -1273,6 +1277,7 @@ public class GVESynchronizationManager {
                         }
                     }
 
+                    assert latestFile != null;
                     logger.info("Processing file " + latestFile.getName());
                     return latestFile;
 
@@ -1288,7 +1293,7 @@ public class GVESynchronizationManager {
         logger.info("Archiving file " + sourceFile.getName());
 
         // Create archive directory if it does not exist
-        File archiveDir = new File("/home/entnero/horaires/archives/");
+        File archiveDir = new File(PropsUtil.get(NeroSystemProperties.SCHEDULE_SYNCHRO_FOLDER) + "archives/");
         if (!archiveDir.exists()) {
             archiveDir.mkdir();
         }
@@ -1523,30 +1528,29 @@ public class GVESynchronizationManager {
             newSessionName = newSessionName.substring(0, (Math.min(newSessionName.length(), 7)));
         } else {
             // Language or science groups -> keep full name
-            logger.error("--------- ELSE");
+            logger.info("--------- ELSE");
         }
         logger.info("sessionName " + sessionName + " transformed into " + newSessionName);
         return newSessionName;
 
     }
 
-    // TODO Cdt
-    /*private void createHoraires(Organization school) {
-
-        final DateFormat fullFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private void createHoraires(Organization school) {
+        final DateFormat fullFormat = new SimpleDateFormat(JSONConstants.FULL_FRENCH_FORMAT);
 
         int classIndex = 0;
         logger.info("About to build CDT sessions for " + coursMap.size() + " cours");
 
         // For obsolete cours orgs deletion
-        List<Integer> types = new ArrayList<Integer>();
+        List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.COURS_TYPE);
         List<Organization> existingCoursOrgs = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, null, false);
         logger.info("There are " + existingCoursOrgs.size() + " existing cours organizations");
-        List<Long> newCoursOrgIds = new ArrayList<Long>();
+        List<Long> newCoursOrgIds = new ArrayList<>();
 
-        for (String coursName : coursMap.keySet()) {
+        for (Map.Entry<String, Map<String, List<SlotData>>> coursEntry : coursMap.entrySet()) {
 
+            String coursName = coursEntry.getKey();
             String fullCoursName = school.getName() + " - " + coursName;
 
             Organization coursOrg = null;
@@ -1573,16 +1577,17 @@ public class GVESynchronizationManager {
             List<CDTSession> existingCoursSessions = CDTSessionLocalServiceUtil.getGroupSessions(coursOrg.getGroupId(), coursStartDate, schoolYearEndDate, false);
 
             // Will contain all processed sessionIds
-            List<Long> newSessionIds = new ArrayList<Long>();
+            List<Long> newSessionIds = new ArrayList<>();
 
             // Loop over slots
             int slotIndex = 0;
-            Map<String, List<SlotData>> slotMap = coursMap.get(coursName);
-            for (String slot : slotMap.keySet()) {
+            Map<String, List<SlotData>> slotMap = coursEntry.getValue();
+            for (Map.Entry<String, List<SlotData>> slotEntry : slotMap.entrySet()) {
 
+                String slot = slotEntry.getKey();
                 slotIndex++;
 
-                for (SlotData slotData : slotMap.get(slot)) {
+                for (SlotData slotData : slotEntry.getValue()) {
 
                     String room = slotData.getRoom();
 
@@ -1628,7 +1633,6 @@ public class GVESynchronizationManager {
                         }
                     }
 
-
                     // Existing sessions for this cours org : from today at 6 in the morning to the schoolyear'end date
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(new Date());
@@ -1636,7 +1640,7 @@ public class GVESynchronizationManager {
                     cal.set(Calendar.MINUTE, 0);
                     cal.set(Calendar.SECOND, 0);
                     Date startDate = cal.getTime();
-                    List<CDTSession> existingSessions = new ArrayList<CDTSession>(CDTSessionLocalServiceUtil.getGroupSessions(coursOrg.getGroupId(), startDate, schoolYearEndDate, false));
+                    List<CDTSession> existingSessions = new ArrayList<>(CDTSessionLocalServiceUtil.getGroupSessions(coursOrg.getGroupId(), startDate, schoolYearEndDate, false));
                     logger.info("Found " + existingSessions.size() + " existing sessions");
 
                     logger.info("There is " + sessionInfosList.size() + " session infos to process");
@@ -1645,9 +1649,9 @@ public class GVESynchronizationManager {
                         List<Long> teacherIdList = sessionInfos.getTeacherIds();
 
                         // tmp
-                        String teacherIdsStr = "";
+                        StringBuilder teacherIdsStr = new StringBuilder();
                         for (Long teacherId : teacherIdList) {
-                            teacherIdsStr += teacherId + ",";
+                            teacherIdsStr.append(teacherId).append(",");
                         }
                         logger.info("-----------------------");
                         logger.info("Loop over sessionInfos with fullCoursName " + sessionInfos.getFullCoursName() + " and teachers " + teacherIdsStr);
@@ -1669,6 +1673,7 @@ public class GVESynchronizationManager {
                                 try {
                                     CDTSessionLocalServiceUtil.updateCDTSession(existingSession);
                                 } catch (Exception e) {
+                                    logger.debug(e);
                                 }
                             }
 
@@ -1685,6 +1690,7 @@ public class GVESynchronizationManager {
                                 try {
                                     CDTSessionLocalServiceUtil.updateCDTSession(existingSession);
                                 } catch (Exception e) {
+                                    logger.debug(e);
                                 }
                             }
 
@@ -1705,9 +1711,7 @@ public class GVESynchronizationManager {
                             }
                         }
                     }
-
                 }
-
             }
 
             // Delete obsolete sessions for current cours (if empty description and no homework related and not in the past)
@@ -1724,7 +1728,7 @@ public class GVESynchronizationManager {
                                     && !HomeworkLocalServiceUtil.hasHomeworksGivenInSession(toDeleteSession.getSessionId())
                                     && !HomeworkLocalServiceUtil.hasHomeworksToDoForSession(toDeleteSession.getSessionId())) {
 
-                                CDTSessionLocalServiceUtil.deleteSessionAndDependancies(toDeleteSession.getSessionId());
+                                CDTSessionLocalServiceUtil.deleteSessionAndDependencies(toDeleteSession.getSessionId());
                                 logger.info(">>> Deleted OBSOLETE SESSION "+toDeleteSession.getSessionId());
                             } else {
                                 logger.info("Session "+toDeleteSession.getSessionId()+" not deleted because description is not empty or homeworks are still related to it");
@@ -1735,7 +1739,6 @@ public class GVESynchronizationManager {
                     }
                 }
             }
-
         }
 
         // Delete obsolete cours orgs
@@ -1743,7 +1746,7 @@ public class GVESynchronizationManager {
         for (Organization toRemoveOrg : existingCoursOrgs) {
             if (!newCoursOrgIds.contains(toRemoveOrg.getOrganizationId())) {
                 logger.info("Should delete obsolete cours org " + toRemoveOrg.getName() + " for school " + school.getName() + " (But for safety reason we keep it for now)");
-//				_log.info("Deleting obsolete cours org " + toRemoveOrg.getName() + " for school " + school.getName());
+//				logger.info("Deleting obsolete cours org " + toRemoveOrg.getName() + " for school " + school.getName());
 //				try {
 //					// Check if it has members
 //					long[] userIds = UserLocalServiceUtil.getOrganizationUserIds(toRemoveOrg.getOrganizationId());
@@ -1760,7 +1763,7 @@ public class GVESynchronizationManager {
 //				}
             }
         }
-    }*/
+    }
 
     private String extractVolee (String coursName) {
 
@@ -1798,13 +1801,11 @@ public class GVESynchronizationManager {
         return null;
     }
 
-    // TODO CDT
-    /*private void updateTeachers (CDTSession existingCdtSession, List<Long> newTeacherIdList, boolean addOnly) {
-
+    private void updateTeachers (CDTSession existingCdtSession, List<Long> newTeacherIdList, boolean addOnly) {
         try {
             boolean isDiff = false;
             List<Long> existingTeacherIds = SessionTeacherLocalServiceUtil.getTeacherIds(existingCdtSession.getSessionId());
-            List<Long> teacherIdListToUpdate = new ArrayList<Long>(existingTeacherIds);
+            List<Long> teacherIdListToUpdate = new ArrayList<>(existingTeacherIds);
             for (Long existingTeacherId : existingTeacherIds) {
                 if (!newTeacherIdList.contains(existingTeacherId) && !addOnly) {
                     logger.info("++++ TeacherId is to delete : "+ existingTeacherId);
@@ -1825,19 +1826,18 @@ public class GVESynchronizationManager {
         } catch (Exception e) {
             logger.error("Error while updating teachers", e);
         }
-    }*/
+    }
 
-    // TODO CDT
-    /*private void updateParentClassGroupIds (Long sessionId, List<Long> newParentClassGroupIds) {
+    private void updateParentClassGroupIds (Long sessionId, List<Long> newParentClassGroupIds) {
         List<Long> existingParentGroupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(sessionId);
 
         for (Long newParentGroupId : newParentClassGroupIds) {
             if (!existingParentGroupIds.contains(newParentGroupId)) {
                 SessionParentClassLocalServiceUtil.addSessionParentClass(sessionId, newParentGroupId);
-                //_log.info(">>> ADDING parentGroupId " + newParentGroupId + " to sessionId " + sessionId);
+                logger.debug(">>> ADDING parentGroupId " + newParentGroupId + " to sessionId " + sessionId);
             }
         }
-    }*/
+    }
 
     private List<Long> getTeacherIds (SlotData slotData) {
 
@@ -1850,25 +1850,22 @@ public class GVESynchronizationManager {
         return slotTeacherIds;
     }
 
-    // TODO CDT
-    /*private CDTSession getExistingSession(List<CDTSession> existingSessions, Date startDate, Date endDate, String fullCoursName, String room) {
-
+    private CDTSession getExistingSession(List<CDTSession> existingSessions, Date startDate, Date endDate, String fullCoursName, String room) {
         DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         logger.info("getExistingSession for fullCoursName="+fullCoursName + ", startDate " + sdf.format(startDate) + " and endDate " + sdf.format(endDate));
 
         // First filter on startDate and endDate only
-        List<CDTSession> sessionCandidates = new ArrayList<CDTSession>();
+        List<CDTSession> sessionCandidates = new ArrayList<>();
         for (CDTSession existingSession : existingSessions) {
-            //_log.info("Compare session " + sdf.format(startDate) + " / " + sdf.format(existingSession.getSessionStart()) + " and " + sdf.format(endDate) + " / " + sdf.format(existingSession.getSessionEnd()) + " and " + room + " / " + existingSession.getRoom());
+            logger.debug("Compare session " + sdf.format(startDate) + " / " + sdf.format(existingSession.getSessionStart()) + " and " + sdf.format(endDate) + " / " + sdf.format(existingSession.getSessionEnd()) + " and " + room + " / " + existingSession.getRoom());
             if (isSameDayAndHour(existingSession.getSessionStart(), startDate)
                     && isSameDayAndHour(existingSession.getSessionEnd(), endDate)) {
                 sessionCandidates.add(existingSession);
             }
         }
 
-        if (sessionCandidates.size() == 0) {
+        if (sessionCandidates.isEmpty()) {
             return null;
-
         } else if (sessionCandidates.size() == 1) {
             // If only 1 result, check that fullCoursName OR room are the same
             logger.info("1 session candidate");
@@ -1886,9 +1883,11 @@ public class GVESynchronizationManager {
                 }
             }
         }
+
         logger.info("No session candidate");
+
         return null;
-    }*/
+    }
 
     /**
      * Returns true if both Date parameters are the same day and hour
@@ -1905,12 +1904,9 @@ public class GVESynchronizationManager {
                 && cal1.get(Calendar.MINUTE) == cal2.get(Calendar.MINUTE));
     }
 
-
     // Returns all candidate pairs startDate / endDate / teacherIds
     private List<SessionInfos> getSessionInfos(String slot, SlotData slotData) {
-
         List<SessionInfos> sessionInfosList = new ArrayList<>();
-        //final DateFormat fullFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         logger.info(" >> slot = " + slot);
 
@@ -1923,7 +1919,6 @@ public class GVESynchronizationManager {
         String endTimeStr = endSlotMap.get(slot.substring(1, 3));
         int slotEndHour = Integer.parseInt(endTimeStr.substring(0, 2));
         int slotEndMinute = Integer.parseInt(endTimeStr.substring(3, 5));
-
 
         // First loop over TeacherFrequencies and calculate a list of dates for each frequency
         for (TeacherFrequency teacherFrequency : slotData.getTeacherFrequencyList()) {
@@ -1987,9 +1982,8 @@ public class GVESynchronizationManager {
             }
         }
 
-
         // Re-loop over TeacherFrequencies and compare dates
-        for (int i = 0 ; i <  slotData.getTeacherFrequencyList().size() ; i++) {
+        for (int i = 0 ; i < slotData.getTeacherFrequencyList().size() ; i++) {
 
             TeacherFrequency teacherFrequency = slotData.getTeacherFrequencyList().get(i);
 
@@ -2067,9 +2061,9 @@ public class GVESynchronizationManager {
             logger.info("date " + cal.getTime() +" is 2H. Week of year is " + cal.get(Calendar.WEEK_OF_YEAR));
             return true;
         }
+
         return false;
     }
-
 
     private int getSlotDay(String slot) {
         if (slot.length() != 3) {
@@ -2139,6 +2133,7 @@ public class GVESynchronizationManager {
                 this.parentClassGroupIds.add(groupId);
             }
         }
+
         public List<Long> getParentClassGroupIds() {
             return parentClassGroupIds;
         }
@@ -2194,7 +2189,6 @@ public class GVESynchronizationManager {
             return this.dateList;
         }
     }
-
 
     public Map<String, String> startSlotMap;
     public Map<String, String> endSlotMap;
@@ -2312,7 +2306,6 @@ public class GVESynchronizationManager {
     }
 
     public LdapContext getContext(long companyId) {
-
         if (ctx != null) {
             return ctx;
         }
@@ -2343,7 +2336,6 @@ public class GVESynchronizationManager {
      * Initializes all variables for synchronization
      */
     private void initSynchronization () {
-
         cnUserMap = new HashMap<>();
         coursMap = new HashMap<>();
         createdUserList = new ArrayList<>();
@@ -2358,7 +2350,7 @@ public class GVESynchronizationManager {
             logger.error("Error while retrieving root org", e);
         }
 
-        DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat sdf = new SimpleDateFormat(JSONConstants.FRENCH_FORMAT);
         try {
             schoolYearStartDate = sdf.parse("22/08/2022");
             schoolYearSemesterDate = sdf.parse("22/01/2023"); // The sunday before changing semester date
@@ -2429,10 +2421,10 @@ public class GVESynchronizationManager {
     }
 
     private void addUserToOrgMap(User user, long orgId) {
-
         if (user == null) {
             return;
         }
+
         if (userOrgMap.containsKey(user)) {
             if (!userOrgMap.get(user).contains(orgId)) {
                 userOrgMap.get(user).add(orgId);
@@ -2601,7 +2593,7 @@ public class GVESynchronizationManager {
         }
 
         public boolean hasErrors() {
-            return !this.getSmogCours().isEmpty() || (this.getSmogCours().isEmpty() && isDirectoryError()) || !unknownSirh.isEmpty() || !unknownRoles.isEmpty();
+            return !this.getSmogCours().isEmpty() || isDirectoryError() || !unknownSirh.isEmpty() || !unknownRoles.isEmpty();
         }
     }
     
@@ -2633,7 +2625,7 @@ public class GVESynchronizationManager {
             }
             String subject = "Anomalies lors de la synchronisation des profils des agents et des horaires";
             StringBuilder content = new StringBuilder("Bonjour,<br><br>"
-                    + "Des erreurs ont \u00e9t\u00e9 d\u00e9tect\u00e9es lors de la synchronisation des profils des agents et des horaires pour votre \u00e9tablissement, en date du " + new SimpleDateFormat("dd/MM/yyyy").format(new Date()) + ".<br><br>");
+                    + "Des erreurs ont \u00e9t\u00e9 d\u00e9tect\u00e9es lors de la synchronisation des profils des agents et des horaires pour votre \u00e9tablissement, en date du " + new SimpleDateFormat(JSONConstants.FRENCH_FORMAT).format(new Date()) + ".<br><br>");
 
             // Unknown teachers
             if (!reportData.getUnknownSirh().isEmpty()) {

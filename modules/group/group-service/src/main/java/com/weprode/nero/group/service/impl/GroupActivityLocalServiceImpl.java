@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.model.Activity;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
@@ -14,6 +15,11 @@ import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.model.MembershipActivity;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupActivityLocalServiceBaseImpl;
+import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.model.CDTSession;
+import com.weprode.nero.schedule.model.Homework;
+import com.weprode.nero.schedule.service.*;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.*;
@@ -53,9 +59,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             Date minDate = cal.getTime();
 
             // Limit date is the school year start date
-            // TODO cdt
-            Date limitMinDate = new Date();
-            // Date limitMinDate = ConfigurationLocalServiceUtil.getConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getStartSessionsDate();
+            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getStartSessionsDate();
 
             // Get activities by successive range dates going back in time, so that we ensure pagination is fine
             // Do not exceed 1 month back in time
@@ -143,9 +147,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }*/
 
                 // Homeworks given
-                // TODO cdt
-                /*if (containHomework) {
-                    List<Homework> givenHomeworks = new ArrayList<Homework>();
+                if (containHomework) {
+                    List<Homework> givenHomeworks = new ArrayList<>();
                     if (RoleUtilsLocalServiceUtil.isStudent(user)) {
                         givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworks(user, minDate);
                     } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
@@ -172,7 +175,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                         GroupActivity sessionActivity = new GroupActivity(session.getSessionId(), 0, modificationDate, ActivityConstants.ACTIVITY_TYPE_SESSION);
                         groupActivities.add(sessionActivity);
                     }
-                }*/
+                }
 
                 // Decrease 1 week
                 maxDate = minDate;
@@ -223,29 +226,27 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_HOMEWORK) {
 
-                // TODO cdt
-                /* Homework homework = HomeworkLocalServiceUtil.getHomework(groupActivity.getActivityId());
+                Homework homework = HomeworkLocalServiceUtil.getHomework(groupActivity.getActivityId());
                 User teacher = UserLocalServiceUtil.getUser(homework.getTeacherId());
-                jsonActivity.put("modificationDate", homework.getFromDate());
-                jsonActivity.put("author", teacher.getFullName());
+                jsonActivity.put(JSONConstants.MODIFICATION_DATE, homework.getFromDate());
+                jsonActivity.put(JSONConstants.AUTHOR, teacher.getFullName());
                 String target;
                 if (homework.getIsCustomStudentList()) {
                     target = StudentHomeworkLocalServiceUtil.getHomeworkStudents(homework.getHomeworkId()).size() + " \u00E9l\u00E8ves";
                 } else {
                     target = " tous";
                 }
-                jsonActivity.put("target", target);*/
-                jsonActivity.put("type", ActivityConstants.TYPE_HOMEWORK);
+                jsonActivity.put(JSONConstants.TARGET, target);
+                jsonActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_HOMEWORK);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_SESSION) {
 
-                // TODO cdt
-                /* CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(groupActivity.getActivityId());
-                jsonActivity.put("modificationDate", groupActivity.getActivityDate());
+                CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(groupActivity.getActivityId());
+                jsonActivity.put(JSONConstants.MODIFICATION_DATE, groupActivity.getActivityDate());
                 User lastEditor = SessionTeacherLocalServiceUtil.getLastEditor(session.getSessionId(), groupActivity.getActivityDate());
-                jsonActivity.put("author", lastEditor.getFullName());
-                jsonActivity.put("target", session.getTitle());*/
-                jsonActivity.put("type", ActivityConstants.TYPE_SESSION);
+                jsonActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
+                jsonActivity.put(JSONConstants.TARGET, session.getTitle());
+                jsonActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_SESSION);
             }
         } catch (Exception e) {
             logger.error("Error converting group activity", e);

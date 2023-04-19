@@ -91,7 +91,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
                             jsonAffectation.put(JSONConstants.TYPE, orgDetails.getType());
                             jsonAffectation.put(JSONConstants.ADMIN_NAME, UserLocalServiceUtil.getUser(userAffectation.getAdminUserId()).getFullName());
                             jsonAffectation.put(JSONConstants.AFFECTATION_DATE,
-                                    new SimpleDateFormat("yyyy-MM-dd").format(userAffectation.getAffectationDate()));
+                                    new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(userAffectation.getAffectationDate()));
                             jsonAffectations.put(jsonAffectation);
                         }
                     } catch (Exception e) {
@@ -142,7 +142,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         try {
             Date expireDate = null;
             if (!expirationDate.equals("")) {
-                expireDate = new SimpleDateFormat("yyyy-MM-dd").parse(expirationDate);
+                expireDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(expirationDate);
             }
             boolean success = AffectationLocalServiceUtil.addUserAffectation(userId, orgId, adminUser.getUserId(), expireDate);
             result.put(JSONConstants.SUCCESS, success);
