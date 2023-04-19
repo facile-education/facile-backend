@@ -51,8 +51,6 @@ import java.util.List;
 public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(GroupUtilsServiceImpl.class);
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
-    private static final String SHORT_DATE_FORMAT = "yyyy-MM-dd";
 
     // Used in Horaires
     @JSONWebService(value = "get-user-groups", method = "GET")
@@ -158,7 +156,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
         try {
             JSONArray groupsArray = JSONFactoryUtil.createJSONArray();
-            DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+            DateFormat dateFormat = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             long schoolId = userProperties.getEtabId();
@@ -434,7 +432,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             JSONArray jsonActivities = JSONFactoryUtil.createJSONArray();
             List<Long> groupIds = new ArrayList<>();
             groupIds.add(groupId);
-            Date maximumDate = new SimpleDateFormat(SHORT_DATE_FORMAT).parse(maxDate);
+            Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults);
             for (GroupActivity groupActivity : groupActivities) {
                 JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);
@@ -476,7 +474,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             JSONArray jsonActivities = JSONFactoryUtil.createJSONArray();
             List<Long> groupIds = new ArrayList<>();
             groupIds.add(groupId);
-            Date maximumDate = new SimpleDateFormat(SHORT_DATE_FORMAT).parse(maxDate);
+            Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults, allHistory, containNews, containDocs, containMembership, containPendingFirings, containFirings, containHomework, containSessions);
             for (GroupActivity groupActivity : groupActivities) {
                 JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);
@@ -517,7 +515,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             JSONArray jsonActivities = JSONFactoryUtil.createJSONArray();
             List<Long> groupIds = new ArrayList<>();
             groupIds.add(groupId);
-            Date maximumDate = new SimpleDateFormat(SHORT_DATE_FORMAT).parse(maxDate);
+            Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getGroupsHistory(user.getUserId(), groupIds, maximumDate, nbResults);
             for (GroupActivity groupActivity : groupActivities) {
                 JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);

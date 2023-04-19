@@ -76,7 +76,7 @@ public class VersionLocalServiceImpl extends VersionLocalServiceBaseImpl {
 				curr.put(JSONConstants.ID, dlFileVersion.getFileVersionId());
 				curr.put(JSONConstants.NAME, dlFileVersion.getVersion());
 				curr.put(JSONConstants.SIZE, (int) dlFileVersion.getSize());
-				curr.put(JSONConstants.DATE, new SimpleDateFormat(DocumentConstants.DATE_FORMAT)
+				curr.put(JSONConstants.DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
 						.format(dlFileVersion.getCreateDate()));
 				curr.put(JSONConstants.USER_NAME, dlFileVersion.getUserName());
 				curr.put(JSONConstants.STATUS_BY_USER_NAME, dlFileVersion.getStatusByUserName());

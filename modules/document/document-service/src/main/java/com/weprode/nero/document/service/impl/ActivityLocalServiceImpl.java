@@ -11,7 +11,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.weprode.nero.document.constants.DocumentConstants;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.model.Activity;
 import com.weprode.nero.document.service.base.ActivityLocalServiceBaseImpl;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
@@ -125,7 +125,7 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 			// Group link redirects to the parent folder of the file, in the group document area
 			// TODO link
 			jsonActivity.put("folderLink", "/user//nero#/documents?folderId=" + activity.getFolderId());
-			jsonActivity.put("modificationDate", new SimpleDateFormat(DocumentConstants.DATE_FORMAT)
+			jsonActivity.put("modificationDate", new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
 					.format(activity.getModificationDate()));
 			jsonActivity.put("type", activity.getType());
 

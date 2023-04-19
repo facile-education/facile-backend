@@ -6,8 +6,6 @@ public class DocumentConstants {
         throw new IllegalStateException("Constants class");
     }
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
-
     public static final int NB_RENAMED_VERSIONS = 500;
 
     public static final String SENDING_BOX_FOLDER_NAME = "._SENDING_BOX_";

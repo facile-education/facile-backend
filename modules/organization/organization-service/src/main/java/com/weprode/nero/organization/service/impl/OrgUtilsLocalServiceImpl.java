@@ -26,6 +26,11 @@ import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.base.OrgUtilsLocalServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.model.CDTSession;
+import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.SessionParentClassLocalServiceUtil;
+import com.weprode.nero.schedule.service.SubjectGroupColorLocalServiceUtil;
+import com.weprode.nero.schedule.service.TeacherGroupColorLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -261,9 +266,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
                 // Org is a cours
                 // If user if a teacher -> use TeacherGroup colors
                 if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                    // TODO CDT ?
-                    color = "";
-                    // color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(user.getUserId(), org.getGroupId());
+                    color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(user.getUserId(), org.getGroupId());
                 } else if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
                     color = "#311B92"; // CDTColorUtil.getNewColor(3);
                 } else {
@@ -273,15 +276,14 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
                     cal.setTime(new Date());
                     cal.add(Calendar.DATE, -30);
                     Date minDate = cal.getTime();
-                    // TODO CDT
-//                    List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupSessions(org.getGroupId(), minDate, new Date(), false);
-//                    if (!sessions.isEmpty()) {
-//                        List<Long> groupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(sessions.get(0).getSessionId());
-//                        if (!groupIds.isEmpty()) {
-//                            String subject = sessions.get(0).getSubject();
-//                            color = SubjectGroupColorLocalServiceUtil.getSubjectGroupColor(groupIds.get(0), subject);
-//                        }
-//                    }
+                    List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupSessions(org.getGroupId(), minDate, new Date(), false);
+                    if (!sessions.isEmpty()) {
+                        List<Long> groupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(sessions.get(0).getSessionId());
+                        if (!groupIds.isEmpty()) {
+                            String subject = sessions.get(0).getSubject();
+                            color = SubjectGroupColorLocalServiceUtil.getSubjectGroupColor(groupIds.get(0), subject);
+                        }
+                    }
                 }
             }
         } catch (Exception e) {

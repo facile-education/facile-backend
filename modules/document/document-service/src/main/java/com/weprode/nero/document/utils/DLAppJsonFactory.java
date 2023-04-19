@@ -128,7 +128,7 @@ public class DLAppJsonFactory {
         formattedFolder.put(JSONConstants.ID, String.valueOf(folder.getFolderId()));
         formattedFolder.put(JSONConstants.NAME, folder.getName());
         formattedFolder.put(JSONConstants.TYPE, "Folder");
-        formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(DocumentConstants.DATE_FORMAT)
+        formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
                 .format(folder.getModifiedDate()));
         
         try {
@@ -162,7 +162,7 @@ public class DLAppJsonFactory {
                 logger.error(e.getMessage());
                 formattedFolder.put(JSONConstants.SIZE, "error when computing size");
             }
-            formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(DocumentConstants.DATE_FORMAT).format(folder.getCreateDate()));
+            formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(folder.getCreateDate()));
             // formattedFolder.put("starred", FavoriteLocalServiceUtil.isInUserFavorites(user, folder.getFolderId())); // TODO: Handle favorite
         }
     }
@@ -176,7 +176,7 @@ public class DLAppJsonFactory {
         formattedFile.put(JSONConstants.TYPE, "File");
         formattedFile.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
         formattedFile.put(JSONConstants.LAST_MODIFIED_DATE,
-                new SimpleDateFormat(DocumentConstants.DATE_FORMAT).format(fileEntry.getModifiedDate()));
+                new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
 
         // Permissions
         final JSONObject permissions = JSONFactoryUtil.createJSONObject();
@@ -188,7 +188,7 @@ public class DLAppJsonFactory {
         if (withDetails) {
             formattedFile.put(JSONConstants.SIZE, (int) fileEntry.getSize());
             formattedFile.put(JSONConstants.CREATION_DATE,
-                    new SimpleDateFormat(DocumentConstants.DATE_FORMAT).format(fileEntry.getCreateDate()));
+                    new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getCreateDate()));
             formattedFile.put(JSONConstants.CREATOR, fileEntry.getUserName());
             // formattedFile.put("starred", FavoriteLocalServiceUtil.isInUserFavorites(user, fileEntry.getFileEntryId()));   // TODO: Handle favorite
             formattedFile.put(JSONConstants.VERSION, fileEntry.getVersion());
@@ -229,7 +229,7 @@ public class DLAppJsonFactory {
 //                TrashEntry trashEntry = TrashEntryLocalServiceUtil.findByEntryId(folder.getFolderId());
 //                formattedFolder.put(JSONConstants.NAME, trashEntry.getSourceName()); // Change name with the original name
 //                formattedFolder.put("sourcePath", trashEntry.getSourcePath());
-//                formattedFolder.put("deleteDate", new SimpleDateFormat(DocumentConstants.DATE_FORMAT).format(trashEntry.getDeleteDate()));
+//                formattedFolder.put("deleteDate", new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(trashEntry.getDeleteDate()));
 //            } else {
 //                formattedFolder.put(JSONConstants.IS_SUB_ENTITY, true);
 //            }
@@ -287,7 +287,7 @@ public class DLAppJsonFactory {
 //                TrashEntry trashEntry = TrashEntryLocalServiceUtil.findByEntryId(fileEntry.getFileEntryId());
 //                formattedFile.put(JSONConstants.NAME, trashEntry.getSourceName()); // Change name with the original name
 //                formattedFile.put("sourcePath", trashEntry.getSourcePath());
-//                formattedFile.put("deleteDate", new SimpleDateFormat(DocumentConstants.DATE_FORMAT).format(trashEntry.getDeleteDate()));
+//                formattedFile.put("deleteDate", new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(trashEntry.getDeleteDate()));
 //            }
 //        } catch (Exception e) {
 //            logger.error(e);

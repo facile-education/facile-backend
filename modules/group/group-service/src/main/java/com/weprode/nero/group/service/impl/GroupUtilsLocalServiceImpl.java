@@ -12,11 +12,14 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupUtilsLocalServiceBaseImpl;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.model.CDTSession;
+import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -187,7 +190,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
 
         try {
             int nbDeletedSessions = 0;
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dateFormat = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
 
             // Start date is in the very past
             Date startDate = dateFormat.parse("2010-01-01");
@@ -195,18 +198,17 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
             // End data is in the very future
             Date endDate = dateFormat.parse("2030-01-01");
 
-
-            // TODO cdt
-            // List<CDTSession> sessionList = CDTSessionLocalServiceUtil.getGroupSessions(groupId, startDate, endDate, false);
-            // if (sessionList != null) {
-            //     for (CDTSession session : sessionList) {
-            //         try {
-            //             CDTSessionLocalServiceUtil.deleteSessionAndDependancies(session.getSessionId());
-            //             nbDeletedSessions++;
-            //         } catch (Exception e) {
-            //         }
-            //     }
-            // }
+            List<CDTSession> sessionList = CDTSessionLocalServiceUtil.getGroupSessions(groupId, startDate, endDate, false);
+            if (sessionList != null) {
+                for (CDTSession session : sessionList) {
+                    try {
+                        CDTSessionLocalServiceUtil.deleteSessionAndDependencies(session.getSessionId());
+                        nbDeletedSessions++;
+                    } catch (Exception e) {
+                        logger.debug(e);
+                    }
+                }
+            }
 
             logger.info("Deleted "+nbDeletedSessions+" CDT events ...");
         } catch (Exception e) {

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <sql id="com.weprode.nero.schedule.service.persistence.CDTSessionFinder.findByTeacherId_RangeDate">
+        <![CDATA[
+            SELECT cdtSession.*
+            FROM Schedule_CDTSession cdtSession
+            JOIN Schedule_SessionTeacher sessionTeacher
+            ON cdtSession.sessionId = sessionTeacher.sessionId
+            WHERE cdtSession.sessionStart > ? AND cdtSession.sessionStart < ?
+            AND sessionTeacher.teacherId = ?
+        ]]>
+    </sql>
+    <sql id="com.weprode.nero.schedule.service.persistence.CDTSessionFinder.findByStudentId_RangeDate">
+        <![CDATA[
+            SELECT cdtSession.*
+            FROM Schedule_CDTSession cdtSession
+            JOIN Schedule_SessionStudent sessionStudent
+            ON cdtSession.sessionId = sessionStudent.sessionId
+            WHERE cdtSession.sessionStart > ? AND cdtSession.sessionStart < ?
+            AND sessionStudent.studentId = ?
+        ]]>
+    </sql>
+    <sql id="com.weprode.nero.schedule.service.persistence.CDTSessionFinder.getSessionActivity">
+        <![CDATA[
+            SELECT cdtSession.*
+            FROM Schedule_CDTSession cdtSession
+            JOIN Schedule_SessionTeacher sessionTeacher
+            ON cdtSession.sessionId = sessionTeacher.sessionId
+            WHERE cdtSession.groupId in ([$GROUP_IDS$])
+            AND sessionTeacher.modificationDate > ? AND sessionTeacher.modificationDate < ?
+        ]]>
+    </sql>
+</custom-sql>

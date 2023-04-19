@@ -21,7 +21,9 @@ import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.CommunityInfosService;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.CommunityInfosServiceBaseImpl;
+import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -40,8 +42,6 @@ import java.util.regex.Pattern;
 public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(CommunityInfosServiceImpl.class);
-
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
 
     @JSONWebService(value = "create-community", method = "POST")
     public JSONObject createCommunity(String groupName, String description, boolean isPedagogical, String members, String color) {
@@ -78,9 +78,8 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         }
 
         try {
-            // TODO cdt
-            // Date expireDate = ConfigurationLocalServiceUtil.getConfiguration(
-            //        UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
+            Date expireDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(
+                    UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
 
             // Create the group
             String friendlyUrl = StringPool.SLASH + groupName;
@@ -99,8 +98,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
 
             communityInfos.setCreationDate(new Date());
             communityInfos.setCreatorId(user.getUserId());
-            // TODO cdt
-            // communityInfos.setExpirationDate(expireDate);
+            communityInfos.setExpirationDate(expireDate);
             communityInfos.setGroupId(createdGroup.getGroupId());
             communityInfos.setIsPedagogical(isPedagogical);
             communityInfos.setIsContactList(true);
@@ -202,7 +200,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                 logger.debug(e);
             }
             if (communityInfos != null && communityInfos.getStatus() == 3 && communityInfos.getCreatorId() == user.getUserId()) {
-                DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+                DateFormat dateFormat = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
                 result.put(JSONConstants.ERROR_CODE, 1);
                 result.put(JSONConstants.CREATION_DATE, dateFormat.format(communityInfos.getCreationDate()));
                 result.put(JSONConstants.EXPIRATION_DATE, dateFormat.format(communityInfos.getExpirationDate()));
@@ -248,9 +246,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         }
 
         try {
-            // TODO cdt
-            Date expireDate = new Date();
-            // Date expireDate = ConfigurationLocalServiceUtil.getConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
+            Date expireDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
 
             Group group = GroupLocalServiceUtil.getGroup(groupId);
             group.setName(groupName, user.getLocale());
@@ -419,9 +415,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
 
         try {
             // Get school year end date
-            // TODO cdt
-            Date schoolYearEndDate = new Date();
-            // Date schoolYearEndDate = ConfigurationLocalServiceUtil.getConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
+            Date schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
 
             CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(groupId);
             communityInfos.setExpirationDate(schoolYearEndDate);
