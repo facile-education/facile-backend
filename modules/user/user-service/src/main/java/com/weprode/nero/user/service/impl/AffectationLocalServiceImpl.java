@@ -15,6 +15,7 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.Affectation;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
 import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
+import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.nero.user.service.base.AffectationLocalServiceBaseImpl;
 import org.osgi.service.component.annotations.Component;
 
@@ -72,6 +73,17 @@ public class AffectationLocalServiceImpl extends AffectationLocalServiceBaseImpl
 
     public boolean addUserAffectation(long userId, long orgId, long adminUserId, Date expirationDate) {
         try {
+            List<Long> affectedUserIds = new ArrayList<Long>();
+            affectedUserIds.add(userId);
+
+            User user = UserLocalServiceUtil.getUser(userId);
+            if (RoleUtilsLocalServiceUtil.isStudent(user)) {
+                for (User parent : UserRelationshipLocalServiceUtil.getParents(user.getUserId())) {
+                    logger.info("Affected user is a student, adding affectation for parentId = " + parent.getUserId());
+                    affectedUserIds.add(parent.getUserId());
+                }
+            }
+
             OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(orgId);
 
             Affectation newAffectation = affectationPersistence.create(counterLocalService.increment());
@@ -84,14 +96,16 @@ public class AffectationLocalServiceImpl extends AffectationLocalServiceBaseImpl
             newAffectation.setExpirationDate(expirationDate);
             affectationPersistence.update(newAffectation);
 
-            // Add the user to the organization
-            if (!OrganizationLocalServiceUtil.hasUserOrganization(userId, orgId)) {
-                UserLocalServiceUtil.addOrganizationUsers(orgId, new long[]{userId});
-            }
+            for (long affectedUserId : affectedUserIds) {
+                // Add the user to the organization
+                if (!OrganizationLocalServiceUtil.hasUserOrganization(affectedUserId, orgId)) {
+                    UserLocalServiceUtil.addOrganizationUsers(orgId, new long[]{affectedUserId});
+                }
 
-            // If this is a school, add the user to the school-level orgs
-            if (orgDetails.getType() == OrgConstants.SCHOOL_TYPE) {
-                UserManagementLocalServiceUtil.synchronizeSchoolLevelOrganizations(userId, orgId);
+                // If this is a school, add the user to the school-level orgs
+                if (orgDetails.getType() == OrgConstants.SCHOOL_TYPE) {
+                    UserManagementLocalServiceUtil.synchronizeSchoolLevelOrganizations(affectedUserId, orgId);
+                }
             }
 
             return true;
@@ -145,11 +159,19 @@ public class AffectationLocalServiceImpl extends AffectationLocalServiceBaseImpl
             // Remove user from organization
             UserLocalServiceUtil.unsetOrganizationUsers(orgId, new long[]{userId});
 
+            // Remove parents from organization too if the user is a student
+            User user = UserLocalServiceUtil.getUser(userId);
+            if (RoleUtilsLocalServiceUtil.isStudent(user)) {
+                for (User parent : UserRelationshipLocalServiceUtil.getParents(user.getUserId())) {
+                    logger.info("Affected user is a student, removing affectation for parentId = " + parent.getUserId());
+                    UserLocalServiceUtil.unsetOrganizationUsers(orgId, new long[]{parent.getUserId()});
+                }
+            }
+
             // If this is a school, remove user from the school-level organizations
             OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(orgId);
             if (orgDetails.getType() == OrgConstants.SCHOOL_TYPE) {
                 // School teachers
-                User user = UserLocalServiceUtil.getUser(userId);
                 if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
                     Organization teacherSchoolLevelOrg = OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(orgId);
                     if (!UserLocalServiceUtil.hasOrganizationUser(teacherSchoolLevelOrg.getOrganizationId(), user.getUserId()) ) {
