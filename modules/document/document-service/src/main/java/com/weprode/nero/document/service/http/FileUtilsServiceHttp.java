@@ -85,13 +85,45 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
+	public static com.liferay.portal.kernel.json.JSONObject uploadTmpFile(
+		HttpPrincipal httpPrincipal, String fileName, java.io.File file) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				FileUtilsServiceUtil.class, "uploadTmpFile",
+				_uploadTmpFileParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, fileName, file);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static com.liferay.portal.kernel.json.JSONObject renameFile(
 		HttpPrincipal httpPrincipal, long fileId, String fileName) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "renameFile",
-				_renameFileParameterTypes1);
+				_renameFileParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, fileId, fileName);
@@ -124,7 +156,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "createAudioFile",
-				_createAudioFileParameterTypes2);
+				_createAudioFileParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, folderId, name, file);
@@ -156,7 +188,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "createGeogebraFile",
-				_createGeogebraFileParameterTypes3);
+				_createGeogebraFileParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, folderId, name);
@@ -188,7 +220,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "createMindmapFile",
-				_createMindmapFileParameterTypes4);
+				_createMindmapFileParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, folderId, name);
@@ -220,7 +252,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "createScratchFile",
-				_createScratchFileParameterTypes5);
+				_createScratchFileParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, folderId, name);
@@ -252,7 +284,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "createLoolFile",
-				_createLoolFileParameterTypes6);
+				_createLoolFileParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, folderId, name, type);
@@ -284,7 +316,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "createHTMLFile",
-				_createHTMLFileParameterTypes7);
+				_createHTMLFileParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, folderId, name);
@@ -315,7 +347,7 @@ public class FileUtilsServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				FileUtilsServiceUtil.class, "addLock", _addLockParameterTypes8);
+				FileUtilsServiceUtil.class, "addLock", _addLockParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, fileId);
 
@@ -346,7 +378,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "removeLock",
-				_removeLockParameterTypes9);
+				_removeLockParameterTypes10);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, fileId);
 
@@ -378,7 +410,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "getResource",
-				_getResourceParameterTypes10);
+				_getResourceParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, fileId, versionId, readOnly);
@@ -410,7 +442,7 @@ public class FileUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FileUtilsServiceUtil.class, "removeLoolToken",
-				_removeLoolTokenParameterTypes11);
+				_removeLoolTokenParameterTypes12);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, token);
 
@@ -440,31 +472,33 @@ public class FileUtilsServiceHttp {
 	private static final Class<?>[] _uploadFileParameterTypes0 = new Class[] {
 		long.class, String.class, java.io.File.class, int.class
 	};
-	private static final Class<?>[] _renameFileParameterTypes1 = new Class[] {
+	private static final Class<?>[] _uploadTmpFileParameterTypes1 =
+		new Class[] {String.class, java.io.File.class};
+	private static final Class<?>[] _renameFileParameterTypes2 = new Class[] {
 		long.class, String.class
 	};
-	private static final Class<?>[] _createAudioFileParameterTypes2 =
+	private static final Class<?>[] _createAudioFileParameterTypes3 =
 		new Class[] {long.class, String.class, java.io.File.class};
-	private static final Class<?>[] _createGeogebraFileParameterTypes3 =
+	private static final Class<?>[] _createGeogebraFileParameterTypes4 =
 		new Class[] {long.class, String.class};
-	private static final Class<?>[] _createMindmapFileParameterTypes4 =
+	private static final Class<?>[] _createMindmapFileParameterTypes5 =
 		new Class[] {long.class, String.class};
-	private static final Class<?>[] _createScratchFileParameterTypes5 =
+	private static final Class<?>[] _createScratchFileParameterTypes6 =
 		new Class[] {long.class, String.class};
-	private static final Class<?>[] _createLoolFileParameterTypes6 =
+	private static final Class<?>[] _createLoolFileParameterTypes7 =
 		new Class[] {long.class, String.class, String.class};
-	private static final Class<?>[] _createHTMLFileParameterTypes7 =
+	private static final Class<?>[] _createHTMLFileParameterTypes8 =
 		new Class[] {long.class, String.class};
-	private static final Class<?>[] _addLockParameterTypes8 = new Class[] {
+	private static final Class<?>[] _addLockParameterTypes9 = new Class[] {
 		long.class
 	};
-	private static final Class<?>[] _removeLockParameterTypes9 = new Class[] {
+	private static final Class<?>[] _removeLockParameterTypes10 = new Class[] {
 		long.class
 	};
-	private static final Class<?>[] _getResourceParameterTypes10 = new Class[] {
+	private static final Class<?>[] _getResourceParameterTypes11 = new Class[] {
 		long.class, long.class, boolean.class
 	};
-	private static final Class<?>[] _removeLoolTokenParameterTypes11 =
+	private static final Class<?>[] _removeLoolTokenParameterTypes12 =
 		new Class[] {String.class};
 
 }

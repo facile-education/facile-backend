@@ -114,6 +114,12 @@ public class FileUtilsServiceUtil {
 		return getService().uploadFile(folderId, fileName, file, mode);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONObject uploadTmpFile(
+		java.lang.String fileName, java.io.File file) {
+
+		return getService().uploadTmpFile(fileName, file);
+	}
+
 	public static FileUtilsService getService() {
 		return _service;
 	}

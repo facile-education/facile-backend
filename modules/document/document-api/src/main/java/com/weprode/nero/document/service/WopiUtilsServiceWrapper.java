@@ -30,6 +30,37 @@ public class WopiUtilsServiceWrapper
 		_wopiUtilsService = wopiUtilsService;
 	}
 
+	@Override
+	public com.liferay.portal.kernel.json.JSONObject getFileAction(
+			java.io.File file, javax.servlet.http.HttpServletResponse response,
+			String accessToken, String wopiParam)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _wopiUtilsService.getFileAction(
+			file, response, accessToken, wopiParam);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.json.JSONObject getFileAction(
+			javax.servlet.http.HttpServletRequest request,
+			javax.servlet.http.HttpServletResponse response, String accessToken,
+			String wopiParam)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _wopiUtilsService.getFileAction(
+			request, response, accessToken, wopiParam);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.json.JSONObject getFileInfo(
+			javax.servlet.http.HttpServletResponse response, String accessToken,
+			String wopiParam)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   java.io.IOException {
+
+		return _wopiUtilsService.getFileInfo(response, accessToken, wopiParam);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
