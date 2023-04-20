@@ -47,7 +47,9 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
                 result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
-            } else if (!RoleUtilsLocalServiceUtil.isPersonal(currentUser) && !RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
+            } else if (!RoleUtilsLocalServiceUtil.isAdministrator(currentUser) &&
+                    !RoleUtilsLocalServiceUtil.isPersonal(currentUser) &&
+                    !RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
                 result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
