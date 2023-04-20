@@ -97,4 +97,7 @@ public interface FileUtilsService extends BaseService {
 	public JSONObject uploadFile(
 		long folderId, String fileName, File file, int mode);
 
+	@JSONWebService(method = "POST")
+	public JSONObject uploadTmpFile(String fileName, File file);
+
 }

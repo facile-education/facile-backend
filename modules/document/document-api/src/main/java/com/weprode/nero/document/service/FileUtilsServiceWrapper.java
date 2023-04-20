@@ -121,6 +121,13 @@ public class FileUtilsServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.json.JSONObject uploadTmpFile(
+		String fileName, java.io.File file) {
+
+		return _fileUtilsService.uploadTmpFile(fileName, file);
+	}
+
+	@Override
 	public FileUtilsService getWrappedService() {
 		return _fileUtilsService;
 	}

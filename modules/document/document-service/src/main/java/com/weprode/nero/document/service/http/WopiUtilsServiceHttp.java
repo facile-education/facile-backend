@@ -14,13 +14,22 @@
 
 package com.weprode.nero.document.service.http;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.auth.HttpPrincipal;
+import com.liferay.portal.kernel.service.http.TunnelUtil;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
+
+import com.weprode.nero.document.service.WopiUtilsServiceUtil;
+
 /**
  * Provides the HTTP utility for the
- * <code>com.weprode.nero.document.service.WopiUtilsServiceUtil</code> service
+ * <code>WopiUtilsServiceUtil</code> service
  * utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it requires an additional
- * <code>com.liferay.portal.kernel.security.auth.HttpPrincipal</code> parameter.
+ * <code>HttpPrincipal</code> parameter.
  *
  * <p>
  * The benefits of using the HTTP utility is that it is fast and allows for
@@ -42,4 +51,154 @@ package com.weprode.nero.document.service.http;
  * @generated
  */
 public class WopiUtilsServiceHttp {
+
+	public static com.liferay.portal.kernel.json.JSONObject getFileAction(
+			HttpPrincipal httpPrincipal,
+			javax.servlet.http.HttpServletRequest request,
+			javax.servlet.http.HttpServletResponse response, String accessToken,
+			String wopiParam)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				WopiUtilsServiceUtil.class, "getFileAction",
+				_getFileActionParameterTypes0);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, request, response, accessToken, wopiParam);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.liferay.portal.kernel.json.JSONObject getFileAction(
+			HttpPrincipal httpPrincipal, java.io.File file,
+			javax.servlet.http.HttpServletResponse response, String accessToken,
+			String wopiParam)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				WopiUtilsServiceUtil.class, "getFileAction",
+				_getFileActionParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, file, response, accessToken, wopiParam);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.liferay.portal.kernel.json.JSONObject getFileInfo(
+			HttpPrincipal httpPrincipal,
+			javax.servlet.http.HttpServletResponse response, String accessToken,
+			String wopiParam)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   java.io.IOException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				WopiUtilsServiceUtil.class, "getFileInfo",
+				_getFileInfoParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, response, accessToken, wopiParam);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				if (exception instanceof java.io.IOException) {
+					throw (java.io.IOException)exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(WopiUtilsServiceHttp.class);
+
+	private static final Class<?>[] _getFileActionParameterTypes0 =
+		new Class[] {
+			javax.servlet.http.HttpServletRequest.class,
+			javax.servlet.http.HttpServletResponse.class, String.class,
+			String.class
+		};
+	private static final Class<?>[] _getFileActionParameterTypes1 =
+		new Class[] {
+			java.io.File.class, javax.servlet.http.HttpServletResponse.class,
+			String.class, String.class
+		};
+	private static final Class<?>[] _getFileInfoParameterTypes2 = new Class[] {
+		javax.servlet.http.HttpServletResponse.class, String.class, String.class
+	};
+
 }

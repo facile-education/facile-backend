@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -37,10 +38,7 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.document.model.EditionLock;
 import com.weprode.nero.document.model.LoolToken;
-import com.weprode.nero.document.service.EditionLockLocalServiceUtil;
-import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
-import com.weprode.nero.document.service.LoolTokenLocalServiceUtil;
-import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.*;
 import com.weprode.nero.document.service.base.FileUtilsServiceBaseImpl;
 
 import com.weprode.nero.document.utils.DLAppJsonFactory;
@@ -72,6 +70,25 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		} catch (Exception e) {
 			logger.error("Error uploading file "+ fileName + " to folderId " + folderId + " in mode " + mode, e);
 			result.put(JSONConstants.SUCCESS, false);
+		}
+
+		return result;
+	}
+
+	@JSONWebService(method = "POST")
+	public JSONObject uploadTmpFile(String fileName, File file) {
+		JSONObject result = JSONFactoryUtil.createJSONObject();
+
+		try {
+			User user = getGuestOrUser();
+			Folder folder = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId());
+			int mode = DocumentConstants.MODE_NORMAL;
+			logger.info("User " + user.getFullName() + " uploads tmp file " + fileName + " to folderId " + folder.getFolderId() + " in mode " + mode);
+
+			return UploadUtil.uploadFile(user, folder.getFolderId(), fileName, file, mode);
+		} catch (Exception e) {
+			logger.error("Error uploading temp file "+ fileName, e);
+			result.put("success", false);
 		}
 
 		return result;

@@ -16,11 +16,19 @@ package com.weprode.nero.document.service;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -47,6 +55,25 @@ public interface WopiUtilsService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.WopiUtilsServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the wopi utils remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link WopiUtilsServiceUtil} if injection and service tracking are not available.
 	 */
+	@JSONWebService(method = "POST")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getFileAction(
+			File file, HttpServletResponse response, String accessToken,
+			String wopiParam)
+		throws PortalException;
+
+	@JSONWebService(method = "GET")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getFileAction(
+			HttpServletRequest request, HttpServletResponse response,
+			String accessToken, String wopiParam)
+		throws PortalException;
+
+	@JSONWebService(method = "GET")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getFileInfo(
+			HttpServletResponse response, String accessToken, String wopiParam)
+		throws IOException, PortalException;
 
 	/**
 	 * Returns the OSGi service identifier.
