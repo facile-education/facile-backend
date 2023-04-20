@@ -69,7 +69,9 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
             }
-            if (!RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                    !RoleUtilsLocalServiceUtil.isPersonal(user) &&
+                    !RoleUtilsLocalServiceUtil.isTeacher(user)) {
                 result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
