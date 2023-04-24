@@ -971,9 +971,7 @@ public class GVESynchronizationManager {
             return null;
         }
 
-
         if (user == null) {
-
             // User creation
             try {
                 logger.info("===== Adding user "+firstName+" "+lastName+ " to portal =====");
@@ -1324,7 +1322,6 @@ public class GVESynchronizationManager {
 
     }
 
-
     private boolean isFileValid (List<String> csvLines) {
 
         // File is not valid if it contains less than 100 lines
@@ -1372,6 +1369,7 @@ public class GVESynchronizationManager {
         List<String> csvLines = GVESynchronizationUtils.getFileContent(csvFile);
         if (!isFileValid(csvLines)) {
             logger.error("File is not valid -> skipping");
+            return;
         }
 
         // 1st line contains the column names
