@@ -286,7 +286,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
                 return result;
             }
-            if (!RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isPersonal(user)) {
+            if (!RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 throw new Exception();
             }
             logger.info("User " + user.getFullName() + " search users with query " + query);

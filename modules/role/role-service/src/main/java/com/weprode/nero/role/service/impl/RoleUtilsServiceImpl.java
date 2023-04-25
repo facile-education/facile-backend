@@ -44,7 +44,8 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 				throw new AuthException();
 			}
 			if (!RoleUtilsLocalServiceUtil.isTeacher(agent) && 
-                    !RoleUtilsLocalServiceUtil.isPersonal(agent)) {
+                    !RoleUtilsLocalServiceUtil.isPersonal(agent) &&
+					!RoleUtilsLocalServiceUtil.isAdministrator(agent)) {
 				throw new RolePermissionsException();
 			}
 		} catch (Exception e) {

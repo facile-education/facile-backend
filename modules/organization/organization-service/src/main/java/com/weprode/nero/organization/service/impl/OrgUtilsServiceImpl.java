@@ -83,7 +83,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
             if (agent.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
                 throw new AuthException();
             }
-            if (!RoleUtilsLocalServiceUtil.isTeacher(agent) && !RoleUtilsLocalServiceUtil.isPersonal(agent)) {
+            if (!RoleUtilsLocalServiceUtil.isTeacher(agent) && !RoleUtilsLocalServiceUtil.isPersonal(agent) && !RoleUtilsLocalServiceUtil.isAdministrator(agent)) {
                 throw new RolePermissionsException();
             }
         } catch (Exception e) {
