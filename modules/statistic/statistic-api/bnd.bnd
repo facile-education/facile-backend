@@ -1,0 +1,10 @@
+Bundle-Name: statistic-api
+Bundle-SymbolicName: com.weprode.nero.statistic.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.statistic.exception,\
+	com.weprode.nero.statistic.model,\
+	com.weprode.nero.statistic.service,\
+	com.weprode.nero.statistic.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../statistic-service/service.xml

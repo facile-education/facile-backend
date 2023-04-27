@@ -40,6 +40,7 @@ import com.weprode.nero.document.model.LoolToken;
 import com.weprode.nero.document.service.LoolTokenLocalServiceUtil;
 import com.weprode.nero.document.service.base.WopiUtilsServiceBaseImpl;
 
+import com.weprode.nero.statistic.service.LoolStatLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,6 +69,12 @@ import java.util.TimeZone;
 public class WopiUtilsServiceImpl extends WopiUtilsServiceBaseImpl {
 
 	private static final Log logger = LogFactoryUtil.getLog(WopiUtilsServiceImpl.class);
+
+	private static final int LOOL_STAT_TYPE_DOC  = 0;
+	private static final int LOOL_STAT_TYPE_NEWS = 1;
+	private static final int LOOL_STAT_TYPE_CDT  = 2;
+	private static final int LOOL_STAT_TYPE_IM   = 3;
+	private static final int LOOL_STAT_TYPE_MAIL = 4;
 
 	@JSONWebService(method = "GET")
 	public JSONObject getFileAction(HttpServletRequest request, HttpServletResponse response, String accessToken, String wopiParam) throws PortalException {
@@ -269,12 +276,11 @@ public class WopiUtilsServiceImpl extends WopiUtilsServiceBaseImpl {
 			long size = fileEntry.getSize();
 			logger.info("User " + user.getFullName() + " is viewing cart LOOL document with size "+ size);
 
-			// TODO Statistics
-			/* if (isIM) {
+			if (isIM) {
 				LoolStatLocalServiceUtil.addLoolStat(fileEntryId, userId, false, LOOL_STAT_TYPE_IM);
 			} else {
 				LoolStatLocalServiceUtil.addLoolStat(fileEntryId, userId, false, LOOL_STAT_TYPE_DOC);
-			}*/
+			}
 
 			ServletResponseUtil.sendFile(request, response, fileEntry.getTitle(), is,
 					(int) size, fileEntry.getMimeType(), "");
@@ -309,8 +315,7 @@ public class WopiUtilsServiceImpl extends WopiUtilsServiceBaseImpl {
 					serviceContext);
 
 			logger.info("End file saving : " + fileEntryId + " to " + feUpdate.getVersion() + " for user : " + userId);
-			// TODO Statistics
-			// LoolStatLocalServiceUtil.addLoolStat(fileEntryId, userId, true, LOOL_STAT_TYPE_DOC);
+			LoolStatLocalServiceUtil.addLoolStat(fileEntryId, userId, true, LOOL_STAT_TYPE_DOC);
 		} catch (Exception e) {
 			logger.error("Error when saving schoolbag file for fileEntryId="+fileEntryId+ " and version="+version);
 		}

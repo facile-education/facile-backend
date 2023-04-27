@@ -334,6 +334,19 @@ public class JSONConstants {
     public static final String CDT_SESSION_ID = "cdtSessionId";
     public static final String REGISTERER_ID = "registererId";
 
+    // Statistics
+    public static final String DATASETS = "datasets";
+    public static final String POINT_BORDER_COLOR = "pointBorderColor";
+    public static final String POINT_BACKGROUND_COLOR = "pointBackgroundColor";
+    public static final String BORDER_COLOR = "borderColor";
+    public static final String BACKGROUND_COLOR = "backgroundColor";
+    public static final String LABELS = "labels";
+    public static final String COUNT = "count";
+    public static final String TOTAL_COUNT = "totalCount";
+    public static final String DATA = "data";
+    public static final String SCHOOL_NEWS_COUNT = "schoolNewsCount";
+    public static final String GROUP_NEWS_COUNT = "groupNewsCount";
+
     // Success
     public static final String SUCCESS = "success";
 
