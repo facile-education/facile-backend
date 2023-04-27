@@ -8,6 +8,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
+import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
+import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
@@ -84,9 +86,8 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		try {
 			// Push item text + links + videos + h5p into session's description
 			Homework homework = HomeworkLocalServiceUtil.getHomework(homeworkId);
-			// TODO Progression
-			/*String itemContent = ProgressionItemLocalServiceUtil.convertContentAsHtml(progressionItemId);
-			homework.setDescription(itemContent);*/
+			String itemContent = ProgressionItemLocalServiceUtil.convertContentAsHtml(progressionItemId);
+			homework.setDescription(itemContent);
 			HomeworkLocalServiceUtil.updateHomework(homework);
 
 			// Delete existing attach files
@@ -94,17 +95,19 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			// AttachFileLocalServiceUtil.removeAllHomeworkAttachFiles(homeworkId);
 
 			// Copy attached files
-			// TODO Attachments + Progression
-			/*List<Long> fileEntryIds = ProgressionItemContentLocalServiceUtil.getFileIds(progressionItemId);
+			List<Long> fileEntryIds = ItemContentLocalServiceUtil.getFileIds(progressionItemId);
 			for (Long fileEntryId : fileEntryIds) {
 				logger.info("Assigning file " + fileEntryId + " to homework " + homeworkId);
-				AttachFileLocalServiceUtil.addHomeworkAttachFile(homeworkId, fileEntryId, false);
+				// TODO Attachments
+				// AttachFileLocalServiceUtil.addHomeworkAttachFile(homeworkId, fileEntryId, false);
 			}
-			List<Long> editableFileEntryIds = ProgressionItemContentLocalServiceUtil.getEditableFileIds(progressionItemId);
+
+			List<Long> editableFileEntryIds = ItemContentLocalServiceUtil.getEditableFileIds(progressionItemId);
 			for (Long fileEntryId : editableFileEntryIds) {
 				logger.info("Assigning editable file " + fileEntryId + " to homework " + homeworkId);
-				AttachFileLocalServiceUtil.addHomeworkAttachFile(homeworkId, fileEntryId, true);
-			}*/
+				// TODO Attachments
+				// AttachFileLocalServiceUtil.addHomeworkAttachFile(homeworkId, fileEntryId, true);
+			}
 
 			// Delete existing audio files
 			// TODO Attachments

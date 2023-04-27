@@ -5,6 +5,7 @@ dependencies {
 	compile project(":modules:user:user-api")
 	compile project(":modules:organization:organization-api")
 	compile project(":modules:group:group-api")
+	compile project(":modules:progression:progression-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 }

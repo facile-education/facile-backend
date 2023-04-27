@@ -103,6 +103,10 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 	public String getOSGiServiceIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Folder getProgressionFolder(long userId)
+		throws PortalException, SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getSendingBox(long userId)
 		throws PortalException, SystemException;
 

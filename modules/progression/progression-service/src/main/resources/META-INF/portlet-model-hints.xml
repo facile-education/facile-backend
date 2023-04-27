@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.progression.model.ItemAssignment">
+		<field name="progressionItemId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="homeworkId" type="long" />
+		<field name="assignedDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+	</model>
+	<model name="com.weprode.nero.progression.model.ItemAttachedFile">
+		<field name="itemAttachedFileId" type="long" />
+		<field name="progressionItemId" type="long" />
+		<field name="fileEntryId" type="long" />
+		<field name="isAudioRecording" type="boolean" />
+		<field name="isToBeCompleted" type="boolean" />
+	</model>
+	<model name="com.weprode.nero.progression.model.ItemContent">
+		<field name="contentId" type="long" />
+		<field name="progressionItemId" type="long" />
+		<field name="modifiedDate" type="Date" />
+		<field name="contentName" type="String" />
+		<field name="contentValue" type="String" />
+		<field name="fileEntryId" type="long" />
+		<field name="contentType" type="int" />
+		<field name="order" type="int" />
+		<field name="isToBeCompleted" type="boolean" />
+	</model>
+	<model name="com.weprode.nero.progression.model.Progression">
+		<field name="progressionId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="name" type="String" />
+		<field name="description" type="String" />
+		<field name="volee" type="String" />
+		<field name="subjectId" type="long" />
+		<field name="color" type="String" />
+	</model>
+	<model name="com.weprode.nero.progression.model.ProgressionFolder">
+		<field name="progressionFolderId" type="long" />
+		<field name="progressionId" type="long" />
+		<field name="parentFolderId" type="long" />
+		<field name="folderName" type="String" />
+		<field name="order" type="int" />
+	</model>
+	<model name="com.weprode.nero.progression.model.ProgressionItem">
+		<field name="progressionItemId" type="long" />
+		<field name="progressionId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="homeworkId" type="long" />
+		<field name="progressionFolderId" type="long" />
+		<field name="modifiedDate" type="Date" />
+		<field name="itemName" type="String" />
+		<field name="isHomework" type="boolean" />
+		<field name="duration" type="String" />
+		<field name="type" type="int" />
+		<field name="order" type="int" />
+	</model>
+</model-hints>

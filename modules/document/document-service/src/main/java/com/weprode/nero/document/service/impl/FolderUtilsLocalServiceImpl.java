@@ -137,15 +137,14 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return tmpFolder;
 	}
 
-	// TODO Progression
-	/* public static Folder getProgressionFolder(long userId) throws PortalException, SystemException {
-		Folder fol;
+	public Folder getProgressionFolder(long userId) throws PortalException, SystemException {
+		Folder folder;
 
 		final User user = UserLocalServiceUtil.getUser(userId);
 		try {
-			fol = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.PROGRESSION_FOLDER_NAME);
+			folder = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.PROGRESSION_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
-			fol = DLAppServiceUtil.addFolder(
+			folder = DLAppServiceUtil.addFolder(
 					user.getGroup().getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.PROGRESSION_FOLDER_NAME,
@@ -153,8 +152,8 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					new ServiceContext());
 		}
 
-		return fol;
-	}*/
+		return folder;
+	}
 
 	// TODO CDT
 	/*public static Folder getHomeworkFolder(long userId) {

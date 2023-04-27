@@ -24,8 +24,14 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.progression.model.Progression;
+import com.weprode.nero.progression.model.ProgressionItem;
+import com.weprode.nero.progression.service.ItemAssignmentLocalServiceUtil;
+import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
+import com.weprode.nero.progression.service.ProgressionLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.CDTSessionModel;
@@ -61,32 +67,32 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
 
         SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
         // Global infos
-        jsonSession.put("sessionId", this.getSessionId());
-        jsonSession.put("title", this.getTitle());
-        jsonSession.put("startDate", sdf.format(this.getSessionStart()));
-        jsonSession.put("endDate", sdf.format(this.getSessionEnd()));
-        jsonSession.put("description", this.getDescription());
+        jsonSession.put(JSONConstants.SESSION_ID, this.getSessionId());
+        jsonSession.put(JSONConstants.TITLE, this.getTitle());
+        jsonSession.put(JSONConstants.START_DATE, sdf.format(this.getSessionStart()));
+        jsonSession.put(JSONConstants.END_DATE, sdf.format(this.getSessionEnd()));
+        jsonSession.put(JSONConstants.DESCRIPTION, this.getDescription());
 
         // Class name
-        jsonSession.put("className", getSessionGroupName(false));
+        jsonSession.put(JSONConstants.CLASS_NAME, getSessionGroupName(false));
 
         if (!includeDetails) {
             return jsonSession;
         }
 
         // Details
-        jsonSession.put("groupId", this.getGroupId());
-        jsonSession.put("room", this.getRoom());
-        jsonSession.put("isManual", this.getIsManual());
-        jsonSession.put("isPublish", this.getPublished());
+        jsonSession.put(JSONConstants.GROUP_ID, this.getGroupId());
+        jsonSession.put(JSONConstants.ROOM, this.getRoom());
+        jsonSession.put(JSONConstants.IS_MANUAL, this.getIsManual());
+        jsonSession.put(JSONConstants.IS_PUBLISH, this.getPublished());
 
         // Teachers
         List<User> sessionTeachers = SessionTeacherLocalServiceUtil.getTeachers(this.getSessionId());
-        jsonSession.put("teachers", JSONProxy.convertUsersToJson(sessionTeachers));
-        jsonSession.put("isCurrentUserTeacher", sessionTeachers.contains(user));
+        jsonSession.put(JSONConstants.TEACHERS, JSONProxy.convertUsersToJson(sessionTeachers));
+        jsonSession.put(JSONConstants.IS_CURRENT_USER_TEACHER, sessionTeachers.contains(user));
 
         // Subject
-        jsonSession.put("subject", this.getSubject());
+        jsonSession.put(JSONConstants.SUBJECT, this.getSubject());
 
         // Audio instructions
         // TODO Attachments
@@ -104,42 +110,42 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
             studentId = user.getUserId();
         }
         List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getToDoHomeworks(this.getSessionId(), studentId);
-        jsonSession.put("toDoHomework", JSONProxy.convertHomeworksAsJson(user, toDoHomeworks));
+        jsonSession.put(JSONConstants.TO_DO_HOMEWORK, JSONProxy.convertHomeworksAsJson(user, toDoHomeworks));
 
         // Given homeworks
         List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getGivenHomeworks(this.getSessionId(), studentId);
-        jsonSession.put("givenHomework", JSONProxy.convertHomeworksAsJson(user, givenHomeworks));
+        jsonSession.put(JSONConstants.GIVEN_HOMEWORK, JSONProxy.convertHomeworksAsJson(user, givenHomeworks));
 
         // Previous and next sessions
         List<CDTSession> previousSessions = this.getPreviousSessions(user);
         List<CDTSession> nextSessions = this.getNextSessions(user);
-        jsonSession.put("previousSessions", JSONProxy.convertSessionsToSimpleJson(previousSessions));
-        jsonSession.put("nextSessions", JSONProxy.convertSessionsToSimpleJson(nextSessions));
+        jsonSession.put(JSONConstants.PREVIOUS_SESSIONS, JSONProxy.convertSessionsToSimpleJson(previousSessions));
+        jsonSession.put(JSONConstants.NEXT_SESSIONS, JSONProxy.convertSessionsToSimpleJson(nextSessions));
 
         // Color
         String color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(user.getUserId(), this.getGroupId());
-        jsonSession.put("color", color);
+        jsonSession.put(JSONConstants.COLOR, color);
 
         // Is progression driven ?
-        // TODO Progression
-        /* boolean isProgressionDriven = ProgressionItemAssignmentLocalServiceUtil.isSessionAffected(this.getSessionId());
-        jsonSession.put("isProgressionDriven", isProgressionDriven);
+        boolean isProgressionDriven = ItemAssignmentLocalServiceUtil.isSessionAffected(this.getSessionId());
+        jsonSession.put(JSONConstants.IS_PROGRESSION_DRIVEN, isProgressionDriven);
         if (isProgressionDriven) {
             try {
-                long progressionItemId = ProgressionItemAssignmentLocalServiceUtil.getSessionAssignmentItemId(this.getSessionId());
+                long progressionItemId = ItemAssignmentLocalServiceUtil.getSessionAssignmentItemId(this.getSessionId());
                 ProgressionItem item = ProgressionItemLocalServiceUtil.getProgressionItem(progressionItemId);
                 Progression progression = ProgressionLocalServiceUtil.getProgression(item.getProgressionId());
                 // Only the progression's owner has the progression link
                 if (progression.getTeacherId() == user.getUserId()) {
                     String progressionUrl = "/user/" + user.getScreenName() + "/nero#/progression?progressionId=" + item.getProgressionId();
-                    jsonSession.put("progressionUrl", progressionUrl);
+                    jsonSession.put(JSONConstants.PROGRESSION_URL, progressionUrl);
                 } else if (SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), this.getSessionId())) {
                     User progressionOwner = UserLocalServiceUtil.getUser(progression.getTeacherId());
-                    jsonSession.put("progressionOwner", progressionOwner.getFullName());
+                    jsonSession.put(JSONConstants.PROGRESSION_OWNER, progressionOwner.getFullName());
                 }
             } catch (Exception e) {
+                logger.debug(e);
             }
-        }*/
+        }
 
         return jsonSession;
     }
@@ -216,9 +222,8 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.HAS_HOMEWORK, hasHomeworks);
 
         // Progression item
-        // TODO Progression
-        /* Long assignedItemId = ProgressionItemAssignmentLocalServiceUtil.getSessionAssignmentItemId(this.getSessionId());
-        jsonSession.put("assignedItemId", assignedItemId);*/
+        Long assignedItemId = ItemAssignmentLocalServiceUtil.getSessionAssignmentItemId(this.getSessionId());
+        jsonSession.put(JSONConstants.ASSIGNED_ITEM_ID, assignedItemId);
 
         return jsonSession;
     }

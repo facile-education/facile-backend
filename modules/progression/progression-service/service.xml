@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.progression">
+	<namespace>Progression</namespace>
+
+	<entity name="Progression" local-service="true" remote-service="true">
+		<column name="progressionId" type="long" primary="true" />
+		<column name="teacherId" type="long"/>
+		<column name="createDate" type="Date"/>
+		<column name="modifiedDate" type="Date"/>
+		<column name="name" type="String"/>
+		<column name="description" type="String"/>
+		<column name="volee" type="String"/>
+		<column name="subjectId" type="long"/>
+		<column name="color" type="String"/>
+
+		<order by="desc">
+			<order-column name="modifiedDate" />
+		</order>
+
+		<finder return-type="Progression" name="progressionId">
+			<finder-column name="progressionId" />
+		</finder>
+		<finder return-type="Collection" name="teacherId">
+			<finder-column name="teacherId" />
+		</finder>
+	</entity>
+
+	<entity name="ProgressionFolder" local-service="true" remote-service="true">
+		<column name="progressionFolderId" type="long" primary="true" />
+		<column name="progressionId" type="long"/>
+		<column name="parentFolderId" type="long"/>
+		<column name="folderName" type="String"/>
+		<column name="order" type="int"/>
+
+		<order by="asc">
+			<order-column name="order" />
+		</order>
+
+		<finder return-type="ProgressionFolder" name="progressionFolderId">
+			<finder-column name="progressionFolderId" />
+		</finder>
+		<finder return-type="Collection" name="parentFolderId_progressionId">
+			<finder-column name="parentFolderId" />
+			<finder-column name="progressionId" />
+		</finder>
+		<finder return-type="Collection" name="parentFolderId">
+			<finder-column name="parentFolderId" />
+		</finder>
+	</entity>
+
+	<entity name="ProgressionItem" local-service="true" remote-service="true">
+		<column name="progressionItemId" type="long" primary="true" />
+		<column name="progressionId" type="long"/>
+		<column name="sessionId" type="long" />
+		<column name="homeworkId" type="long" />
+		<column name="progressionFolderId" type="long"/>
+		<column name="modifiedDate" type="Date"/>
+		<column name="itemName" type="String"/>
+		<column name="isHomework" type="boolean"/>
+		<column name="duration" type="String"/>
+		<column name="type" type="int"/>
+		<column name="order" type="int"/>
+
+		<order by="asc">
+			<order-column name="order" />
+		</order>
+
+		<finder return-type="ProgressionItem" name="progressionItemId">
+			<finder-column name="progressionItemId" />
+		</finder>
+		<finder return-type="ProgressionItem" name="sessionId">
+			<finder-column name="sessionId" />
+		</finder>
+		<finder return-type="ProgressionItem" name="homeworkId">
+			<finder-column name="homeworkId" />
+		</finder>
+		<finder return-type="Collection" name="progressionFolderId">
+			<finder-column name="progressionFolderId" />
+		</finder>
+		<finder return-type="Collection" name="progressionFolderId_progressionId">
+			<finder-column name="progressionFolderId" />
+			<finder-column name="progressionId" />
+		</finder>
+	</entity>
+
+	<!-- Text : name and string -->
+	<!-- Record : name and fileEntryId -->
+	<!-- Link : name and string -->
+	<!-- Video : name and fileEntryId -->
+	<!-- File : name and fileEntryId -->
+	<!-- H5P : name and string -->
+	<entity name="ItemContent" local-service="true" remote-service="false">
+		<column name="contentId" type="long" primary="true"/>
+		<column name="progressionItemId" type="long" />
+		<column name="modifiedDate" type="Date"/>
+		<column name="contentName" type="String"/>
+		<column name="contentValue" type="String"/>
+		<column name="fileEntryId" type="long"/>
+		<column name="contentType" type="int"/>
+		<column name="order" type="int"/>
+		<column name="isToBeCompleted" type="boolean"/>
+
+		<order by="asc">
+			<order-column name="order" />
+		</order>
+
+		<finder return-type="Collection" name="progressionItemId">
+			<finder-column name="progressionItemId" />
+		</finder>
+	</entity>
+
+	<entity name="ItemAttachedFile" local-service="true" remote-service="true">
+		<column name="itemAttachedFileId" type="long" primary="true" />
+		<column name="progressionItemId" type="long"/>
+		<column name="fileEntryId" type="long"/>
+		<column name="isAudioRecording" type="boolean"/>
+		<column name="isToBeCompleted" type="boolean"/>
+
+		<finder return-type="ItemAttachedFile" name="itemAttachedFileId">
+			<finder-column name="itemAttachedFileId" />
+		</finder>
+		<finder return-type="Collection" name="progressionItemId">
+			<finder-column name="progressionItemId" />
+		</finder>
+	</entity>
+
+	<entity name="ItemAssignment" local-service="true" remote-service="true">
+		<column name="progressionItemId" type="long" primary="true" />
+		<column name="sessionId" type="long" primary="true" />
+		<column name="homeworkId" type="long"/>
+		<column name="assignedDate" type="Date"/>
+		<column name="modifiedDate" type="Date"/>
+
+		<finder return-type="ItemAssignment" name="progressionItemId_sessionId">
+			<finder-column name="progressionItemId" />
+			<finder-column name="sessionId" />
+		</finder>
+		<finder return-type="ItemAssignment" name="progressionItemId_homeworkId">
+			<finder-column name="progressionItemId" />
+			<finder-column name="homeworkId" />
+		</finder>
+		<finder return-type="Collection" name="progressionItemId">
+			<finder-column name="progressionItemId" />
+		</finder>
+		<finder return-type="Collection" name="sessionId">
+			<finder-column name="sessionId" />
+		</finder>
+		<finder return-type="Collection" name="homeworkId">
+			<finder-column name="homeworkId" />
+		</finder>
+	</entity>
+
+</service-builder>
