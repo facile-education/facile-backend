@@ -21,6 +21,7 @@ import com.weprode.nero.application.service.base.ApplicationServiceBaseImpl;
 import com.weprode.nero.application.service.utils.ExportUtils;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.menu.enums.MenuEntry;
+import com.weprode.nero.menu.service.SideMenuLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
@@ -375,11 +376,16 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         JSONArray applications = JSONFactoryUtil.createJSONArray();
 
         try {
-            // TODO Add lool/cool to applications ?
-            // TODO get school menu instead of full
-            // New arraylist to avoid read only list
-            for (MenuEntry entry : MenuEntry.getFullMenu()) {
-                if (entry.getEntries().isEmpty()) {
+            List<MenuEntry> entries;
+            if (schoolId != 0) {
+                entries = SideMenuLocalServiceUtil.getSchoolMenu(schoolId);
+            } else {
+                entries = MenuEntry.getFullMenu();
+            }
+
+            // TODO Add cool to applications ?
+            for (MenuEntry entry : entries) {
+                if (entry.getEntries() == null || entry.getEntries().isEmpty()) {
                     applications.put(convertMenuEntryToJSON(entry));
 
                 } else if (!entry.getKey().equals("administration")) {

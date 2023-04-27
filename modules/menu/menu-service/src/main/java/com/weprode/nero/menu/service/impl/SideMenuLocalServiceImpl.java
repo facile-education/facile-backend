@@ -43,7 +43,7 @@ public class SideMenuLocalServiceImpl extends SideMenuLocalServiceBaseImpl {
             boolean isSchoolAuthorized = AuthorizedSchoolLocalServiceUtil.isSchoolAuthorized(application.getApplicationId(), schoolId);
 
             if (application.getCategoryName().equals(AppManagerConstants.COMMUN_CATEGORIE)
-                    || (isSchoolAuthorized && appBroadcast.isIsBroadcasted())) {
+                    || (isSchoolAuthorized && appBroadcast != null && appBroadcast.isIsBroadcasted())) {
                 applicationIds.add(application.getMenuEntryId());
             }
         }
