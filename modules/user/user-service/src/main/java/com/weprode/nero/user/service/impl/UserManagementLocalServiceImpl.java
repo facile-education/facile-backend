@@ -86,18 +86,9 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             user.setReminderQueryAnswer("@new@");
             UserLocalServiceUtil.updateUser(user);
 
-            // Create default user properties
-            UserPropertiesLocalServiceUtil.addUserProperties(user.getUserId());
-
             // Create default user notifications
             // TODO Preferences
             // NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
-
-            // Add user to root org
-            Organization rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(companyId);
-            if (!UserLocalServiceUtil.hasOrganizationUser(rootOrg.getOrganizationId(), user.getUserId()) ) {
-                UserLocalServiceUtil.addOrganizationUsers(rootOrg.getOrganizationId(), new long[]{user.getUserId()});
-            }
 
             if (sendUserLogin) {
                 sendLoginPasswordToUser(email, screenName, password);

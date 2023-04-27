@@ -17,7 +17,6 @@ import com.liferay.portal.kernel.service.*;
 import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
-import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.LDAPMappingLocalServiceUtil;
