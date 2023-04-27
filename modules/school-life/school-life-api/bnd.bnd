@@ -1,0 +1,10 @@
+Bundle-Name: school-life-api
+Bundle-SymbolicName: com.weprode.nero.school.life.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.school.life.exception,\
+	com.weprode.nero.school.life.model,\
+	com.weprode.nero.school.life.service,\
+	com.weprode.nero.school.life.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../school-life-service/service.xml

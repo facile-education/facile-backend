@@ -313,6 +313,26 @@ public class JSONConstants {
     public static final String PROGRESSION_URL = "progressionUrl";
     public static final String PROGRESSION_OWNER = "progressionOwner";
 
+    // School life
+    public static final String STUDENT_NAME = "studentName";
+    public static final String SESSION_SUBJECT = "sessionSubject";
+    public static final String SESSION_DATE = "sessionDate";
+    public static final String TEACHER_NAME = "teacherName";
+    public static final String SCHOOLLIFE_SESSION_ID = "schoollifeSessionId";
+    public static final String SOURCE_SCHOOLLIFE_SESSION_ID = "sourceSchoollifeSessionId";
+    public static final String CANDIDATE_SESSIONS = "candidateSessions";
+    public static final String PENDING_RENVOIS = "pendingRenvois";
+    public static final String RENVOI_DATE = "renvoiDate";
+    public static final String STUDENT = "student";
+    public static final String SOURCE_TEACHER_ID = "sourceTeacherId";
+    public static final String CAPACITY = "capacity";
+    public static final String NB_REGISTERED_STUDENTS = "nbRegisteredStudents";
+    public static final String COMMENT = "comment";
+    public static final String IS_PRESENT = "isPresent";
+    public static final String NOT_REGISTERED_ARRAY = "notRegisteredArray";
+    public static final String NB_REGISTERED = "nbRegistered";
+    public static final String CDT_SESSION_ID = "cdtSessionId";
+    public static final String REGISTERER_ID = "registererId";
 
     // Success
     public static final String SUCCESS = "success";

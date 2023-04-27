@@ -26,6 +26,8 @@ import com.weprode.nero.schedule.service.base.CDTSessionServiceBaseImpl;
 
 import com.weprode.nero.schedule.utils.FilterUtil;
 import com.weprode.nero.schedule.utils.JSONProxy;
+import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
+import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -99,12 +101,11 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			// 2. Schoollife sessions
 			JSONArray jsonSchoollifeSessions = JSONFactoryUtil.createJSONArray();
 			if (targetUser != null && RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
-				// TODO Schoollife
-				// jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), startDate, endDate);
+				jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), startDate, endDate);
 			} else if (targetUser != null && RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
-				// TODO Schoollife
-				// jsonSchoollifeSessions = SchoollifeSessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), startDate, endDate);
+				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), startDate, endDate);
 			}
+
 			// Transform teachers
 			for (int i = 0 ; i < jsonSchoollifeSessions.length() ; i++) {
 				JSONObject jsonSchoollifeSession = jsonSchoollifeSessions.getJSONObject(i);
