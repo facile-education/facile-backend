@@ -10,7 +10,7 @@ public class NeroSystemProperties {
 	public static final String PORTAL_URL = "absolute.url";
 	public static final String NOTIFICATIONS_ENABLED = "ent.notifications.enable";
 
-	public static final String MAX_UPLOAD_SIZE = "com.liferay.portal.upload.UploadServletRequestImpl.max.size";
+	public static final String MAX_UPLOAD_SIZE = "data.limit.dl.storage.max.size";
 	public static final String XSS_IFRAME_WHITELIST = "xss.iframe.whitelist";
 
 	public static final String GVE_VOLEES = "gve.volees";
