@@ -134,6 +134,13 @@ public class FolderUtilsLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
+			getProgressionFolder(long userId)
+		throws PortalException, SystemException {
+
+		return getService().getProgressionFolder(userId);
+	}
+
+	public static com.liferay.portal.kernel.repository.model.Folder
 			getSendingBox(long userId)
 		throws PortalException, SystemException {
 

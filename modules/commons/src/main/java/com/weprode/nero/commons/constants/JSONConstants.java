@@ -251,12 +251,15 @@ public class JSONConstants {
     public static final String SUBSTITUTE = "substitute";
     public static final String IS_SAME_SLOT = "isSameSlot";
     public static final String NEXT_SESSIONS = "nextSessions";
+    public static final String PREVIOUS_SESSIONS = "previousSessions";
     public static final String START_DAY_TIME = "startDayTime";
     public static final String END_DAY_TIME = "endDayTime";
     public static final String START_DATE_PROJECT = "startDateProject";
     public static final String START_DATE_SCHOOL = "startDateSchool";
     public static final String END_DATE_SCHOOL = "endDateSchool";
     public static final String SCHOOL_DAYS = "schoolDays";
+    public static final String GIVEN_HOMEWORK = "givenHomework";
+    public static final String TO_DO_HOMEWORK = "toDoHomework";
 
     // Homework
     public static final String HOMEWORK_ID = "homeworkId";
@@ -272,6 +275,44 @@ public class JSONConstants {
     public static final String SELECTED_STUDENTS = "selectedStudents";
     public static final String IS_WHOLE_CLASS = "isWholeClass";
     public static final String DONE_STUDENTS = "doneStudents";
+    public static final String GROUP_STUDENTS = "groupStudents";
+
+    // Progression
+    public static final String PROGRESSION_ID = "progressionId";
+    public static final String CREATED_DATE = "createdDate";
+    public static final String MODIFIED_DATE = "modifiedDate";
+    public static final String SUBJECT_NAME = "subjectName";
+    public static final String VOLEE = "volee";
+    public static final String ITEM_ID = "itemId";
+    public static final String ITEMS = "items";
+    public static final String ITEM = "item";
+    public static final String FOLDER_ID = "folderId";
+    public static final String IS_HOMEWORK = "isHomework";
+    public static final String PARENT_ID = "parentId";
+    public static final String DURATION = "duration";
+    public static final String ORDER = "order";
+    public static final String CONTENTS = "contents";
+    public static final String ASSIGNMENTS = "assignments";
+    public static final String ASSIGNMENT = "assignment";
+    public static final String CONTENT_ID = "contentId";
+    public static final String CONTENT_NAME = "contentName";
+    public static final String CONTENT_TYPE = "contentType";
+    public static final String LINK = "link";
+    public static final String DOWNLOAD_URL = "downloadUrl";
+    public static final String IS_TO_BE_COMPLETED = "isToBeCompleted";
+    public static final String CONTENT_VALUE = "contentValue";
+    public static final String ATTACHED_FILE_ID = "attachedFileId";
+    public static final String IS_AUDIO_RECORDING = "isAudioRecording";
+    public static final String ASSIGNED_DATE = "assignedDate";
+    public static final String SESSION_START_DATE = "sessionStartDate";
+    public static final String SESSION_END_DATE = "sessionEndDate";
+    public static final String TARGET_DATE = "targetDate";
+    public static final String PREVIEW = "preview";
+    public static final String ASSIGNED_ITEM_ID = "assignedItemId";
+    public static final String IS_PROGRESSION_DRIVEN = "isProgressionDriven";
+    public static final String PROGRESSION_URL = "progressionUrl";
+    public static final String PROGRESSION_OWNER = "progressionOwner";
+
 
     // Success
     public static final String SUCCESS = "success";

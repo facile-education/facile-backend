@@ -151,6 +151,15 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.repository.model.Folder
+			getProgressionFolder(long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _folderUtilsLocalService.getProgressionFolder(userId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getSendingBox(
 			long userId)
 		throws com.liferay.portal.kernel.exception.PortalException,

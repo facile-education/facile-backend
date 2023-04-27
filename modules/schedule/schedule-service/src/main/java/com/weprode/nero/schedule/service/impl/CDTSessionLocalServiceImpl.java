@@ -22,6 +22,8 @@ import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
+import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.utils.HomeworkUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
@@ -314,9 +316,8 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 			// Push item text + links + videos + h5p into session's description
 			// Force publication
 			CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
-			// TODO Progression
-			/*String itemContent = ProgressionItemLocalServiceUtil.convertContentAsHtml(progressionItemId);
-			cdtSession.setDescription(itemContent);*/
+			String itemContent = ProgressionItemLocalServiceUtil.convertContentAsHtml(progressionItemId);
+			cdtSession.setDescription(itemContent);
 			cdtSession.setPublished(true);
 			CDTSessionLocalServiceUtil.updateCDTSession(cdtSession);
 
@@ -325,23 +326,23 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 			// AttachFileLocalServiceUtil.removeAllSessionAttachFiles(sessionId);
 
 			// Copy attached files
-			// TODO Attachments and Progression
-			/*List<Long> fileEntryIds = ProgressionItemContentLocalServiceUtil.getFileIds(progressionItemId);
+			List<Long> fileEntryIds = ItemContentLocalServiceUtil.getFileIds(progressionItemId);
 			for (Long fileEntryId : fileEntryIds) {
-				AttachFileLocalServiceUtil.addSessionAttachFile(sessionId, fileEntryId);
-			}*/
+				// TODO Attachments
+				// AttachFileLocalServiceUtil.addSessionAttachFile(sessionId, fileEntryId);
+			}
 
 			// Delete existing audio files
 			// TODO Attachments
 			// AttachFileLocalServiceUtil.deleteSessionAudioInstructions(sessionId);
 
 			// Copy audio files
-			// TODO Attachments and Progression
-			/*List<Long> audioFileEntryIds = ProgressionItemContentLocalServiceUtil.getAudioFileIds(progressionItemId);
+			List<Long> audioFileEntryIds = ItemContentLocalServiceUtil.getAudioFileIds(progressionItemId);
 			for (Long audioFileEntryId : audioFileEntryIds) {
-				AttachFileLocalServiceUtil.addSessionAttachFile(sessionId, audioFileEntryId);
-				//AttachFileLocalServiceUtil.addSessionAudioInstructions(sessionId, audioFileName);
-			}*/
+				// TODO Attachments
+				//AttachFileLocalServiceUtil.addSessionAttachFile(sessionId, audioFileEntryId);
+				// //AttachFileLocalServiceUtil.addSessionAudioInstructions(sessionId, audioFileName);
+			}
 
 			logger.info("Assigned content of item " + progressionItemId + " to session " + cdtSession.getSessionId());
 			return true;

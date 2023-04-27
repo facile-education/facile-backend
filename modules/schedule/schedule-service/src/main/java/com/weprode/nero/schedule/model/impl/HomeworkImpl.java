@@ -23,13 +23,20 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.progression.model.Progression;
+import com.weprode.nero.progression.model.ProgressionItem;
+import com.weprode.nero.progression.service.ItemAssignmentLocalServiceUtil;
+import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
+import com.weprode.nero.progression.service.ProgressionLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.StudentHomework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionParentClassLocalServiceUtil;
+import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.utils.JSONProxy;
 
@@ -138,7 +145,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
             List<User> sourceSessionStudents = CDTSessionLocalServiceUtil.getSessionStudents(this.getSourceSessionId());
 
             JSONArray targetSessionStudentsJson = JSONProxy.convertUsersToJson(targetSessionStudents);
-            jsonHomework.put("groupStudents", targetSessionStudentsJson);
+            jsonHomework.put(JSONConstants.GROUP_STUDENTS, targetSessionStudentsJson);
 
             // Get assigned students
             List<User> assignedStudents;
@@ -179,29 +186,29 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         }
 
         // Progression item
-        // TODO Progression
-        /*Long assignedItemId = ProgressionItemAssignmentLocalServiceUtil.getHomeworkAssignmentItemId(this.getHomeworkId());
-        jsonHomework.put("assignedItemId", assignedItemId);
+        Long assignedItemId = ItemAssignmentLocalServiceUtil.getHomeworkAssignmentItemId(this.getHomeworkId());
+        jsonHomework.put(JSONConstants.ASSIGNED_ITEM_ID, assignedItemId);
 
         // is Progression driven ?
         boolean isProgressionDriven = assignedItemId != 0;
-        jsonHomework.put("isProgressionDriven", isProgressionDriven);
+        jsonHomework.put(JSONConstants.IS_PROGRESSION_DRIVEN, isProgressionDriven);
         if (isProgressionDriven) {
             try {
-                long progressionItemId = ProgressionItemAssignmentLocalServiceUtil.getHomeworkAssignmentItemId(this.getHomeworkId());
+                long progressionItemId = ItemAssignmentLocalServiceUtil.getHomeworkAssignmentItemId(this.getHomeworkId());
                 ProgressionItem item = ProgressionItemLocalServiceUtil.getProgressionItem(progressionItemId);
                 Progression progression = ProgressionLocalServiceUtil.getProgression(item.getProgressionId());
                 // Only the progression's owner has the progression link
                 if (progression.getTeacherId() == user.getUserId()) {
                     String progressionUrl = "/user/" + user.getScreenName() + "/nero#/progression?progressionId=" + item.getProgressionId();
-                    jsonHomework.put("progressionUrl", progressionUrl);
+                    jsonHomework.put(JSONConstants.PROGRESSION_URL, progressionUrl);
                 } else if (SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), this.getSourceSessionId())) {
                     User progressionOwner = UserLocalServiceUtil.getUser(progression.getTeacherId());
-                    jsonHomework.put("progressionOwner", progressionOwner.getFullName());
+                    jsonHomework.put(JSONConstants.PROGRESSION_OWNER, progressionOwner.getFullName());
                 }
             } catch (Exception e) {
+                logger.debug(e);
             }
-        }*/
+        }
 
         return jsonHomework;
     }
