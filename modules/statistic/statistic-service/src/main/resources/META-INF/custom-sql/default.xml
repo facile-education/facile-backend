@@ -70,8 +70,7 @@
 			FROM Messaging_Message m
 			WHERE m.sendMessageId = 0
 			AND m.sendDate BETWEEN ? AND ?
-			AND m.messageSubject NOT LIKE 'Notification quotidienne%'
-			AND m.messageSubject NOT LIKE 'Notification hebdo%'
+			AND m.type_ != 3
 		]]>
     </sql>
     <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolMessages">
@@ -81,8 +80,7 @@
 			JOIN Users_Orgs uo ON m.senderId = uo.userId
 			WHERE m.sendMessageId = 0
 			AND m.sendDate BETWEEN ? AND ?
-			AND m.messageSubject NOT LIKE 'Notification quotidienne%'
-			AND m.messageSubject NOT LIKE 'Notification hebdo%'
+			AND m.type_ != 3
 			AND uo.organizationId = ?
 		]]>
     </sql>
