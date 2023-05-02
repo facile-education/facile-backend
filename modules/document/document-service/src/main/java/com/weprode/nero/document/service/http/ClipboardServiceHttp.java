@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.ClipboardServiceUtil;
  */
 public class ClipboardServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject copy(
+	public static org.json.JSONObject copy(
 			HttpPrincipal httpPrincipal, String folderIds, String fileIds,
 			long targetFolderId, int mode)
 		throws com.liferay.portal.kernel.security.auth.PrincipalException {
@@ -82,7 +82,7 @@ public class ClipboardServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -93,7 +93,7 @@ public class ClipboardServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject move(
+	public static org.json.JSONObject move(
 			HttpPrincipal httpPrincipal, String folderIds, String fileIds,
 			long targetFolderId, int mode)
 		throws com.liferay.portal.kernel.security.auth.PrincipalException {
@@ -123,7 +123,7 @@ public class ClipboardServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

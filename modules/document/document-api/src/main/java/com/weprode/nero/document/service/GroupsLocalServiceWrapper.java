@@ -61,7 +61,7 @@ public class GroupsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONArray getUserGroupsFolders(
+	public org.json.JSONArray getUserGroupsFolders(
 			com.liferay.portal.kernel.model.User user)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
@@ -70,7 +70,7 @@ public class GroupsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONArray groupFilesToJSON(
+	public org.json.JSONArray groupFilesToJSON(
 		com.liferay.portal.kernel.model.User user,
 		java.util.List<com.liferay.portal.kernel.repository.model.FileEntry>
 			groupFiles,
@@ -81,7 +81,7 @@ public class GroupsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONArray groupFoldersToJSON(
+	public org.json.JSONArray groupFoldersToJSON(
 		com.liferay.portal.kernel.model.User user,
 		java.util.List<com.liferay.portal.kernel.repository.model.Folder>
 			groupFolders,

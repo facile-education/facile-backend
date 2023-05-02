@@ -123,8 +123,8 @@ public class PermissionUtilsLocalServiceUtil {
 
 	public static void validateFullPermission(
 			com.liferay.portal.kernel.model.User user, long objectId,
-			String type, com.liferay.portal.kernel.json.JSONArray permissions,
-			boolean applyToChild, long scopeGrpId)
+			String type, org.json.JSONArray permissions, boolean applyToChild,
+			long scopeGrpId)
 		throws PortalException, SystemException {
 
 		getService().validateFullPermission(

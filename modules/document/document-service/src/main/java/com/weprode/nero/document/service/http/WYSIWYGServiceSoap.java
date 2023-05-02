@@ -53,14 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class WYSIWYGServiceSoap {
 
-	public static String getHTMLContent(long fileVersionId)
+	public static org.json.JSONObject getHTMLContent(long fileVersionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				WYSIWYGServiceUtil.getHTMLContent(fileVersionId);
+			org.json.JSONObject returnValue = WYSIWYGServiceUtil.getHTMLContent(
+				fileVersionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -69,16 +69,16 @@ public class WYSIWYGServiceSoap {
 		}
 	}
 
-	public static String saveHTMLContent(
+	public static org.json.JSONObject saveHTMLContent(
 			Long fileVersionId, String content, Boolean majorVersion)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				WYSIWYGServiceUtil.saveHTMLContent(
 					fileVersionId, content, majorVersion);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

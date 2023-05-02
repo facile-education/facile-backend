@@ -31,23 +31,17 @@ public class VersionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createMajorVersion(
-		long fileEntryId) {
-
+	public org.json.JSONObject createMajorVersion(long fileEntryId) {
 		return _versionService.createMajorVersion(fileEntryId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteVersion(
-		long fileEntryId, String version) {
-
+	public org.json.JSONObject deleteVersion(long fileEntryId, String version) {
 		return _versionService.deleteVersion(fileEntryId, version);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFileVersions(
-		long fileId) {
-
+	public org.json.JSONObject getFileVersions(long fileId) {
 		return _versionService.getFileVersions(fileId);
 	}
 
@@ -62,14 +56,12 @@ public class VersionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject restoreVersion(
-		long fileVersionId) {
-
+	public org.json.JSONObject restoreVersion(long fileVersionId) {
 		return _versionService.restoreVersion(fileVersionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveVersionDescription(
+	public org.json.JSONObject saveVersionDescription(
 		long fileVersionId, String description) {
 
 		return _versionService.saveVersionDescription(

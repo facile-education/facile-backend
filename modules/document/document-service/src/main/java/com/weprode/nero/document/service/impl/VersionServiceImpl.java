@@ -16,8 +16,8 @@ package com.weprode.nero.document.service.impl;
 
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -44,7 +44,7 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject getFileVersions(long fileId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -61,7 +61,7 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject deleteVersion(long fileEntryId, String version) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -77,7 +77,7 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject restoreVersion(long fileVersionId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -93,7 +93,7 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject saveVersionDescription(long fileVersionId, String description) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -109,7 +109,7 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject createMajorVersion(long fileEntryId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();

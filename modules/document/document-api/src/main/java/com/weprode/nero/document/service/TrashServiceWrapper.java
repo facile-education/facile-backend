@@ -31,7 +31,7 @@ public class TrashServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteDocuments(
+	public org.json.JSONObject deleteDocuments(
 		String folderIdArray, String fileIdArray) {
 
 		return _trashService.deleteDocuments(folderIdArray, fileIdArray);

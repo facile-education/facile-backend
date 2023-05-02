@@ -31,16 +31,12 @@ public class GroupsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getGroupBreadcrumb(
-		String nodePath) {
-
+	public org.json.JSONObject getGroupBreadcrumb(String nodePath) {
 		return _groupsService.getGroupBreadcrumb(nodePath);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getGroupEntities(
-		String nodePath) {
-
+	public org.json.JSONObject getGroupEntities(String nodePath) {
 		return _groupsService.getGroupEntities(nodePath);
 	}
 
@@ -55,14 +51,14 @@ public class GroupsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject recordDownloadActivity(
+	public org.json.JSONObject recordDownloadActivity(
 		long fileEntryId, long versionId) {
 
 		return _groupsService.recordDownloadActivity(fileEntryId, versionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject recordViewActivity(
+	public org.json.JSONObject recordViewActivity(
 		long fileEntryId, long versionId) {
 
 		return _groupsService.recordViewActivity(fileEntryId, versionId);

@@ -25,8 +25,8 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -58,7 +58,7 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 
 	@JSONWebService(value = "get-html-content", method = "GET")
 	public JSONObject getHTMLContent (long fileVersionId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		result.put(JSONConstants.SUCCESS, true);
 
@@ -96,7 +96,7 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 
 	@JSONWebService(value = "save-html-content", method = "POST")
 	public JSONObject saveHTMLContent(Long fileVersionId, String content, Boolean majorVersion) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();

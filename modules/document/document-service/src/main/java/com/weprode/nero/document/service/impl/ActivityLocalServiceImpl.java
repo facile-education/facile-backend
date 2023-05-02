@@ -3,8 +3,8 @@ package com.weprode.nero.document.service.impl;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -94,40 +94,40 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 	}
 
 	public JSONObject convertActivityToJson(Activity activity) {
-		JSONObject jsonActivity = JSONFactoryUtil.createJSONObject();
+		JSONObject jsonActivity = new JSONObject();
 
 		try {
-			jsonActivity.put("activityId", activity.getActivityId());
-			jsonActivity.put("userId", activity.getUserId());
+			jsonActivity.put(JSONConstants.ACTIVITY_ID, activity.getActivityId());
+			jsonActivity.put(JSONConstants.USER_ID, activity.getUserId());
 			User user = UserLocalServiceUtil.getUser(activity.getUserId());
-			jsonActivity.put("userName", user.getFullName());
-			jsonActivity.put("author", user.getFullName());
-			jsonActivity.put("fileName", activity.getFileName());
-			jsonActivity.put("folderName", activity.getFolderName());
-			jsonActivity.put("groupName", GroupUtilsLocalServiceUtil.getGroupName(activity.getGroupId()));
+			jsonActivity.put(JSONConstants.USER_NAME, user.getFullName());
+			jsonActivity.put(JSONConstants.AUTHOR, user.getFullName());
+			jsonActivity.put(JSONConstants.FILE_NAME, activity.getFileName());
+			jsonActivity.put(JSONConstants.FOLDER_NAME, activity.getFolderName());
+			jsonActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(activity.getGroupId()));
 
 			boolean isFile = (activity.getType() < 5);
-			jsonActivity.put("target", isFile ? activity.getFileName() : activity.getFolderName());
+			jsonActivity.put(JSONConstants.TARGET, isFile ? activity.getFileName() : activity.getFolderName());
 			if (isFile) {
-				jsonActivity.put("fileLink", "/c/document_library/get_file?fileEntryId=" + activity.getFileEntryId());
-				jsonActivity.put("fileId", activity.getFileEntryId());
+				jsonActivity.put(JSONConstants.FILE_LINK, "/c/document_library/get_file?fileEntryId=" + activity.getFileEntryId());
+				jsonActivity.put(JSONConstants.FILE_ID, activity.getFileEntryId());
 			}
 			boolean isFolder = (activity.getType() >= 5 && activity.getType() < 9);
 
 			if (isFile || isFolder) {
 				if (isFile) {
-					jsonActivity.put("folderId", DLAppServiceUtil.getFileEntry(activity.getFileEntryId()).getFolderId());
+					jsonActivity.put(JSONConstants.FOLDER_ID, DLAppServiceUtil.getFileEntry(activity.getFileEntryId()).getFolderId());
 				} else {
-					jsonActivity.put("folderId", activity.getFolderId());
+					jsonActivity.put(JSONConstants.FOLDER_ID, activity.getFolderId());
 				}
 			}
 
 			// Group link redirects to the parent folder of the file, in the group document area
 			// TODO link
-			jsonActivity.put("folderLink", "/user//nero#/documents?folderId=" + activity.getFolderId());
-			jsonActivity.put("modificationDate", new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
+			jsonActivity.put(JSONConstants.FOLDER_LINK, "/user//nero#/documents?folderId=" + activity.getFolderId());
+			jsonActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
 					.format(activity.getModificationDate()));
-			jsonActivity.put("type", activity.getType());
+			jsonActivity.put(JSONConstants.TYPE, activity.getType());
 
 		} catch (Exception e) {
 			logger.error("Error converting activity " + activity.getActivityId() + " : " + e.getMessage());

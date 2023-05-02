@@ -58,12 +58,14 @@ public class ScratchServiceSoap {
 	 *
 	 * @return JSONObject with all user's scratch files
 	 */
-	public static String getScratchFiles(long userId) throws RemoteException {
+	public static org.json.JSONObject getScratchFiles(long userId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ScratchServiceUtil.getScratchFiles(userId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -77,14 +79,14 @@ public class ScratchServiceSoap {
 	 *
 	 * @return JSONObject - the scratch file name and content
 	 */
-	public static String getScratchFile(long fileVersionId)
+	public static org.json.JSONObject getScratchFile(long fileVersionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ScratchServiceUtil.getScratchFile(fileVersionId);
+			org.json.JSONObject returnValue = ScratchServiceUtil.getScratchFile(
+				fileVersionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -99,12 +101,14 @@ public class ScratchServiceSoap {
 	 * @param params - The map containing userId, fileEntryId, fileName and content
 	 * @return JSONObject success or not
 	 */
-	public static String saveScratchFile(String params) throws RemoteException {
+	public static org.json.JSONObject saveScratchFile(String params)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ScratchServiceUtil.saveScratchFile(params);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

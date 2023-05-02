@@ -33,7 +33,7 @@ public class TrashServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.TrashServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject deleteDocuments(
+	public static org.json.JSONObject deleteDocuments(
 		java.lang.String folderIdArray, java.lang.String fileIdArray) {
 
 		return getService().deleteDocuments(folderIdArray, fileIdArray);

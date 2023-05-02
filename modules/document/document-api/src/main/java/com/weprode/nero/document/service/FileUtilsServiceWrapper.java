@@ -31,49 +31,41 @@ public class FileUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addLock(long fileId) {
+	public org.json.JSONObject addLock(long fileId) {
 		return _fileUtilsService.addLock(fileId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createAudioFile(
+	public org.json.JSONObject createAudioFile(
 		long folderId, String name, java.io.File file) {
 
 		return _fileUtilsService.createAudioFile(folderId, name, file);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createGeogebraFile(
-		long folderId, String name) {
-
+	public org.json.JSONObject createGeogebraFile(long folderId, String name) {
 		return _fileUtilsService.createGeogebraFile(folderId, name);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createHTMLFile(
-		long folderId, String name) {
-
+	public org.json.JSONObject createHTMLFile(long folderId, String name) {
 		return _fileUtilsService.createHTMLFile(folderId, name);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createLoolFile(
+	public org.json.JSONObject createLoolFile(
 		long folderId, String name, String type) {
 
 		return _fileUtilsService.createLoolFile(folderId, name, type);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createMindmapFile(
-		long folderId, String name) {
-
+	public org.json.JSONObject createMindmapFile(long folderId, String name) {
 		return _fileUtilsService.createMindmapFile(folderId, name);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createScratchFile(
-		long folderId, String name) {
-
+	public org.json.JSONObject createScratchFile(long folderId, String name) {
 		return _fileUtilsService.createScratchFile(folderId, name);
 	}
 
@@ -88,40 +80,36 @@ public class FileUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getResource(
+	public org.json.JSONObject getResource(
 		long fileId, long versionId, boolean readOnly) {
 
 		return _fileUtilsService.getResource(fileId, versionId, readOnly);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject removeLock(long fileId) {
+	public org.json.JSONObject removeLock(long fileId) {
 		return _fileUtilsService.removeLock(fileId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject removeLoolToken(
-		String token) {
-
+	public org.json.JSONObject removeLoolToken(String token) {
 		return _fileUtilsService.removeLoolToken(token);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject renameFile(
-		long fileId, String fileName) {
-
+	public org.json.JSONObject renameFile(long fileId, String fileName) {
 		return _fileUtilsService.renameFile(fileId, fileName);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject uploadFile(
+	public org.json.JSONObject uploadFile(
 		long folderId, String fileName, java.io.File file, int mode) {
 
 		return _fileUtilsService.uploadFile(folderId, fileName, file, mode);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject uploadTmpFile(
+	public org.json.JSONObject uploadTmpFile(
 		String fileName, java.io.File file) {
 
 		return _fileUtilsService.uploadTmpFile(fileName, file);

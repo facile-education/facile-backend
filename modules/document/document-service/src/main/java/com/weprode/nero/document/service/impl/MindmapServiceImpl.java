@@ -24,8 +24,8 @@ import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -55,7 +55,7 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 	 */
 	@JSONWebService(value = "get-mind-file", method = "GET")
 	public JSONObject getMindFile(long fileVersionId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		logger.info("getMindFile with fileVersionId="+fileVersionId);
 
@@ -93,12 +93,12 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 	 */
 	@JSONWebService(value = "save-mind-file", method = "POST")
 	public JSONObject saveMindFile(String params) throws SystemException {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
-			JSONObject paramMap = JSONFactoryUtil.createJSONObject(params);
+			JSONObject paramMap = new JSONObject(params);
 
-			long fileVersionId = paramMap.getLong("id", -1);
+			long fileVersionId = JSONConstants.getLongValue(paramMap, JSONConstants.ID, -1);
 			String content = paramMap.getString("xml");
 			String properties = paramMap.getString("pref");
 

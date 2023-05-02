@@ -167,6 +167,11 @@ public class JSONConstants {
     public static final String MODIFICATION_DATE = "modificationDate";
     public static final String AUTHOR = "author";
     public static final String TARGET = "target";
+    public static final String ACTIVITY_ID = "activityId";
+    public static final String FOLDER_NAME = "folderName";
+    public static final String FILE_LINK = "fileLink";
+    public static final String FILE_ID = "fileId";
+    public static final String FOLDER_LINK = "folderLink";
 
     // Menu
     public static final String MENU = "menu";

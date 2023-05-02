@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.WYSIWYGServiceUtil;
  */
 public class WYSIWYGServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getHTMLContent(
+	public static org.json.JSONObject getHTMLContent(
 		HttpPrincipal httpPrincipal, long fileVersionId) {
 
 		try {
@@ -73,7 +73,7 @@ public class WYSIWYGServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class WYSIWYGServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveHTMLContent(
+	public static org.json.JSONObject saveHTMLContent(
 		HttpPrincipal httpPrincipal, Long fileVersionId, String content,
 		Boolean majorVersion) {
 
@@ -106,7 +106,7 @@ public class WYSIWYGServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

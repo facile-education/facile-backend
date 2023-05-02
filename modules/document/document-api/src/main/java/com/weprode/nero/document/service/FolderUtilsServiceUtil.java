@@ -35,28 +35,24 @@ public class FolderUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.FolderUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject createFolder(
+	public static org.json.JSONObject createFolder(
 			long targetFolderId, String folderName)
 		throws SystemException {
 
 		return getService().createFolder(targetFolderId, folderName);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject downloadFolder(
-		long folderId) {
-
+	public static org.json.JSONObject downloadFolder(long folderId) {
 		return getService().downloadFolder(folderId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getAllEntities(
+	public static org.json.JSONObject getAllEntities(
 		long folderId, boolean withDetails) {
 
 		return getService().getAllEntities(folderId, withDetails);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getBreadcrumb(
-		long folderId) {
-
+	public static org.json.JSONObject getBreadcrumb(long folderId) {
 		return getService().getBreadcrumb(folderId);
 	}
 
@@ -69,7 +65,7 @@ public class FolderUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject renameFolder(
+	public static org.json.JSONObject renameFolder(
 		long folderId, String folderName) {
 
 		return getService().renameFolder(folderId, folderName);

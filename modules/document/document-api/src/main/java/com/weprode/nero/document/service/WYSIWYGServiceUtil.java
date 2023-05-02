@@ -33,9 +33,7 @@ public class WYSIWYGServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.WYSIWYGServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getHTMLContent(
-		long fileVersionId) {
-
+	public static org.json.JSONObject getHTMLContent(long fileVersionId) {
 		return getService().getHTMLContent(fileVersionId);
 	}
 
@@ -48,7 +46,7 @@ public class WYSIWYGServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveHTMLContent(
+	public static org.json.JSONObject saveHTMLContent(
 		java.lang.Long fileVersionId, java.lang.String content,
 		java.lang.Boolean majorVersion) {
 

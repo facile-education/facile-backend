@@ -68,9 +68,7 @@ public class ActivityLocalServiceUtil {
 			fileEntryId, folderId, userId, groupId, fileName, folderName, type);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		convertActivityToJson(Activity activity) {
-
+	public static org.json.JSONObject convertActivityToJson(Activity activity) {
 		return getService().convertActivityToJson(activity);
 	}
 

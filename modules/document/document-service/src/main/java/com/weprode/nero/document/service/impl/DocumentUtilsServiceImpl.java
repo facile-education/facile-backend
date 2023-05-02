@@ -18,8 +18,9 @@ import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -51,7 +52,7 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "get-global-documents-properties", method = "GET")
 	public JSONObject getGlobalDocumentsProperties() throws SystemException, PortalException {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user = getGuestOrUser();
 		logger.info("Getting global document properties for user " + user.getUserId());
@@ -60,12 +61,12 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		Folder privateFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(user.getUserId());
 
 		// Private
-		JSONObject jsonProperties = JSONFactoryUtil.createJSONObject();
+		JSONObject jsonProperties = new JSONObject();
 		jsonProperties.put(JSONConstants.ID, privateFolder.getFolderId());
 		jsonProperties.put(JSONConstants.NAME, privateFolder.getName());
 		jsonProperties.put(JSONConstants.HAS_SUB_FOLDERS, true);
-		jsonProperties.put(JSONConstants.SUB_FOLDERS, JSONFactoryUtil.createJSONArray());
-		jsonProperties.put(JSONConstants.FILES, JSONFactoryUtil.createJSONArray());
+		jsonProperties.put(JSONConstants.SUB_FOLDERS, new JSONArray());
+		jsonProperties.put(JSONConstants.FILES, new JSONArray());
 		result.put(JSONConstants.PRIVATE, jsonProperties);
 
 		// User Max upload Size
@@ -83,7 +84,7 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "is-embed-url-whitelisted", method = "GET")
 	public JSONObject isEmbedUrlWhitelisted(String url) throws SystemException {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		result.put(JSONConstants.IS_ALLOWED, DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(url));
 		result.put(JSONConstants.SUCCESS, true);

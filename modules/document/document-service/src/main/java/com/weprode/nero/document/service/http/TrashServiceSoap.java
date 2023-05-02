@@ -53,15 +53,15 @@ import java.rmi.RemoteException;
 @Deprecated
 public class TrashServiceSoap {
 
-	public static String deleteDocuments(
+	public static org.json.JSONObject deleteDocuments(
 			String folderIdArray, String fileIdArray)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				TrashServiceUtil.deleteDocuments(folderIdArray, fileIdArray);
+			org.json.JSONObject returnValue = TrashServiceUtil.deleteDocuments(
+				folderIdArray, fileIdArray);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

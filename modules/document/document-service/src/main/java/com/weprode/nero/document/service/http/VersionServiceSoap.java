@@ -64,12 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class VersionServiceSoap {
 
-	public static String getFileVersions(long fileId) throws RemoteException {
+	public static org.json.JSONObject getFileVersions(long fileId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				VersionServiceUtil.getFileVersions(fileId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -78,14 +80,15 @@ public class VersionServiceSoap {
 		}
 	}
 
-	public static String deleteVersion(long fileEntryId, String version)
+	public static org.json.JSONObject deleteVersion(
+			long fileEntryId, String version)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				VersionServiceUtil.deleteVersion(fileEntryId, version);
+			org.json.JSONObject returnValue = VersionServiceUtil.deleteVersion(
+				fileEntryId, version);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -94,14 +97,14 @@ public class VersionServiceSoap {
 		}
 	}
 
-	public static String restoreVersion(long fileVersionId)
+	public static org.json.JSONObject restoreVersion(long fileVersionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				VersionServiceUtil.restoreVersion(fileVersionId);
+			org.json.JSONObject returnValue = VersionServiceUtil.restoreVersion(
+				fileVersionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -110,16 +113,16 @@ public class VersionServiceSoap {
 		}
 	}
 
-	public static String saveVersionDescription(
+	public static org.json.JSONObject saveVersionDescription(
 			long fileVersionId, String description)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				VersionServiceUtil.saveVersionDescription(
 					fileVersionId, description);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -128,14 +131,14 @@ public class VersionServiceSoap {
 		}
 	}
 
-	public static String createMajorVersion(long fileEntryId)
+	public static org.json.JSONObject createMajorVersion(long fileEntryId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				VersionServiceUtil.createMajorVersion(fileEntryId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

@@ -36,8 +36,7 @@ public class DocumentUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.DocumentUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject
-			getGlobalDocumentsProperties()
+	public static org.json.JSONObject getGlobalDocumentsProperties()
 		throws PortalException, SystemException {
 
 		return getService().getGlobalDocumentsProperties();
@@ -52,8 +51,7 @@ public class DocumentUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-			isEmbedUrlWhitelisted(String url)
+	public static org.json.JSONObject isEmbedUrlWhitelisted(String url)
 		throws SystemException {
 
 		return getService().isEmbedUrlWhitelisted(url);

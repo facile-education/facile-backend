@@ -53,14 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class PermissionUtilsServiceSoap {
 
-	public static String getFilePermissionMatrix(long fileEntryId)
+	public static org.json.JSONObject getFilePermissionMatrix(long fileEntryId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				PermissionUtilsServiceUtil.getFilePermissionMatrix(fileEntryId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -69,14 +69,14 @@ public class PermissionUtilsServiceSoap {
 		}
 	}
 
-	public static String getFolderPermissionMatrix(long folderId)
+	public static org.json.JSONObject getFolderPermissionMatrix(long folderId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				PermissionUtilsServiceUtil.getFolderPermissionMatrix(folderId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -85,16 +85,16 @@ public class PermissionUtilsServiceSoap {
 		}
 	}
 
-	public static String saveFolderPermissionMatrix(
+	public static org.json.JSONObject saveFolderPermissionMatrix(
 			long folderId, String jsonPermissionMatrix, boolean isRecursive)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				PermissionUtilsServiceUtil.saveFolderPermissionMatrix(
 					folderId, jsonPermissionMatrix, isRecursive);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -103,16 +103,16 @@ public class PermissionUtilsServiceSoap {
 		}
 	}
 
-	public static String saveFilePermissionMatrix(
+	public static org.json.JSONObject saveFilePermissionMatrix(
 			long fileEntryId, String jsonPermissionMatrix)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				PermissionUtilsServiceUtil.saveFilePermissionMatrix(
 					fileEntryId, jsonPermissionMatrix);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.ScratchServiceUtil;
  */
 public class ScratchServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getScratchFiles(
+	public static org.json.JSONObject getScratchFiles(
 		HttpPrincipal httpPrincipal, long userId) {
 
 		try {
@@ -72,7 +72,7 @@ public class ScratchServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class ScratchServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getScratchFile(
+	public static org.json.JSONObject getScratchFile(
 		HttpPrincipal httpPrincipal, long fileVersionId) {
 
 		try {
@@ -104,7 +104,7 @@ public class ScratchServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -115,7 +115,7 @@ public class ScratchServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveScratchFile(
+	public static org.json.JSONObject saveScratchFile(
 		HttpPrincipal httpPrincipal, String params) {
 
 		try {
@@ -135,7 +135,7 @@ public class ScratchServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

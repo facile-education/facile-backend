@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.MindmapServiceUtil;
  */
 public class MindmapServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getMindFile(
+	public static org.json.JSONObject getMindFile(
 		HttpPrincipal httpPrincipal, long fileVersionId) {
 
 		try {
@@ -73,7 +73,7 @@ public class MindmapServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class MindmapServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveMindFile(
+	public static org.json.JSONObject saveMindFile(
 			HttpPrincipal httpPrincipal, String params)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
@@ -112,7 +112,7 @@ public class MindmapServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

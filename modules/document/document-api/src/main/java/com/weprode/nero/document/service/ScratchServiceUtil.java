@@ -48,9 +48,7 @@ public class ScratchServiceUtil {
 	 *
 	 * @return JSONObject - the scratch file name and content
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getScratchFile(
-		long fileVersionId) {
-
+	public static org.json.JSONObject getScratchFile(long fileVersionId) {
 		return getService().getScratchFile(fileVersionId);
 	}
 
@@ -59,9 +57,7 @@ public class ScratchServiceUtil {
 	 *
 	 * @return JSONObject with all user's scratch files
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getScratchFiles(
-		long userId) {
-
+	public static org.json.JSONObject getScratchFiles(long userId) {
 		return getService().getScratchFiles(userId);
 	}
 
@@ -71,9 +67,7 @@ public class ScratchServiceUtil {
 	 * @param params - The map containing userId, fileEntryId, fileName and content
 	 * @return JSONObject success or not
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject saveScratchFile(
-		java.lang.String params) {
-
+	public static org.json.JSONObject saveScratchFile(java.lang.String params) {
 		return getService().saveScratchFile(params);
 	}
 

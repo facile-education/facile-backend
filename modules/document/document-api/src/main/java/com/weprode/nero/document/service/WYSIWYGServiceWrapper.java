@@ -31,9 +31,7 @@ public class WYSIWYGServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getHTMLContent(
-		long fileVersionId) {
-
+	public org.json.JSONObject getHTMLContent(long fileVersionId) {
 		return _wysiwygService.getHTMLContent(fileVersionId);
 	}
 
@@ -48,7 +46,7 @@ public class WYSIWYGServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveHTMLContent(
+	public org.json.JSONObject saveHTMLContent(
 		Long fileVersionId, String content, Boolean majorVersion) {
 
 		return _wysiwygService.saveHTMLContent(

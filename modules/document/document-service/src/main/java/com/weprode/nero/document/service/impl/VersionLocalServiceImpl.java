@@ -26,9 +26,9 @@ import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -61,9 +61,9 @@ public class VersionLocalServiceImpl extends VersionLocalServiceBaseImpl {
 	private static final Log logger = LogFactoryUtil.getLog(VersionLocalServiceImpl.class);
 
 	public JSONObject getFileVersions(User user, long fileId) {
-		final JSONObject res = JSONFactoryUtil.createJSONObject();
+		final JSONObject res = new JSONObject();
 
-		final JSONArray versionItems = JSONFactoryUtil.createJSONArray();
+		final JSONArray versionItems = new JSONArray();
 
 		try {
 			logger.info("User " + user.getFullName() + " fetches the versions for fileId " + fileId);
@@ -72,7 +72,7 @@ public class VersionLocalServiceImpl extends VersionLocalServiceBaseImpl {
 
 			for (DLFileVersion dlFileVersion : dlFileVersionList) {
 
-				JSONObject curr = JSONFactoryUtil.createJSONObject();
+				JSONObject curr = new JSONObject();
 				curr.put(JSONConstants.ID, dlFileVersion.getFileVersionId());
 				curr.put(JSONConstants.NAME, dlFileVersion.getVersion());
 				curr.put(JSONConstants.SIZE, (int) dlFileVersion.getSize());

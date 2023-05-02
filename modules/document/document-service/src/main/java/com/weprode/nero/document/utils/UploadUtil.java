@@ -3,8 +3,8 @@ package com.weprode.nero.document.utils;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -28,7 +28,7 @@ public class UploadUtil {
 
     // Add new file from workspace
     public static JSONObject uploadFile(User user, long folderId, String fileName, File file, int mode) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         
         result.put(JSONConstants.SUCCESS, false);
 

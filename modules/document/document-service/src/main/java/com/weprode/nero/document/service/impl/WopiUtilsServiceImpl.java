@@ -24,8 +24,8 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -139,7 +139,7 @@ public class WopiUtilsServiceImpl extends WopiUtilsServiceBaseImpl {
 			return null;
 		}
 
-		Long userId = loolToken.getUserId();
+		long userId = loolToken.getUserId();
 		if (userId == 0L) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return null;
@@ -188,7 +188,7 @@ public class WopiUtilsServiceImpl extends WopiUtilsServiceBaseImpl {
 		}
 
 		User user = UserLocalServiceUtil.getUser(userId);
-		JSONObject fileInfo = JSONFactoryUtil.createJSONObject();
+		JSONObject fileInfo = new JSONObject();
 		fileInfo.put(JSONConstants.WOPI_OWNER_ID, user.getUserId());
 		fileInfo.put(JSONConstants.WOPI_USER_ID, user.getUserId());
 		fileInfo.put(JSONConstants.WOPI_USER_INFO, user.getScreenName());

@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.FolderUtilsServiceUtil;
  */
 public class FolderUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getBreadcrumb(
+	public static org.json.JSONObject getBreadcrumb(
 		HttpPrincipal httpPrincipal, long folderId) {
 
 		try {
@@ -73,7 +73,7 @@ public class FolderUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class FolderUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createFolder(
+	public static org.json.JSONObject createFolder(
 			HttpPrincipal httpPrincipal, long targetFolderId, String folderName)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
@@ -113,7 +113,7 @@ public class FolderUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -124,7 +124,7 @@ public class FolderUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject renameFolder(
+	public static org.json.JSONObject renameFolder(
 		HttpPrincipal httpPrincipal, long folderId, String folderName) {
 
 		try {
@@ -145,7 +145,7 @@ public class FolderUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -156,7 +156,7 @@ public class FolderUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject downloadFolder(
+	public static org.json.JSONObject downloadFolder(
 		HttpPrincipal httpPrincipal, long folderId) {
 
 		try {
@@ -177,7 +177,7 @@ public class FolderUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -188,7 +188,7 @@ public class FolderUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getAllEntities(
+	public static org.json.JSONObject getAllEntities(
 		HttpPrincipal httpPrincipal, long folderId, boolean withDetails) {
 
 		try {
@@ -209,7 +209,7 @@ public class FolderUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

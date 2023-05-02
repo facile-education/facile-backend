@@ -251,7 +251,7 @@ public class VersionLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFileVersions(
+	public static org.json.JSONObject getFileVersions(
 		com.liferay.portal.kernel.model.User user, long fileId) {
 
 		return getService().getFileVersions(user, fileId);

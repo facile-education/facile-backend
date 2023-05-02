@@ -41,9 +41,7 @@ public class MindmapServiceUtil {
 	 *
 	 * @return JSONObject - the mindmap file name and content
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getMindFile(
-		long fileVersionId) {
-
+	public static org.json.JSONObject getMindFile(long fileVersionId) {
 		return getService().getMindFile(fileVersionId);
 	}
 
@@ -62,8 +60,7 @@ public class MindmapServiceUtil {
 	 * @param params - The map containing fileVersionId, fileName and content
 	 * @return JSONObject success or not
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject saveMindFile(
-			String params)
+	public static org.json.JSONObject saveMindFile(String params)
 		throws SystemException {
 
 		return getService().saveMindFile(params);

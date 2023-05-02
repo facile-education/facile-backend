@@ -33,43 +33,41 @@ public class FileUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.FileUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject addLock(
-		long fileId) {
-
+	public static org.json.JSONObject addLock(long fileId) {
 		return getService().addLock(fileId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createAudioFile(
+	public static org.json.JSONObject createAudioFile(
 		long folderId, java.lang.String name, java.io.File file) {
 
 		return getService().createAudioFile(folderId, name, file);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createGeogebraFile(
+	public static org.json.JSONObject createGeogebraFile(
 		long folderId, java.lang.String name) {
 
 		return getService().createGeogebraFile(folderId, name);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createHTMLFile(
+	public static org.json.JSONObject createHTMLFile(
 		long folderId, java.lang.String name) {
 
 		return getService().createHTMLFile(folderId, name);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createLoolFile(
+	public static org.json.JSONObject createLoolFile(
 		long folderId, java.lang.String name, java.lang.String type) {
 
 		return getService().createLoolFile(folderId, name, type);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createMindmapFile(
+	public static org.json.JSONObject createMindmapFile(
 		long folderId, java.lang.String name) {
 
 		return getService().createMindmapFile(folderId, name);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createScratchFile(
+	public static org.json.JSONObject createScratchFile(
 		long folderId, java.lang.String name) {
 
 		return getService().createScratchFile(folderId, name);
@@ -84,37 +82,33 @@ public class FileUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getResource(
+	public static org.json.JSONObject getResource(
 		long fileId, long versionId, boolean readOnly) {
 
 		return getService().getResource(fileId, versionId, readOnly);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeLock(
-		long fileId) {
-
+	public static org.json.JSONObject removeLock(long fileId) {
 		return getService().removeLock(fileId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeLoolToken(
-		java.lang.String token) {
-
+	public static org.json.JSONObject removeLoolToken(java.lang.String token) {
 		return getService().removeLoolToken(token);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject renameFile(
+	public static org.json.JSONObject renameFile(
 		long fileId, java.lang.String fileName) {
 
 		return getService().renameFile(fileId, fileName);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject uploadFile(
+	public static org.json.JSONObject uploadFile(
 		long folderId, java.lang.String fileName, java.io.File file, int mode) {
 
 		return getService().uploadFile(folderId, fileName, file, mode);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject uploadTmpFile(
+	public static org.json.JSONObject uploadTmpFile(
 		java.lang.String fileName, java.io.File file) {
 
 		return getService().uploadTmpFile(fileName, file);

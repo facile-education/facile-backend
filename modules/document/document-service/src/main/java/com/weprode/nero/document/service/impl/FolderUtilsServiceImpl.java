@@ -20,9 +20,9 @@ import com.liferay.document.library.kernel.service.persistence.DLFileVersionUtil
 import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -53,7 +53,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "get-breadcrumb", method = "GET")
 	public JSONObject getBreadcrumb(long folderId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		result.put(JSONConstants.SUCCESS, false);
 
@@ -63,7 +63,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			List<Folder> folderList = FolderUtilsLocalServiceUtil.getFolderPath(folderId);
 
 			// Format breadCrumb
-			final JSONArray folderBreadcrumb = JSONFactoryUtil.createJSONArray();
+			final JSONArray folderBreadcrumb = new JSONArray();
 			int space = DocumentUtil.getDocumentSpace(folderList.get(0));
 			for (int i = 0 ; i < folderList.size() ; i++) {
 				Folder breadcrumbFolder = folderList.get(i);
@@ -86,7 +86,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "create-folder", method = "POST")
 	public JSONObject createFolder(long targetFolderId, String folderName) throws SystemException {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -108,7 +108,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject renameFolder(long folderId, String folderName) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -130,7 +130,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 	@JSONWebService(value = "download-folder", method = "GET")
 	public JSONObject downloadFolder(long folderId) {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 		result.put(JSONConstants.SUCCESS, false);
 
 		try {
@@ -151,11 +151,11 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "get-all-entities", method = "GET")
 	public JSONObject getAllEntities(long folderId, boolean withDetails) {
-		final JSONObject result = JSONFactoryUtil.createJSONObject();
+		final JSONObject result = new JSONObject();
 
 		try {
-			final JSONArray folderItems = JSONFactoryUtil.createJSONArray();
-			final JSONArray fileItems = JSONFactoryUtil.createJSONArray();
+			final JSONArray folderItems = new JSONArray();
+			final JSONArray fileItems = new JSONArray();
 
 			User user = getGuestOrUser();
 			logger.info("User " + user.getFullName() + " fetches documents in folder " + folderId + (withDetails ? " with details":""));

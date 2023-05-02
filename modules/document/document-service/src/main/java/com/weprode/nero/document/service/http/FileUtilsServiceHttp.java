@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.FileUtilsServiceUtil;
  */
 public class FileUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject uploadFile(
+	public static org.json.JSONObject uploadFile(
 		HttpPrincipal httpPrincipal, long folderId, String fileName,
 		java.io.File file, int mode) {
 
@@ -74,7 +74,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -85,7 +85,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject uploadTmpFile(
+	public static org.json.JSONObject uploadTmpFile(
 		HttpPrincipal httpPrincipal, String fileName, java.io.File file) {
 
 		try {
@@ -106,7 +106,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -117,7 +117,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject renameFile(
+	public static org.json.JSONObject renameFile(
 		HttpPrincipal httpPrincipal, long fileId, String fileName) {
 
 		try {
@@ -138,7 +138,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -149,7 +149,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createAudioFile(
+	public static org.json.JSONObject createAudioFile(
 		HttpPrincipal httpPrincipal, long folderId, String name,
 		java.io.File file) {
 
@@ -171,7 +171,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -182,7 +182,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createGeogebraFile(
+	public static org.json.JSONObject createGeogebraFile(
 		HttpPrincipal httpPrincipal, long folderId, String name) {
 
 		try {
@@ -203,7 +203,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -214,7 +214,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createMindmapFile(
+	public static org.json.JSONObject createMindmapFile(
 		HttpPrincipal httpPrincipal, long folderId, String name) {
 
 		try {
@@ -235,7 +235,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -246,7 +246,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createScratchFile(
+	public static org.json.JSONObject createScratchFile(
 		HttpPrincipal httpPrincipal, long folderId, String name) {
 
 		try {
@@ -267,7 +267,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -278,7 +278,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createLoolFile(
+	public static org.json.JSONObject createLoolFile(
 		HttpPrincipal httpPrincipal, long folderId, String name, String type) {
 
 		try {
@@ -299,7 +299,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -310,7 +310,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createHTMLFile(
+	public static org.json.JSONObject createHTMLFile(
 		HttpPrincipal httpPrincipal, long folderId, String name) {
 
 		try {
@@ -331,7 +331,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -342,7 +342,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addLock(
+	public static org.json.JSONObject addLock(
 		HttpPrincipal httpPrincipal, long fileId) {
 
 		try {
@@ -361,7 +361,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -372,7 +372,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeLock(
+	public static org.json.JSONObject removeLock(
 		HttpPrincipal httpPrincipal, long fileId) {
 
 		try {
@@ -392,7 +392,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -403,7 +403,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getResource(
+	public static org.json.JSONObject getResource(
 		HttpPrincipal httpPrincipal, long fileId, long versionId,
 		boolean readOnly) {
 
@@ -425,7 +425,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -436,7 +436,7 @@ public class FileUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeLoolToken(
+	public static org.json.JSONObject removeLoolToken(
 		HttpPrincipal httpPrincipal, String token) {
 
 		try {
@@ -456,7 +456,7 @@ public class FileUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

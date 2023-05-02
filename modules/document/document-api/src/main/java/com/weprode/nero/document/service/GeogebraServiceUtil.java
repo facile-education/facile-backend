@@ -33,9 +33,7 @@ public class GeogebraServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.GeogebraServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getGeogebraFile(
-		long fileVersionId) {
-
+	public static org.json.JSONObject getGeogebraFile(long fileVersionId) {
 		return getService().getGeogebraFile(fileVersionId);
 	}
 
@@ -48,7 +46,7 @@ public class GeogebraServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveGeogebraFile(
+	public static org.json.JSONObject saveGeogebraFile(
 		java.lang.String params) {
 
 		return getService().saveGeogebraFile(params);

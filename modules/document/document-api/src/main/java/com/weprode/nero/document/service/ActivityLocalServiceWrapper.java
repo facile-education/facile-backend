@@ -59,7 +59,7 @@ public class ActivityLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertActivityToJson(
+	public org.json.JSONObject convertActivityToJson(
 		com.weprode.nero.document.model.Activity activity) {
 
 		return _activityLocalService.convertActivityToJson(activity);

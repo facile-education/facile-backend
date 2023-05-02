@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.WopiUtilsServiceUtil;
  */
 public class WopiUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getFileAction(
+	public static org.json.JSONObject getFileAction(
 			HttpPrincipal httpPrincipal,
 			javax.servlet.http.HttpServletRequest request,
 			javax.servlet.http.HttpServletResponse response, String accessToken,
@@ -84,7 +84,7 @@ public class WopiUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -95,7 +95,7 @@ public class WopiUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFileAction(
+	public static org.json.JSONObject getFileAction(
 			HttpPrincipal httpPrincipal, java.io.File file,
 			javax.servlet.http.HttpServletResponse response, String accessToken,
 			String wopiParam)
@@ -126,7 +126,7 @@ public class WopiUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -137,7 +137,7 @@ public class WopiUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFileInfo(
+	public static org.json.JSONObject getFileInfo(
 			HttpPrincipal httpPrincipal,
 			javax.servlet.http.HttpServletResponse response, String accessToken,
 			String wopiParam)
@@ -173,7 +173,7 @@ public class WopiUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
