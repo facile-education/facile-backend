@@ -16,7 +16,6 @@ package com.weprode.nero.group.service;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
@@ -25,6 +24,8 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.weprode.nero.group.model.GroupActivity;
 
 import java.util.*;
+
+import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
 

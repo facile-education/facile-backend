@@ -64,17 +64,17 @@ import java.rmi.RemoteException;
 @Deprecated
 public class CommunityInfosServiceSoap {
 
-	public static String createCommunity(
+	public static org.json.JSONObject createCommunity(
 			String groupName, String description, boolean isPedagogical,
 			String members, String color)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				CommunityInfosServiceUtil.createCommunity(
 					groupName, description, isPedagogical, members, color);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -83,14 +83,14 @@ public class CommunityInfosServiceSoap {
 		}
 	}
 
-	public static String checkCommunityName(String communityName)
+	public static org.json.JSONObject checkCommunityName(String communityName)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				CommunityInfosServiceUtil.checkCommunityName(communityName);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -99,18 +99,18 @@ public class CommunityInfosServiceSoap {
 		}
 	}
 
-	public static String editCommunity(
+	public static org.json.JSONObject editCommunity(
 			long groupId, String groupName, String description,
 			boolean isPedagogical, String members, String color)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				CommunityInfosServiceUtil.editCommunity(
 					groupId, groupName, description, isPedagogical, members,
 					color);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -119,12 +119,14 @@ public class CommunityInfosServiceSoap {
 		}
 	}
 
-	public static String removeCommunity(long groupId) throws RemoteException {
+	public static org.json.JSONObject removeCommunity(long groupId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				CommunityInfosServiceUtil.removeCommunity(groupId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -133,12 +135,14 @@ public class CommunityInfosServiceSoap {
 		}
 	}
 
-	public static String extendCommunity(long groupId) throws RemoteException {
+	public static org.json.JSONObject extendCommunity(long groupId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				CommunityInfosServiceUtil.extendCommunity(groupId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

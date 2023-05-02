@@ -33,13 +33,13 @@ public class CommunityInfosServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.group.service.impl.CommunityInfosServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject checkCommunityName(
+	public static org.json.JSONObject checkCommunityName(
 		java.lang.String communityName) {
 
 		return getService().checkCommunityName(communityName);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createCommunity(
+	public static org.json.JSONObject createCommunity(
 		java.lang.String groupName, java.lang.String description,
 		boolean isPedagogical, java.lang.String members,
 		java.lang.String color) {
@@ -48,7 +48,7 @@ public class CommunityInfosServiceUtil {
 			groupName, description, isPedagogical, members, color);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject editCommunity(
+	public static org.json.JSONObject editCommunity(
 		long groupId, java.lang.String groupName, java.lang.String description,
 		boolean isPedagogical, java.lang.String members,
 		java.lang.String color) {
@@ -57,9 +57,7 @@ public class CommunityInfosServiceUtil {
 			groupId, groupName, description, isPedagogical, members, color);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject extendCommunity(
-		long groupId) {
-
+	public static org.json.JSONObject extendCommunity(long groupId) {
 		return getService().extendCommunity(groupId);
 	}
 
@@ -72,9 +70,7 @@ public class CommunityInfosServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeCommunity(
-		long groupId) {
-
+	public static org.json.JSONObject removeCommunity(long groupId) {
 		return getService().removeCommunity(groupId);
 	}
 

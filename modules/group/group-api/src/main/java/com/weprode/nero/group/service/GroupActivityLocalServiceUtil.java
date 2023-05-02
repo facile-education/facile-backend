@@ -35,10 +35,8 @@ public class GroupActivityLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.group.service.impl.GroupActivityLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject
-		convertGroupActivity(
-			long userId,
-			com.weprode.nero.group.model.GroupActivity groupActivity) {
+	public static org.json.JSONObject convertGroupActivity(
+		long userId, com.weprode.nero.group.model.GroupActivity groupActivity) {
 
 		return getService().convertGroupActivity(userId, groupActivity);
 	}

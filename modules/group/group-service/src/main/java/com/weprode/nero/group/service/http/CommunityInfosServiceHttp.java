@@ -52,7 +52,7 @@ import com.weprode.nero.group.service.CommunityInfosServiceUtil;
  */
 public class CommunityInfosServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject createCommunity(
+	public static org.json.JSONObject createCommunity(
 		HttpPrincipal httpPrincipal, String groupName, String description,
 		boolean isPedagogical, String members, String color) {
 
@@ -75,7 +75,7 @@ public class CommunityInfosServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -86,7 +86,7 @@ public class CommunityInfosServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject checkCommunityName(
+	public static org.json.JSONObject checkCommunityName(
 		HttpPrincipal httpPrincipal, String communityName) {
 
 		try {
@@ -107,7 +107,7 @@ public class CommunityInfosServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -118,7 +118,7 @@ public class CommunityInfosServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject editCommunity(
+	public static org.json.JSONObject editCommunity(
 		HttpPrincipal httpPrincipal, long groupId, String groupName,
 		String description, boolean isPedagogical, String members,
 		String color) {
@@ -142,7 +142,7 @@ public class CommunityInfosServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -153,7 +153,7 @@ public class CommunityInfosServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeCommunity(
+	public static org.json.JSONObject removeCommunity(
 		HttpPrincipal httpPrincipal, long groupId) {
 
 		try {
@@ -173,7 +173,7 @@ public class CommunityInfosServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -184,7 +184,7 @@ public class CommunityInfosServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject extendCommunity(
+	public static org.json.JSONObject extendCommunity(
 		HttpPrincipal httpPrincipal, long groupId) {
 
 		try {
@@ -204,7 +204,7 @@ public class CommunityInfosServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

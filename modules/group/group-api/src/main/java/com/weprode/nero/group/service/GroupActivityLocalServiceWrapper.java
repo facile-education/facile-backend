@@ -34,7 +34,7 @@ public class GroupActivityLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertGroupActivity(
+	public org.json.JSONObject convertGroupActivity(
 		long userId, com.weprode.nero.group.model.GroupActivity groupActivity) {
 
 		return _groupActivityLocalService.convertGroupActivity(

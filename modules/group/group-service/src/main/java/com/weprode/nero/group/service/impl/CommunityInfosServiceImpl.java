@@ -2,9 +2,9 @@ package com.weprode.nero.group.service.impl;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -45,7 +45,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
 
     @JSONWebService(value = "create-community", method = "POST")
     public JSONObject createCommunity(String groupName, String description, boolean isPedagogical, String members, String color) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -111,7 +111,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             }
             CommunityInfosLocalServiceUtil.updateCommunityInfos(communityInfos);
 
-            JSONArray jsonMembers = JSONFactoryUtil.createJSONArray(members);
+            JSONArray jsonMembers = new JSONArray(members);
 
             Role ownerRole = RoleLocalServiceUtil.getRole(user.getCompanyId(), RoleConstants.SITE_OWNER);
             Role managerRole = RoleLocalServiceUtil.getRole(user.getCompanyId(), RoleConstants.SITE_ADMINISTRATOR);
@@ -150,7 +150,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             String subject = messages.getString("creation-du-groupe") + " " + createdGroup.getName();
             String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + createdGroup.getName()+".</br></br> L'&eacute;quipe technique";
             // TODO Messaging
-            // InternalMessageLocalServiceUtil.sendInternalMessage(noReplyUser, notifiedMemberIds, subject, content, JSONFactoryUtil.createJSONArray(), 0, 0);
+            // InternalMessageLocalServiceUtil.sendInternalMessage(noReplyUser, notifiedMemberIds, subject, content, new JSONArray(), 0, 0);
 
             // The creator has both owner and admin roles
             UserGroupRoleLocalServiceUtil.addUserGroupRoles(user.getUserId(), createdGroup.getGroupId(), new long[] {ownerRole.getRoleId(), managerRole.getRoleId()});
@@ -166,7 +166,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
     @JSONWebService(value = "check-community-name", method = "GET")
     public JSONObject checkCommunityName(String communityName) {
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -218,7 +218,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
     @JSONWebService(value = "edit-community", method = "POST")
     public JSONObject editCommunity(long groupId, String groupName, String description, boolean isPedagogical, String members, String color) {
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -267,7 +267,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             CommunityInfosLocalServiceUtil.updateCommunityInfos(communityInfos);
 
             // Handle members
-            JSONArray jsonMembers = JSONFactoryUtil.createJSONArray(members);
+            JSONArray jsonMembers = new JSONArray(members);
 
             Role managerRole = RoleLocalServiceUtil.getRole(user.getCompanyId(), RoleConstants.SITE_ADMINISTRATOR);
             ResourceBundle messages = ResourceBundle.getBundle("content.Language", user.getLocale());
@@ -327,7 +327,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             String subject = messages.getString("ajouter-au-groupe") + " " + group.getName();
             String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + group.getName()+".</br></br> L'&eacute;quipe technique";
             // TODO Messaging
-            // InternalMessageLocalServiceUtil.sendInternalMessage(noReplyUser, notifiedMemberIds, subject, content, JSONFactoryUtil.createJSONArray(), 0, 0);
+            // InternalMessageLocalServiceUtil.sendInternalMessage(noReplyUser, notifiedMemberIds, subject, content, new JSONArray(), 0, 0);
 
             // Remove obsolete members
             for (Map.Entry<Long, Boolean> oldMember : membersIdAdmin.entrySet()) {
@@ -350,7 +350,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
     @JSONWebService(value = "remove-community", method = "GET")
     public JSONObject removeCommunity(long groupId) {
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -398,7 +398,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
 
     @JSONWebService(value = "extend-community", method = "POST")
     public JSONObject extendCommunity(long groupId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         
         User user = null;
         try {

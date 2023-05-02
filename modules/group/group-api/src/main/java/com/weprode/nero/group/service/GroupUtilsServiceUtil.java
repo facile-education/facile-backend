@@ -33,21 +33,19 @@ public class GroupUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.group.service.impl.GroupUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getGroupActivity(
+	public static org.json.JSONObject getGroupActivity(
 		long groupId, java.lang.String maxDate, int nbResults) {
 
 		return getService().getGroupActivity(groupId, maxDate, nbResults);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getGroupHistory(
+	public static org.json.JSONObject getGroupHistory(
 		long groupId, java.lang.String maxDate, int nbResults) {
 
 		return getService().getGroupHistory(groupId, maxDate, nbResults);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getGroupMembers(
-		long groupId) {
-
+	public static org.json.JSONObject getGroupMembers(long groupId) {
 		return getService().getGroupMembers(groupId);
 	}
 
@@ -60,13 +58,12 @@ public class GroupUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSpecificGroupActivities(
-			long groupId, java.lang.String maxDate, int nbResults,
-			boolean allHistory, boolean containNews, boolean containDocs,
-			boolean containMembership, boolean containPendingFirings,
-			boolean containFirings, boolean containHomework,
-			boolean containSessions) {
+	public static org.json.JSONObject getSpecificGroupActivities(
+		long groupId, java.lang.String maxDate, int nbResults,
+		boolean allHistory, boolean containNews, boolean containDocs,
+		boolean containMembership, boolean containPendingFirings,
+		boolean containFirings, boolean containHomework,
+		boolean containSessions) {
 
 		return getService().getSpecificGroupActivities(
 			groupId, maxDate, nbResults, allHistory, containNews, containDocs,
@@ -74,16 +71,15 @@ public class GroupUtilsServiceUtil {
 			containHomework, containSessions);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getUserCollaborativeGroups(
-			java.lang.String filter, boolean allCommunities, boolean allClasses,
-			boolean allCours) {
+	public static org.json.JSONObject getUserCollaborativeGroups(
+		java.lang.String filter, boolean allCommunities, boolean allClasses,
+		boolean allCours) {
 
 		return getService().getUserCollaborativeGroups(
 			filter, allCommunities, allClasses, allCours);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getUserGroups(
+	public static org.json.JSONObject getUserGroups(
 		long schoolId, boolean includeInstitutional, boolean includeCommunities,
 		boolean pedagogicalOnly) {
 
@@ -92,7 +88,7 @@ public class GroupUtilsServiceUtil {
 			pedagogicalOnly);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getUsersCompletion(
+	public static org.json.JSONObject getUsersCompletion(
 		java.lang.String query, long schoolId, long roleId) {
 
 		return getService().getUsersCompletion(query, schoolId, roleId);

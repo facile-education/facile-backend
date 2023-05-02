@@ -2,8 +2,8 @@ package com.weprode.nero.group.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.*;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -37,7 +37,7 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
         // First get activities for the same groupId in the last 10 minutes
         List<MembershipActivity> sameGroupRecentActivities = getRecentGroupActivities(groupId);
 
-        if (sameGroupRecentActivities.size() == 0) {
+        if (sameGroupRecentActivities.isEmpty()) {
 
             // If no recent activity => add the new activity
             return createMembershipActivity(groupId, actionUserId, targetUserIds, incoming);
@@ -262,18 +262,18 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
     }
 
     public JSONObject convertMembershipActivityToJson(MembershipActivity membershipActivity) {
-        JSONObject jsonMembershipActivity = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonMembershipActivity = new JSONObject();
 
         DateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
         try {
-            jsonMembershipActivity.put("activityId", membershipActivity.getMembershipActivityId());
-            jsonMembershipActivity.put("actionUserId", membershipActivity.getActionUserId());
+            jsonMembershipActivity.put(JSONConstants.ACTIVITY_ID, membershipActivity.getMembershipActivityId());
+            jsonMembershipActivity.put(JSONConstants.ACTION_USER_ID, membershipActivity.getActionUserId());
 
             // Action user name
             User actionUser = UserLocalServiceUtil.getUser(membershipActivity.getActionUserId());
-            jsonMembershipActivity.put("actionUserName", actionUser.getFullName());
-            jsonMembershipActivity.put("author", actionUser.getFullName());
+            jsonMembershipActivity.put(JSONConstants.ACTION_USER_NAME, actionUser.getFullName());
+            jsonMembershipActivity.put(JSONConstants.AUTHOR, actionUser.getFullName());
 
             // Target user names
             StringBuilder targetUserNames = new StringBuilder();
@@ -305,15 +305,15 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
                     }
                 }
             }
-            jsonMembershipActivity.put("targetUserNames", targetUserNames.toString());
-            jsonMembershipActivity.put("shortTargetUserNames", shortTargetUserNames);
-            jsonMembershipActivity.put("target", shortTargetUserNames.isEmpty() ? targetUserNames.toString() : shortTargetUserNames);
-            jsonMembershipActivity.put("type", membershipActivity.getIncoming() ? ActivityConstants.TYPE_ADD_MEMBERSHIP : ActivityConstants.TYPE_REMOVE_MEMBERSHIP);
-            jsonMembershipActivity.put("modificationDate", sdf.format(membershipActivity.getMovementDate()));
+            jsonMembershipActivity.put(JSONConstants.TARGET_USER_NAMES, targetUserNames.toString());
+            jsonMembershipActivity.put(JSONConstants.SHORT_TARGET_USER_NAMES, shortTargetUserNames);
+            jsonMembershipActivity.put(JSONConstants.TARGET, shortTargetUserNames.isEmpty() ? targetUserNames.toString() : shortTargetUserNames);
+            jsonMembershipActivity.put(JSONConstants.TYPE, membershipActivity.getIncoming() ? ActivityConstants.TYPE_ADD_MEMBERSHIP : ActivityConstants.TYPE_REMOVE_MEMBERSHIP);
+            jsonMembershipActivity.put(JSONConstants.MODIFICATION_DATE, sdf.format(membershipActivity.getMovementDate()));
             jsonMembershipActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(membershipActivity.getGroupId()));
 
             Group group = GroupLocalServiceUtil.getGroup(membershipActivity.getGroupId());
-            jsonMembershipActivity.put("groupLink", "#/group"+ group.getFriendlyURL());
+            jsonMembershipActivity.put(JSONConstants.GROUP_LINK, "#/group"+ group.getFriendlyURL());
 
         } catch (Exception e) {
             logger.error("Error while converting membership activity to json");

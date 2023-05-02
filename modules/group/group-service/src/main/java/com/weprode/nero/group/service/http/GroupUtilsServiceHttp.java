@@ -52,7 +52,7 @@ import com.weprode.nero.group.service.GroupUtilsServiceUtil;
  */
 public class GroupUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getUserGroups(
+	public static org.json.JSONObject getUserGroups(
 		HttpPrincipal httpPrincipal, long schoolId,
 		boolean includeInstitutional, boolean includeCommunities,
 		boolean pedagogicalOnly) {
@@ -76,7 +76,7 @@ public class GroupUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -87,10 +87,9 @@ public class GroupUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getUserCollaborativeGroups(
-			HttpPrincipal httpPrincipal, String filter, boolean allCommunities,
-			boolean allClasses, boolean allCours) {
+	public static org.json.JSONObject getUserCollaborativeGroups(
+		HttpPrincipal httpPrincipal, String filter, boolean allCommunities,
+		boolean allClasses, boolean allCours) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -110,7 +109,7 @@ public class GroupUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -121,7 +120,7 @@ public class GroupUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getUsersCompletion(
+	public static org.json.JSONObject getUsersCompletion(
 		HttpPrincipal httpPrincipal, String query, long schoolId, long roleId) {
 
 		try {
@@ -142,7 +141,7 @@ public class GroupUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -153,7 +152,7 @@ public class GroupUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getGroupMembers(
+	public static org.json.JSONObject getGroupMembers(
 		HttpPrincipal httpPrincipal, long groupId) {
 
 		try {
@@ -173,7 +172,7 @@ public class GroupUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -184,7 +183,7 @@ public class GroupUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getGroupActivity(
+	public static org.json.JSONObject getGroupActivity(
 		HttpPrincipal httpPrincipal, long groupId, String maxDate,
 		int nbResults) {
 
@@ -206,7 +205,7 @@ public class GroupUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -217,13 +216,12 @@ public class GroupUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSpecificGroupActivities(
-			HttpPrincipal httpPrincipal, long groupId, String maxDate,
-			int nbResults, boolean allHistory, boolean containNews,
-			boolean containDocs, boolean containMembership,
-			boolean containPendingFirings, boolean containFirings,
-			boolean containHomework, boolean containSessions) {
+	public static org.json.JSONObject getSpecificGroupActivities(
+		HttpPrincipal httpPrincipal, long groupId, String maxDate,
+		int nbResults, boolean allHistory, boolean containNews,
+		boolean containDocs, boolean containMembership,
+		boolean containPendingFirings, boolean containFirings,
+		boolean containHomework, boolean containSessions) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -245,7 +243,7 @@ public class GroupUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -256,7 +254,7 @@ public class GroupUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getGroupHistory(
+	public static org.json.JSONObject getGroupHistory(
 		HttpPrincipal httpPrincipal, long groupId, String maxDate,
 		int nbResults) {
 
@@ -278,7 +276,7 @@ public class GroupUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

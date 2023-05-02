@@ -1,8 +1,8 @@
 package com.weprode.nero.group.service.impl;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -55,11 +55,11 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
     // Used in Horaires
     @JSONWebService(value = "get-user-groups", method = "GET")
     public JSONObject getUserGroups(long schoolId, boolean includeInstitutional, boolean includeCommunities, boolean pedagogicalOnly) {
+        JSONObject result = new JSONObject();
+
         logger.info("Get user groups for schoolId " + schoolId + ", includeInstitutional=" + includeInstitutional + ", includeCommunities=" + includeCommunities + ", pedagogicalOnly=" + pedagogicalOnly);
 
         // SchoolId = 0 means all user's schools
-        JSONObject result = JSONFactoryUtil.createJSONObject();
-
         User user;
         try {
             user = getGuestOrUser();
@@ -83,7 +83,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
 
         try {
-            JSONArray groupsArray = JSONFactoryUtil.createJSONArray();
+            JSONArray groupsArray = new JSONArray();
 
             if (includeInstitutional) {
                 List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserVisibilitySchools(user);
@@ -97,7 +97,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                         // Loop over classes
                         for (Organization org : schoolOrganizations){
                             if (org.getParentOrganizationId() == school.getOrganizationId()) {
-                                JSONObject classObject = JSONFactoryUtil.createJSONObject();
+                                JSONObject classObject = new JSONObject();
                                 classObject.put(JSONConstants.GROUP_ID, org.getGroupId());
                                 classObject.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
                                 groupsArray.put(classObject);
@@ -112,7 +112,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 List<Group> personalGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), pedagogicalOnly, true);
                 if (!personalGroups.isEmpty()) {
                     for (Group group : personalGroups) {
-                        JSONObject groupObject = JSONFactoryUtil.createJSONObject();
+                        JSONObject groupObject = new JSONObject();
                         groupObject.put(JSONConstants.GROUP_ID, group.getGroupId());
                         groupObject.put(JSONConstants.GROUP_NAME, group.getName());
                         groupObject.put(JSONConstants.IS_PERSONAL_GROUP, true);
@@ -137,10 +137,9 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
     // Used in Collaborative spaces service
     @JSONWebService(value = "get-user-collaborative-groups", method = "GET")
     public JSONObject getUserCollaborativeGroups(String filter, boolean allCommunities, boolean allClasses, boolean allCours) {
+        JSONObject result = new JSONObject();
 
         logger.info("Get user collaborative groups allCommunities=" + allCommunities + ", allClasses=" + allClasses + ", allCours=" + allCours);
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
 
         User user;
         try {
@@ -157,7 +156,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
 
         try {
-            JSONArray groupsArray = JSONFactoryUtil.createJSONArray();
+            JSONArray groupsArray = new JSONArray();
             DateFormat dateFormat = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
@@ -173,7 +172,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
             for (Group group : communities) {
                 if (filter.equals("") || containsIgnoreCase(group.getName(), filter)) {
-                    JSONObject jsonGroup = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonGroup = new JSONObject();
                     CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(group.getGroupId());
                     jsonGroup.put(JSONConstants.GROUP_ID, group.getGroupId());
                     jsonGroup.put(JSONConstants.GROUP_NAME, group.getName(user.getLocale()));
@@ -233,7 +232,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     boolean withSchoolName = orgDetails.getType() == OrgConstants.SCHOOL_TYPE || orgDetails.getType() == OrgConstants.SCHOOL_LEVEL_TYPE;
                     String formattedName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), withSchoolName);
 
-                    JSONObject jsonGroup = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonGroup = new JSONObject();
                     jsonGroup.put(JSONConstants.GROUP_ID, org.getGroupId());
                     jsonGroup.put(JSONConstants.GROUP_NAME, formattedName);
                     jsonGroup.put(JSONConstants.DESCRIPTION, "Espace collaboratif de " + formattedName);
@@ -276,8 +275,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-users-completion", method="GET")
     public JSONObject getUsersCompletion (String query, long schoolId, long roleId) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -313,10 +311,10 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             // List<User> results = ContactLocalServiceUtil.directorySearch(user, query, new ArrayList<Long>(), schoolIds, roleIds,
             //        null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
             // TODO Convert to JSON with user profil and school ? -> UserUtils ?
-            JSONArray contacts = JSONFactoryUtil.createJSONArray();
+            JSONArray contacts = new JSONArray();
 
             for (User contact : results) {
-                JSONObject contactJSON = JSONFactoryUtil.createJSONObject();
+                JSONObject contactJSON = new JSONObject();
                 contactJSON.put(JSONConstants.USER_ID, contact.getUserId());
                 contactJSON.put(JSONConstants.FIRST_NAME, contact.getFirstName());
                 contactJSON.put(JSONConstants.LAST_NAME, contact.getLastName());
@@ -343,8 +341,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-group-members", method = "GET")
     public JSONObject getGroupMembers(long groupId) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -361,7 +359,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonMembers = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonMembers = new JSONArray();
             Group group = GroupLocalServiceUtil.getGroup(groupId);
             List<User> groupMembers;
             if (group.isRegularSite()) {
@@ -369,7 +367,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 if (groupMembers != null) {
                     for (User member : groupMembers) {
                         if (member.isActive()) {
-                            JSONObject jsonMember = JSONFactoryUtil.createJSONObject();
+                            JSONObject jsonMember = new JSONObject();
                             jsonMember.put(JSONConstants.USER_ID, member.getUserId());
                             jsonMember.put(JSONConstants.USER_NAME, member.getLastName() + " " + member.getFirstName());
                             jsonMember.put(JSONConstants.FIRST_NAME, member.getFirstName());
@@ -389,7 +387,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 if (groupMembers != null) {
                     for (User member : groupMembers) {
                         if (member.isActive() && (!isClassOrCours || !RoleUtilsLocalServiceUtil.isParent(member))) {
-                            JSONObject jsonMember = JSONFactoryUtil.createJSONObject();
+                            JSONObject jsonMember = new JSONObject();
                             jsonMember.put(JSONConstants.USER_ID, member.getUserId());
                             jsonMember.put(JSONConstants.USER_NAME, member.getLastName() + " " + member.getFirstName());
                             jsonMember.put(JSONConstants.IS_TEACHER, RoleUtilsLocalServiceUtil.isTeacher(member));
@@ -401,7 +399,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     }
                 }
             }
-            result.put("members", jsonMembers);
+            result.put(JSONConstants.MEMBERS, jsonMembers);
 
         } catch (Exception e) {
             logger.error("Error while fetching details for groupId " + groupId, e);
@@ -413,8 +411,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-group-activity", method = "GET")
     public JSONObject getGroupActivity(long groupId, String maxDate, int nbResults) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         result.put(JSONConstants.SUCCESS, false);
 
         User user;
@@ -431,7 +428,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonActivities = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonActivities = new JSONArray();
             List<Long> groupIds = new ArrayList<>();
             groupIds.add(groupId);
             Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
@@ -454,7 +451,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-specific-group-activities", method = "GET")
     public JSONObject getSpecificGroupActivities(long groupId, String maxDate, int nbResults, boolean allHistory, boolean containNews, boolean containDocs, boolean containMembership, boolean containPendingFirings, boolean containFirings, boolean containHomework, boolean containSessions) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         result.put(JSONConstants.SUCCESS, false);
 
@@ -473,7 +470,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonActivities = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonActivities = new JSONArray();
             List<Long> groupIds = new ArrayList<>();
             groupIds.add(groupId);
             Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
@@ -496,8 +493,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-group-history", method = "GET")
     public JSONObject getGroupHistory(long groupId, String maxDate, int nbResults) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         result.put(JSONConstants.SUCCESS, false);
 
         User user;
@@ -514,7 +510,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonActivities = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonActivities = new JSONArray();
             List<Long> groupIds = new ArrayList<>();
             groupIds.add(groupId);
             Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);

@@ -64,10 +64,8 @@ public class MembershipActivityLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject
-		convertMembershipActivityToJson(
-			com.weprode.nero.group.model.MembershipActivity
-				membershipActivity) {
+	public org.json.JSONObject convertMembershipActivityToJson(
+		com.weprode.nero.group.model.MembershipActivity membershipActivity) {
 
 		return _membershipActivityLocalService.convertMembershipActivityToJson(
 			membershipActivity);
