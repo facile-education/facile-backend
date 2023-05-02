@@ -33,15 +33,13 @@ public class PermissionUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.PermissionUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject
-		getFilePermissionMatrix(long fileEntryId) {
+	public static org.json.JSONObject getFilePermissionMatrix(
+		long fileEntryId) {
 
 		return getService().getFilePermissionMatrix(fileEntryId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getFolderPermissionMatrix(long folderId) {
-
+	public static org.json.JSONObject getFolderPermissionMatrix(long folderId) {
 		return getService().getFolderPermissionMatrix(folderId);
 	}
 
@@ -54,18 +52,16 @@ public class PermissionUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveFilePermissionMatrix(
-			long fileEntryId, java.lang.String jsonPermissionMatrix) {
+	public static org.json.JSONObject saveFilePermissionMatrix(
+		long fileEntryId, java.lang.String jsonPermissionMatrix) {
 
 		return getService().saveFilePermissionMatrix(
 			fileEntryId, jsonPermissionMatrix);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveFolderPermissionMatrix(
-			long folderId, java.lang.String jsonPermissionMatrix,
-			boolean isRecursive) {
+	public static org.json.JSONObject saveFolderPermissionMatrix(
+		long folderId, java.lang.String jsonPermissionMatrix,
+		boolean isRecursive) {
 
 		return getService().saveFolderPermissionMatrix(
 			folderId, jsonPermissionMatrix, isRecursive);

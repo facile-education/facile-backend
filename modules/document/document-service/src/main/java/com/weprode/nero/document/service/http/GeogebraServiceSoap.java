@@ -53,14 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class GeogebraServiceSoap {
 
-	public static String getGeogebraFile(long fileVersionId)
+	public static org.json.JSONObject getGeogebraFile(long fileVersionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeogebraServiceUtil.getGeogebraFile(fileVersionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -69,14 +69,14 @@ public class GeogebraServiceSoap {
 		}
 	}
 
-	public static String saveGeogebraFile(String params)
+	public static org.json.JSONObject saveGeogebraFile(String params)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeogebraServiceUtil.saveGeogebraFile(params);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

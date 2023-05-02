@@ -35,7 +35,7 @@ public class WopiUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.WopiUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getFileAction(
+	public static org.json.JSONObject getFileAction(
 			java.io.File file, javax.servlet.http.HttpServletResponse response,
 			String accessToken, String wopiParam)
 		throws PortalException {
@@ -44,7 +44,7 @@ public class WopiUtilsServiceUtil {
 			file, response, accessToken, wopiParam);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFileAction(
+	public static org.json.JSONObject getFileAction(
 			javax.servlet.http.HttpServletRequest request,
 			javax.servlet.http.HttpServletResponse response, String accessToken,
 			String wopiParam)
@@ -54,7 +54,7 @@ public class WopiUtilsServiceUtil {
 			request, response, accessToken, wopiParam);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFileInfo(
+	public static org.json.JSONObject getFileInfo(
 			javax.servlet.http.HttpServletResponse response, String accessToken,
 			String wopiParam)
 		throws java.io.IOException, PortalException {

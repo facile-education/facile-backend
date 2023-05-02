@@ -17,9 +17,9 @@ package com.weprode.nero.document.service.impl;
 import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -60,7 +60,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 	@JSONWebService(method = "GET")
 	public JSONObject getGroupEntities(String nodePath) {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 		result.put(JSONConstants.SUCCESS, false);
 
 		try {
@@ -94,21 +94,21 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject getGroupBreadcrumb (String nodePath) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 		result.put(JSONConstants.SUCCESS, false);
 
 		try {
 			User user = getGuestOrUser();
 			JSONArray breadCrumb;
 
-			final JSONObject groupPermissions = JSONFactoryUtil.createJSONObject();
+			final JSONObject groupPermissions = new JSONObject();
 			groupPermissions.put(PermissionConstants.ADD_OBJECT, false);
 			groupPermissions.put(ActionKeys.DELETE, false);
 			groupPermissions.put(ActionKeys.PERMISSIONS, false);
 
 			// Group root
-			breadCrumb = JSONFactoryUtil.createJSONArray();
-			JSONObject rootGroup = JSONFactoryUtil.createJSONObject();
+			breadCrumb = new JSONArray();
+			JSONObject rootGroup = new JSONObject();
 			rootGroup.put(JSONConstants.ID, COLLABORATIVE);
 			rootGroup.put(JSONConstants.NAME, "Collaboratifs");
 			rootGroup.put(JSONConstants.TYPE, "Group");
@@ -135,7 +135,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject recordDownloadActivity (long fileEntryId, long versionId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 		result.put(JSONConstants.SUCCESS, false);
 
 		try {
@@ -164,7 +164,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject recordViewActivity (long fileEntryId, long versionId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 		result.put(JSONConstants.SUCCESS, false);
 
 		try {

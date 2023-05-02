@@ -33,21 +33,17 @@ public class VersionServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.VersionServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject createMajorVersion(
-		long fileEntryId) {
-
+	public static org.json.JSONObject createMajorVersion(long fileEntryId) {
 		return getService().createMajorVersion(fileEntryId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteVersion(
+	public static org.json.JSONObject deleteVersion(
 		long fileEntryId, java.lang.String version) {
 
 		return getService().deleteVersion(fileEntryId, version);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFileVersions(
-		long fileId) {
-
+	public static org.json.JSONObject getFileVersions(long fileId) {
 		return getService().getFileVersions(fileId);
 	}
 
@@ -60,15 +56,12 @@ public class VersionServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject restoreVersion(
-		long fileVersionId) {
-
+	public static org.json.JSONObject restoreVersion(long fileVersionId) {
 		return getService().restoreVersion(fileVersionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveVersionDescription(
-			long fileVersionId, java.lang.String description) {
+	public static org.json.JSONObject saveVersionDescription(
+		long fileVersionId, java.lang.String description) {
 
 		return getService().saveVersionDescription(fileVersionId, description);
 	}

@@ -53,16 +53,15 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ClipboardServiceSoap {
 
-	public static String copy(
+	public static org.json.JSONObject copy(
 			String folderIds, String fileIds, long targetFolderId, int mode)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ClipboardServiceUtil.copy(
-					folderIds, fileIds, targetFolderId, mode);
+			org.json.JSONObject returnValue = ClipboardServiceUtil.copy(
+				folderIds, fileIds, targetFolderId, mode);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -71,16 +70,15 @@ public class ClipboardServiceSoap {
 		}
 	}
 
-	public static String move(
+	public static org.json.JSONObject move(
 			String folderIds, String fileIds, long targetFolderId, int mode)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ClipboardServiceUtil.move(
-					folderIds, fileIds, targetFolderId, mode);
+			org.json.JSONObject returnValue = ClipboardServiceUtil.move(
+				folderIds, fileIds, targetFolderId, mode);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

@@ -53,14 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class FileUtilsServiceSoap {
 
-	public static String renameFile(long fileId, String fileName)
+	public static org.json.JSONObject renameFile(long fileId, String fileName)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				FileUtilsServiceUtil.renameFile(fileId, fileName);
+			org.json.JSONObject returnValue = FileUtilsServiceUtil.renameFile(
+				fileId, fileName);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -69,14 +69,15 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String createGeogebraFile(long folderId, String name)
+	public static org.json.JSONObject createGeogebraFile(
+			long folderId, String name)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FileUtilsServiceUtil.createGeogebraFile(folderId, name);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -85,14 +86,15 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String createMindmapFile(long folderId, String name)
+	public static org.json.JSONObject createMindmapFile(
+			long folderId, String name)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FileUtilsServiceUtil.createMindmapFile(folderId, name);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -101,14 +103,15 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String createScratchFile(long folderId, String name)
+	public static org.json.JSONObject createScratchFile(
+			long folderId, String name)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FileUtilsServiceUtil.createScratchFile(folderId, name);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -117,14 +120,15 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String createLoolFile(long folderId, String name, String type)
+	public static org.json.JSONObject createLoolFile(
+			long folderId, String name, String type)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FileUtilsServiceUtil.createLoolFile(folderId, name, type);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -133,14 +137,14 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String createHTMLFile(long folderId, String name)
+	public static org.json.JSONObject createHTMLFile(long folderId, String name)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FileUtilsServiceUtil.createHTMLFile(folderId, name);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -149,12 +153,14 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String addLock(long fileId) throws RemoteException {
+	public static org.json.JSONObject addLock(long fileId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				FileUtilsServiceUtil.addLock(fileId);
+			org.json.JSONObject returnValue = FileUtilsServiceUtil.addLock(
+				fileId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -163,12 +169,14 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String removeLock(long fileId) throws RemoteException {
+	public static org.json.JSONObject removeLock(long fileId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				FileUtilsServiceUtil.removeLock(fileId);
+			org.json.JSONObject returnValue = FileUtilsServiceUtil.removeLock(
+				fileId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -177,15 +185,15 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String getResource(
+	public static org.json.JSONObject getResource(
 			long fileId, long versionId, boolean readOnly)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				FileUtilsServiceUtil.getResource(fileId, versionId, readOnly);
+			org.json.JSONObject returnValue = FileUtilsServiceUtil.getResource(
+				fileId, versionId, readOnly);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -194,12 +202,14 @@ public class FileUtilsServiceSoap {
 		}
 	}
 
-	public static String removeLoolToken(String token) throws RemoteException {
+	public static org.json.JSONObject removeLoolToken(String token)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FileUtilsServiceUtil.removeLoolToken(token);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

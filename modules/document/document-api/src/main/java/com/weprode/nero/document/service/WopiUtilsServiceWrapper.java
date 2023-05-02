@@ -31,7 +31,7 @@ public class WopiUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFileAction(
+	public org.json.JSONObject getFileAction(
 			java.io.File file, javax.servlet.http.HttpServletResponse response,
 			String accessToken, String wopiParam)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -41,7 +41,7 @@ public class WopiUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFileAction(
+	public org.json.JSONObject getFileAction(
 			javax.servlet.http.HttpServletRequest request,
 			javax.servlet.http.HttpServletResponse response, String accessToken,
 			String wopiParam)
@@ -52,7 +52,7 @@ public class WopiUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFileInfo(
+	public org.json.JSONObject getFileInfo(
 			javax.servlet.http.HttpServletResponse response, String accessToken,
 			String wopiParam)
 		throws com.liferay.portal.kernel.exception.PortalException,

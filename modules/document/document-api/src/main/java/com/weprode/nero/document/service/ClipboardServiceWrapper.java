@@ -31,7 +31,7 @@ public class ClipboardServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject copy(
+	public org.json.JSONObject copy(
 			String folderIds, String fileIds, long targetFolderId, int mode)
 		throws com.liferay.portal.kernel.security.auth.PrincipalException {
 
@@ -49,7 +49,7 @@ public class ClipboardServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject move(
+	public org.json.JSONObject move(
 			String folderIds, String fileIds, long targetFolderId, int mode)
 		throws com.liferay.portal.kernel.security.auth.PrincipalException {
 

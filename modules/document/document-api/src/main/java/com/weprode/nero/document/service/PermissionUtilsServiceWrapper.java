@@ -33,16 +33,12 @@ public class PermissionUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFilePermissionMatrix(
-		long fileEntryId) {
-
+	public org.json.JSONObject getFilePermissionMatrix(long fileEntryId) {
 		return _permissionUtilsService.getFilePermissionMatrix(fileEntryId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFolderPermissionMatrix(
-		long folderId) {
-
+	public org.json.JSONObject getFolderPermissionMatrix(long folderId) {
 		return _permissionUtilsService.getFolderPermissionMatrix(folderId);
 	}
 
@@ -57,7 +53,7 @@ public class PermissionUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveFilePermissionMatrix(
+	public org.json.JSONObject saveFilePermissionMatrix(
 		long fileEntryId, String jsonPermissionMatrix) {
 
 		return _permissionUtilsService.saveFilePermissionMatrix(
@@ -65,7 +61,7 @@ public class PermissionUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveFolderPermissionMatrix(
+	public org.json.JSONObject saveFolderPermissionMatrix(
 		long folderId, String jsonPermissionMatrix, boolean isRecursive) {
 
 		return _permissionUtilsService.saveFolderPermissionMatrix(

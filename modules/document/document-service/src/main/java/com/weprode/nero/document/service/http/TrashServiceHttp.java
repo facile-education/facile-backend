@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.TrashServiceUtil;
  */
 public class TrashServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteDocuments(
+	public static org.json.JSONObject deleteDocuments(
 		HttpPrincipal httpPrincipal, String folderIdArray, String fileIdArray) {
 
 		try {
@@ -73,7 +73,7 @@ public class TrashServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

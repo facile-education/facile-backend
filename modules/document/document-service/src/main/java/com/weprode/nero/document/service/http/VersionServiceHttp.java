@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.VersionServiceUtil;
  */
 public class VersionServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getFileVersions(
+	public static org.json.JSONObject getFileVersions(
 		HttpPrincipal httpPrincipal, long fileId) {
 
 		try {
@@ -72,7 +72,7 @@ public class VersionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class VersionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteVersion(
+	public static org.json.JSONObject deleteVersion(
 		HttpPrincipal httpPrincipal, long fileEntryId, String version) {
 
 		try {
@@ -104,7 +104,7 @@ public class VersionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -115,7 +115,7 @@ public class VersionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject restoreVersion(
+	public static org.json.JSONObject restoreVersion(
 		HttpPrincipal httpPrincipal, long fileVersionId) {
 
 		try {
@@ -136,7 +136,7 @@ public class VersionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -147,10 +147,8 @@ public class VersionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveVersionDescription(
-			HttpPrincipal httpPrincipal, long fileVersionId,
-			String description) {
+	public static org.json.JSONObject saveVersionDescription(
+		HttpPrincipal httpPrincipal, long fileVersionId, String description) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -170,7 +168,7 @@ public class VersionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -181,7 +179,7 @@ public class VersionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createMajorVersion(
+	public static org.json.JSONObject createMajorVersion(
 		HttpPrincipal httpPrincipal, long fileEntryId) {
 
 		try {
@@ -202,7 +200,7 @@ public class VersionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

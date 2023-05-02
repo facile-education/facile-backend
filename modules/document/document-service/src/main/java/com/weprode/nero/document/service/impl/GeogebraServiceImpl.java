@@ -24,8 +24,8 @@ import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -54,7 +54,7 @@ public class GeogebraServiceImpl extends GeogebraServiceBaseImpl {
 	@JSONWebService(value = "get-geogebra-file", method = "GET")
 	public JSONObject getGeogebraFile(long fileVersionId) {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		result.put(JSONConstants.SUCCESS, true);
 
@@ -86,10 +86,10 @@ public class GeogebraServiceImpl extends GeogebraServiceBaseImpl {
 
 	@JSONWebService(value = "save-geogebra-file", method = "POST")
 	public JSONObject saveGeogebraFile(String params) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
-			JSONObject paramMap = JSONFactoryUtil.createJSONObject(params);
+			JSONObject paramMap = new JSONObject(params);
 
 			String fileVersionId = paramMap.getString(JSONConstants.FILE_VERSION_ID);
 			String content = paramMap.getString(JSONConstants.CONTENT);

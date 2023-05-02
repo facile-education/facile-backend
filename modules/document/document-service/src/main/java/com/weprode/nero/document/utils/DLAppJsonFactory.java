@@ -3,9 +3,9 @@ package com.weprode.nero.document.utils;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -62,7 +62,7 @@ public class DLAppJsonFactory {
 
     public static JSONObject format(User user, Folder folder, int space, boolean withDetails) {
 
-        JSONObject formattedFolder = JSONFactoryUtil.createJSONObject();
+        JSONObject formattedFolder = new JSONObject();
         addCommonsFields(formattedFolder, folder, user, withDetails);
 
         switch (space) {
@@ -100,7 +100,7 @@ public class DLAppJsonFactory {
      * Formats a given FileEntry into JSONObject
      */
     public static JSONObject format(User user, FileEntry fileEntry, int space, boolean withDetails) {
-        JSONObject formattedFile = JSONFactoryUtil.createJSONObject();
+        JSONObject formattedFile = new JSONObject();
 
         addCommonsFields(formattedFile, fileEntry, user, withDetails);
 
@@ -149,7 +149,7 @@ public class DLAppJsonFactory {
             logger.debug(e);
         }
         
-        final JSONObject permissions = JSONFactoryUtil.createJSONObject();
+        final JSONObject permissions = new JSONObject();
         permissions.put(PermissionConstants.ADD_OBJECT, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT));
         permissions.put(ActionKeys.DELETE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.DELETE));
         permissions.put(ActionKeys.PERMISSIONS, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS));
@@ -179,7 +179,7 @@ public class DLAppJsonFactory {
                 new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
 
         // Permissions
-        final JSONObject permissions = JSONFactoryUtil.createJSONObject();
+        final JSONObject permissions = new JSONObject();
         permissions.put(ActionKeys.UPDATE, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE));
         permissions.put(ActionKeys.DELETE, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.DELETE));
         permissions.put(ActionKeys.PERMISSIONS, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS));
@@ -258,7 +258,7 @@ public class DLAppJsonFactory {
                     formattedFolder.put(JSONConstants.COLOR, color);
                 }
                 formattedFolder.put(JSONConstants.IS_GROUP_ROOT_FOLDER, true); // those folder is considered as Group on front side (group root folder)
-                final JSONObject permissions = JSONFactoryUtil.createJSONObject();
+                final JSONObject permissions = new JSONObject();
 
                 // Directors and school admins have all rights on institutional groups
                 boolean hasFullPermissions = false;
@@ -296,7 +296,7 @@ public class DLAppJsonFactory {
 
     private static void addGroupFields(JSONObject formattedFile, FileEntry fileEntry, User user) {
         formattedFile.put(JSONConstants.IS_GROUP_FILE, true);
-        final JSONObject permissions = JSONFactoryUtil.createJSONObject();
+        final JSONObject permissions = new JSONObject();
         // Directors and school admins have all rights on institutional groups
         boolean hasFullPermissions = false;
         try {
@@ -313,7 +313,7 @@ public class DLAppJsonFactory {
     }
     
     public static JSONArray formatUsers(List<Long> userIds) {
-        final JSONArray jsonUsers = JSONFactoryUtil.createJSONArray();
+        final JSONArray jsonUsers = new JSONArray();
 
         for (long userId : userIds) {
             jsonUsers.put(formatUser(userId));
@@ -331,7 +331,7 @@ public class DLAppJsonFactory {
                     user.getPortraitId(), user.getUserUuid());
 
             // Put fields
-            JSONObject curr = JSONFactoryUtil.createJSONObject();
+            JSONObject curr = new JSONObject();
             curr.put(JSONConstants.ID, userId);
             curr.put(JSONConstants.NAME, user.getFullName());
             curr.put(JSONConstants.PICTURE, urlImg);
@@ -340,7 +340,7 @@ public class DLAppJsonFactory {
             return curr;
         } catch (Exception e) {
             logger.error("Cant retrieve user with userId " + userId, e);
-            return JSONFactoryUtil.createJSONObject();
+            return new JSONObject();
         }
     }
 
@@ -348,14 +348,14 @@ public class DLAppJsonFactory {
         try {
             User user = UserLocalServiceUtil.getUser(userId);
 
-            JSONObject curr = JSONFactoryUtil.createJSONObject();
+            JSONObject curr = new JSONObject();
             curr.put(JSONConstants.ID, userId);
             curr.put(JSONConstants.NAME, user.getFullName());
 
             return curr;
         } catch (Exception e) {
             logger.error("Cant retrieve user with userId " + userId, e);
-            return JSONFactoryUtil.createJSONObject();
+            return new JSONObject();
         }
     }
 
@@ -364,7 +364,7 @@ public class DLAppJsonFactory {
     }
 
     public static JSONObject formatError(String type, String message) throws SystemException {
-        JSONObject error = JSONFactoryUtil.createJSONObject();
+        JSONObject error = new JSONObject();
 
         error.put(JSONConstants.TYPE, type);
         error.put(JSONConstants.MESSAGE, message);

@@ -63,14 +63,14 @@ public class GroupsLocalServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray getUserGroupsFolders(
+	public static org.json.JSONArray getUserGroupsFolders(
 			com.liferay.portal.kernel.model.User user)
 		throws PortalException, SystemException {
 
 		return getService().getUserGroupsFolders(user);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray groupFilesToJSON(
+	public static org.json.JSONArray groupFilesToJSON(
 		com.liferay.portal.kernel.model.User user,
 		List<com.liferay.portal.kernel.repository.model.FileEntry> groupFiles,
 		Boolean withDetails) {
@@ -78,7 +78,7 @@ public class GroupsLocalServiceUtil {
 		return getService().groupFilesToJSON(user, groupFiles, withDetails);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray groupFoldersToJSON(
+	public static org.json.JSONArray groupFoldersToJSON(
 		com.liferay.portal.kernel.model.User user,
 		List<com.liferay.portal.kernel.repository.model.Folder> groupFolders,
 		Boolean withDetails) {

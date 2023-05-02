@@ -33,13 +33,13 @@ public class GroupsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.GroupsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getGroupBreadcrumb(
+	public static org.json.JSONObject getGroupBreadcrumb(
 		java.lang.String nodePath) {
 
 		return getService().getGroupBreadcrumb(nodePath);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getGroupEntities(
+	public static org.json.JSONObject getGroupEntities(
 		java.lang.String nodePath) {
 
 		return getService().getGroupEntities(nodePath);
@@ -54,13 +54,13 @@ public class GroupsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		recordDownloadActivity(long fileEntryId, long versionId) {
+	public static org.json.JSONObject recordDownloadActivity(
+		long fileEntryId, long versionId) {
 
 		return getService().recordDownloadActivity(fileEntryId, versionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject recordViewActivity(
+	public static org.json.JSONObject recordViewActivity(
 		long fileEntryId, long versionId) {
 
 		return getService().recordViewActivity(fileEntryId, versionId);

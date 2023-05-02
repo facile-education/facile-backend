@@ -33,8 +33,7 @@ public class DocumentUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject
-			getGlobalDocumentsProperties()
+	public org.json.JSONObject getGlobalDocumentsProperties()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
@@ -52,8 +51,7 @@ public class DocumentUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject isEmbedUrlWhitelisted(
-			String url)
+	public org.json.JSONObject isEmbedUrlWhitelisted(String url)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _documentUtilsService.isEmbedUrlWhitelisted(url);

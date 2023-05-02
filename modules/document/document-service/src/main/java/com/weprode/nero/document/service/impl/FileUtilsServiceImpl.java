@@ -19,8 +19,8 @@ import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -61,7 +61,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject uploadFile(long folderId, String fileName, File file, int mode) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -77,7 +77,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject uploadTmpFile(String fileName, File file) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -96,7 +96,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject renameFile(long fileId, String fileName) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -118,7 +118,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject createAudioFile(long folderId, String name, File file) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -136,7 +136,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject createGeogebraFile(long folderId, String name) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -156,7 +156,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject createMindmapFile(long folderId, String name) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -177,7 +177,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject createScratchFile(long folderId, String name) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -198,7 +198,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject createLoolFile(long folderId, String name, String type) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -218,7 +218,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject createHTMLFile(long folderId, String name) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -238,7 +238,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject addLock(long fileId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -287,7 +287,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject removeLock(long fileId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();
@@ -311,7 +311,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject getResource(long fileId, long versionId, boolean readOnly) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		long userId = 0;
 		try {
@@ -359,7 +359,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject removeLoolToken(String token) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = getGuestOrUser();

@@ -16,9 +16,9 @@ package com.weprode.nero.document.service.impl;
 
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -46,13 +46,13 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject deleteDocuments(String folderIdArray, String fileIdArray) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		// Extract fileIds and folderIds as lists of Long
 		List<Long> fileIds = DocumentUtil.extractLongIds(fileIdArray);
 		List<Long> folderIds = DocumentUtil.extractLongIds(folderIdArray);
 
-		JSONArray failedEntitiesList = JSONFactoryUtil.createJSONArray();
+		JSONArray failedEntitiesList = new JSONArray();
 
 		try {
 			User user = getGuestOrUser();
@@ -62,7 +62,7 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 				try {
 					FolderUtilsLocalServiceUtil.deleteFolder(user.getUserId(), folderId);
 				} catch (Exception e) {
-					JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+					JSONObject failedEntity = new JSONObject();
 					failedEntity.put(JSONConstants.ID, folderId);
 					failedEntitiesList.put(failedEntity);
 					logger.error(e);
@@ -72,7 +72,7 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 				try {
 					FileUtilsLocalServiceUtil.deleteFile(user.getUserId(), fileEntityId);
 				} catch (Exception e) {
-					JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+					JSONObject failedEntity = new JSONObject();
 					failedEntity.put(JSONConstants.ID, fileEntityId);
 					failedEntitiesList.put(failedEntity);
 					logger.error(e);

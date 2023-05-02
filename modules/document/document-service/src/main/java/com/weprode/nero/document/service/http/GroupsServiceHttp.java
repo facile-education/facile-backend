@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.GroupsServiceUtil;
  */
 public class GroupsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getGroupEntities(
+	public static org.json.JSONObject getGroupEntities(
 		HttpPrincipal httpPrincipal, String nodePath) {
 
 		try {
@@ -73,7 +73,7 @@ public class GroupsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class GroupsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getGroupBreadcrumb(
+	public static org.json.JSONObject getGroupBreadcrumb(
 		HttpPrincipal httpPrincipal, String nodePath) {
 
 		try {
@@ -105,7 +105,7 @@ public class GroupsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -116,9 +116,8 @@ public class GroupsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		recordDownloadActivity(
-			HttpPrincipal httpPrincipal, long fileEntryId, long versionId) {
+	public static org.json.JSONObject recordDownloadActivity(
+		HttpPrincipal httpPrincipal, long fileEntryId, long versionId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -138,7 +137,7 @@ public class GroupsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -149,7 +148,7 @@ public class GroupsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject recordViewActivity(
+	public static org.json.JSONObject recordViewActivity(
 		HttpPrincipal httpPrincipal, long fileEntryId, long versionId) {
 
 		try {
@@ -170,7 +169,7 @@ public class GroupsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

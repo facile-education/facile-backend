@@ -52,8 +52,8 @@ import com.weprode.nero.document.service.DocumentUtilsServiceUtil;
  */
 public class DocumentUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject
-			getGlobalDocumentsProperties(HttpPrincipal httpPrincipal)
+	public static org.json.JSONObject getGlobalDocumentsProperties(
+			HttpPrincipal httpPrincipal)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
@@ -88,7 +88,7 @@ public class DocumentUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -99,8 +99,8 @@ public class DocumentUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-			isEmbedUrlWhitelisted(HttpPrincipal httpPrincipal, String url)
+	public static org.json.JSONObject isEmbedUrlWhitelisted(
+			HttpPrincipal httpPrincipal, String url)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		try {
@@ -127,7 +127,7 @@ public class DocumentUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

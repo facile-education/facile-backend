@@ -24,9 +24,9 @@ import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -66,7 +66,7 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 	 */
 	@JSONWebService(value = "get-scratch-files", method = "GET")
 	public JSONObject getScratchFiles(long userId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
 			User user = UserLocalServiceUtil.getUser(userId);
@@ -77,11 +77,11 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 			}
 
 			// Get all .scratch documents in schoolbag's root directory
-			JSONArray scratchFiles = JSONFactoryUtil.createJSONArray();
+			JSONArray scratchFiles = new JSONArray();
 			Folder rootFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(user.getUserId());
 			for (FileEntry fileEntry : DLAppServiceUtil.getFileEntries(rootFolder.getGroupId(), rootFolder.getFolderId())) {
 				if (fileEntry.getTitle().endsWith(".scratch")){
-					JSONObject scratchFile = JSONFactoryUtil.createJSONObject();
+					JSONObject scratchFile = new JSONObject();
 					scratchFile.put(JSONConstants.FILE_ENTRY_ID, fileEntry.getFileEntryId());
 					scratchFile.put(JSONConstants.NAME, fileEntry.getTitle());
 					scratchFiles.put(scratchFile);
@@ -104,7 +104,7 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 	 */
 	@JSONWebService(value = "get-scratch-file", method = "GET")
 	public JSONObject getScratchFile(long fileVersionId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		// Get file content
 		try {
@@ -141,12 +141,12 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 	 */
 	@JSONWebService(value = "save-scratch-file", method = "POST")
 	public JSONObject saveScratchFile(String params) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		try {
-			JSONObject paramMap = JSONFactoryUtil.createJSONObject(params);
+			JSONObject paramMap = new JSONObject(params);
 
-			long fileVersionId = paramMap.getLong(JSONConstants.FILE_VERSION_ID, -1);
+			long fileVersionId = JSONConstants.getLongValue(paramMap, JSONConstants.FILE_VERSION_ID, -1);
 			String fileName = paramMap.getString(JSONConstants.FILE_NAME);
 			String content = paramMap.getString(JSONConstants.CONTENT);
 

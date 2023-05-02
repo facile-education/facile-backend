@@ -19,9 +19,9 @@ import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -58,9 +58,9 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject getFilePermissionMatrix (long fileEntryId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
-		JSONArray permissionMatrix = JSONFactoryUtil.createJSONArray();
+		JSONArray permissionMatrix = new JSONArray();
 		result.put(JSONConstants.SUCCESS, false);
 
 		try {
@@ -80,7 +80,7 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 						role.getRoleId() == RoleUtilsLocalServiceUtil.getSchoolAdminRole().getRoleId()) ||
 						role.getRoleId() == RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId();
 
-				JSONObject roleActions = JSONFactoryUtil.createJSONObject();
+				JSONObject roleActions = new JSONObject();
 				roleActions.put(JSONConstants.ROLE_ID, role.getRoleId());
 				roleActions.put(JSONConstants.ROLE_NAME, role.getName());
 				roleActions.put(JSONConstants.EDITABLE, areRoleActionsEditable);
@@ -103,9 +103,9 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "GET")
 	public JSONObject getFolderPermissionMatrix (long folderId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
-		JSONArray permissionMatrix = JSONFactoryUtil.createJSONArray();
+		JSONArray permissionMatrix = new JSONArray();
 		result.put(JSONConstants.SUCCESS, false);
 
 		try {
@@ -124,7 +124,7 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 						role.getRoleId() == RoleUtilsLocalServiceUtil.getSchoolAdminRole().getRoleId() ||
 						role.getRoleId() == RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId());
 
-				JSONObject roleActions = JSONFactoryUtil.createJSONObject();
+				JSONObject roleActions = new JSONObject();
 				roleActions.put(JSONConstants.ROLE_ID, role.getRoleId());
 				roleActions.put(JSONConstants.ROLE_NAME, role.getName());
 				roleActions.put(JSONConstants.EDITABLE, areRoleActionsEditable);
@@ -147,7 +147,7 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject saveFolderPermissionMatrix (long folderId, String jsonPermissionMatrix, boolean isRecursive) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 		result.put(JSONConstants.SUCCESS, false);
 
 		try {
@@ -158,7 +158,7 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			// Check if the user have the right to update those permissions
 			if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS)) {
 				long scopeGroupId = folder.getGroupId();
-				JSONArray permissions = JSONFactoryUtil.createJSONArray(jsonPermissionMatrix);
+				JSONArray permissions = new JSONArray(jsonPermissionMatrix);
 				PermissionUtilsLocalServiceUtil.validateFullPermission(user, folderId, "folder", permissions, isRecursive, scopeGroupId);
 
 				result.put(JSONConstants.SUCCESS, true);
@@ -175,7 +175,7 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 
 	@JSONWebService(method = "POST")
 	public JSONObject saveFilePermissionMatrix (long fileEntryId, String jsonPermissionMatrix) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		result.put(JSONConstants.SUCCESS, false);
 
@@ -187,7 +187,7 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			// Check if the user have the right to update those permissions
 			if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS)) {
 				long scopeGroupId = fileEntry.getGroupId();
-				JSONArray permissions = JSONFactoryUtil.createJSONArray(jsonPermissionMatrix);
+				JSONArray permissions = new JSONArray(jsonPermissionMatrix);
 				PermissionUtilsLocalServiceUtil.validateFullPermission(user, fileEntryId, "file", permissions, false, scopeGroupId);
 
 				result.put(JSONConstants.SUCCESS, true);

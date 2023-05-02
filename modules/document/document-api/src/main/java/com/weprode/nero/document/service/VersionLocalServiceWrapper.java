@@ -276,7 +276,7 @@ public class VersionLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFileVersions(
+	public org.json.JSONObject getFileVersions(
 		com.liferay.portal.kernel.model.User user, long fileId) {
 
 		return _versionLocalService.getFileVersions(user, fileId);

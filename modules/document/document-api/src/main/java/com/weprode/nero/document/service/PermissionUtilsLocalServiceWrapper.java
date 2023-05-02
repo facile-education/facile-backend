@@ -140,8 +140,8 @@ public class PermissionUtilsLocalServiceWrapper
 	@Override
 	public void validateFullPermission(
 			com.liferay.portal.kernel.model.User user, long objectId,
-			String type, com.liferay.portal.kernel.json.JSONArray permissions,
-			boolean applyToChild, long scopeGrpId)
+			String type, org.json.JSONArray permissions, boolean applyToChild,
+			long scopeGrpId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 

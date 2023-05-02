@@ -58,14 +58,14 @@ public class MindmapServiceSoap {
 	 *
 	 * @return JSONObject - the mindmap file name and content
 	 */
-	public static String getMindFile(long fileVersionId)
+	public static org.json.JSONObject getMindFile(long fileVersionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				MindmapServiceUtil.getMindFile(fileVersionId);
+			org.json.JSONObject returnValue = MindmapServiceUtil.getMindFile(
+				fileVersionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -80,12 +80,14 @@ public class MindmapServiceSoap {
 	 * @param params - The map containing fileVersionId, fileName and content
 	 * @return JSONObject success or not
 	 */
-	public static String saveMindFile(String params) throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				MindmapServiceUtil.saveMindFile(params);
+	public static org.json.JSONObject saveMindFile(String params)
+		throws RemoteException {
 
-			return returnValue.toString();
+		try {
+			org.json.JSONObject returnValue = MindmapServiceUtil.saveMindFile(
+				params);
+
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

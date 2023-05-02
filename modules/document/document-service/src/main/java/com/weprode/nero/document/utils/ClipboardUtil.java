@@ -3,9 +3,9 @@ package com.weprode.nero.document.utils;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.FileNameException;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -26,10 +26,10 @@ public class ClipboardUtil {
     private static final Log logger = LogFactoryUtil.getLog(ClipboardUtil.class);
 
     public static JSONObject copy(long userId, long destFolderId, String folderIds, String fileIds, int mode) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
-        JSONArray failedEntitiesList = JSONFactoryUtil.createJSONArray();
-        JSONArray foldersInConflict = JSONFactoryUtil.createJSONArray();
-        JSONArray filesInConflict = JSONFactoryUtil.createJSONArray();
+        JSONObject result = new JSONObject();
+        JSONArray failedEntitiesList = new JSONArray();
+        JSONArray foldersInConflict = new JSONArray();
+        JSONArray filesInConflict = new JSONArray();
 
         List<Long> folderIdList = jsonArrayStringToList(folderIds);
 
@@ -42,7 +42,7 @@ public class ClipboardUtil {
                     foldersInConflict.put(DLAppJsonFactory.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
-                    JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+                    JSONObject failedEntity = new JSONObject();
                     failedEntity.put(JSONConstants.ID, folderId);
                     failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
                     failedEntitiesList.put(failedEntity);
@@ -50,7 +50,7 @@ public class ClipboardUtil {
                 }
             } catch (Exception e) {
                 logger.error(e);
-                JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+                JSONObject failedEntity = new JSONObject();
                 failedEntity.put(JSONConstants.ID, folderId);
                 failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
                 failedEntitiesList.put(failedEntity);
@@ -69,7 +69,7 @@ public class ClipboardUtil {
                     filesInConflict.put(DLAppJsonFactory.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
-                    JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+                    JSONObject failedEntity = new JSONObject();
                     failedEntity.put(JSONConstants.ID, fileId);
                     failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
                     failedEntitiesList.put(failedEntity);
@@ -77,7 +77,7 @@ public class ClipboardUtil {
                 }
             } catch (Exception e) {
                 logger.error(e);
-                JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+                JSONObject failedEntity = new JSONObject();
                 failedEntity.put(JSONConstants.ID, fileId);
                 failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
                 failedEntitiesList.put(failedEntity);
@@ -94,11 +94,11 @@ public class ClipboardUtil {
 
     // Move entities or paste from cut
     public static JSONObject move(long userId, long destFolderId, String folderIds, String fileIds, int mode) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
-        JSONArray failedEntitiesList = JSONFactoryUtil.createJSONArray();
-        JSONArray foldersInConflict = JSONFactoryUtil.createJSONArray();
-        JSONArray filesInConflict = JSONFactoryUtil.createJSONArray();
+        JSONArray failedEntitiesList = new JSONArray();
+        JSONArray foldersInConflict = new JSONArray();
+        JSONArray filesInConflict = new JSONArray();
 
         List<Long> folderIdList = jsonArrayStringToList(folderIds);
 
@@ -112,7 +112,7 @@ public class ClipboardUtil {
                     foldersInConflict.put(DLAppJsonFactory.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
-                    JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+                    JSONObject failedEntity = new JSONObject();
                     failedEntity.put(JSONConstants.ID, folderId);
                     failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
                     failedEntitiesList.put(failedEntity);
@@ -120,7 +120,7 @@ public class ClipboardUtil {
                 }
             } catch (Exception e) {
                 logger.error(e);
-                JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+                JSONObject failedEntity = new JSONObject();
                 failedEntity.put(JSONConstants.ID, folderId);
                 failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
                 failedEntitiesList.put(failedEntity);
@@ -139,7 +139,7 @@ public class ClipboardUtil {
                     filesInConflict.put(DLAppJsonFactory.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
-                    JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+                    JSONObject failedEntity = new JSONObject();
                     failedEntity.put(JSONConstants.ID, fileId);
                     failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
                     failedEntitiesList.put(failedEntity);
@@ -147,7 +147,7 @@ public class ClipboardUtil {
                 }
             } catch (Exception e) {
                 logger.error(e);
-                JSONObject failedEntity = JSONFactoryUtil.createJSONObject();
+                JSONObject failedEntity = new JSONObject();
                 failedEntity.put(JSONConstants.ID, fileId);
                 failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
                 failedEntitiesList.put(failedEntity);
@@ -166,7 +166,7 @@ public class ClipboardUtil {
         List<Long> idList = new ArrayList<>();
         
         try {
-            JSONArray fileIdArray = JSONFactoryUtil.createJSONArray(idArray);
+            JSONArray fileIdArray = new JSONArray(idArray);
 
             for (int i=0 ; i<fileIdArray.length() ; ++i) {
                 idList.add(fileIdArray.getLong(i));

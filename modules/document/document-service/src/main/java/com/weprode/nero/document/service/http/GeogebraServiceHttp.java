@@ -52,7 +52,7 @@ import com.weprode.nero.document.service.GeogebraServiceUtil;
  */
 public class GeogebraServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getGeogebraFile(
+	public static org.json.JSONObject getGeogebraFile(
 		HttpPrincipal httpPrincipal, long fileVersionId) {
 
 		try {
@@ -73,7 +73,7 @@ public class GeogebraServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class GeogebraServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveGeogebraFile(
+	public static org.json.JSONObject saveGeogebraFile(
 		HttpPrincipal httpPrincipal, String params) {
 
 		try {
@@ -104,7 +104,7 @@ public class GeogebraServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

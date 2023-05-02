@@ -31,7 +31,7 @@ public class FolderUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createFolder(
+	public org.json.JSONObject createFolder(
 			long targetFolderId, String folderName)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
@@ -39,23 +39,19 @@ public class FolderUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject downloadFolder(
-		long folderId) {
-
+	public org.json.JSONObject downloadFolder(long folderId) {
 		return _folderUtilsService.downloadFolder(folderId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getAllEntities(
+	public org.json.JSONObject getAllEntities(
 		long folderId, boolean withDetails) {
 
 		return _folderUtilsService.getAllEntities(folderId, withDetails);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getBreadcrumb(
-		long folderId) {
-
+	public org.json.JSONObject getBreadcrumb(long folderId) {
 		return _folderUtilsService.getBreadcrumb(folderId);
 	}
 
@@ -70,9 +66,7 @@ public class FolderUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject renameFolder(
-		long folderId, String folderName) {
-
+	public org.json.JSONObject renameFolder(long folderId, String folderName) {
 		return _folderUtilsService.renameFolder(folderId, folderName);
 	}
 

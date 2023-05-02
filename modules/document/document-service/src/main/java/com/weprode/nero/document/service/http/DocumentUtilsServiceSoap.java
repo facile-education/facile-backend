@@ -53,12 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class DocumentUtilsServiceSoap {
 
-	public static String getGlobalDocumentsProperties() throws RemoteException {
+	public static org.json.JSONObject getGlobalDocumentsProperties()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				DocumentUtilsServiceUtil.getGlobalDocumentsProperties();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -67,14 +69,14 @@ public class DocumentUtilsServiceSoap {
 		}
 	}
 
-	public static String isEmbedUrlWhitelisted(String url)
+	public static org.json.JSONObject isEmbedUrlWhitelisted(String url)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				DocumentUtilsServiceUtil.isEmbedUrlWhitelisted(url);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

@@ -31,9 +31,7 @@ public class GeogebraServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getGeogebraFile(
-		long fileVersionId) {
-
+	public org.json.JSONObject getGeogebraFile(long fileVersionId) {
 		return _geogebraService.getGeogebraFile(fileVersionId);
 	}
 
@@ -48,9 +46,7 @@ public class GeogebraServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveGeogebraFile(
-		String params) {
-
+	public org.json.JSONObject saveGeogebraFile(String params) {
 		return _geogebraService.saveGeogebraFile(params);
 	}
 

@@ -52,8 +52,8 @@ import com.weprode.nero.document.service.PermissionUtilsServiceUtil;
  */
 public class PermissionUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getFilePermissionMatrix(HttpPrincipal httpPrincipal, long fileEntryId) {
+	public static org.json.JSONObject getFilePermissionMatrix(
+		HttpPrincipal httpPrincipal, long fileEntryId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -73,7 +73,7 @@ public class PermissionUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,8 +84,8 @@ public class PermissionUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getFolderPermissionMatrix(HttpPrincipal httpPrincipal, long folderId) {
+	public static org.json.JSONObject getFolderPermissionMatrix(
+		HttpPrincipal httpPrincipal, long folderId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -105,7 +105,7 @@ public class PermissionUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -116,10 +116,9 @@ public class PermissionUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveFolderPermissionMatrix(
-			HttpPrincipal httpPrincipal, long folderId,
-			String jsonPermissionMatrix, boolean isRecursive) {
+	public static org.json.JSONObject saveFolderPermissionMatrix(
+		HttpPrincipal httpPrincipal, long folderId, String jsonPermissionMatrix,
+		boolean isRecursive) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -139,7 +138,7 @@ public class PermissionUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -150,10 +149,9 @@ public class PermissionUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveFilePermissionMatrix(
-			HttpPrincipal httpPrincipal, long fileEntryId,
-			String jsonPermissionMatrix) {
+	public static org.json.JSONObject saveFilePermissionMatrix(
+		HttpPrincipal httpPrincipal, long fileEntryId,
+		String jsonPermissionMatrix) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -173,7 +171,7 @@ public class PermissionUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

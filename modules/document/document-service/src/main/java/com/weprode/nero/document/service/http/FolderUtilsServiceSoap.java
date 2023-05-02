@@ -53,12 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class FolderUtilsServiceSoap {
 
-	public static String getBreadcrumb(long folderId) throws RemoteException {
+	public static org.json.JSONObject getBreadcrumb(long folderId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FolderUtilsServiceUtil.getBreadcrumb(folderId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -67,14 +69,15 @@ public class FolderUtilsServiceSoap {
 		}
 	}
 
-	public static String createFolder(long targetFolderId, String folderName)
+	public static org.json.JSONObject createFolder(
+			long targetFolderId, String folderName)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FolderUtilsServiceUtil.createFolder(targetFolderId, folderName);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -83,14 +86,15 @@ public class FolderUtilsServiceSoap {
 		}
 	}
 
-	public static String renameFolder(long folderId, String folderName)
+	public static org.json.JSONObject renameFolder(
+			long folderId, String folderName)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				FolderUtilsServiceUtil.renameFolder(folderId, folderName);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -99,28 +103,31 @@ public class FolderUtilsServiceSoap {
 		}
 	}
 
-	public static String downloadFolder(long folderId) throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				FolderUtilsServiceUtil.downloadFolder(folderId);
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getAllEntities(long folderId, boolean withDetails)
+	public static org.json.JSONObject downloadFolder(long folderId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
+				FolderUtilsServiceUtil.downloadFolder(folderId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getAllEntities(
+			long folderId, boolean withDetails)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
 				FolderUtilsServiceUtil.getAllEntities(folderId, withDetails);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

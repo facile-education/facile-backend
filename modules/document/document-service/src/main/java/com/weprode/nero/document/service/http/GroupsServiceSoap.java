@@ -53,14 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class GroupsServiceSoap {
 
-	public static String getGroupEntities(String nodePath)
+	public static org.json.JSONObject getGroupEntities(String nodePath)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupsServiceUtil.getGroupEntities(nodePath);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -69,14 +69,14 @@ public class GroupsServiceSoap {
 		}
 	}
 
-	public static String getGroupBreadcrumb(String nodePath)
+	public static org.json.JSONObject getGroupBreadcrumb(String nodePath)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupsServiceUtil.getGroupBreadcrumb(nodePath);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -85,16 +85,16 @@ public class GroupsServiceSoap {
 		}
 	}
 
-	public static String recordDownloadActivity(
+	public static org.json.JSONObject recordDownloadActivity(
 			long fileEntryId, long versionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupsServiceUtil.recordDownloadActivity(
 					fileEntryId, versionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -103,14 +103,15 @@ public class GroupsServiceSoap {
 		}
 	}
 
-	public static String recordViewActivity(long fileEntryId, long versionId)
+	public static org.json.JSONObject recordViewActivity(
+			long fileEntryId, long versionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupsServiceUtil.recordViewActivity(fileEntryId, versionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

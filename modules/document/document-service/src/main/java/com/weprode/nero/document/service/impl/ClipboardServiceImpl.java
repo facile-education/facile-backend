@@ -2,7 +2,7 @@ package com.weprode.nero.document.service.impl;
 
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
