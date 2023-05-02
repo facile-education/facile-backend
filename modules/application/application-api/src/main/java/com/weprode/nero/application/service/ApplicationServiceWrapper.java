@@ -31,7 +31,7 @@ public class ApplicationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addApplication(
+	public org.json.JSONObject addApplication(
 		String applicationName, String applicationKey, String category,
 		long menuEntryId, String image, boolean hasCustomUrl, String globalUrl,
 		boolean exportUser, boolean exportStudent, boolean exportParent,
@@ -45,7 +45,7 @@ public class ApplicationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject editApplication(
+	public org.json.JSONObject editApplication(
 		long applicationId, String applicationName, String applicationKey,
 		String category, long menuEntryId, String image, boolean hasCustomUrl,
 		String globalUrl, boolean exportUser, boolean exportStudent,
@@ -60,14 +60,14 @@ public class ApplicationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject export(
+	public org.json.JSONObject export(
 		long applicationId, long schoolId, String roleName) {
 
 		return _applicationService.export(applicationId, schoolId, roleName);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getAllApplications() {
+	public org.json.JSONObject getAllApplications() {
 		return _applicationService.getAllApplications();
 	}
 
@@ -82,33 +82,27 @@ public class ApplicationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getPortlets() {
+	public org.json.JSONObject getPortlets() {
 		return _applicationService.getPortlets();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSchoolApplications(
-		long schoolId) {
-
+	public org.json.JSONObject getSchoolApplications(long schoolId) {
 		return _applicationService.getSchoolApplications(schoolId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getStatApplications(
-		long schoolId) {
-
+	public org.json.JSONObject getStatApplications(long schoolId) {
 		return _applicationService.getStatApplications(schoolId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getUserApplications() {
+	public org.json.JSONObject getUserApplications() {
 		return _applicationService.getUserApplications();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject removeApplication(
-		long applicationId) {
-
+	public org.json.JSONObject removeApplication(long applicationId) {
 		return _applicationService.removeApplication(applicationId);
 	}
 

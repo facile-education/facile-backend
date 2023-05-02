@@ -33,7 +33,7 @@ public class BroadcastRuleServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.application.service.impl.BroadcastRuleServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getApplicationRules(
+	public static org.json.JSONObject getApplicationRules(
 		long applicationId, long schoolId) {
 
 		return getService().getApplicationRules(applicationId, schoolId);
@@ -48,9 +48,8 @@ public class BroadcastRuleServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		updateBroadcastRules(
-			long applicationId, long schoolId, java.lang.String rules) {
+	public static org.json.JSONObject updateBroadcastRules(
+		long applicationId, long schoolId, java.lang.String rules) {
 
 		return getService().updateBroadcastRules(
 			applicationId, schoolId, rules);

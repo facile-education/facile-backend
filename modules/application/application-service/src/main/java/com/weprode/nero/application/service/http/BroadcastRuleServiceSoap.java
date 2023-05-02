@@ -64,15 +64,16 @@ import java.rmi.RemoteException;
 @Deprecated
 public class BroadcastRuleServiceSoap {
 
-	public static String getApplicationRules(long applicationId, long schoolId)
+	public static org.json.JSONObject getApplicationRules(
+			long applicationId, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				BroadcastRuleServiceUtil.getApplicationRules(
 					applicationId, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -81,16 +82,16 @@ public class BroadcastRuleServiceSoap {
 		}
 	}
 
-	public static String updateBroadcastRules(
+	public static org.json.JSONObject updateBroadcastRules(
 			long applicationId, long schoolId, String rules)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				BroadcastRuleServiceUtil.updateBroadcastRules(
 					applicationId, schoolId, rules);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

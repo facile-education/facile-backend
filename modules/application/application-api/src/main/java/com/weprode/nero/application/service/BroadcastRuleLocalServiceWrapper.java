@@ -60,7 +60,7 @@ public class BroadcastRuleLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertRule(
+	public org.json.JSONObject convertRule(
 		com.weprode.nero.application.model.BroadcastRule rule) {
 
 		return _broadcastRuleLocalService.convertRule(rule);

@@ -75,7 +75,7 @@ public class ApplicationLocalServiceUtil {
 			exportTeacher, exportOther, defaultRoles, authorizedSchools);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject convertToJSON(
+	public static org.json.JSONObject convertToJSON(
 		Application application, boolean withDetails) {
 
 		return getService().convertToJSON(application, withDetails);
@@ -348,7 +348,7 @@ public class ApplicationLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getPortlets(
+	public static org.json.JSONObject getPortlets(
 		com.liferay.portal.kernel.model.User user) {
 
 		return getService().getPortlets(user);

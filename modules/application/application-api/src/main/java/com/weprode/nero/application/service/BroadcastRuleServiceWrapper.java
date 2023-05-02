@@ -33,7 +33,7 @@ public class BroadcastRuleServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getApplicationRules(
+	public org.json.JSONObject getApplicationRules(
 		long applicationId, long schoolId) {
 
 		return _broadcastRuleService.getApplicationRules(
@@ -51,7 +51,7 @@ public class BroadcastRuleServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateBroadcastRules(
+	public org.json.JSONObject updateBroadcastRules(
 		long applicationId, long schoolId, String rules) {
 
 		return _broadcastRuleService.updateBroadcastRules(

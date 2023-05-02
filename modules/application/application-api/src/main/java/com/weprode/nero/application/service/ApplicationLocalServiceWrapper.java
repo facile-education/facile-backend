@@ -66,7 +66,7 @@ public class ApplicationLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
+	public org.json.JSONObject convertToJSON(
 		com.weprode.nero.application.model.Application application,
 		boolean withDetails) {
 
@@ -392,7 +392,7 @@ public class ApplicationLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getPortlets(
+	public org.json.JSONObject getPortlets(
 		com.liferay.portal.kernel.model.User user) {
 
 		return _applicationLocalService.getPortlets(user);

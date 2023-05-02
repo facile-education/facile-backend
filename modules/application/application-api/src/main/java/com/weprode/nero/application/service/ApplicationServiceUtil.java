@@ -33,7 +33,7 @@ public class ApplicationServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.application.service.impl.ApplicationServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject addApplication(
+	public static org.json.JSONObject addApplication(
 		java.lang.String applicationName, java.lang.String applicationKey,
 		java.lang.String category, long menuEntryId, java.lang.String image,
 		boolean hasCustomUrl, java.lang.String globalUrl, boolean exportUser,
@@ -47,7 +47,7 @@ public class ApplicationServiceUtil {
 			exportTeacher, exportOther, defaultRoles, authorizedSchools);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject editApplication(
+	public static org.json.JSONObject editApplication(
 		long applicationId, java.lang.String applicationName,
 		java.lang.String applicationKey, java.lang.String category,
 		long menuEntryId, java.lang.String image, boolean hasCustomUrl,
@@ -62,15 +62,13 @@ public class ApplicationServiceUtil {
 			defaultRoles, authorizedSchools);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject export(
+	public static org.json.JSONObject export(
 		long applicationId, long schoolId, java.lang.String roleName) {
 
 		return getService().export(applicationId, schoolId, roleName);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getAllApplications() {
-
+	public static org.json.JSONObject getAllApplications() {
 		return getService().getAllApplications();
 	}
 
@@ -83,31 +81,23 @@ public class ApplicationServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getPortlets() {
+	public static org.json.JSONObject getPortlets() {
 		return getService().getPortlets();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSchoolApplications(long schoolId) {
-
+	public static org.json.JSONObject getSchoolApplications(long schoolId) {
 		return getService().getSchoolApplications(schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getStatApplications(
-		long schoolId) {
-
+	public static org.json.JSONObject getStatApplications(long schoolId) {
 		return getService().getStatApplications(schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getUserApplications() {
-
+	public static org.json.JSONObject getUserApplications() {
 		return getService().getUserApplications();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeApplication(
-		long applicationId) {
-
+	public static org.json.JSONObject removeApplication(long applicationId) {
 		return getService().removeApplication(applicationId);
 	}
 

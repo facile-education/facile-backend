@@ -3,9 +3,6 @@ package com.weprode.nero.application.service.impl;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.RolePermissionsException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -13,16 +10,18 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.nero.application.model.Broadcast;
 import com.weprode.nero.application.model.Application;
-import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
+import com.weprode.nero.application.model.Broadcast;
 import com.weprode.nero.application.service.ApplicationLocalServiceUtil;
+import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.application.service.base.ApplicationServiceBaseImpl;
 import com.weprode.nero.application.service.utils.ExportUtils;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.menu.enums.MenuEntry;
 import com.weprode.nero.menu.service.SideMenuLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
 
     @JSONWebService(value = "get-portlets", method = "GET")
     public JSONObject getPortlets() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -76,7 +75,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
     public JSONObject addApplication(String applicationName, String applicationKey, String category, long menuEntryId, String image, boolean hasCustomUrl, String globalUrl,
                                  boolean exportUser, boolean exportStudent, boolean exportParent, boolean exportTeacher, boolean exportOther,
                                  String defaultRoles, String authorizedSchools) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -113,7 +112,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
     public JSONObject editApplication(long applicationId, String applicationName, String applicationKey, String category, long menuEntryId, String image, boolean hasCustomUrl, String globalUrl,
                                   boolean exportUser, boolean exportStudent, boolean exportParent, boolean exportTeacher, boolean exportOther,
                                   String defaultRoles, String authorizedSchools) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -149,7 +148,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
 
     @JSONWebService(value = "remove-application", method = "GET")
     public JSONObject removeApplication(long applicationId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -182,7 +181,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
 
     @JSONWebService(value = "get-school-applications", method = "GET")
     public JSONObject getSchoolApplications(long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -204,7 +203,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonApplications = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonApplications = new JSONArray();
 
             if (schoolId == 0 && RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 List<Application> schoolApplications = ApplicationLocalServiceUtil.getAllApplications();
@@ -239,7 +238,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
 
     @JSONWebService(value = "export", method = "GET")
     public JSONObject export(long applicationId, long schoolId, String roleName) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -261,7 +260,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         }
 
         try {
-            result = JSONFactoryUtil.createJSONObject(
+            result = new JSONObject(
                     ExportUtils.exportFile(user.getUserId(), applicationId, schoolId, roleName));
 
         } catch (Exception e) {
@@ -274,7 +273,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
 
     @JSONWebService(value = "get-user-applications", method = "GET")
     public JSONObject getUserApplications() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -290,7 +289,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonApplications = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonApplications = new JSONArray();
             List<Application> userApplications = ApplicationLocalServiceUtil.getUserApplications(user);
 
             for (Application userApplication : userApplications) {
@@ -310,7 +309,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
 
     @JSONWebService(value = "get-all-applications", method = "GET")
     public JSONObject getAllApplications() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -327,7 +326,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonApplications = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonApplications = new JSONArray();
             List<Application> entApplications = ApplicationLocalServiceUtil.getAllApplications();
 
             if (entApplications != null) {
@@ -350,7 +349,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
     /* Get all menu entries except for admin ones. */
     @JSONWebService(value = "get-stat-applications", method = "GET")
     public JSONObject getStatApplications (long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -373,7 +372,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
             return result;
         }
 
-        JSONArray applications = JSONFactoryUtil.createJSONArray();
+        JSONArray applications = new JSONArray();
 
         try {
             List<MenuEntry> entries;
@@ -407,7 +406,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
     }
 
     private JSONObject convertMenuEntryToJSON (MenuEntry entry) {
-        JSONObject jsonApplication = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonApplication = new JSONObject();
         jsonApplication.put(JSONConstants.APPLICATION_ID, entry.getId());
         jsonApplication.put(JSONConstants.NAME, entry.getKey());
 

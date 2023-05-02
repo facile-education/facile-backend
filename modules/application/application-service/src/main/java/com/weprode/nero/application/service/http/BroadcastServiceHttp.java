@@ -52,7 +52,7 @@ import com.weprode.nero.application.service.BroadcastServiceUtil;
  */
 public class BroadcastServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject updateBroadcast(
+	public static org.json.JSONObject updateBroadcast(
 		HttpPrincipal httpPrincipal, long applicationId, long schoolId,
 		boolean isBroadcasted, String applicationUrl) {
 
@@ -75,7 +75,7 @@ public class BroadcastServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

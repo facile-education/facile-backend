@@ -4,9 +4,8 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -73,7 +72,7 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
         try {
             // defaultRoles is an array of roleIds
             if (!defaultRoles.equals("")) {
-                JSONArray jsonRoles = JSONFactoryUtil.createJSONArray(defaultRoles);
+                JSONArray jsonRoles = new JSONArray(defaultRoles);
                 for (int i = 0; i < jsonRoles.length(); i++) {
                     DefaultRoleLocalServiceUtil.addDefaultRole(jsonRoles.getLong(i), application.getApplicationId());
                 }
@@ -81,7 +80,7 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
 
             // authorizedSchools is an array of schoolIds
             if (!authorizedSchools.equals("")) {
-                JSONArray jsonSchools = JSONFactoryUtil.createJSONArray(authorizedSchools);
+                JSONArray jsonSchools = new JSONArray(authorizedSchools);
                 for (int i = 0; i < jsonSchools.length(); i++) {
                     AuthorizedSchoolLocalServiceUtil.addAuthorizedSchool(application.getApplicationId(), jsonSchools.getLong(i));
                 }
@@ -116,7 +115,7 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
             // Delete roles and recreate them
             DefaultRoleLocalServiceUtil.deleteDefaultRoleByApplicationId(applicationId);
             if (!defaultRoles.equals("")) {
-                JSONArray jsonRoles = JSONFactoryUtil.createJSONArray(defaultRoles);
+                JSONArray jsonRoles = new JSONArray(defaultRoles);
                 for (int i = 0; i < jsonRoles.length(); i++) {
                     DefaultRoleLocalServiceUtil.addDefaultRole(jsonRoles.getLong(i), application.getApplicationId());
                 }
@@ -124,9 +123,9 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
 
             // Detect removed authorizedSchools and remove all the stuff for them
             List<Long> existingAuthorizedSchoolIds = AuthorizedSchoolLocalServiceUtil.getAuthorizedSchoolIds(applicationId);
-            JSONArray jsonSchools = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonSchools = new JSONArray();
             if (!authorizedSchools.equals("")) {
-                jsonSchools = JSONFactoryUtil.createJSONArray(authorizedSchools);
+                jsonSchools = new JSONArray(authorizedSchools);
             }
 
             for (Long existingSchoolId : existingAuthorizedSchoolIds) {
@@ -165,13 +164,13 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
     }
 
     public JSONObject getPortlets(User user) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             List<UserGroup> allUserGroups = getAllApplicationGroups(user.getCompanyId());
-            JSONArray jsonPortlets = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonPortlets = new JSONArray();
             for (UserGroup userGroup : allUserGroups) {
-                final JSONObject jsonPortlet = JSONFactoryUtil.createJSONObject();
+                final JSONObject jsonPortlet = new JSONObject();
                 jsonPortlet.put(JSONConstants.PORTLET_ID, userGroup.getUserGroupId());
                 jsonPortlet.put(JSONConstants.NAME, userGroup.getName().substring(12));
                 jsonPortlets.put(jsonPortlet);
@@ -206,7 +205,7 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
     }
 
     public JSONObject convertToJSON(Application application, boolean withDetails) {
-        JSONObject applicationJson = JSONFactoryUtil.createJSONObject();
+        JSONObject applicationJson = new JSONObject();
 
         applicationJson.put(JSONConstants.APPLICATION_ID, application.getApplicationId());
         applicationJson.put(JSONConstants.APPLICATION_NAME, application.getApplicationName());
@@ -225,11 +224,11 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
             applicationJson.put(JSONConstants.MENU_ENTRY_ID, application.getMenuEntryId());
             applicationJson.put(JSONConstants.GLOBAL_URL, application.getGlobalUrl());
 
-            JSONArray jsonSchools = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonSchools = new JSONArray();
             try {
                 List<Long> authorizedSchoolIds = AuthorizedSchoolLocalServiceUtil.getAuthorizedSchoolIds(application.getApplicationId());
                 for (Long schoolId : authorizedSchoolIds) {
-                    JSONObject jsonSchool = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonSchool = new JSONObject();
                     jsonSchool.put(JSONConstants.SCHOOL_NAME, OrganizationLocalServiceUtil.getOrganization(schoolId).getName());
                     jsonSchool.put(JSONConstants.SCHOOL_ID, schoolId);
                     jsonSchools.put(jsonSchool);
@@ -239,7 +238,7 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
             }
             applicationJson.put(JSONConstants.AUTHORIZED_SCHOOLS, jsonSchools);
 
-            JSONArray jsonDefaultRoles = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonDefaultRoles = new JSONArray();
             try {
                 jsonDefaultRoles = DefaultRoleLocalServiceUtil.getDefaultRoleJson(application.getApplicationId());
             } catch (Exception e) {

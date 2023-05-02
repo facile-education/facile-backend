@@ -68,9 +68,7 @@ public class BroadcastRuleLocalServiceUtil {
 			applicationId, schoolId, roleId, orgId, groupId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject convertRule(
-		BroadcastRule rule) {
-
+	public static org.json.JSONObject convertRule(BroadcastRule rule) {
 		return getService().convertRule(rule);
 	}
 

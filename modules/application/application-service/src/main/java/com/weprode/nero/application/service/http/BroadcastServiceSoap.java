@@ -64,17 +64,17 @@ import java.rmi.RemoteException;
 @Deprecated
 public class BroadcastServiceSoap {
 
-	public static String updateBroadcast(
+	public static org.json.JSONObject updateBroadcast(
 			long applicationId, long schoolId, boolean isBroadcasted,
 			String applicationUrl)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				BroadcastServiceUtil.updateBroadcast(
 					applicationId, schoolId, isBroadcasted, applicationUrl);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
