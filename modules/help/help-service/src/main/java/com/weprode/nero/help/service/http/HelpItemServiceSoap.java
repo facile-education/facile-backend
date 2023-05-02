@@ -64,14 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class HelpItemServiceSoap {
 
-	public static String getHelpItemDetails(long itemId)
+	public static org.json.JSONObject getHelpItemDetails(long itemId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				HelpItemServiceUtil.getHelpItemDetails(itemId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -80,14 +80,15 @@ public class HelpItemServiceSoap {
 		}
 	}
 
-	public static String saveHelpItemPosition(long categoryId, String item)
+	public static org.json.JSONObject saveHelpItemPosition(
+			long categoryId, String item)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				HelpItemServiceUtil.saveHelpItemPosition(categoryId, item);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -96,14 +97,14 @@ public class HelpItemServiceSoap {
 		}
 	}
 
-	public static String saveHelpItem(long categoryId, String item)
+	public static org.json.JSONObject saveHelpItem(long categoryId, String item)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				HelpItemServiceUtil.saveHelpItem(categoryId, item);
+			org.json.JSONObject returnValue = HelpItemServiceUtil.saveHelpItem(
+				categoryId, item);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -112,12 +113,14 @@ public class HelpItemServiceSoap {
 		}
 	}
 
-	public static String deleteItem(long itemId) throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				HelpItemServiceUtil.deleteItem(itemId);
+	public static org.json.JSONObject deleteItem(long itemId)
+		throws RemoteException {
 
-			return returnValue.toString();
+		try {
+			org.json.JSONObject returnValue = HelpItemServiceUtil.deleteItem(
+				itemId);
+
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

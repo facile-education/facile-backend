@@ -1,9 +1,9 @@
 package com.weprode.nero.help.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -32,7 +32,7 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
     @JSONWebService(value = "get-help-menu", method = "GET")
     public JSONObject getHelpMenu(String search) {
         logger.info("Getting help menu with search = " + search);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -62,7 +62,7 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
     @JSONWebService(value = "save-category", method = "POST")
     public JSONObject saveHelpCategory(String categoryName, long serviceId) {
         logger.info("Updating category with name = " + categoryName);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -95,7 +95,7 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
     @JSONWebService(value = "delete-category", method = "GET")
     public JSONObject deleteCategory(long categoryId) {
         logger.info("Deleting category with id = " + categoryId);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

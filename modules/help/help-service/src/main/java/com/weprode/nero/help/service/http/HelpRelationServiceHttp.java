@@ -52,7 +52,7 @@ import com.weprode.nero.help.service.HelpRelationServiceUtil;
  */
 public class HelpRelationServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject saveRelation(
+	public static org.json.JSONObject saveRelation(
 		HttpPrincipal httpPrincipal, String relation) {
 
 		try {
@@ -73,7 +73,7 @@ public class HelpRelationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class HelpRelationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteRelation(
+	public static org.json.JSONObject deleteRelation(
 		HttpPrincipal httpPrincipal, long relationId) {
 
 		try {
@@ -105,7 +105,7 @@ public class HelpRelationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

@@ -33,15 +33,11 @@ public class HelpItemServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.help.service.impl.HelpItemServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject deleteItem(
-		long itemId) {
-
+	public static org.json.JSONObject deleteItem(long itemId) {
 		return getService().deleteItem(itemId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getHelpItemDetails(
-		long itemId) {
-
+	public static org.json.JSONObject getHelpItemDetails(long itemId) {
 		return getService().getHelpItemDetails(itemId);
 	}
 
@@ -54,14 +50,14 @@ public class HelpItemServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveHelpItem(
+	public static org.json.JSONObject saveHelpItem(
 		long categoryId, java.lang.String item) {
 
 		return getService().saveHelpItem(categoryId, item);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveHelpItemPosition(long categoryId, java.lang.String item) {
+	public static org.json.JSONObject saveHelpItemPosition(
+		long categoryId, java.lang.String item) {
 
 		return getService().saveHelpItemPosition(categoryId, item);
 	}

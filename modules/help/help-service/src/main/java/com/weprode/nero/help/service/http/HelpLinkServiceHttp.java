@@ -52,7 +52,7 @@ import com.weprode.nero.help.service.HelpLinkServiceUtil;
  */
 public class HelpLinkServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject saveLink(
+	public static org.json.JSONObject saveLink(
 		HttpPrincipal httpPrincipal, String link) {
 
 		try {
@@ -72,7 +72,7 @@ public class HelpLinkServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class HelpLinkServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteLink(
+	public static org.json.JSONObject deleteLink(
 		HttpPrincipal httpPrincipal, long linkId) {
 
 		try {
@@ -103,7 +103,7 @@ public class HelpLinkServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

@@ -1,8 +1,8 @@
 package com.weprode.nero.help.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -31,7 +31,7 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
     @JSONWebService(value = "save-relation", method = "POST")
     public JSONObject saveRelation(String relation) {
         logger.info("Saving relation with content = " + relation);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -49,7 +49,7 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
         }
 
         try {
-            JSONObject savedRelation = HelpUtil.saveRelation(JSONFactoryUtil.createJSONObject(relation));
+            JSONObject savedRelation = HelpUtil.saveRelation(new JSONObject(relation));
 
             result.put(JSONConstants.RELATION, savedRelation);
             result.put(JSONConstants.SUCCESS, true);
@@ -63,7 +63,7 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
     @JSONWebService(value = "delete-relation", method = "GET")
     public JSONObject deleteRelation(long relationId) {
         logger.info("Deleting relation with id = " + relationId);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

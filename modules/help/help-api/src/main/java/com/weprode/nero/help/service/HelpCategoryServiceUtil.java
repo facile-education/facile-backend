@@ -33,15 +33,11 @@ public class HelpCategoryServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.help.service.impl.HelpCategoryServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject deleteCategory(
-		long categoryId) {
-
+	public static org.json.JSONObject deleteCategory(long categoryId) {
 		return getService().deleteCategory(categoryId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getHelpMenu(
-		java.lang.String search) {
-
+	public static org.json.JSONObject getHelpMenu(java.lang.String search) {
 		return getService().getHelpMenu(search);
 	}
 
@@ -54,7 +50,7 @@ public class HelpCategoryServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveHelpCategory(
+	public static org.json.JSONObject saveHelpCategory(
 		java.lang.String categoryName, long serviceId) {
 
 		return getService().saveHelpCategory(categoryName, serviceId);

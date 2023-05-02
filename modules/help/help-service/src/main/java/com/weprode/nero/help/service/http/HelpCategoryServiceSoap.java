@@ -64,12 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class HelpCategoryServiceSoap {
 
-	public static String getHelpMenu(String search) throws RemoteException {
+	public static org.json.JSONObject getHelpMenu(String search)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				HelpCategoryServiceUtil.getHelpMenu(search);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -78,15 +80,16 @@ public class HelpCategoryServiceSoap {
 		}
 	}
 
-	public static String saveHelpCategory(String categoryName, long serviceId)
+	public static org.json.JSONObject saveHelpCategory(
+			String categoryName, long serviceId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				HelpCategoryServiceUtil.saveHelpCategory(
 					categoryName, serviceId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -95,14 +98,14 @@ public class HelpCategoryServiceSoap {
 		}
 	}
 
-	public static String deleteCategory(long categoryId)
+	public static org.json.JSONObject deleteCategory(long categoryId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				HelpCategoryServiceUtil.deleteCategory(categoryId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

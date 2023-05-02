@@ -1,8 +1,8 @@
 package com.weprode.nero.help.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -31,7 +31,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
     @JSONWebService(value = "get-help-item", method = "GET")
     public JSONObject getHelpItemDetails(long itemId) {
         logger.info("Getting item content for id = " + itemId);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -64,7 +64,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
     @JSONWebService(value = "save-help-item-position", method = "POST")
     public JSONObject saveHelpItemPosition(long categoryId, String item) {
         logger.info("Moving item with content = " + item);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -82,7 +82,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
         }
 
         try {
-            JSONObject jsonHelpItem = JSONFactoryUtil.createJSONObject(item);
+            JSONObject jsonHelpItem = new JSONObject(item);
             HelpUtil.saveHelpItemPosition(categoryId, jsonHelpItem);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
     @JSONWebService(value = "save-help-item", method = "POST")
     public JSONObject saveHelpItem (long categoryId, String item) {
         logger.info("Saving item with content = " + item);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -113,7 +113,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
         }
 
         try {
-            JSONObject jsonHelpItem = JSONFactoryUtil.createJSONObject(item);
+            JSONObject jsonHelpItem = new JSONObject(item);
             JSONObject savedHelpItem = HelpUtil.saveHelpItem(categoryId, jsonHelpItem);
 
             result.put(JSONConstants.HELP_ITEM, savedHelpItem);
@@ -130,7 +130,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
     @JSONWebService(value = "delete-item", method = "POST")
     public JSONObject deleteItem(long itemId) {
         logger.info("Deleting item with id = " + itemId);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
