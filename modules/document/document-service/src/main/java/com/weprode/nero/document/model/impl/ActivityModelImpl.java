@@ -94,7 +94,7 @@ public class ActivityModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Document_Activity (activityId LONG not null primary key,fileEntryId LONG,folderId LONG,userId LONG,groupId LONG,fileName VARCHAR(75) null,folderName VARCHAR(75) null,type_ INTEGER,modificationDate DATE null)";
+		"create table Document_Activity (activityId LONG not null primary key,fileEntryId LONG,folderId LONG,userId LONG,groupId LONG,fileName VARCHAR(255) null,folderName VARCHAR(100) null,type_ INTEGER,modificationDate DATE null)";
 
 	public static final String TABLE_SQL_DROP = "drop table Document_Activity";
 
