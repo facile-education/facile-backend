@@ -43,7 +43,7 @@ public class BroadcastServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateBroadcast(
+	public static org.json.JSONObject updateBroadcast(
 		long applicationId, long schoolId, boolean isBroadcasted,
 		java.lang.String applicationUrl) {
 

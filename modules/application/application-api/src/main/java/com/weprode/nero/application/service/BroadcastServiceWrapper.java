@@ -41,7 +41,7 @@ public class BroadcastServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateBroadcast(
+	public org.json.JSONObject updateBroadcast(
 		long applicationId, long schoolId, boolean isBroadcasted,
 		String applicationUrl) {
 

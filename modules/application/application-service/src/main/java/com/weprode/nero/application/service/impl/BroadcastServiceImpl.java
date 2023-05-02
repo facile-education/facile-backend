@@ -1,8 +1,6 @@
 package com.weprode.nero.application.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -13,6 +11,7 @@ import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.application.service.base.BroadcastServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
@@ -28,7 +27,7 @@ public class BroadcastServiceImpl extends BroadcastServiceBaseImpl {
 
     @JSONWebService(value = "update-broadcast", method = "POST")
     public JSONObject updateBroadcast(long applicationId, long schoolId, boolean isBroadcasted, String applicationUrl) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

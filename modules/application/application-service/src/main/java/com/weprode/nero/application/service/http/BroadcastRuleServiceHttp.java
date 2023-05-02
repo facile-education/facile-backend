@@ -52,7 +52,7 @@ import com.weprode.nero.application.service.BroadcastRuleServiceUtil;
  */
 public class BroadcastRuleServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getApplicationRules(
+	public static org.json.JSONObject getApplicationRules(
 		HttpPrincipal httpPrincipal, long applicationId, long schoolId) {
 
 		try {
@@ -73,7 +73,7 @@ public class BroadcastRuleServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,10 +84,9 @@ public class BroadcastRuleServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		updateBroadcastRules(
-			HttpPrincipal httpPrincipal, long applicationId, long schoolId,
-			String rules) {
+	public static org.json.JSONObject updateBroadcastRules(
+		HttpPrincipal httpPrincipal, long applicationId, long schoolId,
+		String rules) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -107,7 +106,7 @@ public class BroadcastRuleServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

@@ -52,9 +52,7 @@ import com.weprode.nero.application.service.ApplicationServiceUtil;
  */
 public class ApplicationServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getPortlets(
-		HttpPrincipal httpPrincipal) {
-
+	public static org.json.JSONObject getPortlets(HttpPrincipal httpPrincipal) {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "getPortlets",
@@ -72,7 +70,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +81,7 @@ public class ApplicationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addApplication(
+	public static org.json.JSONObject addApplication(
 		HttpPrincipal httpPrincipal, String applicationName,
 		String applicationKey, String category, long menuEntryId, String image,
 		boolean hasCustomUrl, String globalUrl, boolean exportUser,
@@ -111,7 +109,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -122,7 +120,7 @@ public class ApplicationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject editApplication(
+	public static org.json.JSONObject editApplication(
 		HttpPrincipal httpPrincipal, long applicationId, String applicationName,
 		String applicationKey, String category, long menuEntryId, String image,
 		boolean hasCustomUrl, String globalUrl, boolean exportUser,
@@ -150,7 +148,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -161,7 +159,7 @@ public class ApplicationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeApplication(
+	public static org.json.JSONObject removeApplication(
 		HttpPrincipal httpPrincipal, long applicationId) {
 
 		try {
@@ -182,7 +180,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -193,8 +191,8 @@ public class ApplicationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSchoolApplications(HttpPrincipal httpPrincipal, long schoolId) {
+	public static org.json.JSONObject getSchoolApplications(
+		HttpPrincipal httpPrincipal, long schoolId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -214,7 +212,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -225,7 +223,7 @@ public class ApplicationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject export(
+	public static org.json.JSONObject export(
 		HttpPrincipal httpPrincipal, long applicationId, long schoolId,
 		String roleName) {
 
@@ -246,7 +244,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -257,7 +255,7 @@ public class ApplicationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getUserApplications(
+	public static org.json.JSONObject getUserApplications(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -277,7 +275,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -288,7 +286,7 @@ public class ApplicationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getAllApplications(
+	public static org.json.JSONObject getAllApplications(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -308,7 +306,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -319,7 +317,7 @@ public class ApplicationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getStatApplications(
+	public static org.json.JSONObject getStatApplications(
 		HttpPrincipal httpPrincipal, long schoolId) {
 
 		try {
@@ -340,7 +338,7 @@ public class ApplicationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

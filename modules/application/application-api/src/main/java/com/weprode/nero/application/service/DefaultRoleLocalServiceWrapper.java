@@ -278,9 +278,7 @@ public class DefaultRoleLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONArray getDefaultRoleJson(
-		long applicationId) {
-
+	public org.json.JSONArray getDefaultRoleJson(long applicationId) {
 		return _defaultRoleLocalService.getDefaultRoleJson(applicationId);
 	}
 

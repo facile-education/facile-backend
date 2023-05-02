@@ -3,8 +3,7 @@ package com.weprode.nero.application.service.utils;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -52,7 +51,7 @@ public class ExportUtils {
     private static final String EMAIL = "email";
 
     public static String exportFile(long userId, long applicationId, long schoolId, String roleName) throws PortalException, SystemException {
-        JSONObject resultExport = JSONFactoryUtil.createJSONObject();
+        JSONObject resultExport = new JSONObject();
 
         User currUser = UserLocalServiceUtil.getUser(userId);
         Application application = ApplicationLocalServiceUtil.getById(applicationId);
@@ -128,7 +127,6 @@ public class ExportUtils {
 
         resultExport.put(JSONConstants.SUCCESS, false);
         return resultExport.toString();
-
     }
 
     private static String exportSacoche(String userRole, List<User> userList, ResourceBundle messages) throws SystemException {

@@ -250,9 +250,7 @@ public class DefaultRoleLocalServiceUtil {
 		return getService().getDefaultRole(defaultRoleId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray getDefaultRoleJson(
-		long applicationId) {
-
+	public static org.json.JSONArray getDefaultRoleJson(long applicationId) {
 		return getService().getDefaultRoleJson(applicationId);
 	}
 

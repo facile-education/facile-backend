@@ -1,8 +1,7 @@
 package com.weprode.nero.application.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.application.model.BroadcastRule;
@@ -88,7 +87,7 @@ public class BroadcastRuleLocalServiceImpl extends BroadcastRuleLocalServiceBase
     }
 
     public JSONObject convertRule(BroadcastRule rule) {
-        JSONObject jsonRule = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonRule = new JSONObject();
 
         jsonRule.put(JSONConstants.APPLICATION_ID, rule.getApplicationId());
         jsonRule.put(JSONConstants.SCHOOL_ID, rule.getSchoolId());

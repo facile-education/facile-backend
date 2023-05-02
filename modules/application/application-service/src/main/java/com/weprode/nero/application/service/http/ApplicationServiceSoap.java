@@ -64,12 +64,12 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ApplicationServiceSoap {
 
-	public static String getPortlets() throws RemoteException {
+	public static org.json.JSONObject getPortlets() throws RemoteException {
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ApplicationServiceUtil.getPortlets();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -78,7 +78,7 @@ public class ApplicationServiceSoap {
 		}
 	}
 
-	public static String addApplication(
+	public static org.json.JSONObject addApplication(
 			String applicationName, String applicationKey, String category,
 			long menuEntryId, String image, boolean hasCustomUrl,
 			String globalUrl, boolean exportUser, boolean exportStudent,
@@ -87,14 +87,14 @@ public class ApplicationServiceSoap {
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ApplicationServiceUtil.addApplication(
 					applicationName, applicationKey, category, menuEntryId,
 					image, hasCustomUrl, globalUrl, exportUser, exportStudent,
 					exportParent, exportTeacher, exportOther, defaultRoles,
 					authorizedSchools);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -103,7 +103,7 @@ public class ApplicationServiceSoap {
 		}
 	}
 
-	public static String editApplication(
+	public static org.json.JSONObject editApplication(
 			long applicationId, String applicationName, String applicationKey,
 			String category, long menuEntryId, String image,
 			boolean hasCustomUrl, String globalUrl, boolean exportUser,
@@ -112,14 +112,14 @@ public class ApplicationServiceSoap {
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ApplicationServiceUtil.editApplication(
 					applicationId, applicationName, applicationKey, category,
 					menuEntryId, image, hasCustomUrl, globalUrl, exportUser,
 					exportStudent, exportParent, exportTeacher, exportOther,
 					defaultRoles, authorizedSchools);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -128,14 +128,14 @@ public class ApplicationServiceSoap {
 		}
 	}
 
-	public static String removeApplication(long applicationId)
+	public static org.json.JSONObject removeApplication(long applicationId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ApplicationServiceUtil.removeApplication(applicationId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -144,14 +144,14 @@ public class ApplicationServiceSoap {
 		}
 	}
 
-	public static String getSchoolApplications(long schoolId)
+	public static org.json.JSONObject getSchoolApplications(long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ApplicationServiceUtil.getSchoolApplications(schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -160,16 +160,15 @@ public class ApplicationServiceSoap {
 		}
 	}
 
-	public static String export(
+	public static org.json.JSONObject export(
 			long applicationId, long schoolId, String roleName)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ApplicationServiceUtil.export(
-					applicationId, schoolId, roleName);
+			org.json.JSONObject returnValue = ApplicationServiceUtil.export(
+				applicationId, schoolId, roleName);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -178,42 +177,46 @@ public class ApplicationServiceSoap {
 		}
 	}
 
-	public static String getUserApplications() throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ApplicationServiceUtil.getUserApplications();
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getAllApplications() throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ApplicationServiceUtil.getAllApplications();
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getStatApplications(long schoolId)
+	public static org.json.JSONObject getUserApplications()
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
+				ApplicationServiceUtil.getUserApplications();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getAllApplications()
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				ApplicationServiceUtil.getAllApplications();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getStatApplications(long schoolId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
 				ApplicationServiceUtil.getStatApplications(schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

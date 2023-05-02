@@ -1,9 +1,6 @@
 package com.weprode.nero.application.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -20,6 +17,8 @@ import com.weprode.nero.application.service.base.BroadcastRuleServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
 
     @JSONWebService(value = "get-application-rules", method = "GET")
     public JSONObject getApplicationRules(long applicationId, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -66,7 +65,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonRules = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonRules = new JSONArray();
 
             List<BroadcastRule> rules = BroadcastRuleLocalServiceUtil.getSchoolRules(applicationId, schoolId);
             Map<Long, List<Long>> map = new HashMap<>();
@@ -80,12 +79,12 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
 
             // Parse the map
             for (Map.Entry<Long, List<Long>> entry : map.entrySet()) {
-                JSONObject jsonRule = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonRule = new JSONObject();
 
                 // Add roles
-                JSONArray jsonRoles = JSONFactoryUtil.createJSONArray();
+                JSONArray jsonRoles = new JSONArray();
                 for (Long roleId : entry.getValue()) {
-                    JSONObject jsonRole = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonRole = new JSONObject();
                     jsonRole.put(JSONConstants.ROLE_ID, roleId);
                     if (roleId == 0) {
                         jsonRole.put(JSONConstants.DISPLAY_TEXT, "Tous les profils");
@@ -98,8 +97,8 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
                 jsonRule.put(JSONConstants.ROLES, jsonRoles);
 
                 // Add orgs
-                JSONArray jsonOrgs = JSONFactoryUtil.createJSONArray();
-                JSONObject jsonOrg = JSONFactoryUtil.createJSONObject();
+                JSONArray jsonOrgs = new JSONArray();
+                JSONObject jsonOrg = new JSONObject();
                 jsonOrg.put(JSONConstants.ORG_ID, entry.getKey());
                 if (entry.getKey() == 0) {
                     jsonOrg.put(JSONConstants.ORG_NAME, "Tout l'\u00e9tablissement");
@@ -125,7 +124,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
 
     @JSONWebService(value = "update-broadcast-rules", method = "POST")
     public JSONObject updateBroadcastRules(long applicationId, long schoolId, String rules) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -151,7 +150,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonRules = JSONFactoryUtil.createJSONArray(rules);
+            JSONArray jsonRules = new JSONArray(rules);
 
             // First delete all application's rules
             BroadcastRuleLocalServiceUtil.deleteSchoolRules(applicationId, schoolId);

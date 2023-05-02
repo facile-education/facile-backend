@@ -2,9 +2,6 @@ package com.weprode.nero.application.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -17,6 +14,8 @@ import com.weprode.nero.application.model.DefaultRole;
 import com.weprode.nero.application.service.base.DefaultRoleLocalServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.constants.NeroRoleConstants;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.List;
@@ -45,9 +44,9 @@ public class DefaultRoleLocalServiceImpl extends DefaultRoleLocalServiceBaseImpl
             long companyId = PortalUtil.getDefaultCompanyId();
 
             List<DefaultRole> defaultRoles = defaultRolePersistence.findByapplicationId(applicationId);
-            JSONArray rolesTab = JSONFactoryUtil.createJSONArray();
+            JSONArray rolesTab = new JSONArray();
             for (DefaultRole defaultRole : defaultRoles) {
-                JSONObject roleJson = JSONFactoryUtil.createJSONObject();
+                JSONObject roleJson = new JSONObject();
                 if (defaultRole.getRoleId() == 0) {
                     roleJson.put(JSONConstants.DISPLAY_TEXT, "Tous les profils");
                     roleJson.put(JSONConstants.ROLE_ID, 0);
@@ -68,7 +67,7 @@ public class DefaultRoleLocalServiceImpl extends DefaultRoleLocalServiceBaseImpl
             logger.error("Error fetching default roles for applicationId " + applicationId, e);
         }
 
-        return JSONFactoryUtil.createJSONArray();
+        return new JSONArray();
     }
 
     public boolean hasUserRole(long applicationId, long userId) {
