@@ -4,8 +4,8 @@ create table Document_Activity (
 	folderId LONG,
 	userId LONG,
 	groupId LONG,
-	fileName VARCHAR(75) null,
-	folderName VARCHAR(75) null,
+	fileName VARCHAR(255) null,
+	folderName VARCHAR(100) null,
 	type_ INTEGER,
 	modificationDate DATE null
 );
@@ -26,7 +26,7 @@ create table Document_Version (
 	fileVersionId LONG not null primary key,
 	dlFileEntryId LONG,
 	versionNumber DOUBLE,
-	comment_ VARCHAR(75) null,
+	comment_ VARCHAR(250) null,
 	downloadCount LONG,
 	viewCount LONG
 );

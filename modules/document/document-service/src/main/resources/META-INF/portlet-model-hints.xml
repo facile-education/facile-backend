@@ -7,8 +7,12 @@
 		<field name="folderId" type="long" />
 		<field name="userId" type="long" />
 		<field name="groupId" type="long" />
-		<field name="fileName" type="String" />
-		<field name="folderName" type="String" />
+		<field name="fileName" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="folderName" type="String">
+			<hint name="max-length">100</hint>
+		</field>
 		<field name="type" type="int" />
 		<field name="modificationDate" type="Date" />
 	</model>
@@ -26,7 +30,9 @@
 		<field name="fileVersionId" type="long" />
 		<field name="dlFileEntryId" type="long" />
 		<field name="versionNumber" type="double" />
-		<field name="comment" type="String" />
+		<field name="comment" type="String">
+			<hint name="max-length">250</hint>
+		</field>
 		<field name="downloadCount" type="long" />
 		<field name="viewCount" type="long" />
 	</model>

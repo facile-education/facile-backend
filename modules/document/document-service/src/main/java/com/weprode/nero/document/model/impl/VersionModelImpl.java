@@ -91,7 +91,7 @@ public class VersionModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Document_Version (fileVersionId LONG not null primary key,dlFileEntryId LONG,versionNumber DOUBLE,comment_ VARCHAR(75) null,downloadCount LONG,viewCount LONG)";
+		"create table Document_Version (fileVersionId LONG not null primary key,dlFileEntryId LONG,versionNumber DOUBLE,comment_ VARCHAR(250) null,downloadCount LONG,viewCount LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table Document_Version";
 
