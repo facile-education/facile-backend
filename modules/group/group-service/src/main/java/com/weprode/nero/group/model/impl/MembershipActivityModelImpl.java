@@ -90,7 +90,7 @@ public class MembershipActivityModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Group_MembershipActivity (membershipActivityId LONG not null primary key,groupId LONG,actionUserId LONG,targetUserIds VARCHAR(75) null,incoming BOOLEAN,movementDate DATE null)";
+		"create table Group_MembershipActivity (membershipActivityId LONG not null primary key,groupId LONG,actionUserId LONG,targetUserIds VARCHAR(300) null,incoming BOOLEAN,movementDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Group_MembershipActivity";

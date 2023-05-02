@@ -24,7 +24,9 @@
 		<field name="membershipActivityId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="actionUserId" type="long" />
-		<field name="targetUserIds" type="String" />
+		<field name="targetUserIds" type="String">
+			<hint name="max-length">300</hint>
+		</field>
 		<field name="incoming" type="boolean" />
 		<field name="movementDate" type="Date" />
 	</model>

@@ -23,7 +23,7 @@ create table Group_MembershipActivity (
 	membershipActivityId LONG not null primary key,
 	groupId LONG,
 	actionUserId LONG,
-	targetUserIds VARCHAR(75) null,
+	targetUserIds VARCHAR(300) null,
 	incoming BOOLEAN,
 	movementDate DATE null
 );
