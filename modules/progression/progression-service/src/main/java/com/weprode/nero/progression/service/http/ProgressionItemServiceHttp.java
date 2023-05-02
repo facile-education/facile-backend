@@ -52,7 +52,7 @@ import com.weprode.nero.progression.service.ProgressionItemServiceUtil;
  */
 public class ProgressionItemServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject addItem(
+	public static org.json.JSONObject addItem(
 		HttpPrincipal httpPrincipal, long progressionId, long folderId,
 		boolean isHomework) {
 
@@ -74,7 +74,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -85,7 +85,7 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateItem(
+	public static org.json.JSONObject updateItem(
 		HttpPrincipal httpPrincipal, long itemId, long folderId, String name,
 		int type, String duration, int order) {
 
@@ -107,7 +107,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -118,7 +118,7 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteItem(
+	public static org.json.JSONObject deleteItem(
 		HttpPrincipal httpPrincipal, long itemId) {
 
 		try {
@@ -138,7 +138,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -149,7 +149,7 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addItemContent(
+	public static org.json.JSONObject addItemContent(
 		HttpPrincipal httpPrincipal, long itemId, int contentType,
 		String contentName, String contentValue, long fileEntryId,
 		boolean isToBeCompleted) {
@@ -173,7 +173,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -184,7 +184,7 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addItemContent(
+	public static org.json.JSONObject addItemContent(
 		HttpPrincipal httpPrincipal, long itemId, int contentType,
 		String contentName, String fileName, java.io.File file) {
 
@@ -206,7 +206,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -217,7 +217,7 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateItemContent(
+	public static org.json.JSONObject updateItemContent(
 		HttpPrincipal httpPrincipal, long contentId, String contentName,
 		String contentValue, int order) {
 
@@ -239,7 +239,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -250,7 +250,7 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteItemContent(
+	public static org.json.JSONObject deleteItemContent(
 		HttpPrincipal httpPrincipal, long contentId) {
 
 		try {
@@ -271,7 +271,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -282,7 +282,7 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getItemContents(
+	public static org.json.JSONObject getItemContents(
 		HttpPrincipal httpPrincipal, long itemId) {
 
 		try {
@@ -302,7 +302,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -313,7 +313,7 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getItemPreview(
+	public static org.json.JSONObject getItemPreview(
 		HttpPrincipal httpPrincipal, long itemId) {
 
 		try {
@@ -333,7 +333,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -344,9 +344,8 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSessionSpecificContents(
-			HttpPrincipal httpPrincipal, long sessionId) {
+	public static org.json.JSONObject getSessionSpecificContents(
+		HttpPrincipal httpPrincipal, long sessionId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -366,7 +365,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -377,9 +376,8 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getHomeworkSpecificContents(
-			HttpPrincipal httpPrincipal, long homeworkId) {
+	public static org.json.JSONObject getHomeworkSpecificContents(
+		HttpPrincipal httpPrincipal, long homeworkId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -399,7 +397,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -410,8 +408,8 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveSessionSpecificItem(HttpPrincipal httpPrincipal, long sessionId) {
+	public static org.json.JSONObject saveSessionSpecificItem(
+		HttpPrincipal httpPrincipal, long sessionId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -431,7 +429,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -442,8 +440,8 @@ public class ProgressionItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveHomeworkSpecificItem(HttpPrincipal httpPrincipal, long homeworkId) {
+	public static org.json.JSONObject saveHomeworkSpecificItem(
+		HttpPrincipal httpPrincipal, long homeworkId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -463,7 +461,7 @@ public class ProgressionItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

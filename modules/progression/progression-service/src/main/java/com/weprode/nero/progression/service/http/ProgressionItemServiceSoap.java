@@ -64,16 +64,16 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ProgressionItemServiceSoap {
 
-	public static String addItem(
+	public static org.json.JSONObject addItem(
 			long progressionId, long folderId, boolean isHomework)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.addItem(
 					progressionId, folderId, isHomework);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -82,17 +82,17 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String updateItem(
+	public static org.json.JSONObject updateItem(
 			long itemId, long folderId, String name, int type, String duration,
 			int order)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.updateItem(
 					itemId, folderId, name, type, duration, order);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -101,12 +101,14 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String deleteItem(long itemId) throws RemoteException {
+	public static org.json.JSONObject deleteItem(long itemId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.deleteItem(itemId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -115,18 +117,18 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String addItemContent(
+	public static org.json.JSONObject addItemContent(
 			long itemId, int contentType, String contentName,
 			String contentValue, long fileEntryId, boolean isToBeCompleted)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.addItemContent(
 					itemId, contentType, contentName, contentValue, fileEntryId,
 					isToBeCompleted);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -135,16 +137,16 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String updateItemContent(
+	public static org.json.JSONObject updateItemContent(
 			long contentId, String contentName, String contentValue, int order)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.updateItemContent(
 					contentId, contentName, contentValue, order);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -153,14 +155,14 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String deleteItemContent(long contentId)
+	public static org.json.JSONObject deleteItemContent(long contentId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.deleteItemContent(contentId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -169,43 +171,47 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String getItemContents(long itemId) throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ProgressionItemServiceUtil.getItemContents(itemId);
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getItemPreview(long itemId) throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ProgressionItemServiceUtil.getItemPreview(itemId);
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getSessionSpecificContents(long sessionId)
+	public static org.json.JSONObject getItemContents(long itemId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
+				ProgressionItemServiceUtil.getItemContents(itemId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getItemPreview(long itemId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				ProgressionItemServiceUtil.getItemPreview(itemId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getSessionSpecificContents(long sessionId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.getSessionSpecificContents(
 					sessionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -214,15 +220,16 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String getHomeworkSpecificContents(long homeworkId)
+	public static org.json.JSONObject getHomeworkSpecificContents(
+			long homeworkId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.getHomeworkSpecificContents(
 					homeworkId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -231,14 +238,14 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String saveSessionSpecificItem(long sessionId)
+	public static org.json.JSONObject saveSessionSpecificItem(long sessionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.saveSessionSpecificItem(sessionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -247,14 +254,14 @@ public class ProgressionItemServiceSoap {
 		}
 	}
 
-	public static String saveHomeworkSpecificItem(long homeworkId)
+	public static org.json.JSONObject saveHomeworkSpecificItem(long homeworkId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionItemServiceUtil.saveHomeworkSpecificItem(homeworkId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

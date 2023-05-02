@@ -14,8 +14,6 @@
 
 package com.weprode.nero.progression.model.impl;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -31,6 +29,8 @@ import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.TeacherGroupColorLocalServiceUtil;
+import org.json.JSONObject;
+
 
 import java.text.SimpleDateFormat;
 
@@ -42,7 +42,7 @@ public class ItemAssignmentImpl extends ItemAssignmentBaseImpl {
     private final Log logger = LogFactoryUtil.getLog(ItemAssignmentImpl.class);
 
     public JSONObject convertToJSON(long userId) {
-        JSONObject jsonAssignment = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonAssignment = new JSONObject();
 
         SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 

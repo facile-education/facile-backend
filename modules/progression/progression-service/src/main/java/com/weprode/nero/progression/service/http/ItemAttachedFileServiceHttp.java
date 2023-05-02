@@ -52,7 +52,7 @@ import com.weprode.nero.progression.service.ItemAttachedFileServiceUtil;
  */
 public class ItemAttachedFileServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject addAttachment(
+	public static org.json.JSONObject addAttachment(
 		HttpPrincipal httpPrincipal, long itemId, String fileName,
 		java.io.File file, boolean isToBeCompleted) {
 
@@ -74,7 +74,7 @@ public class ItemAttachedFileServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -85,7 +85,7 @@ public class ItemAttachedFileServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteAttachment(
+	public static org.json.JSONObject deleteAttachment(
 		HttpPrincipal httpPrincipal, long attachmentId) {
 
 		try {
@@ -106,7 +106,7 @@ public class ItemAttachedFileServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

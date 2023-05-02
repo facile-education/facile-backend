@@ -34,7 +34,7 @@ public class ItemAttachedFileServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addAttachment(
+	public org.json.JSONObject addAttachment(
 		long itemId, String fileName, java.io.File file,
 		boolean isToBeCompleted) {
 
@@ -43,9 +43,7 @@ public class ItemAttachedFileServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteAttachment(
-		long attachmentId) {
-
+	public org.json.JSONObject deleteAttachment(long attachmentId) {
 		return _itemAttachedFileService.deleteAttachment(attachmentId);
 	}
 

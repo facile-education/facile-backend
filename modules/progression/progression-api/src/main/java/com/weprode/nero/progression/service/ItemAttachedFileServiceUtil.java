@@ -33,7 +33,7 @@ public class ItemAttachedFileServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.progression.service.impl.ItemAttachedFileServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject addAttachment(
+	public static org.json.JSONObject addAttachment(
 		long itemId, java.lang.String fileName, java.io.File file,
 		boolean isToBeCompleted) {
 
@@ -41,9 +41,7 @@ public class ItemAttachedFileServiceUtil {
 			itemId, fileName, file, isToBeCompleted);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteAttachment(
-		long attachmentId) {
-
+	public static org.json.JSONObject deleteAttachment(long attachmentId) {
 		return getService().deleteAttachment(attachmentId);
 	}
 

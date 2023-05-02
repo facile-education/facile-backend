@@ -1,10 +1,6 @@
 package com.weprode.nero.progression.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -25,6 +21,9 @@ import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -45,7 +44,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
     
     @JSONWebService(value = "add-session-assignment", method = "POST")
     public JSONObject addSessionAssignment(long itemId, long sessionId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         
         User user;
         try {
@@ -91,7 +90,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
 
     @JSONWebService(value = "add-homework-assignment", method = "POST")
     public JSONObject addHomeworkAssignment(long itemId, String homeworks) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -116,21 +115,21 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
 
             JSONArray jsonHomeworks;
             try {
-                jsonHomeworks = JSONFactoryUtil.createJSONArray(homeworks);
+                jsonHomeworks = new JSONArray(homeworks);
             } catch (JSONException e) {
                 logger.error("Error adding homework assignments : passed json is not well-formed:" + homeworks, e);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
             }
 
-            JSONArray jsonAssignments = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonAssignments = new JSONArray();
 
             // Parse the homeworks to create
             for (int i = 0 ; i < jsonHomeworks.length() ; i++) {
                 JSONObject homeworkToCreate = jsonHomeworks.getJSONObject(i);
                 logger.info("Parsing homework " + homeworkToCreate.toString());
 
-                long homeworkId = homeworkToCreate.getLong(JSONConstants.HOMEWORK_ID, 0);
+                long homeworkId = JSONConstants.getLongValue(homeworkToCreate, JSONConstants.HOMEWORK_ID, 0);
                 long sourceSessionId = homeworkToCreate.getLong(JSONConstants.SOURCE_SESSION_ID);
 
                 // Check that the user is a source session's teacher
@@ -140,7 +139,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
                     return result;
                 }
 
-                long targetSessionId = homeworkToCreate.getLong(JSONConstants.TARGET_SESSION_ID, 0);
+                long targetSessionId = JSONConstants.getLongValue(homeworkToCreate, JSONConstants.TARGET_SESSION_ID, 0);
 
                 // Target date is the targetSession date if any, else the toDate
                 Date toDate = null;
@@ -205,7 +204,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
 
     @JSONWebService(value = "delete-assignment", method = "DELETE")
     public JSONObject deleteAssignment(long itemId, long sessionId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

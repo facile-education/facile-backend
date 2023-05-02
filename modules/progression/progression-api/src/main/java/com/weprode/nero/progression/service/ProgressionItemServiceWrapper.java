@@ -33,7 +33,7 @@ public class ProgressionItemServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addItem(
+	public org.json.JSONObject addItem(
 		long progressionId, long folderId, boolean isHomework) {
 
 		return _progressionItemService.addItem(
@@ -41,7 +41,7 @@ public class ProgressionItemServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addItemContent(
+	public org.json.JSONObject addItemContent(
 		long itemId, int contentType, String contentName, String fileName,
 		java.io.File file) {
 
@@ -50,7 +50,7 @@ public class ProgressionItemServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addItemContent(
+	public org.json.JSONObject addItemContent(
 		long itemId, int contentType, String contentName, String contentValue,
 		long fileEntryId, boolean isToBeCompleted) {
 
@@ -60,35 +60,27 @@ public class ProgressionItemServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteItem(long itemId) {
+	public org.json.JSONObject deleteItem(long itemId) {
 		return _progressionItemService.deleteItem(itemId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteItemContent(
-		long contentId) {
-
+	public org.json.JSONObject deleteItemContent(long contentId) {
 		return _progressionItemService.deleteItemContent(contentId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject
-		getHomeworkSpecificContents(long homeworkId) {
-
+	public org.json.JSONObject getHomeworkSpecificContents(long homeworkId) {
 		return _progressionItemService.getHomeworkSpecificContents(homeworkId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getItemContents(
-		long itemId) {
-
+	public org.json.JSONObject getItemContents(long itemId) {
 		return _progressionItemService.getItemContents(itemId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getItemPreview(
-		long itemId) {
-
+	public org.json.JSONObject getItemPreview(long itemId) {
 		return _progressionItemService.getItemPreview(itemId);
 	}
 
@@ -103,28 +95,22 @@ public class ProgressionItemServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSessionSpecificContents(
-		long sessionId) {
-
+	public org.json.JSONObject getSessionSpecificContents(long sessionId) {
 		return _progressionItemService.getSessionSpecificContents(sessionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveHomeworkSpecificItem(
-		long homeworkId) {
-
+	public org.json.JSONObject saveHomeworkSpecificItem(long homeworkId) {
 		return _progressionItemService.saveHomeworkSpecificItem(homeworkId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveSessionSpecificItem(
-		long sessionId) {
-
+	public org.json.JSONObject saveSessionSpecificItem(long sessionId) {
 		return _progressionItemService.saveSessionSpecificItem(sessionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateItem(
+	public org.json.JSONObject updateItem(
 		long itemId, long folderId, String name, int type, String duration,
 		int order) {
 
@@ -133,7 +119,7 @@ public class ProgressionItemServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateItemContent(
+	public org.json.JSONObject updateItemContent(
 		long contentId, String contentName, String contentValue, int order) {
 
 		return _progressionItemService.updateItemContent(

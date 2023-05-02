@@ -34,7 +34,7 @@ public class ProgressionFolderServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addFolder(
+	public org.json.JSONObject addFolder(
 		long progressionId, long parentFolderId) {
 
 		return _progressionFolderService.addFolder(
@@ -42,16 +42,12 @@ public class ProgressionFolderServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteFolder(
-		long folderId) {
-
+	public org.json.JSONObject deleteFolder(long folderId) {
 		return _progressionFolderService.deleteFolder(folderId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFolderContent(
-		long folderId) {
-
+	public org.json.JSONObject getFolderContent(long folderId) {
 		return _progressionFolderService.getFolderContent(folderId);
 	}
 
@@ -66,7 +62,7 @@ public class ProgressionFolderServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateFolder(
+	public org.json.JSONObject updateFolder(
 		long folderId, long parentFolderId, String name, int order) {
 
 		return _progressionFolderService.updateFolder(

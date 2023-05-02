@@ -6,6 +6,7 @@ dependencies {
 	compile project(":modules:document:document-api")
 	compile project(":modules:eel-synchronization:eel-synchronization-api")
 
+	compileOnly group: 'org.json', name: 'json'
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 }
 

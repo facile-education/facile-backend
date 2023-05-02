@@ -33,21 +33,17 @@ public class ProgressionFolderServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.progression.service.impl.ProgressionFolderServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject addFolder(
+	public static org.json.JSONObject addFolder(
 		long progressionId, long parentFolderId) {
 
 		return getService().addFolder(progressionId, parentFolderId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteFolder(
-		long folderId) {
-
+	public static org.json.JSONObject deleteFolder(long folderId) {
 		return getService().deleteFolder(folderId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFolderContent(
-		long folderId) {
-
+	public static org.json.JSONObject getFolderContent(long folderId) {
 		return getService().getFolderContent(folderId);
 	}
 
@@ -60,7 +56,7 @@ public class ProgressionFolderServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateFolder(
+	public static org.json.JSONObject updateFolder(
 		long folderId, long parentFolderId, java.lang.String name, int order) {
 
 		return getService().updateFolder(folderId, parentFolderId, name, order);

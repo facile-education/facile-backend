@@ -31,7 +31,7 @@ public class ProgressionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addProgression(
+	public org.json.JSONObject addProgression(
 		String name, String description, long subjectId, String volee,
 		String color) {
 
@@ -40,9 +40,7 @@ public class ProgressionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteProgression(
-		long progressionId) {
-
+	public org.json.JSONObject deleteProgression(long progressionId) {
 		return _progressionService.deleteProgression(progressionId);
 	}
 
@@ -57,19 +55,17 @@ public class ProgressionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getProgressionList() {
+	public org.json.JSONObject getProgressionList() {
 		return _progressionService.getProgressionList();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getProgressionTree(
-		long progressionId) {
-
+	public org.json.JSONObject getProgressionTree(long progressionId) {
 		return _progressionService.getProgressionTree(progressionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateProgression(
+	public org.json.JSONObject updateProgression(
 		long progressionId, String name, String description, long subjectId,
 		String volee, String color) {
 

@@ -58,7 +58,6 @@ public interface ItemContent extends ItemContentModel, PersistedModel {
 
 		};
 
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
-		boolean isContentIncluded);
+	public org.json.JSONObject convertToJSON(boolean isContentIncluded);
 
 }

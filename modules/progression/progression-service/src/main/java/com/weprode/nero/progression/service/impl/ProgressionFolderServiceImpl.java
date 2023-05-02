@@ -2,9 +2,6 @@ package com.weprode.nero.progression.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -19,6 +16,8 @@ import com.weprode.nero.progression.service.ProgressionFolderLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.progression.service.base.ProgressionFolderServiceBaseImpl;
 import com.weprode.nero.progression.utils.ProgressionUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.List;
@@ -36,8 +35,8 @@ public class ProgressionFolderServiceImpl extends ProgressionFolderServiceBaseIm
 
     @JSONWebService(value = "get-folder-content", method = "GET")
     public JSONObject getFolderContent(long folderId) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -60,14 +59,14 @@ public class ProgressionFolderServiceImpl extends ProgressionFolderServiceBaseIm
             }
 
             List<ProgressionFolder> subFolders = ProgressionFolderLocalServiceUtil.getSubFolders(folderId);
-            JSONArray folderArray = JSONFactoryUtil.createJSONArray();
+            JSONArray folderArray = new JSONArray();
             for (ProgressionFolder folder : subFolders) {
                 folderArray.put(folder.convertToJSON());
             }
             result.put(JSONConstants.FOLDERS, folderArray);
 
             List<ProgressionItem> items = ProgressionItemLocalServiceUtil.getFolderItems(folderId);
-            JSONArray itemArray = JSONFactoryUtil.createJSONArray();
+            JSONArray itemArray = new JSONArray();
             for (ProgressionItem item: items) {
                 itemArray.put(item.convertToJSON(user.getUserId(), true));
             }
@@ -83,7 +82,7 @@ public class ProgressionFolderServiceImpl extends ProgressionFolderServiceBaseIm
 
     @JSONWebService(value = "add-folder", method = "POST")
     public JSONObject addFolder(long progressionId, long parentFolderId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -119,7 +118,7 @@ public class ProgressionFolderServiceImpl extends ProgressionFolderServiceBaseIm
 
     @JSONWebService(value = "update-folder", method = "POST")
     public JSONObject updateFolder(long folderId, long parentFolderId, String name, int order) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -154,7 +153,7 @@ public class ProgressionFolderServiceImpl extends ProgressionFolderServiceBaseIm
 
     @JSONWebService(value = "delete-folder", method = "DELETE")
     public JSONObject deleteFolder(long folderId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

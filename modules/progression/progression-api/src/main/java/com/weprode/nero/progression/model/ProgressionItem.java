@@ -58,9 +58,9 @@ public interface ProgressionItem extends PersistedModel, ProgressionItemModel {
 
 		};
 
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(long userId);
+	public org.json.JSONObject convertToJSON(long userId);
 
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
+	public org.json.JSONObject convertToJSON(
 		long userId, boolean isContentIncluded);
 
 }

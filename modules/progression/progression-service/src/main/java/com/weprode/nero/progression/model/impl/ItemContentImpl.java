@@ -15,14 +15,13 @@
 package com.weprode.nero.progression.model.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.progression.constants.ProgressionConstants;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 
@@ -34,7 +33,7 @@ public class ItemContentImpl extends ItemContentBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(ItemContentImpl.class);
 
     public JSONObject convertToJSON(boolean isContentIncluded) {
-        JSONObject jsonItem = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonItem = new JSONObject();
 
         SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 

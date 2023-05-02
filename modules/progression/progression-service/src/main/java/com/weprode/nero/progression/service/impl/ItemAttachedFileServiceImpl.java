@@ -1,8 +1,7 @@
 package com.weprode.nero.progression.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -15,6 +14,7 @@ import com.weprode.nero.progression.model.ItemAttachedFile;
 import com.weprode.nero.progression.service.ItemAttachedFileLocalServiceUtil;
 import com.weprode.nero.progression.service.base.ItemAttachedFileServiceBaseImpl;
 import com.weprode.nero.progression.utils.ProgressionUtils;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class ItemAttachedFileServiceImpl extends ItemAttachedFileServiceBaseImpl
     
     @JSONWebService(value = "add-attachment", method = "POST")
     public JSONObject addAttachment(long itemId, String fileName, File file, boolean isToBeCompleted) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -68,7 +68,7 @@ public class ItemAttachedFileServiceImpl extends ItemAttachedFileServiceBaseImpl
 
     @JSONWebService(value = "delete-attachment", method = "DELETE")
     public JSONObject deleteAttachment(long attachmentId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

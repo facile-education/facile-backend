@@ -60,6 +60,6 @@ public interface ProgressionFolder
 
 			};
 
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON();
+	public org.json.JSONObject convertToJSON();
 
 }

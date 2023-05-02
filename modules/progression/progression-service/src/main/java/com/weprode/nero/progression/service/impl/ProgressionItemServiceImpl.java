@@ -3,9 +3,8 @@ package com.weprode.nero.progression.service.impl;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -52,7 +51,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "add-item", method = "POST")
     public JSONObject addItem(long progressionId, long folderId, boolean isHomework) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -89,7 +88,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "update-item", method = "POST")
     public JSONObject updateItem(long itemId, long folderId, String name, int type, String duration, int order) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -126,7 +125,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "delete-item", method = "DELETE")
     public JSONObject deleteItem(long itemId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -163,8 +162,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "add-item-content", method = "POST")
     public JSONObject addItemContent(long itemId, int contentType, String contentName, String contentValue, long fileEntryId, boolean isToBeCompleted) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -203,7 +201,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "add-item-content", method = "POST")
     public JSONObject addItemContent(long itemId, int contentType, String contentName, String fileName, File file) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -272,7 +270,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "update-item-content", method = "POST")
     public JSONObject updateItemContent(long contentId, String contentName, String contentValue, int order) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -313,8 +311,8 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "delete-item-content", method = "DELETE")
     public JSONObject deleteItemContent(long contentId) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -349,7 +347,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "get-item-contents", method = "GET")
     public JSONObject getItemContents(long itemId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -372,7 +370,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
                 return result;
             }
 
-            JSONArray jsonContents = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonContents = new JSONArray();
             List<ItemContent> itemContents = ItemContentLocalServiceUtil.getContentsByItemId(itemId);
             for (ItemContent itemContent : itemContents) {
                 jsonContents.put(itemContent.convertToJSON(true));
@@ -389,8 +387,8 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "get-item-preview", method = "GET")
     public JSONObject getItemPreview(long itemId) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -425,8 +423,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "get-session-specific-contents", method = "GET")
     public JSONObject getSessionSpecificContents(long sessionId) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -477,8 +474,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "get-homework-specific-contents", method = "GET")
     public JSONObject getHomeworkSpecificContents(long homeworkId) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -531,7 +527,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "save-session-specific-item", method = "POST")
     public JSONObject saveSessionSpecificItem(long sessionId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -572,7 +568,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
 
     @JSONWebService(value = "save-homework-specific-item", method = "POST")
     public JSONObject saveHomeworkSpecificItem(long homeworkId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

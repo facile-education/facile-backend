@@ -58,6 +58,6 @@ public interface Progression extends PersistedModel, ProgressionModel {
 
 		};
 
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON();
+	public org.json.JSONObject convertToJSON();
 
 }

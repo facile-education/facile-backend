@@ -60,6 +60,6 @@ public interface ItemAttachedFile
 
 			};
 
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON();
+	public org.json.JSONObject convertToJSON();
 
 }
