@@ -91,7 +91,7 @@ public class SessionStudentModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Schoollife_SessionStudent (schoollifeSessionId LONG not null,studentId LONG not null,sourceTeacherId LONG,isPresent BOOLEAN,notifyParents BOOLEAN,comment_ VARCHAR(75) null,subject VARCHAR(75) null,primary key (schoollifeSessionId, studentId))";
+		"create table Schoollife_SessionStudent (schoollifeSessionId LONG not null,studentId LONG not null,sourceTeacherId LONG,isPresent BOOLEAN,notifyParents BOOLEAN,comment_ STRING null,subject VARCHAR(300) null,primary key (schoollifeSessionId, studentId))";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Schoollife_SessionStudent";

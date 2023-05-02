@@ -96,7 +96,7 @@ public class RenvoiModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Schoollife_Renvoi (schoollifeSessionId LONG not null,studentId LONG not null,schoolId LONG,renvoiDate DATE null,teacherId LONG,sourceSessionId LONG,sourceSchoollifeSessionId LONG,sourceTeacherId LONG,reason VARCHAR(75) null,status INTEGER,primary key (schoollifeSessionId, studentId))";
+		"create table Schoollife_Renvoi (schoollifeSessionId LONG not null,studentId LONG not null,schoolId LONG,renvoiDate DATE null,teacherId LONG,sourceSessionId LONG,sourceSchoollifeSessionId LONG,sourceTeacherId LONG,reason STRING null,status INTEGER,primary key (schoollifeSessionId, studentId))";
 
 	public static final String TABLE_SQL_DROP = "drop table Schoollife_Renvoi";
 

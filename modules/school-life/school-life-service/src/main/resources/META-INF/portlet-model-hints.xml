@@ -14,7 +14,9 @@
 		<field name="sourceSessionId" type="long" />
 		<field name="sourceSchoollifeSessionId" type="long" />
 		<field name="sourceTeacherId" type="long" />
-		<field name="reason" type="String" />
+		<field name="reason" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
 		<field name="status" type="int" />
 	</model>
 	<model name="com.weprode.nero.school.life.model.SchoollifeSession">
@@ -45,7 +47,11 @@
 		<field name="sourceTeacherId" type="long" />
 		<field name="isPresent" type="boolean" />
 		<field name="notifyParents" type="boolean" />
-		<field name="comment" type="String" />
-		<field name="subject" type="String" />
+		<field name="comment" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="subject" type="String">
+			<hint name="max-length">300</hint>
+		</field>
 	</model>
 </model-hints>

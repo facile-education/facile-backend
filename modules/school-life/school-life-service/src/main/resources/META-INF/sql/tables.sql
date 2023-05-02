@@ -13,7 +13,7 @@ create table Schoollife_Renvoi (
 	sourceSessionId LONG,
 	sourceSchoollifeSessionId LONG,
 	sourceTeacherId LONG,
-	reason VARCHAR(75) null,
+	reason STRING null,
 	status INTEGER,
 	primary key (schoollifeSessionId, studentId)
 );
@@ -48,7 +48,7 @@ create table Schoollife_SessionStudent (
 	sourceTeacherId LONG,
 	isPresent BOOLEAN,
 	notifyParents BOOLEAN,
-	comment_ VARCHAR(75) null,
-	subject VARCHAR(75) null,
+	comment_ STRING null,
+	subject VARCHAR(300) null,
 	primary key (schoollifeSessionId, studentId)
 );
