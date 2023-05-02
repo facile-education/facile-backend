@@ -31,9 +31,7 @@ public class HelpRelationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteRelation(
-		long relationId) {
-
+	public org.json.JSONObject deleteRelation(long relationId) {
 		return _helpRelationService.deleteRelation(relationId);
 	}
 
@@ -48,9 +46,7 @@ public class HelpRelationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveRelation(
-		String relation) {
-
+	public org.json.JSONObject saveRelation(String relation) {
 		return _helpRelationService.saveRelation(relation);
 	}
 

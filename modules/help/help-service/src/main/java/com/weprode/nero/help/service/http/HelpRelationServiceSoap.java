@@ -64,12 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class HelpRelationServiceSoap {
 
-	public static String saveRelation(String relation) throws RemoteException {
+	public static org.json.JSONObject saveRelation(String relation)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				HelpRelationServiceUtil.saveRelation(relation);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -78,14 +80,14 @@ public class HelpRelationServiceSoap {
 		}
 	}
 
-	public static String deleteRelation(long relationId)
+	public static org.json.JSONObject deleteRelation(long relationId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				HelpRelationServiceUtil.deleteRelation(relationId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

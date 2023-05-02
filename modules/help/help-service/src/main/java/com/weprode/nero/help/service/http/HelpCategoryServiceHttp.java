@@ -52,7 +52,7 @@ import com.weprode.nero.help.service.HelpCategoryServiceUtil;
  */
 public class HelpCategoryServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getHelpMenu(
+	public static org.json.JSONObject getHelpMenu(
 		HttpPrincipal httpPrincipal, String search) {
 
 		try {
@@ -72,7 +72,7 @@ public class HelpCategoryServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class HelpCategoryServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveHelpCategory(
+	public static org.json.JSONObject saveHelpCategory(
 		HttpPrincipal httpPrincipal, String categoryName, long serviceId) {
 
 		try {
@@ -104,7 +104,7 @@ public class HelpCategoryServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -115,7 +115,7 @@ public class HelpCategoryServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteCategory(
+	public static org.json.JSONObject deleteCategory(
 		HttpPrincipal httpPrincipal, long categoryId) {
 
 		try {
@@ -136,7 +136,7 @@ public class HelpCategoryServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

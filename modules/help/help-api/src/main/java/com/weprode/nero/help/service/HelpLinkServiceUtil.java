@@ -33,9 +33,7 @@ public class HelpLinkServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.help.service.impl.HelpLinkServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject deleteLink(
-		long linkId) {
-
+	public static org.json.JSONObject deleteLink(long linkId) {
 		return getService().deleteLink(linkId);
 	}
 
@@ -48,9 +46,7 @@ public class HelpLinkServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveLink(
-		java.lang.String link) {
-
+	public static org.json.JSONObject saveLink(java.lang.String link) {
 		return getService().saveLink(link);
 	}
 

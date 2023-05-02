@@ -1,8 +1,8 @@
 package com.weprode.nero.help.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -31,7 +31,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
     @JSONWebService(value = "save-link", method = "POST")
     public JSONObject saveLink(String link) {
         logger.info("Saving link with content = " + link);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -49,7 +49,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
         }
 
         try {
-            JSONObject savedLink = HelpUtil.saveLink(JSONFactoryUtil.createJSONObject(link));
+            JSONObject savedLink = HelpUtil.saveLink(new JSONObject(link));
 
             result.put(JSONConstants.LINK, savedLink);
             result.put(JSONConstants.SUCCESS, true);
@@ -63,7 +63,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
     @JSONWebService(value = "delete-link", method = "GET")
     public JSONObject deleteLink(long linkId) {
         logger.info("Deleting link with id = " + linkId);
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

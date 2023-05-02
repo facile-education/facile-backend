@@ -3,9 +3,6 @@ package com.weprode.nero.help.utils;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -17,9 +14,10 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.help.model.*;
 import com.weprode.nero.help.service.*;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.portlet.ResourceRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HelpUtil {
@@ -32,7 +30,7 @@ public class HelpUtil {
 
     // Returns the whole help tree with categories and help items, with filtering if search terms are provided
     public static JSONArray getHelpTree(User user, String searchTerms) {
-        JSONArray helpTree = JSONFactoryUtil.createJSONArray();
+        JSONArray helpTree = new JSONArray();
 
         // First fetch all categories
         List<HelpCategory> categories = HelpCategoryLocalServiceUtil.getAllCategories();
@@ -52,10 +50,10 @@ public class HelpUtil {
                         helpItems = HelpItemLocalServiceUtil.getHelpItems(category.getCategoryId(), searchTerms);
                     }
 
-                    JSONArray jsonHelpItems = JSONFactoryUtil.createJSONArray();
+                    JSONArray jsonHelpItems = new JSONArray();
                     for (HelpItem helpItem : helpItems) {
                         if (HelpItemRoleLocalServiceUtil.isUserAllowedToSeeItem(user, helpItem.getItemId())) {
-                            JSONObject jsonHelpItem = JSONFactoryUtil.createJSONObject();
+                            JSONObject jsonHelpItem = new JSONObject();
                             jsonHelpItem.put(JSONConstants.ITEM_ID, helpItem.getItemId());
                             jsonHelpItem.put(JSONConstants.ITEM_NAME, helpItem.getItemName());
                             jsonHelpItem.put(JSONConstants.POSITION, helpItem.getPosition());
@@ -95,7 +93,7 @@ public class HelpUtil {
     }
 
     public static JSONObject getHelpItemDetails(long itemId) {
-        JSONObject jsonHelpItem = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonHelpItem = new JSONObject();
 
         HelpItem helpItem = null;
         try {
@@ -116,7 +114,7 @@ public class HelpUtil {
             jsonHelpItem.put(JSONConstants.IS_MANAGEMENT, helpItem.getIsManagement());
 
             // Questions
-            JSONArray jsonQuestions = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonQuestions = new JSONArray();
             List<HelpQuestion> helpQuestions = HelpQuestionLocalServiceUtil.getHelpQuestions(helpItem.getItemId());
             if (helpQuestions != null) {
                 for (HelpQuestion helpQuestion : helpQuestions) {
@@ -126,7 +124,7 @@ public class HelpUtil {
             jsonHelpItem.put(JSONConstants.QUESTIONS, jsonQuestions);
 
             // Related items
-            JSONArray jsonRelations = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonRelations = new JSONArray();
             List<HelpRelation> helpRelations = HelpRelationLocalServiceUtil.getHelpRelations(helpItem.getItemId());
             if (helpRelations != null) {
                 for (HelpRelation helpRelation : helpRelations) {
@@ -138,7 +136,7 @@ public class HelpUtil {
             // Links
             List<HelpLink> helpLinks = HelpLinkLocalServiceUtil.getHelpLinks(helpItem.getItemId());
             if (helpLinks != null) {
-                JSONArray jsonLinks = JSONFactoryUtil.createJSONArray();
+                JSONArray jsonLinks = new JSONArray();
                 for (HelpLink helpLink : helpLinks) {
                     jsonLinks.put(convertLinkToJson(helpLink));
                 }
@@ -150,7 +148,7 @@ public class HelpUtil {
     }
 
     public static void saveHelpItemPosition(long categoryId, JSONObject jsonHelpItem) throws PortalException, SystemException {
-        long itemId = jsonHelpItem.getLong(JSONConstants.ITEM_ID, 0);
+        long itemId = JSONConstants.getLongValue(jsonHelpItem, JSONConstants.ITEM_ID, 0);
         int position = jsonHelpItem.getInt(JSONConstants.POSITION);
 
         if (itemId > 0) {
@@ -179,7 +177,7 @@ public class HelpUtil {
     // Create new help item and save it to the DB
     public static JSONObject saveHelpItem(long categoryId, JSONObject jsonHelpItem) {
         try {
-            long itemId = jsonHelpItem.getLong(JSONConstants.ITEM_ID, 0);
+            long itemId = JSONConstants.getLongValue(jsonHelpItem, JSONConstants.ITEM_ID, 0);
             String itemName = jsonHelpItem.getString(JSONConstants.ITEM_NAME);
             String videoUrl = jsonHelpItem.getString(JSONConstants.VIDEO_URL);
             String videoDescription = jsonHelpItem.getString(JSONConstants.VIDEO_DESCRIPTION);
@@ -243,7 +241,7 @@ public class HelpUtil {
     }
 
     public static JSONObject saveRelation(JSONObject relation) throws PortalException, SystemException {
-        int relationId = relation.getInt(JSONConstants.RELATION_ID, 0);
+        int relationId = JSONConstants.getIntValue(relation, JSONConstants.RELATION_ID, 0);
         int itemId = relation.getInt(JSONConstants.ITEM_ID);
         int relatedItemId = relation.getInt(JSONConstants.RELATED_ITEM_ID);
         HelpRelation helpRelation;
@@ -260,7 +258,7 @@ public class HelpUtil {
     }
 
     public static JSONObject saveLink(JSONObject link) throws PortalException, SystemException {
-        int linkId = link.getInt(JSONConstants.RELATION_ID, 0);
+        int linkId = JSONConstants.getIntValue(link, JSONConstants.RELATION_ID, 0);
         int itemId = link.getInt(JSONConstants.ITEM_ID);
         String linkUrl = link.getString(JSONConstants.LINK_URL);
         String linkName = link.getString(JSONConstants.LINK_NAME);
@@ -282,7 +280,7 @@ public class HelpUtil {
     private static JSONArray updateQuestions(long itemId, JSONArray questions) {
 
         // Output
-        JSONArray updatedJsonQuestions = JSONFactoryUtil.createJSONArray();
+        JSONArray updatedJsonQuestions = new JSONArray();
 
         // Remove all existing questions
         HelpQuestionLocalServiceUtil.removeQuestionsForHelpItem(itemId);
@@ -307,7 +305,7 @@ public class HelpUtil {
     // Update a list of relations, create new ones, remove obsolete ones
     private static JSONArray updateRelations(long itemId, JSONArray relations) {
         // Output
-        JSONArray updatedJsonRelations = JSONFactoryUtil.createJSONArray();
+        JSONArray updatedJsonRelations = new JSONArray();
 
         // Remove all existing relations
         HelpRelationLocalServiceUtil.removeRelationsForHelpItem(itemId);
@@ -331,7 +329,7 @@ public class HelpUtil {
     // Update a list of links, create new ones, remove obsolete ones
     private static JSONArray updateLinks(long itemId, JSONArray links) {
         // Output
-        JSONArray updatedJsonLinks = JSONFactoryUtil.createJSONArray();
+        JSONArray updatedJsonLinks = new JSONArray();
 
         // Remove all existing links
         HelpLinkLocalServiceUtil.removeLinksForHelpItem(itemId);
@@ -367,13 +365,13 @@ public class HelpUtil {
     }
 
     public static JSONArray getEntServices() {
-        JSONArray jsonServices = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonServices = new JSONArray();
 
         try {
             List<Application> entApps = ApplicationLocalServiceUtil.getAllApplications();
             if (entApps != null) {
                 for (Application app : entApps) {
-                    JSONObject jsonService = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonService = new JSONObject();
                     jsonService.put(JSONConstants.APPLICATION_ID, app.getApplicationId());
                     jsonService.put(JSONConstants.APPLICATION_NAME, app.getApplicationName());
                     jsonService.put(JSONConstants.APPLICATION_KEY, app.getApplicationKey());
@@ -402,7 +400,7 @@ public class HelpUtil {
     }
 
     private static JSONObject convertQuestionToJson(HelpQuestion helpQuestion) {
-        JSONObject jsonQuestion = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonQuestion = new JSONObject();
 
         jsonQuestion.put(JSONConstants.QUESTION_ID, helpQuestion.getQuestionId());
         jsonQuestion.put(JSONConstants.QUESTION, helpQuestion.getQuestion());
@@ -413,7 +411,7 @@ public class HelpUtil {
 
 
     private static JSONObject convertRelationToJson(HelpRelation helpRelation) {
-        JSONObject jsonRelation = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonRelation = new JSONObject();
 
         jsonRelation.put(JSONConstants.RELATION_ID, helpRelation.getRelationId());
         jsonRelation.put(JSONConstants.RELATED_ITEM_ID, helpRelation.getRelatedItemId());
@@ -431,7 +429,7 @@ public class HelpUtil {
     }
 
     private static JSONObject convertCategoryToJson(HelpCategory category) {
-        JSONObject jsonCategory = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonCategory = new JSONObject();
 
         jsonCategory.put(JSONConstants.CATEGORY_ID, category.getCategoryId());
         jsonCategory.put(JSONConstants.CATEGORY_NAME, category.getCategoryName());
@@ -449,7 +447,7 @@ public class HelpUtil {
     }
 
     private static JSONObject convertLinkToJson(HelpLink helpLink) {
-        JSONObject jsonLink = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonLink = new JSONObject();
 
         jsonLink.put(JSONConstants.LINK_ID, helpLink.getLinkId());
         jsonLink.put(JSONConstants.LINK_URL, helpLink.getLinkUrl());

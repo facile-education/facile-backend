@@ -52,7 +52,7 @@ import com.weprode.nero.help.service.HelpItemServiceUtil;
  */
 public class HelpItemServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getHelpItemDetails(
+	public static org.json.JSONObject getHelpItemDetails(
 		HttpPrincipal httpPrincipal, long itemId) {
 
 		try {
@@ -72,7 +72,7 @@ public class HelpItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,9 +83,8 @@ public class HelpItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveHelpItemPosition(
-			HttpPrincipal httpPrincipal, long categoryId, String item) {
+	public static org.json.JSONObject saveHelpItemPosition(
+		HttpPrincipal httpPrincipal, long categoryId, String item) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -105,7 +104,7 @@ public class HelpItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -116,7 +115,7 @@ public class HelpItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveHelpItem(
+	public static org.json.JSONObject saveHelpItem(
 		HttpPrincipal httpPrincipal, long categoryId, String item) {
 
 		try {
@@ -137,7 +136,7 @@ public class HelpItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -148,7 +147,7 @@ public class HelpItemServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteItem(
+	public static org.json.JSONObject deleteItem(
 		HttpPrincipal httpPrincipal, long itemId) {
 
 		try {
@@ -168,7 +167,7 @@ public class HelpItemServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

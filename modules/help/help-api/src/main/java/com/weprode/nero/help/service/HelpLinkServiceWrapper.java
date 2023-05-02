@@ -31,7 +31,7 @@ public class HelpLinkServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteLink(long linkId) {
+	public org.json.JSONObject deleteLink(long linkId) {
 		return _helpLinkService.deleteLink(linkId);
 	}
 
@@ -46,7 +46,7 @@ public class HelpLinkServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveLink(String link) {
+	public org.json.JSONObject saveLink(String link) {
 		return _helpLinkService.saveLink(link);
 	}
 

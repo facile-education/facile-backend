@@ -31,14 +31,12 @@ public class HelpItemServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteItem(long itemId) {
+	public org.json.JSONObject deleteItem(long itemId) {
 		return _helpItemService.deleteItem(itemId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getHelpItemDetails(
-		long itemId) {
-
+	public org.json.JSONObject getHelpItemDetails(long itemId) {
 		return _helpItemService.getHelpItemDetails(itemId);
 	}
 
@@ -53,14 +51,12 @@ public class HelpItemServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveHelpItem(
-		long categoryId, String item) {
-
+	public org.json.JSONObject saveHelpItem(long categoryId, String item) {
 		return _helpItemService.saveHelpItem(categoryId, item);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveHelpItemPosition(
+	public org.json.JSONObject saveHelpItemPosition(
 		long categoryId, String item) {
 
 		return _helpItemService.saveHelpItemPosition(categoryId, item);

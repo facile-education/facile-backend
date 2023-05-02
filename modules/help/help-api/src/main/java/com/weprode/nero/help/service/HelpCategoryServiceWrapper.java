@@ -31,16 +31,12 @@ public class HelpCategoryServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteCategory(
-		long categoryId) {
-
+	public org.json.JSONObject deleteCategory(long categoryId) {
 		return _helpCategoryService.deleteCategory(categoryId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getHelpMenu(
-		String search) {
-
+	public org.json.JSONObject getHelpMenu(String search) {
 		return _helpCategoryService.getHelpMenu(search);
 	}
 
@@ -55,7 +51,7 @@ public class HelpCategoryServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveHelpCategory(
+	public org.json.JSONObject saveHelpCategory(
 		String categoryName, long serviceId) {
 
 		return _helpCategoryService.saveHelpCategory(categoryName, serviceId);

@@ -33,9 +33,7 @@ public class HelpRelationServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.help.service.impl.HelpRelationServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject deleteRelation(
-		long relationId) {
-
+	public static org.json.JSONObject deleteRelation(long relationId) {
 		return getService().deleteRelation(relationId);
 	}
 
@@ -48,9 +46,7 @@ public class HelpRelationServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject saveRelation(
-		java.lang.String relation) {
-
+	public static org.json.JSONObject saveRelation(java.lang.String relation) {
 		return getService().saveRelation(relation);
 	}
 

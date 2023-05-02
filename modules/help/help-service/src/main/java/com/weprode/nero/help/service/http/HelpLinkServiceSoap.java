@@ -64,12 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class HelpLinkServiceSoap {
 
-	public static String saveLink(String link) throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				HelpLinkServiceUtil.saveLink(link);
+	public static org.json.JSONObject saveLink(String link)
+		throws RemoteException {
 
-			return returnValue.toString();
+		try {
+			org.json.JSONObject returnValue = HelpLinkServiceUtil.saveLink(
+				link);
+
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -78,12 +80,14 @@ public class HelpLinkServiceSoap {
 		}
 	}
 
-	public static String deleteLink(long linkId) throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				HelpLinkServiceUtil.deleteLink(linkId);
+	public static org.json.JSONObject deleteLink(long linkId)
+		throws RemoteException {
 
-			return returnValue.toString();
+		try {
+			org.json.JSONObject returnValue = HelpLinkServiceUtil.deleteLink(
+				linkId);
+
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
