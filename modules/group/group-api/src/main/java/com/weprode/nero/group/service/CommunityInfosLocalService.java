@@ -15,7 +15,6 @@
 package com.weprode.nero.group.service;
 
 import com.liferay.petra.sql.dsl.query.DSLQuery;
-import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
