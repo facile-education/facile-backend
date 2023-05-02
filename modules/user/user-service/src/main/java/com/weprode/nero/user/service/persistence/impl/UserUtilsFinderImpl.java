@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component(service = UserUtilsFinder.class)
-public class UserUtilsFinderImpl extends BasePersistenceImpl<UserUtils>
+public class UserUtilsFinderImpl extends UserUtilsFinderBaseImpl
         implements UserUtilsFinder {
 
     private static final Log logger = LogFactoryUtil.getLog(UserUtilsFinderImpl.class);
