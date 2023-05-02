@@ -52,7 +52,7 @@ import com.weprode.nero.progression.service.ProgressionServiceUtil;
  */
 public class ProgressionServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getProgressionList(
+	public static org.json.JSONObject getProgressionList(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -72,7 +72,7 @@ public class ProgressionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class ProgressionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getProgressionTree(
+	public static org.json.JSONObject getProgressionTree(
 		HttpPrincipal httpPrincipal, long progressionId) {
 
 		try {
@@ -104,7 +104,7 @@ public class ProgressionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -115,7 +115,7 @@ public class ProgressionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addProgression(
+	public static org.json.JSONObject addProgression(
 		HttpPrincipal httpPrincipal, String name, String description,
 		long subjectId, String volee, String color) {
 
@@ -137,7 +137,7 @@ public class ProgressionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -148,7 +148,7 @@ public class ProgressionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateProgression(
+	public static org.json.JSONObject updateProgression(
 		HttpPrincipal httpPrincipal, long progressionId, String name,
 		String description, long subjectId, String volee, String color) {
 
@@ -171,7 +171,7 @@ public class ProgressionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -182,7 +182,7 @@ public class ProgressionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteProgression(
+	public static org.json.JSONObject deleteProgression(
 		HttpPrincipal httpPrincipal, long progressionId) {
 
 		try {
@@ -203,7 +203,7 @@ public class ProgressionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

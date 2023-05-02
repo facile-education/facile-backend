@@ -14,9 +14,8 @@
 
 package com.weprode.nero.progression.model.impl;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.weprode.nero.commons.constants.JSONConstants;
+import org.json.JSONObject;
 
 /**
  * @author Brian Wing Shun Chan
@@ -24,7 +23,7 @@ import com.weprode.nero.commons.constants.JSONConstants;
 public class ItemAttachedFileImpl extends ItemAttachedFileBaseImpl {
 
     public JSONObject convertToJSON() {
-        JSONObject jsonAttachedFile = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonAttachedFile = new JSONObject();
 
         jsonAttachedFile.put(JSONConstants.ATTACHED_FILE_ID, this.getItemAttachedFileId());
         jsonAttachedFile.put(JSONConstants.ITEM_ID, this.getProgressionItemId());

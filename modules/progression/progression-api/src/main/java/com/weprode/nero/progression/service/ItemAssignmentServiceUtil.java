@@ -33,19 +33,19 @@ public class ItemAssignmentServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.progression.service.impl.ItemAssignmentServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject
-		addHomeworkAssignment(long itemId, java.lang.String homeworks) {
+	public static org.json.JSONObject addHomeworkAssignment(
+		long itemId, java.lang.String homeworks) {
 
 		return getService().addHomeworkAssignment(itemId, homeworks);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		addSessionAssignment(long itemId, long sessionId) {
+	public static org.json.JSONObject addSessionAssignment(
+		long itemId, long sessionId) {
 
 		return getService().addSessionAssignment(itemId, sessionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteAssignment(
+	public static org.json.JSONObject deleteAssignment(
 		long itemId, long sessionId) {
 
 		return getService().deleteAssignment(itemId, sessionId);

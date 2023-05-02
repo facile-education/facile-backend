@@ -64,14 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ProgressionFolderServiceSoap {
 
-	public static String getFolderContent(long folderId)
+	public static org.json.JSONObject getFolderContent(long folderId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionFolderServiceUtil.getFolderContent(folderId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -80,15 +80,16 @@ public class ProgressionFolderServiceSoap {
 		}
 	}
 
-	public static String addFolder(long progressionId, long parentFolderId)
+	public static org.json.JSONObject addFolder(
+			long progressionId, long parentFolderId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionFolderServiceUtil.addFolder(
 					progressionId, parentFolderId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -97,16 +98,16 @@ public class ProgressionFolderServiceSoap {
 		}
 	}
 
-	public static String updateFolder(
+	public static org.json.JSONObject updateFolder(
 			long folderId, long parentFolderId, String name, int order)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionFolderServiceUtil.updateFolder(
 					folderId, parentFolderId, name, order);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -115,12 +116,14 @@ public class ProgressionFolderServiceSoap {
 		}
 	}
 
-	public static String deleteFolder(long folderId) throws RemoteException {
+	public static org.json.JSONObject deleteFolder(long folderId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionFolderServiceUtil.deleteFolder(folderId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

@@ -52,9 +52,8 @@ import com.weprode.nero.progression.service.ItemAssignmentServiceUtil;
  */
 public class ItemAssignmentServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		addSessionAssignment(
-			HttpPrincipal httpPrincipal, long itemId, long sessionId) {
+	public static org.json.JSONObject addSessionAssignment(
+		HttpPrincipal httpPrincipal, long itemId, long sessionId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -74,7 +73,7 @@ public class ItemAssignmentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -85,9 +84,8 @@ public class ItemAssignmentServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		addHomeworkAssignment(
-			HttpPrincipal httpPrincipal, long itemId, String homeworks) {
+	public static org.json.JSONObject addHomeworkAssignment(
+		HttpPrincipal httpPrincipal, long itemId, String homeworks) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -107,7 +105,7 @@ public class ItemAssignmentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -118,7 +116,7 @@ public class ItemAssignmentServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteAssignment(
+	public static org.json.JSONObject deleteAssignment(
 		HttpPrincipal httpPrincipal, long itemId, long sessionId) {
 
 		try {
@@ -139,7 +137,7 @@ public class ItemAssignmentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

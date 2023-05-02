@@ -14,9 +14,8 @@
 
 package com.weprode.nero.progression.model.impl;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.weprode.nero.commons.constants.JSONConstants;
+import org.json.JSONObject;
 
 /**
  * @author Brian Wing Shun Chan
@@ -24,7 +23,7 @@ import com.weprode.nero.commons.constants.JSONConstants;
 public class ProgressionFolderImpl extends ProgressionFolderBaseImpl {
 
     public JSONObject convertToJSON() {
-        JSONObject jsonFolder = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonFolder = new JSONObject();
 
         jsonFolder.put(JSONConstants.FOLDER_ID, this.getProgressionFolderId());
         jsonFolder.put(JSONConstants.PARENT_ID, this.getParentFolderId());

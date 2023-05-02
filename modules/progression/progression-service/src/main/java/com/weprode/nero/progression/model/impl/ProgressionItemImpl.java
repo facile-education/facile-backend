@@ -14,9 +14,6 @@
 
 package com.weprode.nero.progression.model.impl;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
@@ -24,6 +21,8 @@ import com.weprode.nero.progression.model.ItemAssignment;
 import com.weprode.nero.progression.model.ItemContent;
 import com.weprode.nero.progression.service.ItemAssignmentLocalServiceUtil;
 import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -40,7 +39,7 @@ public class ProgressionItemImpl extends ProgressionItemBaseImpl {
     }
 
     public JSONObject convertToJSON(long userId, boolean isContentIncluded) {
-        JSONObject jsonItem = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonItem = new JSONObject();
 
         SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
@@ -53,14 +52,14 @@ public class ProgressionItemImpl extends ProgressionItemBaseImpl {
         jsonItem.put(JSONConstants.TYPE, this.getType());
         jsonItem.put(JSONConstants.DURATION, this.getDuration());
         jsonItem.put(JSONConstants.ORDER, this.getOrder());
-        jsonItem.put(JSONConstants.CONTENTS, JSONFactoryUtil.createJSONArray());
-        jsonItem.put(JSONConstants.ASSIGNMENTS, JSONFactoryUtil.createJSONArray());
+        jsonItem.put(JSONConstants.CONTENTS, new JSONArray());
+        jsonItem.put(JSONConstants.ASSIGNMENTS, new JSONArray());
 
         if (isContentIncluded) {
             try {
                 List<ItemContent> itemContents = ItemContentLocalServiceUtil.getContentsByItemId(this.getProgressionItemId());
 
-                JSONArray itemContentsArray = JSONFactoryUtil.createJSONArray();
+                JSONArray itemContentsArray = new JSONArray();
                 for (ItemContent itemContent : itemContents) {
                     itemContentsArray.put(itemContent.convertToJSON(true));
                 }
@@ -75,7 +74,7 @@ public class ProgressionItemImpl extends ProgressionItemBaseImpl {
         try {
             List<ItemAssignment> assignments = ItemAssignmentLocalServiceUtil.getItemAssignments(this.getProgressionItemId());
 
-            JSONArray assignmentArray = JSONFactoryUtil.createJSONArray();
+            JSONArray assignmentArray = new JSONArray();
             for (ItemAssignment assignment : assignments) {
                 assignmentArray.put(assignment.convertToJSON(userId));
             }

@@ -90,9 +90,7 @@ public class ItemAssignmentWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
-		long userId) {
-
+	public org.json.JSONObject convertToJSON(long userId) {
 		return model.convertToJSON(userId);
 	}
 

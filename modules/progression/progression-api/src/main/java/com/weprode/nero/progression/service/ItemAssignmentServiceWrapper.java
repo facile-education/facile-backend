@@ -33,23 +33,21 @@ public class ItemAssignmentServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addHomeworkAssignment(
+	public org.json.JSONObject addHomeworkAssignment(
 		long itemId, String homeworks) {
 
 		return _itemAssignmentService.addHomeworkAssignment(itemId, homeworks);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addSessionAssignment(
+	public org.json.JSONObject addSessionAssignment(
 		long itemId, long sessionId) {
 
 		return _itemAssignmentService.addSessionAssignment(itemId, sessionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteAssignment(
-		long itemId, long sessionId) {
-
+	public org.json.JSONObject deleteAssignment(long itemId, long sessionId) {
 		return _itemAssignmentService.deleteAssignment(itemId, sessionId);
 	}
 

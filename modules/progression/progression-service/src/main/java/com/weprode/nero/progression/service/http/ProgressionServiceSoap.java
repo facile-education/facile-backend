@@ -64,28 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ProgressionServiceSoap {
 
-	public static String getProgressionList() throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ProgressionServiceUtil.getProgressionList();
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getProgressionTree(long progressionId)
+	public static org.json.JSONObject getProgressionList()
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				ProgressionServiceUtil.getProgressionTree(progressionId);
+			org.json.JSONObject returnValue =
+				ProgressionServiceUtil.getProgressionList();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -94,17 +80,33 @@ public class ProgressionServiceSoap {
 		}
 	}
 
-	public static String addProgression(
+	public static org.json.JSONObject getProgressionTree(long progressionId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				ProgressionServiceUtil.getProgressionTree(progressionId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject addProgression(
 			String name, String description, long subjectId, String volee,
 			String color)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionServiceUtil.addProgression(
 					name, description, subjectId, volee, color);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -113,17 +115,17 @@ public class ProgressionServiceSoap {
 		}
 	}
 
-	public static String updateProgression(
+	public static org.json.JSONObject updateProgression(
 			long progressionId, String name, String description, long subjectId,
 			String volee, String color)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionServiceUtil.updateProgression(
 					progressionId, name, description, subjectId, volee, color);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -132,14 +134,14 @@ public class ProgressionServiceSoap {
 		}
 	}
 
-	public static String deleteProgression(long progressionId)
+	public static org.json.JSONObject deleteProgression(long progressionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ProgressionServiceUtil.deleteProgression(progressionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

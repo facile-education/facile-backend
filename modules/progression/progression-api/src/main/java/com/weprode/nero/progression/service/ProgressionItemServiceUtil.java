@@ -33,13 +33,13 @@ public class ProgressionItemServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.progression.service.impl.ProgressionItemServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject addItem(
+	public static org.json.JSONObject addItem(
 		long progressionId, long folderId, boolean isHomework) {
 
 		return getService().addItem(progressionId, folderId, isHomework);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addItemContent(
+	public static org.json.JSONObject addItemContent(
 		long itemId, int contentType, java.lang.String contentName,
 		java.lang.String fileName, java.io.File file) {
 
@@ -47,7 +47,7 @@ public class ProgressionItemServiceUtil {
 			itemId, contentType, contentName, fileName, file);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addItemContent(
+	public static org.json.JSONObject addItemContent(
 		long itemId, int contentType, java.lang.String contentName,
 		java.lang.String contentValue, long fileEntryId,
 		boolean isToBeCompleted) {
@@ -57,33 +57,25 @@ public class ProgressionItemServiceUtil {
 			isToBeCompleted);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteItem(
-		long itemId) {
-
+	public static org.json.JSONObject deleteItem(long itemId) {
 		return getService().deleteItem(itemId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteItemContent(
-		long contentId) {
-
+	public static org.json.JSONObject deleteItemContent(long contentId) {
 		return getService().deleteItemContent(contentId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getHomeworkSpecificContents(long homeworkId) {
+	public static org.json.JSONObject getHomeworkSpecificContents(
+		long homeworkId) {
 
 		return getService().getHomeworkSpecificContents(homeworkId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getItemContents(
-		long itemId) {
-
+	public static org.json.JSONObject getItemContents(long itemId) {
 		return getService().getItemContents(itemId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getItemPreview(
-		long itemId) {
-
+	public static org.json.JSONObject getItemPreview(long itemId) {
 		return getService().getItemPreview(itemId);
 	}
 
@@ -96,25 +88,23 @@ public class ProgressionItemServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSessionSpecificContents(long sessionId) {
+	public static org.json.JSONObject getSessionSpecificContents(
+		long sessionId) {
 
 		return getService().getSessionSpecificContents(sessionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveHomeworkSpecificItem(long homeworkId) {
+	public static org.json.JSONObject saveHomeworkSpecificItem(
+		long homeworkId) {
 
 		return getService().saveHomeworkSpecificItem(homeworkId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveSessionSpecificItem(long sessionId) {
-
+	public static org.json.JSONObject saveSessionSpecificItem(long sessionId) {
 		return getService().saveSessionSpecificItem(sessionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateItem(
+	public static org.json.JSONObject updateItem(
 		long itemId, long folderId, java.lang.String name, int type,
 		java.lang.String duration, int order) {
 
@@ -122,7 +112,7 @@ public class ProgressionItemServiceUtil {
 			itemId, folderId, name, type, duration, order);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateItemContent(
+	public static org.json.JSONObject updateItemContent(
 		long contentId, java.lang.String contentName,
 		java.lang.String contentValue, int order) {
 

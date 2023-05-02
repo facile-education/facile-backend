@@ -1,5 +1,8 @@
 package com.weprode.nero.commons.constants;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class JSONConstants {
 
     private JSONConstants() {
@@ -312,6 +315,9 @@ public class JSONConstants {
     public static final String IS_PROGRESSION_DRIVEN = "isProgressionDriven";
     public static final String PROGRESSION_URL = "progressionUrl";
     public static final String PROGRESSION_OWNER = "progressionOwner";
+    public static final String PROGRESSION = "progression";
+    public static final String SUB_SECTIONS = "subSections";
+    public static final String SECTIONS = "sections";
 
     // School life
     public static final String STUDENT_NAME = "studentName";
@@ -391,4 +397,11 @@ public class JSONConstants {
     public static final String FILE_SIZE_EXCEPTION = "fileSizeException";
     public static final String DUPLICATE_FILE_EXCEPTION = "DuplicateFileException";
 
+    public static long getLongValue(JSONObject object, String property, long defaultValue) {
+        try {
+            return object.getLong(property);
+        } catch (JSONException e) {
+            return defaultValue;
+        }
+    }
 }

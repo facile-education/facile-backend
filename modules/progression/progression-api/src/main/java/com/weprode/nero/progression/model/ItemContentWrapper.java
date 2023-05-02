@@ -118,9 +118,7 @@ public class ItemContentWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
-		boolean isContentIncluded) {
-
+	public org.json.JSONObject convertToJSON(boolean isContentIncluded) {
 		return model.convertToJSON(isContentIncluded);
 	}
 

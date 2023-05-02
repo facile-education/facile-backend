@@ -52,7 +52,7 @@ import com.weprode.nero.progression.service.ProgressionFolderServiceUtil;
  */
 public class ProgressionFolderServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getFolderContent(
+	public static org.json.JSONObject getFolderContent(
 		HttpPrincipal httpPrincipal, long folderId) {
 
 		try {
@@ -73,7 +73,7 @@ public class ProgressionFolderServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class ProgressionFolderServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addFolder(
+	public static org.json.JSONObject addFolder(
 		HttpPrincipal httpPrincipal, long progressionId, long parentFolderId) {
 
 		try {
@@ -105,7 +105,7 @@ public class ProgressionFolderServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -116,7 +116,7 @@ public class ProgressionFolderServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateFolder(
+	public static org.json.JSONObject updateFolder(
 		HttpPrincipal httpPrincipal, long folderId, long parentFolderId,
 		String name, int order) {
 
@@ -138,7 +138,7 @@ public class ProgressionFolderServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -149,7 +149,7 @@ public class ProgressionFolderServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteFolder(
+	public static org.json.JSONObject deleteFolder(
 		HttpPrincipal httpPrincipal, long folderId) {
 
 		try {
@@ -170,7 +170,7 @@ public class ProgressionFolderServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

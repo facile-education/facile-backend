@@ -64,15 +64,16 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ItemAssignmentServiceSoap {
 
-	public static String addSessionAssignment(long itemId, long sessionId)
+	public static org.json.JSONObject addSessionAssignment(
+			long itemId, long sessionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ItemAssignmentServiceUtil.addSessionAssignment(
 					itemId, sessionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -81,15 +82,16 @@ public class ItemAssignmentServiceSoap {
 		}
 	}
 
-	public static String addHomeworkAssignment(long itemId, String homeworks)
+	public static org.json.JSONObject addHomeworkAssignment(
+			long itemId, String homeworks)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ItemAssignmentServiceUtil.addHomeworkAssignment(
 					itemId, homeworks);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -98,14 +100,15 @@ public class ItemAssignmentServiceSoap {
 		}
 	}
 
-	public static String deleteAssignment(long itemId, long sessionId)
+	public static org.json.JSONObject deleteAssignment(
+			long itemId, long sessionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ItemAssignmentServiceUtil.deleteAssignment(itemId, sessionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

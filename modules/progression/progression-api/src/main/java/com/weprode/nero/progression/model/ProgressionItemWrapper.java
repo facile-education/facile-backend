@@ -132,14 +132,12 @@ public class ProgressionItemWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
-		long userId) {
-
+	public org.json.JSONObject convertToJSON(long userId) {
 		return model.convertToJSON(userId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
+	public org.json.JSONObject convertToJSON(
 		long userId, boolean isContentIncluded) {
 
 		return model.convertToJSON(userId, isContentIncluded);

@@ -33,7 +33,7 @@ public class ProgressionServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.progression.service.impl.ProgressionServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject addProgression(
+	public static org.json.JSONObject addProgression(
 		java.lang.String name, java.lang.String description, long subjectId,
 		java.lang.String volee, java.lang.String color) {
 
@@ -41,9 +41,7 @@ public class ProgressionServiceUtil {
 			name, description, subjectId, volee, color);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteProgression(
-		long progressionId) {
-
+	public static org.json.JSONObject deleteProgression(long progressionId) {
 		return getService().deleteProgression(progressionId);
 	}
 
@@ -56,19 +54,15 @@ public class ProgressionServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getProgressionList() {
-
+	public static org.json.JSONObject getProgressionList() {
 		return getService().getProgressionList();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getProgressionTree(
-		long progressionId) {
-
+	public static org.json.JSONObject getProgressionTree(long progressionId) {
 		return getService().getProgressionTree(progressionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateProgression(
+	public static org.json.JSONObject updateProgression(
 		long progressionId, java.lang.String name, java.lang.String description,
 		long subjectId, java.lang.String volee, java.lang.String color) {
 

@@ -2,9 +2,6 @@ package com.weprode.nero.progression.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -22,6 +19,8 @@ import com.weprode.nero.progression.service.ProgressionLocalServiceUtil;
 import com.weprode.nero.progression.service.base.ProgressionServiceBaseImpl;
 import com.weprode.nero.progression.utils.ProgressionUtils;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.List;
@@ -39,8 +38,8 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
 
     @JSONWebService(value = "get-progression-list", method = "GET")
     public JSONObject getProgressionList() {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -63,7 +62,7 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
             }
             List<Progression> teacherProgressions = ProgressionLocalServiceUtil.getTeacherProgressions(user.getUserId());
 
-            JSONArray progressionArray = JSONFactoryUtil.createJSONArray();
+            JSONArray progressionArray = new JSONArray();
             for (Progression progression : teacherProgressions) {
                 progressionArray.put(progression.convertToJSON());
             }
@@ -79,8 +78,8 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
 
     @JSONWebService(value = "get-progression-content", method = "GET")
     public JSONObject getProgressionTree(long progressionId) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -103,42 +102,42 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
             }
 
             Progression progression = ProgressionLocalServiceUtil.getProgression(progressionId);
-            result.put("progression", progression.convertToJSON());
+            result.put(JSONConstants.PROGRESSION, progression.convertToJSON());
 
             List<ProgressionFolder> sections = ProgressionFolderLocalServiceUtil.getProgressionRootFolders(progressionId);
-            JSONArray sectionsArray = JSONFactoryUtil.createJSONArray();
+            JSONArray sectionsArray = new JSONArray();
             for (ProgressionFolder section : sections) {
                 JSONObject jsonSection = section.convertToJSON();
 
                 // Get sub-sections
                 List<ProgressionFolder> subSections = ProgressionFolderLocalServiceUtil.getSubFolders(section.getProgressionFolderId());
-                JSONArray subSectionsArray = JSONFactoryUtil.createJSONArray();
+                JSONArray subSectionsArray = new JSONArray();
                 for (ProgressionFolder subSection : subSections) {
                     JSONObject jsonSubSection = subSection.convertToJSON();
 
                     // Get sub-section items without content
                     List<ProgressionItem> subSectionItems = ProgressionItemLocalServiceUtil.getFolderItems(subSection.getProgressionFolderId());
-                    JSONArray subSectionItemsArray = JSONFactoryUtil.createJSONArray();
+                    JSONArray subSectionItemsArray = new JSONArray();
                     for (ProgressionItem subSectionItem : subSectionItems) {
                         subSectionItemsArray.put(subSectionItem.convertToJSON(user.getUserId(), false));
                     }
-                    jsonSubSection.put("items", subSectionItemsArray);
+                    jsonSubSection.put(JSONConstants.ITEMS, subSectionItemsArray);
 
                     subSectionsArray.put(jsonSubSection);
                 }
-                jsonSection.put("subSections", subSectionsArray);
+                jsonSection.put(JSONConstants.SUB_SECTIONS, subSectionsArray);
 
                 // Get section items without content
                 List<ProgressionItem> sectionItems = ProgressionItemLocalServiceUtil.getFolderItems(section.getProgressionFolderId());
-                JSONArray sectionItemsArray = JSONFactoryUtil.createJSONArray();
+                JSONArray sectionItemsArray = new JSONArray();
                 for (ProgressionItem sectionItem : sectionItems) {
                     sectionItemsArray.put(sectionItem.convertToJSON(user.getUserId(), false));
                 }
-                jsonSection.put("items", sectionItemsArray);
+                jsonSection.put(JSONConstants.ITEMS, sectionItemsArray);
 
                 sectionsArray.put(jsonSection);
             }
-            result.put("sections", sectionsArray);
+            result.put(JSONConstants.SECTIONS, sectionsArray);
 
         } catch (Exception e) {
             logger.error("Could not get progression tree for progressionId="+progressionId, e);
@@ -150,8 +149,8 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
 
     @JSONWebService(value = "add-progression", method = "POST")
     public JSONObject addProgression(String name, String description, long subjectId, String volee, String color) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -185,8 +184,8 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
 
     @JSONWebService(value = "update-progression", method = "POST")
     public JSONObject updateProgression(long progressionId, String name, String description, long subjectId, String volee, String color) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();
@@ -218,8 +217,8 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
 
     @JSONWebService(value = "delete-progression", method = "DELETE")
     public JSONObject deleteProgression(long progressionId) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User user;
         try {
             user = getGuestOrUser();

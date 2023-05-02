@@ -64,14 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ItemAttachedFileServiceSoap {
 
-	public static String deleteAttachment(long attachmentId)
+	public static org.json.JSONObject deleteAttachment(long attachmentId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				ItemAttachedFileServiceUtil.deleteAttachment(attachmentId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
