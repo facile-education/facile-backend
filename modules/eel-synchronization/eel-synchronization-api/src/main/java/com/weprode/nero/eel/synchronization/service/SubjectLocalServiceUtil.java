@@ -286,7 +286,7 @@ public class SubjectLocalServiceUtil {
 		return getService().getSubjectsCount();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSubjectsJSON() {
+	public static org.json.JSONObject getSubjectsJSON() {
 		return getService().getSubjectsJSON();
 	}
 

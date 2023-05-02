@@ -1,7 +1,7 @@
 package com.weprode.nero.eel.synchronization.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.weprode.nero.eel.synchronization.service.SubjectLocalServiceUtil;
 import com.weprode.nero.eel.synchronization.service.base.SubjectServiceBaseImpl;

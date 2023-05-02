@@ -128,7 +128,7 @@ public class GVESynchronizationManager {
                 String content = "Une erreur LDAP est survenue lors de la synchro qui a donc été arrêtée.";
                 // TODO Messaging
                 /*InternalMessageLocalServiceUtil.sendInternalMessage(administrator, recipientList, subject, content,
-                        JSONFactoryUtil.createJSONArray(), 0, 0);*/
+                        new JSONArray(), 0, 0);*/
             } catch (Exception e1) {
                 logger.error("Couldn't find admin user", e1);
             }

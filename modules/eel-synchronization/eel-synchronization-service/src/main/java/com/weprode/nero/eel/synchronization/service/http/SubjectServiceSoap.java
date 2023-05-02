@@ -64,12 +64,11 @@ import java.rmi.RemoteException;
 @Deprecated
 public class SubjectServiceSoap {
 
-	public static String getSubjects() throws RemoteException {
+	public static org.json.JSONObject getSubjects() throws RemoteException {
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				SubjectServiceUtil.getSubjects();
+			org.json.JSONObject returnValue = SubjectServiceUtil.getSubjects();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

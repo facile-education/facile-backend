@@ -41,7 +41,7 @@ public class SubjectServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSubjects() {
+	public org.json.JSONObject getSubjects() {
 		return _subjectService.getSubjects();
 	}
 

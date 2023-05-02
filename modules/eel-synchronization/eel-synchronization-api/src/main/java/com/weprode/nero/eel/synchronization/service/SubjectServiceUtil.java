@@ -43,7 +43,7 @@ public class SubjectServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSubjects() {
+	public static org.json.JSONObject getSubjects() {
 		return getService().getSubjects();
 	}
 

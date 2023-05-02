@@ -52,9 +52,7 @@ import com.weprode.nero.eel.synchronization.service.SubjectServiceUtil;
  */
 public class SubjectServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getSubjects(
-		HttpPrincipal httpPrincipal) {
-
+	public static org.json.JSONObject getSubjects(HttpPrincipal httpPrincipal) {
 		try {
 			MethodKey methodKey = new MethodKey(
 				SubjectServiceUtil.class, "getSubjects",
@@ -72,7 +70,7 @@ public class SubjectServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

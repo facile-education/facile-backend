@@ -2,9 +2,9 @@ package com.weprode.nero.eel.synchronization.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
@@ -71,9 +71,9 @@ public class SubjectLocalServiceImpl extends SubjectLocalServiceBaseImpl {
     }
 
     public JSONObject getSubjectsJSON() {
-        JSONObject ret = JSONFactoryUtil.createJSONObject();
+        JSONObject ret = new JSONObject();
 
-        JSONArray jsonSubjects = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonSubjects = new JSONArray();
 
         List<Subject> subjectList = new ArrayList<>();
         try {
@@ -83,7 +83,7 @@ public class SubjectLocalServiceImpl extends SubjectLocalServiceBaseImpl {
         }
 
         for (Subject subject : subjectList) {
-            JSONObject jsonSubject = JSONFactoryUtil.createJSONObject();
+            JSONObject jsonSubject = new JSONObject();
             jsonSubject.put(JSONConstants.SUBJECT_ID, subject.getSubjectId());
             jsonSubject.put(JSONConstants.NAME, subject.getName());
             jsonSubjects.put(jsonSubject);

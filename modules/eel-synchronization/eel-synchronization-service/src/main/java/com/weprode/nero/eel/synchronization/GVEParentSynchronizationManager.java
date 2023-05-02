@@ -888,7 +888,7 @@ public class GVEParentSynchronizationManager {
         String subject = "Echec de la synchronisation des parents";
         // TODO Messaging
         /*InternalMessageLocalServiceUtil.sendInternalMessage(administrator, recipientList, subject, content,
-                JSONFactoryUtil.createJSONArray(), 0, 0);*/
+                new JSONArray(), 0, 0);*/
     }
 
     private static class GVEParent {
