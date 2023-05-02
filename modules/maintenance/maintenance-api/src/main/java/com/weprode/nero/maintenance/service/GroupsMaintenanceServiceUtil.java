@@ -33,19 +33,15 @@ public class GroupsMaintenanceServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.maintenance.service.impl.GroupsMaintenanceServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject archiveGroups() {
+	public static org.json.JSONObject archiveGroups() {
 		return getService().archiveGroups();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteGroup(
-		long groupId) {
-
+	public static org.json.JSONObject deleteGroup(long groupId) {
 		return getService().deleteGroup(groupId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteGroups(
-		java.io.File file) {
-
+	public static org.json.JSONObject deleteGroups(java.io.File file) {
 		return getService().deleteGroups(file);
 	}
 

@@ -16,8 +16,9 @@ package com.weprode.nero.maintenance.service.impl;
 
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import com.weprode.nero.commons.constants.JSONConstants;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -63,19 +64,19 @@ public class GroupsMaintenanceServiceImpl
 
 	@JSONWebService(value = "archive-groups", method = "POST")
 	public JSONObject archiveGroups () {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put("error", "NOT_ALLOWED_EXCEPTION");
-				result.put("success", false);
+				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
-			result.put("error", "NOT_ALLOWED_EXCEPTION");
-			result.put("success", false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
@@ -95,7 +96,7 @@ public class GroupsMaintenanceServiceImpl
 			String archiveSuffix = f.format(lastSchoolYearStartDate) + "/" + f.format(currentSchoolYearStartDate);
 
 			if (Validator.isNull(archiveSuffix)) {
-				result.put("success", false);
+				result.put(JSONConstants.SUCCESS, false);
 			} else {
 				// Loop over all schools
 				List<Organization> schools = OrgUtilsLocalServiceUtil.getAllSchools();
@@ -150,37 +151,37 @@ public class GroupsMaintenanceServiceImpl
 				}
 			}
 			logger.info("Number of archived orgs : " + nbArchivedOrgs);
-			result.put("success", true);
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error in archiving process", e);
-			result.put("success", false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
 	}
 
 	@JSONWebService(value = "delete-group", method = "POST")
 	public JSONObject deleteGroup (long groupId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put("error", "NOT_ALLOWED_EXCEPTION");
-				result.put("success", false);
+				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
-			result.put("error", "NOT_ALLOWED_EXCEPTION");
-			result.put("success", false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
 		logger.warn("Param groupId = "+groupId);
 
 		GroupUtilsLocalServiceUtil.groupCleanup(groupId);
-		result.put("success", true);
+		result.put(JSONConstants.SUCCESS, true);
 
 		return result;
 	}
@@ -188,25 +189,25 @@ public class GroupsMaintenanceServiceImpl
 	@JSONWebService(value = "delete-groups", method = "POST")
 	public JSONObject deleteGroups (File file) {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put("error", "NOT_ALLOWED_EXCEPTION");
-				result.put("success", false);
+				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
-			result.put("error", "NOT_ALLOWED_EXCEPTION");
-			result.put("success", false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
 
 		GroupCleanupUtil.multipleGroupCleanup(file);
-		result.put("success", true);
+		result.put(JSONConstants.SUCCESS, true);
 
 		return result;
 	}

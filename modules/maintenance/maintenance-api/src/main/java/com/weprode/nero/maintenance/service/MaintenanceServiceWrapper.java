@@ -41,27 +41,27 @@ public class MaintenanceServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject runAnonymisation() {
+	public org.json.JSONObject runAnonymisation() {
 		return _maintenanceService.runAnonymisation();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject startFsAnalysis() {
+	public org.json.JSONObject startFsAnalysis() {
 		return _maintenanceService.startFsAnalysis();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject startFsAnalysisV2() {
+	public org.json.JSONObject startFsAnalysisV2() {
 		return _maintenanceService.startFsAnalysisV2();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject startParentSynchro() {
+	public org.json.JSONObject startParentSynchro() {
 		return _maintenanceService.startParentSynchro();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject startSynchro() {
+	public org.json.JSONObject startSynchro() {
 		return _maintenanceService.startSynchro();
 	}
 

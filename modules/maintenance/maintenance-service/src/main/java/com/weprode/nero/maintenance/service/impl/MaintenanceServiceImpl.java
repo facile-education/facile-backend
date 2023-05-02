@@ -15,19 +15,17 @@
 package com.weprode.nero.maintenance.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.eel.synchronization.service.SynchronizationLocalServiceUtil;
 import com.weprode.nero.maintenance.AnonymizationUtil;
 import com.weprode.nero.maintenance.FsManagement;
 import com.weprode.nero.maintenance.service.base.MaintenanceServiceBaseImpl;
-
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -47,29 +45,29 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 	@JSONWebService(value = "start-synchro", method = "POST")
 	public JSONObject startSynchro() {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put("error", "NOT_ALLOWED_EXCEPTION");
-				result.put("success", false);
+				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
-			result.put("error", "NOT_ALLOWED_EXCEPTION");
-			result.put("success", false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
 		try {
 			SynchronizationLocalServiceUtil.runGVESynchronization();
-			result.put("success", true);
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error running message migration", e);
-			result.put("success", false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
 	}
@@ -77,29 +75,29 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 	@JSONWebService(value = "start-parent-synchro", method = "POST")
 	public JSONObject startParentSynchro() {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put("error", "NOT_ALLOWED_EXCEPTION");
-				result.put("success", false);
+				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
-			result.put("error", "NOT_ALLOWED_EXCEPTION");
-			result.put("success", false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
 		try {
 			SynchronizationLocalServiceUtil.runGVEParentSynchronization();
-			result.put("success", true);
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error running message migration", e);
-			result.put("success", false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
 	}
@@ -107,19 +105,19 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 	@JSONWebService(value = "start-fs-analysis", method = "POST")
 	public JSONObject startFsAnalysis() {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put("error", "NOT_ALLOWED_EXCEPTION");
-				result.put("success", false);
+				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
-			result.put("error", "NOT_ALLOWED_EXCEPTION");
-			result.put("success", false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
@@ -127,11 +125,11 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			logger.info("Start exploring file system");
 			FsManagement fsManagement = new FsManagement();
 			fsManagement.exploreFileSystem();
-			result.put("success", true);
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error running file system exploration", e);
-			result.put("success", false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
 	}
@@ -139,19 +137,19 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 	@JSONWebService(value = "start-fs-analysis-v2", method = "POST")
 	public JSONObject startFsAnalysisV2() {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put("error", "NOT_ALLOWED_EXCEPTION");
-				result.put("success", false);
+				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
-			result.put("error", "NOT_ALLOWED_EXCEPTION");
-			result.put("success", false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
@@ -159,11 +157,11 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			logger.info("Start exploring DB");
 			FsManagement fsManagement = new FsManagement();
 			fsManagement.exploreDB();
-			result.put("success", true);
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error running file system exploration", e);
-			result.put("success", false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
 	}
@@ -171,29 +169,29 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 	@JSONWebService(value = "run-anonymisation", method = "POST")
 	public JSONObject runAnonymisation() {
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put("error", "NOT_ALLOWED_EXCEPTION");
-				result.put("success", false);
+				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
-			result.put("error", "NOT_ALLOWED_EXCEPTION");
-			result.put("success", false);
+			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
 		try {
 			AnonymizationUtil.anonymize();
-			result.put("success", true);
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error running file system exploration", e);
-			result.put("success", false);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
 	}

@@ -53,12 +53,12 @@ import java.rmi.RemoteException;
 @Deprecated
 public class MaintenanceServiceSoap {
 
-	public static String startSynchro() throws RemoteException {
+	public static org.json.JSONObject startSynchro() throws RemoteException {
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				MaintenanceServiceUtil.startSynchro();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -67,12 +67,14 @@ public class MaintenanceServiceSoap {
 		}
 	}
 
-	public static String startParentSynchro() throws RemoteException {
+	public static org.json.JSONObject startParentSynchro()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				MaintenanceServiceUtil.startParentSynchro();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -81,12 +83,12 @@ public class MaintenanceServiceSoap {
 		}
 	}
 
-	public static String startFsAnalysis() throws RemoteException {
+	public static org.json.JSONObject startFsAnalysis() throws RemoteException {
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				MaintenanceServiceUtil.startFsAnalysis();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -95,12 +97,14 @@ public class MaintenanceServiceSoap {
 		}
 	}
 
-	public static String startFsAnalysisV2() throws RemoteException {
+	public static org.json.JSONObject startFsAnalysisV2()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				MaintenanceServiceUtil.startFsAnalysisV2();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -109,12 +113,14 @@ public class MaintenanceServiceSoap {
 		}
 	}
 
-	public static String runAnonymisation() throws RemoteException {
+	public static org.json.JSONObject runAnonymisation()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				MaintenanceServiceUtil.runAnonymisation();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

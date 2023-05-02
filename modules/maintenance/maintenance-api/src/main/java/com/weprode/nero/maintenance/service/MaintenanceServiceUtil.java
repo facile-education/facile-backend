@@ -43,27 +43,23 @@ public class MaintenanceServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject runAnonymisation() {
+	public static org.json.JSONObject runAnonymisation() {
 		return getService().runAnonymisation();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject startFsAnalysis() {
+	public static org.json.JSONObject startFsAnalysis() {
 		return getService().startFsAnalysis();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		startFsAnalysisV2() {
-
+	public static org.json.JSONObject startFsAnalysisV2() {
 		return getService().startFsAnalysisV2();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		startParentSynchro() {
-
+	public static org.json.JSONObject startParentSynchro() {
 		return getService().startParentSynchro();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject startSynchro() {
+	public static org.json.JSONObject startSynchro() {
 		return getService().startSynchro();
 	}
 

@@ -52,7 +52,7 @@ import com.weprode.nero.maintenance.service.MaintenanceServiceUtil;
  */
 public class MaintenanceServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject startSynchro(
+	public static org.json.JSONObject startSynchro(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -72,7 +72,7 @@ public class MaintenanceServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject startParentSynchro(
+	public static org.json.JSONObject startParentSynchro(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -103,7 +103,7 @@ public class MaintenanceServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -114,7 +114,7 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject startFsAnalysis(
+	public static org.json.JSONObject startFsAnalysis(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -134,7 +134,7 @@ public class MaintenanceServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -145,7 +145,7 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject startFsAnalysisV2(
+	public static org.json.JSONObject startFsAnalysisV2(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -165,7 +165,7 @@ public class MaintenanceServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -176,7 +176,7 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject runAnonymisation(
+	public static org.json.JSONObject runAnonymisation(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -196,7 +196,7 @@ public class MaintenanceServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

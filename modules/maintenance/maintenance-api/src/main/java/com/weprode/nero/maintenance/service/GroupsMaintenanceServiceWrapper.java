@@ -34,19 +34,17 @@ public class GroupsMaintenanceServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject archiveGroups() {
+	public org.json.JSONObject archiveGroups() {
 		return _groupsMaintenanceService.archiveGroups();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteGroup(long groupId) {
+	public org.json.JSONObject deleteGroup(long groupId) {
 		return _groupsMaintenanceService.deleteGroup(groupId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteGroups(
-		java.io.File file) {
-
+	public org.json.JSONObject deleteGroups(java.io.File file) {
 		return _groupsMaintenanceService.deleteGroups(file);
 	}
 

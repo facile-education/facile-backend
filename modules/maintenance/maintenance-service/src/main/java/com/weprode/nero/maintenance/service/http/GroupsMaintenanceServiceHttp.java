@@ -52,7 +52,7 @@ import com.weprode.nero.maintenance.service.GroupsMaintenanceServiceUtil;
  */
 public class GroupsMaintenanceServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject archiveGroups(
+	public static org.json.JSONObject archiveGroups(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -72,7 +72,7 @@ public class GroupsMaintenanceServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class GroupsMaintenanceServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteGroup(
+	public static org.json.JSONObject deleteGroup(
 		HttpPrincipal httpPrincipal, long groupId) {
 
 		try {
@@ -103,7 +103,7 @@ public class GroupsMaintenanceServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -114,7 +114,7 @@ public class GroupsMaintenanceServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteGroups(
+	public static org.json.JSONObject deleteGroups(
 		HttpPrincipal httpPrincipal, java.io.File file) {
 
 		try {
@@ -134,7 +134,7 @@ public class GroupsMaintenanceServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

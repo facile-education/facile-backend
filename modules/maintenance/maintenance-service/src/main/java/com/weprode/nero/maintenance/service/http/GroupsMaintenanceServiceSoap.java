@@ -53,12 +53,12 @@ import java.rmi.RemoteException;
 @Deprecated
 public class GroupsMaintenanceServiceSoap {
 
-	public static String archiveGroups() throws RemoteException {
+	public static org.json.JSONObject archiveGroups() throws RemoteException {
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupsMaintenanceServiceUtil.archiveGroups();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -67,12 +67,14 @@ public class GroupsMaintenanceServiceSoap {
 		}
 	}
 
-	public static String deleteGroup(long groupId) throws RemoteException {
+	public static org.json.JSONObject deleteGroup(long groupId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupsMaintenanceServiceUtil.deleteGroup(groupId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
