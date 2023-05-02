@@ -347,6 +347,37 @@ public class JSONConstants {
     public static final String SCHOOL_NEWS_COUNT = "schoolNewsCount";
     public static final String GROUP_NEWS_COUNT = "groupNewsCount";
 
+    // Help
+    public static final String HELP_TREE = "helpTree";
+    public static final String HELP_ITEM = "helpItem";
+    // Help category
+    public static final String CATEGORY_ID = "categoryId";
+    public static final String CATEGORY_NAME = "categoryName";
+    // Help item
+    public static final String ITEM_NAME = "itemName";
+    public static final String VIDEO_URL = "videoUrl";
+    public static final String VIDEO_DESCRIPTION = "videoDescription";
+    public static final String MANUAL = "manual";
+    public static final String LANGUAGE = "language";
+    public static final String IS_FETCHED = "isFetched";
+    public static final String IS_MANAGEMENT = "isManagement";
+    // Help questions
+    public static final String QUESTION_ID = "questionId";
+    public static final String QUESTION = "question";
+    public static final String ANSWER = "answer";
+    public static final String QUESTIONS = "questions";
+    // Help relations
+    public static final String RELATION_ID = "relationId";
+    public static final String RELATED_ITEM_ID = "relatedItemId";
+    public static final String RELATED_ITEM_NAME = "relatedItemName";
+    public static final String RELATIONS = "relations";
+    public static final String RELATION = "relation";
+    // Help links
+    public static final String LINK_ID = "linkId";
+    public static final String LINK_URL = "linkUrl";
+    public static final String LINK_NAME = "linkName";
+    public static final String LINKS = "links";
+
     // Success
     public static final String SUCCESS = "success";
 
