@@ -31,23 +31,21 @@ public class GroupUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getGroupActivity(
+	public org.json.JSONObject getGroupActivity(
 		long groupId, String maxDate, int nbResults) {
 
 		return _groupUtilsService.getGroupActivity(groupId, maxDate, nbResults);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getGroupHistory(
+	public org.json.JSONObject getGroupHistory(
 		long groupId, String maxDate, int nbResults) {
 
 		return _groupUtilsService.getGroupHistory(groupId, maxDate, nbResults);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getGroupMembers(
-		long groupId) {
-
+	public org.json.JSONObject getGroupMembers(long groupId) {
 		return _groupUtilsService.getGroupMembers(groupId);
 	}
 
@@ -62,7 +60,7 @@ public class GroupUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSpecificGroupActivities(
+	public org.json.JSONObject getSpecificGroupActivities(
 		long groupId, String maxDate, int nbResults, boolean allHistory,
 		boolean containNews, boolean containDocs, boolean containMembership,
 		boolean containPendingFirings, boolean containFirings,
@@ -75,7 +73,7 @@ public class GroupUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getUserCollaborativeGroups(
+	public org.json.JSONObject getUserCollaborativeGroups(
 		String filter, boolean allCommunities, boolean allClasses,
 		boolean allCours) {
 
@@ -84,7 +82,7 @@ public class GroupUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getUserGroups(
+	public org.json.JSONObject getUserGroups(
 		long schoolId, boolean includeInstitutional, boolean includeCommunities,
 		boolean pedagogicalOnly) {
 
@@ -94,7 +92,7 @@ public class GroupUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getUsersCompletion(
+	public org.json.JSONObject getUsersCompletion(
 		String query, long schoolId, long roleId) {
 
 		return _groupUtilsService.getUsersCompletion(query, schoolId, roleId);

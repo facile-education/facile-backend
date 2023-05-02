@@ -1,8 +1,8 @@
 package com.weprode.nero.group.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -204,7 +204,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
     }
 
     public JSONObject convertGroupActivity(long userId, GroupActivity groupActivity) {
-        JSONObject jsonActivity = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonActivity = new JSONObject();
 
         try {
             if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_NEWS) {
@@ -223,11 +223,11 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI) {
                 Renvoi renvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
-                jsonActivity = RenvoiLocalServiceUtil.convertRenvoiToJson(renvoi);
+                // jsonActivity = RenvoiLocalServiceUtil.convertRenvoiToJson(renvoi);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI) {
                 Renvoi schoolRenvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
-                jsonActivity = RenvoiLocalServiceUtil.convertSchoolRenvoi(schoolRenvoi);
+                // jsonActivity = RenvoiLocalServiceUtil.convertSchoolRenvoi(schoolRenvoi);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_HOMEWORK) {
 

@@ -69,8 +69,8 @@ public class MembershipActivityLocalServiceUtil {
 		return getService().addMembershipActivity(membershipActivity);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		convertMembershipActivityToJson(MembershipActivity membershipActivity) {
+	public static org.json.JSONObject convertMembershipActivityToJson(
+		MembershipActivity membershipActivity) {
 
 		return getService().convertMembershipActivityToJson(membershipActivity);
 	}

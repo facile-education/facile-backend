@@ -53,18 +53,18 @@ import java.rmi.RemoteException;
 @Deprecated
 public class GroupUtilsServiceSoap {
 
-	public static String getUserGroups(
+	public static org.json.JSONObject getUserGroups(
 			long schoolId, boolean includeInstitutional,
 			boolean includeCommunities, boolean pedagogicalOnly)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupUtilsServiceUtil.getUserGroups(
 					schoolId, includeInstitutional, includeCommunities,
 					pedagogicalOnly);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -73,17 +73,17 @@ public class GroupUtilsServiceSoap {
 		}
 	}
 
-	public static String getUserCollaborativeGroups(
+	public static org.json.JSONObject getUserCollaborativeGroups(
 			String filter, boolean allCommunities, boolean allClasses,
 			boolean allCours)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupUtilsServiceUtil.getUserCollaborativeGroups(
 					filter, allCommunities, allClasses, allCours);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -92,16 +92,16 @@ public class GroupUtilsServiceSoap {
 		}
 	}
 
-	public static String getUsersCompletion(
+	public static org.json.JSONObject getUsersCompletion(
 			String query, long schoolId, long roleId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupUtilsServiceUtil.getUsersCompletion(
 					query, schoolId, roleId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -110,12 +110,14 @@ public class GroupUtilsServiceSoap {
 		}
 	}
 
-	public static String getGroupMembers(long groupId) throws RemoteException {
+	public static org.json.JSONObject getGroupMembers(long groupId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupUtilsServiceUtil.getGroupMembers(groupId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -124,16 +126,16 @@ public class GroupUtilsServiceSoap {
 		}
 	}
 
-	public static String getGroupActivity(
+	public static org.json.JSONObject getGroupActivity(
 			long groupId, String maxDate, int nbResults)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupUtilsServiceUtil.getGroupActivity(
 					groupId, maxDate, nbResults);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -142,7 +144,7 @@ public class GroupUtilsServiceSoap {
 		}
 	}
 
-	public static String getSpecificGroupActivities(
+	public static org.json.JSONObject getSpecificGroupActivities(
 			long groupId, String maxDate, int nbResults, boolean allHistory,
 			boolean containNews, boolean containDocs, boolean containMembership,
 			boolean containPendingFirings, boolean containFirings,
@@ -150,13 +152,13 @@ public class GroupUtilsServiceSoap {
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupUtilsServiceUtil.getSpecificGroupActivities(
 					groupId, maxDate, nbResults, allHistory, containNews,
 					containDocs, containMembership, containPendingFirings,
 					containFirings, containHomework, containSessions);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -165,16 +167,16 @@ public class GroupUtilsServiceSoap {
 		}
 	}
 
-	public static String getGroupHistory(
+	public static org.json.JSONObject getGroupHistory(
 			long groupId, String maxDate, int nbResults)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GroupUtilsServiceUtil.getGroupHistory(
 					groupId, maxDate, nbResults);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

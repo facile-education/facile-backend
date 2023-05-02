@@ -33,14 +33,12 @@ public class CommunityInfosServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject checkCommunityName(
-		String communityName) {
-
+	public org.json.JSONObject checkCommunityName(String communityName) {
 		return _communityInfosService.checkCommunityName(communityName);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createCommunity(
+	public org.json.JSONObject createCommunity(
 		String groupName, String description, boolean isPedagogical,
 		String members, String color) {
 
@@ -49,7 +47,7 @@ public class CommunityInfosServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject editCommunity(
+	public org.json.JSONObject editCommunity(
 		long groupId, String groupName, String description,
 		boolean isPedagogical, String members, String color) {
 
@@ -58,9 +56,7 @@ public class CommunityInfosServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject extendCommunity(
-		long groupId) {
-
+	public org.json.JSONObject extendCommunity(long groupId) {
 		return _communityInfosService.extendCommunity(groupId);
 	}
 
@@ -75,9 +71,7 @@ public class CommunityInfosServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject removeCommunity(
-		long groupId) {
-
+	public org.json.JSONObject removeCommunity(long groupId) {
 		return _communityInfosService.removeCommunity(groupId);
 	}
 

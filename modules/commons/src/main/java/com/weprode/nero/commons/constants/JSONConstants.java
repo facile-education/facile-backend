@@ -172,6 +172,11 @@ public class JSONConstants {
     public static final String FILE_LINK = "fileLink";
     public static final String FILE_ID = "fileId";
     public static final String FOLDER_LINK = "folderLink";
+    public static final String ACTION_USER_ID = "actionUserId";
+    public static final String ACTION_USER_NAME = "actionUserName";
+    public static final String TARGET_USER_NAMES = "targetUserNames";
+    public static final String SHORT_TARGET_USER_NAMES = "shortTargetUserNames";
+    public static final String GROUP_LINK = "groupLink";
 
     // Menu
     public static final String MENU = "menu";
