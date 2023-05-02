@@ -20,7 +20,9 @@
 		<field name="progressionItemId" type="long" />
 		<field name="modifiedDate" type="Date" />
 		<field name="contentName" type="String" />
-		<field name="contentValue" type="String" />
+		<field name="contentValue" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
 		<field name="fileEntryId" type="long" />
 		<field name="contentType" type="int" />
 		<field name="order" type="int" />

@@ -20,7 +20,7 @@ create table Progression_ItemContent (
 	progressionItemId LONG,
 	modifiedDate DATE null,
 	contentName VARCHAR(75) null,
-	contentValue VARCHAR(75) null,
+	contentValue STRING null,
 	fileEntryId LONG,
 	contentType INTEGER,
 	order_ INTEGER,

@@ -91,7 +91,7 @@ public class ItemContentModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Progression_ItemContent (contentId LONG not null primary key,progressionItemId LONG,modifiedDate DATE null,contentName VARCHAR(75) null,contentValue VARCHAR(75) null,fileEntryId LONG,contentType INTEGER,order_ INTEGER,isToBeCompleted BOOLEAN)";
+		"create table Progression_ItemContent (contentId LONG not null primary key,progressionItemId LONG,modifiedDate DATE null,contentName VARCHAR(75) null,contentValue STRING null,fileEntryId LONG,contentType INTEGER,order_ INTEGER,isToBeCompleted BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Progression_ItemContent";
