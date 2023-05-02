@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.help">
+	<namespace>Help</namespace>
+
+	<!-- Help category -->
+	<entity name="HelpCategory" local-service="true" remote-service="true">
+		<column name="categoryId" type="long" primary="true" />
+		<column name="categoryName" type="String" />
+		<column name="serviceId" type="long" />
+		<column name="position" type="int"/>
+	</entity>
+
+	<!-- Help item -->
+	<entity name="HelpItem" local-service="true" remote-service="true">
+		<column name="itemId" type="long" primary="true" />
+		<column name="categoryId" type="long" />
+		<column name="itemName" type="String" />
+		<column name="videoURL" type="String" />
+		<column name="videoDescription" type="String" />
+		<column name="manual" type="String" />
+		<column name="position" type="int" />
+		<column name="language" type="String" />
+		<column name="isManagement" type="boolean" />
+
+		<finder return-type="Collection" name="categoryId">
+			<finder-column name="categoryId" />
+		</finder>
+	</entity>
+
+	<!-- Help item role -->
+	<entity name="HelpItemRole" local-service="true" remote-service="false">
+		<column name="helpItemRoleId" type="long" primary="true" />
+		<column name="itemId" type="long" />
+		<column name="roleId" type="long" />
+
+		<finder return-type="Collection" name="itemId">
+			<finder-column name="itemId" />
+		</finder>
+	</entity>
+
+	<!-- Help question -->
+	<entity name="HelpQuestion" local-service="true" remote-service="false">
+		<column name="questionId" type="long" primary="true" />
+		<column name="itemId" type="long" />
+		<column name="question" type="String" />
+		<column name="answer" type="String" />
+
+		<finder return-type="Collection" name="itemId">
+			<finder-column name="itemId" />
+		</finder>
+	</entity>
+
+	<!-- Help Relation -->
+	<entity name="HelpRelation" local-service="true" remote-service="true">
+		<column name="relationId" type="long" primary="true" />
+		<column name="itemId" type="long" />
+		<column name="relatedItemId" type="long" />
+
+		<finder return-type="Collection" name="itemId">
+			<finder-column name="itemId" />
+		</finder>
+	</entity>
+
+	<!-- Help Link -->
+	<entity name="HelpLink" local-service="true" remote-service="true">
+		<column name="linkId" type="long" primary="true" />
+		<column name="itemId" type="long" />
+		<column name="linkName" type="String" />
+		<column name="linkUrl" type="String" />
+
+		<finder return-type="Collection" name="itemId">
+			<finder-column name="itemId" />
+		</finder>
+	</entity>
+</service-builder>
