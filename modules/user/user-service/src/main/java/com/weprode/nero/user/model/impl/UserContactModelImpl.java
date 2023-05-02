@@ -100,7 +100,7 @@ public class UserContactModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table User_UserContact (contactId LONG not null primary key,userId LONG,middleNames VARCHAR(75) null,birthName VARCHAR(75) null,address VARCHAR(75) null,isAddressAuthorized BOOLEAN,mail VARCHAR(75) null,isMailAuthorized BOOLEAN,mobilePhone VARCHAR(75) null,mobilePhoneSMS VARCHAR(75) null,homePhone VARCHAR(75) null,proPhone VARCHAR(75) null,familyLink VARCHAR(75) null)";
+		"create table User_UserContact (contactId LONG not null primary key,userId LONG,middleNames VARCHAR(75) null,birthName VARCHAR(75) null,address VARCHAR(200) null,isAddressAuthorized BOOLEAN,mail VARCHAR(150) null,isMailAuthorized BOOLEAN,mobilePhone VARCHAR(75) null,mobilePhoneSMS VARCHAR(75) null,homePhone VARCHAR(75) null,proPhone VARCHAR(75) null,familyLink VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table User_UserContact";
 
