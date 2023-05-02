@@ -6,6 +6,7 @@ dependencies {
 	compile project(":modules:preference:preference-api")
 	compile project(":modules:document:document-api")
 	compile project(":modules:schedule:schedule-api")
+	compile project(":modules:school-life:school-life-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 }

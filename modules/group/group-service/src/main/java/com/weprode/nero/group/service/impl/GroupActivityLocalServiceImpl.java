@@ -24,6 +24,9 @@ import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.StudentHomeworkLocalServiceUtil;
+import com.weprode.nero.school.life.model.Renvoi;
+import com.weprode.nero.school.life.service.RenvoiLocalServiceUtil;
+import com.weprode.nero.school.life.service.persistence.RenvoiPK;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -119,8 +122,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Teachers see their pending renvois
-                // TODO HHC
-                /* if (!allHistory && containPendingFirings) {
+                if (!allHistory && containPendingFirings) {
                     List<Renvoi> pendingRenvois = RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId());
 
                     if (!pendingRenvois.isEmpty()) logger.info("Got "+pendingRenvois.size()+" pending renvois");
@@ -150,7 +152,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                             groupActivities.add(schoolRenvoiActivity);
                         }
                     }
-                }*/
+                }
 
                 // Homeworks given
                 if (containHomework) {
@@ -202,7 +204,6 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
     }
 
     public JSONObject convertGroupActivity(long userId, GroupActivity groupActivity) {
-
         JSONObject jsonActivity = JSONFactoryUtil.createJSONObject();
 
         try {
@@ -221,16 +222,12 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 jsonActivity = MembershipActivityLocalServiceUtil.convertMembershipActivityToJson(membershipActivity);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI) {
-
-                // TODO HHC
-                // Renvoi renvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
-                // jsonActivity = RenvoiLocalServiceUtil.convertRenvoiToJson(renvoi);
+                Renvoi renvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
+                jsonActivity = RenvoiLocalServiceUtil.convertRenvoiToJson(renvoi);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI) {
-
-                // TODO HHC
-                // Renvoi schoolRenvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
-                // jsonActivity = RenvoiLocalServiceUtil.convertSchoolRenvoi(schoolRenvoi);
+                Renvoi schoolRenvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
+                jsonActivity = RenvoiLocalServiceUtil.convertSchoolRenvoi(schoolRenvoi);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_HOMEWORK) {
 
