@@ -43,31 +43,31 @@ public class UserSearchServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoollifeAgents(
+	public static org.json.JSONObject getSchoollifeAgents(
 		java.lang.String search, long schoolId) {
 
 		return getService().getSchoollifeAgents(search, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolMembers(
+	public static org.json.JSONObject getSchoolMembers(
 		long schoolId, java.lang.String search) {
 
 		return getService().getSchoolMembers(schoolId, search);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolStudents(
+	public static org.json.JSONObject getSchoolStudents(
 		java.lang.String search, long schoolId) {
 
 		return getService().getSchoolStudents(search, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSchoolStudentTeacherList(long schoolId, java.lang.String search) {
+	public static org.json.JSONObject getSchoolStudentTeacherList(
+		long schoolId, java.lang.String search) {
 
 		return getService().getSchoolStudentTeacherList(schoolId, search);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolTeachers(
+	public static org.json.JSONObject getSchoolTeachers(
 		long schoolId, java.lang.String search) {
 
 		return getService().getSchoolTeachers(schoolId, search);

@@ -52,8 +52,8 @@ import com.weprode.nero.user.service.UserPasswordServiceUtil;
  */
 public class UserPasswordServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject
-			sendPasswordResetLink(HttpPrincipal httpPrincipal, String email)
+	public static org.json.JSONObject sendPasswordResetLink(
+			HttpPrincipal httpPrincipal, String email)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		try {
@@ -80,7 +80,7 @@ public class UserPasswordServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -91,7 +91,7 @@ public class UserPasswordServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject sendScreenname(
+	public static org.json.JSONObject sendScreenname(
 			HttpPrincipal httpPrincipal, String email)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
@@ -119,7 +119,7 @@ public class UserPasswordServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

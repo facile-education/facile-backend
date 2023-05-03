@@ -1,9 +1,9 @@
 package com.weprode.nero.user.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -42,7 +42,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-user-infos", method = "GET")
     public JSONObject getUserInfos() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -92,10 +92,10 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
         // Children
         List<User> children = UserRelationshipLocalServiceUtil.getChildren(user.getUserId());
-        JSONArray userChildrenJson = JSONFactoryUtil.createJSONArray();
+        JSONArray userChildrenJson = new JSONArray();
         if (children != null) {
             for (User child : children) {
-                JSONObject userChildJson = JSONFactoryUtil.createJSONObject();
+                JSONObject userChildJson = new JSONObject();
                 userChildJson.put(JSONConstants.FIRST_NAME, child.getFirstName());
                 userChildJson.put(JSONConstants.LAST_NAME, child.getLastName());
                 userChildJson.put(JSONConstants.USER_ID, child.getUserId());
@@ -105,11 +105,11 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         result.put(JSONConstants.CHILDREN, userChildrenJson);
 
         // Schools
-        JSONArray userSchoolsJson = JSONFactoryUtil.createJSONArray();
+        JSONArray userSchoolsJson = new JSONArray();
         List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserVisibilitySchools(user);
         if (userSchools != null) {
             for (Organization userSchool : userSchools) {
-                JSONObject userSchoolJson = JSONFactoryUtil.createJSONObject();
+                JSONObject userSchoolJson = new JSONObject();
                 userSchoolJson.put(JSONConstants.SCHOOL_ID, userSchool.getOrganizationId());
                 userSchoolJson.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
                 userSchoolJson.put(JSONConstants.IS_PREFERED, (userProperties.getPreferedSchoolId() == userSchool.getOrganizationId()));
@@ -127,7 +127,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-personnal-details", method = "GET")
     public JSONObject getPersonnalDetails() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

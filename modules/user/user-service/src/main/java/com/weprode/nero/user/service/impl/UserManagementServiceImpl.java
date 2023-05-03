@@ -1,8 +1,8 @@
 package com.weprode.nero.user.service.impl;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -44,7 +44,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
     @JSONWebService(value = "create-manual-user", method = "POST")
     public JSONObject createManualUser(String lastName, String firstName, String email, long roleId, long schoolId) {
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         User adminUser;
         try {
             adminUser = getGuestOrUser();
@@ -93,7 +93,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
 
     @JSONWebService(value = "edit-manual-user", method = "POST")
     public JSONObject editManualUser(long userId, String lastName, String firstName, String email, long roleId, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         
         User adminUser;
         try {
@@ -166,7 +166,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
 
     @JSONWebService(value = "delete-manual-user", method = "GET")
     public JSONObject deleteManualUser(long userId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         
         User adminUser;
         try {
@@ -209,7 +209,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
 
     @JSONWebService(value = "get-manual-users", method = "GET")
     public JSONObject getManualUsers(long schoolId, String search, int start, int limit) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         
         try {
             User user = getGuestOrUser();
@@ -237,7 +237,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
             OrderByComparator<User> obc = new UserLastNameCaseInsensitiveComparator(true);
 
             List<User> users = UserSearchLocalServiceUtil.searchUsers(search, organizationIds, null, null, null, true, start, limit, obc);
-            JSONArray jsonUsers = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonUsers = new JSONArray();
             for (User user : users) {
                 JSONObject jsonUser = convertUser(user);
                 jsonUsers.put(jsonUser);
@@ -260,7 +260,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
     }
 
     private JSONObject convertUser(User user) {
-        JSONObject jsonUser = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonUser = new JSONObject();
         jsonUser.put(JSONConstants.USER_ID, user.getUserId());
         jsonUser.put(JSONConstants.LAST_NAME, user.getLastName());
         jsonUser.put(JSONConstants.FIRST_NAME, user.getFirstName());
@@ -284,8 +284,8 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
 
     @JSONWebService(value = "update-password", method = "GET")
     public JSONObject updatePassword(long userId, String password) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User adminUser;
         try {
             adminUser = getGuestOrUser();

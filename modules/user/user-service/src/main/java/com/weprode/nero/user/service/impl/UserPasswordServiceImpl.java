@@ -3,8 +3,8 @@ package com.weprode.nero.user.service.impl;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -36,7 +36,7 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
     public JSONObject sendPasswordResetLink(String email) throws SystemException {
         logger.info("Start sendPasswordResetLink for email="+email);
         
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         result.put(JSONConstants.SUCCESS, true);
 
         try {
@@ -59,7 +59,7 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
     public JSONObject sendScreenname(String email) throws SystemException {
         logger.info("Start sendScreenname for email="+email);
         
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         result.put(JSONConstants.SUCCESS, true);
         try {
             User user = UserLocalServiceUtil.getUserByEmailAddress(PortalUtil.getDefaultCompanyId(), email);

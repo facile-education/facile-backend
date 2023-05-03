@@ -45,15 +45,13 @@ public class UserPasswordServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-			sendPasswordResetLink(String email)
+	public static org.json.JSONObject sendPasswordResetLink(String email)
 		throws SystemException {
 
 		return getService().sendPasswordResetLink(email);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject sendScreenname(
-			String email)
+	public static org.json.JSONObject sendScreenname(String email)
 		throws SystemException {
 
 		return getService().sendScreenname(email);

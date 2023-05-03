@@ -52,9 +52,8 @@ import com.weprode.nero.user.service.UserSearchServiceUtil;
  */
 public class UserSearchServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSchoolStudentTeacherList(
-			HttpPrincipal httpPrincipal, long schoolId, String search) {
+	public static org.json.JSONObject getSchoolStudentTeacherList(
+		HttpPrincipal httpPrincipal, long schoolId, String search) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -74,7 +73,7 @@ public class UserSearchServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -85,7 +84,7 @@ public class UserSearchServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolMembers(
+	public static org.json.JSONObject getSchoolMembers(
 		HttpPrincipal httpPrincipal, long schoolId, String search) {
 
 		try {
@@ -106,7 +105,7 @@ public class UserSearchServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -117,7 +116,7 @@ public class UserSearchServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolStudents(
+	public static org.json.JSONObject getSchoolStudents(
 		HttpPrincipal httpPrincipal, String search, long schoolId) {
 
 		try {
@@ -138,7 +137,7 @@ public class UserSearchServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -149,7 +148,7 @@ public class UserSearchServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolTeachers(
+	public static org.json.JSONObject getSchoolTeachers(
 		HttpPrincipal httpPrincipal, long schoolId, String search) {
 
 		try {
@@ -170,7 +169,7 @@ public class UserSearchServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -181,7 +180,7 @@ public class UserSearchServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoollifeAgents(
+	public static org.json.JSONObject getSchoollifeAgents(
 		HttpPrincipal httpPrincipal, String search, long schoolId) {
 
 		try {
@@ -202,7 +201,7 @@ public class UserSearchServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

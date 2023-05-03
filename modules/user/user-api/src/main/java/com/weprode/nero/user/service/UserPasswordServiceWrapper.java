@@ -41,16 +41,14 @@ public class UserPasswordServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject sendPasswordResetLink(
-			String email)
+	public org.json.JSONObject sendPasswordResetLink(String email)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _userPasswordService.sendPasswordResetLink(email);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject sendScreenname(
-			String email)
+	public org.json.JSONObject sendScreenname(String email)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _userPasswordService.sendScreenname(email);

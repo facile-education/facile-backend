@@ -31,14 +31,12 @@ public class SchoolAdminServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addSchoolAdmin(
-		long userId, long schoolId) {
-
+	public org.json.JSONObject addSchoolAdmin(long userId, long schoolId) {
 		return _schoolAdminService.addSchoolAdmin(userId, schoolId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getDelegationCandidates(
+	public org.json.JSONObject getDelegationCandidates(
 		long schoolId, String filter) {
 
 		return _schoolAdminService.getDelegationCandidates(schoolId, filter);
@@ -55,16 +53,12 @@ public class SchoolAdminServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSchoolDelegates(
-		long schoolId) {
-
+	public org.json.JSONObject getSchoolDelegates(long schoolId) {
 		return _schoolAdminService.getSchoolDelegates(schoolId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject removeSchoolAdmin(
-		long userId, long schoolId) {
-
+	public org.json.JSONObject removeSchoolAdmin(long userId, long schoolId) {
 		return _schoolAdminService.removeSchoolAdmin(userId, schoolId);
 	}
 

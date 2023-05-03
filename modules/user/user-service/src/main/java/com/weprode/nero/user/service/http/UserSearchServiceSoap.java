@@ -53,16 +53,16 @@ import java.rmi.RemoteException;
 @Deprecated
 public class UserSearchServiceSoap {
 
-	public static String getSchoolStudentTeacherList(
+	public static org.json.JSONObject getSchoolStudentTeacherList(
 			long schoolId, String search)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserSearchServiceUtil.getSchoolStudentTeacherList(
 					schoolId, search);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -71,14 +71,15 @@ public class UserSearchServiceSoap {
 		}
 	}
 
-	public static String getSchoolMembers(long schoolId, String search)
+	public static org.json.JSONObject getSchoolMembers(
+			long schoolId, String search)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserSearchServiceUtil.getSchoolMembers(schoolId, search);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -87,14 +88,15 @@ public class UserSearchServiceSoap {
 		}
 	}
 
-	public static String getSchoolStudents(String search, long schoolId)
+	public static org.json.JSONObject getSchoolStudents(
+			String search, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserSearchServiceUtil.getSchoolStudents(search, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -103,14 +105,15 @@ public class UserSearchServiceSoap {
 		}
 	}
 
-	public static String getSchoolTeachers(long schoolId, String search)
+	public static org.json.JSONObject getSchoolTeachers(
+			long schoolId, String search)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserSearchServiceUtil.getSchoolTeachers(schoolId, search);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -119,14 +122,15 @@ public class UserSearchServiceSoap {
 		}
 	}
 
-	public static String getSchoollifeAgents(String search, long schoolId)
+	public static org.json.JSONObject getSchoollifeAgents(
+			String search, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserSearchServiceUtil.getSchoollifeAgents(search, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

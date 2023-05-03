@@ -53,14 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class SchoolAdminServiceSoap {
 
-	public static String getSchoolDelegates(long schoolId)
+	public static org.json.JSONObject getSchoolDelegates(long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SchoolAdminServiceUtil.getSchoolDelegates(schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -69,15 +69,16 @@ public class SchoolAdminServiceSoap {
 		}
 	}
 
-	public static String getDelegationCandidates(long schoolId, String filter)
+	public static org.json.JSONObject getDelegationCandidates(
+			long schoolId, String filter)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SchoolAdminServiceUtil.getDelegationCandidates(
 					schoolId, filter);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -86,14 +87,14 @@ public class SchoolAdminServiceSoap {
 		}
 	}
 
-	public static String addSchoolAdmin(long userId, long schoolId)
+	public static org.json.JSONObject addSchoolAdmin(long userId, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SchoolAdminServiceUtil.addSchoolAdmin(userId, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -102,14 +103,15 @@ public class SchoolAdminServiceSoap {
 		}
 	}
 
-	public static String removeSchoolAdmin(long userId, long schoolId)
+	public static org.json.JSONObject removeSchoolAdmin(
+			long userId, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SchoolAdminServiceUtil.removeSchoolAdmin(userId, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

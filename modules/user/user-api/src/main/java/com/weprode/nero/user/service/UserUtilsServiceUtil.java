@@ -43,13 +43,11 @@ public class UserUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getPersonnalDetails() {
-
+	public static org.json.JSONObject getPersonnalDetails() {
 		return getService().getPersonnalDetails();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getUserInfos() {
+	public static org.json.JSONObject getUserInfos() {
 		return getService().getUserInfos();
 	}
 

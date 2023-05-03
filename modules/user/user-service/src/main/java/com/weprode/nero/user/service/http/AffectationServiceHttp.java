@@ -52,7 +52,7 @@ import com.weprode.nero.user.service.AffectationServiceUtil;
  */
 public class AffectationServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getAffectedUsers(
+	public static org.json.JSONObject getAffectedUsers(
 		HttpPrincipal httpPrincipal, long schoolId, String filter) {
 
 		try {
@@ -73,7 +73,7 @@ public class AffectationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class AffectationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addUserAffectation(
+	public static org.json.JSONObject addUserAffectation(
 		HttpPrincipal httpPrincipal, long userId, long orgId,
 		String expirationDate) {
 
@@ -106,7 +106,7 @@ public class AffectationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -117,9 +117,8 @@ public class AffectationServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		removeUserAffectation(
-			HttpPrincipal httpPrincipal, long userId, long orgId) {
+	public static org.json.JSONObject removeUserAffectation(
+		HttpPrincipal httpPrincipal, long userId, long orgId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -139,7 +138,7 @@ public class AffectationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

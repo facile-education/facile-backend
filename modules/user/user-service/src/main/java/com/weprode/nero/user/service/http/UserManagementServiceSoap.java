@@ -53,17 +53,17 @@ import java.rmi.RemoteException;
 @Deprecated
 public class UserManagementServiceSoap {
 
-	public static String createManualUser(
+	public static org.json.JSONObject createManualUser(
 			String lastName, String firstName, String email, long roleId,
 			long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserManagementServiceUtil.createManualUser(
 					lastName, firstName, email, roleId, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -72,17 +72,17 @@ public class UserManagementServiceSoap {
 		}
 	}
 
-	public static String editManualUser(
+	public static org.json.JSONObject editManualUser(
 			long userId, String lastName, String firstName, String email,
 			long roleId, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserManagementServiceUtil.editManualUser(
 					userId, lastName, firstName, email, roleId, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -91,12 +91,14 @@ public class UserManagementServiceSoap {
 		}
 	}
 
-	public static String deleteManualUser(long userId) throws RemoteException {
+	public static org.json.JSONObject deleteManualUser(long userId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserManagementServiceUtil.deleteManualUser(userId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -105,16 +107,16 @@ public class UserManagementServiceSoap {
 		}
 	}
 
-	public static String getManualUsers(
+	public static org.json.JSONObject getManualUsers(
 			long schoolId, String search, int start, int limit)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserManagementServiceUtil.getManualUsers(
 					schoolId, search, start, limit);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -123,14 +125,15 @@ public class UserManagementServiceSoap {
 		}
 	}
 
-	public static String updatePassword(long userId, String password)
+	public static org.json.JSONObject updatePassword(
+			long userId, String password)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserManagementServiceUtil.updatePassword(userId, password);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

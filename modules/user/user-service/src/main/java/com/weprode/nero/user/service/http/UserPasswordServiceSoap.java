@@ -53,14 +53,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class UserPasswordServiceSoap {
 
-	public static String sendPasswordResetLink(String email)
+	public static org.json.JSONObject sendPasswordResetLink(String email)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserPasswordServiceUtil.sendPasswordResetLink(email);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -69,12 +69,14 @@ public class UserPasswordServiceSoap {
 		}
 	}
 
-	public static String sendScreenname(String email) throws RemoteException {
+	public static org.json.JSONObject sendScreenname(String email)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserPasswordServiceUtil.sendScreenname(email);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

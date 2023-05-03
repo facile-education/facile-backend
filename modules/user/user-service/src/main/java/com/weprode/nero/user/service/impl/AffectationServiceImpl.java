@@ -1,8 +1,8 @@
 package com.weprode.nero.user.service.impl;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -41,8 +41,8 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
 
     @JSONWebService(value = "get-affected-users", method = "GET")
     public JSONObject getAffectedUsers(long schoolId, String filter) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         User adminUser;
         try {
             adminUser = getGuestOrUser();
@@ -64,10 +64,10 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonUsers = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonUsers = new JSONArray();
             List<User> users = AffectationLocalServiceUtil.getAffectedUsers(schoolId, filter);
             for (User user : users) {
-                JSONObject jsonUser = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonUser = new JSONObject();
                 jsonUser.put(JSONConstants.USER_ID, user.getUserId());
                 jsonUser.put(JSONConstants.LAST_NAME, user.getLastName());
                 jsonUser.put(JSONConstants.FIRST_NAME, user.getFirstName());
@@ -75,7 +75,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
 
                 // Get affectations
                 List<Affectation> userAffectations = AffectationLocalServiceUtil.getUserAffectations(user.getUserId(), schoolId);
-                JSONArray jsonAffectations = JSONFactoryUtil.createJSONArray();
+                JSONArray jsonAffectations = new JSONArray();
                 for (Affectation userAffectation : userAffectations) {
                     try {
                         Organization org = OrganizationLocalServiceUtil.getOrganization(userAffectation.getOrgId());
@@ -85,7 +85,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
                         if (orgDetails.getType() == OrgConstants.SCHOOL_TYPE || orgDetails.getType() == OrgConstants.CLASS_TYPE
                                 || orgDetails.getType() == OrgConstants.COURS_TYPE) {
 
-                            JSONObject jsonAffectation = JSONFactoryUtil.createJSONObject();
+                            JSONObject jsonAffectation = new JSONObject();
                             jsonAffectation.put(JSONConstants.ORG_ID, userAffectation.getOrgId());
                             jsonAffectation.put(JSONConstants.ORG_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
                             jsonAffectation.put(JSONConstants.TYPE, orgDetails.getType());
@@ -116,7 +116,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
 
     @JSONWebService(value = "add-user-affectation", method = "GET")
     public JSONObject addUserAffectation(long userId, long orgId, String expirationDate) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User adminUser;
         try {
@@ -158,7 +158,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
 
     @JSONWebService(value = "remove-user-affectation", method = "GET")
     public JSONObject removeUserAffectation(long userId, long orgId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User adminUser;
         try {

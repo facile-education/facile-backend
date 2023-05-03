@@ -64,14 +64,15 @@ import java.rmi.RemoteException;
 @Deprecated
 public class AffectationServiceSoap {
 
-	public static String getAffectedUsers(long schoolId, String filter)
+	public static org.json.JSONObject getAffectedUsers(
+			long schoolId, String filter)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				AffectationServiceUtil.getAffectedUsers(schoolId, filter);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -80,16 +81,16 @@ public class AffectationServiceSoap {
 		}
 	}
 
-	public static String addUserAffectation(
+	public static org.json.JSONObject addUserAffectation(
 			long userId, long orgId, String expirationDate)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				AffectationServiceUtil.addUserAffectation(
 					userId, orgId, expirationDate);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -98,14 +99,15 @@ public class AffectationServiceSoap {
 		}
 	}
 
-	public static String removeUserAffectation(long userId, long orgId)
+	public static org.json.JSONObject removeUserAffectation(
+			long userId, long orgId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				AffectationServiceUtil.removeUserAffectation(userId, orgId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
