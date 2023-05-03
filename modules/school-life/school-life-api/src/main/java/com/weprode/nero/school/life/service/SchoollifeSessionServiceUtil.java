@@ -43,7 +43,7 @@ public class SchoollifeSessionServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getWeekSessions(
+	public static org.json.JSONObject getWeekSessions(
 		long schoolId, int type, java.lang.String currentDateStr) {
 
 		return getService().getWeekSessions(schoolId, type, currentDateStr);

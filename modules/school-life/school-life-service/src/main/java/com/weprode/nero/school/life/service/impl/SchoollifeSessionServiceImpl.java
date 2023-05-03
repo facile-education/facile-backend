@@ -1,9 +1,9 @@
 package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -35,10 +35,10 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
 
     @JSONWebService(value = "get-week-sessions", method = "GET")
     public JSONObject getWeekSessions(long schoolId, int type, String currentDateStr) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         logger.info("Get schoollife week sessions for schoolId = " + schoolId  + ", type = " + type + " and date " + currentDateStr);
-        JSONArray jsonSessions = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonSessions = new JSONArray();
 
         try {
             SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -48,7 +48,7 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
             for (SchoollifeSession session : sessions) {
                 SchoollifeSlot slot = SchoollifeSlotLocalServiceUtil.getSchoollifeSlot(session.getSchoollifeSlotId());
 
-                JSONObject jsonSession = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonSession = new JSONObject();
                 jsonSession.put(JSONConstants.SCHOOLLIFE_SESSION_ID, session.getSchoollifeSessionId());
                 jsonSession.put(JSONConstants.START_DATE, df.format(session.getStartDate()));
                 jsonSession.put(JSONConstants.END_DATE, df.format(session.getEndDate()));
@@ -56,7 +56,7 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
                 jsonSession.put(JSONConstants.TYPE, session.getType());
 
                 User teacher = UserLocalServiceUtil.getUser(slot.getTeacherId());
-                JSONObject jsonTeacher = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonTeacher = new JSONObject();
                 jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
                 jsonTeacher.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
                 jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());

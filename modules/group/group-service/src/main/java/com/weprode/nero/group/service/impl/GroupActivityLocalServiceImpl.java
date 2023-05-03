@@ -223,11 +223,11 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI) {
                 Renvoi renvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
-                // jsonActivity = RenvoiLocalServiceUtil.convertRenvoiToJson(renvoi);
+                jsonActivity = RenvoiLocalServiceUtil.convertRenvoiToJson(renvoi);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI) {
                 Renvoi schoolRenvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
-                // jsonActivity = RenvoiLocalServiceUtil.convertSchoolRenvoi(schoolRenvoi);
+                jsonActivity = RenvoiLocalServiceUtil.convertSchoolRenvoi(schoolRenvoi);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_HOMEWORK) {
 

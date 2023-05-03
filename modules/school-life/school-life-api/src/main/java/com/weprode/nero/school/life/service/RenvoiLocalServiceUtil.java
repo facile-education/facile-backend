@@ -69,15 +69,11 @@ public class RenvoiLocalServiceUtil {
 		return getService().addRenvoi(renvoi);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject convertRenvoiToJson(
-		Renvoi renvoi) {
-
+	public static org.json.JSONObject convertRenvoiToJson(Renvoi renvoi) {
 		return getService().convertRenvoiToJson(renvoi);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject convertSchoolRenvoi(
-		Renvoi schoolRenvoi) {
-
+	public static org.json.JSONObject convertSchoolRenvoi(Renvoi schoolRenvoi) {
 		return getService().convertSchoolRenvoi(schoolRenvoi);
 	}
 

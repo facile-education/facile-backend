@@ -64,12 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class RenvoiServiceSoap {
 
-	public static String getPendingRenvois() throws RemoteException {
+	public static org.json.JSONObject getPendingRenvois()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				RenvoiServiceUtil.getPendingRenvois();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -78,20 +80,20 @@ public class RenvoiServiceSoap {
 		}
 	}
 
-	public static String registerStudentRenvoi(
+	public static org.json.JSONObject registerStudentRenvoi(
 			long schoollifeSessionId, long sourceTeacherId, long studentId,
 			long sourceSessionId, long sourceSchoollifeSessionId,
 			String registrationDate)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				RenvoiServiceUtil.registerStudentRenvoi(
 					schoollifeSessionId, sourceTeacherId, studentId,
 					sourceSessionId, sourceSchoollifeSessionId,
 					registrationDate);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -100,16 +102,15 @@ public class RenvoiServiceSoap {
 		}
 	}
 
-	public static String setRenvoiReason(
+	public static org.json.JSONObject setRenvoiReason(
 			long schoollifeSessionId, long studentId, String reason)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				RenvoiServiceUtil.setRenvoiReason(
-					schoollifeSessionId, studentId, reason);
+			org.json.JSONObject returnValue = RenvoiServiceUtil.setRenvoiReason(
+				schoollifeSessionId, studentId, reason);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -118,16 +119,16 @@ public class RenvoiServiceSoap {
 		}
 	}
 
-	public static String unregisterStudentRenvoi(
+	public static org.json.JSONObject unregisterStudentRenvoi(
 			long schoollifeSessionId, long studentId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				RenvoiServiceUtil.unregisterStudentRenvoi(
 					schoollifeSessionId, studentId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -136,16 +137,16 @@ public class RenvoiServiceSoap {
 		}
 	}
 
-	public static String getCandidateSessions(
+	public static org.json.JSONObject getCandidateSessions(
 			long schoollifeSessionId, long studentId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				RenvoiServiceUtil.getCandidateSessions(
 					schoollifeSessionId, studentId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

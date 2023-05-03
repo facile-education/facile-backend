@@ -64,16 +64,16 @@ import java.rmi.RemoteException;
 @Deprecated
 public class SchoollifeSessionServiceSoap {
 
-	public static String getWeekSessions(
+	public static org.json.JSONObject getWeekSessions(
 			long schoolId, int type, String currentDateStr)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SchoollifeSessionServiceUtil.getWeekSessions(
 					schoolId, type, currentDateStr);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

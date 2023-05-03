@@ -44,7 +44,7 @@ public class SchoollifeSessionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getWeekSessions(
+	public org.json.JSONObject getWeekSessions(
 		long schoolId, int type, String currentDateStr) {
 
 		return _schoollifeSessionService.getWeekSessions(

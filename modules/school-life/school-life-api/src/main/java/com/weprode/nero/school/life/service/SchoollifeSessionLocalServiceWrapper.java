@@ -359,7 +359,7 @@ public class SchoollifeSessionLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONArray getTeacherSessions(
+	public org.json.JSONArray getTeacherSessions(
 		long teacherId, java.util.Date minDate, java.util.Date maxDate) {
 
 		return _schoollifeSessionLocalService.getTeacherSessions(

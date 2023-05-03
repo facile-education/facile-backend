@@ -64,18 +64,18 @@ import java.rmi.RemoteException;
 @Deprecated
 public class SchoollifeSlotServiceSoap {
 
-	public static String createSlot(
+	public static org.json.JSONObject createSlot(
 			long schoolId, String startDateStr, int day, String startHour,
 			String endHour, long teacherId, int type, String room, int capacity)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SchoollifeSlotServiceUtil.createSlot(
 					schoolId, startDateStr, day, startHour, endHour, teacherId,
 					type, room, capacity);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -84,19 +84,19 @@ public class SchoollifeSlotServiceSoap {
 		}
 	}
 
-	public static String editSlot(
+	public static org.json.JSONObject editSlot(
 			long schoollifeSessionId, String startDateStr, int newDay,
 			String newStartHour, String newEndHour, long newTeacherId,
 			String newRoom, int newCapacity)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SchoollifeSlotServiceUtil.editSlot(
 					schoollifeSessionId, startDateStr, newDay, newStartHour,
 					newEndHour, newTeacherId, newRoom, newCapacity);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -105,16 +105,16 @@ public class SchoollifeSlotServiceSoap {
 		}
 	}
 
-	public static String deleteSlot(
+	public static org.json.JSONObject deleteSlot(
 			long schoollifeSessionId, String startDateStr)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SchoollifeSlotServiceUtil.deleteSlot(
 					schoollifeSessionId, startDateStr);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

@@ -2,9 +2,9 @@ package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -52,15 +52,14 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
     @JSONWebService(value = "get-session-members", method = "GET")
     public JSONObject getSessionMembers(long schoollifeSessionId) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
-        JSONArray members = JSONFactoryUtil.createJSONArray();
+        JSONObject result = new JSONObject();
+        JSONArray members = new JSONArray();
 
         try {
             List<SessionStudent> schoollifeSessionStudents = SessionStudentLocalServiceUtil.getSessionMembers(schoollifeSessionId);
             for (SessionStudent schoollifeSessionStudent : schoollifeSessionStudents) {
                 try {
-                    JSONObject jsonMember = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonMember = new JSONObject();
                     jsonMember.put(JSONConstants.STUDENT_ID, schoollifeSessionStudent.getStudentId());
                     User student = UserLocalServiceUtil.getUser(schoollifeSessionStudent.getStudentId());
                     jsonMember.put(JSONConstants.REGISTERER_ID, schoollifeSessionStudent.getSourceTeacherId());
@@ -83,12 +82,13 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
             logger.error("Error fetching student members for schoollife session " + schoollifeSessionId, e);
             result.put(JSONConstants.SUCCESS, false);
         }
+
         return result;
     }
 
     @JSONWebService(value = "get-sessions", method = "GET")
     public JSONObject getSessions(long studentId, long classId, String minDateStr, String maxDateStr) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
         
         if (studentId > 0) {
             logger.info("Get sessions for student " + studentId + " between " + minDateStr + " and " + maxDateStr);
@@ -103,7 +103,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
             // 1. SchoolLife sessions
             // TODO return class HHC ?
-            JSONArray jsonSessions = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonSessions = new JSONArray();
             if (studentId > 0) {
                 jsonSessions = SessionStudentLocalServiceUtil.getStudentSessions(studentId, minDate, maxDate);
             }
@@ -119,7 +119,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
             for (CDTSession cdtSession : sessions) {
 
-                JSONObject cdtSessionJson = JSONFactoryUtil.createJSONObject();
+                JSONObject cdtSessionJson = new JSONObject();
                 cdtSessionJson.put(JSONConstants.CDT_SESSION_ID, cdtSession.getSessionId());
                 cdtSessionJson.put(JSONConstants.START_DATE, df.format(cdtSession.getSessionStart()));
                 cdtSessionJson.put(JSONConstants.END_DATE, df.format(cdtSession.getSessionEnd()));
@@ -130,10 +130,10 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 // Teacher
                 // cdt sessions can have many teachers, unlike notUsualSessions
                 List<User> teacherList = SessionTeacherLocalServiceUtil.getTeachers(cdtSession.getSessionId());
-                JSONArray teacherArray = JSONFactoryUtil.createJSONArray();
+                JSONArray teacherArray = new JSONArray();
 
                 for (User teacher : teacherList) {
-                    JSONObject jsonTeacher = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonTeacher = new JSONObject();
                     jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
                     jsonTeacher.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
                     jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());
@@ -159,13 +159,13 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
             logger.error("Error fetching sessions for student " + studentId + ", class "+ classId, e);
             result.put(JSONConstants.SUCCESS, false);
         }
+
         return result;
     }
 
     @JSONWebService(value = "register-student", method = "POST")
     public JSONObject registerStudent(long studentId, long schoollifeSessionId, String comment, String replayTestSubject, boolean notifyParents) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             User teacher = getGuestOrUser();
@@ -196,12 +196,13 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
             logger.error("Error registering student " + studentId + " in session " + schoollifeSessionId, e);
             result.put(JSONConstants.SUCCESS, false);
         }
+
         return result;
     }
 
     @JSONWebService(value = "register-class", method = "POST")
     public JSONObject registerClass(long classId, long schoollifeSessionId, String comment, String replayTestSubject, boolean notifyParents) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User agent;
         try {
@@ -228,7 +229,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
             // Only handle classes for etude type
             if (session.getType() == SchoollifeConstants.TYPE_ETUDE && classId > 0) {
                 int nbRegistered = 0;
-                JSONArray notRegisteredArray = JSONFactoryUtil.createJSONArray();
+                JSONArray notRegisteredArray = new JSONArray();
 
                 List<Long> organizationIds = new ArrayList<>();
                 organizationIds.add(classId);
@@ -268,7 +269,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
     @JSONWebService(value = "unregister-student", method = "GET")
     public JSONObject unregisterStudent(long studentId, long schoollifeSessionId, boolean allSessions) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             User teacher = getGuestOrUser();
@@ -301,10 +302,10 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
     @JSONWebService(value = "mark-students-present", method = "POST")
     public JSONObject markStudentsPresent(long schoollifeSessionId, String studentsPresence) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
-            JSONArray studentsPresenceJson = JSONFactoryUtil.createJSONArray(studentsPresence);
+            JSONArray studentsPresenceJson = new JSONArray(studentsPresence);
             for (int i = 0 ; i < studentsPresenceJson.length() ; i++) {
                 JSONObject studentJson = studentsPresenceJson.getJSONObject(i);
                 long studentId = studentJson.getLong(JSONConstants.STUDENT_ID);

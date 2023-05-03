@@ -21,6 +21,8 @@ import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.CDTSessionServiceBaseImpl;
 import com.weprode.nero.schedule.utils.FilterUtil;
 import com.weprode.nero.schedule.utils.JSONProxy;
+import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
+import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -96,9 +98,9 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			// 2. Schoollife sessions
 			JSONArray jsonSchoollifeSessions = new JSONArray();
 			if (targetUser != null && RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
-				// jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), startDate, endDate);
+				jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), startDate, endDate);
 			} else if (targetUser != null && RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
-				// jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), startDate, endDate);
+				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), startDate, endDate);
 			}
 
 			// Transform teachers

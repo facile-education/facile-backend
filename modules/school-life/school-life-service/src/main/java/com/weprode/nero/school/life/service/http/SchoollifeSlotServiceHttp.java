@@ -52,7 +52,7 @@ import com.weprode.nero.school.life.service.SchoollifeSlotServiceUtil;
  */
 public class SchoollifeSlotServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject createSlot(
+	public static org.json.JSONObject createSlot(
 		HttpPrincipal httpPrincipal, long schoolId, String startDateStr,
 		int day, String startHour, String endHour, long teacherId, int type,
 		String room, int capacity) {
@@ -76,7 +76,7 @@ public class SchoollifeSlotServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -87,7 +87,7 @@ public class SchoollifeSlotServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject editSlot(
+	public static org.json.JSONObject editSlot(
 		HttpPrincipal httpPrincipal, long schoollifeSessionId,
 		String startDateStr, int newDay, String newStartHour, String newEndHour,
 		long newTeacherId, String newRoom, int newCapacity) {
@@ -111,7 +111,7 @@ public class SchoollifeSlotServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -122,7 +122,7 @@ public class SchoollifeSlotServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteSlot(
+	public static org.json.JSONObject deleteSlot(
 		HttpPrincipal httpPrincipal, long schoollifeSessionId,
 		String startDateStr) {
 
@@ -144,7 +144,7 @@ public class SchoollifeSlotServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
