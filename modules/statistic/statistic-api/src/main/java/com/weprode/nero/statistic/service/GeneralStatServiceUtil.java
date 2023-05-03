@@ -33,37 +33,35 @@ public class GeneralStatServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.statistic.service.impl.GeneralStatServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getActiveUsersCount(
+	public static org.json.JSONObject getActiveUsersCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return getService().getActiveUsersCount(startDate, endDate, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getDashboardStatistics() {
-
+	public static org.json.JSONObject getDashboardStatistics() {
 		return getService().getDashboardStatistics();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFilesCount(
+	public static org.json.JSONObject getFilesCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return getService().getFilesCount(startDate, endDate, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getHomeworksCount(
+	public static org.json.JSONObject getHomeworksCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return getService().getHomeworksCount(startDate, endDate, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getMessagesCount(
+	public static org.json.JSONObject getMessagesCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return getService().getMessagesCount(startDate, endDate, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getNewsCount(
+	public static org.json.JSONObject getNewsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return getService().getNewsCount(startDate, endDate, schoolId);
@@ -78,7 +76,7 @@ public class GeneralStatServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSessionsCount(
+	public static org.json.JSONObject getSessionsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId,
 		long serviceId, java.lang.String comparator) {
 

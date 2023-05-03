@@ -38,7 +38,7 @@ public class MatomoLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.statistic.service.impl.MatomoLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject fetchStatistics(
+	public static org.json.JSONObject fetchStatistics(
 			com.liferay.portal.kernel.model.User user, String compareOn,
 			String period, java.util.Date startDate, java.util.Date endDate,
 			List<Long> profileIds, List<Long> schoolIds, List<Long> serviceIds)

@@ -1,9 +1,9 @@
 package com.weprode.nero.statistic.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -46,7 +46,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     @JSONWebService(value = "get-sessions-count", method = "GET")
     public JSONObject getSessionsCount(Date startDate, Date endDate, long schoolId, long serviceId, String comparator) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -109,7 +109,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     @JSONWebService(value = "get-active-users-count", method = "GET")
     public JSONObject getActiveUsersCount(Date startDate, Date endDate, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -135,7 +135,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     @JSONWebService(value = "get-files-count", method = "GET")
     public JSONObject getFilesCount(Date startDate, Date endDate, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -154,11 +154,11 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         try {
-            JSONArray labels = JSONFactoryUtil.createJSONArray();
-            JSONArray datasets = JSONFactoryUtil.createJSONArray();
-            JSONObject dataset = JSONFactoryUtil.createJSONObject("{label: \"Main\"}");
-            JSONArray data = JSONFactoryUtil.createJSONArray();
-            JSONArray backgroundColors = JSONFactoryUtil.createJSONArray();
+            JSONArray labels = new JSONArray();
+            JSONArray datasets = new JSONArray();
+            JSONObject dataset = new JSONObject("{label: \"Main\"}");
+            JSONArray data = new JSONArray();
+            JSONArray backgroundColors = new JSONArray();
             int totalCount = 0;
 
             int index = 0;
@@ -187,7 +187,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     @JSONWebService(value = "get-homeworks-count", method = "GET")
     public JSONObject getHomeworksCount(Date startDate, Date endDate, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -206,11 +206,11 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         try {
-            JSONArray labels = JSONFactoryUtil.createJSONArray();
-            JSONArray datasets = JSONFactoryUtil.createJSONArray();
-            JSONObject dataset = JSONFactoryUtil.createJSONObject("{label: \"Main\"}");
-            JSONArray data = JSONFactoryUtil.createJSONArray();
-            JSONArray backgroundColors = JSONFactoryUtil.createJSONArray();
+            JSONArray labels = new JSONArray();
+            JSONArray datasets = new JSONArray();
+            JSONObject dataset = new JSONObject("{label: \"Main\"}");
+            JSONArray data = new JSONArray();
+            JSONArray backgroundColors = new JSONArray();
             int totalCount = 0;
 
             int index = 0;
@@ -239,7 +239,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     @JSONWebService(value = "get-news-count", method = "GET")
     public JSONObject getNewsCount(Date startDate, Date endDate, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -266,7 +266,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     @JSONWebService(value = "get-messages-count", method = "GET")
     public JSONObject getMessagesCount(Date startDate, Date endDate, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -300,7 +300,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     @JSONWebService(value = "get-dashboard-statistics-count", method = "GET")
     public JSONObject getDashboardStatistics() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {

@@ -52,7 +52,7 @@ import com.weprode.nero.statistic.service.GeneralStatServiceUtil;
  */
 public class GeneralStatServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getSessionsCount(
+	public static org.json.JSONObject getSessionsCount(
 		HttpPrincipal httpPrincipal, java.util.Date startDate,
 		java.util.Date endDate, long schoolId, long serviceId,
 		String comparator) {
@@ -75,7 +75,7 @@ public class GeneralStatServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -86,7 +86,7 @@ public class GeneralStatServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getActiveUsersCount(
+	public static org.json.JSONObject getActiveUsersCount(
 		HttpPrincipal httpPrincipal, java.util.Date startDate,
 		java.util.Date endDate, long schoolId) {
 
@@ -108,7 +108,7 @@ public class GeneralStatServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -119,7 +119,7 @@ public class GeneralStatServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getFilesCount(
+	public static org.json.JSONObject getFilesCount(
 		HttpPrincipal httpPrincipal, java.util.Date startDate,
 		java.util.Date endDate, long schoolId) {
 
@@ -141,7 +141,7 @@ public class GeneralStatServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -152,7 +152,7 @@ public class GeneralStatServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getHomeworksCount(
+	public static org.json.JSONObject getHomeworksCount(
 		HttpPrincipal httpPrincipal, java.util.Date startDate,
 		java.util.Date endDate, long schoolId) {
 
@@ -174,7 +174,7 @@ public class GeneralStatServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -185,7 +185,7 @@ public class GeneralStatServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getNewsCount(
+	public static org.json.JSONObject getNewsCount(
 		HttpPrincipal httpPrincipal, java.util.Date startDate,
 		java.util.Date endDate, long schoolId) {
 
@@ -207,7 +207,7 @@ public class GeneralStatServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -218,7 +218,7 @@ public class GeneralStatServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getMessagesCount(
+	public static org.json.JSONObject getMessagesCount(
 		HttpPrincipal httpPrincipal, java.util.Date startDate,
 		java.util.Date endDate, long schoolId) {
 
@@ -240,7 +240,7 @@ public class GeneralStatServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -251,8 +251,8 @@ public class GeneralStatServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getDashboardStatistics(HttpPrincipal httpPrincipal) {
+	public static org.json.JSONObject getDashboardStatistics(
+		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -271,7 +271,7 @@ public class GeneralStatServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

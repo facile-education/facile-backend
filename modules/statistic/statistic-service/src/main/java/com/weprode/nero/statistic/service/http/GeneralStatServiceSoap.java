@@ -53,17 +53,17 @@ import java.rmi.RemoteException;
 @Deprecated
 public class GeneralStatServiceSoap {
 
-	public static String getSessionsCount(
+	public static org.json.JSONObject getSessionsCount(
 			java.util.Date startDate, java.util.Date endDate, long schoolId,
 			long serviceId, String comparator)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeneralStatServiceUtil.getSessionsCount(
 					startDate, endDate, schoolId, serviceId, comparator);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -72,16 +72,16 @@ public class GeneralStatServiceSoap {
 		}
 	}
 
-	public static String getActiveUsersCount(
+	public static org.json.JSONObject getActiveUsersCount(
 			java.util.Date startDate, java.util.Date endDate, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeneralStatServiceUtil.getActiveUsersCount(
 					startDate, endDate, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -90,16 +90,16 @@ public class GeneralStatServiceSoap {
 		}
 	}
 
-	public static String getFilesCount(
+	public static org.json.JSONObject getFilesCount(
 			java.util.Date startDate, java.util.Date endDate, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeneralStatServiceUtil.getFilesCount(
 					startDate, endDate, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -108,16 +108,16 @@ public class GeneralStatServiceSoap {
 		}
 	}
 
-	public static String getHomeworksCount(
+	public static org.json.JSONObject getHomeworksCount(
 			java.util.Date startDate, java.util.Date endDate, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeneralStatServiceUtil.getHomeworksCount(
 					startDate, endDate, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -126,16 +126,16 @@ public class GeneralStatServiceSoap {
 		}
 	}
 
-	public static String getNewsCount(
+	public static org.json.JSONObject getNewsCount(
 			java.util.Date startDate, java.util.Date endDate, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeneralStatServiceUtil.getNewsCount(
 					startDate, endDate, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -144,16 +144,16 @@ public class GeneralStatServiceSoap {
 		}
 	}
 
-	public static String getMessagesCount(
+	public static org.json.JSONObject getMessagesCount(
 			java.util.Date startDate, java.util.Date endDate, long schoolId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeneralStatServiceUtil.getMessagesCount(
 					startDate, endDate, schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -162,12 +162,14 @@ public class GeneralStatServiceSoap {
 		}
 	}
 
-	public static String getDashboardStatistics() throws RemoteException {
+	public static org.json.JSONObject getDashboardStatistics()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				GeneralStatServiceUtil.getDashboardStatistics();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
