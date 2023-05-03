@@ -53,12 +53,11 @@ import java.rmi.RemoteException;
 @Deprecated
 public class SideMenuServiceSoap {
 
-	public static String getSideMenu() throws RemoteException {
+	public static org.json.JSONObject getSideMenu() throws RemoteException {
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				SideMenuServiceUtil.getSideMenu();
+			org.json.JSONObject returnValue = SideMenuServiceUtil.getSideMenu();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
