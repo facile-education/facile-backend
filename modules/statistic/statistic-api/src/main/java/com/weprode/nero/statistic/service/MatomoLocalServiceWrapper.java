@@ -31,7 +31,7 @@ public class MatomoLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject fetchStatistics(
+	public org.json.JSONObject fetchStatistics(
 			com.liferay.portal.kernel.model.User user, String compareOn,
 			String period, java.util.Date startDate, java.util.Date endDate,
 			java.util.List<Long> profileIds, java.util.List<Long> schoolIds,

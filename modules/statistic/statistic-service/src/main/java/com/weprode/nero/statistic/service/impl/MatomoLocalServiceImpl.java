@@ -4,10 +4,9 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -314,9 +313,9 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
         int cpt = 0;
 
         // For each built url, call the API and store data
-        JSONObject dataJson = JSONFactoryUtil.createJSONObject();
-        JSONArray datasets = JSONFactoryUtil.createJSONArray();
-        JSONArray datesArray = JSONFactoryUtil.createJSONArray();
+        JSONObject dataJson = new JSONObject();
+        JSONArray datasets = new JSONArray();
+        JSONArray datesArray = new JSONArray();
 
         // Fetch statistics from urls
         for (String specificUrl : urls) {
@@ -328,7 +327,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
             logger.debug("Statistics url : " + specificUrl);
 
             InputStream is = new URL(specificUrl).openStream();
-            JSONObject dataset = JSONFactoryUtil.createJSONObject();
+            JSONObject dataset = new JSONObject();
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
                 // Read JSON from matomo
@@ -339,7 +338,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
                     sb.append(line).append("\n");
                 }
                 String jsonText = sb.toString();
-                JSONObject matomoJson = JSONFactoryUtil.createJSONObject(jsonText);
+                JSONObject matomoJson = new JSONObject(jsonText);
 
                 String datasetLabel = metadata.get(cpt);
                 if (datasetLabel.trim().equals("")) {
@@ -355,7 +354,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
                 }
                 java.util.Collections.sort(dates);
 
-                JSONArray dataArray = JSONFactoryUtil.createJSONArray();
+                JSONArray dataArray = new JSONArray();
 
                 for (String dateStr : dates) {
 

@@ -31,7 +31,7 @@ public class GeneralStatServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getActiveUsersCount(
+	public org.json.JSONObject getActiveUsersCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return _generalStatService.getActiveUsersCount(
@@ -39,19 +39,19 @@ public class GeneralStatServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getDashboardStatistics() {
+	public org.json.JSONObject getDashboardStatistics() {
 		return _generalStatService.getDashboardStatistics();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getFilesCount(
+	public org.json.JSONObject getFilesCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return _generalStatService.getFilesCount(startDate, endDate, schoolId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getHomeworksCount(
+	public org.json.JSONObject getHomeworksCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return _generalStatService.getHomeworksCount(
@@ -59,7 +59,7 @@ public class GeneralStatServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getMessagesCount(
+	public org.json.JSONObject getMessagesCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return _generalStatService.getMessagesCount(
@@ -67,7 +67,7 @@ public class GeneralStatServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getNewsCount(
+	public org.json.JSONObject getNewsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
 		return _generalStatService.getNewsCount(startDate, endDate, schoolId);
@@ -84,7 +84,7 @@ public class GeneralStatServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSessionsCount(
+	public org.json.JSONObject getSessionsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId,
 		long serviceId, String comparator) {
 
