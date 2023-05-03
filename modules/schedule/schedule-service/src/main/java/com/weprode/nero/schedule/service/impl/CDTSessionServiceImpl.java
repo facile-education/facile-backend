@@ -107,7 +107,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			for (int i = 0 ; i < jsonSchoollifeSessions.length() ; i++) {
 				JSONObject jsonSchoollifeSession = jsonSchoollifeSessions.getJSONObject(i);
 				JSONArray jsonTeachers = new JSONArray();
-				if (jsonSchoollifeSession.getJSONObject(JSONConstants.TEACHER) != null) {
+				if (jsonSchoollifeSession.has(JSONConstants.TEACHER)) {
 					jsonTeachers.put(jsonSchoollifeSession.getJSONObject(JSONConstants.TEACHER));
 				}
 				jsonSchoollifeSession.put(JSONConstants.TEACHERS, jsonTeachers);
