@@ -43,28 +43,22 @@ public class UserPropertiesServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateReportFrequency(
-		int frequency) {
-
+	public org.json.JSONObject updateReportFrequency(int frequency) {
 		return _userPropertiesService.updateReportFrequency(frequency);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateThemeColor(
-		String color) {
-
+	public org.json.JSONObject updateThemeColor(String color) {
 		return _userPropertiesService.updateThemeColor(color);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateUserPicture(
-		java.io.File picture) {
-
+	public org.json.JSONObject updateUserPicture(java.io.File picture) {
 		return _userPropertiesService.updateUserPicture(picture);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateWebdavPassword(
+	public org.json.JSONObject updateWebdavPassword(
 		String password, String confirmPassword) {
 
 		return _userPropertiesService.updateWebdavPassword(
@@ -72,9 +66,7 @@ public class UserPropertiesServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updateWebdavState(
-		boolean isEnabled) {
-
+	public org.json.JSONObject updateWebdavState(boolean isEnabled) {
 		return _userPropertiesService.updateWebdavState(isEnabled);
 	}
 

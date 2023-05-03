@@ -52,7 +52,7 @@ import com.weprode.nero.preference.service.UserPropertiesServiceUtil;
  */
 public class UserPropertiesServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject updateUserPicture(
+	public static org.json.JSONObject updateUserPicture(
 		HttpPrincipal httpPrincipal, java.io.File picture) {
 
 		try {
@@ -72,7 +72,7 @@ public class UserPropertiesServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class UserPropertiesServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateThemeColor(
+	public static org.json.JSONObject updateThemeColor(
 		HttpPrincipal httpPrincipal, String color) {
 
 		try {
@@ -103,7 +103,7 @@ public class UserPropertiesServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -114,8 +114,8 @@ public class UserPropertiesServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		updateReportFrequency(HttpPrincipal httpPrincipal, int frequency) {
+	public static org.json.JSONObject updateReportFrequency(
+		HttpPrincipal httpPrincipal, int frequency) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -135,7 +135,7 @@ public class UserPropertiesServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -146,7 +146,7 @@ public class UserPropertiesServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateWebdavState(
+	public static org.json.JSONObject updateWebdavState(
 		HttpPrincipal httpPrincipal, boolean isEnabled) {
 
 		try {
@@ -167,7 +167,7 @@ public class UserPropertiesServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -178,10 +178,8 @@ public class UserPropertiesServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		updateWebdavPassword(
-			HttpPrincipal httpPrincipal, String password,
-			String confirmPassword) {
+	public static org.json.JSONObject updateWebdavPassword(
+		HttpPrincipal httpPrincipal, String password, String confirmPassword) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -201,7 +199,7 @@ public class UserPropertiesServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

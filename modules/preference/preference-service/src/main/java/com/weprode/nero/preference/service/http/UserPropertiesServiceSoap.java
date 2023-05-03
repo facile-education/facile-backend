@@ -64,12 +64,14 @@ import java.rmi.RemoteException;
 @Deprecated
 public class UserPropertiesServiceSoap {
 
-	public static String updateThemeColor(String color) throws RemoteException {
+	public static org.json.JSONObject updateThemeColor(String color)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserPropertiesServiceUtil.updateThemeColor(color);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -78,14 +80,14 @@ public class UserPropertiesServiceSoap {
 		}
 	}
 
-	public static String updateReportFrequency(int frequency)
+	public static org.json.JSONObject updateReportFrequency(int frequency)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserPropertiesServiceUtil.updateReportFrequency(frequency);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -94,14 +96,14 @@ public class UserPropertiesServiceSoap {
 		}
 	}
 
-	public static String updateWebdavState(boolean isEnabled)
+	public static org.json.JSONObject updateWebdavState(boolean isEnabled)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserPropertiesServiceUtil.updateWebdavState(isEnabled);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -110,16 +112,16 @@ public class UserPropertiesServiceSoap {
 		}
 	}
 
-	public static String updateWebdavPassword(
+	public static org.json.JSONObject updateWebdavPassword(
 			String password, String confirmPassword)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserPropertiesServiceUtil.updateWebdavPassword(
 					password, confirmPassword);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

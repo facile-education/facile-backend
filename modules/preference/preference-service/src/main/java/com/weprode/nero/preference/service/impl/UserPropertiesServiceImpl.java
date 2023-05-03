@@ -2,9 +2,9 @@ package com.weprode.nero.preference.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -48,7 +48,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
     @JSONWebService(value = "update-user-picture", method = "POST")
     public JSONObject updateUserPicture(File picture) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -83,7 +83,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
     @JSONWebService(value = "update-theme-color", method = "POST")
     public JSONObject updateThemeColor(String color) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -124,7 +124,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
     @JSONWebService(value = "update-report-frequency", method = "POST")
     public JSONObject updateReportFrequency(int frequency) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -160,7 +160,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
     @JSONWebService(value = "update-webdav-state", method = "POST")
     public JSONObject updateWebdavState(boolean isEnabled) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -207,7 +207,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
     @JSONWebService(value = "update-webdav-password", method = "POST")
     public JSONObject updateWebdavPassword(String password, String confirmPassword) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -237,7 +237,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
     }
 
     private JSONObject updateUserPasword(User user, String password, boolean isUpdated, boolean isWebdav) throws PortalException, SystemException {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(user, password, password, false);
         if (!errorMessage.equals("")) {
@@ -280,7 +280,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
             String subject = "Activation de webdav";
             // String subject = "Modification du mot de passe de " + (isWebdav ? "webdav" : "l'ENT");
 
-            JSONArray attachFiles = JSONFactoryUtil.createJSONArray();
+            JSONArray attachFiles = new JSONArray();
             // TODO Messaging
             // InternalMessageLocalServiceUtil.sendInternalMessage(admin, dest, subject, msg, attachFiles, 0, 0);
             result.put(JSONConstants.SUCCESS, true);
