@@ -1,9 +1,9 @@
 package com.weprode.nero.organization.service.impl;
 
 import com.liferay.portal.kernel.exception.RolePermissionsException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -38,7 +38,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-visibility-schools", method = "GET")
     public JSONObject getVisibilitySchools() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -53,10 +53,10 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonSchools = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonSchools = new JSONArray();
             List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserVisibilitySchools(user);
             for (Organization userSchool : userSchools) {
-                JSONObject jsonSchool = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonSchool = new JSONObject();
                 jsonSchool.put(JSONConstants.SCHOOL_ID, userSchool.getOrganizationId());
                 jsonSchool.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
                 jsonSchools.put(jsonSchool);
@@ -74,7 +74,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-all-schools", method = "GET")
     public JSONObject getAllSchools() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User agent;
         try {
@@ -93,10 +93,10 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
         }
 
         try {
-            JSONArray jsonSchools = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonSchools = new JSONArray();
             List<Organization> schools = OrgUtilsLocalServiceUtil.getAllSchools();
             for (Organization userSchool : schools) {
-                JSONObject jsonSchool = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonSchool = new JSONObject();
                 jsonSchool.put(JSONConstants.SCHOOL_ID, userSchool.getOrganizationId());
                 jsonSchool.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
                 jsonSchools.put(jsonSchool);
@@ -115,7 +115,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-school-classes", method = "GET")
     public JSONObject getSchoolClasses(long schoolId, boolean includeCours) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -140,7 +140,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
             schoolId = UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId();
         }
 
-        JSONArray jsonOrgs = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonOrgs = new JSONArray();
 
         // Loop over schools
         List<Integer> types = new ArrayList<>();
@@ -154,7 +154,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
         // Loop over classes
         for (Organization org : schoolOrganizations) {
             if (org.getParentOrganizationId() == schoolId) {
-                JSONObject jsonOrg = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonOrg = new JSONObject();
                 jsonOrg.put(JSONConstants.ORG_ID, org.getOrganizationId());
                 jsonOrg.put(JSONConstants.ORG_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
                 jsonOrgs.put(jsonOrg);
@@ -173,7 +173,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
      */
     @JSONWebService(value = "get-school-volees", method = "GET")
     public JSONObject getSchoolVolees(long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -208,7 +208,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.VOLEE_TYPE);
 
-        JSONArray voleeArray = JSONFactoryUtil.createJSONArray();
+        JSONArray voleeArray = new JSONArray();
         List<String> voleeNames = new ArrayList<>();
 
         // Get volees from user schools

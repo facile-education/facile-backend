@@ -19,7 +19,7 @@ import org.osgi.service.component.annotations.Reference;
 import java.util.List;
 
 @Component(service = OrgUtilsFinder.class)
-public class OrgUtilsFinderImpl extends BasePersistenceImpl<OrgUtils>
+public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
         implements OrgUtilsFinder {
 
     private static final Log logger = LogFactoryUtil.getLog(OrgUtilsFinderImpl.class);
