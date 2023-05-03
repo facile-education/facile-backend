@@ -64,16 +64,16 @@ import java.rmi.RemoteException;
 @Deprecated
 public class CDTSessionServiceSoap {
 
-	public static String getHorairesSessions(
+	public static org.json.JSONObject getHorairesSessions(
 			long userId, long groupId, String start, String end, String volee)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				CDTSessionServiceUtil.getHorairesSessions(
 					userId, groupId, start, end, volee);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -82,28 +82,14 @@ public class CDTSessionServiceSoap {
 		}
 	}
 
-	public static String getTeacherGroups() throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				CDTSessionServiceUtil.getTeacherGroups();
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getSessionDetails(long sessionId)
+	public static org.json.JSONObject getTeacherGroups()
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				CDTSessionServiceUtil.getSessionDetails(sessionId);
+			org.json.JSONObject returnValue =
+				CDTSessionServiceUtil.getTeacherGroups();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -112,18 +98,34 @@ public class CDTSessionServiceSoap {
 		}
 	}
 
-	public static String createSession(
+	public static org.json.JSONObject getSessionDetails(long sessionId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				CDTSessionServiceUtil.getSessionDetails(sessionId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject createSession(
 			long groupId, String subject, String room, String startDate,
 			String endDate, String teacherIds, boolean isRecurrent)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				CDTSessionServiceUtil.createSession(
 					groupId, subject, room, startDate, endDate, teacherIds,
 					isRecurrent);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

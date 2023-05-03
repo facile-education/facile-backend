@@ -67,19 +67,17 @@ public class CDTSessionLocalServiceUtil {
 		return getService().assignSessionContent(sessionId, progressionItemId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray
-		convertSessionsToJson(
-			List<CDTSession> sessions,
-			com.liferay.portal.kernel.model.User user, long colorsTeacherId) {
+	public static org.json.JSONArray convertSessionsToJson(
+		List<CDTSession> sessions, com.liferay.portal.kernel.model.User user,
+		long colorsTeacherId) {
 
 		return getService().convertSessionsToJson(
 			sessions, user, colorsTeacherId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject copySessionContent(
+	public static org.json.JSONObject copySessionContent(
 		com.liferay.portal.kernel.model.User currentUser, long sourceSessionId,
-		long targetSessionId,
-		com.liferay.portal.kernel.json.JSONArray homeworksAsJSON) {
+		long targetSessionId, org.json.JSONArray homeworksAsJSON) {
 
 		return getService().copySessionContent(
 			currentUser, sourceSessionId, targetSessionId, homeworksAsJSON);

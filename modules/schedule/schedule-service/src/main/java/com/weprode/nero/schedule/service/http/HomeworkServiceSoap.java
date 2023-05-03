@@ -64,14 +64,15 @@ import java.rmi.RemoteException;
 @Deprecated
 public class HomeworkServiceSoap {
 
-	public static String getHomeworks(long studentId, String minDateStr)
+	public static org.json.JSONObject getHomeworks(
+			long studentId, String minDateStr)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				HomeworkServiceUtil.getHomeworks(studentId, minDateStr);
+			org.json.JSONObject returnValue = HomeworkServiceUtil.getHomeworks(
+				studentId, minDateStr);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -80,14 +81,15 @@ public class HomeworkServiceSoap {
 		}
 	}
 
-	public static String setHomeworkDone(long homeworkId, boolean isDone)
+	public static org.json.JSONObject setHomeworkDone(
+			long homeworkId, boolean isDone)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				HomeworkServiceUtil.setHomeworkDone(homeworkId, isDone);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

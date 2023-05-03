@@ -52,7 +52,7 @@ import com.weprode.nero.schedule.service.ScheduleConfigurationServiceUtil;
  */
 public class ScheduleConfigurationServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getConfiguration(
+	public static org.json.JSONObject getConfiguration(
 		HttpPrincipal httpPrincipal, long schoolId, long childId) {
 
 		try {
@@ -73,7 +73,7 @@ public class ScheduleConfigurationServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

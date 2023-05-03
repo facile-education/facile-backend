@@ -64,15 +64,16 @@ import java.rmi.RemoteException;
 @Deprecated
 public class SessionTeacherServiceSoap {
 
-	public static String getSessionTeachersAndSubstitutes(long sessionId)
+	public static org.json.JSONObject getSessionTeachersAndSubstitutes(
+			long sessionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SessionTeacherServiceUtil.getSessionTeachersAndSubstitutes(
 					sessionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -81,16 +82,16 @@ public class SessionTeacherServiceSoap {
 		}
 	}
 
-	public static String saveTeacherSubstitutes(
+	public static org.json.JSONObject saveTeacherSubstitutes(
 			long sessionId, String teacherArray)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SessionTeacherServiceUtil.saveTeacherSubstitutes(
 					sessionId, teacherArray);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

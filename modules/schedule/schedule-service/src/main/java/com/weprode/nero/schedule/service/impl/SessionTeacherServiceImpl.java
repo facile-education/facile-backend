@@ -3,10 +3,9 @@ package com.weprode.nero.schedule.service.impl;
 import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -48,7 +47,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 
 	@JSONWebService(value = "get-session-teachers-and-substitutes", method = "GET")
 	public JSONObject getSessionTeachersAndSubstitutes (long sessionId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
@@ -70,7 +69,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 		logger.info(user.getScreenName() + " is fetching teacher infos for sessionId "+sessionId);
 
 		List<SessionTeacher> sessionTeachers = SessionTeacherLocalServiceUtil.getSessionTeachers(sessionId);
-		JSONArray teacherArray = JSONFactoryUtil.createJSONArray();
+		JSONArray teacherArray = new JSONArray();
 
 		for (SessionTeacher sessionTeacher : sessionTeachers) {
 
@@ -79,7 +78,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 				continue;
 			}
 
-			JSONObject teacherJSON = JSONFactoryUtil.createJSONObject();
+			JSONObject teacherJSON = new JSONObject();
 
 			User teacher;
 			try {
@@ -102,7 +101,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 					return result;
 				}
 
-				JSONObject substituteJSON = JSONFactoryUtil.createJSONObject();
+				JSONObject substituteJSON = new JSONObject();
 				substituteJSON.put(JSONConstants.TEACHER_ID, substitute.getUserId());
 				substituteJSON.put(JSONConstants.DISPLAY_NAME, substitute.getFullName());
 				substituteJSON.put(JSONConstants.FIRST_NAME, substitute.getFirstName());
@@ -111,7 +110,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 			}
 
 			// Get teacher sessions for the coming month
-			JSONArray sessionArray = JSONFactoryUtil.createJSONArray();
+			JSONArray sessionArray = new JSONArray();
 			CDTSession session;
 			try {
 				session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
@@ -162,7 +161,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 
 	@JSONWebService(value = "save-teacher-substitutes", method = "POST")
 	public JSONObject saveTeacherSubstitutes(long sessionId, String teacherArray) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
@@ -183,7 +182,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 
 		JSONArray teachers;
 		try {
-			teachers = JSONFactoryUtil.createJSONArray(teacherArray);
+			teachers = new JSONArray(teacherArray);
 		} catch (JSONException e) {
 			logger.error("Could not convert string into JSONArray", e);
 			result.put(JSONConstants.SUCCESS, false);
@@ -194,8 +193,8 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 		for (int i = 0 ; i<teachers.length() ; i++) {
 			JSONObject teacher = teachers.getJSONObject(i);
 			long teacherId = teacher.getLong(JSONConstants.TEACHER_ID);
-			long substituteId = teacher.getLong(JSONConstants.SUBSTITUTE_ID, 0);
-			User teacherUser = null;
+			long substituteId = JSONConstants.getLongValue(teacher, JSONConstants.SUBSTITUTE_ID, 0);
+			User teacherUser;
 			try {
 				teacherUser = UserLocalServiceUtil.getUser(teacherId);
 			} catch (Exception e) {
@@ -219,9 +218,9 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 			}
 
 			// Adding substitute for current and next sessions
-			long lastSessionId = teacher.getLong("lastSessionId", 0);
+			long lastSessionId = JSONConstants.getLongValue(teacher, JSONConstants.LAST_SESSION_ID, 0);
 			if (substituteId > 0 && lastSessionId > 0) {
-				boolean allSlot = teacher.getBoolean("allSlots", false);
+				boolean allSlot = JSONConstants.getBoolValue(teacher, JSONConstants.ALL_SLOTS, false);
 				CDTSession session;
 				try {
 					session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
@@ -280,7 +279,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 											Organization org = OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
 											// Add affectation for teacher to organization, with expiration date
 
-											Date expirationDate = null;
+											Date expirationDate;
 											if (allSlot) {
 												// Expiration date is the school year end date
 												ScheduleConfiguration cdtConfig = ScheduleConfigurationLocalServiceUtil.getSchoolConfiguration(nextSession.getSchoolId());

@@ -339,8 +339,7 @@ public class WeeklyScheduleLocalServiceWrapper
 	@Override
 	public java.util.List<com.weprode.nero.schedule.model.WeeklySchedule>
 			replaceWeeklyScheduleBySchoolId(
-				com.liferay.portal.kernel.json.JSONArray dayIdList,
-				Long schoolId)
+				org.json.JSONArray dayIdList, Long schoolId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _weeklyScheduleLocalService.replaceWeeklyScheduleBySchoolId(

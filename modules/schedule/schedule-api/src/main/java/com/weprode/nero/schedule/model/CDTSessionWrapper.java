@@ -146,19 +146,19 @@ public class CDTSessionWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON() {
+	public org.json.JSONObject convertToJSON() {
 		return model.convertToJSON();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
+	public org.json.JSONObject convertToJSON(
 		boolean includeDetails, com.liferay.portal.kernel.model.User user) {
 
 		return model.convertToJSON(includeDetails, user);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
+	public org.json.JSONObject convertToJSON(
 		long colorsTeacherId, com.liferay.portal.kernel.model.User user) {
 
 		return model.convertToJSON(colorsTeacherId, user);

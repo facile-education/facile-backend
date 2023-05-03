@@ -31,7 +31,7 @@ public class CDTSessionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createSession(
+	public org.json.JSONObject createSession(
 		long groupId, String subject, String room, String startDate,
 		String endDate, String teacherIds, boolean isRecurrent) {
 
@@ -41,7 +41,7 @@ public class CDTSessionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getHorairesSessions(
+	public org.json.JSONObject getHorairesSessions(
 		long userId, long groupId, String start, String end, String volee) {
 
 		return _cdtSessionService.getHorairesSessions(
@@ -59,14 +59,12 @@ public class CDTSessionServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSessionDetails(
-		long sessionId) {
-
+	public org.json.JSONObject getSessionDetails(long sessionId) {
 		return _cdtSessionService.getSessionDetails(sessionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getTeacherGroups() {
+	public org.json.JSONObject getTeacherGroups() {
 		return _cdtSessionService.getTeacherGroups();
 	}
 

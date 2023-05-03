@@ -140,7 +140,7 @@ public class HomeworkWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
+	public org.json.JSONObject convertToJSON(
 		com.liferay.portal.kernel.model.User user) {
 
 		return model.convertToJSON(user);

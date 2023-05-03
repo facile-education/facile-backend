@@ -31,8 +31,7 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getHomeworks(
-			long studentId, String minDateStr)
+	public org.json.JSONObject getHomeworks(long studentId, String minDateStr)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
@@ -50,7 +49,7 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject setHomeworkDone(
+	public org.json.JSONObject setHomeworkDone(
 		long homeworkId, boolean isDone) {
 
 		return _homeworkService.setHomeworkDone(homeworkId, isDone);

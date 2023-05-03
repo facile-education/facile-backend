@@ -52,7 +52,7 @@ import com.weprode.nero.schedule.service.HomeworkServiceUtil;
  */
 public class HomeworkServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getHomeworks(
+	public static org.json.JSONObject getHomeworks(
 			HttpPrincipal httpPrincipal, long studentId, String minDateStr)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
@@ -89,7 +89,7 @@ public class HomeworkServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -100,7 +100,7 @@ public class HomeworkServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject setHomeworkDone(
+	public static org.json.JSONObject setHomeworkDone(
 		HttpPrincipal httpPrincipal, long homeworkId, boolean isDone) {
 
 		try {
@@ -121,7 +121,7 @@ public class HomeworkServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

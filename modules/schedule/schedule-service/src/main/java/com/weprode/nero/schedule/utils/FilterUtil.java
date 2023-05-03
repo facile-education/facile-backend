@@ -1,8 +1,8 @@
 package com.weprode.nero.schedule.utils;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -28,7 +28,7 @@ public class FilterUtil {
     private static final Log logger = LogFactoryUtil.getLog(FilterUtil.class);
 
     public static JSONArray getGroupsForFilter(User teacher) {
-        JSONArray schoolsArray = JSONFactoryUtil.createJSONArray();
+        JSONArray schoolsArray = new JSONArray();
 
         List<Organization> userOrganizations = UserOrgsLocalServiceUtil.getUserClassesAndCours(teacher, false);
         List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserSchools(teacher);
@@ -37,15 +37,15 @@ public class FilterUtil {
         // Loop over schools
         for (Organization school: userSchools){
 
-            JSONObject schoolObject = JSONFactoryUtil.createJSONObject();
+            JSONObject schoolObject = new JSONObject();
             schoolObject.put(JSONConstants.SCHOOL_ID, school.getGroupId());
             schoolObject.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true));
 
             // Loop over classes
-            JSONArray groupsArray = JSONFactoryUtil.createJSONArray();
+            JSONArray groupsArray = new JSONArray();
             for (Organization org : userOrganizations){
                 if (org.getParentOrganizationId() == school.getOrganizationId()) {
-                    JSONObject classObject = JSONFactoryUtil.createJSONObject();
+                    JSONObject classObject = new JSONObject();
                     classObject.put(JSONConstants.GROUP_ID, org.getGroupId());
                     classObject.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
                     groupsArray.put(classObject);
@@ -57,11 +57,11 @@ public class FilterUtil {
 
         // Loop over personal groups
         if (!personalGroups.isEmpty()) {
-            JSONObject schoolObject = JSONFactoryUtil.createJSONObject();
+            JSONObject schoolObject = new JSONObject();
             schoolObject.put(JSONConstants.SCHOOL_NAME, "Personnels");
-            JSONArray groupsArray = JSONFactoryUtil.createJSONArray();
+            JSONArray groupsArray = new JSONArray();
             for (Group group : personalGroups) {
-                JSONObject groupObject = JSONFactoryUtil.createJSONObject();
+                JSONObject groupObject = new JSONObject();
                 groupObject.put(JSONConstants.GROUP_ID, group.getGroupId());
                 groupObject.put(JSONConstants.GROUP_NAME, group.getName());
                 groupObject.put(JSONConstants.IS_PERSONAL_GROUP, true);

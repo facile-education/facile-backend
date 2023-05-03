@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
@@ -38,6 +37,8 @@ import com.weprode.nero.schedule.service.persistence.WeeklySchedulePK;
 import java.io.Serializable;
 
 import java.util.List;
+
+import org.json.JSONArray;
 
 import org.osgi.annotation.versioning.ProviderType;
 

@@ -310,7 +310,7 @@ public class WeeklyScheduleLocalServiceUtil {
 	 * Sunday = 0 / Monday = 1 ...... / Saturday = 6
 	 */
 	public static List<WeeklySchedule> replaceWeeklyScheduleBySchoolId(
-			com.liferay.portal.kernel.json.JSONArray dayIdList, Long schoolId)
+			org.json.JSONArray dayIdList, Long schoolId)
 		throws SystemException {
 
 		return getService().replaceWeeklyScheduleBySchoolId(

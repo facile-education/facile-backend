@@ -4,9 +4,9 @@ import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -41,7 +41,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 	@JSONWebService(value = "get-homeworks", method = "GET")
 	public JSONObject getHomeworks(long studentId, String minDateStr) throws SystemException, PortalException {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 		
 		User currentUser;
 		try {
@@ -61,7 +61,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			minDate = new Date();
 		}
 
-		JSONArray homeworks = JSONFactoryUtil.createJSONArray();
+		JSONArray homeworks = new JSONArray();
 
 		List<Homework> homeworkList = new ArrayList<>();
 		if (RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
@@ -87,7 +87,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 	@JSONWebService(value = "set-homework-done", method = "GET")
 	public JSONObject setHomeworkDone(long homeworkId, boolean isDone) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 		
 		User user;
 		try {

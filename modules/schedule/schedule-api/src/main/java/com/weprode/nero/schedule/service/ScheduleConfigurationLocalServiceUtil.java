@@ -316,8 +316,8 @@ public class ScheduleConfigurationLocalServiceUtil {
 		return getService().getSchoolConfiguration(schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSchoolConfigurationAsJson(long schoolId) {
+	public static org.json.JSONObject getSchoolConfigurationAsJson(
+		long schoolId) {
 
 		return getService().getSchoolConfigurationAsJson(schoolId);
 	}

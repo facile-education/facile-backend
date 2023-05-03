@@ -3,7 +3,7 @@ package com.weprode.nero.schedule.service.impl;
 import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
+import org.json.JSONArray;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.schedule.model.WeeklySchedule;

@@ -1,11 +1,7 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -23,11 +19,10 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.CDTSessionServiceBaseImpl;
-
 import com.weprode.nero.schedule.utils.FilterUtil;
 import com.weprode.nero.schedule.utils.JSONProxy;
-import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
-import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -48,7 +43,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 	@JSONWebService(value = "get-horaires-sessions", method = "GET")
 	public JSONObject getHorairesSessions(long userId, long groupId, String start, String end, String volee) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User currentUser;
 		try {
@@ -99,17 +94,17 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			result.put(JSONConstants.SESSIONS, JSONProxy.convertSessionsToJson(userSessions, currentUser, colorsTeacherId));
 
 			// 2. Schoollife sessions
-			JSONArray jsonSchoollifeSessions = JSONFactoryUtil.createJSONArray();
+			JSONArray jsonSchoollifeSessions = new JSONArray();
 			if (targetUser != null && RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
-				jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), startDate, endDate);
+				// jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), startDate, endDate);
 			} else if (targetUser != null && RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
-				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), startDate, endDate);
+				// jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), startDate, endDate);
 			}
 
 			// Transform teachers
 			for (int i = 0 ; i < jsonSchoollifeSessions.length() ; i++) {
 				JSONObject jsonSchoollifeSession = jsonSchoollifeSessions.getJSONObject(i);
-				JSONArray jsonTeachers = JSONFactoryUtil.createJSONArray();
+				JSONArray jsonTeachers = new JSONArray();
 				if (jsonSchoollifeSession.getJSONObject(JSONConstants.TEACHER) != null) {
 					jsonTeachers.put(jsonSchoollifeSession.getJSONObject(JSONConstants.TEACHER));
 				}
@@ -128,7 +123,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 	@JSONWebService(value = "get-teacher-groups", method = "GET")
 	public JSONObject getTeacherGroups() {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User currentUser;
 		try {
@@ -149,8 +144,8 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 	@JSONWebService(value = "get-session-details", method = "GET")
 	public JSONObject getSessionDetails(long sessionId) {
+		JSONObject result = new JSONObject();
 
-		JSONObject result = JSONFactoryUtil.createJSONObject();
 		User user;
 		try {
 			user = getGuestOrUser();
@@ -183,9 +178,9 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 	@JSONWebService(value = "create-session", method = "POST")
 	public JSONObject createSession(long groupId, String subject, String room, String startDate, String endDate, String teacherIds, boolean isRecurrent) {
-
 		logger.info("Creating manual session(s) for group " + groupId + ", subject=" + subject + " from " + startDate + " to " + endDate + ", teacherIds=" + teacherIds + ", isRecurrent is " + isRecurrent);
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
+
 		User user;
 		try {
 			user = getGuestOrUser();
@@ -214,7 +209,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			Date end = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDate);
 
 			List<Long> teacherIdList = new ArrayList<>();
-			JSONArray jsonTeachers = JSONFactoryUtil.createJSONArray(teacherIds);
+			JSONArray jsonTeachers = new JSONArray(teacherIds);
 			if (jsonTeachers != null) {
 				for (int i = 0 ; i < jsonTeachers.length() ; i++) {
 					JSONObject jsonTeacher = jsonTeachers.getJSONObject(i);
