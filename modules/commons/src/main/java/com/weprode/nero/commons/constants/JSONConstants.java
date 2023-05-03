@@ -432,4 +432,12 @@ public class JSONConstants {
             return defaultValue;
         }
     }
+
+    public static String getStringValue(JSONObject object, String property, String defaultValue) {
+        try {
+            return object.getString(property);
+        } catch (JSONException e) {
+            return defaultValue;
+        }
+    }
 }
