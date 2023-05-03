@@ -4,6 +4,7 @@ dependencies {
 	compile project(":modules:user:user-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	compileOnly group: 'org.json', name: 'json'
 }
 
 buildService {

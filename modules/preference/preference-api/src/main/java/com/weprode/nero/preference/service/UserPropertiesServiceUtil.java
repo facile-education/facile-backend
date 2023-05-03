@@ -43,34 +43,25 @@ public class UserPropertiesServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		updateReportFrequency(int frequency) {
-
+	public static org.json.JSONObject updateReportFrequency(int frequency) {
 		return getService().updateReportFrequency(frequency);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateThemeColor(
-		java.lang.String color) {
-
+	public static org.json.JSONObject updateThemeColor(java.lang.String color) {
 		return getService().updateThemeColor(color);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateUserPicture(
-		java.io.File picture) {
-
+	public static org.json.JSONObject updateUserPicture(java.io.File picture) {
 		return getService().updateUserPicture(picture);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		updateWebdavPassword(
-			java.lang.String password, java.lang.String confirmPassword) {
+	public static org.json.JSONObject updateWebdavPassword(
+		java.lang.String password, java.lang.String confirmPassword) {
 
 		return getService().updateWebdavPassword(password, confirmPassword);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updateWebdavState(
-		boolean isEnabled) {
-
+	public static org.json.JSONObject updateWebdavState(boolean isEnabled) {
 		return getService().updateWebdavState(isEnabled);
 	}
 
