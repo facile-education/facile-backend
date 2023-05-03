@@ -1,9 +1,9 @@
 package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -44,9 +44,9 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
 
     @JSONWebService(value = "get-pending-renvois", method = "GET")
     public JSONObject getPendingRenvois() {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
-        JSONArray jsonRenvois = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonRenvois = new JSONArray();
         try {
             User teacher = getGuestOrUser();
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -55,7 +55,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
             for (Renvoi pendingRenvoi : pendingRenvois) {
                 if (pendingRenvoi.getSourceSchoollifeSessionId() != 0 || SessionTeacherLocalServiceUtil.hasTeacherSession(teacher.getUserId(), pendingRenvoi.getSourceSessionId())) {
 
-                    JSONObject jsonRenvoi = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonRenvoi = new JSONObject();
                     jsonRenvoi.put(JSONConstants.SCHOOLLIFE_SESSION_ID, pendingRenvoi.getSchoollifeSessionId());
                     if (pendingRenvoi.getSourceSessionId() != 0) {
                         jsonRenvoi.put(JSONConstants.SOURCE_SESSION_ID, pendingRenvoi.getSourceSessionId());
@@ -95,7 +95,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
 
     @JSONWebService(value = "register-student-renvoi", method = "GET")
     public JSONObject registerStudentRenvoi(long schoollifeSessionId, long sourceTeacherId, long studentId, long sourceSessionId, long sourceSchoollifeSessionId, String registrationDate) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             User teacher = getGuestOrUser();
@@ -125,7 +125,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
 
     @JSONWebService(value = "set-renvoi-reason", method = "POST")
     public JSONObject setRenvoiReason(long schoollifeSessionId, long studentId, String reason) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             User teacher = getGuestOrUser();
@@ -143,7 +143,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
 
     @JSONWebService(value = "unregister-student-renvoi", method = "GET")
     public JSONObject unregisterStudentRenvoi(long schoollifeSessionId, long studentId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             User teacher = getGuestOrUser();
@@ -168,7 +168,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
 
     @JSONWebService(value = "get-candidate-sessions", method = "GET")
     public JSONObject getCandidateSessions(long schoollifeSessionId, long studentId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -188,7 +188,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
             // 2. CDT sessions
             List<CDTSession> studentDaySessions = CDTSessionLocalServiceUtil.getStudentSessions(studentId, minDate, schoollifeSession.getEndDate());
             for (CDTSession studentDaySession : studentDaySessions) {
-                JSONObject sessionJson = JSONFactoryUtil.createJSONObject();
+                JSONObject sessionJson = new JSONObject();
                 sessionJson.put(JSONConstants.SESSION_ID, studentDaySession.getSessionId());
                 sessionJson.put(JSONConstants.TITLE, studentDaySession.getTitle());
                 sessionJson.put(JSONConstants.SUBJECT, studentDaySession.getSubject());
@@ -197,7 +197,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 sessionJson.put(JSONConstants.ROOM, studentDaySession.getRoom());
 
                 // Teachers
-                JSONArray teachersJson = JSONFactoryUtil.createJSONArray();
+                JSONArray teachersJson = new JSONArray();
                 List<User> teachers = SessionTeacherLocalServiceUtil.getTeachers(studentDaySession.getSessionId());
                 boolean thereIsSubstituteTeacherInList = false;
                 for (User teacher : teachers) {
@@ -209,13 +209,13 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 for (User teacher : teachers) {
                     if (thereIsSubstituteTeacherInList) { // Only add the substitute Teacher
                         if (SessionTeacherLocalServiceUtil.isSubstituted(teacher.getUserId(), studentDaySession.getSessionId())) {
-                            JSONObject teacherJson = JSONFactoryUtil.createJSONObject();
+                            JSONObject teacherJson = new JSONObject();
                             teacherJson.put(JSONConstants.TEACHER_ID, teacher.getUserId());
                             teacherJson.put(JSONConstants.NAME, teacher.getFullName());
                             teachersJson.put(teacherJson);
                         }
                     } else {
-                        JSONObject teacherJson = JSONFactoryUtil.createJSONObject();
+                        JSONObject teacherJson = new JSONObject();
                         teacherJson.put(JSONConstants.TEACHER_ID, teacher.getUserId());
                         teacherJson.put(JSONConstants.NAME, teacher.getFullName());
                         teachersJson.put(teacherJson);

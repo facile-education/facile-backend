@@ -33,7 +33,7 @@ public class SchoollifeSlotServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.school.life.service.impl.SchoollifeSlotServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject createSlot(
+	public static org.json.JSONObject createSlot(
 		long schoolId, java.lang.String startDateStr, int day,
 		java.lang.String startHour, java.lang.String endHour, long teacherId,
 		int type, java.lang.String room, int capacity) {
@@ -43,13 +43,13 @@ public class SchoollifeSlotServiceUtil {
 			room, capacity);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteSlot(
+	public static org.json.JSONObject deleteSlot(
 		long schoollifeSessionId, java.lang.String startDateStr) {
 
 		return getService().deleteSlot(schoollifeSessionId, startDateStr);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject editSlot(
+	public static org.json.JSONObject editSlot(
 		long schoollifeSessionId, java.lang.String startDateStr, int newDay,
 		java.lang.String newStartHour, java.lang.String newEndHour,
 		long newTeacherId, java.lang.String newRoom, int newCapacity) {

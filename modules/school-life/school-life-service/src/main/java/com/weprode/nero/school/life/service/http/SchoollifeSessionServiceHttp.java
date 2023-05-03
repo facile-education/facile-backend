@@ -52,7 +52,7 @@ import com.weprode.nero.school.life.service.SchoollifeSessionServiceUtil;
  */
 public class SchoollifeSessionServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getWeekSessions(
+	public static org.json.JSONObject getWeekSessions(
 		HttpPrincipal httpPrincipal, long schoolId, int type,
 		String currentDateStr) {
 
@@ -74,7 +74,7 @@ public class SchoollifeSessionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

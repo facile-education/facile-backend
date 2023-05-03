@@ -2,8 +2,8 @@ package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -124,7 +124,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
     }
 
     public JSONObject convertRenvoiToJson(Renvoi renvoi) {
-        JSONObject jsonPendingRenvoi = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonPendingRenvoi = new JSONObject();
 
         try {
             SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -221,7 +221,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
     }
 
     public JSONObject convertSchoolRenvoi(Renvoi schoolRenvoi) {
-        JSONObject jsonSchoolRenvoi = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonSchoolRenvoi = new JSONObject();
 
         try {
             SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);

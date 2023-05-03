@@ -2,9 +2,9 @@ package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
@@ -178,7 +178,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
     }
 
     public JSONArray getTeacherSessions(long teacherId, Date minDate, Date maxDate) {
-        JSONArray jsonSessions = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonSessions = new JSONArray();
 
         try {
             SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -191,7 +191,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
                         if (!slotSession.getStartDate().before(minDate) && !slotSession.getEndDate().after(maxDate)) {
 
                             // Convert schoollife session to JSON
-                            JSONObject jsonSession = JSONFactoryUtil.createJSONObject();
+                            JSONObject jsonSession = new JSONObject();
                             jsonSession.put(JSONConstants.SCHOOLLIFE_SESSION_ID, slotSession.getSchoollifeSessionId());
                             jsonSession.put(JSONConstants.START_DATE, df.format(slotSession.getStartDate()));
                             jsonSession.put(JSONConstants.END_DATE, df.format(slotSession.getEndDate()));

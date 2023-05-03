@@ -318,7 +318,7 @@ public class SchoollifeSessionLocalServiceUtil {
 		return getService().getSlotSessions(schoollifeSlotId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray getTeacherSessions(
+	public static org.json.JSONArray getTeacherSessions(
 		long teacherId, java.util.Date minDate, java.util.Date maxDate) {
 
 		return getService().getTeacherSessions(teacherId, minDate, maxDate);

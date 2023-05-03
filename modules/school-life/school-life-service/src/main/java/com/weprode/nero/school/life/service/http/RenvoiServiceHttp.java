@@ -52,7 +52,7 @@ import com.weprode.nero.school.life.service.RenvoiServiceUtil;
  */
 public class RenvoiServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getPendingRenvois(
+	public static org.json.JSONObject getPendingRenvois(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -72,7 +72,7 @@ public class RenvoiServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,11 +83,10 @@ public class RenvoiServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		registerStudentRenvoi(
-			HttpPrincipal httpPrincipal, long schoollifeSessionId,
-			long sourceTeacherId, long studentId, long sourceSessionId,
-			long sourceSchoollifeSessionId, String registrationDate) {
+	public static org.json.JSONObject registerStudentRenvoi(
+		HttpPrincipal httpPrincipal, long schoollifeSessionId,
+		long sourceTeacherId, long studentId, long sourceSessionId,
+		long sourceSchoollifeSessionId, String registrationDate) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -108,7 +107,7 @@ public class RenvoiServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -119,7 +118,7 @@ public class RenvoiServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject setRenvoiReason(
+	public static org.json.JSONObject setRenvoiReason(
 		HttpPrincipal httpPrincipal, long schoollifeSessionId, long studentId,
 		String reason) {
 
@@ -141,7 +140,7 @@ public class RenvoiServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -152,10 +151,8 @@ public class RenvoiServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		unregisterStudentRenvoi(
-			HttpPrincipal httpPrincipal, long schoollifeSessionId,
-			long studentId) {
+	public static org.json.JSONObject unregisterStudentRenvoi(
+		HttpPrincipal httpPrincipal, long schoollifeSessionId, long studentId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -175,7 +172,7 @@ public class RenvoiServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -186,10 +183,8 @@ public class RenvoiServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getCandidateSessions(
-			HttpPrincipal httpPrincipal, long schoollifeSessionId,
-			long studentId) {
+	public static org.json.JSONObject getCandidateSessions(
+		HttpPrincipal httpPrincipal, long schoollifeSessionId, long studentId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -209,7 +204,7 @@ public class RenvoiServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

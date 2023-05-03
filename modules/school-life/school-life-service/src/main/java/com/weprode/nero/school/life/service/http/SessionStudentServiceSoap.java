@@ -64,15 +64,16 @@ import java.rmi.RemoteException;
 @Deprecated
 public class SessionStudentServiceSoap {
 
-	public static String getSessionMembers(long schoollifeSessionId)
+	public static org.json.JSONObject getSessionMembers(
+			long schoollifeSessionId)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SessionStudentServiceUtil.getSessionMembers(
 					schoollifeSessionId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -81,16 +82,16 @@ public class SessionStudentServiceSoap {
 		}
 	}
 
-	public static String getSessions(
+	public static org.json.JSONObject getSessions(
 			long studentId, long classId, String minDateStr, String maxDateStr)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SessionStudentServiceUtil.getSessions(
 					studentId, classId, minDateStr, maxDateStr);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -99,18 +100,18 @@ public class SessionStudentServiceSoap {
 		}
 	}
 
-	public static String registerStudent(
+	public static org.json.JSONObject registerStudent(
 			long studentId, long schoollifeSessionId, String comment,
 			String replayTestSubject, boolean notifyParents)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SessionStudentServiceUtil.registerStudent(
 					studentId, schoollifeSessionId, comment, replayTestSubject,
 					notifyParents);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -119,18 +120,18 @@ public class SessionStudentServiceSoap {
 		}
 	}
 
-	public static String registerClass(
+	public static org.json.JSONObject registerClass(
 			long classId, long schoollifeSessionId, String comment,
 			String replayTestSubject, boolean notifyParents)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SessionStudentServiceUtil.registerClass(
 					classId, schoollifeSessionId, comment, replayTestSubject,
 					notifyParents);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -139,16 +140,16 @@ public class SessionStudentServiceSoap {
 		}
 	}
 
-	public static String unregisterStudent(
+	public static org.json.JSONObject unregisterStudent(
 			long studentId, long schoollifeSessionId, boolean allSessions)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SessionStudentServiceUtil.unregisterStudent(
 					studentId, schoollifeSessionId, allSessions);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -157,16 +158,16 @@ public class SessionStudentServiceSoap {
 		}
 	}
 
-	public static String markStudentsPresent(
+	public static org.json.JSONObject markStudentsPresent(
 			long schoollifeSessionId, String studentsPresence)
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				SessionStudentServiceUtil.markStudentsPresent(
 					schoollifeSessionId, studentsPresence);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

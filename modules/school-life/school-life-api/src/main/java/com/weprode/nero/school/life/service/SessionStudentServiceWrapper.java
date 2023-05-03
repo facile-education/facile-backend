@@ -43,14 +43,12 @@ public class SessionStudentServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSessionMembers(
-		long schoollifeSessionId) {
-
+	public org.json.JSONObject getSessionMembers(long schoollifeSessionId) {
 		return _sessionStudentService.getSessionMembers(schoollifeSessionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSessions(
+	public org.json.JSONObject getSessions(
 		long studentId, long classId, String minDateStr, String maxDateStr) {
 
 		return _sessionStudentService.getSessions(
@@ -58,7 +56,7 @@ public class SessionStudentServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject markStudentsPresent(
+	public org.json.JSONObject markStudentsPresent(
 		long schoollifeSessionId, String studentsPresence) {
 
 		return _sessionStudentService.markStudentsPresent(
@@ -66,7 +64,7 @@ public class SessionStudentServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject registerClass(
+	public org.json.JSONObject registerClass(
 		long classId, long schoollifeSessionId, String comment,
 		String replayTestSubject, boolean notifyParents) {
 
@@ -76,7 +74,7 @@ public class SessionStudentServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject registerStudent(
+	public org.json.JSONObject registerStudent(
 		long studentId, long schoollifeSessionId, String comment,
 		String replayTestSubject, boolean notifyParents) {
 
@@ -86,7 +84,7 @@ public class SessionStudentServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject unregisterStudent(
+	public org.json.JSONObject unregisterStudent(
 		long studentId, long schoollifeSessionId, boolean allSessions) {
 
 		return _sessionStudentService.unregisterStudent(

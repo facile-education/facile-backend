@@ -59,14 +59,14 @@ public class RenvoiLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertRenvoiToJson(
+	public org.json.JSONObject convertRenvoiToJson(
 		com.weprode.nero.school.life.model.Renvoi renvoi) {
 
 		return _renvoiLocalService.convertRenvoiToJson(renvoi);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject convertSchoolRenvoi(
+	public org.json.JSONObject convertSchoolRenvoi(
 		com.weprode.nero.school.life.model.Renvoi schoolRenvoi) {
 
 		return _renvoiLocalService.convertSchoolRenvoi(schoolRenvoi);

@@ -43,13 +43,13 @@ public class SessionStudentServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSessionMembers(
+	public static org.json.JSONObject getSessionMembers(
 		long schoollifeSessionId) {
 
 		return getService().getSessionMembers(schoollifeSessionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSessions(
+	public static org.json.JSONObject getSessions(
 		long studentId, long classId, java.lang.String minDateStr,
 		java.lang.String maxDateStr) {
 
@@ -57,14 +57,14 @@ public class SessionStudentServiceUtil {
 			studentId, classId, minDateStr, maxDateStr);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject markStudentsPresent(
+	public static org.json.JSONObject markStudentsPresent(
 		long schoollifeSessionId, java.lang.String studentsPresence) {
 
 		return getService().markStudentsPresent(
 			schoollifeSessionId, studentsPresence);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject registerClass(
+	public static org.json.JSONObject registerClass(
 		long classId, long schoollifeSessionId, java.lang.String comment,
 		java.lang.String replayTestSubject, boolean notifyParents) {
 
@@ -73,7 +73,7 @@ public class SessionStudentServiceUtil {
 			notifyParents);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject registerStudent(
+	public static org.json.JSONObject registerStudent(
 		long studentId, long schoollifeSessionId, java.lang.String comment,
 		java.lang.String replayTestSubject, boolean notifyParents) {
 
@@ -82,7 +82,7 @@ public class SessionStudentServiceUtil {
 			notifyParents);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject unregisterStudent(
+	public static org.json.JSONObject unregisterStudent(
 		long studentId, long schoollifeSessionId, boolean allSessions) {
 
 		return getService().unregisterStudent(

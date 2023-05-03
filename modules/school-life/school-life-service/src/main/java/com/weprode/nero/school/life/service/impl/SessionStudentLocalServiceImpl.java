@@ -1,9 +1,9 @@
 package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -190,7 +190,7 @@ public class SessionStudentLocalServiceImpl extends SessionStudentLocalServiceBa
     }
 
     public JSONArray getStudentSessions(long studentId, Date minDate, Date maxDate, Boolean withFired) {
-        JSONArray jsonSessions = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonSessions = new JSONArray();
         
         try {
             User student = UserLocalServiceUtil.getUser(studentId);
@@ -208,7 +208,7 @@ public class SessionStudentLocalServiceImpl extends SessionStudentLocalServiceBa
                             SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(studentSession.getSchoollifeSessionId());
                             if (withFired || session.getType() != SchoollifeConstants.TYPE_RENVOI) {
                                 if (!session.getStartDate().before(minDate) && session.getStartDate().before(maxDate)) {
-                                    JSONObject schoollifeSessionJson = JSONFactoryUtil.createJSONObject();
+                                    JSONObject schoollifeSessionJson = new JSONObject();
                                     schoollifeSessionJson.put(JSONConstants.SCHOOLLIFE_SESSION_ID, studentSession.getSchoollifeSessionId());
                                     schoollifeSessionJson.put(JSONConstants.START_DATE, df.format(session.getStartDate()));
                                     schoollifeSessionJson.put(JSONConstants.END_DATE, df.format(session.getEndDate()));
@@ -223,7 +223,7 @@ public class SessionStudentLocalServiceImpl extends SessionStudentLocalServiceBa
                                     schoollifeSessionJson.put(JSONConstants.ROOM, slot.getRoom());
 
                                     User teacher = UserLocalServiceUtil.getUser(slot.getTeacherId());
-                                    JSONObject jsonTeacher = JSONFactoryUtil.createJSONObject();
+                                    JSONObject jsonTeacher = new JSONObject();
                                     jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
                                     jsonTeacher.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
                                     jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());

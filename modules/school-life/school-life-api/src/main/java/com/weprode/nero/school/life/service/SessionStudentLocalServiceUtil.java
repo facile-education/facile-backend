@@ -319,13 +319,13 @@ public class SessionStudentLocalServiceUtil {
 		return getService().getSessionStudentsCount();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray getStudentSessions(
+	public static org.json.JSONArray getStudentSessions(
 		long studentId, java.util.Date minDate, java.util.Date maxDate) {
 
 		return getService().getStudentSessions(studentId, minDate, maxDate);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray getStudentSessions(
+	public static org.json.JSONArray getStudentSessions(
 		long studentId, java.util.Date minDate, java.util.Date maxDate,
 		Boolean withFired) {
 

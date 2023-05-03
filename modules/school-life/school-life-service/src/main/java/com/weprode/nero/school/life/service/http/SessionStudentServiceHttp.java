@@ -52,7 +52,7 @@ import com.weprode.nero.school.life.service.SessionStudentServiceUtil;
  */
 public class SessionStudentServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getSessionMembers(
+	public static org.json.JSONObject getSessionMembers(
 		HttpPrincipal httpPrincipal, long schoollifeSessionId) {
 
 		try {
@@ -73,7 +73,7 @@ public class SessionStudentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,7 +84,7 @@ public class SessionStudentServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSessions(
+	public static org.json.JSONObject getSessions(
 		HttpPrincipal httpPrincipal, long studentId, long classId,
 		String minDateStr, String maxDateStr) {
 
@@ -106,7 +106,7 @@ public class SessionStudentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -117,7 +117,7 @@ public class SessionStudentServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject registerStudent(
+	public static org.json.JSONObject registerStudent(
 		HttpPrincipal httpPrincipal, long studentId, long schoollifeSessionId,
 		String comment, String replayTestSubject, boolean notifyParents) {
 
@@ -140,7 +140,7 @@ public class SessionStudentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -151,7 +151,7 @@ public class SessionStudentServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject registerClass(
+	public static org.json.JSONObject registerClass(
 		HttpPrincipal httpPrincipal, long classId, long schoollifeSessionId,
 		String comment, String replayTestSubject, boolean notifyParents) {
 
@@ -174,7 +174,7 @@ public class SessionStudentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -185,7 +185,7 @@ public class SessionStudentServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject unregisterStudent(
+	public static org.json.JSONObject unregisterStudent(
 		HttpPrincipal httpPrincipal, long studentId, long schoollifeSessionId,
 		boolean allSessions) {
 
@@ -207,7 +207,7 @@ public class SessionStudentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -218,7 +218,7 @@ public class SessionStudentServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject markStudentsPresent(
+	public static org.json.JSONObject markStudentsPresent(
 		HttpPrincipal httpPrincipal, long schoollifeSessionId,
 		String studentsPresence) {
 
@@ -240,7 +240,7 @@ public class SessionStudentServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

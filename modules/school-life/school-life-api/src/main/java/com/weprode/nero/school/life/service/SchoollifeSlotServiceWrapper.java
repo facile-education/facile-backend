@@ -33,7 +33,7 @@ public class SchoollifeSlotServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createSlot(
+	public org.json.JSONObject createSlot(
 		long schoolId, String startDateStr, int day, String startHour,
 		String endHour, long teacherId, int type, String room, int capacity) {
 
@@ -43,7 +43,7 @@ public class SchoollifeSlotServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteSlot(
+	public org.json.JSONObject deleteSlot(
 		long schoollifeSessionId, String startDateStr) {
 
 		return _schoollifeSlotService.deleteSlot(
@@ -51,7 +51,7 @@ public class SchoollifeSlotServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject editSlot(
+	public org.json.JSONObject editSlot(
 		long schoollifeSessionId, String startDateStr, int newDay,
 		String newStartHour, String newEndHour, long newTeacherId,
 		String newRoom, int newCapacity) {

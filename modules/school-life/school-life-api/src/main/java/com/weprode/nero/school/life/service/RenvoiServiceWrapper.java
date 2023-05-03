@@ -31,7 +31,7 @@ public class RenvoiServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getCandidateSessions(
+	public org.json.JSONObject getCandidateSessions(
 		long schoollifeSessionId, long studentId) {
 
 		return _renvoiService.getCandidateSessions(
@@ -49,12 +49,12 @@ public class RenvoiServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getPendingRenvois() {
+	public org.json.JSONObject getPendingRenvois() {
 		return _renvoiService.getPendingRenvois();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject registerStudentRenvoi(
+	public org.json.JSONObject registerStudentRenvoi(
 		long schoollifeSessionId, long sourceTeacherId, long studentId,
 		long sourceSessionId, long sourceSchoollifeSessionId,
 		String registrationDate) {
@@ -65,7 +65,7 @@ public class RenvoiServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject setRenvoiReason(
+	public org.json.JSONObject setRenvoiReason(
 		long schoollifeSessionId, long studentId, String reason) {
 
 		return _renvoiService.setRenvoiReason(
@@ -73,7 +73,7 @@ public class RenvoiServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject unregisterStudentRenvoi(
+	public org.json.JSONObject unregisterStudentRenvoi(
 		long schoollifeSessionId, long studentId) {
 
 		return _renvoiService.unregisterStudentRenvoi(

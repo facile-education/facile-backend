@@ -33,8 +33,8 @@ public class RenvoiServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.school.life.service.impl.RenvoiServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject
-		getCandidateSessions(long schoollifeSessionId, long studentId) {
+	public static org.json.JSONObject getCandidateSessions(
+		long schoollifeSessionId, long studentId) {
 
 		return getService().getCandidateSessions(
 			schoollifeSessionId, studentId);
@@ -49,32 +49,29 @@ public class RenvoiServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getPendingRenvois() {
-
+	public static org.json.JSONObject getPendingRenvois() {
 		return getService().getPendingRenvois();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		registerStudentRenvoi(
-			long schoollifeSessionId, long sourceTeacherId, long studentId,
-			long sourceSessionId, long sourceSchoollifeSessionId,
-			java.lang.String registrationDate) {
+	public static org.json.JSONObject registerStudentRenvoi(
+		long schoollifeSessionId, long sourceTeacherId, long studentId,
+		long sourceSessionId, long sourceSchoollifeSessionId,
+		java.lang.String registrationDate) {
 
 		return getService().registerStudentRenvoi(
 			schoollifeSessionId, sourceTeacherId, studentId, sourceSessionId,
 			sourceSchoollifeSessionId, registrationDate);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject setRenvoiReason(
+	public static org.json.JSONObject setRenvoiReason(
 		long schoollifeSessionId, long studentId, java.lang.String reason) {
 
 		return getService().setRenvoiReason(
 			schoollifeSessionId, studentId, reason);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		unregisterStudentRenvoi(long schoollifeSessionId, long studentId) {
+	public static org.json.JSONObject unregisterStudentRenvoi(
+		long schoollifeSessionId, long studentId) {
 
 		return getService().unregisterStudentRenvoi(
 			schoollifeSessionId, studentId);

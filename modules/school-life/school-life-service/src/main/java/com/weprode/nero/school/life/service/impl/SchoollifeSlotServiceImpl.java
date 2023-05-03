@@ -1,8 +1,8 @@
 package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -29,8 +29,8 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
 
     @JSONWebService(value = "create-slot", method = "GET")
     public JSONObject createSlot(long schoolId, String startDateStr, int day, String startHour, String endHour, long teacherId, int type, String room, int capacity) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         try {
             Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
             SchoollifeSlotLocalServiceUtil.addSlot(schoolId, startDate, day, startHour, endHour, teacherId, type, room, capacity);
@@ -41,13 +41,14 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
             logger.error("Error creating schoollife slot for schoolId " + schoolId, e);
             result.put(JSONConstants.SUCCESS, false);
         }
+
         return result;
     }
 
     @JSONWebService(value = "edit-slot", method = "GET")
     public JSONObject editSlot(long schoollifeSessionId, String startDateStr, int newDay, String newStartHour, String newEndHour, long newTeacherId, String newRoom, int newCapacity) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         try {
             Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
             long schoollifeSlotId = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId).getSchoollifeSlotId();
@@ -58,13 +59,14 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
             logger.error("Error editing schoollife slot linked to session " + schoollifeSessionId, e);
             result.put(JSONConstants.SUCCESS, false);
         }
+
         return result;
     }
 
     @JSONWebService(value = "delete-slot", method = "GET")
     public JSONObject deleteSlot(long schoollifeSessionId, String startDateStr) {
+        JSONObject result = new JSONObject();
 
-        JSONObject result = JSONFactoryUtil.createJSONObject();
         try {
             Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
             long schoollifeSlotId = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId).getSchoollifeSlotId();
@@ -75,6 +77,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
             logger.error("Error deleting schoollife slot linked to session " + schoollifeSessionId, e);
             result.put(JSONConstants.SUCCESS, false);
         }
+
         return result;
     }
 }
