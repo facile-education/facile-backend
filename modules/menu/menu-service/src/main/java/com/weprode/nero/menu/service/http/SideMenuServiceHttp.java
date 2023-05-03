@@ -52,9 +52,7 @@ import com.weprode.nero.menu.service.SideMenuServiceUtil;
  */
 public class SideMenuServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getSideMenu(
-		HttpPrincipal httpPrincipal) {
-
+	public static org.json.JSONObject getSideMenu(HttpPrincipal httpPrincipal) {
 		try {
 			MethodKey methodKey = new MethodKey(
 				SideMenuServiceUtil.class, "getSideMenu",
@@ -72,7 +70,7 @@ public class SideMenuServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

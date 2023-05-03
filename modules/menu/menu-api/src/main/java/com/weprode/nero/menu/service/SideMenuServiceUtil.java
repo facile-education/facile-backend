@@ -43,7 +43,7 @@ public class SideMenuServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSideMenu() {
+	public static org.json.JSONObject getSideMenu() {
 		return getService().getSideMenu();
 	}
 

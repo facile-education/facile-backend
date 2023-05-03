@@ -41,7 +41,7 @@ public class SideMenuServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSideMenu() {
+	public org.json.JSONObject getSideMenu() {
 		return _sideMenuService.getSideMenu();
 	}
 
