@@ -179,15 +179,20 @@ public class HelpUtil {
         try {
             long itemId = JSONConstants.getLongValue(jsonHelpItem, JSONConstants.ITEM_ID, 0);
             String itemName = jsonHelpItem.getString(JSONConstants.ITEM_NAME);
-            String videoUrl = jsonHelpItem.getString(JSONConstants.VIDEO_URL);
-            String videoDescription = jsonHelpItem.getString(JSONConstants.VIDEO_DESCRIPTION);
-            String textualHelp = jsonHelpItem.getString(JSONConstants.MANUAL);
-            int position = jsonHelpItem.getInt(JSONConstants.POSITION);
+            String videoUrl = JSONConstants.getStringValue(jsonHelpItem, JSONConstants.VIDEO_URL, StringPool.BLANK);
+            String videoDescription = JSONConstants.getStringValue(jsonHelpItem, JSONConstants.VIDEO_DESCRIPTION, StringPool.BLANK);
+            String textualHelp = JSONConstants.getStringValue(jsonHelpItem, JSONConstants.MANUAL, StringPool.BLANK);
+            int position = JSONConstants.getIntValue(jsonHelpItem, JSONConstants.POSITION, 0);
             String language = jsonHelpItem.getString(JSONConstants.LANGUAGE);
-            JSONArray roles = jsonHelpItem.getJSONArray(JSONConstants.ROLES);
-            boolean isManagement = jsonHelpItem.getBoolean(JSONConstants.IS_MANAGEMENT);
 
-            HelpItem helpItem = null;
+            JSONArray roles = new JSONArray();
+            if (jsonHelpItem.has(JSONConstants.ROLES)) {
+                roles = jsonHelpItem.getJSONArray(JSONConstants.ROLES);
+            }
+
+            boolean isManagement = JSONConstants.getBoolValue(jsonHelpItem, JSONConstants.IS_MANAGEMENT, false);
+
+            HelpItem helpItem;
             if (itemId == 0) {
                 // Creation
                 helpItem = HelpItemLocalServiceUtil.createItem(categoryId, itemName, videoUrl, videoDescription, textualHelp, language, isManagement);
@@ -199,7 +204,7 @@ public class HelpUtil {
                 // Add roles if any
                 if (roles != null) {
                     for (int idx = 0 ; idx < roles.length() ; idx++) {
-                        long roleId = roles.getJSONObject(idx).getLong("roleId");
+                        long roleId = roles.getJSONObject(idx).getLong(JSONConstants.ROLE_ID);
                         logger.info("Associating help item " + helpItem.getItemId() + " to roleId " + roleId);
                         HelpItemRoleLocalServiceUtil.addItemRole(helpItem.getItemId(), roleId);
                     }
@@ -219,7 +224,10 @@ public class HelpUtil {
             }
 
             // Questions
-            JSONArray questions = jsonHelpItem.getJSONArray(JSONConstants.QUESTIONS);
+            JSONArray questions = new JSONArray();
+            if (jsonHelpItem.has(JSONConstants.QUESTIONS)) {
+                questions = jsonHelpItem.getJSONArray(JSONConstants.QUESTIONS);
+            }
             JSONArray updatedQuestions = updateQuestions(itemId, questions);
             jsonHelpItem.put(JSONConstants.QUESTIONS, updatedQuestions);
 
