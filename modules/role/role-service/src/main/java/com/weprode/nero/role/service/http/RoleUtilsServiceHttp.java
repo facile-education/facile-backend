@@ -52,7 +52,7 @@ import com.weprode.nero.role.service.RoleUtilsServiceUtil;
  */
 public class RoleUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getMainRoles(
+	public static org.json.JSONObject getMainRoles(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -72,7 +72,7 @@ public class RoleUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class RoleUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getLocalUserRoles(
+	public static org.json.JSONObject getLocalUserRoles(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -103,7 +103,7 @@ public class RoleUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -114,7 +114,7 @@ public class RoleUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getBroadcastRoles(
+	public static org.json.JSONObject getBroadcastRoles(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -134,7 +134,7 @@ public class RoleUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

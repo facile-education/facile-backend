@@ -33,20 +33,25 @@ public class RoleUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.role.service.impl.RoleUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getMainRoles() {
-		return getService().getMainRoles();
+	public static org.json.JSONObject getBroadcastRoles() {
+		return getService().getBroadcastRoles();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getLocalUserRoles() {
-
+	public static org.json.JSONObject getLocalUserRoles() {
 		return getService().getLocalUserRoles();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getBroadcastRoles() {
+	public static org.json.JSONObject getMainRoles() {
+		return getService().getMainRoles();
+	}
 
-		return getService().getBroadcastRoles();
+	/**
+	 * Returns the OSGi service identifier.
+	 *
+	 * @return the OSGi service identifier
+	 */
+	public static java.lang.String getOSGiServiceIdentifier() {
+		return getService().getOSGiServiceIdentifier();
 	}
 
 	public static RoleUtilsService getService() {

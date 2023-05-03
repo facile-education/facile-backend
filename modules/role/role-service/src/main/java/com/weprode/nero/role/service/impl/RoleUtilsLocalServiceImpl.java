@@ -722,12 +722,12 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 
 /*	public JSONObject getAllEntRolesAsJson(User user, boolean addEmptyRole) {
 
-		JSONObject ret = JSONFactoryUtil.createJSONObject();
-		JSONArray roles = JSONFactoryUtil.createJSONArray();
+		JSONObject ret = new JSONObject();
+		JSONArray roles = new JSONArray();
 		
 		// Empty role to search them all (only for agents)
 		if (addEmptyRole && !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-			JSONObject emptyRole = JSONFactoryUtil.createJSONObject();
+			JSONObject emptyRole = new JSONObject();
 			emptyRole.put("roleId", "0");
 			emptyRole.put("roleCode", "0");
 			emptyRole.put("label", "Tous");
@@ -738,7 +738,7 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 		
 		// Create JSON object for visible roles
 		for (Role role : entRoles) {
-			JSONObject currRole = JSONFactoryUtil.createJSONObject();
+			JSONObject currRole = new JSONObject();
 			currRole.put("roleId", role.getRoleId());
 			currRole.put("roleCode", role.getName());
 			currRole.put("label", role.getTitle(user.getLocale()));
