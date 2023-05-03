@@ -52,8 +52,8 @@ import com.weprode.nero.organization.service.OrgUtilsServiceUtil;
  */
 public class OrgUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getVisibilitySchools(HttpPrincipal httpPrincipal) {
+	public static org.json.JSONObject getVisibilitySchools(
+		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -72,7 +72,7 @@ public class OrgUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class OrgUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getAllSchools(
+	public static org.json.JSONObject getAllSchools(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -103,7 +103,7 @@ public class OrgUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -114,7 +114,7 @@ public class OrgUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolClasses(
+	public static org.json.JSONObject getSchoolClasses(
 		HttpPrincipal httpPrincipal, long schoolId, boolean includeCours) {
 
 		try {
@@ -135,7 +135,7 @@ public class OrgUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -146,7 +146,7 @@ public class OrgUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolVolees(
+	public static org.json.JSONObject getSchoolVolees(
 		HttpPrincipal httpPrincipal, long schoolId) {
 
 		try {
@@ -167,7 +167,7 @@ public class OrgUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

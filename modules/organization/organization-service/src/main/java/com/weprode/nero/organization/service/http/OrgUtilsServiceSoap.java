@@ -53,42 +53,45 @@ import java.rmi.RemoteException;
 @Deprecated
 public class OrgUtilsServiceSoap {
 
-	public static String getVisibilitySchools() throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				OrgUtilsServiceUtil.getVisibilitySchools();
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getAllSchools() throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
-				OrgUtilsServiceUtil.getAllSchools();
-
-			return returnValue.toString();
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static String getSchoolClasses(long schoolId, boolean includeCours)
+	public static org.json.JSONObject getVisibilitySchools()
 		throws RemoteException {
 
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
+				OrgUtilsServiceUtil.getVisibilitySchools();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getAllSchools() throws RemoteException {
+		try {
+			org.json.JSONObject returnValue =
+				OrgUtilsServiceUtil.getAllSchools();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getSchoolClasses(
+			long schoolId, boolean includeCours)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
 				OrgUtilsServiceUtil.getSchoolClasses(schoolId, includeCours);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -101,12 +104,14 @@ public class OrgUtilsServiceSoap {
 	 * Return the volee list for given schoolId or all the volees in user school list
 	 * if schoolId is 0
 	 */
-	public static String getSchoolVolees(long schoolId) throws RemoteException {
+	public static org.json.JSONObject getSchoolVolees(long schoolId)
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				OrgUtilsServiceUtil.getSchoolVolees(schoolId);
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

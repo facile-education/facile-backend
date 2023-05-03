@@ -31,7 +31,7 @@ public class OrgUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getAllSchools() {
+	public org.json.JSONObject getAllSchools() {
 		return _orgUtilsService.getAllSchools();
 	}
 
@@ -46,7 +46,7 @@ public class OrgUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSchoolClasses(
+	public org.json.JSONObject getSchoolClasses(
 		long schoolId, boolean includeCours) {
 
 		return _orgUtilsService.getSchoolClasses(schoolId, includeCours);
@@ -57,14 +57,12 @@ public class OrgUtilsServiceWrapper
 	 * if schoolId is 0
 	 */
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSchoolVolees(
-		long schoolId) {
-
+	public org.json.JSONObject getSchoolVolees(long schoolId) {
 		return _orgUtilsService.getSchoolVolees(schoolId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getVisibilitySchools() {
+	public org.json.JSONObject getVisibilitySchools() {
 		return _orgUtilsService.getVisibilitySchools();
 	}
 

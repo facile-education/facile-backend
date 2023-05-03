@@ -33,7 +33,7 @@ public class OrgUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.organization.service.impl.OrgUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getAllSchools() {
+	public static org.json.JSONObject getAllSchools() {
 		return getService().getAllSchools();
 	}
 
@@ -46,7 +46,7 @@ public class OrgUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolClasses(
+	public static org.json.JSONObject getSchoolClasses(
 		long schoolId, boolean includeCours) {
 
 		return getService().getSchoolClasses(schoolId, includeCours);
@@ -56,15 +56,11 @@ public class OrgUtilsServiceUtil {
 	 * Return the volee list for given schoolId or all the volees in user school list
 	 * if schoolId is 0
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolVolees(
-		long schoolId) {
-
+	public static org.json.JSONObject getSchoolVolees(long schoolId) {
 		return getService().getSchoolVolees(schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getVisibilitySchools() {
-
+	public static org.json.JSONObject getVisibilitySchools() {
 		return getService().getVisibilitySchools();
 	}
 
