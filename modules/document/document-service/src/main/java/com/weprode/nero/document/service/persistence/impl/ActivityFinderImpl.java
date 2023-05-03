@@ -1,7 +1,6 @@
 package com.weprode.nero.document.service.persistence.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -9,7 +8,7 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.weprode.nero.document.model.Activity;
-import com.weprode.nero.document.service.ActivityLocalService;
+import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.persistence.ActivityFinder;
 import com.weprode.nero.group.constants.ActivityConstants;
@@ -24,9 +23,6 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
         implements ActivityFinder {
 
     private static final Log logger = LogFactoryUtil.getLog(ActivityFinderImpl.class);
-
-    @BeanReference(type = ActivityLocalService.class)
-    private ActivityLocalService activityLocalService;
 
     /*@Reference
     private CustomSQL customSQL;
@@ -95,7 +91,7 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
             dynamicQuery.addOrder(modificationDateOrder);
 
             // Execute the query
-            activityList = activityLocalService.dynamicQuery(dynamicQuery, start, end);
+            activityList = ActivityLocalServiceUtil.dynamicQuery(dynamicQuery, start, end);
         } catch (Exception e) {
             logger.error(e);
         } finally {
@@ -127,7 +123,7 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
             dynamicQuery.add(RestrictionsFactoryUtil.between("modificationDate", minDate, maxDate));
 
             // Execute the query
-            activityList = activityLocalService.dynamicQuery(dynamicQuery);
+            activityList = ActivityLocalServiceUtil.dynamicQuery(dynamicQuery);
 
             // Loop over activities to filter those on which current user has no permission
             List<Activity> filteredActivityList = new ArrayList<>();
