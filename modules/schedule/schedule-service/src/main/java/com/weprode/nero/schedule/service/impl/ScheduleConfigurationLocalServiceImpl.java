@@ -2,9 +2,9 @@ package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
@@ -112,8 +112,8 @@ public class ScheduleConfigurationLocalServiceImpl
 	}
 
 	public JSONObject getSchoolConfigurationAsJson(long schoolId) {
+		JSONObject jsonConfig = new JSONObject();
 
-		JSONObject jsonConfig = JSONFactoryUtil.createJSONObject();
 		ScheduleConfiguration schoolConfig = getSchoolConfiguration(schoolId);
 		if (schoolConfig != null) {
 			List<WeeklySchedule> weeklySchedules = WeeklyScheduleLocalServiceUtil.getWeeklyScheduleBySchoolId(schoolId);
@@ -126,7 +126,7 @@ public class ScheduleConfigurationLocalServiceImpl
 			jsonConfig.put(JSONConstants.START_DATE_SCHOOL, sdf.format(schoolConfig.getStartSessionsDate()));
 			jsonConfig.put(JSONConstants.END_DATE_SCHOOL, sdf.format(schoolConfig.getEndSessionsDate()));
 
-			JSONArray dayArray = JSONFactoryUtil.createJSONArray();
+			JSONArray dayArray = new JSONArray();
 			for (WeeklySchedule aDay : weeklySchedules) {
 				dayArray.put(aDay.getDayId());
 			}

@@ -43,14 +43,14 @@ public class SessionTeacherServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSessionTeachersAndSubstitutes(long sessionId) {
+	public static org.json.JSONObject getSessionTeachersAndSubstitutes(
+		long sessionId) {
 
 		return getService().getSessionTeachersAndSubstitutes(sessionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveTeacherSubstitutes(long sessionId, java.lang.String teacherArray) {
+	public static org.json.JSONObject saveTeacherSubstitutes(
+		long sessionId, java.lang.String teacherArray) {
 
 		return getService().saveTeacherSubstitutes(sessionId, teacherArray);
 	}

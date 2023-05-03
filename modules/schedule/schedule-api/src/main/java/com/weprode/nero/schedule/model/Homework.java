@@ -56,7 +56,7 @@ public interface Homework extends HomeworkModel, PersistedModel {
 
 		};
 
-	public com.liferay.portal.kernel.json.JSONObject convertToJSON(
+	public org.json.JSONObject convertToJSON(
 		com.liferay.portal.kernel.model.User user);
 
 }

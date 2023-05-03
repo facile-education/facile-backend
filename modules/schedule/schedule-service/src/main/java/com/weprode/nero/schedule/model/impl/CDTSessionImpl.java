@@ -15,8 +15,6 @@
 package com.weprode.nero.schedule.model.impl;
 
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -37,8 +35,8 @@ import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.CDTSessionModel;
 import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.*;
-import com.weprode.nero.schedule.utils.CDTColorUtil;
 import com.weprode.nero.schedule.utils.JSONProxy;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -63,7 +61,7 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
 
     // Used for prev and next session or details panel
     public JSONObject convertToJSON(boolean includeDetails, User user) {
-        JSONObject jsonSession = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonSession = new JSONObject();
 
         SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
         // Global infos
@@ -152,7 +150,7 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
 
     // Used when displaying session in calendar
     public JSONObject convertToJSON(long colorsTeacherId, User user) {
-        JSONObject jsonSession = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonSession = new JSONObject();
 
         boolean isPersonalGroup = false;
         String className = StringPool.BLANK;

@@ -36,7 +36,7 @@ public class HomeworkServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.schedule.service.impl.HomeworkServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject getHomeworks(
+	public static org.json.JSONObject getHomeworks(
 			long studentId, String minDateStr)
 		throws PortalException, SystemException {
 
@@ -52,7 +52,7 @@ public class HomeworkServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject setHomeworkDone(
+	public static org.json.JSONObject setHomeworkDone(
 		long homeworkId, boolean isDone) {
 
 		return getService().setHomeworkDone(homeworkId, isDone);

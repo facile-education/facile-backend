@@ -2,8 +2,8 @@ package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -40,7 +40,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 	@JSONWebService(value = "get-configuration", method = "GET")
 	public JSONObject getConfiguration(long schoolId, long childId) {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {

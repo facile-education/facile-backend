@@ -33,7 +33,7 @@ public class CDTSessionServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.schedule.service.impl.CDTSessionServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject createSession(
+	public static org.json.JSONObject createSession(
 		long groupId, java.lang.String subject, java.lang.String room,
 		java.lang.String startDate, java.lang.String endDate,
 		java.lang.String teacherIds, boolean isRecurrent) {
@@ -43,7 +43,7 @@ public class CDTSessionServiceUtil {
 			isRecurrent);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getHorairesSessions(
+	public static org.json.JSONObject getHorairesSessions(
 		long userId, long groupId, java.lang.String start, java.lang.String end,
 		java.lang.String volee) {
 
@@ -60,13 +60,11 @@ public class CDTSessionServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSessionDetails(
-		long sessionId) {
-
+	public static org.json.JSONObject getSessionDetails(long sessionId) {
 		return getService().getSessionDetails(sessionId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getTeacherGroups() {
+	public static org.json.JSONObject getTeacherGroups() {
 		return getService().getTeacherGroups();
 	}
 

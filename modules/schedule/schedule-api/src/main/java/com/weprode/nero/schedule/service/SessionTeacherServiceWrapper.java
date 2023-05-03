@@ -43,15 +43,15 @@ public class SessionTeacherServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject
-		getSessionTeachersAndSubstitutes(long sessionId) {
+	public org.json.JSONObject getSessionTeachersAndSubstitutes(
+		long sessionId) {
 
 		return _sessionTeacherService.getSessionTeachersAndSubstitutes(
 			sessionId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject saveTeacherSubstitutes(
+	public org.json.JSONObject saveTeacherSubstitutes(
 		long sessionId, String teacherArray) {
 
 		return _sessionTeacherService.saveTeacherSubstitutes(

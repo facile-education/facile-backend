@@ -1,8 +1,8 @@
 package com.weprode.nero.schedule.utils;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -25,7 +25,7 @@ public class JSONProxy {
      */
     public static JSONArray convertSessionsToJson(List<CDTSession> sessions, User user, long colorsTeacherId) {
 
-        JSONArray sessionsArray = JSONFactoryUtil.createJSONArray();
+        JSONArray sessionsArray = new JSONArray();
         for (CDTSession session : sessions) {
             try {
                 sessionsArray.put(session.convertToJSON(colorsTeacherId, user));
@@ -39,7 +39,7 @@ public class JSONProxy {
 
     public static JSONArray convertUsersToJson(List<User> userList) {
 
-        JSONArray userListAsJSON = JSONFactoryUtil.createJSONArray();
+        JSONArray userListAsJSON = new JSONArray();
         for (User aUser : userList) {
             JSONObject aUserAsJson = convertUserToJson(aUser);
             userListAsJSON.put(aUserAsJson);
@@ -49,7 +49,7 @@ public class JSONProxy {
     }
 
     public static JSONObject convertUserToJson(User user) {
-        JSONObject jsonUser = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonUser = new JSONObject();
         jsonUser.put(JSONConstants.USER_ID, user.getUserId());
         jsonUser.put(JSONConstants.FIRST_NAME, user.getFirstName());
         jsonUser.put(JSONConstants.LAST_NAME, user.getLastName());
@@ -59,7 +59,7 @@ public class JSONProxy {
 
     public static JSONArray convertSessionsToSimpleJson(List<CDTSession> sessions) {
 
-        JSONArray sessionsArray = JSONFactoryUtil.createJSONArray();
+        JSONArray sessionsArray = new JSONArray();
         for (CDTSession session : sessions) {
             sessionsArray.put(session.convertToJSON());
         }
@@ -70,7 +70,7 @@ public class JSONProxy {
      * Build JSON for ajax call error case
      */
     public static JSONObject getJSONReturnInErrorCase(String errorMessage){
-        JSONObject errorReturn = JSONFactoryUtil.createJSONObject();
+        JSONObject errorReturn = new JSONObject();
         errorReturn.put(JSONConstants.ERROR,errorMessage);
         errorReturn.put(JSONConstants.SUCCESS,false);
         return errorReturn;
@@ -86,7 +86,7 @@ public class JSONProxy {
     }
 
     public static JSONArray convertAttachFiles (User studentUser, List<AttachFile> attachFileList, boolean isExercice) {
-        JSONArray fileDescriptor = JSONFactoryUtil.createJSONArray();
+        JSONArray fileDescriptor = new JSONArray();
         for (AttachFile attachFile : attachFileList) {
             if (attachFile.getIsEditable() == isExercice) {
                 fileDescriptor.put(attachFile.convertToJSON(studentUser));
@@ -101,7 +101,7 @@ public class JSONProxy {
      */
     public static JSONArray convertHomeworksAsJson (User user, List<Homework> homeworkList) {
 
-        JSONArray homeworkArray = JSONFactoryUtil.createJSONArray();
+        JSONArray homeworkArray = new JSONArray();
 
         for (Homework homework : homeworkList) {
             homeworkArray.put(homework.convertToJSON(user));
@@ -120,7 +120,7 @@ public class JSONProxy {
             if (attachFiles.getLong(i) > 0) {
                 fileIds[i] = attachFiles.getLong(i);
             } else {
-                fileIds[i] = attachFiles.getJSONObject(i).getLong(JSONConstants.ID, 0);
+                fileIds[i] = JSONConstants.getLongValue(attachFiles.getJSONObject(i), JSONConstants.ID, 0);
             }
         }
         return fileIds;

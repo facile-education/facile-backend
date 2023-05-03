@@ -3,8 +3,8 @@ package com.weprode.nero.schedule.utils;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.Homework;
@@ -29,7 +29,7 @@ public class HomeworkUtil {
         for (int i = 0; i < homeworksAsJSON.length() ; i++) {
 
             JSONObject homeworkAsJSON = homeworksAsJSON.getJSONObject(i);
-            long homeworkSourceId = homeworkAsJSON.getLong("homeworkId");
+            long homeworkSourceId = homeworkAsJSON.getLong(JSONConstants.HOMEWORK_ID);
             Homework homeworkToCopy = HomeworkLocalServiceUtil.getHomework(homeworkSourceId);
             Date copiedHomeworkToDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(homeworkAsJSON.getString("toDate"));
             // get target week
@@ -46,7 +46,7 @@ public class HomeworkUtil {
             copiedHomework.setSourceSessionId(targetSession.getSessionId());
             copiedHomework.setTargetDate(copiedHomeworkToDate);
             copiedHomework.setTargetWeekId(weekId);
-            copiedHomework.setTargetSessionId(homeworkAsJSON.getLong("targetSessionId",0));
+            copiedHomework.setTargetSessionId(JSONConstants.getLongValue(homeworkAsJSON, JSONConstants.TARGET_SESSION_ID, 0));
             copiedHomework.setGroupId(targetSession.getGroupId());
             HomeworkLocalServiceUtil.updateHomework(copiedHomework);
 

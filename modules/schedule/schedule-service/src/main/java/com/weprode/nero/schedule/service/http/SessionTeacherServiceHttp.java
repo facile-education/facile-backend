@@ -52,9 +52,8 @@ import com.weprode.nero.schedule.service.SessionTeacherServiceUtil;
  */
 public class SessionTeacherServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getSessionTeachersAndSubstitutes(
-			HttpPrincipal httpPrincipal, long sessionId) {
+	public static org.json.JSONObject getSessionTeachersAndSubstitutes(
+		HttpPrincipal httpPrincipal, long sessionId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -75,7 +74,7 @@ public class SessionTeacherServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -86,9 +85,8 @@ public class SessionTeacherServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		saveTeacherSubstitutes(
-			HttpPrincipal httpPrincipal, long sessionId, String teacherArray) {
+	public static org.json.JSONObject saveTeacherSubstitutes(
+		HttpPrincipal httpPrincipal, long sessionId, String teacherArray) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -108,7 +106,7 @@ public class SessionTeacherServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

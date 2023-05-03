@@ -365,9 +365,7 @@ public class ScheduleConfigurationLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject
-		getSchoolConfigurationAsJson(long schoolId) {
-
+	public org.json.JSONObject getSchoolConfigurationAsJson(long schoolId) {
 		return _scheduleConfigurationLocalService.getSchoolConfigurationAsJson(
 			schoolId);
 	}

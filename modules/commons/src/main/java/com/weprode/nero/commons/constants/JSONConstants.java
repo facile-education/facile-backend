@@ -273,6 +273,8 @@ public class JSONConstants {
     public static final String SCHOOL_DAYS = "schoolDays";
     public static final String GIVEN_HOMEWORK = "givenHomework";
     public static final String TO_DO_HOMEWORK = "toDoHomework";
+    public static final String LAST_SESSION_ID = "lastSessionId";
+    public static final String ALL_SLOTS = "allSlots";
 
     // Homework
     public static final String HOMEWORK_ID = "homeworkId";
@@ -418,6 +420,14 @@ public class JSONConstants {
     public static int getIntValue(JSONObject object, String property, int defaultValue) {
         try {
             return object.getInt(property);
+        } catch (JSONException e) {
+            return defaultValue;
+        }
+    }
+
+    public static boolean getBoolValue(JSONObject object, String property, boolean defaultValue) {
+        try {
+            return object.getBoolean(property);
         } catch (JSONException e) {
             return defaultValue;
         }

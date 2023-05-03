@@ -52,7 +52,7 @@ import com.weprode.nero.schedule.service.CDTSessionServiceUtil;
  */
 public class CDTSessionServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getHorairesSessions(
+	public static org.json.JSONObject getHorairesSessions(
 		HttpPrincipal httpPrincipal, long userId, long groupId, String start,
 		String end, String volee) {
 
@@ -74,7 +74,7 @@ public class CDTSessionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -85,7 +85,7 @@ public class CDTSessionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getTeacherGroups(
+	public static org.json.JSONObject getTeacherGroups(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -105,7 +105,7 @@ public class CDTSessionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -116,7 +116,7 @@ public class CDTSessionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSessionDetails(
+	public static org.json.JSONObject getSessionDetails(
 		HttpPrincipal httpPrincipal, long sessionId) {
 
 		try {
@@ -137,7 +137,7 @@ public class CDTSessionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -148,7 +148,7 @@ public class CDTSessionServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject createSession(
+	public static org.json.JSONObject createSession(
 		HttpPrincipal httpPrincipal, long groupId, String subject, String room,
 		String startDate, String endDate, String teacherIds,
 		boolean isRecurrent) {
@@ -172,7 +172,7 @@ public class CDTSessionServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

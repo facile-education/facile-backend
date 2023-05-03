@@ -58,7 +58,7 @@ public class CDTSessionLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONArray convertSessionsToJson(
+	public org.json.JSONArray convertSessionsToJson(
 		java.util.List<com.weprode.nero.schedule.model.CDTSession> sessions,
 		com.liferay.portal.kernel.model.User user, long colorsTeacherId) {
 
@@ -67,10 +67,9 @@ public class CDTSessionLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject copySessionContent(
+	public org.json.JSONObject copySessionContent(
 		com.liferay.portal.kernel.model.User currentUser, long sourceSessionId,
-		long targetSessionId,
-		com.liferay.portal.kernel.json.JSONArray homeworksAsJSON) {
+		long targetSessionId, org.json.JSONArray homeworksAsJSON) {
 
 		return _cdtSessionLocalService.copySessionContent(
 			currentUser, sourceSessionId, targetSessionId, homeworksAsJSON);

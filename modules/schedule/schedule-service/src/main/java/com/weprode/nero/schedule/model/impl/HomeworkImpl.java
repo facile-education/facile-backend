@@ -14,9 +14,9 @@
 
 package com.weprode.nero.schedule.model.impl;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -54,7 +54,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
     public HomeworkImpl() {}
 
     public JSONObject convertToJSON(User user) {
-        JSONObject jsonHomework = JSONFactoryUtil.createJSONObject();
+        JSONObject jsonHomework = new JSONObject();
 
         SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
         jsonHomework.put(JSONConstants.GROUP_ID, this.getGroupId());
