@@ -52,7 +52,7 @@ import com.weprode.nero.user.service.UserManagementServiceUtil;
  */
 public class UserManagementServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject createManualUser(
+	public static org.json.JSONObject createManualUser(
 		HttpPrincipal httpPrincipal, String lastName, String firstName,
 		String email, long roleId, long schoolId) {
 
@@ -74,7 +74,7 @@ public class UserManagementServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -85,7 +85,7 @@ public class UserManagementServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject editManualUser(
+	public static org.json.JSONObject editManualUser(
 		HttpPrincipal httpPrincipal, long userId, String lastName,
 		String firstName, String email, long roleId, long schoolId) {
 
@@ -108,7 +108,7 @@ public class UserManagementServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -119,7 +119,7 @@ public class UserManagementServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteManualUser(
+	public static org.json.JSONObject deleteManualUser(
 		HttpPrincipal httpPrincipal, long userId) {
 
 		try {
@@ -139,7 +139,7 @@ public class UserManagementServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -150,7 +150,7 @@ public class UserManagementServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getManualUsers(
+	public static org.json.JSONObject getManualUsers(
 		HttpPrincipal httpPrincipal, long schoolId, String search, int start,
 		int limit) {
 
@@ -172,7 +172,7 @@ public class UserManagementServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -183,7 +183,7 @@ public class UserManagementServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updatePassword(
+	public static org.json.JSONObject updatePassword(
 		HttpPrincipal httpPrincipal, long userId, String password) {
 
 		try {
@@ -204,7 +204,7 @@ public class UserManagementServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

@@ -41,37 +41,31 @@ public class UserSearchServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSchoollifeAgents(
+	public org.json.JSONObject getSchoollifeAgents(
 		String search, long schoolId) {
 
 		return _userSearchService.getSchoollifeAgents(search, schoolId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSchoolMembers(
-		long schoolId, String search) {
-
+	public org.json.JSONObject getSchoolMembers(long schoolId, String search) {
 		return _userSearchService.getSchoolMembers(schoolId, search);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSchoolStudents(
-		String search, long schoolId) {
-
+	public org.json.JSONObject getSchoolStudents(String search, long schoolId) {
 		return _userSearchService.getSchoolStudents(search, schoolId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject
-		getSchoolStudentTeacherList(long schoolId, String search) {
+	public org.json.JSONObject getSchoolStudentTeacherList(
+		long schoolId, String search) {
 
 		return _userSearchService.getSchoolStudentTeacherList(schoolId, search);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getSchoolTeachers(
-		long schoolId, String search) {
-
+	public org.json.JSONObject getSchoolTeachers(long schoolId, String search) {
 		return _userSearchService.getSchoolTeachers(schoolId, search);
 	}
 

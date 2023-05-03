@@ -33,7 +33,7 @@ public class UserManagementServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.user.service.impl.UserManagementServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject createManualUser(
+	public static org.json.JSONObject createManualUser(
 		java.lang.String lastName, java.lang.String firstName,
 		java.lang.String email, long roleId, long schoolId) {
 
@@ -41,13 +41,11 @@ public class UserManagementServiceUtil {
 			lastName, firstName, email, roleId, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject deleteManualUser(
-		long userId) {
-
+	public static org.json.JSONObject deleteManualUser(long userId) {
 		return getService().deleteManualUser(userId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject editManualUser(
+	public static org.json.JSONObject editManualUser(
 		long userId, java.lang.String lastName, java.lang.String firstName,
 		java.lang.String email, long roleId, long schoolId) {
 
@@ -55,7 +53,7 @@ public class UserManagementServiceUtil {
 			userId, lastName, firstName, email, roleId, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getManualUsers(
+	public static org.json.JSONObject getManualUsers(
 		long schoolId, java.lang.String search, int start, int limit) {
 
 		return getService().getManualUsers(schoolId, search, start, limit);
@@ -70,7 +68,7 @@ public class UserManagementServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject updatePassword(
+	public static org.json.JSONObject updatePassword(
 		long userId, java.lang.String password) {
 
 		return getService().updatePassword(userId, password);

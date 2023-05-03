@@ -1,8 +1,8 @@
 package com.weprode.nero.user.service.impl;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -32,9 +32,9 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
 
     @JSONWebService(value = "get-school-delegates", method = "GET")
     public JSONObject getSchoolDelegates(long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
-        JSONArray jsonAdmins = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonAdmins = new JSONArray();
         try {
             User user = getGuestOrUser();
             logger.info("User " + user.getUserId() + " fetches all admins and delegates for school " + schoolId);
@@ -69,7 +69,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
             }*/
             
             for (User admin : allAdmins) {
-                JSONObject adminJSON = JSONFactoryUtil.createJSONObject();
+                JSONObject adminJSON = new JSONObject();
                 adminJSON.put(JSONConstants.USER_ID, admin.getUserId());
                 adminJSON.put(JSONConstants.LAST_NAME, admin.getLastName());
                 adminJSON.put(JSONConstants.FIRST_NAME, admin.getFirstName());
@@ -94,7 +94,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
 
     @JSONWebService(value = "get-delegation-candidates", method = "GET")
     public JSONObject getDelegationCandidates(long schoolId, String filter) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             User user = getGuestOrUser();
@@ -128,10 +128,10 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
             List<User> schoolDelegates = BlogEntryDelegateLocalServiceUtil.getSchoolDelegates(schoolId);*/
             List<User> schoolAdmins = SchoolAdminLocalServiceUtil.getSchoolAdmins(schoolId);
 
-            JSONArray jsonCandidates = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonCandidates = new JSONArray();
             for (User candidate : delegationCandidates) {
                 if (!schoolDelegates.contains(candidate) && !schoolAdmins.contains(candidate)) {
-                    JSONObject jsonCandidate = JSONFactoryUtil.createJSONObject();
+                    JSONObject jsonCandidate = new JSONObject();
                     jsonCandidate.put(JSONConstants.USER_ID, candidate.getUserId());
                     jsonCandidate.put(JSONConstants.LAST_NAME, candidate.getLastName());
                     jsonCandidate.put(JSONConstants.FIRST_NAME, candidate.getFirstName());
@@ -151,7 +151,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
 
     @JSONWebService(value = "add-school-admin", method = "GET")
     public JSONObject addSchoolAdmin(long userId, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             User user = getGuestOrUser();
@@ -187,8 +187,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
     
     @JSONWebService(value = "remove-school-admin", method = "GET")
     public JSONObject removeSchoolAdmin(long userId, long schoolId) {
-
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         try {
             User user = getGuestOrUser();

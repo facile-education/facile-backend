@@ -52,7 +52,7 @@ import com.weprode.nero.user.service.UserUtilsServiceUtil;
  */
 public class UserUtilsServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getUserInfos(
+	public static org.json.JSONObject getUserInfos(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -72,7 +72,7 @@ public class UserUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -83,7 +83,7 @@ public class UserUtilsServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getPersonnalDetails(
+	public static org.json.JSONObject getPersonnalDetails(
 		HttpPrincipal httpPrincipal) {
 
 		try {
@@ -103,7 +103,7 @@ public class UserUtilsServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

@@ -1,9 +1,9 @@
 package com.weprode.nero.user.service.impl;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import org.json.JSONArray;
+
+import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -36,9 +36,9 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
 
     @JSONWebService(value = "get-school-student-teacher-list", method = "GET")
     public JSONObject getSchoolStudentTeacherList (long schoolId, String search) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
-        JSONArray jsonUsers = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonUsers = new JSONArray();
         User currentUser;
         try {
             currentUser = getGuestOrUser();
@@ -72,7 +72,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
                     QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
             for (User user : users) {
-                JSONObject jsonUser = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonUser = new JSONObject();
                 jsonUser.put(JSONConstants.USER_ID, user.getUserId());
 
                 if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
@@ -100,9 +100,9 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
 
     @JSONWebService(value = "get-school-members", method = "GET")
     public JSONObject getSchoolMembers (long schoolId, String search) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
-        JSONArray jsonUsers = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonUsers = new JSONArray();
         User currentUser;
         try {
             currentUser = getGuestOrUser();
@@ -132,7 +132,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
                     QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
             for (User user : users) {
-                JSONObject jsonUser = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonUser = new JSONObject();
                 jsonUser.put(JSONConstants.USER_ID, user.getUserId());
                 jsonUser.put(JSONConstants.FIRST_NAME, user.getFirstName());
                 jsonUser.put(JSONConstants.LAST_NAME, user.getLastName());
@@ -154,9 +154,9 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
 
     @JSONWebService(value = "get-school-students", method = "GET")
     public JSONObject getSchoolStudents(String search, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
-        JSONArray jsonStudents = JSONFactoryUtil.createJSONArray();
+        JSONArray jsonStudents = new JSONArray();
         try {
             List<Long> orgIds = new ArrayList<>();
             orgIds.add(schoolId);
@@ -168,7 +168,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
                     QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
             for (User student : students) {
-                JSONObject jsonStudent = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonStudent = new JSONObject();
                 // TODO remove studentId
                 jsonStudent.put(JSONConstants.STUDENT_ID, student.getUserId());
                 jsonStudent.put(JSONConstants.USER_ID, student.getUserId());
@@ -191,7 +191,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
 
     @JSONWebService(value = "get-school-teachers", method = "GET")
     public JSONObject getSchoolTeachers(long schoolId, String search) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -213,9 +213,9 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
             List<User> schoolTeachers = UserSearchLocalServiceUtil.searchUsers(search, orgIds, null, roleIds, null, 
                     QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-            JSONArray jsonTeachers = JSONFactoryUtil.createJSONArray();
+            JSONArray jsonTeachers = new JSONArray();
             for (User teacher : schoolTeachers) {
-                JSONObject jsonUser = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonUser = new JSONObject();
                 jsonUser.put(JSONConstants.USER_ID, teacher.getUserId());
                 jsonUser.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
                 jsonUser.put(JSONConstants.LAST_NAME, teacher.getLastName());
@@ -236,7 +236,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
     // Returns all watchers (teacher/secretaires/directeur) for schoollife slot creation/edition
     @JSONWebService(value = "get-schoolife-agents", method = "GET")
     public JSONObject getSchoollifeAgents(String search, long schoolId) {
-        JSONObject result = JSONFactoryUtil.createJSONObject();
+        JSONObject result = new JSONObject();
 
         User user;
         try {
@@ -250,7 +250,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
             return result;
         }
 
-        JSONArray members = JSONFactoryUtil.createJSONArray();
+        JSONArray members = new JSONArray();
         try {
             List<Long> orgIds = new ArrayList<>();
             orgIds.add(schoolId);
@@ -262,7 +262,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
                     QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
             for (User teacher : schoolAgents) {
-                JSONObject jsonTeacher = JSONFactoryUtil.createJSONObject();
+                JSONObject jsonTeacher = new JSONObject();
                 // TODO remove teacherId
                 jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
                 jsonTeacher.put(JSONConstants.USER_ID, teacher.getUserId());

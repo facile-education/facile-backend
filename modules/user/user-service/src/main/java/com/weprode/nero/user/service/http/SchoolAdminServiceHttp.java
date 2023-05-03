@@ -52,7 +52,7 @@ import com.weprode.nero.user.service.SchoolAdminServiceUtil;
  */
 public class SchoolAdminServiceHttp {
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolDelegates(
+	public static org.json.JSONObject getSchoolDelegates(
 		HttpPrincipal httpPrincipal, long schoolId) {
 
 		try {
@@ -73,7 +73,7 @@ public class SchoolAdminServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -84,9 +84,8 @@ public class SchoolAdminServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getDelegationCandidates(
-			HttpPrincipal httpPrincipal, long schoolId, String filter) {
+	public static org.json.JSONObject getDelegationCandidates(
+		HttpPrincipal httpPrincipal, long schoolId, String filter) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -106,7 +105,7 @@ public class SchoolAdminServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -117,7 +116,7 @@ public class SchoolAdminServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject addSchoolAdmin(
+	public static org.json.JSONObject addSchoolAdmin(
 		HttpPrincipal httpPrincipal, long userId, long schoolId) {
 
 		try {
@@ -138,7 +137,7 @@ public class SchoolAdminServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {
@@ -149,7 +148,7 @@ public class SchoolAdminServiceHttp {
 		}
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeSchoolAdmin(
+	public static org.json.JSONObject removeSchoolAdmin(
 		HttpPrincipal httpPrincipal, long userId, long schoolId) {
 
 		try {
@@ -170,7 +169,7 @@ public class SchoolAdminServiceHttp {
 					exception);
 			}
 
-			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+			return (org.json.JSONObject)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException
 					systemException) {

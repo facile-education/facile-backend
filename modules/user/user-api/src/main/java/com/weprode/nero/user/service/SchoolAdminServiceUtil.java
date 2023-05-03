@@ -33,14 +33,14 @@ public class SchoolAdminServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.user.service.impl.SchoolAdminServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject addSchoolAdmin(
+	public static org.json.JSONObject addSchoolAdmin(
 		long userId, long schoolId) {
 
 		return getService().addSchoolAdmin(userId, schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		getDelegationCandidates(long schoolId, java.lang.String filter) {
+	public static org.json.JSONObject getDelegationCandidates(
+		long schoolId, java.lang.String filter) {
 
 		return getService().getDelegationCandidates(schoolId, filter);
 	}
@@ -54,13 +54,11 @@ public class SchoolAdminServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getSchoolDelegates(
-		long schoolId) {
-
+	public static org.json.JSONObject getSchoolDelegates(long schoolId) {
 		return getService().getSchoolDelegates(schoolId);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject removeSchoolAdmin(
+	public static org.json.JSONObject removeSchoolAdmin(
 		long userId, long schoolId) {
 
 		return getService().removeSchoolAdmin(userId, schoolId);

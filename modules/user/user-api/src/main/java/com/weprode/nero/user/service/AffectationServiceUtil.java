@@ -33,13 +33,13 @@ public class AffectationServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.user.service.impl.AffectationServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.portal.kernel.json.JSONObject addUserAffectation(
+	public static org.json.JSONObject addUserAffectation(
 		long userId, long orgId, java.lang.String expirationDate) {
 
 		return getService().addUserAffectation(userId, orgId, expirationDate);
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject getAffectedUsers(
+	public static org.json.JSONObject getAffectedUsers(
 		long schoolId, java.lang.String filter) {
 
 		return getService().getAffectedUsers(schoolId, filter);
@@ -54,8 +54,8 @@ public class AffectationServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONObject
-		removeUserAffectation(long userId, long orgId) {
+	public static org.json.JSONObject removeUserAffectation(
+		long userId, long orgId) {
 
 		return getService().removeUserAffectation(userId, orgId);
 	}

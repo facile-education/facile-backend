@@ -41,12 +41,12 @@ public class UserUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getPersonnalDetails() {
+	public org.json.JSONObject getPersonnalDetails() {
 		return _userUtilsService.getPersonnalDetails();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getUserInfos() {
+	public org.json.JSONObject getUserInfos() {
 		return _userUtilsService.getUserInfos();
 	}
 

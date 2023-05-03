@@ -31,7 +31,7 @@ public class AffectationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject addUserAffectation(
+	public org.json.JSONObject addUserAffectation(
 		long userId, long orgId, String expirationDate) {
 
 		return _affectationService.addUserAffectation(
@@ -39,9 +39,7 @@ public class AffectationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getAffectedUsers(
-		long schoolId, String filter) {
-
+	public org.json.JSONObject getAffectedUsers(long schoolId, String filter) {
 		return _affectationService.getAffectedUsers(schoolId, filter);
 	}
 
@@ -56,9 +54,7 @@ public class AffectationServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject removeUserAffectation(
-		long userId, long orgId) {
-
+	public org.json.JSONObject removeUserAffectation(long userId, long orgId) {
 		return _affectationService.removeUserAffectation(userId, orgId);
 	}
 

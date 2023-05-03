@@ -33,7 +33,7 @@ public class UserManagementServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject createManualUser(
+	public org.json.JSONObject createManualUser(
 		String lastName, String firstName, String email, long roleId,
 		long schoolId) {
 
@@ -42,14 +42,12 @@ public class UserManagementServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject deleteManualUser(
-		long userId) {
-
+	public org.json.JSONObject deleteManualUser(long userId) {
 		return _userManagementService.deleteManualUser(userId);
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject editManualUser(
+	public org.json.JSONObject editManualUser(
 		long userId, String lastName, String firstName, String email,
 		long roleId, long schoolId) {
 
@@ -58,7 +56,7 @@ public class UserManagementServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getManualUsers(
+	public org.json.JSONObject getManualUsers(
 		long schoolId, String search, int start, int limit) {
 
 		return _userManagementService.getManualUsers(
@@ -76,9 +74,7 @@ public class UserManagementServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject updatePassword(
-		long userId, String password) {
-
+	public org.json.JSONObject updatePassword(long userId, String password) {
 		return _userManagementService.updatePassword(userId, password);
 	}
 

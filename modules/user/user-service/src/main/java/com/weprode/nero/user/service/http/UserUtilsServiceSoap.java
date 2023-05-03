@@ -53,12 +53,12 @@ import java.rmi.RemoteException;
 @Deprecated
 public class UserUtilsServiceSoap {
 
-	public static String getUserInfos() throws RemoteException {
+	public static org.json.JSONObject getUserInfos() throws RemoteException {
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserUtilsServiceUtil.getUserInfos();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -67,12 +67,14 @@ public class UserUtilsServiceSoap {
 		}
 	}
 
-	public static String getPersonnalDetails() throws RemoteException {
+	public static org.json.JSONObject getPersonnalDetails()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				UserUtilsServiceUtil.getPersonnalDetails();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
