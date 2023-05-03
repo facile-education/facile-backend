@@ -1,11 +1,7 @@
 package com.weprode.nero.role.service.impl;
 
 import com.liferay.portal.kernel.exception.RolePermissionsException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Role;
@@ -18,9 +14,9 @@ import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsService;
 import com.weprode.nero.role.service.base.RoleUtilsServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
-
-import static com.liferay.portal.kernel.security.auth.GuestOrUserUtil.getGuestOrUser;
 
 @Component(
 		property = {
@@ -35,7 +31,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "get-main-roles", method = "GET")
 	public JSONObject getMainRoles() {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User agent;
 		try {
@@ -55,7 +51,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		}
 
 		try {
-			JSONArray roles = JSONFactoryUtil.createJSONArray();
+			JSONArray roles = new JSONArray();
 			for (Role role : RoleUtilsLocalServiceUtil.getUserSearchableRoles(agent)) {
 				JSONObject jsonRole = getRoleAsJSON(role, agent);
 				roles.put(jsonRole);
@@ -73,7 +69,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "get-local-user-roles", method = "GET")
 	public JSONObject getLocalUserRoles() {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User adminUser;
 		try {
@@ -92,7 +88,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		}
 
 		try {
-			JSONArray localUsersRoles = JSONFactoryUtil.createJSONArray();
+			JSONArray localUsersRoles = new JSONArray();
 
 			for (Role role : RoleUtilsLocalServiceUtil.getAvailableRolesForLocalUser()) {
 				JSONObject jsonRole = getRoleAsJSON(role, adminUser);
@@ -112,7 +108,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 	// Used in app manager (includes admin roles and if role can be apply to a class org)
 	@JSONWebService(value = "get-broadcast-roles", method = "GET")
 	public JSONObject getBroadcastRoles() {
-		JSONObject result = JSONFactoryUtil.createJSONObject();
+		JSONObject result = new JSONObject();
 
 		User user;
 		try {
@@ -133,10 +129,10 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		}
 
 		try {
-			JSONArray roleList = JSONFactoryUtil.createJSONArray();
+			JSONArray roleList = new JSONArray();
 
 			for (Role role : RoleUtilsLocalServiceUtil.getUserSearchableRoles(user)) {
-				final JSONObject curr = JSONFactoryUtil.createJSONObject();
+				final JSONObject curr = new JSONObject();
 				curr.put(JSONConstants.ROLE_ID, role.getRoleId());
 				curr.put(JSONConstants.DISPLAY_TEXT, role.getTitle(user.getLocale()));
 				curr.put(JSONConstants.IS_FOR_CLASS, (role.getName().equals(NeroRoleConstants.NATIONAL_1) || role.getName().equals(NeroRoleConstants.NATIONAL_2) ||
@@ -145,14 +141,14 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 			}
 
 			Role schoolAdmin = RoleUtilsLocalServiceUtil.getSchoolAdminRole();
-			JSONObject schoolAdminRole = JSONFactoryUtil.createJSONObject();
+			JSONObject schoolAdminRole = new JSONObject();
 			schoolAdminRole.put(JSONConstants.ROLE_ID, schoolAdmin.getRoleId());
 			schoolAdminRole.put(JSONConstants.DISPLAY_TEXT, "Administrateur local");
 			schoolAdminRole.put(JSONConstants.IS_FOR_CLASS, false);
 			roleList.put(schoolAdminRole);
 
 			Role entAdmin = RoleUtilsLocalServiceUtil.getEntAdminRole();
-			JSONObject entAdminRole = JSONFactoryUtil.createJSONObject();
+			JSONObject entAdminRole = new JSONObject();
 			entAdminRole.put(JSONConstants.ROLE_ID, entAdmin.getRoleId());
 			entAdminRole.put(JSONConstants.DISPLAY_TEXT, "Administrateur ENT");
 			entAdminRole.put(JSONConstants.IS_FOR_CLASS, false);
@@ -169,7 +165,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 	}
 
 	private JSONObject getRoleAsJSON(Role role, User user) {
-		JSONObject jsonRole = JSONFactoryUtil.createJSONObject();
+		JSONObject jsonRole = new JSONObject();
 
 		jsonRole.put(JSONConstants.ROLE_ID, role.getRoleId());
 		jsonRole.put(JSONConstants.ROLE_CODE, role.getName());

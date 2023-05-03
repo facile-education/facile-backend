@@ -53,12 +53,12 @@ import java.rmi.RemoteException;
 @Deprecated
 public class RoleUtilsServiceSoap {
 
-	public static String getMainRoles() throws RemoteException {
+	public static org.json.JSONObject getMainRoles() throws RemoteException {
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				RoleUtilsServiceUtil.getMainRoles();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -67,12 +67,14 @@ public class RoleUtilsServiceSoap {
 		}
 	}
 
-	public static String getLocalUserRoles() throws RemoteException {
+	public static org.json.JSONObject getLocalUserRoles()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				RoleUtilsServiceUtil.getLocalUserRoles();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -81,12 +83,14 @@ public class RoleUtilsServiceSoap {
 		}
 	}
 
-	public static String getBroadcastRoles() throws RemoteException {
+	public static org.json.JSONObject getBroadcastRoles()
+		throws RemoteException {
+
 		try {
-			com.liferay.portal.kernel.json.JSONObject returnValue =
+			org.json.JSONObject returnValue =
 				RoleUtilsServiceUtil.getBroadcastRoles();
 
-			return returnValue.toString();
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);

@@ -31,18 +31,28 @@ public class RoleUtilsServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getMainRoles() {
-		return _roleUtilsService.getMainRoles();
+	public org.json.JSONObject getBroadcastRoles() {
+		return _roleUtilsService.getBroadcastRoles();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getLocalUserRoles() {
+	public org.json.JSONObject getLocalUserRoles() {
 		return _roleUtilsService.getLocalUserRoles();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONObject getBroadcastRoles() {
-		return _roleUtilsService.getBroadcastRoles();
+	public org.json.JSONObject getMainRoles() {
+		return _roleUtilsService.getMainRoles();
+	}
+
+	/**
+	 * Returns the OSGi service identifier.
+	 *
+	 * @return the OSGi service identifier
+	 */
+	@Override
+	public String getOSGiServiceIdentifier() {
+		return _roleUtilsService.getOSGiServiceIdentifier();
 	}
 
 	@Override

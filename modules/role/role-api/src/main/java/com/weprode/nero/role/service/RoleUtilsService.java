@@ -16,13 +16,14 @@ package com.weprode.nero.role.service;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+
+import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -49,16 +50,23 @@ public interface RoleUtilsService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.role.service.impl.RoleUtilsServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the role utils remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link RoleUtilsServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "get-main-roles")
+	@JSONWebService(method = "GET", value = "get-broadcast-roles")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getMainRoles();
+	public JSONObject getBroadcastRoles();
 
 	@JSONWebService(method = "GET", value = "get-local-user-roles")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getLocalUserRoles();
 
-	@JSONWebService(method = "GET", value = "get-broadcast-roles")
+	@JSONWebService(method = "GET", value = "get-main-roles")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getBroadcastRoles();
+	public JSONObject getMainRoles();
+
+	/**
+	 * Returns the OSGi service identifier.
+	 *
+	 * @return the OSGi service identifier
+	 */
+	public String getOSGiServiceIdentifier();
 
 }
