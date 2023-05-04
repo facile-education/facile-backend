@@ -219,6 +219,9 @@ public interface UserRelationshipLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<User> getAllRelatives(long parentId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<User> getChildren(long parentId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -79,6 +79,9 @@ public interface UserUtilsLocalService extends BaseLocalService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<User> getUserPsychologues(User user);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<User> getUserTeachers(User user);
+
 	/**
 	 * Purges all expired users
 	 *

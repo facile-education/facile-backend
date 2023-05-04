@@ -1,0 +1,17 @@
+dependencies {
+	compile project(":modules:contact:contact-api")
+	compile project(":modules:commons")
+	compile project(":modules:role:role-api")
+	compile project(":modules:organization:organization-api")
+	compile project(":modules:group:group-api")
+	compile project(":modules:eel-synchronization:eel-synchronization-api")
+    implementation 'org.json:json'
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	compile group: 'com.whirlycott', name: 'whirlycache', version: '1.0.1'
+}
+
+buildService {
+	apiDir = "../contact-api/src/main/java"
+}
+
+group = "com.weprode.nero.contact"

@@ -32,9 +32,6 @@ public class RoleUtilsLocalServiceWrapper
 		_roleUtilsLocalService = roleUtilsLocalService;
 	}
 
-	/**
-	 * Get the User Profile
-	 */
 	@Override
 	public String displayUserRoles(com.liferay.portal.kernel.model.User user) {
 		return _roleUtilsLocalService.displayUserRoles(user);
@@ -53,6 +50,14 @@ public class RoleUtilsLocalServiceWrapper
 	@Override
 	public com.liferay.portal.kernel.model.Role getAdministratorRole() {
 		return _roleUtilsLocalService.getAdministratorRole();
+	}
+
+	/**
+	 * Get the User Profile
+	 */
+	@Override
+	public java.util.List<Long> getAgentsRoleIds() {
+		return _roleUtilsLocalService.getAgentsRoleIds();
 	}
 
 	@Override

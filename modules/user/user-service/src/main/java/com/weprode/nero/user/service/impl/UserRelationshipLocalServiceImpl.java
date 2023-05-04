@@ -88,6 +88,29 @@ public class UserRelationshipLocalServiceImpl extends UserRelationshipLocalServi
         return parents;
     }
 
+    // Return all relatives of the user's children
+    public List<User> getAllRelatives(long parentId) {
+
+        List<User> relatives = new ArrayList<>();
+        try {
+            List<User> userChildren = getChildren(parentId);
+            for (User userChild : userChildren) {
+                if (userChild.isActive()) {
+                    List<User> childParents = getParents(userChild.getUserId());
+                    for (User childParent : childParents) {
+                        if (childParent.isActive() && !relatives.contains(childParent)) {
+                            relatives.add(childParent);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error getting all relatives for parent " + parentId, e);
+        }
+        return relatives;
+    }
+
+
     public void deleteChild(long childId) {
         try {
             userRelationshipPersistence.removeBychildUserId(childId);
