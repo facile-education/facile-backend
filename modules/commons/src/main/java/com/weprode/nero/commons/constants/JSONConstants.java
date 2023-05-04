@@ -396,6 +396,18 @@ public class JSONConstants {
     public static final String LINK_NAME = "linkName";
     public static final String LINKS = "links";
 
+    // About
+    public static final String NEW = "new";
+    public static final String NEWS = "news";
+    public static final String OTHERS = "others";
+    public static final String VERSION_ID = "versionId";
+    public static final String VERSION_NUMBER = "versionNumber";
+    public static final String VERSION_DATE = "versionDate";
+    public static final String LATEST = "latest";
+    public static final String VERSIONS = "versions";
+    public static final String VERSION_DETAILS = "versionDetails";
+    public static final String TERMS_OF_USE = "termsOfUse";
+
     // Success
     public static final String SUCCESS = "success";
 

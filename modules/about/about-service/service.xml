@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.about">
+	<namespace>About</namespace>
+
+	<entity name="EntDetails" local-service="true" remote-service="true" />
+
+	<entity name="UpdateInformation" local-service="true" remote-service="false">
+		<column name="updateInfoId" type="long" primary="true" />
+		<column name="description" type="String" />
+		<column name="modifyDate" type="Date" />
+	</entity>
+
+	<entity name="EntVersion" local-service="true" remote-service="false">
+		<column name="entVersionId" type="long" primary="true" />
+		<column name="version" type="String" />
+		<column name="details" type="String" />
+		<column name="versionDate" type="Date" />
+		<column name="isLast" type="boolean" />
+
+		<finder return-type="EntVersion" name="isLast">
+			<finder-column name="isLast" />
+		</finder>
+	</entity>
+
+	<entity name="EntVersionUser" local-service="true" remote-service="false">
+		<column name="versionUserId" type="long" primary="true" />
+		<column name="entVersionId" type="long" />
+		<column name="userId" type="long" />
+
+		<finder return-type="EntVersionUser" name="entVersionId_userId">
+			<finder-column name="entVersionId" />
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+
+</service-builder>

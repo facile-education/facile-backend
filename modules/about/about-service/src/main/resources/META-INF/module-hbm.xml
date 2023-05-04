@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.weprode.nero.about.model.EntVersion" />
+	<import class="com.weprode.nero.about.model.EntVersionUser" />
+	<import class="com.weprode.nero.about.model.UpdateInformation" />
+	<class name="com.weprode.nero.about.model.impl.EntVersionImpl" table="About_EntVersion">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="entVersionId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="version" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="details" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="versionDate" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isLast" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+	</class>
+	<class name="com.weprode.nero.about.model.impl.EntVersionUserImpl" table="About_EntVersionUser">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="versionUserId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="entVersionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.weprode.nero.about.model.impl.UpdateInformationImpl" table="About_UpdateInformation">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="updateInfoId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="modifyDate" type="org.hibernate.type.TimestampType" />
+	</class>
+</hibernate-mapping>
