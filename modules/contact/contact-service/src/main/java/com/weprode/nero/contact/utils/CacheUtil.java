@@ -1,4 +1,4 @@
-package com.weprode.nero.contact;
+package com.weprode.nero.contact.utils;
 
 import com.whirlycott.cache.Cache;
 import com.whirlycott.cache.CacheManager;
@@ -7,7 +7,7 @@ public class CacheUtil {
 
     static Cache whirlycache = null;
 
-    static{
+    static {
         try {
             whirlycache = CacheManager.getInstance().getCache();
         } catch (com.whirlycott.cache.CacheException e) {

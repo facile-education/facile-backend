@@ -1,4 +1,4 @@
-package com.weprode.nero.contact;
+package com.weprode.nero.contact.constants;
 
 public class ContactConstants {
 

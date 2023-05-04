@@ -1,8 +1,6 @@
 package com.weprode.nero.group.service.impl;
 
-import org.json.JSONArray;
-
-import org.json.JSONObject;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -17,6 +15,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.group.model.CommunityInfos;
 import com.weprode.nero.group.model.GroupActivity;
@@ -33,6 +32,8 @@ import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.comparator.UserLastNameCaseInsensitiveComparator;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -306,10 +307,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
             OrderByComparator obc = new UserLastNameCaseInsensitiveComparator(true);
 
-            // TODO Contacts
-            List<User> results = new ArrayList<>();
-            // List<User> results = ContactLocalServiceUtil.directorySearch(user, query, new ArrayList<Long>(), schoolIds, roleIds,
-            //        null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
+            List<User> results = ContactLocalServiceUtil.directorySearch(user, query, new ArrayList<>(), schoolIds, roleIds,
+                    null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
             // TODO Convert to JSON with user profil and school ? -> UserUtils ?
             JSONArray contacts = new JSONArray();
 
