@@ -9,7 +9,10 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.*;
-import com.liferay.portal.kernel.util.*;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.ldap.util.LDAPUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
@@ -17,6 +20,10 @@ import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.model.Subject;
 import com.weprode.nero.eel.synchronization.service.SubjectLocalServiceUtil;
 import com.weprode.nero.eel.synchronization.service.TeacherSubjectLocalServiceUtil;
+import com.weprode.nero.messaging.constants.MessagingConstants;
+import com.weprode.nero.messaging.model.MessagingConfig;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessagingConfigLocalServiceUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.model.OrgMapping;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
@@ -26,23 +33,24 @@ import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.user.model.LDAPMapping;
-import com.weprode.nero.user.model.UserContact;
-import com.weprode.nero.user.service.*;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionParentClassLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
+import com.weprode.nero.user.model.LDAPMapping;
+import com.weprode.nero.user.model.UserContact;
+import com.weprode.nero.user.service.*;
 
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.*;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
-import java.io.File;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.Normalizer;
@@ -126,9 +134,7 @@ public class GVESynchronizationManager {
                 recipientList.add(administrator.getUserId());
                 String subject = "Echec de la synchronisation EEL";
                 String content = "Une erreur LDAP est survenue lors de la synchro qui a donc été arrêtée.";
-                // TODO Messaging
-                /*InternalMessageLocalServiceUtil.sendInternalMessage(administrator, recipientList, subject, content,
-                        new JSONArray(), 0, 0);*/
+                MessageLocalServiceUtil.sendMessage(administrator.getUserId(), recipientList, subject, content);
             } catch (Exception e1) {
                 logger.error("Couldn't find admin user", e1);
             }
@@ -1041,8 +1047,7 @@ public class GVESynchronizationManager {
      * Update MessagingConfig table
      */
     private void createMessagingConfig(User user) {
-        // TODO Messaging
-        /*MessagingConfig messagingConfig = null;
+        MessagingConfig messagingConfig = null;
 
         try {
             messagingConfig = MessagingConfigLocalServiceUtil.getMessagingConfig(user.getUserId());
@@ -1052,11 +1057,11 @@ public class GVESynchronizationManager {
 
         if (messagingConfig == null) {
             try {
-                MessagingConfigLocalServiceUtil.addMessagingConfig(user);
+                MessagingConfigLocalServiceUtil.addDefaultMessagingConfig(user.getUserId());
             } catch (Exception e) {
                 logger.error("Error while creating messaging config for user "+user.getFullName()+" ("+user.getUserId()+")");
             }
-        }*/
+        }
     }
 
     private void createContactProperties(User user) {
@@ -2613,7 +2618,7 @@ public class GVESynchronizationManager {
             roleIds.add(schoolAdminRole.getRoleId());
             List<User> directors = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-            User noReplyUser = UserLocalServiceUtil.getUser(Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID)));
+            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
             List<Long> recipientList = new ArrayList<>();
             for (User director : directors) {
                 if (!recipientList.contains(director.getUserId())) {
@@ -2668,8 +2673,7 @@ public class GVESynchronizationManager {
 
             content.append("Bien cordialement,<br>L'\u00e9quipe technique");
 
-            // TODO Messaging
-            // InternalMessageLocalServiceUtil.sendInternalMessage(noReplyUser, recipientList, subject, content, null, 0, 0);
+            MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content.toString(), MessagingConstants.TYPE_REPORT);
         } catch (Exception e) {
             logger.error("Erreur lors de l'envoi du rapport de synchronisation pour schoolId " + schoolId, e);
         }

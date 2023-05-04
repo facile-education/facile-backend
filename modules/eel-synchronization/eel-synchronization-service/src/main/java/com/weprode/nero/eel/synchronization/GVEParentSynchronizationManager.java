@@ -1,5 +1,6 @@
 package com.weprode.nero.eel.synchronization;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -18,6 +19,10 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.model.ParentSynchro;
 import com.weprode.nero.eel.synchronization.service.ParentSynchroLocalServiceUtil;
+import com.weprode.nero.messaging.constants.MessagingConstants;
+import com.weprode.nero.messaging.model.MessagingConfig;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessagingConfigLocalServiceUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
@@ -28,22 +33,10 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Main class for GVE synchronization process
@@ -683,14 +676,12 @@ public class GVEParentSynchronizationManager {
         }
 
         if (user != null) {
-
             try {
                 // Deactivate mail forward
-                // TODO Messaging
-                /*MessagingConfig messagingConfig = MessagingConfigLocalServiceUtil.getOrCreateMessagingConfig(user);
-                messagingConfig.setForwardByMail(false);
-                messagingConfig.setForwardMail("");
-                MessagingConfigLocalServiceUtil.updateMessagingConfig(messagingConfig);*/
+                MessagingConfig messagingConfig = MessagingConfigLocalServiceUtil.getOrCreateMessagingConfig(user.getUserId());
+                messagingConfig.setIsForwardActive(false);
+                messagingConfig.setForwardMail(StringPool.BLANK);
+                MessagingConfigLocalServiceUtil.updateMessagingConfig(messagingConfig);
             } catch (Exception e) {
                 logger.warn("Could not deactivate mail forward for userId "+user.getUserId());
             }
@@ -712,8 +703,19 @@ public class GVEParentSynchronizationManager {
             UserContactLocalServiceUtil.updateUserContact(userContact);
 
             // Send welcome message
-            // TODO Messaging
-            // InternalMessageLocalServiceUtil.sendWelcomeMessage(user);
+            List<Long> recipientList = new ArrayList<>();
+            recipientList.add(user.getUserId());
+
+            String subject = "Bienvenue dans votre environnement digital \u00e9ducatif";
+            String content = "Ch\u00e8re Madame, cher Monsieur,</br></br>" +
+                    "La plateforme Pentila N\u00e9ro assure le prolongement num\u00e9rique de l'\u00e9tablissement scolaire de votre.vos enfant.s.</br>" +
+                    "Il vous propose un espace priv\u00e9 et s\u00e9curis\u00e9 o\u00f9 vous pourrez suivre la vie de l'\u00e9tablissement et de la classe de votre.vos enfant.s.</br>" +
+                    "Il repr\u00e9sente surtout votre moyen de communication privil\u00e9gi\u00e9 avec l'\u00e9cole,  les enseignant.e.s et le personnel encadrant.</br>" +
+                    "N'h\u00e9sitez pas \u00e0 consulter le service d'aide accessible en haut \u00e0 droite de votre \u00e9cran sous le \" ? \" pour r\u00e9pondre \u00e0 vos \u00e9ventuelles questions.</br></br>" +
+                    "Meilleurs messages,</br>L'\u00e9quipe projet";
+
+            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_OTHER);
 
             // Mark latest ent news as read so that it does not pop at first connection
             // TODO Update info
@@ -886,9 +888,7 @@ public class GVEParentSynchronizationManager {
         List<Long> recipientList = new ArrayList<>();
         recipientList.add(administrator.getUserId());
         String subject = "Echec de la synchronisation des parents";
-        // TODO Messaging
-        /*InternalMessageLocalServiceUtil.sendInternalMessage(administrator, recipientList, subject, content,
-                new JSONArray(), 0, 0);*/
+        MessageLocalServiceUtil.sendMessage(administrator.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_REPORT);
     }
 
     private static class GVEParent {

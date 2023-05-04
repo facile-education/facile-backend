@@ -21,6 +21,7 @@ import java.util.List;
 @Component(service = RenvoiFinder.class)
 public class RenvoiFinderImpl extends RenvoiFinderBaseImpl
         implements RenvoiFinder {
+
     private static final Log logger = LogFactoryUtil.getLog(RenvoiFinderImpl.class);
 
     @Reference

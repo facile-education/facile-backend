@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <sql id="com.weprode.nero.messaging.service.persistence.MessageFinder.getUserThreadMessages">
+        <![CDATA[
+            SELECT im.messageId
+            FROM Messaging_Message im
+            INNER JOIN
+                Messaging_MessageFolder mf ON im.folderId = mf.folderId
+            WHERE
+                mf.userId = ?
+                AND im.threadId = ?
+        ]]>
+    </sql>
+</custom-sql>

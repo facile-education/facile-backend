@@ -4,6 +4,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.messaging.constants.MessagingConstants;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
@@ -79,8 +81,7 @@ public class NotificationUtil {
             }
             content += "Meilleurs messages,</br>" + teacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
         } catch (Exception e) {
             _log.error("Error sending notification for renvoi", e);
         }
@@ -136,8 +137,7 @@ public class NotificationUtil {
 
                 content += "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for renvoi", e);
@@ -181,8 +181,7 @@ public class NotificationUtil {
                     + "Je me tiens, bien entendu, \u00e0 votre disposition pour discuter de la situation de votre enfant.</br></br>"
                     + "Meilleurs messages,</br>" + teacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
 
             // Send notification to the student's doyens and the student's main teacher (and psychologist and social counselor) if not the source teacher + co-teachers
             recipientList = new ArrayList<>();
@@ -232,8 +231,7 @@ public class NotificationUtil {
                         + " pour le motif suivant:</br>" + reason + "</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for renvoi", e);
@@ -259,8 +257,7 @@ public class NotificationUtil {
             }
             studentContent += "</br>Meilleurs messages,</br>" + teacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, studentContent, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, studentContent, MessagingConstants.TYPE_HHC);
 
             // Send notification to his parents if selected
             if (notifyParents) {
@@ -274,8 +271,7 @@ public class NotificationUtil {
                     parentContent += "Motif : " + comment + "</br>";
                 }
                 parentContent += "</br>Meilleurs messages,</br>" + teacher.getFullName();
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
 
             // Send notification to his doyens and main teacher if not the teacher
@@ -300,8 +296,7 @@ public class NotificationUtil {
                     teacherContent += "Motif : " + comment + "</br>";
                 }
                 teacherContent += "</br>Meilleurs messages,</br>" + teacher.getFullName();
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
 
 
@@ -331,12 +326,11 @@ public class NotificationUtil {
             String content = "Cher.e " + student.getFullName() + ", </br></br>La retenue du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e.</br></br>"
                     + "Meilleurs messages,</br>" + teacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
 
             // Send notification to student's parents if selected
             if (notifyParents) {
-                recipientList = new ArrayList<Long>();
+                recipientList = new ArrayList<>();
                 List<User> parents = UserRelationshipLocalServiceUtil.getParents(studentId);
                 for (User parent : parents) {
                     recipientList.add(parent.getUserId());
@@ -344,8 +338,7 @@ public class NotificationUtil {
                 String parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>La retenue de votre enfant " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
             
             // Send notification to the student's doyen and the student's main teacher if not the teacher
@@ -369,8 +362,7 @@ public class NotificationUtil {
                 String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>La retenue de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for retenue", e);
@@ -413,8 +405,7 @@ public class NotificationUtil {
             String content = "Cher.e.s coll\u00e8gue.s, </br></br>" + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e en retenue le " + df.format(session.getStartDate()) + ".</br></br>";
             content += "Meilleurs messages,</br>" + watchTeacher.getFullName();
 
-            // TODO MESSAGING
-            // MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
         } catch (Exception e) {
             _log.error("Error sending notification for retenue", e);
         }
@@ -443,8 +434,7 @@ public class NotificationUtil {
             String studentContent = "Cher.e " + student.getFullName() + ", </br></br>Vous \u00eates convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
                     + "Meilleurs messages,</br>" + teacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, studentContent, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, studentContent, MessagingConstants.TYPE_HHC);
 
             if (notifyParents) {
                 recipientList = new ArrayList<>();
@@ -456,8 +446,7 @@ public class NotificationUtil {
                         + ", </br></br>Votre enfant " + student.getFullName() + " est convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
 
             recipientList = new ArrayList<>();
@@ -480,8 +469,7 @@ public class NotificationUtil {
                 String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>" + student.getFullName() + " est convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for travaux", e);
@@ -509,8 +497,7 @@ public class NotificationUtil {
             String content = "Cher.e " + student.getFullName() + ", </br></br>Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9.</br></br>"
                     + "Meilleurs messages,</br>" + teacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
 
             // Send notification to student's parents if selected
             if (notifyParents) {
@@ -522,8 +509,7 @@ public class NotificationUtil {
                 String parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " par votre enfant " + student.getFullName() + " est annul\u00e9.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
 
 
@@ -548,8 +534,7 @@ public class NotificationUtil {
                 String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " par l'\u00e9l\u00e8ve " + student.getFullName() + " est annul\u00e9.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for travail a refaire", e);
@@ -593,8 +578,7 @@ public class NotificationUtil {
             String content = "Cher.e.s coll\u00e8gue.s, </br></br>L'\u00e9l\u00e8ve " + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e au travail \u00e0 refaire de " + sessionStudent.getSubject() + " le " + df.format(session.getStartDate()) + ".</br></br>";
             content += "Meilleurs messages,</br>" + watchTeacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
         } catch (Exception e) {
             _log.error("Error sending notification for travaux absence for studentId="+studentId+", schoollifeSessionId=" + schoollifeSessionId, e);
         }
@@ -622,8 +606,7 @@ public class NotificationUtil {
                         + "Votre enfant " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e au d\u00e9pannage le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
 
             // Send notification to the student's doyens and the student's main teacher if not the teacher
@@ -647,8 +630,7 @@ public class NotificationUtil {
                 String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>" + student.getFullName() + " s'est pr\u00e9sent\u00e9.e au d\u00e9pannage le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for dépannage", e);
@@ -682,8 +664,7 @@ public class NotificationUtil {
                 String parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>Le d\u00e9pannage de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
 
             // Send notification to the student's doyen and the student's main teacher if not the teacher
@@ -707,8 +688,7 @@ public class NotificationUtil {
                 String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>Le d\u00e9pannage de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for dépannage", e);
@@ -736,8 +716,7 @@ public class NotificationUtil {
                     + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
                     + "Meilleurs messages,</br>" + teacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
 
             // Send notification to student's parents if selected
             if (notifyParents) {
@@ -751,8 +730,7 @@ public class NotificationUtil {
                         + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
 
             // Send notification to the student's doyens and the student's main teacher if not the teacher
@@ -777,8 +755,7 @@ public class NotificationUtil {
                         + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for etude", e);
@@ -811,8 +788,7 @@ public class NotificationUtil {
                 content = "Cher.e" + student.getFullName() + ", </br></br>Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + "</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
             }
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
 
             // Send notification to student's parents if selected
             if (notifyParents) {
@@ -831,8 +807,7 @@ public class NotificationUtil {
                             + "Meilleurs messages,</br>" + teacher.getFullName();
                 }
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
 
             // Send notification to the student's doyens and the student's main teacher if not the teacher
@@ -863,8 +838,7 @@ public class NotificationUtil {
                             + "Meilleurs messages,</br>" + teacher.getFullName();
                 }
 
-                // TODO Messaging
-                // MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
+                MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
             _log.error("Error sending notification for etude deregistration", e);
@@ -906,8 +880,7 @@ public class NotificationUtil {
             String content = "Cher.e.s coll\u00e8gue.s, </br></br>L'\u00e9l\u00e8ve " + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e au cercle d'\u00e9tude le " + df.format(session.getStartDate()) + ".</br></br>";
             content += "Meilleurs messages,</br>" + watchTeacher.getFullName();
 
-            // TODO Messaging
-            // MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
+            MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
         } catch (Exception e) {
             _log.error("Error sending notification for travaux absence for studentId="+studentId+", schoollifeSessionId=" + schoollifeSessionId, e);
         }
