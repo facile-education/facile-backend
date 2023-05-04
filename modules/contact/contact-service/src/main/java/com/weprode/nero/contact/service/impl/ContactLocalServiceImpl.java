@@ -30,7 +30,7 @@ import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.contact.ContactConstants;
+import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.base.ContactLocalServiceBaseImpl;
 
 import com.weprode.nero.eel.synchronization.service.TeacherSubjectLocalServiceUtil;

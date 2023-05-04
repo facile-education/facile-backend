@@ -2,6 +2,7 @@ Bundle-Name: contact-api
 Bundle-SymbolicName: com.weprode.nero.contact.api
 Bundle-Version: 1.0.0
 Export-Package:\
+    com.weprode.nero.contact.constants,\
 	com.weprode.nero.contact.service
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../contact-service/service.xml

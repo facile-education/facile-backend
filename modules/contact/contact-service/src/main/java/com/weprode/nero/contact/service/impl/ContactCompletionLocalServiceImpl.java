@@ -23,8 +23,8 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.weprode.nero.contact.CacheUtil;
-import com.weprode.nero.contact.ContactConstants;
+import com.weprode.nero.contact.utils.CacheUtil;
+import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.contact.service.base.ContactCompletionLocalServiceBaseImpl;
 
@@ -83,12 +83,15 @@ public class ContactCompletionLocalServiceImpl
 
 		// Create cache key
 		String contactsCacheKey = COMPLETION_CONTACTS_CACHE_KEY + user.getUserId();
-		JSONArray allContacts = (JSONArray) CacheUtil.getObjectFromCache(contactsCacheKey);
+		// TODO Cache
+		// JSONArray allContacts = (JSONArray) CacheUtil.getObjectFromCache(contactsCacheKey);
+		JSONArray allContacts = null;
 
 		if (allContacts == null) {
 			allContacts = generateUserContactsCache(user);
 			// We store in cache for half an hour (30 minutes)
-			CacheUtil.storeObjectIntoCache(contactsCacheKey, allContacts, 1800000);
+			// TODO Cache
+			// CacheUtil.storeObjectIntoCache(contactsCacheKey, allContacts, 1800000);
 		}
 
 		for (int i=0 ; i < allContacts.length() ; ++i) {
@@ -165,13 +168,15 @@ public class ContactCompletionLocalServiceImpl
 
 		// Create cache key
 		String listsCacheKey = COMPLETION_LISTS_CACHE_KEY + user.getUserId();
-
-		JSONArray userContactTree = (JSONArray) CacheUtil.getObjectFromCache(listsCacheKey);
+		// TODO Cache
+		// JSONArray userContactTree = (JSONArray) CacheUtil.getObjectFromCache(listsCacheKey);
+		JSONArray userContactTree = null;
 
 		if (userContactTree == null) {
 			userContactTree = ContactLocalServiceUtil.getContactTree(user);
 			// We store in cache for half an hour (30 minutes)
-			CacheUtil.storeObjectIntoCache(listsCacheKey, userContactTree, 1800000);
+			// TODO Cache
+			// CacheUtil.storeObjectIntoCache(listsCacheKey, userContactTree, 1800000);
 		}
 
 		// Normalize the query
@@ -195,8 +200,9 @@ public class ContactCompletionLocalServiceImpl
 					}
 				}
 
-				JSONObject rootClasses = jsonSchool.getJSONObject(ContactConstants.CLASSES);
-				if (rootClasses != null) {
+				if (jsonSchool.has(ContactConstants.CLASSES)) {
+					JSONObject rootClasses = jsonSchool.getJSONObject(ContactConstants.CLASSES);
+
 					JSONArray volees = rootClasses.getJSONArray(ContactConstants.VOLEES);
 					for (int voleeIdx = 0; voleeIdx < volees.length(); voleeIdx++) {
 						JSONObject volee = volees.getJSONObject(voleeIdx);

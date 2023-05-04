@@ -5,9 +5,11 @@ dependencies {
 	compile project(":modules:organization:organization-api")
 	compile project(":modules:group:group-api")
 	compile project(":modules:eel-synchronization:eel-synchronization-api")
-    implementation 'org.json:json'
+
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	compileOnly group: 'org.json', name: 'json'
 	compile group: 'com.whirlycott', name: 'whirlycache', version: '1.0.1'
+
 }
 
 buildService {
