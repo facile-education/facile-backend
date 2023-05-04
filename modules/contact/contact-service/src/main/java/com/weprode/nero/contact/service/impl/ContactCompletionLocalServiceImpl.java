@@ -15,7 +15,6 @@
 package com.weprode.nero.contact.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -23,11 +22,10 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.weprode.nero.contact.utils.CacheUtil;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.contact.service.base.ContactCompletionLocalServiceBaseImpl;
-
+import com.weprode.nero.contact.utils.CacheUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
@@ -194,7 +192,8 @@ public class ContactCompletionLocalServiceImpl
 					JSONObject schoolList = schoolLists.getJSONObject(i);
 					if (stringMatches(schoolList.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 						// id is schoolId + roleId
-						schoolList.put(COMPLETION_ID, Long.parseLong(jsonSchool.getString(ContactConstants.SCHOOL_ORG_ID) + schoolList.getString(ContactConstants.ROLE_ID)));
+						schoolList.put(COMPLETION_ID, Long.parseLong(
+								String.valueOf(jsonSchool.getLong(ContactConstants.SCHOOL_ORG_ID)) + schoolList.getLong(ContactConstants.ROLE_ID)));
 						schoolList.put(COMPLETION_NAME, schoolList.getString(ContactConstants.POPULATION_NAME));
 						results.put(schoolList);
 					}
@@ -225,7 +224,8 @@ public class ContactCompletionLocalServiceImpl
 								JSONObject population = populations.getJSONObject(j);
 								if (stringMatches(population.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 									// id is schoolId + roleId
-									population.put(COMPLETION_ID, Long.parseLong(population.getString(ContactConstants.ORG_ID) + population.getString(ContactConstants.ROLE_ID)));
+									population.put(COMPLETION_ID, Long.parseLong(
+											String.valueOf(population.getLong(ContactConstants.ORG_ID)) + population.getLong(ContactConstants.ROLE_ID)));
 									// Population name is suffixed by '(Classe)'
 									population.put(COMPLETION_NAME, population.getString(ContactConstants.POPULATION_NAME) + " (Classe)");
 									population.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
@@ -244,7 +244,8 @@ public class ContactCompletionLocalServiceImpl
 							JSONObject population = populations.getJSONObject(j);
 							if (stringMatches(population.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 								// id is schoolId + roleId
-								population.put(COMPLETION_ID, Long.parseLong(population.getString(ContactConstants.ORG_ID) + population.getString(ContactConstants.ROLE_ID)));
+								population.put(COMPLETION_ID, Long.parseLong(
+										String.valueOf(population.getLong(ContactConstants.ORG_ID)) + population.getLong(ContactConstants.ROLE_ID)));
 								// Population name is suffixed by '(Cours)'
 								population.put(COMPLETION_NAME, population.getString(ContactConstants.POPULATION_NAME) + " (Cours)");
 								population.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
@@ -259,7 +260,8 @@ public class ContactCompletionLocalServiceImpl
 						JSONObject subject = subjects.getJSONObject(i);
 						if (stringMatches(subject.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 							// id is schoolId + roleId
-							subject.put(COMPLETION_ID, Long.parseLong(subject.getString(ContactConstants.ORG_ID) + subject.getString(ContactConstants.ROLE_ID)));
+							subject.put(COMPLETION_ID, Long.parseLong(
+									String.valueOf(subject.getLong(ContactConstants.ORG_ID)) + subject.getLong(ContactConstants.ROLE_ID)));
 							// Population name is suffixed by '(Discipline)'
 							subject.put(COMPLETION_NAME, subject.getString(ContactConstants.POPULATION_NAME) + " (Discipline)");
 							subject.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
