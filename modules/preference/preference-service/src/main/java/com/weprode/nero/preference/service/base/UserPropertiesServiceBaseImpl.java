@@ -27,6 +27,10 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesService;
 import com.weprode.nero.preference.service.UserPropertiesServiceUtil;
+import com.weprode.nero.preference.service.persistence.MobileDevicePersistence;
+import com.weprode.nero.preference.service.persistence.MobileNotificationPersistence;
+import com.weprode.nero.preference.service.persistence.NotifyConfigPersistence;
+import com.weprode.nero.preference.service.persistence.UserMobileTokenPersistence;
 import com.weprode.nero.preference.service.persistence.UserPropertiesPersistence;
 
 import java.lang.reflect.Field;
@@ -132,6 +136,18 @@ public abstract class UserPropertiesServiceBaseImpl
 			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
+
+	@Reference
+	protected MobileDevicePersistence mobileDevicePersistence;
+
+	@Reference
+	protected MobileNotificationPersistence mobileNotificationPersistence;
+
+	@Reference
+	protected NotifyConfigPersistence notifyConfigPersistence;
+
+	@Reference
+	protected UserMobileTokenPersistence userMobileTokenPersistence;
 
 	@Reference
 	protected com.weprode.nero.preference.service.UserPropertiesLocalService

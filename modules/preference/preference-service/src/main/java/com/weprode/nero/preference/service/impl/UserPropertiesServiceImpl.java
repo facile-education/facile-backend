@@ -2,9 +2,6 @@ package com.weprode.nero.preference.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -17,11 +14,15 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
+import com.weprode.nero.preference.model.NotifyConfig;
 import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesService;
 import com.weprode.nero.preference.service.base.UserPropertiesServiceBaseImpl;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.File;
@@ -141,14 +142,13 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
         try {
             // Frequency : NONE = 0, DAILY = 1, WEEKLY = 2
-            // TODO Preferences
-           /* NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
+            NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
 
             userNotificationConfig.setActivate(frequency != NONE);
             userNotificationConfig.setDigestPeriod(frequency);
             userNotificationConfig.setUserId(user.getUserId());
 
-            NotifyConfigLocalServiceUtil.updateNotifyConfig(userNotificationConfig);*/
+            NotifyConfigLocalServiceUtil.updateNotifyConfig(userNotificationConfig);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Could not update notification frequency for userId " + user.getUserId(), e);
@@ -273,16 +273,13 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
             msg += "<p style='" + defaultStyle + " margin-top: -27px; border-bottom: 2px solid #8b9ea8; border-radius: 0px 0px 5px 5px;'>Cordialement</p>";
 
-            Long defaultSender = Long.valueOf(PropsUtil.get(NeroSystemProperties.CONFIRMATION_SENDER_ID));
-            User admin = UserLocalServiceUtil.getUser(defaultSender);
+            long defaultSenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.CONFIRMATION_SENDER_ID));
             List<Long> dest =  new ArrayList<>();
             dest.add(user.getUserId());
             String subject = "Activation de webdav";
             // String subject = "Modification du mot de passe de " + (isWebdav ? "webdav" : "l'ENT");
 
-            JSONArray attachFiles = new JSONArray();
-            // TODO Messaging
-            // InternalMessageLocalServiceUtil.sendInternalMessage(admin, dest, subject, msg, attachFiles, 0, 0);
+            MessageLocalServiceUtil.sendMessage(defaultSenderId, dest, subject, msg);
             result.put(JSONConstants.SUCCESS, true);
         }
 
