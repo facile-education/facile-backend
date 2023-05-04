@@ -87,6 +87,13 @@ public class UserUtilsLocalServiceWrapper
 		return _userUtilsLocalService.getUserPsychologues(user);
 	}
 
+	@Override
+	public java.util.List<com.liferay.portal.kernel.model.User> getUserTeachers(
+		com.liferay.portal.kernel.model.User user) {
+
+		return _userUtilsLocalService.getUserTeachers(user);
+	}
+
 	/**
 	 * Purges all expired users
 	 *

@@ -49,10 +49,6 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.role.service.impl.RoleUtilsLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the role utils local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link RoleUtilsLocalServiceUtil} if injection and service tracking are not available.
 	 */
-
-	/**
-	 * Get the User Profile
-	 */
 	public String displayUserRoles(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -63,6 +59,12 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getAdministratorRole();
+
+	/**
+	 * Get the User Profile
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Long> getAgentsRoleIds();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getAssistantTechniqueRole();

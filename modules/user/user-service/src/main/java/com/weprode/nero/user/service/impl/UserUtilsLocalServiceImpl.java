@@ -15,6 +15,7 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserUtilsLocalServiceBaseImpl;
 import org.osgi.service.component.annotations.Component;
 
@@ -38,6 +39,26 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<User> getUserTeachers(User user) {
+        List<User> teachers = new ArrayList<User>();
+        if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+            try {
+                // Loop over user's classes
+                List<Organization> userClasses = UserOrgsLocalServiceUtil.getUserClassesAndCours(user, false);
+                List<Long> orgIds = new ArrayList<Long>();
+                for (Organization userClass : userClasses) {
+                    orgIds.add(userClass.getOrganizationId());
+                }
+                List<Long> roleIds = new ArrayList<Long>();
+                roleIds.add(RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId());
+                teachers = UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+            } catch (Exception e) {
+                logger.error("Error fetching teachers for user " + user.getUserId());
+            }
+        }
+        return teachers;
     }
 
     public List<User> getUserDoyens(User user) {

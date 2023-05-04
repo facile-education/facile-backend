@@ -267,6 +267,13 @@ public class UserRelationshipLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.liferay.portal.kernel.model.User> getAllRelatives(
+		long parentId) {
+
+		return _userRelationshipLocalService.getAllRelatives(parentId);
+	}
+
+	@Override
 	public java.util.List<com.liferay.portal.kernel.model.User> getChildren(
 		long parentId) {
 

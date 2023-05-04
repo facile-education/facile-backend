@@ -242,6 +242,12 @@ public class UserRelationshipLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static List<com.liferay.portal.kernel.model.User> getAllRelatives(
+		long parentId) {
+
+		return getService().getAllRelatives(parentId);
+	}
+
 	public static List<com.liferay.portal.kernel.model.User> getChildren(
 		long parentId) {
 

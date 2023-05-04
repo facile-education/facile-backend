@@ -83,6 +83,12 @@ public class UserUtilsLocalServiceUtil {
 		return getService().getUserPsychologues(user);
 	}
 
+	public static List<com.liferay.portal.kernel.model.User> getUserTeachers(
+		com.liferay.portal.kernel.model.User user) {
+
+		return getService().getUserTeachers(user);
+	}
+
 	/**
 	 * Purges all expired users
 	 *

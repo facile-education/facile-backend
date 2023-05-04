@@ -623,17 +623,18 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	 	}
 	 }*/
 
-/*	 public List<Long> getAgentsRoleIds() {
-	 	List<Long> agentsRoleIds = new ArrayList<Long>();
+	 public List<Long> getAgentsRoleIds() {
+	 	List<Long> agentsRoleIds = new ArrayList<>();
 	 	try {
-	 		for (String personalRole : NeroRoleConstants.PERSONAL_ROLES_LIST) {
+	 		for (String personalRole : NeroRoleConstants.PERSONAL_ROLES) {
 	 			agentsRoleIds.add(getRole(personalRole).getRoleId());
 	 		}
 	 		agentsRoleIds.add(RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId());
 	 	} catch (Exception e) {
+			 logger.info("Error fetching agent roleIds", e);
 	 	}
 	 	return agentsRoleIds;
-	 }*/
+	 }
 
 	 public String displayUserRoles(User user) {
 		
