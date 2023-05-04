@@ -8,6 +8,7 @@ public class NeroSystemProperties {
 
 	public static final String ROOT_ORGANIZATION_NAME = "ent.orgRoot.name";
 	public static final String PORTAL_URL = "absolute.url";
+	public static final String TERMS_OF_USE_FILE = "ent.chart";
 	public static final String NOTIFICATIONS_ENABLED = "ent.notifications.enable";
 
 	public static final String MAX_UPLOAD_SIZE = "data.limit.dl.storage.max.size";
