@@ -16,10 +16,14 @@ public class NeroSystemProperties {
 
 	public static final String GVE_VOLEES = "gve.volees";
 
-	public static final String MAIL_NO_REPLY = "ent.mail.noreply";
+	public static final String MAIL_NO_REPLY = "ent.mail.noreply"; // "mail.noreply.address" ?
 	public static final String MAIL_NO_REPLY_USER_ID = "ent.mail.noreply.userId";
+	public static final String MAIL_FORWARD_ENABLED = "mail.forward.enabled";
+	public static final String MAIL_FORWARD_ADDCONTENT = "mail.forward.addcontent";
 	public static final String DEFAUT_MAIL_SUFFIX = "ent.mail.academic.suffix";
 	public static final String CONFIRMATION_SENDER_ID = "ent.mailSender.use.forward";
+	public static final String MESSAGING_URL = "portlet.url.messaging";
+	public static final String MOBILE_NOTIFICATION_ENABLED = "ent.mobile.notification.enable";
 
 	public static final String PARENT_SYNCHRO_FOLDER = "synchro.drop.folder";
 	public static final String SCHEDULE_SYNCHRO_FOLDER = "synchro.schedule.drop.folder";

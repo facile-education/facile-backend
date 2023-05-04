@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.messaging.model.Message">
+		<field name="messageId" type="long" />
+		<field name="folderId" type="long" />
+		<field name="threadId" type="long" />
+		<field name="sendMessageId" type="long" />
+		<field name="senderId" type="long" />
+		<field name="sendDate" type="Date" />
+		<field name="senderName" type="String" />
+		<field name="messageSubject" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="messageContent" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="isNew" type="boolean" />
+		<field name="readDate" type="Date" />
+		<field name="isAnswered" type="boolean" />
+		<field name="isForwarded" type="boolean" />
+		<field name="type" type="int" />
+	</model>
+	<model name="com.weprode.nero.messaging.model.MessageAttachFile">
+		<field name="messageId" type="long" />
+		<field name="fileId" type="long" />
+	</model>
+	<model name="com.weprode.nero.messaging.model.MessageContent">
+		<field name="messageId" type="long" />
+		<field name="messageContent" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+	</model>
+	<model name="com.weprode.nero.messaging.model.MessageFolder">
+		<field name="folderId" type="long" />
+		<field name="userId" type="long" />
+		<field name="folderName" type="String">
+			<hint name="max-length">300</hint>
+		</field>
+		<field name="type" type="int" />
+		<field name="parentFolderId" type="long" />
+	</model>
+	<model name="com.weprode.nero.messaging.model.MessageRecipients">
+		<field name="messageId" type="long" />
+		<field name="recipients" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+	</model>
+	<model name="com.weprode.nero.messaging.model.MessagingConfig">
+		<field name="userId" type="long" />
+		<field name="isForwardActive" type="boolean" />
+		<field name="forwardMail" type="String">
+			<hint name="max-length">300</hint>
+		</field>
+		<field name="isSignatureActive" type="boolean" />
+		<field name="signature" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="isAutoReplyActive" type="boolean" />
+		<field name="autoReplyContent" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+	</model>
+</model-hints>

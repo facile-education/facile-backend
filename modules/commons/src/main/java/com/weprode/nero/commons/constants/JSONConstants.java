@@ -352,6 +352,41 @@ public class JSONConstants {
     public static final String CDT_SESSION_ID = "cdtSessionId";
     public static final String REGISTERER_ID = "registererId";
 
+    // Messaging
+    public static final String RECIPIENTS = "recipients";
+    public static final String NB_RECIPIENTS = "nbRecipients";
+    public static final String READ_DATE = "readDate";
+    public static final String HAS_READ = "hasRead";
+    public static final String ATTACHMENTS = "attachments";
+    public static final String HAS_ATTACH_FILES = "hasAttachFiles";
+    public static final String IS_FORWARDED = "isForwarded";
+    public static final String IS_ANSWERED = "isAnswered";
+    public static final String FULL_CONTENT = "fullContent";
+    public static final String PREVIEW_CONTENT = "previewContent";
+    public static final String SENDER_ID = "senderId";
+    public static final String SENDER_NAME = "senderName";
+    public static final String IS_NEW = "isNew";
+    public static final String SEND_DATE = "sendDate";
+    public static final String THREAD_ID = "threadId";
+    public static final String MESSAGE_ID = "messageId";
+    public static final String NB_UNREAD = "nbUnread";
+    public static final String RENAMED_FOLDER = "renamedFolder";
+    public static final String IS_SENDER_DELETED = "isSenderDeleted";
+    public static final String MESSAGE_FOLDER_ID = "messageFolderId";
+    public static final String THREADS = "threads";
+    public static final String THREAD = "thread";
+    public static final String MESSAGES = "messages";
+    public static final String NB_MESSAGES = "nbMessages";
+    public static final String ATTACHED_FILES = "attachedFiles";
+    public static final String NB_MOVED_MESSAGES = "nbMovedMessages";
+    // Messaging configuration
+    public static final String SIGNATURE = "signature";
+    public static final String IS_ACTIVE = "isActive";
+    public static final String FORWARD = "forward";
+    public static final String ADDRESSES = "addresses";
+    public static final String TEXT = "text";
+    public static final String AUTO_REPLY = "autoReply";
+
     // Statistics
     public static final String DATASETS = "datasets";
     public static final String POINT_BORDER_COLOR = "pointBorderColor";

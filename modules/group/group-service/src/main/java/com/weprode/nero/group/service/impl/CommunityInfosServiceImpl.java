@@ -2,13 +2,13 @@ package com.weprode.nero.group.service.impl;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.*;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.GroupConstants;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.service.*;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -21,9 +21,12 @@ import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.CommunityInfosService;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.CommunityInfosServiceBaseImpl;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -145,12 +148,10 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             }
 
             // Notify members that they have been added to a new group
-            Long noReplySenderId = Long.valueOf(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
-            User noReplyUser = UserLocalServiceUtil.getUser(noReplySenderId);
+            long noReplySenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
             String subject = messages.getString("creation-du-groupe") + " " + createdGroup.getName();
             String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + createdGroup.getName()+".</br></br> L'&eacute;quipe technique";
-            // TODO Messaging
-            // InternalMessageLocalServiceUtil.sendInternalMessage(noReplyUser, notifiedMemberIds, subject, content, new JSONArray(), 0, 0);
+            MessageLocalServiceUtil.sendMessage(noReplySenderId, notifiedMemberIds, subject, content);
 
             // The creator has both owner and admin roles
             UserGroupRoleLocalServiceUtil.addUserGroupRoles(user.getUserId(), createdGroup.getGroupId(), new long[] {ownerRole.getRoleId(), managerRole.getRoleId()});
@@ -322,12 +323,10 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             }
 
             // Notify members that they have been added to a new group
-            Long noReplySenderId = Long.valueOf(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
-            User noReplyUser = UserLocalServiceUtil.getUser(noReplySenderId);
+            long noReplySenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
             String subject = messages.getString("ajouter-au-groupe") + " " + group.getName();
             String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + group.getName()+".</br></br> L'&eacute;quipe technique";
-            // TODO Messaging
-            // InternalMessageLocalServiceUtil.sendInternalMessage(noReplyUser, notifiedMemberIds, subject, content, new JSONArray(), 0, 0);
+            MessageLocalServiceUtil.sendMessage(noReplySenderId, notifiedMemberIds, subject, content);
 
             // Remove obsolete members
             for (Map.Entry<Long, Boolean> oldMember : membersIdAdmin.entrySet()) {
