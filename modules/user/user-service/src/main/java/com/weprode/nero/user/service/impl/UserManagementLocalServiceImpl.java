@@ -86,10 +86,6 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             user.setReminderQueryAnswer("@new@");
             UserLocalServiceUtil.updateUser(user);
 
-            // Create default user notifications
-            // TODO Preferences
-            // NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
-
             if (sendUserLogin) {
                 sendLoginPasswordToUser(email, screenName, password);
             }

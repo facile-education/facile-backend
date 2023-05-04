@@ -20,6 +20,7 @@ import com.weprode.nero.messaging.model.MessageFolder;
 import com.weprode.nero.messaging.service.MessageFolderLocalServiceUtil;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.LDAPMappingLocalServiceUtil;
@@ -79,8 +80,8 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 		UserPropertiesLocalServiceUtil.addUserProperties(user.getUserId());
 
 		// Create default user notifications
-		// TODO Preferences
-		// NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
+		NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
+
 		return user;
 	}
 
@@ -145,13 +146,12 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 		//cleanupDLFolders(userId);
 
 		// Cleanup notify config
-		// TODO Preferences
-		/*try {
+		try {
 			logger.debug("Clean up user notify config for userId " + userId);
 			NotifyConfigLocalServiceUtil.deleteNotifyConfigByUser(userId);
 		} catch (Exception e) {
 			logger.error("Could not delete the notify configuration for user id "+userId);
-		}*/
+		}
 
 		try {
 			logger.debug("Clean up user properties for userId " + userId);

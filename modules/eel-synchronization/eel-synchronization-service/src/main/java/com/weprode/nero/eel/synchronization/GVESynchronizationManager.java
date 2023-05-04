@@ -29,7 +29,9 @@ import com.weprode.nero.organization.model.OrgMapping;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.preference.model.NotifyConfig;
 import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -1001,11 +1003,6 @@ public class GVESynchronizationManager {
                 user.setReminderQueryAnswer("@new@");
                 UserLocalServiceUtil.updateUser(user);
 
-                // Create default user notifications
-                // TODO Preferences
-                /*NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
-                logger.debug("create user notification config : " + userNotificationConfig.getNotifyConfigId() + " for user " + user.getUserId());*/
-
                 createMessagingConfig(user);
                 createContactProperties(user);
                 createServiceNotifications(user);
@@ -1089,8 +1086,7 @@ public class GVESynchronizationManager {
         try {
             // Force notifications to enable
             if (Boolean.parseBoolean(PropsUtil.get(NeroSystemProperties.NOTIFICATIONS_ENABLED))) {
-                // TODO Preferences
-                /*NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
+                NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
 
                 userNotificationConfig.setNotifyCasier(true);
                 userNotificationConfig.setNotifyActu(true);
@@ -1101,7 +1097,7 @@ public class GVESynchronizationManager {
 
                 userNotificationConfig.setActivate(true);
 
-                NotifyConfigLocalServiceUtil.updateNotifyConfig(userNotificationConfig);*/
+                NotifyConfigLocalServiceUtil.updateNotifyConfig(userNotificationConfig);
             }
         } catch(Exception e) {
             logger.error("Error while updating user notify config for user "+user.getUserId());

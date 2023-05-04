@@ -1,9 +1,6 @@
 package com.weprode.nero.user.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -17,14 +14,17 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.preference.model.NotifyConfig;
 import com.weprode.nero.preference.model.UserProperties;
+import com.weprode.nero.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.UserContactLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
-import com.weprode.nero.user.service.UserUtilsService;
 import com.weprode.nero.user.service.base.UserUtilsServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.List;
@@ -152,10 +152,9 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
             result.put(JSONConstants.PRO_PHONE, userContact.getProPhone());
             result.put(JSONConstants.ADDRESS, userContact.getAddress());
 
-            // TODO Preferences
-            /* NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
+            NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
             //result.put("", userNotificationConfig.setActivate(frequency != NONE);
-            result.put(JSONConstants.REPORT_FREQUENCY, userNotificationConfig.getDigestPeriod());*/
+            result.put(JSONConstants.REPORT_FREQUENCY, userNotificationConfig.getDigestPeriod());
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             result.put(JSONConstants.IS_LOCAL_USER, userProperties.isManualAccount());

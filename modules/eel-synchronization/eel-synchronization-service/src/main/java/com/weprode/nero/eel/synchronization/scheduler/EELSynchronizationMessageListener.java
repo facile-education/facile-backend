@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Component(
-        immediate = true, property = {"cron.expression=0 11 13 * * ?"},
+        immediate = true, property = {"cron.expression=0 0 5 * * ?"},
         service = EELSynchronizationMessageListener.class
 )
 public class EELSynchronizationMessageListener extends BaseMessageListener {

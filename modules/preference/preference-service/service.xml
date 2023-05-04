@@ -23,4 +23,99 @@
 		</finder>
 	</entity>
 
+	<entity name="NotifyConfig" local-service="true" remote-service="false">
+		<column name="notifyConfigId" type="long" primary="true" />
+		<column name="userId" type="long" />
+		<column name="activate" type="boolean" />
+		<column name="notifyCasier" type="boolean" />
+		<column name="notifyActu" type="boolean" />
+		<column name="notifyGrpDoc" type="boolean" />
+		<column name="notifyAgenda" type="boolean" />
+		<column name="notifySync" type="boolean" />
+		<column name="digestPeriod" type="int" />
+
+		<finder return-type="NotifyConfig" name="userId">
+			<finder-column name="userId"></finder-column>
+		</finder>
+
+		<finder return-type="Collection" name="activate">
+			<finder-column name="activate"></finder-column>
+		</finder>
+
+		<finder return-type="Collection" name="activate_digestPeriod">
+			<finder-column name="activate"></finder-column>
+			<finder-column name="digestPeriod"></finder-column>
+		</finder>
+	</entity>
+
+	<entity name="MobileNotification" local-service="true" remote-service="false">
+		<column name="mobileNotificationId" type="long" primary="true" />
+		<column name="userId" type="long"/>
+		<column name="etabId" type="long"/>
+		<column name="enable" type="boolean"/>
+
+		<column name="token" type="String"/>
+		<column name="device" type="String"/>
+
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+
+		<finder return-type="Collection" name="etabId">
+			<finder-column name="etabId" />
+		</finder>
+
+		<finder return-type="Collection" name="userId_enable">
+			<finder-column name="userId" />
+			<finder-column name="enable" />
+		</finder>
+
+		<finder return-type="Collection" name="etabId_enable">
+			<finder-column name="etabId" />
+			<finder-column name="enable" />
+		</finder>
+	</entity>
+
+	<entity name="MobileDevice" local-service="true" remote-service="false">
+		<column name="mobileDeviceId" type="long" primary="true" />
+		<column name="manufaturerDeviceId" type="String"/>
+		<column name="userId" type="long"/>
+		<column name="deviceModel" type="String"/>
+		<column name="manufacturer" type="String"/>
+		<column name="operatingSystem" type="String"/>
+		<column name="operatingSystemVersion" type="String"/>
+		<column name="browserUA" type="String"/>
+
+		<finder return-type="MobileDevice" name="mobileDeviceId">
+			<finder-column name="mobileDeviceId" />
+		</finder>
+
+		<finder return-type="MobileDevice" name="manufaturerDeviceId">
+			<finder-column name="manufaturerDeviceId" />
+		</finder>
+
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+
+	<entity name="UserMobileToken" local-service="true" remote-service="false">
+		<column name="userMobileTokenId" type="long" primary="true" />
+		<column name="userId" type="long"/>
+		<column name="mobileToken" type="String"/>
+
+		<finder return-type="UserMobileToken" name="userMobileTokenId">
+			<finder-column name="userMobileTokenId" />
+		</finder>
+
+		<finder return-type="UserMobileToken" name="userId_mobileToken">
+			<finder-column name="userId" />
+			<finder-column name="mobileToken" />
+		</finder>
+
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+
 </service-builder>
