@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.access.model.Access">
+		<field name="uuid" type="String" />
+		<field name="accessId" type="long" />
+		<field name="categoryId" type="long" />
+		<field name="title" type="String" />
+		<field name="url" type="String" />
+		<field name="thumbnail" type="String" />
+		<field name="position" type="int" />
+	</model>
+	<model name="com.weprode.nero.access.model.AccessCategory">
+		<field name="uuid" type="String" />
+		<field name="categoryId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="categoryName" type="String" />
+		<field name="position" type="int" />
+	</model>
+	<model name="com.weprode.nero.access.model.AccessProfile">
+		<field name="uuid" type="String" />
+		<field name="accessId" type="long" />
+		<field name="roleId" type="long" />
+	</model>
+</model-hints>
