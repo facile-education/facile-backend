@@ -1,0 +1,15 @@
+dependencies {
+	compile project(":modules:access:access-api")
+	compile project(":modules:commons")
+	compile project(":modules:role:role-api")
+	compile project(":modules:organization:organization-api")
+	compileOnly group: 'org.json', name: 'json'
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+}
+
+buildService {
+	apiDir = "../access-api/src/main/java"
+}
+
+group = "com.weprode.nero.access"

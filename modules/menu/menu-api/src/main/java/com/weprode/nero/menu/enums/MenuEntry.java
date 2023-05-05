@@ -31,13 +31,14 @@ public class MenuEntry {
     // TODO vue component
     public static final MenuEntry HORAIRES_ADMIN = new MenuEntry(17, StringPool.BLANK, "horaires-admin", 2, "ApplicationManager");
     public static final MenuEntry DASHBOARD_ADMIN = new MenuEntry(18, StringPool.BLANK, "dashboard-admin", 3, "DashboardManager");
-    public static final MenuEntry STATISTICS = new MenuEntry(19, StringPool.BLANK, "statistics", 4, "Statistics");
-    public static final MenuEntry MAINTENANCE = new MenuEntry(20, StringPool.BLANK, "maintenance", 5, "Maintenance");
+    public static final MenuEntry ACCESS_ADMIN = new MenuEntry(19, StringPool.BLANK, "access-admin", 4, "AccessManager");
+    public static final MenuEntry STATISTICS = new MenuEntry(20, StringPool.BLANK, "statistics", 5, "Statistics");
+    public static final MenuEntry MAINTENANCE = new MenuEntry(21, StringPool.BLANK, "maintenance", 6, "Maintenance");
 
     public static final MenuEntry SCHOOL_LIFE = new MenuEntry("icon-nav-vie-scolaire.svg", "school-life", 3, Arrays.asList(CDT, HORAIRES, HHC, PROGRESSION));
     public static final MenuEntry COMMUNICATION = new MenuEntry("icon-nav-communication.svg", "communication", 4, Arrays.asList(MESSAGING, CONTACTS));
     public static final MenuEntry RESOURCES = new MenuEntry("icon-nav-ressources.svg", "resources", 5, Arrays.asList(UNIVERSALIS, UNIVERSALIS_JUNIOR, CORTEX, DISCIPLINES_CO, H5P, GRR));
-    public static final MenuEntry ADMINISTRATION = new MenuEntry("icon-nav-admin.svg", "administration", 6, Arrays.asList(USER_ADMIN, APPLICATION_ADMIN, HORAIRES_ADMIN, DASHBOARD_ADMIN, STATISTICS, MAINTENANCE));
+    public static final MenuEntry ADMINISTRATION = new MenuEntry("icon-nav-admin.svg", "administration", 6, Arrays.asList(USER_ADMIN, APPLICATION_ADMIN, HORAIRES_ADMIN, DASHBOARD_ADMIN, ACCESS_ADMIN, STATISTICS, MAINTENANCE));
 
     final long id;
     final int position;

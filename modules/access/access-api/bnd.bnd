@@ -1,0 +1,10 @@
+Bundle-Name: access-api
+Bundle-SymbolicName: com.weprode.nero.access.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.access.exception,\
+	com.weprode.nero.access.model,\
+	com.weprode.nero.access.service,\
+	com.weprode.nero.access.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../access-service/service.xml
