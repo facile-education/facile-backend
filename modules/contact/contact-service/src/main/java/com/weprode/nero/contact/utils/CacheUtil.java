@@ -1,52 +1,85 @@
 package com.weprode.nero.contact.utils;
 
-import com.whirlycott.cache.Cache;
-import com.whirlycott.cache.CacheManager;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.CacheConfiguration;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
+import org.ehcache.expiry.ExpiryPolicy;
+
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.function.Supplier;
 
 public class CacheUtil {
 
-    static Cache whirlycache = null;
+    static Cache<String, String> cache;
 
     static {
+        // We store in cache for half an hour (30 minutes)
+        // Create a cache configuration with the desired settings
+        CacheConfiguration<String, String> cacheConfiguration = CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, String.class,
+                        ResourcePoolsBuilder.newResourcePoolsBuilder()
+                                .heap(10000, EntryUnit.ENTRIES)
+                                .offheap(1, MemoryUnit.GB))
+                .withExpiry(new ExpiryPolicy<>() {
+                    @Override
+                    public Duration getExpiryForCreation(String s, String s2) {
+                        return Duration.of(30, ChronoUnit.MINUTES);
+                    }
+
+                    @Override
+                    public Duration getExpiryForAccess(String s, Supplier<? extends String> supplier) {
+                        return Duration.of(30, ChronoUnit.MINUTES);
+                    }
+
+                    @Override
+                    public Duration getExpiryForUpdate(String s, Supplier<? extends String> supplier, String s2) {
+                        return Duration.of(30, ChronoUnit.MINUTES);
+                    }
+                })
+                .build();
+
         try {
-            whirlycache = CacheManager.getInstance().getCache();
-        } catch (com.whirlycott.cache.CacheException e) {
+            CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+                    .withCache("myCache", cacheConfiguration)
+                    .build(true);
+
+            // Create a cache instance with the desired name
+            cache = cacheManager.getCache("myCache", String.class, String.class);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static boolean checkCache(String pKey) {
-        if (whirlycache == null) {
+    private static boolean checkCache(String key) {
+        if (cache == null) {
             return false;
         }
-        return pKey != null && !pKey.equals("");
+        return key != null && !key.equals("") && cache.containsKey(key);
     }
 
-    public static Object getObjectFromCache(String key){
+    public static String getObjectFromCache(String key) {
         if (!checkCache(key)) {
             return null;
         }
-        return whirlycache.retrieve(key);
+
+        // Retrieve the object from the cache using the key
+        return cache.get(key);
     }
 
-    public static Object removeObjectFromCache (String key) {
-        if (!checkCache(key)) {
-            return null;
+    public static void removeObjectFromCache (String key) {
+        if (checkCache(key)) {
+            cache.remove(key);
         }
-        return whirlycache.remove(key);
     }
 
-    public static void storeObjectIntoCache(String key,Object object,long expireTime){
-        if (!checkCache(key)) {
-            return;
-        }
-        if (expireTime < 0) {
-            // Cache object with no expire date
-            whirlycache.store(key,object);
-        } else {
-            // Cache object with expire date, this object will cleanup automatically after expire date
-            whirlycache.store(key,object,expireTime);
-        }
+    public static void storeObjectIntoCache(String key, String value){
+        // Store an object in the cache with a given key
+        cache.put(key, value);
     }
 
 }

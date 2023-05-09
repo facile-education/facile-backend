@@ -5,30 +5,9 @@ Liferay-Require-SchemaVersion: 1.0.0
 Liferay-Service: true
 -dsannotations-options: inherit
 -includeresource:\
-META-INF/lib/whirlycache-1.0.1.jar=whirlycache-1.0.1.jar;lib:=true
+META-INF/lib/ehcache-3.9.0.jar=ehcache-3.9.0.jar;lib:=true
 
 Import-Package:\
-    EDU.oswego.*;resolution:="optional",\
-    com.mchange.*;resolution:="optional",\
-    com.opensymphony.*;resolution:="optional",\
-    com.typesafe.*;resolution:="optional",\
     javax.*;resolution:="optional",\
-	net.sf.*;resolution:="optional",\
-    org.apache.avalon.framework.*;resolution:="optional",\
-    org.apache.commons.*;resolution:="optional",\
-    org.apache.excalibur.*;resolution:="optional",\
-    org.apache.*;resolution:="optional",\
-    org.dom4j;resolution:="optional",\
-    org.dom4j.*;resolution:="optional",\
-    org.hibernate;resolution:="optional",\
-    org.hibernate.*;resolution:="optional",\
-    org.jboss.*;resolution:="optional",\
-    org.jgroups;resolution:="optional",\
-    org.jgroups.*;resolution:="optional",\
-    org.logicalcobwebs.*;resolution:="optional",\
-    org.objectweb.*;resolution:="optional",\
-    org.odmg;resolution:="optional",\
-    org.quartz;resolution:="optional",\
-    org.quartz.*;resolution:="optional",\
-    org.terracotta.*;resolution:="optional",\
+    org.*;resolution:="optional",\
     *
