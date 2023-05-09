@@ -429,12 +429,12 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		List<User> agentContacts = new ArrayList<>();
 		try {
 			if (!studentAndParentOrgIds.isEmpty() && !studentAndParentRoleIds.isEmpty()) {
-				studentAndParentContacts = UserSearchLocalServiceUtil.searchUsers(query, studentAndParentOrgIds, null, studentAndParentRoleIds, null, 0, limit, obc);
+				studentAndParentContacts = UserSearchLocalServiceUtil.searchUsers(query, studentAndParentOrgIds, null, studentAndParentRoleIds, null, start, limit, obc);
 				studentAndParentContacts = userListFilter(studentAndParentContacts);
 			}
 
 			if (!agentRoleIds.isEmpty()) {
-				agentContacts = UserSearchLocalServiceUtil.searchUsers(query, agentOrgIds, null, agentRoleIds, subjectIds, 0, limit, obc);
+				agentContacts = UserSearchLocalServiceUtil.searchUsers(query, agentOrgIds, null, agentRoleIds, subjectIds, start, limit, obc);
 				agentContacts = userListFilter(agentContacts);
 			}
 		} catch (Exception e) {
