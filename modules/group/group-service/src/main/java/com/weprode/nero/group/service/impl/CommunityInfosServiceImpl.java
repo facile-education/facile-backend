@@ -127,7 +127,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                 JSONObject jsonMember = jsonMembers.getJSONObject(i);
 
                 boolean isAdmin = jsonMember.getBoolean(JSONConstants.IS_ADMIN);
-                String type = jsonMember.getString(JSONConstants.TYPE);
+                String type = JSONConstants.getStringValue(jsonMember, JSONConstants.TYPE, StringPool.BLANK);
                 Long memberId = jsonMember.getLong(JSONConstants.USER_ID);
                 if (!notifiedMemberIds.contains(memberId)) {
                     notifiedMemberIds.add(memberId);
