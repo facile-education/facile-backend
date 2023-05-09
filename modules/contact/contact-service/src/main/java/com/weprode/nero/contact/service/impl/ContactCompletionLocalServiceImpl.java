@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.contact.service.base.ContactCompletionLocalServiceBaseImpl;
@@ -37,7 +38,6 @@ import org.osgi.service.component.annotations.Component;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -103,8 +103,8 @@ public class ContactCompletionLocalServiceImpl
 				try {
 					User completedUser = UserLocalServiceUtil.getUser(contact.getLong(ContactConstants.USER_ID));
 					contact = ContactLocalServiceUtil.convertUserToJson(completedUser);
-					contact.put(COMPLETION_ID, completedUser.getUserId());
-					contact.put(COMPLETION_NAME, completedUser.getFullName());
+					contact.put(JSONConstants.ID, completedUser.getUserId());
+					contact.put(JSONConstants.NAME, completedUser.getFullName());
 				} catch (Exception e) {
 					logger.info("Error adding user " + contact.getLong(ContactConstants.USER_ID) + " to completion list for user " + user.getFullName() +" and query " + query);
 				}
@@ -190,11 +190,11 @@ public class ContactCompletionLocalServiceImpl
 				JSONArray schoolLists = jsonSchool.getJSONArray(ContactConstants.PERSONALS);
 				for (int i = 0 ; i < schoolLists.length() ; i++) {
 					JSONObject schoolList = schoolLists.getJSONObject(i);
-					if (stringMatches(schoolList.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+					if (schoolList.has(ContactConstants.POPULATION_NAME) && stringMatches(schoolList.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 						// id is schoolId + roleId
-						schoolList.put(COMPLETION_ID, Long.parseLong(
+						schoolList.put(JSONConstants.ID, Long.parseLong(
 								String.valueOf(jsonSchool.getLong(ContactConstants.SCHOOL_ORG_ID)) + schoolList.getLong(ContactConstants.ROLE_ID)));
-						schoolList.put(COMPLETION_NAME, schoolList.getString(ContactConstants.POPULATION_NAME));
+						schoolList.put(JSONConstants.NAME, schoolList.getString(ContactConstants.POPULATION_NAME));
 						results.put(schoolList);
 					}
 				}
@@ -207,11 +207,11 @@ public class ContactCompletionLocalServiceImpl
 						JSONObject volee = volees.getJSONObject(voleeIdx);
 
 						// Matching volee name ?
-						if (stringMatches(volee.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+						if (volee.has(ContactConstants.POPULATION_NAME) && stringMatches(volee.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 							// id is voleeIdx
-							volee.put(COMPLETION_ID, voleeIdx);
+							volee.put(JSONConstants.ID, voleeIdx);
 							// Population name is suffixed by '(Volee)'
-							volee.put(COMPLETION_NAME, volee.getString(ContactConstants.GROUP_NAME) + " (Volee)");
+							volee.put(JSONConstants.NAME, volee.getString(ContactConstants.GROUP_NAME) + " (Volee)");
 							volee.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
 							results.put(volee);
 						}
@@ -222,12 +222,12 @@ public class ContactCompletionLocalServiceImpl
 							JSONArray populations = classes.getJSONObject(i).getJSONArray("populations");
 							for (int j = 0; j < populations.length(); j++) {
 								JSONObject population = populations.getJSONObject(j);
-								if (stringMatches(population.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+								if (population.has(ContactConstants.POPULATION_NAME) && stringMatches(population.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 									// id is schoolId + roleId
-									population.put(COMPLETION_ID, Long.parseLong(
+									population.put(JSONConstants.ID, Long.parseLong(
 											String.valueOf(population.getLong(ContactConstants.ORG_ID)) + population.getLong(ContactConstants.ROLE_ID)));
 									// Population name is suffixed by '(Classe)'
-									population.put(COMPLETION_NAME, population.getString(ContactConstants.POPULATION_NAME) + " (Classe)");
+									population.put(JSONConstants.NAME, population.getString(ContactConstants.POPULATION_NAME) + " (Classe)");
 									population.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
 									results.put(population);
 								}
@@ -235,19 +235,20 @@ public class ContactCompletionLocalServiceImpl
 						}
 					}
 				}
-				JSONObject cours = jsonSchool.getJSONObject(ContactConstants.COURS);
-				if (cours != null) {
+
+				if (jsonSchool.has(ContactConstants.COURS)) {
+					JSONObject cours = jsonSchool.getJSONObject(ContactConstants.COURS);
 					JSONArray coursList = cours.getJSONArray(ContactConstants.COURS);
 					for (int i = 0 ; i < coursList.length() ; i++) {
 						JSONArray populations = coursList.getJSONObject(i).getJSONArray("populations");
 						for (int j = 0 ; j < populations.length() ; j++) {
 							JSONObject population = populations.getJSONObject(j);
-							if (stringMatches(population.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+							if (population.has(ContactConstants.POPULATION_NAME) && stringMatches(population.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 								// id is schoolId + roleId
-								population.put(COMPLETION_ID, Long.parseLong(
+								population.put(JSONConstants.ID, Long.parseLong(
 										String.valueOf(population.getLong(ContactConstants.ORG_ID)) + population.getLong(ContactConstants.ROLE_ID)));
 								// Population name is suffixed by '(Cours)'
-								population.put(COMPLETION_NAME, population.getString(ContactConstants.POPULATION_NAME) + " (Cours)");
+								population.put(JSONConstants.NAME, population.getString(ContactConstants.POPULATION_NAME) + " (Cours)");
 								population.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
 								results.put(population);
 							}
@@ -258,12 +259,12 @@ public class ContactCompletionLocalServiceImpl
 				if (subjects != null) {
 					for (int i = 0; i < subjects.length(); i++) {
 						JSONObject subject = subjects.getJSONObject(i);
-						if (stringMatches(subject.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+						if (subject.has(ContactConstants.POPULATION_NAME) && stringMatches(subject.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
 							// id is schoolId + roleId
-							subject.put(COMPLETION_ID, Long.parseLong(
+							subject.put(JSONConstants.ID, Long.parseLong(
 									String.valueOf(subject.getLong(ContactConstants.ORG_ID)) + subject.getLong(ContactConstants.ROLE_ID)));
 							// Population name is suffixed by '(Discipline)'
-							subject.put(COMPLETION_NAME, subject.getString(ContactConstants.POPULATION_NAME) + " (Discipline)");
+							subject.put(JSONConstants.NAME, subject.getString(ContactConstants.POPULATION_NAME) + " (Discipline)");
 							subject.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
 							results.put(subject);
 						}
@@ -275,11 +276,11 @@ public class ContactCompletionLocalServiceImpl
 				JSONArray groups = jsonSchool.getJSONArray(ContactConstants.GROUPS);
 				for (int i = 0 ; i < groups.length() ; i++) {
 					JSONObject group = groups.getJSONObject(i);
-					if (stringMatches(group.getString(ContactConstants.GROUP_NAME), normalizedQuery)) {
-						group.put(COMPLETION_ID, group.getLong(ContactConstants.GROUP_ID));
+					if (group.has(ContactConstants.GROUP_NAME) && stringMatches(group.getString(ContactConstants.GROUP_NAME), normalizedQuery)) {
+						group.put(JSONConstants.ID, group.getLong(ContactConstants.GROUP_ID));
 						// Population name is suffixed by '(Groupe)'
 						group.put(ContactConstants.POPULATION_NAME, group.getString(ContactConstants.GROUP_NAME) + " (Groupe)");
-						group.put(COMPLETION_NAME, group.getString(ContactConstants.POPULATION_NAME));
+						group.put(JSONConstants.NAME, group.getString(ContactConstants.POPULATION_NAME));
 						group.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_GROUP);
 						results.put(group);
 					}
@@ -291,7 +292,7 @@ public class ContactCompletionLocalServiceImpl
 
 	public List<User> getSchoolContacts(String search, User user, Organization school, int start, int limit, OrderByComparator comparator) {
 
-		List<User> sortedUserList = new ArrayList<User>();
+		List<User> sortedUserList = new ArrayList<>();
 
 		logger.info("Searching contacts in school "+school.getName()+" for user "+user.getFullName()+" with search '"+search+"' and limited between "+start+" and "+limit);
 
@@ -299,8 +300,6 @@ public class ContactCompletionLocalServiceImpl
 		int startIndex = 0;
 		if (start == QueryUtil.ALL_POS) {
 			startIndex = start;
-		} else {
-			startIndex = 0;
 		}
 
 		try {
@@ -491,12 +490,12 @@ public class ContactCompletionLocalServiceImpl
 
 			// Sort with the given comparator
 			if (comparator != null) {
-				Collections.sort(uniqueList, comparator);
+				uniqueList.sort(comparator);
 			}
 
 			if (start != QueryUtil.ALL_POS && limit != QueryUtil.ALL_POS) {
 				// Start and limit are provided
-				int max = ((uniqueList.size() < limit) ? uniqueList.size() : limit);
+				int max = (Math.min(uniqueList.size(), limit));
 				// To prevent infinite loops error
 				if (start <= max) {
 					sortedUserList = uniqueList.subList(start, max);
@@ -536,9 +535,5 @@ public class ContactCompletionLocalServiceImpl
 		name = name.replaceAll("[^\\p{ASCII}]", "");
 		return name.length() >= query.length() && name.contains(query);
 	}
-
-
-	private static final String COMPLETION_ID = "id";
-	private static final String COMPLETION_NAME = "name";
 
 }
