@@ -387,6 +387,18 @@ public class JSONConstants {
     public static final String TEXT = "text";
     public static final String AUTO_REPLY = "autoReply";
 
+    // Contacts
+    public static final String SCHOOL_ORG_ID = "schoolOrgId";
+    public static final String POPULATIONS = "populations";
+    public static final String POPULATION_NAME = "populationName";
+    public static final String CLASSES = "classes";
+    public static final String COURS = "cours";
+    public static final String IS_EXPANDED = "isExpanded";
+    public static final String IS_SELECTABLE = "isSelectable";
+    public static final String IS_COMMUNITY = "isCommunity";
+    public static final String CATEGORIES = "categories";
+    public static final String PERSONALS = "Personnels";
+
     // Statistics
     public static final String DATASETS = "datasets";
     public static final String POINT_BORDER_COLOR = "pointBorderColor";

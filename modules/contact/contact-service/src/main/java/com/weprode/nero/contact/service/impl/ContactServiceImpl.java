@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.contact.service.base.ContactServiceBaseImpl;
 import org.json.JSONArray;
@@ -67,7 +66,7 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 
 		logger.info("User " + user.getUserId() + " fetches its contact tree");
 		JSONArray jsonCategories = ContactLocalServiceUtil.getContactTree(user);
-		result.put(ContactConstants.CATEGORIES, jsonCategories);
+		result.put(JSONConstants.CATEGORIES, jsonCategories);
 
 		result.put(JSONConstants.SUCCESS, true);
 		return result;

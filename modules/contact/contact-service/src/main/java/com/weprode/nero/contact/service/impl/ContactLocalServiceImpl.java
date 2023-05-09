@@ -72,9 +72,9 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 			for (Organization userSchool : userSchools) {
 
 				JSONObject jsonSchool = new JSONObject();
-				jsonSchool.put(ContactConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
-				jsonSchool.put(ContactConstants.SCHOOL_ORG_ID, userSchool.getOrganizationId());
-				jsonSchool.put(ContactConstants.IS_EXPANDED, true);
+				jsonSchool.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
+				jsonSchool.put(JSONConstants.SCHOOL_ORG_ID, userSchool.getOrganizationId());
+				jsonSchool.put(JSONConstants.IS_EXPANDED, true);
 
 				// Global personal lists
 				JSONArray jsonSchoolGlobalLists = new JSONArray();
@@ -99,12 +99,12 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					jsonSchoolGlobalLists.put(getJsonPopulation(userSchool.getGroupId(), userSchool.getOrganizationId(), RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId(), NeroRoleConstants.CONSEILLER_SOCIAL_INCLUSIVE, user.getUserId()));
 				}
 
-				jsonSchool.put(ContactConstants.PERSONALS, jsonSchoolGlobalLists);
+				jsonSchool.put(JSONConstants.PERSONALS, jsonSchoolGlobalLists);
 
 				// Classes
 				List<Organization> schoolClasses = getUserClasses(user, userSchool);
 				if (!schoolClasses.isEmpty()) {
-					jsonSchool.put(ContactConstants.CLASSES, getJsonClasses(user, schoolClasses));
+					jsonSchool.put(JSONConstants.CLASSES, getJsonClasses(user, schoolClasses));
 				}
 
 				// Cours
@@ -112,17 +112,17 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					List<Organization> schoolCours = getUserCours(user, userSchool);
 					if (!schoolCours.isEmpty()) {
 						JSONObject jsonCours = new JSONObject();
-						jsonCours.put(ContactConstants.IS_EXPANDED, true);
-						jsonCours.put(ContactConstants.IS_SELECTABLE, false);
-						jsonCours.put(ContactConstants.COURS, getOrgTypePopulations(user, schoolCours));
-						jsonSchool.put(ContactConstants.COURS, jsonCours);
+						jsonCours.put(JSONConstants.IS_EXPANDED, true);
+						jsonCours.put(JSONConstants.IS_SELECTABLE, false);
+						jsonCours.put(JSONConstants.COURS, getOrgTypePopulations(user, schoolCours));
+						jsonSchool.put(JSONConstants.COURS, jsonCours);
 					}
 				}
 
 				// Subjects
 				List<Organization> schoolSubjects = getUserSubjects(user, userSchool);
 				if (!schoolSubjects.isEmpty()) {
-					jsonSchool.put(ContactConstants.SUBJECTS, getOrgTypePopulations(user, schoolSubjects));
+					jsonSchool.put(JSONConstants.SUBJECTS, getOrgTypePopulations(user, schoolSubjects));
 				}
 
 				jsonTree.put(jsonSchool);
@@ -130,20 +130,20 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 			// Communities
 			JSONObject jsonCommunities = new JSONObject();
-			jsonCommunities.put(ContactConstants.SCHOOL_NAME, ContactConstants.COMMUNITIES);
-			jsonCommunities.put(ContactConstants.SCHOOL_ORG_ID, 0);
+			jsonCommunities.put(JSONConstants.SCHOOL_NAME, ContactConstants.COMMUNITIES);
+			jsonCommunities.put(JSONConstants.SCHOOL_ORG_ID, 0);
 			JSONArray jsonPersGroups = new JSONArray();
 			List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
 			for (Group userGroup : userGroups) {
 				JSONObject jsonGroup = new JSONObject();
-				jsonGroup.put(ContactConstants.GROUP_NAME, userGroup.getName());
-				jsonGroup.put(ContactConstants.GROUP_ID, userGroup.getGroupId());
-				jsonGroup.put(ContactConstants.ROLE_ID, 0);
-				jsonGroup.put(ContactConstants.IS_COMMUNITY, true);
-				jsonGroup.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_GROUP);
+				jsonGroup.put(JSONConstants.GROUP_NAME, userGroup.getName());
+				jsonGroup.put(JSONConstants.GROUP_ID, userGroup.getGroupId());
+				jsonGroup.put(JSONConstants.ROLE_ID, 0);
+				jsonGroup.put(JSONConstants.IS_COMMUNITY, true);
+				jsonGroup.put(JSONConstants.TYPE, ContactConstants.RECIPIENT_TYPE_GROUP);
 				jsonPersGroups.put(jsonGroup);
 			}
-			jsonCommunities.put(ContactConstants.GROUPS, jsonPersGroups);
+			jsonCommunities.put(JSONConstants.GROUPS, jsonPersGroups);
 			jsonTree.put(jsonCommunities);
 
 		} catch (Exception e) {
@@ -217,30 +217,30 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		JSONArray jsonVolees = new JSONArray();
 		for (String volee : voleeMap.keySet()) {
 			JSONObject jsonVolee = new JSONObject();
-			jsonVolee.put(ContactConstants.GROUP_NAME, volee);
-			jsonVolee.put(ContactConstants.IS_SELECTABLE, false);
-			jsonVolee.put(ContactConstants.IS_EXPANDED, false);
+			jsonVolee.put(JSONConstants.GROUP_NAME, volee);
+			jsonVolee.put(JSONConstants.IS_SELECTABLE, false);
+			jsonVolee.put(JSONConstants.IS_EXPANDED, false);
 
 			// Loop over classes
 			JSONArray jsonClasses = new JSONArray();
 			for (Organization userClass : voleeMap.get(volee)) {
 				JSONObject jsonClass = new JSONObject();
-				jsonClass.put(ContactConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userClass.getName(), false));
-				jsonClass.put(ContactConstants.ORG_ID, userClass.getOrganizationId());
-				jsonClass.put(ContactConstants.ROLE_ID, 0);
-				jsonClass.put(ContactConstants.IS_SELECTABLE, false);
-				jsonClass.put(ContactConstants.IS_EXPANDED, false);
-				jsonClass.put(ContactConstants.POPULATIONS, getOrgPopulations(user, userClass));
+				jsonClass.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userClass.getName(), false));
+				jsonClass.put(JSONConstants.ORG_ID, userClass.getOrganizationId());
+				jsonClass.put(JSONConstants.ROLE_ID, 0);
+				jsonClass.put(JSONConstants.IS_SELECTABLE, false);
+				jsonClass.put(JSONConstants.IS_EXPANDED, false);
+				jsonClass.put(JSONConstants.POPULATIONS, getOrgPopulations(user, userClass));
 				jsonClasses.put(jsonClass);
 			}
 
-			jsonVolee.put(ContactConstants.CLASSES, jsonClasses);
+			jsonVolee.put(JSONConstants.CLASSES, jsonClasses);
 			jsonVolees.put(jsonVolee);
 		}
 
-		result.put(ContactConstants.IS_SELECTABLE, false);
-		result.put(ContactConstants.IS_EXPANDED, true);
-		result.put(ContactConstants.VOLEES, jsonVolees);
+		result.put(JSONConstants.IS_SELECTABLE, false);
+		result.put(JSONConstants.IS_EXPANDED, true);
+		result.put(JSONConstants.VOLEES, jsonVolees);
 		return result;
 	}
 
@@ -250,22 +250,22 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		try {
 			for (Organization org : orgs) {
 				JSONObject jsonGroup = new JSONObject();
-				jsonGroup.put(ContactConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
-				jsonGroup.put(ContactConstants.ORG_ID, org.getOrganizationId());
+				jsonGroup.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
+				jsonGroup.put(JSONConstants.ORG_ID, org.getOrganizationId());
 
 				boolean isSubject = OrgDetailsLocalServiceUtil.isSubject(org.getOrganizationId());
 				long teacherRoleId = RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId();
-				jsonGroup.put(ContactConstants.ROLE_ID, isSubject ? teacherRoleId : 0);
-				jsonGroup.put(ContactConstants.IS_SELECTABLE, isSubject);
+				jsonGroup.put(JSONConstants.ROLE_ID, isSubject ? teacherRoleId : 0);
+				jsonGroup.put(JSONConstants.IS_SELECTABLE, isSubject);
 				// No sub-population for subjects
 				if (!isSubject) {
-					jsonGroup.put(ContactConstants.POPULATIONS, getOrgPopulations(user, org));
+					jsonGroup.put(JSONConstants.POPULATIONS, getOrgPopulations(user, org));
 				} else {
 					String populationName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);
 					if (!UserOrgsLocalServiceUtil.getUserSchools(user).isEmpty() && org.getParentOrganizationId() != 0) {
 						populationName += ContactConstants.OF + OrgUtilsLocalServiceUtil.formatOrgName(org.getParentOrganization().getName(), true);
 					}
-					jsonGroup.put(ContactConstants.POPULATION_NAME, populationName);
+					jsonGroup.put(JSONConstants.POPULATION_NAME, populationName);
 				}
 				jsonGroups.put(jsonGroup);
 			}
@@ -300,12 +300,12 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 	private JSONObject getJsonPopulation(long groupId, long orgId, long roleId, String groupName, long userId) {
 
 		JSONObject population = new JSONObject();
-		population.put(ContactConstants.GROUP_ID, groupId);
-		population.put(ContactConstants.ORG_ID, orgId);
-		population.put(ContactConstants.GROUP_NAME, groupName);
-		population.put(ContactConstants.ROLE_ID, roleId);
-		population.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
-		population.put(ContactConstants.POPULATION_NAME, getPopulationName(orgId, roleId, userId));
+		population.put(JSONConstants.GROUP_ID, groupId);
+		population.put(JSONConstants.ORG_ID, orgId);
+		population.put(JSONConstants.GROUP_NAME, groupName);
+		population.put(JSONConstants.ROLE_ID, roleId);
+		population.put(JSONConstants.TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
+		population.put(JSONConstants.POPULATION_NAME, getPopulationName(orgId, roleId, userId));
 
 		return population;
 	}
@@ -492,16 +492,16 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 		JSONObject jsonUser = new JSONObject();
 
-		jsonUser.put(ContactConstants.USER_ID, user.getUserId());
-		jsonUser.put(ContactConstants.FIRSTNAME, formatName(user.getFirstName()));
-		jsonUser.put(ContactConstants.LASTNAME, formatName(user.getLastName()));
-		jsonUser.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_USER);
+		jsonUser.put(JSONConstants.USER_ID, user.getUserId());
+		jsonUser.put(JSONConstants.FIRST_NAME, formatName(user.getFirstName()));
+		jsonUser.put(JSONConstants.LAST_NAME, formatName(user.getLastName()));
+		jsonUser.put(JSONConstants.TYPE, ContactConstants.RECIPIENT_TYPE_USER);
 
 		try {
-			jsonUser.put(ContactConstants.ROLES, RoleUtilsLocalServiceUtil.displayUserRoles(user));
+			jsonUser.put(JSONConstants.ROLES, RoleUtilsLocalServiceUtil.displayUserRoles(user));
 
 			if (RoleUtilsLocalServiceUtil.isStudent(user)) {
-				jsonUser.put(ContactConstants.CLASSES, UserOrgsLocalServiceUtil.getStudentClassName(user));
+				jsonUser.put(JSONConstants.CLASSES, UserOrgsLocalServiceUtil.getStudentClassName(user));
 
 			} else if (RoleUtilsLocalServiceUtil.isParent(user)) {
 				StringBuilder parentClasses = new StringBuilder();
@@ -513,10 +513,10 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 						parentClasses.append(", ");
 					}
 				}
-				jsonUser.put(ContactConstants.CLASSES, parentClasses.toString());
+				jsonUser.put(JSONConstants.CLASSES, parentClasses.toString());
 
 			} else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-				jsonUser.put(ContactConstants.SUBJECTS, TeacherSubjectLocalServiceUtil.getTeacherSubjectList(user));
+				jsonUser.put(JSONConstants.SUBJECTS, TeacherSubjectLocalServiceUtil.getTeacherSubjectList(user));
 			}
 
 		} catch (Exception e) {
@@ -635,17 +635,17 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		for (int i=0; i < recipients.length(); i++) {
 
 			JSONObject recipient = recipients.getJSONObject(i);
-			int recipientType = recipient.getInt(ContactConstants.RECIPIENT_TYPE);
+			int recipientType = recipient.getInt(JSONConstants.TYPE);
 
 			// 1. Recipient is a user
 			if (recipientType == ContactConstants.RECIPIENT_TYPE_USER) {
-				recipientUserIds.add(recipient.getLong("userId"));
+				recipientUserIds.add(recipient.getLong(JSONConstants.USER_ID));
 			}
 			// 2. Recipients are members of an organization
 			else if (recipientType == ContactConstants.RECIPIENT_TYPE_ORG) {
 
-				long orgId = JSONConstants.getLongValue(recipient, "orgId", 0);
-				long roleId = JSONConstants.getLongValue(recipient, "roleId", 0);
+				long orgId = JSONConstants.getLongValue(recipient, JSONConstants.ORG_ID, 0);
+				long roleId = JSONConstants.getLongValue(recipient, JSONConstants.ROLE_ID, 0);
 				List<User> recipientUsers = getListMembers(user, roleId, orgId);
 				for (User recipientUser : recipientUsers) {
 					recipientUserIds.add(recipientUser.getUserId());
@@ -655,7 +655,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 			// 3. Recipients are group members
 			else if (recipientType == ContactConstants.RECIPIENT_TYPE_GROUP) {
 
-				long groupId = recipient.getLong("groupId");
+				long groupId = recipient.getLong(JSONConstants.GROUP_ID);
 				List<User> groupMembers = UserLocalServiceUtil.getGroupUsers(groupId);
 
 				for (User groupMember : groupMembers) {
@@ -682,9 +682,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		// If classes or groups are given, return them
 		List<Long> longOrgIds = new ArrayList<>();
 		if (organizationIds != null) {
-			for (Long organizationId : organizationIds) {
-				longOrgIds.add(organizationId);
-			}
+			longOrgIds.addAll(organizationIds);
 		}
 		if (!longOrgIds.isEmpty())  {
 			return longOrgIds;
