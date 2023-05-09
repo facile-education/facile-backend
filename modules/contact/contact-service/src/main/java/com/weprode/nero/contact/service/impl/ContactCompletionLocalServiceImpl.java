@@ -100,7 +100,7 @@ public class ContactCompletionLocalServiceImpl
 			if (stringMatches(firstName, normalizedQuery) || stringMatches(lastName, normalizedQuery)) {
 
 				try {
-					User completedUser = UserLocalServiceUtil.getUser(contact.getLong(ContactConstants.USER_ID));
+					User completedUser = UserLocalServiceUtil.getUser(contact.getLong(JSONConstants.USER_ID));
 					contact = ContactLocalServiceUtil.convertUserToJson(completedUser);
 					contact.put(JSONConstants.ID, completedUser.getUserId());
 					contact.put(JSONConstants.NAME, completedUser.getFullName());
@@ -183,29 +183,29 @@ public class ContactCompletionLocalServiceImpl
 			JSONObject jsonSchool = userContactTree.getJSONObject(schoolIdx);
 
 			// School
-			if (jsonSchool.has(ContactConstants.SCHOOL_ORG_ID) && jsonSchool.getLong(ContactConstants.SCHOOL_ORG_ID) != 0) {
+			if (jsonSchool.has(JSONConstants.SCHOOL_ORG_ID) && jsonSchool.getLong(JSONConstants.SCHOOL_ORG_ID) != 0) {
 				// Loop over school's lists
-				JSONArray schoolLists = jsonSchool.getJSONArray(ContactConstants.PERSONALS);
+				JSONArray schoolLists = jsonSchool.getJSONArray(JSONConstants.PERSONALS);
 				for (int i = 0 ; i < schoolLists.length() ; i++) {
 					JSONObject schoolList = schoolLists.getJSONObject(i);
-					if (schoolList.has(ContactConstants.POPULATION_NAME) && stringMatches(schoolList.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+					if (schoolList.has(JSONConstants.POPULATION_NAME) && stringMatches(schoolList.getString(JSONConstants.POPULATION_NAME), normalizedQuery)) {
 						// id is schoolId + roleId
 						schoolList.put(JSONConstants.ID, Long.parseLong(
-								String.valueOf(jsonSchool.getLong(ContactConstants.SCHOOL_ORG_ID)) + schoolList.getLong(JSONConstants.ROLE_ID)));
-						schoolList.put(JSONConstants.NAME, schoolList.getString(ContactConstants.POPULATION_NAME));
+								String.valueOf(jsonSchool.getLong(JSONConstants.SCHOOL_ORG_ID)) + schoolList.getLong(JSONConstants.ROLE_ID)));
+						schoolList.put(JSONConstants.NAME, schoolList.getString(JSONConstants.POPULATION_NAME));
 						results.put(schoolList);
 					}
 				}
 
-				if (jsonSchool.has(ContactConstants.CLASSES)) {
-					JSONObject rootClasses = jsonSchool.getJSONObject(ContactConstants.CLASSES);
+				if (jsonSchool.has(JSONConstants.CLASSES)) {
+					JSONObject rootClasses = jsonSchool.getJSONObject(JSONConstants.CLASSES);
 
 					JSONArray volees = rootClasses.getJSONArray(JSONConstants.VOLEES);
 					for (int voleeIdx = 0; voleeIdx < volees.length(); voleeIdx++) {
 						JSONObject volee = volees.getJSONObject(voleeIdx);
 
 						// Matching volee name ?
-						if (volee.has(ContactConstants.POPULATION_NAME) && stringMatches(volee.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+						if (volee.has(JSONConstants.POPULATION_NAME) && stringMatches(volee.getString(JSONConstants.POPULATION_NAME), normalizedQuery)) {
 							// id is voleeIdx
 							volee.put(JSONConstants.ID, voleeIdx);
 							// Population name is suffixed by '(Volee)'
@@ -215,17 +215,17 @@ public class ContactCompletionLocalServiceImpl
 						}
 
 						// Loop over classes
-						JSONArray classes = volee.getJSONArray(ContactConstants.CLASSES);
+						JSONArray classes = volee.getJSONArray(JSONConstants.CLASSES);
 						for (int i = 0; i < classes.length(); i++) {
 							JSONArray populations = classes.getJSONObject(i).getJSONArray("populations");
 							for (int j = 0; j < populations.length(); j++) {
 								JSONObject population = populations.getJSONObject(j);
-								if (population.has(ContactConstants.POPULATION_NAME) && stringMatches(population.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+								if (population.has(JSONConstants.POPULATION_NAME) && stringMatches(population.getString(JSONConstants.POPULATION_NAME), normalizedQuery)) {
 									// id is schoolId + roleId
 									population.put(JSONConstants.ID, Long.parseLong(
 											String.valueOf(population.getLong(JSONConstants.ORG_ID)) + population.getLong(JSONConstants.ROLE_ID)));
 									// Population name is suffixed by '(Classe)'
-									population.put(JSONConstants.NAME, population.getString(ContactConstants.POPULATION_NAME) + " (Classe)");
+									population.put(JSONConstants.NAME, population.getString(JSONConstants.POPULATION_NAME) + " (Classe)");
 									population.put(JSONConstants.TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
 									results.put(population);
 								}
@@ -234,52 +234,52 @@ public class ContactCompletionLocalServiceImpl
 					}
 				}
 
-				if (jsonSchool.has(ContactConstants.COURS)) {
-					JSONObject cours = jsonSchool.getJSONObject(ContactConstants.COURS);
-					JSONArray coursList = cours.getJSONArray(ContactConstants.COURS);
+				if (jsonSchool.has(JSONConstants.COURS)) {
+					JSONObject cours = jsonSchool.getJSONObject(JSONConstants.COURS);
+					JSONArray coursList = cours.getJSONArray(JSONConstants.COURS);
 					for (int i = 0 ; i < coursList.length() ; i++) {
-						JSONArray populations = coursList.getJSONObject(i).getJSONArray("populations");
+						JSONArray populations = coursList.getJSONObject(i).getJSONArray(JSONConstants.POPULATIONS);
 						for (int j = 0 ; j < populations.length() ; j++) {
 							JSONObject population = populations.getJSONObject(j);
-							if (population.has(ContactConstants.POPULATION_NAME) && stringMatches(population.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+							if (population.has(JSONConstants.POPULATION_NAME) && stringMatches(population.getString(JSONConstants.POPULATION_NAME), normalizedQuery)) {
 								// id is schoolId + roleId
 								population.put(JSONConstants.ID, Long.parseLong(
 										String.valueOf(population.getLong(JSONConstants.ORG_ID)) + population.getLong(JSONConstants.ROLE_ID)));
 								// Population name is suffixed by '(Cours)'
-								population.put(JSONConstants.NAME, population.getString(ContactConstants.POPULATION_NAME) + " (Cours)");
-								population.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
+								population.put(JSONConstants.NAME, population.getString(JSONConstants.POPULATION_NAME) + " (Cours)");
+								population.put(JSONConstants.TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
 								results.put(population);
 							}
 						}
 					}
 				}
-				JSONArray subjects = jsonSchool.getJSONArray(ContactConstants.SUBJECTS);
+				JSONArray subjects = jsonSchool.getJSONArray(JSONConstants.SUBJECTS);
 				if (subjects != null) {
 					for (int i = 0; i < subjects.length(); i++) {
 						JSONObject subject = subjects.getJSONObject(i);
-						if (subject.has(ContactConstants.POPULATION_NAME) && stringMatches(subject.getString(ContactConstants.POPULATION_NAME), normalizedQuery)) {
+						if (subject.has(JSONConstants.POPULATION_NAME) && stringMatches(subject.getString(JSONConstants.POPULATION_NAME), normalizedQuery)) {
 							// id is schoolId + roleId
 							subject.put(JSONConstants.ID, Long.parseLong(
 									String.valueOf(subject.getLong(JSONConstants.ORG_ID)) + subject.getLong(JSONConstants.ROLE_ID)));
 							// Population name is suffixed by '(Discipline)'
-							subject.put(JSONConstants.NAME, subject.getString(ContactConstants.POPULATION_NAME) + " (Discipline)");
-							subject.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
+							subject.put(JSONConstants.NAME, subject.getString(JSONConstants.POPULATION_NAME) + " (Discipline)");
+							subject.put(JSONConstants.TYPE, ContactConstants.RECIPIENT_TYPE_ORG);
 							results.put(subject);
 						}
 					}
 				}
 
-			} else if (jsonSchool.has(ContactConstants.GROUPS)) {
+			} else if (jsonSchool.has(JSONConstants.GROUPS)) {
 				// Communities
-				JSONArray groups = jsonSchool.getJSONArray(ContactConstants.GROUPS);
+				JSONArray groups = jsonSchool.getJSONArray(JSONConstants.GROUPS);
 				for (int i = 0 ; i < groups.length() ; i++) {
 					JSONObject group = groups.getJSONObject(i);
 					if (group.has(JSONConstants.GROUP_NAME) && stringMatches(group.getString(JSONConstants.GROUP_NAME), normalizedQuery)) {
 						group.put(JSONConstants.ID, group.getLong(JSONConstants.GROUP_ID));
 						// Population name is suffixed by '(Groupe)'
-						group.put(ContactConstants.POPULATION_NAME, group.getString(JSONConstants.GROUP_NAME) + " (Groupe)");
-						group.put(JSONConstants.NAME, group.getString(ContactConstants.POPULATION_NAME));
-						group.put(ContactConstants.RECIPIENT_TYPE, ContactConstants.RECIPIENT_TYPE_GROUP);
+						group.put(JSONConstants.POPULATION_NAME, group.getString(JSONConstants.GROUP_NAME) + " (Groupe)");
+						group.put(JSONConstants.NAME, group.getString(JSONConstants.POPULATION_NAME));
+						group.put(JSONConstants.TYPE, ContactConstants.RECIPIENT_TYPE_GROUP);
 						results.put(group);
 					}
 				}
