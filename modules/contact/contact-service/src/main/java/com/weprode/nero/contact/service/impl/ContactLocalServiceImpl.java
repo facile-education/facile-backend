@@ -136,7 +136,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 			List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
 			for (Group userGroup : userGroups) {
 				JSONObject jsonGroup = new JSONObject();
-				jsonGroup.put(JSONConstants.GROUP_NAME, userGroup.getName());
+				jsonGroup.put(JSONConstants.GROUP_NAME, userGroup.getName(user.getLocale()));
 				jsonGroup.put(JSONConstants.GROUP_ID, userGroup.getGroupId());
 				jsonGroup.put(JSONConstants.ROLE_ID, 0);
 				jsonGroup.put(JSONConstants.IS_COMMUNITY, true);

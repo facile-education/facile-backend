@@ -169,7 +169,7 @@ public class ContactCompletionLocalServiceImpl
 		JSONArray userContactTree;
 		String cache = CacheUtil.getObjectFromCache(listsCacheKey);
 		if (cache == null) {
-			userContactTree = generateUserContactsCache(user);
+			userContactTree = ContactLocalServiceUtil.getContactTree(user);
 			CacheUtil.storeObjectIntoCache(listsCacheKey, userContactTree.toString());
 		} else {
 			userContactTree = new JSONArray(cache);
@@ -217,7 +217,7 @@ public class ContactCompletionLocalServiceImpl
 						// Loop over classes
 						JSONArray classes = volee.getJSONArray(JSONConstants.CLASSES);
 						for (int i = 0; i < classes.length(); i++) {
-							JSONArray populations = classes.getJSONObject(i).getJSONArray("populations");
+							JSONArray populations = classes.getJSONObject(i).getJSONArray(JSONConstants.POPULATIONS);
 							for (int j = 0; j < populations.length(); j++) {
 								JSONObject population = populations.getJSONObject(j);
 								if (population.has(JSONConstants.POPULATION_NAME) && stringMatches(population.getString(JSONConstants.POPULATION_NAME), normalizedQuery)) {
