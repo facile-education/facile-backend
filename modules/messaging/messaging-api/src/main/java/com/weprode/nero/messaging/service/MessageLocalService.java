@@ -251,23 +251,6 @@ public interface MessageLocalService
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
 	/**
-	 * Get the most recent message before the specified Date, which not belong to a threadId referenced before
-	 * (This message will be the source of a new thread)
-	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Message getLastOutThreadedMessageBeforeDate(
-		long folderId, Date fromDate, boolean unReadOnly);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public MessagingThread getLastThread(
-		long userId, long folderId, Date fromDate, boolean unReadOnly);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<MessagingThread> getLastThreads(
-		long userId, long folderId, Date fromDate, int nbThreads,
-		boolean unReadOnly);
-
-	/**
 	 * Returns the message with the primary key.
 	 *
 	 * @param messageId the primary key of the message
@@ -312,6 +295,14 @@ public interface MessageLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getMessagesCount();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public MessagingThread getMessagingThread(long threadId)
+		throws SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public MessagingThread getMostRecentThread(
+		long userId, long folderId, Date fromDate, boolean unReadOnly);
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -334,8 +325,9 @@ public interface MessageLocalService
 	public Message getThreadLastMessage(long folderId, long threadId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public MessagingThread getUserThread(long userId, long threadId)
-		throws SystemException;
+	public List<MessagingThread> getThreads(
+		long userId, long folderId, Date maxDate, int nbThreads,
+		boolean unReadOnly);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Message> getUserThreadMessages(long userId, long threadId);
