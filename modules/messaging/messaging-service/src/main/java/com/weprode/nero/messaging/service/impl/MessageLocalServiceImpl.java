@@ -49,105 +49,69 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(MessageLocalServiceImpl.class);
 
-    public List<MessagingThread> getLastThreads (long userId, long folderId, Date fromDate, int nbThreads, boolean unReadOnly) {
+    public List<MessagingThread> getThreads (long userId, long folderId, Date maxDate, int nbThreads, boolean unReadOnly) {
         List<MessagingThread> threadList = new ArrayList<>();
 
+        // Fetch threads one by one
         while (threadList.size() < nbThreads) {
-            MessagingThread thread = MessageLocalServiceUtil.getLastThread(userId, folderId, fromDate, unReadOnly);
+            MessagingThread thread = getMostRecentThread(userId, folderId, maxDate, unReadOnly);
             if (thread == null) {	// No more threads available
                 break;
             }
             threadList.add(thread);
+
             // Main message is the first message displayed
             Message threadMainMessage = MessagingUtil.getLastMessageFromList(thread.getDisplayableMessages(unReadOnly, folderId));
-            fromDate = threadMainMessage.getSendDate();	// Get next thread after the date of the main-message thread
+            maxDate = threadMainMessage.getSendDate();	// Get next thread after the date of the main-message thread
         }
 
         return threadList;
     }
 
-    public MessagingThread getLastThread (long userId, long folderId, Date fromDate, boolean unReadOnly) {
-        Message lastMessage = MessageLocalServiceUtil.getLastOutThreadedMessageBeforeDate(folderId, fromDate, unReadOnly);
+    public MessagingThread getMostRecentThread (long userId, long folderId, Date fromDate, boolean unReadOnly) {
+        // Get messages from newest to oldest by pack of 60, and compute if the wanted message is inside
+        int start = 0;
+        int nbMessagesToFetchAtTime = 60;
+        OrderByComparator<Message> odc = OrderByComparatorFactoryUtil.create("Messaging_Message", "sendDate", false);
 
-        if (lastMessage == null) {	// There is no more threads available
-            return null;
+        List<Message> messagePool = new ArrayList<>();
+        Message lastMessage = null;
+
+        while (lastMessage == null) {
+            List<Message> folderMessages = MessageLocalServiceUtil.getFolderMessages(	// Quick on recall because of cache
+                    folderId,
+                    start,
+                    start + nbMessagesToFetchAtTime,
+                    odc
+            );
+            if (folderMessages.isEmpty()) {
+                // No more messages the search the chosen from, return null
+                return null;
+            }
+            messagePool.addAll(folderMessages);
+
+            // Loop over messages
+            for (Message message : messagePool) {
+                // Must be before the given Date and be New if the unreadOnly boolean is set to true
+                if (message.getSendDate().before(fromDate) && (!unReadOnly || message.getIsNew())) {
+                    lastMessage = message;
+                    break;
+                }
+            }
+            start = start + nbMessagesToFetchAtTime;
         }
 
         try {
-            return MessageLocalServiceUtil.getUserThread(userId, lastMessage.getThreadId());
+            return MessageLocalServiceUtil.getMessagingThread(lastMessage.getThreadId());
         } catch (Exception e) {
             logger.error(e);
             return null;
         }
     }
 
-    public MessagingThread getUserThread (long userId, long threadId) throws SystemException {
+    public MessagingThread getMessagingThread (long threadId) throws SystemException {
         List<Message> messageList = messagePersistence.findBythreadId(threadId);
-//		List<Message> messageList = MessageLocalServiceUtil.getUserThreadMessages(userId, threadId); // Throw weirds exceptions, to understand why
-
         return new MessagingThread(threadId, messageList);
-    }
-
-    /**
-     * Get the most recent message before the specified Date, which not belong to a threadId referenced before
-     * (This message will be the source of a new thread)
-     */
-    public Message getLastOutThreadedMessageBeforeDate (long folderId, Date fromDate, boolean unReadOnly) {
-        // TODO: To improve with custom queries?
-
-        // Get messages from newest to oldest by pack of 60, and compute if the wanted message is inside
-        int start = 0;
-        int nbMessagesToFetchAtTime = 60;
-        OrderByComparator odc = OrderByComparatorFactoryUtil.create("Messaging_Message", "sendDate", false);
-
-        List<Message> messagePool = new ArrayList<>();
-        Message theChosenMessage = null;
-
-        while (theChosenMessage == null) {
-            List<Message> newFetchedMessages = MessageLocalServiceUtil.getFolderMessages(	// Quick on recall because of cache
-                    folderId,
-                    start,
-                    start + nbMessagesToFetchAtTime,
-                    odc
-            );
-            if (newFetchedMessages.isEmpty()) {	// no more messages the search the chosen from, return null
-                return null;
-            }
-            messagePool.addAll(newFetchedMessages);
-
-            // Loop over messages to search the chosen
-            for (Message message : messagePool) {
-                if (isTheChosen(message, fromDate, unReadOnly, messagePool)) {
-                    theChosenMessage = message;
-                    break;
-                }
-            }
-
-            start = start + nbMessagesToFetchAtTime;
-        }
-
-        return theChosenMessage;
-    }
-
-    boolean isTheChosen (Message candidateMessage, Date fromDate, boolean unReadOnly, List<Message> messagePool) {	// Note the messagePool must be ordered from the newest to the oldest message
-        // The candidate must be before the given Date and be New if the unreadOnly boolean is set to true
-        if (candidateMessage.getSendDate().before(fromDate) && (!unReadOnly || candidateMessage.getIsNew())) {
-
-            // Browse the list from newest to oldest until the candidate,
-            // but return false if we find a most recent message with the same threadId (because the thread was already computed before)
-            for (Message previousMessage: messagePool) {
-                if (previousMessage.getMessageId() == candidateMessage.getMessageId()) {
-                    return true;
-                } else {
-                    if (previousMessage.getThreadId() == candidateMessage.getThreadId() && (!unReadOnly || previousMessage.getIsNew())) {
-                        return false;
-                    }
-                    // else: continue until find the candidate
-                }
-            }
-        }
-
-        return false;
     }
 
     public Message addMessage(long folderId, long senderId, Date sendDate, long threadId, String messageSubject, String messageContent, boolean isNew, int type, long sendMessageId) {

@@ -340,38 +340,6 @@ public class MessageLocalServiceWrapper
 	}
 
 	/**
-	 * Get the most recent message before the specified Date, which not belong to a threadId referenced before
-	 * (This message will be the source of a new thread)
-	 */
-	@Override
-	public com.weprode.nero.messaging.model.Message
-		getLastOutThreadedMessageBeforeDate(
-			long folderId, java.util.Date fromDate, boolean unReadOnly) {
-
-		return _messageLocalService.getLastOutThreadedMessageBeforeDate(
-			folderId, fromDate, unReadOnly);
-	}
-
-	@Override
-	public com.weprode.nero.messaging.model.MessagingThread getLastThread(
-		long userId, long folderId, java.util.Date fromDate,
-		boolean unReadOnly) {
-
-		return _messageLocalService.getLastThread(
-			userId, folderId, fromDate, unReadOnly);
-	}
-
-	@Override
-	public java.util.List<com.weprode.nero.messaging.model.MessagingThread>
-		getLastThreads(
-			long userId, long folderId, java.util.Date fromDate, int nbThreads,
-			boolean unReadOnly) {
-
-		return _messageLocalService.getLastThreads(
-			userId, folderId, fromDate, nbThreads, unReadOnly);
-	}
-
-	/**
 	 * Returns the message with the primary key.
 	 *
 	 * @param messageId the primary key of the message
@@ -438,6 +406,23 @@ public class MessageLocalServiceWrapper
 		return _messageLocalService.getMessagesCount();
 	}
 
+	@Override
+	public com.weprode.nero.messaging.model.MessagingThread getMessagingThread(
+			long threadId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _messageLocalService.getMessagingThread(threadId);
+	}
+
+	@Override
+	public com.weprode.nero.messaging.model.MessagingThread getMostRecentThread(
+		long userId, long folderId, java.util.Date fromDate,
+		boolean unReadOnly) {
+
+		return _messageLocalService.getMostRecentThread(
+			userId, folderId, fromDate, unReadOnly);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -475,11 +460,13 @@ public class MessageLocalServiceWrapper
 	}
 
 	@Override
-	public com.weprode.nero.messaging.model.MessagingThread getUserThread(
-			long userId, long threadId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public java.util.List<com.weprode.nero.messaging.model.MessagingThread>
+		getThreads(
+			long userId, long folderId, java.util.Date maxDate, int nbThreads,
+			boolean unReadOnly) {
 
-		return _messageLocalService.getUserThread(userId, threadId);
+		return _messageLocalService.getThreads(
+			userId, folderId, maxDate, nbThreads, unReadOnly);
 	}
 
 	@Override

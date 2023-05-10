@@ -63,7 +63,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             // If no date specified, get threads from now
             Date fromDateDate = fromDate.equals("-1") ? new Date() :
                     new SimpleDateFormat(MessagingUtil.messagingDateFormat).parse(fromDate);
-            List<MessagingThread> lastThreads = MessageLocalServiceUtil.getLastThreads(userId, folderId, fromDateDate, nbDisplayed, unreadOnly);
+            List<MessagingThread> lastThreads = MessageLocalServiceUtil.getThreads(userId, folderId, fromDateDate, nbDisplayed, unreadOnly);
             result.put(JSONConstants.THREADS, ThreadUtil.formatThreadList(lastThreads, false, folderId));
 
             result.put(JSONConstants.SUCCESS, true);
@@ -90,7 +90,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             logger.info("User " + userId + " fetches thread from messageId " + messageId);
 
             result.put(JSONConstants.MESSAGE_FOLDER_ID, message.getFolderId()); // To be able to select the correct folder in front
-            MessagingThread thread = MessageLocalServiceUtil.getUserThread(userId, message.getThreadId());
+            MessagingThread thread = MessageLocalServiceUtil.getMessagingThread(message.getThreadId());
             result.put(JSONConstants.THREAD, ThreadUtil.formatThread(thread, false, message.getFolderId()));
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

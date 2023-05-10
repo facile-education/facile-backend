@@ -301,35 +301,6 @@ public class MessageLocalServiceUtil {
 	}
 
 	/**
-	 * Get the most recent message before the specified Date, which not belong to a threadId referenced before
-	 * (This message will be the source of a new thread)
-	 */
-	public static Message getLastOutThreadedMessageBeforeDate(
-		long folderId, java.util.Date fromDate, boolean unReadOnly) {
-
-		return getService().getLastOutThreadedMessageBeforeDate(
-			folderId, fromDate, unReadOnly);
-	}
-
-	public static com.weprode.nero.messaging.model.MessagingThread
-		getLastThread(
-			long userId, long folderId, java.util.Date fromDate,
-			boolean unReadOnly) {
-
-		return getService().getLastThread(
-			userId, folderId, fromDate, unReadOnly);
-	}
-
-	public static List<com.weprode.nero.messaging.model.MessagingThread>
-		getLastThreads(
-			long userId, long folderId, java.util.Date fromDate, int nbThreads,
-			boolean unReadOnly) {
-
-		return getService().getLastThreads(
-			userId, folderId, fromDate, nbThreads, unReadOnly);
-	}
-
-	/**
 	 * Returns the message with the primary key.
 	 *
 	 * @param messageId the primary key of the message
@@ -383,6 +354,22 @@ public class MessageLocalServiceUtil {
 		return getService().getMessagesCount();
 	}
 
+	public static com.weprode.nero.messaging.model.MessagingThread
+			getMessagingThread(long threadId)
+		throws SystemException {
+
+		return getService().getMessagingThread(threadId);
+	}
+
+	public static com.weprode.nero.messaging.model.MessagingThread
+		getMostRecentThread(
+			long userId, long folderId, java.util.Date fromDate,
+			boolean unReadOnly) {
+
+		return getService().getMostRecentThread(
+			userId, folderId, fromDate, unReadOnly);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -409,11 +396,13 @@ public class MessageLocalServiceUtil {
 		return getService().getThreadLastMessage(folderId, threadId);
 	}
 
-	public static com.weprode.nero.messaging.model.MessagingThread
-			getUserThread(long userId, long threadId)
-		throws SystemException {
+	public static List<com.weprode.nero.messaging.model.MessagingThread>
+		getThreads(
+			long userId, long folderId, java.util.Date maxDate, int nbThreads,
+			boolean unReadOnly) {
 
-		return getService().getUserThread(userId, threadId);
+		return getService().getThreads(
+			userId, folderId, maxDate, nbThreads, unReadOnly);
 	}
 
 	public static List<Message> getUserThreadMessages(
