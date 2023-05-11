@@ -43,25 +43,22 @@
 			GROUP BY fe.extension
 		]]>
     </sql>
-    <!-- TODO Update news requests to fetch new tables -->
     <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllNews">
         <![CDATA[
 			SELECT count(*)
-			FROM BlogsEntry be
-			JOIN Actualites_BlogEntryInfos bei ON be.entryId = bei.blogEntryId
-			WHERE be.createDate BETWEEN ? AND ?
-			AND bei.headMaster = ?
+			FROM News_News n
+			WHERE n.publicationDate BETWEEN ? AND ?
+			AND n.isSchoolNews = ?
 		]]>
     </sql>
     <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolNews">
         <![CDATA[
 			SELECT count(*)
-			FROM BlogsEntry be
-			JOIN Actualites_BlogEntryInfos bei ON be.entryId = bei.blogEntryId
-			JOIN Users_Orgs uo ON be.userId = uo.userId
-			WHERE be.createDate BETWEEN ? AND ?
+			FROM News_News n
+			JOIN Users_Orgs uo ON n.authorId = uo.userId
+			WHERE n.publicationDate BETWEEN ? AND ?
 			AND uo.organizationId = ?
-			AND bei.headMaster = ?
+			AND n.isSchoolNews = ?
 		]]>
     </sql>
     <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllMessages">
