@@ -419,6 +419,13 @@ public class JSONConstants {
     public static final String EDITED_NEWS = "editedNews";
     public static final String NB_UNREAD_NEWS = "nbUnreadNews";
 
+    // Agenda
+    public static final String EVENTS = "events";
+    public static final String EVENT_ID = "eventId";
+    public static final String NB_UNREAD_EVENTS = "nbUnreadEvents";
+    public static final String CREATED_EVENT = "createdEvent";
+    public static final String LOCATION = "location";
+
     // Statistics
     public static final String DATASETS = "datasets";
     public static final String POINT_BORDER_COLOR = "pointBorderColor";
