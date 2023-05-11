@@ -2,9 +2,6 @@ package com.weprode.nero.document.service.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
-
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -14,7 +11,9 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.model.Activity;
 import com.weprode.nero.document.service.base.ActivityLocalServiceBaseImpl;
+import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -69,17 +68,17 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 		return activityFinder.getActivities(groupIdList, creatorId, start, end);
 	}
 
-	public List<Activity> getGroupsHistory(long userId, List<Long> groupIdList, Date minDate, Date maxDate) {
-		return getGroupsActivity(userId, groupIdList, minDate, maxDate, true);
-	}
-
 	public List<Activity> getGroupsActivity(long userId, List<Long> groupIdList, Date minDate, Date maxDate,
-											boolean fullHistory) {
+											boolean includeUserActivity, boolean withFileCreation,
+											boolean withFileModification, boolean withFolderCreation,
+											boolean withFolderModification) {
+
 		if (groupIdList == null || groupIdList.isEmpty()) {
 			return new ArrayList<>();
 		}
 
-		return activityFinder.getGroupsActivities(userId, groupIdList, minDate, maxDate, fullHistory);
+		return activityFinder.getGroupsActivities(userId, groupIdList, minDate, maxDate, includeUserActivity,
+				withFileCreation, withFileModification, withFolderCreation, withFolderModification);
 	}
 
 	public boolean deleteGroupActivity(long groupId) {
@@ -104,33 +103,24 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 			jsonActivity.put(JSONConstants.AUTHOR, user.getFullName());
 			jsonActivity.put(JSONConstants.FILE_NAME, activity.getFileName());
 			jsonActivity.put(JSONConstants.FOLDER_NAME, activity.getFolderName());
+			jsonActivity.put(JSONConstants.GROUP_ID, activity.getGroupId());
 			jsonActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(activity.getGroupId()));
+			jsonActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(activity.getModificationDate()));
+			jsonActivity.put(JSONConstants.TYPE, activity.getType());
 
-			boolean isFile = (activity.getType() < 5);
+			boolean isFile = (activity.getType() < ActivityConstants.TYPE_FOLDER_CREATION);
 			jsonActivity.put(JSONConstants.TARGET, isFile ? activity.getFileName() : activity.getFolderName());
 			if (isFile) {
 				jsonActivity.put(JSONConstants.FILE_LINK, "/c/document_library/get_file?fileEntryId=" + activity.getFileEntryId());
 				jsonActivity.put(JSONConstants.FILE_ID, activity.getFileEntryId());
+				jsonActivity.put(JSONConstants.PARENT_FOLDER_ID, DLAppServiceUtil.getFileEntry(activity.getFileEntryId()).getFolderId());
+			} else {
+				jsonActivity.put(JSONConstants.FOLDER_ID, activity.getFolderId());
+				jsonActivity.put(JSONConstants.PARENT_FOLDER_ID, DLAppServiceUtil.getFolder(activity.getFolderId()).getParentFolderId());
 			}
-			boolean isFolder = (activity.getType() >= 5 && activity.getType() < 9);
-
-			if (isFile || isFolder) {
-				if (isFile) {
-					jsonActivity.put(JSONConstants.FOLDER_ID, DLAppServiceUtil.getFileEntry(activity.getFileEntryId()).getFolderId());
-				} else {
-					jsonActivity.put(JSONConstants.FOLDER_ID, activity.getFolderId());
-				}
-			}
-
-			// Group link redirects to the parent folder of the file, in the group document area
-			// TODO link
-			jsonActivity.put(JSONConstants.FOLDER_LINK, "/user//nero#/documents?folderId=" + activity.getFolderId());
-			jsonActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
-					.format(activity.getModificationDate()));
-			jsonActivity.put(JSONConstants.TYPE, activity.getType());
 
 		} catch (Exception e) {
-			logger.error("Error converting activity " + activity.getActivityId() + " : " + e.getMessage());
+			logger.debug("Error converting activity " + activity.getActivityId() + " : " + e.getMessage());
 			// Happened for deleted file or folder -> we currently don't want to display these activities as the link would be empty
 			// Only displaying the "deleted" activity for this entry
 			return null;

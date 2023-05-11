@@ -23,7 +23,8 @@ import com.liferay.portal.kernel.transaction.Transactional;
 
 import com.weprode.nero.group.model.GroupActivity;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -55,22 +56,18 @@ public interface GroupActivityLocalService extends BaseLocalService {
 		long userId, GroupActivity groupActivity);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<GroupActivity> getGroupsActivities(
-		long userId, java.util.List<Long> groupIds, java.util.Date maxDate,
-		int nbResults);
+	public List<GroupActivity> getDashboardGroupsActivities(
+		long userId, List<Long> groupIds, Date maxDate, int nbResults,
+		boolean withNews, boolean withDocs, boolean withMemberships,
+		boolean withSchoollife, boolean withSessions);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<GroupActivity> getGroupsActivities(
-		long userId, java.util.List<Long> groupIds, java.util.Date maxDate,
-		int nbResults, boolean allHistory, boolean containNews,
-		boolean containDocs, boolean containMembership,
-		boolean containPendingFirings, boolean containFirings,
-		boolean containHomework, boolean containsSessions);
+	public List<GroupActivity> getDocumentGroupActivities(
+		long userId, long groupId, Date maxDate, int nbResults);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<GroupActivity> getGroupsHistory(
-		long userId, java.util.List<Long> groupIds, java.util.Date maxDate,
-		int nbResults);
+	public List<GroupActivity> getFullGroupActivities(
+		long userId, long groupId, Date maxDate, int nbResults);
 
 	/**
 	 * Returns the OSGi service identifier.

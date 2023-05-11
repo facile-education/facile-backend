@@ -15,7 +15,6 @@
 package com.weprode.nero.group.service;
 
 import com.liferay.petra.sql.dsl.query.DSLQuery;
-import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
@@ -238,10 +237,6 @@ public interface MembershipActivityLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MembershipActivity> getMembershipActivities(int start, int end);
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<MembershipActivity> getMembershipActivities(
-		List<Long> groupIdList, long actionUserId, int start, int end);
-
 	/**
 	 * Returns the number of membership activities.
 	 *
@@ -264,11 +259,8 @@ public interface MembershipActivityLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MembershipActivity> getMembershipActivity(
 		long userId, List<Long> groupIdList, Date minDate, Date maxDate,
-		boolean includeSelf);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<MembershipActivity> getMembershipHistory(
-		long userId, List<Long> groupIdList, Date minDate, Date maxDate);
+		boolean includeUserActions, boolean onlyWithUserBeingTarget,
+		boolean withAdd, boolean withRemovals);
 
 	/**
 	 * Returns the OSGi service identifier.

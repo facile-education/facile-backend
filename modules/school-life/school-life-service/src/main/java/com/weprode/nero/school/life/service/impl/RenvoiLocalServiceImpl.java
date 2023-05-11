@@ -2,12 +2,11 @@ package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.group.constants.ActivityConstants;
@@ -15,6 +14,7 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.Renvoi;
 import com.weprode.nero.school.life.model.SchoollifeSession;
@@ -22,6 +22,7 @@ import com.weprode.nero.school.life.service.RenvoiLocalServiceUtil;
 import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
 import com.weprode.nero.school.life.service.base.RenvoiLocalServiceBaseImpl;
 import com.weprode.nero.school.life.service.persistence.RenvoiPK;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -140,9 +141,10 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
                 CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(renvoi.getSourceSessionId());
                 jsonPendingRenvoi.put(JSONConstants.SESSION_SUBJECT, cdtSession.getSubject());
                 jsonPendingRenvoi.put(JSONConstants.SESSION_DATE, df.format(cdtSession.getSessionStart()));
+                jsonPendingRenvoi.put(JSONConstants.SESSION_NAME, GroupLocalServiceUtil.getGroup(cdtSession.getGroupId()).getName());
             } else {
                 SchoollifeSession schoollifeSession = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(renvoi.getSourceSchoollifeSessionId());
-                jsonPendingRenvoi.put(JSONConstants.SESSION_SUBJECT, SchoollifeSessionLocalServiceUtil.getSessionName(renvoi.getSourceSchoollifeSessionId()));
+                jsonPendingRenvoi.put(JSONConstants.SESSION_NAME, SchoollifeSessionLocalServiceUtil.getSessionName(renvoi.getSourceSchoollifeSessionId()));
                 jsonPendingRenvoi.put(JSONConstants.SESSION_DATE, df.format(schoollifeSession.getStartDate()));
             }
         } catch (Exception e) {
@@ -155,7 +157,8 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
     public List<Renvoi> getDoyenSchoolRenvois(User user) {
         List<Renvoi> userSchoolRenvois = new ArrayList<>();
 
-        // Limit analysis to main teachers and doyens
+        // Limit analysis to main teachers and doyens and co-teachers
+        // Skip own renvois
         if (RoleUtilsLocalServiceUtil.isMainTeacher(user) || RoleUtilsLocalServiceUtil.isDoyen(user)) {
 
             long schoolId = UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId();
@@ -170,7 +173,10 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
 
                         Organization studentClass = studentClasses.get(0);
 
-                        if (RoleUtilsLocalServiceUtil.isMainTeacher(user, studentClass.getOrganizationId()) || RoleUtilsLocalServiceUtil.isDoyen(user, studentClass.getOrganizationId())) {
+                        if ((RoleUtilsLocalServiceUtil.isMainTeacher(user, studentClass.getOrganizationId()) ||
+                                RoleUtilsLocalServiceUtil.isDoyen(user, studentClass.getOrganizationId()) ||
+                                SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), schoolRenvoi.getSourceSessionId()))
+                                && user.getUserId() != schoolRenvoi.getSourceTeacherId()) {
                             userSchoolRenvois.add(schoolRenvoi);
                         }
                     }

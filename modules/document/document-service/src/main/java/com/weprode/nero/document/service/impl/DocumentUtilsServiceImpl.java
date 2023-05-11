@@ -15,17 +15,15 @@
 package com.weprode.nero.document.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
@@ -33,8 +31,15 @@ import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.base.DocumentUtilsServiceBaseImpl;
-
+import com.weprode.nero.group.model.GroupActivity;
+import com.weprode.nero.group.service.GroupActivityLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Brian Wing Shun Chan
@@ -88,6 +93,44 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 
 		result.put(JSONConstants.IS_ALLOWED, DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(url));
 		result.put(JSONConstants.SUCCESS, true);
+
+		return result;
+	}
+
+	@JSONWebService(value = "get-document-group-activity", method = "GET")
+	public JSONObject getDocumentGroupActivity(long groupId, String maxDate, int nbResults) {
+		JSONObject result = new JSONObject();
+		
+		result.put(JSONConstants.SUCCESS, false);
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+				return result;
+			}
+			logger.info("User " + user.getFullName() +" fetches document activity for groupId " + groupId);
+		} catch (Exception e) {
+			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+			return result;
+		}
+
+		try {
+			JSONArray jsonActivities = new JSONArray();
+			Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
+			List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDocumentGroupActivities(user.getUserId(), groupId, maximumDate, nbResults);
+			for (GroupActivity groupActivity : groupActivities) {
+				JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);
+				if (jsonActivity != null) {
+					jsonActivities.put(jsonActivity);
+				}
+			}
+
+			result.put(JSONConstants.ACTIVITIES, jsonActivities);
+			result.put(JSONConstants.SUCCESS, true);
+		} catch (Exception e) {
+			logger.error("Error while fetching document activity for groupId " + groupId, e);
+		}
 
 		return result;
 	}

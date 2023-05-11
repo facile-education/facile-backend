@@ -138,6 +138,39 @@ public class DocumentUtilsServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getDocumentGroupActivity(
+		HttpPrincipal httpPrincipal, long groupId, String maxDate,
+		int nbResults) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				DocumentUtilsServiceUtil.class, "getDocumentGroupActivity",
+				_getDocumentGroupActivityParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, groupId, maxDate, nbResults);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		DocumentUtilsServiceHttp.class);
 
@@ -145,5 +178,7 @@ public class DocumentUtilsServiceHttp {
 		_getGlobalDocumentsPropertiesParameterTypes0 = new Class[] {};
 	private static final Class<?>[] _isEmbedUrlWhitelistedParameterTypes1 =
 		new Class[] {String.class};
+	private static final Class<?>[] _getDocumentGroupActivityParameterTypes2 =
+		new Class[] {long.class, String.class, int.class};
 
 }

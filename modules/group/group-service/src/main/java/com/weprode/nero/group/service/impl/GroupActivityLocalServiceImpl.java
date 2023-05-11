@@ -3,14 +3,18 @@ package com.weprode.nero.group.service.impl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.model.Activity;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
+import com.weprode.nero.group.model.CommunityInfos;
 import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.model.MembershipActivity;
+import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
+import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupActivityLocalServiceBaseImpl;
 import com.weprode.nero.news.model.News;
@@ -46,22 +50,12 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
     private static final Log logger = LogFactoryUtil.getLog(GroupActivityLocalServiceImpl.class);
 
-    public List<GroupActivity> getGroupsHistory(long userId, List<Long> groupIds, Date maxDate, int nbResults) {
-        return getGroupsActivities(userId, groupIds, maxDate, nbResults, true, true, true, true, false, true, true, true);
-    }
-
-    public List<GroupActivity> getGroupsActivities (long userId, List<Long> groupIds, Date maxDate, int nbResults) {
-
-        return getGroupsActivities(userId, groupIds, maxDate, nbResults, false, true, true, true, true, true, true, true);
-    }
-
-    public List<GroupActivity> getGroupsActivities (long userId, List<Long> groupIds, Date maxDate, int nbResults,
-                                                    boolean allHistory, boolean containNews, boolean containDocs, boolean containMembership,
-                                                    boolean containPendingFirings, boolean containFirings, boolean containHomework, boolean containsSessions) {
-
+    public List<GroupActivity> getDashboardGroupsActivities (long userId, List<Long> groupIds, Date maxDate, int nbResults,
+                                                             boolean withNews, boolean withDocs, boolean withMemberships, boolean withSchoollife, boolean withSessions) {
         List<GroupActivity> groupActivities = new ArrayList<>();
-        logger.info("getGroupActivities for userId " + userId + " for " + groupIds.size() + " groups, until maxDate " + maxDate);
-        if (!(containNews || containDocs || !containMembership || containPendingFirings || containFirings || containHomework)) {
+
+        logger.info("Get dashboard group activities for userId " + userId + " for " + groupIds.size() + " groups, until maxDate " + maxDate);
+        if (!(withNews || withDocs || !withMemberships || withSchoollife || withSessions)) {
             return groupActivities;
         }
 
@@ -78,12 +72,11 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             // Get activities by successive range dates going back in time, so that we ensure pagination is fine
             // Do not exceed 1 month back in time
             while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
-
                 // Fetch activities from minDate = maxDate minus 7 days
                 logger.info("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
 
                 // Group news
-                if (containNews) {
+                if (withNews) {
                     List<News> groupNews = NewsLocalServiceUtil.getNews(user, 0, new Date(), 10, true, false, false);
                     for (News news : groupNews) {
                         GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
@@ -92,33 +85,19 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Document activity
-                if (containDocs) {
-                    List<Activity> activityList;
-                    if (allHistory) {
-                        activityList = ActivityLocalServiceUtil.getGroupsHistory(user.getUserId(), groupIds, minDate, maxDate);
-                    } else {
-                        activityList = ActivityLocalServiceUtil.getGroupsActivity(user.getUserId(), groupIds, minDate, maxDate, false);
-                    }
-
-                    if (!activityList.isEmpty()) logger.info("Got "+activityList.size()+" doc activities");
-
+                if (withDocs) {
+                    List<Activity> activityList = ActivityLocalServiceUtil.getGroupsActivity(user.getUserId(), groupIds, minDate, maxDate,
+                            false, true, false, false, false);
                     for (Activity activity : activityList) {
-                        GroupActivity docActivity = new GroupActivity(activity.getActivityId(), 0, activity.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_ACTIVITY);
+                        GroupActivity docActivity = new GroupActivity(activity.getActivityId(), 0, activity.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_DOCUMENT);
                         groupActivities.add(docActivity);
                     }
                 }
 
                 // Membership activity
-                if (containMembership) {
-                    List<MembershipActivity> membershipActivities;
-                    if (allHistory) {
-                        membershipActivities = MembershipActivityLocalServiceUtil.getMembershipHistory(user.getUserId(), groupIds, minDate, maxDate);
-                    } else {
-                        membershipActivities = MembershipActivityLocalServiceUtil.getMembershipActivity(user.getUserId(), groupIds, minDate, maxDate, false);
-                    }
-
-                    if (!membershipActivities.isEmpty()) logger.info("Got "+membershipActivities.size()+" membership activities");
-
+                if (withMemberships) {
+                    // No activity performed by the user himself, only the activity with him as target, just adds, no removals
+                    List<MembershipActivity> membershipActivities = MembershipActivityLocalServiceUtil.getMembershipActivity(user.getUserId(), groupIds, minDate, maxDate, false, true, true, false);
                     for (MembershipActivity membershipActivity : membershipActivities) {
                         GroupActivity groupMembershipActivity = new GroupActivity(membershipActivity.getMembershipActivityId(), 0, membershipActivity.getMovementDate(), ActivityConstants.ACTIVITY_TYPE_MEMBERSHIP);
                         groupActivities.add(groupMembershipActivity);
@@ -126,11 +105,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Teachers see their pending renvois
-                if (!allHistory && containPendingFirings) {
+                if (withSchoollife) {
                     List<Renvoi> pendingRenvois = RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId());
-
-                    if (!pendingRenvois.isEmpty()) logger.info("Got "+pendingRenvois.size()+" pending renvois");
-
                     for (Renvoi pendingRenvoi : pendingRenvois) {
                         if (pendingRenvoi.getRenvoiDate().after(minDate) && pendingRenvoi.getRenvoiDate().before(maxDate)) {
                             GroupActivity pendingRenvoiActivity = new GroupActivity(pendingRenvoi.getSchoollifeSessionId(), pendingRenvoi.getStudentId(), pendingRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI);
@@ -140,16 +116,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Doyens and main teachers see the renvois for the students of classes that are affected to him
-                if (containFirings) {
-                    List<Renvoi> schoolRenvois;
-                    if (allHistory) {
-                        schoolRenvois = RenvoiLocalServiceUtil.getGroupRenvois(user, groupIds, minDate, maxDate);
-                    } else {
-                        schoolRenvois = RenvoiLocalServiceUtil.getDoyenSchoolRenvois(user);
-                    }
-
-                    if (!schoolRenvois.isEmpty()) logger.info("Got "+schoolRenvois.size()+" school renvois");
-
+                if (withSchoollife) {
+                    List<Renvoi> schoolRenvois = RenvoiLocalServiceUtil.getDoyenSchoolRenvois(user);
                     for (Renvoi schoolRenvoi : schoolRenvois) {
                         if (schoolRenvoi.getRenvoiDate().after(minDate) && schoolRenvoi.getRenvoiDate().before(maxDate)) {
                             GroupActivity schoolRenvoiActivity = new GroupActivity(schoolRenvoi.getSchoollifeSessionId(), schoolRenvoi.getStudentId(), schoolRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI);
@@ -159,15 +127,13 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Homeworks given
-                if (containHomework) {
+                if (withSessions) {
                     List<Homework> givenHomeworks = new ArrayList<>();
                     if (RoleUtilsLocalServiceUtil.isStudent(user)) {
                         givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworks(user, minDate);
                     } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
                         givenHomeworks.addAll(HomeworkLocalServiceUtil.getTeacherHomeworks(user, minDate, 0));
                     }
-
-                    if (!givenHomeworks.isEmpty()) logger.info("Got "+givenHomeworks.size()+" homeworks");
 
                     for (Homework givenHomework : givenHomeworks) {
                         if (givenHomework.getFromDate().after(minDate) && givenHomework.getFromDate().before(maxDate) && groupIds.contains(givenHomework.getGroupId())) {
@@ -178,9 +144,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Sessions content added
-                if (containsSessions) {
-                    logger.info("fetch sessions");
-                    List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupsSessionActivity(allHistory ? 0 : user.getUserId(), groupIds, minDate, maxDate);
+                if (withSessions) {
+                    List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupsSessionActivity(user.getUserId(), groupIds, minDate, maxDate);
                     for (CDTSession session : sessions) {
                         // Get modificationDate
                         Date modificationDate = SessionTeacherLocalServiceUtil.getLastModificationDate(session.getSessionId(), minDate, maxDate);
@@ -188,6 +153,16 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                             GroupActivity sessionActivity = new GroupActivity(session.getSessionId(), 0, modificationDate, ActivityConstants.ACTIVITY_TYPE_SESSION);
                             groupActivities.add(sessionActivity);
                         }
+                    }
+                }
+
+                // Groups expired for reactivation
+                List<Group> userCommunities = CommunityInfosLocalServiceUtil.getUserCommunities(userId, false, false);
+                for (Group userCommunity : userCommunities) {
+                    CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(userCommunity.getGroupId());
+                    if (communityInfos.getStatus() == 3 && communityInfos.getExpirationDate().after(minDate) && communityInfos.getExpirationDate().before(maxDate) && RoleUtilsLocalServiceUtil.isUserGroupAdmin(user, userCommunity.getGroupId())) {
+                        GroupActivity sessionActivity = new GroupActivity(userCommunity.getGroupId(), 0, communityInfos.getExpirationDate(), ActivityConstants.ACTIVITY_TYPE_EXPIRED_GROUP);
+                        groupActivities.add(sessionActivity);
                     }
                 }
 
@@ -207,6 +182,153 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         return groupActivities.subList(0, Math.min(groupActivities.size(), nbResults));
     }
 
+    // Called from the Group service, we get the full list of activities, including current user's ones
+    public List<GroupActivity> getFullGroupActivities (long userId, long groupId, Date maxDate, int nbResults) {
+        List<GroupActivity> groupActivities = new ArrayList<>();
+        logger.info("getGroupActivities for userId " + userId + " and groupId " + groupId + ", until maxDate " + maxDate);
+
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(maxDate);
+            cal.add(Calendar.DATE, -7);
+            Date minDate = cal.getTime();
+
+            List<Long> groupIds = new ArrayList<>();
+            groupIds.add(groupId);
+
+            // Limit date is the school year start date
+            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getStartSessionsDate();
+
+            // Get activities by successive range dates going back in time, so that we ensure pagination is fine
+            // Do not exceed 1 month back in time
+            while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
+                // Fetch activities from minDate = maxDate minus 7 days
+                logger.debug("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
+
+                // Group news
+                List<News> groupNews = NewsLocalServiceUtil.getNews(user, 0, new Date(), 10, true, false, false);
+                for (News news : groupNews) {
+                    GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
+                    groupActivities.add(newsActivity);
+                }
+
+                // Document activity
+                List<Activity> activityList = ActivityLocalServiceUtil.getGroupsActivity(user.getUserId(), groupIds, minDate, maxDate,
+                        true, true, true, true, true);
+                for (Activity activity : activityList) {
+                    GroupActivity docActivity = new GroupActivity(activity.getActivityId(), 0, activity.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_DOCUMENT);
+                    groupActivities.add(docActivity);
+                }
+
+                // Membership activity: self one + adds + removals
+                List<MembershipActivity> membershipActivities = MembershipActivityLocalServiceUtil.getMembershipActivity(user.getUserId(), groupIds, minDate, maxDate, true, false, true, true);
+                for (MembershipActivity membershipActivity : membershipActivities) {
+                    GroupActivity groupMembershipActivity = new GroupActivity(membershipActivity.getMembershipActivityId(), 0, membershipActivity.getMovementDate(), ActivityConstants.ACTIVITY_TYPE_MEMBERSHIP);
+                    groupActivities.add(groupMembershipActivity);
+                }
+
+                // No pending firings
+                // Doyens and main teachers see the renvois for the students of classes that are affected to him
+                List<Renvoi> schoolRenvois = RenvoiLocalServiceUtil.getGroupRenvois(user, groupIds, minDate, maxDate);
+
+                for (Renvoi schoolRenvoi : schoolRenvois) {
+                    if (schoolRenvoi.getRenvoiDate().after(minDate) && schoolRenvoi.getRenvoiDate().before(maxDate)) {
+                        GroupActivity schoolRenvoiActivity = new GroupActivity(schoolRenvoi.getSchoollifeSessionId(), schoolRenvoi.getStudentId(), schoolRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI);
+                        groupActivities.add(schoolRenvoiActivity);
+                    }
+                }
+
+                // Homeworks given
+                List<Homework> givenHomeworks = new ArrayList<>();
+                if (RoleUtilsLocalServiceUtil.isStudent(user)) {
+                    givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworks(user, minDate);
+                } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+                    givenHomeworks.addAll(HomeworkLocalServiceUtil.getTeacherHomeworks(user, minDate, 0));
+                }
+
+                for (Homework givenHomework : givenHomeworks) {
+                    if (givenHomework.getFromDate().after(minDate) && givenHomework.getFromDate().before(maxDate) && groupIds.contains(givenHomework.getGroupId())) {
+                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getFromDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
+                        groupActivities.add(homeworkActivity);
+                    }
+                }
+
+                // Sessions content added
+                List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupsSessionActivity(0, groupIds, minDate, maxDate);
+                for (CDTSession session : sessions) {
+                    // Get modificationDate
+                    Date modificationDate = SessionTeacherLocalServiceUtil.getLastModificationDate(session.getSessionId(), minDate, maxDate);
+                    if (modificationDate != null) {
+                        GroupActivity sessionActivity = new GroupActivity(session.getSessionId(), 0, modificationDate, ActivityConstants.ACTIVITY_TYPE_SESSION);
+                        groupActivities.add(sessionActivity);
+                    }
+                }
+
+                // Decrease 1 week
+                maxDate = minDate;
+                cal = Calendar.getInstance();
+                cal.setTime(minDate);
+                cal.add(Calendar.DATE, -7);
+                minDate = cal.getTime();
+            }
+        } catch (Exception e) {
+            logger.error("Error fetching group activities for userId " + userId + " and groupId " + groupId, e);
+        }
+
+        // Sort activities by action date
+        groupActivities.sort(Collections.reverseOrder());
+        return groupActivities.subList(0, Math.min(groupActivities.size(), nbResults));
+    }
+
+    // Called from the document service, in the info panel
+    public List<GroupActivity> getDocumentGroupActivities (long userId, long groupId, Date maxDate, int nbResults) {
+        List<GroupActivity> groupActivities = new ArrayList<>();
+        logger.info("Get document activities for userId " + userId + " and groupId " + groupId + ", until maxDate " + maxDate);
+
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(maxDate);
+            cal.add(Calendar.DATE, -7);
+            Date minDate = cal.getTime();
+
+            List<Long> groupIds = new ArrayList<>();
+            groupIds.add(groupId);
+
+            // Limit date is the school year start date
+            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getStartSessionsDate();
+
+            // Get activities by successive range dates going back in time, so that we ensure pagination is fine
+            // Do not exceed 1 month back in time
+            while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
+                // Fetch activities from minDate = maxDate minus 7 days
+                logger.debug("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
+
+                // Document activity
+                List<Activity> activityList = ActivityLocalServiceUtil.getGroupsActivity(user.getUserId(), groupIds, minDate, maxDate,
+                        true, true, true, true, true);
+                for (Activity activity : activityList) {
+                    GroupActivity docActivity = new GroupActivity(activity.getActivityId(), 0, activity.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_DOCUMENT);
+                    groupActivities.add(docActivity);
+                }
+
+                // Decrease 1 week
+                maxDate = minDate;
+                cal = Calendar.getInstance();
+                cal.setTime(minDate);
+                cal.add(Calendar.DATE, -7);
+                minDate = cal.getTime();
+            }
+        } catch (Exception e) {
+            logger.error("Error fetching document activities for userId " + userId + " and groupId " + groupId, e);
+        }
+
+        // Sort activities by action date
+        groupActivities.sort(Collections.reverseOrder());
+        return groupActivities.subList(0, Math.min(groupActivities.size(), nbResults));
+    }
+
     public JSONObject convertGroupActivity(long userId, GroupActivity groupActivity) {
         JSONObject jsonActivity = new JSONObject();
 
@@ -215,7 +337,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
                 jsonActivity = NewsLocalServiceUtil.convertNewsToJson(groupActivity.getActivityId(), userId, false);
 
-            } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_ACTIVITY) {
+            } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_DOCUMENT) {
 
                 Activity activity = ActivityLocalServiceUtil.getActivity(groupActivity.getActivityId());
                 jsonActivity = ActivityLocalServiceUtil.convertActivityToJson(activity);
@@ -225,36 +347,31 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 jsonActivity = MembershipActivityLocalServiceUtil.convertMembershipActivityToJson(membershipActivity);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI) {
+
                 Renvoi renvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
                 jsonActivity = RenvoiLocalServiceUtil.convertRenvoiToJson(renvoi);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI) {
+
                 Renvoi schoolRenvoi = RenvoiLocalServiceUtil.getRenvoi(new RenvoiPK(groupActivity.getActivityId(), groupActivity.getStudentId()));
                 jsonActivity = RenvoiLocalServiceUtil.convertSchoolRenvoi(schoolRenvoi);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_HOMEWORK) {
 
                 Homework homework = HomeworkLocalServiceUtil.getHomework(groupActivity.getActivityId());
-                User teacher = UserLocalServiceUtil.getUser(homework.getTeacherId());
-                jsonActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getFromDate()));
-                jsonActivity.put(JSONConstants.AUTHOR, teacher.getFullName());
-                String target;
-                if (homework.getIsCustomStudentList()) {
-                    target = StudentHomeworkLocalServiceUtil.getHomeworkStudents(homework.getHomeworkId()).size() + " \u00E9l\u00E8ves";
-                } else {
-                    target = " tous";
-                }
-                jsonActivity.put(JSONConstants.TARGET, target);
-                jsonActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_HOMEWORK);
+                jsonActivity = convertHomeworkActivity(homework);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_SESSION) {
 
                 CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(groupActivity.getActivityId());
-                jsonActivity.put(JSONConstants.MODIFICATION_DATE, df.format(groupActivity.getActivityDate()));
-                User lastEditor = SessionTeacherLocalServiceUtil.getLastEditor(session.getSessionId(), groupActivity.getActivityDate());
-                jsonActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
-                jsonActivity.put(JSONConstants.TARGET, session.getTitle());
-                jsonActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_SESSION);
+                jsonActivity = convertSessionActivity(session, groupActivity.getActivityDate());
+
+            } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_EXPIRED_GROUP) {
+
+                jsonActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(groupActivity.getActivityDate()));
+                jsonActivity.put(JSONConstants.GROUP_ID, groupActivity.getActivityId());
+                jsonActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(groupActivity.getActivityId()));
+                jsonActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_EXPIRED_GROUP);
             }
         } catch (Exception e) {
             logger.error("Error converting group activity", e);
@@ -263,5 +380,41 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         return jsonActivity;
     }
 
-    public DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    private JSONObject convertHomeworkActivity (Homework homework) {
+        JSONObject homeworkActivity = new JSONObject();
+
+        try {
+            DateFormat df = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+            homeworkActivity.put(JSONConstants.HOMEWORK_ID, homework.getHomeworkId());
+            User teacher = UserLocalServiceUtil.getUser(homework.getTeacherId());
+            homeworkActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getFromDate()));
+            homeworkActivity.put(JSONConstants.TARGET_DATE, df.format(homework.getTargetDate()));
+            homeworkActivity.put(JSONConstants.GROUP_ID, homework.getGroupId());
+            homeworkActivity.put(JSONConstants.AUTHOR, teacher.getFullName());
+            homeworkActivity.put(JSONConstants.IS_FOR_ALL_STUDENTS, !homework.getIsCustomStudentList());
+            if (homework.getIsCustomStudentList()) {
+                homeworkActivity.put(JSONConstants.NB_STUDENTS, StudentHomeworkLocalServiceUtil.getHomeworkStudents(homework.getHomeworkId()).size());
+            }
+            homeworkActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_HOMEWORK);
+        } catch (Exception e) {
+            logger.error("Error converting homework activity for homework " + homework.getHomeworkId(), e);
+        }
+
+        return homeworkActivity;
+    }
+
+    private JSONObject convertSessionActivity (CDTSession session, Date activityDate) {
+        JSONObject sessionActivity = new JSONObject();
+
+        try {
+            sessionActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(activityDate));
+            User lastEditor = SessionTeacherLocalServiceUtil.getLastEditor(session.getSessionId(), activityDate);
+            sessionActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
+            sessionActivity.put(JSONConstants.TARGET, session.getTitle());
+            sessionActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_SESSION);
+        } catch (Exception e) {
+            logger.error("Error converting session activity for session " + session.getSessionId(), e);
+        }
+        return sessionActivity;
+    }
 }

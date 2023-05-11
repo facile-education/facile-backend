@@ -317,15 +317,10 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             return result;
         }
 
-        String period = MatomoConstants.PERIOD_WEEK;
-
         try {
             List<Long> profileIds = UserProfile.getAllStatProfileIds();
+            List<Long> schoolIds = getUserSchoolIds(user);
             List<Long> serviceIds = new ArrayList<>();
-
-            List<Long> schoolIds = new ArrayList<>();
-            long schoolId = UserOrgsLocalServiceUtil.getUserSchools(user).get(0).getOrganizationId();
-            schoolIds.add(schoolId);
 
             // Start and end are last week
             Calendar cal = Calendar.getInstance();
@@ -334,21 +329,44 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             cal.add(Calendar.DATE, -7);
             Date startDate = cal.getTime();
 
-            JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, "", period, startDate, endDate,
+            logger.info("Fetch dashboard statistics from " + startDate + " to " + endDate);
+            JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, "", MatomoConstants.PERIOD_DAY, startDate, endDate,
                     profileIds, schoolIds, serviceIds);
 
-            // Get colors from pool
             JSONArray datasets = data.getJSONArray(JSONConstants.DATASETS);
-            for (int i = 0 ; i < datasets.length() ; ++i) {
-                JSONObject dataset = datasets.getJSONObject(i);
-                dataset.put(JSONConstants.POINT_BORDER_COLOR, "white");
-                dataset.put(JSONConstants.POINT_BACKGROUND_COLOR, COLOR_POOL[i].replace("0.55", "1"));
-                dataset.put(JSONConstants.BORDER_COLOR, COLOR_POOL[i].replace("0.55", "1"));
-                // dataset.put("backgroundColor", COLOR_POOL[i].replace("0.55", "0.25"));
+            JSONArray dayData = datasets.getJSONObject(0).getJSONArray(JSONConstants.DATA);
+            int nbConnexions = 0;
+            for (int i = 0 ; i < dayData.length() ; ++i) {
+                nbConnexions += dayData.getLong(i);
             }
 
-            result.put(JSONConstants.DATASETS, datasets);
-            result.put(JSONConstants.LABELS, data.getJSONArray(JSONConstants.LABELS));
+            result.put(JSONConstants.NB_CONNEXIONS, nbConnexions);
+
+            // Same call for previous week
+            cal.add(Calendar.DATE, -1);
+            Date previousWeekEndDate = cal.getTime();
+            cal.add(Calendar.DATE, -7);
+            Date previousWeekStartDate = cal.getTime();
+            JSONObject previousWeekData = MatomoLocalServiceUtil.fetchStatistics(user, "", MatomoConstants.PERIOD_DAY, previousWeekStartDate, previousWeekEndDate,
+                    profileIds, schoolIds, serviceIds);
+
+            JSONArray previousDayData = previousWeekData.getJSONArray(JSONConstants.DATASETS).getJSONObject(0).getJSONArray(JSONConstants.DATA);
+            int previousNbConnexions = 0;
+            for (int i = 0 ; i < previousDayData.length() ; ++i) {
+                previousNbConnexions += previousDayData.getLong(i);
+            }
+            result.put(JSONConstants.PREVIOUS_NB_CONNEXIONS, previousNbConnexions);
+
+            // Active users
+            Organization userSchool = UserOrgsLocalServiceUtil.getUserSchools(user).get(0);
+            result.put(JSONConstants.ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(startDate, endDate, userSchool.getOrganizationId()));
+            result.put(JSONConstants.PREVIOUS_ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId()));
+
+            // Number of productions
+            // For now, number of created news
+            result.put(JSONConstants.GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(startDate, endDate, userSchool.getOrganizationId(), false));
+            result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId(), false));
+
             result.put(JSONConstants.SUCCESS, true);
         } catch(Exception e) {
             result.put(JSONConstants.SUCCESS, false);
@@ -356,5 +374,19 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         return result;
+    }
+
+    private List<Long> getUserSchoolIds(User user) {
+        List<Long> schoolIds = new ArrayList<>();
+
+        // Do not add school filter for admins
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
+                if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user, school.getOrganizationId())) {
+                    schoolIds.add(school.getOrganizationId());
+                }
+            }
+        }
+        return schoolIds;
     }
 }

@@ -266,13 +266,6 @@ public class MembershipActivityLocalServiceUtil {
 		return getService().getMembershipActivities(start, end);
 	}
 
-	public static List<MembershipActivity> getMembershipActivities(
-		List<Long> groupIdList, long actionUserId, int start, int end) {
-
-		return getService().getMembershipActivities(
-			groupIdList, actionUserId, start, end);
-	}
-
 	/**
 	 * Returns the number of membership activities.
 	 *
@@ -298,18 +291,13 @@ public class MembershipActivityLocalServiceUtil {
 
 	public static List<MembershipActivity> getMembershipActivity(
 		long userId, List<Long> groupIdList, java.util.Date minDate,
-		java.util.Date maxDate, boolean includeSelf) {
+		java.util.Date maxDate, boolean includeUserActions,
+		boolean onlyWithUserBeingTarget, boolean withAdd,
+		boolean withRemovals) {
 
 		return getService().getMembershipActivity(
-			userId, groupIdList, minDate, maxDate, includeSelf);
-	}
-
-	public static List<MembershipActivity> getMembershipHistory(
-		long userId, List<Long> groupIdList, java.util.Date minDate,
-		java.util.Date maxDate) {
-
-		return getService().getMembershipHistory(
-			userId, groupIdList, minDate, maxDate);
+			userId, groupIdList, minDate, maxDate, includeUserActions,
+			onlyWithUserBeingTarget, withAdd, withRemovals);
 	}
 
 	/**

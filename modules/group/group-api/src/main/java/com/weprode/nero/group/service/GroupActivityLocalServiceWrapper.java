@@ -43,37 +43,33 @@ public class GroupActivityLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.weprode.nero.group.model.GroupActivity>
-		getGroupsActivities(
+		getDashboardGroupsActivities(
 			long userId, java.util.List<Long> groupIds, java.util.Date maxDate,
-			int nbResults) {
+			int nbResults, boolean withNews, boolean withDocs,
+			boolean withMemberships, boolean withSchoollife,
+			boolean withSessions) {
 
-		return _groupActivityLocalService.getGroupsActivities(
-			userId, groupIds, maxDate, nbResults);
+		return _groupActivityLocalService.getDashboardGroupsActivities(
+			userId, groupIds, maxDate, nbResults, withNews, withDocs,
+			withMemberships, withSchoollife, withSessions);
 	}
 
 	@Override
 	public java.util.List<com.weprode.nero.group.model.GroupActivity>
-		getGroupsActivities(
-			long userId, java.util.List<Long> groupIds, java.util.Date maxDate,
-			int nbResults, boolean allHistory, boolean containNews,
-			boolean containDocs, boolean containMembership,
-			boolean containPendingFirings, boolean containFirings,
-			boolean containHomework, boolean containsSessions) {
+		getDocumentGroupActivities(
+			long userId, long groupId, java.util.Date maxDate, int nbResults) {
 
-		return _groupActivityLocalService.getGroupsActivities(
-			userId, groupIds, maxDate, nbResults, allHistory, containNews,
-			containDocs, containMembership, containPendingFirings,
-			containFirings, containHomework, containsSessions);
+		return _groupActivityLocalService.getDocumentGroupActivities(
+			userId, groupId, maxDate, nbResults);
 	}
 
 	@Override
 	public java.util.List<com.weprode.nero.group.model.GroupActivity>
-		getGroupsHistory(
-			long userId, java.util.List<Long> groupIds, java.util.Date maxDate,
-			int nbResults) {
+		getFullGroupActivities(
+			long userId, long groupId, java.util.Date maxDate, int nbResults) {
 
-		return _groupActivityLocalService.getGroupsHistory(
-			userId, groupIds, maxDate, nbResults);
+		return _groupActivityLocalService.getFullGroupActivities(
+			userId, groupId, maxDate, nbResults);
 	}
 
 	/**

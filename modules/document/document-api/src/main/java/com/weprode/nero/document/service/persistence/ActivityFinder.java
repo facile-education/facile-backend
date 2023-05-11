@@ -32,6 +32,8 @@ public interface ActivityFinder {
 		getGroupsActivities(
 			long userId, java.util.List<Long> groupIdList,
 			java.util.Date minDate, java.util.Date maxDate,
-			boolean fullHistory);
+			boolean includeUserActivity, boolean withFileCreation,
+			boolean withFileModification, boolean withFolderCreation,
+			boolean withFolderModification);
 
 }

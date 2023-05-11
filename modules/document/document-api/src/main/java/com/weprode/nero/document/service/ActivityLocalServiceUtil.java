@@ -275,18 +275,14 @@ public class ActivityLocalServiceUtil {
 
 	public static List<Activity> getGroupsActivity(
 		long userId, List<Long> groupIdList, java.util.Date minDate,
-		java.util.Date maxDate, boolean fullHistory) {
+		java.util.Date maxDate, boolean includeUserActivity,
+		boolean withFileCreation, boolean withFileModification,
+		boolean withFolderCreation, boolean withFolderModification) {
 
 		return getService().getGroupsActivity(
-			userId, groupIdList, minDate, maxDate, fullHistory);
-	}
-
-	public static List<Activity> getGroupsHistory(
-		long userId, List<Long> groupIdList, java.util.Date minDate,
-		java.util.Date maxDate) {
-
-		return getService().getGroupsHistory(
-			userId, groupIdList, minDate, maxDate);
+			userId, groupIdList, minDate, maxDate, includeUserActivity,
+			withFileCreation, withFileModification, withFolderCreation,
+			withFolderModification);
 	}
 
 	public static

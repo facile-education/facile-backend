@@ -33,6 +33,14 @@ public class DocumentUtilsServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getDocumentGroupActivity(
+		long groupId, String maxDate, int nbResults) {
+
+		return _documentUtilsService.getDocumentGroupActivity(
+			groupId, maxDate, nbResults);
+	}
+
+	@Override
 	public org.json.JSONObject getGlobalDocumentsProperties()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {

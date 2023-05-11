@@ -39,12 +39,6 @@ public class GroupUtilsServiceUtil {
 		return getService().getGroupActivity(groupId, maxDate, nbResults);
 	}
 
-	public static org.json.JSONObject getGroupHistory(
-		long groupId, java.lang.String maxDate, int nbResults) {
-
-		return getService().getGroupHistory(groupId, maxDate, nbResults);
-	}
-
 	public static org.json.JSONObject getGroupMembers(long groupId) {
 		return getService().getGroupMembers(groupId);
 	}
@@ -56,19 +50,6 @@ public class GroupUtilsServiceUtil {
 	 */
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
-	}
-
-	public static org.json.JSONObject getSpecificGroupActivities(
-		long groupId, java.lang.String maxDate, int nbResults,
-		boolean allHistory, boolean containNews, boolean containDocs,
-		boolean containMembership, boolean containPendingFirings,
-		boolean containFirings, boolean containHomework,
-		boolean containSessions) {
-
-		return getService().getSpecificGroupActivities(
-			groupId, maxDate, nbResults, allHistory, containNews, containDocs,
-			containMembership, containPendingFirings, containFirings,
-			containHomework, containSessions);
 	}
 
 	public static org.json.JSONObject getUserCollaborativeGroups(
@@ -86,12 +67,6 @@ public class GroupUtilsServiceUtil {
 		return getService().getUserGroups(
 			schoolId, includeInstitutional, includeCommunities,
 			pedagogicalOnly);
-	}
-
-	public static org.json.JSONObject getUsersCompletion(
-		java.lang.String query, long schoolId, long roleId) {
-
-		return getService().getUsersCompletion(query, schoolId, roleId);
 	}
 
 	public static GroupUtilsService getService() {
