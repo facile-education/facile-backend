@@ -1,15 +1,22 @@
 package com.weprode.nero.messaging.service.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.weprode.nero.application.model.Application;
+import com.weprode.nero.application.service.ApplicationLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactCompletionLocalServiceUtil;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
@@ -22,14 +29,17 @@ import com.weprode.nero.messaging.service.base.MessageServiceBaseImpl;
 import com.weprode.nero.messaging.utils.MessageUtil;
 import com.weprode.nero.messaging.utils.MessagingUtil;
 import com.weprode.nero.messaging.utils.ThreadUtil;
+import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.SchoolAdminLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component(
         property = {
@@ -367,7 +377,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             JSONArray jsonAttachedFiles = new JSONArray(attachedFiles);
             List<Long> attachedFileIds = new ArrayList<>();
             for (int i = 0 ; i < jsonAttachedFiles.length() ; i++) {
-                attachedFileIds.add(jsonAttachedFiles.getJSONObject(i).getLong("id"));
+                attachedFileIds.add(jsonAttachedFiles.getJSONObject(i).getLong(JSONConstants.ID));
             }
 
             JSONArray jsonRecipients = new JSONArray(recipients);
@@ -405,7 +415,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             JSONArray jsonAttachedFiles = new JSONArray(attachedFiles);
             List<Long> attachFileIds = new ArrayList<>();
             for (int i = 0 ; i < jsonAttachedFiles.length() ; i++) {
-                attachFileIds.add(jsonAttachedFiles.getJSONObject(i).getLong("id"));
+                attachFileIds.add(jsonAttachedFiles.getJSONObject(i).getLong(JSONConstants.ID));
             }
 
             JSONArray jsonRecipients = new JSONArray(recipients);
@@ -573,6 +583,130 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
 
         } catch (Exception e) {
             logger.error(e);
+        }
+
+        return result;
+    }
+
+    @JSONWebService(value = "send-assistance-message", method = "POST")
+    public JSONObject sendAssistanceMessage(long applicationId, String content, boolean isSuggestion, String attachFiles) throws Exception {
+        JSONObject result = new JSONObject();
+
+        User user = getGuestOrUser();
+
+        ResourceBundle messages = ResourceBundle.getBundle("content.Language", user.getLocale());
+        String htmlContent = content.replaceAll("(\r\n|\n)", "<br />");
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat(JSONConstants.FRENCH_FORMAT);
+        SimpleDateFormat hourFormat = new SimpleDateFormat("H:mm");
+        String dateDay = dateFormat.format(currentDate);
+        String dateTime = hourFormat.format(currentDate);
+
+        String statut = messages.getString("utilisateur-local");
+        try {
+            statut = RoleUtilsLocalServiceUtil.displayUserRoles(user);
+        } catch (Exception e) {
+            logger.debug(e);
+        }
+
+        String schoolName = OrgUtilsLocalServiceUtil.formatOrgName(UserOrgsLocalServiceUtil.getEtabRatachement(user).getName(), true);
+
+        try {
+            // Manage destination people
+            List<Long> destFinal = new ArrayList<>();
+
+            // 1. Send to all Administrators
+            long roleId = RoleUtilsLocalServiceUtil.getAdministratorRole().getRoleId();
+
+            if (roleId > 0) {
+                List<Long> roleIds = new ArrayList<>();
+                roleIds.add(roleId);
+
+                final List<User> administrators = UserSearchLocalServiceUtil.searchUsers(
+                        StringPool.BLANK, null, null, roleIds,
+                        null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+                for (User u : administrators){
+                    destFinal.add(u.getUserId());
+                }
+            }
+
+            // 2. Specific list of destination people in portal-ext.properties
+            try {
+                String[] notifyUsers = PrefsPropsUtil.getStringArray(NeroSystemProperties.ENT_INCIDENTS_USERS_NOTIFICATION, ",");
+                for (String notifyUser : notifyUsers) {
+                    destFinal.add(Long.parseLong(notifyUser));
+                }
+            } catch (Exception e) {
+                logger.debug("No additionnal users to notify");
+            }
+
+            boolean sendToLocalAdmins = PrefsPropsUtil.getBoolean(NeroSystemProperties.SUPPORT_LOCAL_ADMINS_ENABLE);
+            boolean sendToDirectionMembers = PrefsPropsUtil.getBoolean(NeroSystemProperties.SUPPORT_DIRECTION_MEMBERS_ENABLE);
+
+            // 3. Local admins and/or direction members of the user's attachment school
+            if ((!RoleUtilsLocalServiceUtil.isSchoolAdmin(user)) && (sendToLocalAdmins || sendToDirectionMembers)) {
+                Organization rattachSchool = UserOrgsLocalServiceUtil.getEtabRatachement(user);
+
+                if (rattachSchool != null) {
+                    // Get local admins
+                    List<User> localAdminList = SchoolAdminLocalServiceUtil.getSchoolAdmins(rattachSchool.getOrganizationId());
+
+                    if (localAdminList != null) {
+                        for (User adminUser : localAdminList) {
+                            boolean isDirectionMember = RoleUtilsLocalServiceUtil.isDirectionMember(adminUser);
+                            if ((!isDirectionMember && sendToLocalAdmins) ||
+                                    (isDirectionMember && sendToDirectionMembers)) {
+                                logger.info("Send support message to local admin "+adminUser.getFullName());
+                                destFinal.add(adminUser.getUserId());
+                            }
+                        }
+                    } else {
+                        logger.error("The retrieved local admin list is null");
+                    }
+                }
+            }
+
+            // Sender
+            List<Long> sender = new ArrayList<>();
+            sender.add(user.getUserId());
+
+            Application app = ApplicationLocalServiceUtil.getApplication(applicationId);
+
+            // Build message subject and content
+            String ownerSubject = (isSuggestion ? "[Suggestion " : "[Assistance ") + app.getApplicationName() + "]";
+            String adminSubject = (isSuggestion ? "[Suggestion " : "[Assistance ") + app.getApplicationName() + "]" + "[" + user.getFullName() + "] ";
+            String ownerContent = (isSuggestion ? messages.getString("rappel-suggestion-que-vous-avez-declare-le") : messages.getString("rappel-incident-que-vous-avez-declare-le")) + " : " + dateDay + " " + messages.getString("a") + " " + dateTime + "<br /><br />"
+                    + htmlContent;
+
+            // Mail body for internal messaging in html format
+            String adminContentHtml =
+                    messages.getString("etablissement") + " : " + schoolName + "<br />"
+                            + messages.getString("statut") + " : " + statut + "<br />"
+                            + (isSuggestion ? messages.getString("suggestion-declare-le") : messages.getString("incident-declare-le")) + " : " + dateDay + " " + messages.getString("a") + " " + dateTime + "<br />"
+                            + htmlContent;
+
+            // Attached files
+            JSONArray attachFilesArray = new JSONArray(attachFiles);
+            List<Long> attachedFileIds = new ArrayList<>();
+
+            for (int i = 0 ; i < attachFilesArray.length() ; i++) {
+                attachedFileIds.add(attachFilesArray.getJSONObject(i).getLong(JSONConstants.ID));
+            }
+
+            // First message : from user to the list of destination (administrators + list in portal-ext.properties + list of local admins)
+            MessageLocalServiceUtil.sendSupportMessage(user, destFinal, adminSubject, adminContentHtml, attachedFileIds, 0, 0);
+
+            // Second message : from technical team to user
+            long defaultSender = PrefsPropsUtil.getLong(NeroSystemProperties.ENT_CONFIRMATION_SENDER_ID);
+            User admin = UserLocalServiceUtil.getUser(defaultSender);
+            MessageLocalServiceUtil.sendSupportMessage(admin, sender, ownerSubject, ownerContent, attachedFileIds, 0, 0);
+
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error when sending support message", e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;

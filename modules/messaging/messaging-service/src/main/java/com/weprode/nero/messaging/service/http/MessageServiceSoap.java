@@ -332,6 +332,25 @@ public class MessageServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject sendAssistanceMessage(
+			long applicationId, String content, boolean isSuggestion,
+			String attachFiles)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				MessageServiceUtil.sendAssistanceMessage(
+					applicationId, content, isSuggestion, attachFiles);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(MessageServiceSoap.class);
 
 }

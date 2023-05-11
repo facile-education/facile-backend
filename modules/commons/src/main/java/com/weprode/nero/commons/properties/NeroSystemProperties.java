@@ -25,6 +25,13 @@ public class NeroSystemProperties {
 	public static final String MESSAGING_URL = "portlet.url.messaging";
 	public static final String MOBILE_NOTIFICATION_ENABLED = "ent.mobile.notification.enable";
 
+	// Assistance
+	public static final String ENT_CONFIRMATION_SENDER_ID = "ent.confirmation.sender.id";
+	public static final String ENT_INCIDENTS_USERS_NOTIFICATION = "ent.incidents.users.notication";
+	public static final String SUPPORT_LOCAL_ADMINS_ENABLE = "support.local.admins.enable";
+	public static final String SUPPORT_DIRECTION_MEMBERS_ENABLE = "support.direction.members.enable";
+
+
 	public static final String PARENT_SYNCHRO_FOLDER = "synchro.drop.folder";
 	public static final String SCHEDULE_SYNCHRO_FOLDER = "synchro.schedule.drop.folder";
 

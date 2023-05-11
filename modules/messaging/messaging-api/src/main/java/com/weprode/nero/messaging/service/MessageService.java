@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
+import java.util.*;
+
 import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -118,6 +120,12 @@ public interface MessageService extends BaseService {
 	public JSONObject saveDraft(
 		String recipients, String subject, String content, String attachedFiles,
 		long draftMessageId, boolean isSupport);
+
+	@JSONWebService(method = "POST", value = "send-assistance-message")
+	public JSONObject sendAssistanceMessage(
+			long applicationId, String content, boolean isSuggestion,
+			String attachFiles)
+		throws Exception;
 
 	@JSONWebService(method = "POST", value = "send-message")
 	public JSONObject sendMessage(
