@@ -2,10 +2,13 @@ package com.weprode.nero.news.service.persistence.impl;
 
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
-import com.liferay.portal.kernel.dao.orm.*;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
+import com.liferay.portal.kernel.dao.orm.Session;
+import com.liferay.portal.kernel.dao.orm.Type;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.weprode.nero.messaging.service.persistence.MessageFinder;
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.model.impl.NewsImpl;
 import com.weprode.nero.news.service.persistence.NewsFinder;
@@ -27,9 +30,9 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
     private CustomSQL customSQL;
 
     public static final String GET_NEWS =
-            MessageFinder.class.getName() + ".getNews";
+            NewsFinder.class.getName() + ".getNews";
     public static final String GET_NEWS_COUNT =
-            MessageFinder.class.getName() + ".getNewsCount";
+            NewsFinder.class.getName() + ".getNewsCount";
 
     public List<News> getNews(long userId, List<Long> groupIds, List<Long> roleIds, Date maxDate, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) {
         Session session = null;
