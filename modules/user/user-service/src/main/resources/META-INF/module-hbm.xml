@@ -4,6 +4,7 @@
 <hibernate-mapping auto-import="false" default-lazy="false">
 	<import class="com.weprode.nero.user.model.Affectation" />
 	<import class="com.weprode.nero.user.model.LDAPMapping" />
+	<import class="com.weprode.nero.user.model.NewsAdmin" />
 	<import class="com.weprode.nero.user.model.UserContact" />
 	<import class="com.weprode.nero.user.model.UserRelationship" />
 	<class name="com.weprode.nero.user.model.impl.AffectationImpl" table="User_Affectation">
@@ -26,6 +27,13 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="UID" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="INE" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="EntEleveStructRattachId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com.weprode.nero.user.model.impl.NewsAdminImpl" table="User_NewsAdmin">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="newsAdminId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoolId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.weprode.nero.user.model.impl.UserContactImpl" table="User_UserContact">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="contactId" type="long">

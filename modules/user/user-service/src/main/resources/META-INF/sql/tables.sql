@@ -17,6 +17,12 @@ create table User_LDAPMapping (
 	EntEleveStructRattachId VARCHAR(75) null
 );
 
+create table User_NewsAdmin (
+	newsAdminId LONG not null primary key,
+	userId LONG,
+	schoolId LONG
+);
+
 create table User_UserContact (
 	contactId LONG not null primary key,
 	userId LONG,

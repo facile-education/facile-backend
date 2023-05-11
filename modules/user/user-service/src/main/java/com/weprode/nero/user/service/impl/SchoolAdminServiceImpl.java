@@ -1,8 +1,5 @@
 package com.weprode.nero.user.service.impl;
 
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -11,9 +8,12 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.NewsAdminLocalServiceUtil;
 import com.weprode.nero.user.service.SchoolAdminLocalServiceUtil;
 import com.weprode.nero.user.service.SchoolAdminService;
 import com.weprode.nero.user.service.base.SchoolAdminServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -59,14 +59,13 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         try {
             List<User> allAdmins = new ArrayList<>(SchoolAdminLocalServiceUtil.getSchoolAdmins(schoolId));
 
-            // TODO News
-            /* List<User> schoolDelegates = BlogEntryDelegateLocalServiceUtil.getSchoolDelegates(schoolId);
+            List<User> schoolDelegates = NewsAdminLocalServiceUtil.getSchoolDelegates(schoolId);
             // Avoid duplicates
             for (User schoolDelegate : schoolDelegates) {
                 if (!allAdmins.contains(schoolDelegate)) {
                     allAdmins.add(schoolDelegate);
                 }
-            }*/
+            }
             
             for (User admin : allAdmins) {
                 JSONObject adminJSON = new JSONObject();
@@ -76,9 +75,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
                 adminJSON.put(JSONConstants.DISPLAY_NAME, admin.getFullName());
                 adminJSON.put(JSONConstants.IS_DIRECTION, RoleUtilsLocalServiceUtil.isDirectionMember(admin));
                 adminJSON.put(JSONConstants.IS_SCHOOL_ADMIN, RoleUtilsLocalServiceUtil.isSchoolAdmin(admin, schoolId));
-                // TODO News
-                adminJSON.put(JSONConstants.IS_NEWS_DELEGATE, false);
-                // adminJSON.put(JSONConstants.IS_NEWS_DELEGATE, BlogEntryDelegateLocalServiceUtil.isUserDelegate(admin));
+                adminJSON.put(JSONConstants.IS_NEWS_DELEGATE, NewsAdminLocalServiceUtil.isUserDelegate(admin));
                 jsonAdmins.put(adminJSON);
             }
 
@@ -121,11 +118,8 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
             // Returned list of the school delegation candidates
             // minus the existing school delegates
             // minus the school's admins
-            // TODO News
-            List<User> delegationCandidates = new ArrayList<>();
-            List<User> schoolDelegates = new ArrayList<>();
-            /*List<User> delegationCandidates = BlogEntryDelegateLocalServiceUtil.getSchoolDelegationCandidates(schoolId, filter);
-            List<User> schoolDelegates = BlogEntryDelegateLocalServiceUtil.getSchoolDelegates(schoolId);*/
+            List<User> delegationCandidates = NewsAdminLocalServiceUtil.getSchoolDelegationCandidates(schoolId, filter);
+            List<User> schoolDelegates = NewsAdminLocalServiceUtil.getSchoolDelegates(schoolId);
             List<User> schoolAdmins = SchoolAdminLocalServiceUtil.getSchoolAdmins(schoolId);
 
             JSONArray jsonCandidates = new JSONArray();
