@@ -45,5 +45,6 @@ create table Preference_UserProperties (
 	preferedSchoolId LONG,
 	webdavActivated BOOLEAN,
 	termsOfUseAgreedDate DATE null,
-	lastSynchroDate DATE null
+	lastSynchroDate DATE null,
+	lastDashboardAccessDate DATE null
 );

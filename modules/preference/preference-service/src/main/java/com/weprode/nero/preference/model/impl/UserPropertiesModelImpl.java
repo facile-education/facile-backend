@@ -81,7 +81,8 @@ public class UserPropertiesModelImpl
 		{"etabId", Types.BIGINT}, {"preferedSchoolId", Types.BIGINT},
 		{"webdavActivated", Types.BOOLEAN},
 		{"termsOfUseAgreedDate", Types.TIMESTAMP},
-		{"lastSynchroDate", Types.TIMESTAMP}
+		{"lastSynchroDate", Types.TIMESTAMP},
+		{"lastDashboardAccessDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -97,10 +98,11 @@ public class UserPropertiesModelImpl
 		TABLE_COLUMNS_MAP.put("webdavActivated", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("termsOfUseAgreedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("lastSynchroDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("lastDashboardAccessDate", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Preference_UserProperties (userId LONG not null primary key,manualAccount BOOLEAN,hideMenu BOOLEAN,themeColor VARCHAR(75) null,etabId LONG,preferedSchoolId LONG,webdavActivated BOOLEAN,termsOfUseAgreedDate DATE null,lastSynchroDate DATE null)";
+		"create table Preference_UserProperties (userId LONG not null primary key,manualAccount BOOLEAN,hideMenu BOOLEAN,themeColor VARCHAR(75) null,etabId LONG,preferedSchoolId LONG,webdavActivated BOOLEAN,termsOfUseAgreedDate DATE null,lastSynchroDate DATE null,lastDashboardAccessDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Preference_UserProperties";
@@ -174,6 +176,8 @@ public class UserPropertiesModelImpl
 		model.setWebdavActivated(soapModel.isWebdavActivated());
 		model.setTermsOfUseAgreedDate(soapModel.getTermsOfUseAgreedDate());
 		model.setLastSynchroDate(soapModel.getLastSynchroDate());
+		model.setLastDashboardAccessDate(
+			soapModel.getLastDashboardAccessDate());
 
 		return model;
 	}
@@ -374,6 +378,13 @@ public class UserPropertiesModelImpl
 			"lastSynchroDate",
 			(BiConsumer<UserProperties, Date>)
 				UserProperties::setLastSynchroDate);
+		attributeGetterFunctions.put(
+			"lastDashboardAccessDate",
+			UserProperties::getLastDashboardAccessDate);
+		attributeSetterBiConsumers.put(
+			"lastDashboardAccessDate",
+			(BiConsumer<UserProperties, Date>)
+				UserProperties::setLastDashboardAccessDate);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -574,6 +585,21 @@ public class UserPropertiesModelImpl
 		_lastSynchroDate = lastSynchroDate;
 	}
 
+	@JSON
+	@Override
+	public Date getLastDashboardAccessDate() {
+		return _lastDashboardAccessDate;
+	}
+
+	@Override
+	public void setLastDashboardAccessDate(Date lastDashboardAccessDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_lastDashboardAccessDate = lastDashboardAccessDate;
+	}
+
 	public long getColumnBitmask() {
 		if (_columnBitmask > 0) {
 			return _columnBitmask;
@@ -639,6 +665,8 @@ public class UserPropertiesModelImpl
 		userPropertiesImpl.setWebdavActivated(isWebdavActivated());
 		userPropertiesImpl.setTermsOfUseAgreedDate(getTermsOfUseAgreedDate());
 		userPropertiesImpl.setLastSynchroDate(getLastSynchroDate());
+		userPropertiesImpl.setLastDashboardAccessDate(
+			getLastDashboardAccessDate());
 
 		userPropertiesImpl.resetOriginalValues();
 
@@ -667,6 +695,8 @@ public class UserPropertiesModelImpl
 			this.<Date>getColumnOriginalValue("termsOfUseAgreedDate"));
 		userPropertiesImpl.setLastSynchroDate(
 			this.<Date>getColumnOriginalValue("lastSynchroDate"));
+		userPropertiesImpl.setLastDashboardAccessDate(
+			this.<Date>getColumnOriginalValue("lastDashboardAccessDate"));
 
 		return userPropertiesImpl;
 	}
@@ -783,6 +813,16 @@ public class UserPropertiesModelImpl
 			userPropertiesCacheModel.lastSynchroDate = Long.MIN_VALUE;
 		}
 
+		Date lastDashboardAccessDate = getLastDashboardAccessDate();
+
+		if (lastDashboardAccessDate != null) {
+			userPropertiesCacheModel.lastDashboardAccessDate =
+				lastDashboardAccessDate.getTime();
+		}
+		else {
+			userPropertiesCacheModel.lastDashboardAccessDate = Long.MIN_VALUE;
+		}
+
 		return userPropertiesCacheModel;
 	}
 
@@ -882,6 +922,7 @@ public class UserPropertiesModelImpl
 	private boolean _webdavActivated;
 	private Date _termsOfUseAgreedDate;
 	private Date _lastSynchroDate;
+	private Date _lastDashboardAccessDate;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<UserProperties, Object> function =
@@ -920,6 +961,8 @@ public class UserPropertiesModelImpl
 		_columnOriginalValues.put(
 			"termsOfUseAgreedDate", _termsOfUseAgreedDate);
 		_columnOriginalValues.put("lastSynchroDate", _lastSynchroDate);
+		_columnOriginalValues.put(
+			"lastDashboardAccessDate", _lastDashboardAccessDate);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -950,6 +993,8 @@ public class UserPropertiesModelImpl
 		columnBitmasks.put("termsOfUseAgreedDate", 128L);
 
 		columnBitmasks.put("lastSynchroDate", 256L);
+
+		columnBitmasks.put("lastDashboardAccessDate", 512L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

@@ -51,6 +51,7 @@ public class UserPropertiesWrapper
 		attributes.put("webdavActivated", isWebdavActivated());
 		attributes.put("termsOfUseAgreedDate", getTermsOfUseAgreedDate());
 		attributes.put("lastSynchroDate", getLastSynchroDate());
+		attributes.put("lastDashboardAccessDate", getLastDashboardAccessDate());
 
 		return attributes;
 	}
@@ -111,6 +112,13 @@ public class UserPropertiesWrapper
 		if (lastSynchroDate != null) {
 			setLastSynchroDate(lastSynchroDate);
 		}
+
+		Date lastDashboardAccessDate = (Date)attributes.get(
+			"lastDashboardAccessDate");
+
+		if (lastDashboardAccessDate != null) {
+			setLastDashboardAccessDate(lastDashboardAccessDate);
+		}
 	}
 
 	@Override
@@ -136,6 +144,16 @@ public class UserPropertiesWrapper
 	@Override
 	public boolean getHideMenu() {
 		return model.getHideMenu();
+	}
+
+	/**
+	 * Returns the last dashboard access date of this user properties.
+	 *
+	 * @return the last dashboard access date of this user properties
+	 */
+	@Override
+	public Date getLastDashboardAccessDate() {
+		return model.getLastDashboardAccessDate();
 	}
 
 	/**
@@ -281,6 +299,16 @@ public class UserPropertiesWrapper
 	@Override
 	public void setHideMenu(boolean hideMenu) {
 		model.setHideMenu(hideMenu);
+	}
+
+	/**
+	 * Sets the last dashboard access date of this user properties.
+	 *
+	 * @param lastDashboardAccessDate the last dashboard access date of this user properties
+	 */
+	@Override
+	public void setLastDashboardAccessDate(Date lastDashboardAccessDate) {
+		model.setLastDashboardAccessDate(lastDashboardAccessDate);
 	}
 
 	/**

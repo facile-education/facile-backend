@@ -49,5 +49,6 @@
 		<field name="webdavActivated" type="boolean" />
 		<field name="termsOfUseAgreedDate" type="Date" />
 		<field name="lastSynchroDate" type="Date" />
+		<field name="lastDashboardAccessDate" type="Date" />
 	</model>
 </model-hints>
