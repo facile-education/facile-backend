@@ -1,5 +1,6 @@
 package com.weprode.nero.messaging.utils;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -168,15 +169,16 @@ public class MessageUtil {
 			if (attachFileIds != null && !attachFileIds.isEmpty()) {
 
 				Folder imBox = FolderUtilsLocalServiceUtil.getIMBox(userId);
-				
+
 				// Create the folder in the sender's sending box
-				Folder attachedFilesFolder = DLAppServiceUtil.addFolder(
+				Folder attachedFilesFolder = DLAppLocalServiceUtil.addFolder(
+						userId,
 						imBox.getGroupId(),
 						imBox.getFolderId(),
 						"PJ du message " + messageId,
 						"PJ du message " + messageId,
 						new ServiceContext());
-				
+
 				for (Long attachFileId : attachFileIds) {
 					logger.info("Copying file " + attachFileId + " to IM_BOX, folder " + attachedFilesFolder.getFolderId());
 					FileEntry referenceFile = FileUtilsLocalServiceUtil.copyFileEntry(userId, attachFileId, attachedFilesFolder.getFolderId(), true);
