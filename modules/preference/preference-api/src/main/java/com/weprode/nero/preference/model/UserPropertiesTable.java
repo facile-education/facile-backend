@@ -59,6 +59,10 @@ public class UserPropertiesTable extends BaseTable<UserPropertiesTable> {
 		createColumn(
 			"lastSynchroDate", Date.class, Types.TIMESTAMP,
 			Column.FLAG_DEFAULT);
+	public final Column<UserPropertiesTable, Date> lastDashboardAccessDate =
+		createColumn(
+			"lastDashboardAccessDate", Date.class, Types.TIMESTAMP,
+			Column.FLAG_DEFAULT);
 
 	private UserPropertiesTable() {
 		super("Preference_UserProperties", UserPropertiesTable::new);

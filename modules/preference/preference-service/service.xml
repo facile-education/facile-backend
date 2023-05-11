@@ -16,6 +16,7 @@
 		<column name="webdavActivated" type="boolean"/>
 		<column name="termsOfUseAgreedDate" type="Date"/>
 		<column name="lastSynchroDate" type="Date"/>
+		<column name="lastDashboardAccessDate" type="Date"/>
 
 		<finder return-type="Collection" name="etabId_manualAccount">
 			<finder-column name="etabId" />

@@ -217,6 +217,20 @@ public interface UserPropertiesModel extends BaseModel<UserProperties> {
 	 */
 	public void setLastSynchroDate(Date lastSynchroDate);
 
+	/**
+	 * Returns the last dashboard access date of this user properties.
+	 *
+	 * @return the last dashboard access date of this user properties
+	 */
+	public Date getLastDashboardAccessDate();
+
+	/**
+	 * Sets the last dashboard access date of this user properties.
+	 *
+	 * @param lastDashboardAccessDate the last dashboard access date of this user properties
+	 */
+	public void setLastDashboardAccessDate(Date lastDashboardAccessDate);
+
 	@Override
 	public UserProperties cloneWithOriginalValues();
 

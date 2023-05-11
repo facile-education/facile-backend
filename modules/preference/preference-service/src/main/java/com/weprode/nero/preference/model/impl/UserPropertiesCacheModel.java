@@ -63,7 +63,7 @@ public class UserPropertiesCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{userId=");
 		sb.append(userId);
@@ -83,6 +83,8 @@ public class UserPropertiesCacheModel
 		sb.append(termsOfUseAgreedDate);
 		sb.append(", lastSynchroDate=");
 		sb.append(lastSynchroDate);
+		sb.append(", lastDashboardAccessDate=");
+		sb.append(lastDashboardAccessDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -122,6 +124,14 @@ public class UserPropertiesCacheModel
 			userPropertiesImpl.setLastSynchroDate(new Date(lastSynchroDate));
 		}
 
+		if (lastDashboardAccessDate == Long.MIN_VALUE) {
+			userPropertiesImpl.setLastDashboardAccessDate(null);
+		}
+		else {
+			userPropertiesImpl.setLastDashboardAccessDate(
+				new Date(lastDashboardAccessDate));
+		}
+
 		userPropertiesImpl.resetOriginalValues();
 
 		return userPropertiesImpl;
@@ -143,6 +153,7 @@ public class UserPropertiesCacheModel
 		webdavActivated = objectInput.readBoolean();
 		termsOfUseAgreedDate = objectInput.readLong();
 		lastSynchroDate = objectInput.readLong();
+		lastDashboardAccessDate = objectInput.readLong();
 	}
 
 	@Override
@@ -167,6 +178,7 @@ public class UserPropertiesCacheModel
 		objectOutput.writeBoolean(webdavActivated);
 		objectOutput.writeLong(termsOfUseAgreedDate);
 		objectOutput.writeLong(lastSynchroDate);
+		objectOutput.writeLong(lastDashboardAccessDate);
 	}
 
 	public long userId;
@@ -178,5 +190,6 @@ public class UserPropertiesCacheModel
 	public boolean webdavActivated;
 	public long termsOfUseAgreedDate;
 	public long lastSynchroDate;
+	public long lastDashboardAccessDate;
 
 }

@@ -42,6 +42,8 @@ public class UserPropertiesSoap implements Serializable {
 		soapModel.setWebdavActivated(model.isWebdavActivated());
 		soapModel.setTermsOfUseAgreedDate(model.getTermsOfUseAgreedDate());
 		soapModel.setLastSynchroDate(model.getLastSynchroDate());
+		soapModel.setLastDashboardAccessDate(
+			model.getLastDashboardAccessDate());
 
 		return soapModel;
 	}
@@ -184,6 +186,14 @@ public class UserPropertiesSoap implements Serializable {
 		_lastSynchroDate = lastSynchroDate;
 	}
 
+	public Date getLastDashboardAccessDate() {
+		return _lastDashboardAccessDate;
+	}
+
+	public void setLastDashboardAccessDate(Date lastDashboardAccessDate) {
+		_lastDashboardAccessDate = lastDashboardAccessDate;
+	}
+
 	private long _userId;
 	private boolean _manualAccount;
 	private boolean _hideMenu;
@@ -193,5 +203,6 @@ public class UserPropertiesSoap implements Serializable {
 	private boolean _webdavActivated;
 	private Date _termsOfUseAgreedDate;
 	private Date _lastSynchroDate;
+	private Date _lastDashboardAccessDate;
 
 }
