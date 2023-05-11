@@ -87,4 +87,18 @@
 
 	<entity name="SchoolAdmin" local-service="true" remote-service="true" />
 
+	<entity name="NewsAdmin" local-service="true" remote-service="true">
+		<column name="newsAdminId" type="long" primary="true" />
+		<column name="userId" type="long"/>
+		<column name="schoolId" type="long"/>
+
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+
+		<finder return-type="Collection" name="schoolId">
+			<finder-column name="schoolId"/>
+		</finder>
+	</entity>
+
 </service-builder>

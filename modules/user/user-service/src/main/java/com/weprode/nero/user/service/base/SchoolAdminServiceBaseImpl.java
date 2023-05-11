@@ -30,6 +30,7 @@ import com.weprode.nero.user.service.SchoolAdminServiceUtil;
 import com.weprode.nero.user.service.persistence.AffectationPersistence;
 import com.weprode.nero.user.service.persistence.LDAPMappingFinder;
 import com.weprode.nero.user.service.persistence.LDAPMappingPersistence;
+import com.weprode.nero.user.service.persistence.NewsAdminPersistence;
 import com.weprode.nero.user.service.persistence.UserContactPersistence;
 import com.weprode.nero.user.service.persistence.UserRelationshipPersistence;
 import com.weprode.nero.user.service.persistence.UserUtilsFinder;
@@ -136,6 +137,9 @@ public abstract class SchoolAdminServiceBaseImpl
 
 	@Reference
 	protected LDAPMappingFinder ldapMappingFinder;
+
+	@Reference
+	protected NewsAdminPersistence newsAdminPersistence;
 
 	@Reference
 	protected com.weprode.nero.user.service.SchoolAdminLocalService

@@ -18,6 +18,11 @@
 		<field name="INE" type="String" />
 		<field name="EntEleveStructRattachId" type="String" />
 	</model>
+	<model name="com.weprode.nero.user.model.NewsAdmin">
+		<field name="newsAdminId" type="long" />
+		<field name="userId" type="long" />
+		<field name="schoolId" type="long" />
+	</model>
 	<model name="com.weprode.nero.user.model.UserContact">
 		<field name="contactId" type="long" />
 		<field name="userId" type="long" />
