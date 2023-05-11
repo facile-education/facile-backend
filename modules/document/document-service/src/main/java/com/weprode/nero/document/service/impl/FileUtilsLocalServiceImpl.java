@@ -18,6 +18,7 @@ import com.liferay.document.library.kernel.exception.DuplicateFileEntryException
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
@@ -84,7 +85,9 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		final User user = UserLocalServiceUtil.getUser(userId);
 
 		final FileEntry originFile = DLAppServiceUtil.getFileEntry(fileId);
-		final Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
+		// Using LocalService here to avoid VIEW permission exception
+		// Example : Sender (!= userId) is copying attached file to recipient folder
+		final Folder destFolder = DLAppLocalServiceUtil.getFolder(destFolderId);
 
 		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
 			boolean isSignet = false;
