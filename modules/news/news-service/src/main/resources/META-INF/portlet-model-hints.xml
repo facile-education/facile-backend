@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.news.model.News">
+		<field name="newsId" type="long" />
+		<field name="title" type="String" />
+		<field name="content" type="String" />
+		<field name="authorId" type="long" />
+		<field name="isSchoolNews" type="boolean" />
+		<field name="isImportant" type="boolean" />
+		<field name="expirationDate" type="Date" />
+		<field name="publicationDate" type="Date" />
+		<field name="modificationDate" type="Date" />
+		<field name="imageId" type="long" />
+	</model>
+	<model name="com.weprode.nero.news.model.NewsAttachedFile">
+		<field name="newsId" type="long" />
+		<field name="fileId" type="long" />
+		<field name="fileName" type="String" />
+	</model>
+	<model name="com.weprode.nero.news.model.NewsPopulation">
+		<field name="newsId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="roleId" type="long" />
+	</model>
+	<model name="com.weprode.nero.news.model.NewsRead">
+		<field name="newsId" type="long" />
+		<field name="userId" type="long" />
+		<field name="readDate" type="Date" />
+	</model>
+</model-hints>
