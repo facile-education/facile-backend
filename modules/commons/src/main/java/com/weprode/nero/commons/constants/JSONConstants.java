@@ -426,6 +426,23 @@ public class JSONConstants {
     public static final String CREATED_EVENT = "createdEvent";
     public static final String LOCATION = "location";
 
+    // Dashboard
+    public static final String HAS_ACTIVITY_THREAD_WIDGET = "hasActivityThreadWidget";
+    public static final String HAS_SCHOOL_NEWS_WIDGET = "hasSchoolNewsWidget";
+    public static final String HAS_DIARY_WIDGET = "hasDiaryWidget";
+    public static final String HAS_HOMEWORK_WIDGET = "hasHomeworkWidget";
+    public static final String HAS_EDT_WIDGET = "hasEDTWidget";
+    public static final String HAS_STATISTIC_WIDGET = "hasStatisticWidget";
+    public static final String IS_DELEGATE = "isDelegate";
+    public static final String CAN_ADD_GROUP_NEWS = "canAddGroupNews";
+    public static final String CAN_ADD_SCHOOL_NEWS = "canAddSchoolNews";
+    public static final String CAN_ADD_EVENTS = "canAddEvents";
+    public static final String IMPORTANT_NEWS = "importantNews";
+    public static final String SESSION_URL = "sessionUrl";
+    public static final String EVENT_LIST = "eventList";
+    public static final String LAST_DASHBOARD_ACCESS_DATE = "lastDashboardAccessDate";
+    public static final String NB_NEW_ACTIVITIES = "nbNewActivities";
+
     // Statistics
     public static final String DATASETS = "datasets";
     public static final String POINT_BORDER_COLOR = "pointBorderColor";

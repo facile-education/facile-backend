@@ -1,0 +1,7 @@
+Bundle-Name: dashboard-api
+Bundle-SymbolicName: com.weprode.nero.dashboard.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.dashboard.service
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../dashboard-service/service.xml
