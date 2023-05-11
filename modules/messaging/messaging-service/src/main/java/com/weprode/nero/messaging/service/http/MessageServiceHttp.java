@@ -557,6 +557,44 @@ public class MessageServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject sendAssistanceMessage(
+			HttpPrincipal httpPrincipal, long applicationId, String content,
+			boolean isSuggestion, String attachFiles)
+		throws Exception {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				MessageServiceUtil.class, "sendAssistanceMessage",
+				_sendAssistanceMessageParameterTypes14);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, applicationId, content, isSuggestion, attachFiles);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof Exception) {
+					throw (Exception)exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(MessageServiceHttp.class);
 
 	private static final Class<?>[] _getThreadsParameterTypes0 = new Class[] {
@@ -599,5 +637,7 @@ public class MessageServiceHttp {
 			long.class, String.class, String.class, String.class, String.class,
 			long.class, long.class, boolean.class, boolean.class, boolean.class
 		};
+	private static final Class<?>[] _sendAssistanceMessageParameterTypes14 =
+		new Class[] {long.class, String.class, boolean.class, String.class};
 
 }

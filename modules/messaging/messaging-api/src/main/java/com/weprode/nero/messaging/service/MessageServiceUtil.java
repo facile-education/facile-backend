@@ -126,6 +126,15 @@ public class MessageServiceUtil {
 			isSupport);
 	}
 
+	public static org.json.JSONObject sendAssistanceMessage(
+			long applicationId, java.lang.String content, boolean isSuggestion,
+			java.lang.String attachFiles)
+		throws java.lang.Exception {
+
+		return getService().sendAssistanceMessage(
+			applicationId, content, isSuggestion, attachFiles);
+	}
+
 	public static org.json.JSONObject sendMessage(
 			java.lang.String recipients, java.lang.String subject,
 			java.lang.String content, java.lang.String attachedFiles,

@@ -125,6 +125,16 @@ public class MessageServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject sendAssistanceMessage(
+			long applicationId, String content, boolean isSuggestion,
+			String attachFiles)
+		throws Exception {
+
+		return _messageService.sendAssistanceMessage(
+			applicationId, content, isSuggestion, attachFiles);
+	}
+
+	@Override
 	public org.json.JSONObject sendMessage(
 			String recipients, String subject, String content,
 			String attachedFiles, long draftMessageId, long originMessageId,
