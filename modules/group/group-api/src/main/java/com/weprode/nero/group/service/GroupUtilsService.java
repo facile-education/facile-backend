@@ -55,11 +55,6 @@ public interface GroupUtilsService extends BaseService {
 	public JSONObject getGroupActivity(
 		long groupId, String maxDate, int nbResults);
 
-	@JSONWebService(method = "GET", value = "get-group-history")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getGroupHistory(
-		long groupId, String maxDate, int nbResults);
-
 	@JSONWebService(method = "GET", value = "get-group-members")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getGroupMembers(long groupId);
@@ -70,14 +65,6 @@ public interface GroupUtilsService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
-
-	@JSONWebService(method = "GET", value = "get-specific-group-activities")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getSpecificGroupActivities(
-		long groupId, String maxDate, int nbResults, boolean allHistory,
-		boolean containNews, boolean containDocs, boolean containMembership,
-		boolean containPendingFirings, boolean containFirings,
-		boolean containHomework, boolean containSessions);
 
 	@JSONWebService(method = "GET", value = "get-user-collaborative-groups")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -90,10 +77,5 @@ public interface GroupUtilsService extends BaseService {
 	public JSONObject getUserGroups(
 		long schoolId, boolean includeInstitutional, boolean includeCommunities,
 		boolean pedagogicalOnly);
-
-	@JSONWebService(method = "GET", value = "get-users-completion")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getUsersCompletion(
-		String query, long schoolId, long roleId);
 
 }

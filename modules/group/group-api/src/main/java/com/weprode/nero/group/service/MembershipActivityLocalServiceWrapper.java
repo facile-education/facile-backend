@@ -299,16 +299,6 @@ public class MembershipActivityLocalServiceWrapper
 			start, end);
 	}
 
-	@Override
-	public java.util.List<com.weprode.nero.group.model.MembershipActivity>
-		getMembershipActivities(
-			java.util.List<Long> groupIdList, long actionUserId, int start,
-			int end) {
-
-		return _membershipActivityLocalService.getMembershipActivities(
-			groupIdList, actionUserId, start, end);
-	}
-
 	/**
 	 * Returns the number of membership activities.
 	 *
@@ -340,20 +330,12 @@ public class MembershipActivityLocalServiceWrapper
 		getMembershipActivity(
 			long userId, java.util.List<Long> groupIdList,
 			java.util.Date minDate, java.util.Date maxDate,
-			boolean includeSelf) {
+			boolean includeUserActions, boolean onlyWithUserBeingTarget,
+			boolean withAdd, boolean withRemovals) {
 
 		return _membershipActivityLocalService.getMembershipActivity(
-			userId, groupIdList, minDate, maxDate, includeSelf);
-	}
-
-	@Override
-	public java.util.List<com.weprode.nero.group.model.MembershipActivity>
-		getMembershipHistory(
-			long userId, java.util.List<Long> groupIdList,
-			java.util.Date minDate, java.util.Date maxDate) {
-
-		return _membershipActivityLocalService.getMembershipHistory(
-			userId, groupIdList, minDate, maxDate);
+			userId, groupIdList, minDate, maxDate, includeUserActions,
+			onlyWithUserBeingTarget, withAdd, withRemovals);
 	}
 
 	/**

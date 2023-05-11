@@ -177,6 +177,9 @@ public class JSONConstants {
     public static final String TARGET_USER_NAMES = "targetUserNames";
     public static final String SHORT_TARGET_USER_NAMES = "shortTargetUserNames";
     public static final String GROUP_LINK = "groupLink";
+    public static final String PARENT_FOLDER_ID = "parentFolderId";
+    public static final String IS_FOR_ALL_STUDENTS = "isForAllStudents";
+    public static final String NB_STUDENTS = "nbStudents";
 
     // Menu
     public static final String MENU = "menu";
@@ -351,6 +354,7 @@ public class JSONConstants {
     public static final String NB_REGISTERED = "nbRegistered";
     public static final String CDT_SESSION_ID = "cdtSessionId";
     public static final String REGISTERER_ID = "registererId";
+    public static final String SESSION_NAME = "sessionName";
 
     // Messaging
     public static final String RECIPIENTS = "recipients";
@@ -427,6 +431,11 @@ public class JSONConstants {
     public static final String DATA = "data";
     public static final String SCHOOL_NEWS_COUNT = "schoolNewsCount";
     public static final String GROUP_NEWS_COUNT = "groupNewsCount";
+    public static final String PREVIOUS_GROUP_NEWS_COUNT = "previousGroupNewsCount";
+    public static final String NB_CONNEXIONS = "nbConnexions";
+    public static final String PREVIOUS_NB_CONNEXIONS = "previousNbConnexions";
+    public static final String ACTIVE_USERS_COUNT = "activeUsersCount";
+    public static final String PREVIOUS_ACTIVE_USERS_COUNT = "previousActiveUsersCount";
 
     // Help
     public static final String HELP_TREE = "helpTree";

@@ -36,6 +36,13 @@ public class DocumentUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.DocumentUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static org.json.JSONObject getDocumentGroupActivity(
+		long groupId, String maxDate, int nbResults) {
+
+		return getService().getDocumentGroupActivity(
+			groupId, maxDate, nbResults);
+	}
+
 	public static org.json.JSONObject getGlobalDocumentsProperties()
 		throws PortalException, SystemException {
 

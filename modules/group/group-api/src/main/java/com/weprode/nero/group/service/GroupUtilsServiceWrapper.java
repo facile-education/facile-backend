@@ -38,13 +38,6 @@ public class GroupUtilsServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getGroupHistory(
-		long groupId, String maxDate, int nbResults) {
-
-		return _groupUtilsService.getGroupHistory(groupId, maxDate, nbResults);
-	}
-
-	@Override
 	public org.json.JSONObject getGroupMembers(long groupId) {
 		return _groupUtilsService.getGroupMembers(groupId);
 	}
@@ -57,19 +50,6 @@ public class GroupUtilsServiceWrapper
 	@Override
 	public String getOSGiServiceIdentifier() {
 		return _groupUtilsService.getOSGiServiceIdentifier();
-	}
-
-	@Override
-	public org.json.JSONObject getSpecificGroupActivities(
-		long groupId, String maxDate, int nbResults, boolean allHistory,
-		boolean containNews, boolean containDocs, boolean containMembership,
-		boolean containPendingFirings, boolean containFirings,
-		boolean containHomework, boolean containSessions) {
-
-		return _groupUtilsService.getSpecificGroupActivities(
-			groupId, maxDate, nbResults, allHistory, containNews, containDocs,
-			containMembership, containPendingFirings, containFirings,
-			containHomework, containSessions);
 	}
 
 	@Override
@@ -89,13 +69,6 @@ public class GroupUtilsServiceWrapper
 		return _groupUtilsService.getUserGroups(
 			schoolId, includeInstitutional, includeCommunities,
 			pedagogicalOnly);
-	}
-
-	@Override
-	public org.json.JSONObject getUsersCompletion(
-		String query, long schoolId, long roleId) {
-
-		return _groupUtilsService.getUsersCompletion(query, schoolId, roleId);
 	}
 
 	@Override

@@ -120,45 +120,13 @@ public class GroupUtilsServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject getUsersCompletion(
-		HttpPrincipal httpPrincipal, String query, long schoolId, long roleId) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				GroupUtilsServiceUtil.class, "getUsersCompletion",
-				_getUsersCompletionParameterTypes2);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, query, schoolId, roleId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static org.json.JSONObject getGroupMembers(
 		HttpPrincipal httpPrincipal, long groupId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				GroupUtilsServiceUtil.class, "getGroupMembers",
-				_getGroupMembersParameterTypes3);
+				_getGroupMembersParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId);
 
@@ -190,78 +158,7 @@ public class GroupUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GroupUtilsServiceUtil.class, "getGroupActivity",
-				_getGroupActivityParameterTypes4);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, groupId, maxDate, nbResults);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	public static org.json.JSONObject getSpecificGroupActivities(
-		HttpPrincipal httpPrincipal, long groupId, String maxDate,
-		int nbResults, boolean allHistory, boolean containNews,
-		boolean containDocs, boolean containMembership,
-		boolean containPendingFirings, boolean containFirings,
-		boolean containHomework, boolean containSessions) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				GroupUtilsServiceUtil.class, "getSpecificGroupActivities",
-				_getSpecificGroupActivitiesParameterTypes5);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, groupId, maxDate, nbResults, allHistory, containNews,
-				containDocs, containMembership, containPendingFirings,
-				containFirings, containHomework, containSessions);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	public static org.json.JSONObject getGroupHistory(
-		HttpPrincipal httpPrincipal, long groupId, String maxDate,
-		int nbResults) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				GroupUtilsServiceUtil.class, "getGroupHistory",
-				_getGroupHistoryParameterTypes6);
+				_getGroupActivityParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, groupId, maxDate, nbResults);
@@ -294,19 +191,9 @@ public class GroupUtilsServiceHttp {
 		new Class[] {long.class, boolean.class, boolean.class, boolean.class};
 	private static final Class<?>[] _getUserCollaborativeGroupsParameterTypes1 =
 		new Class[] {String.class, boolean.class, boolean.class, boolean.class};
-	private static final Class<?>[] _getUsersCompletionParameterTypes2 =
-		new Class[] {String.class, long.class, long.class};
-	private static final Class<?>[] _getGroupMembersParameterTypes3 =
+	private static final Class<?>[] _getGroupMembersParameterTypes2 =
 		new Class[] {long.class};
-	private static final Class<?>[] _getGroupActivityParameterTypes4 =
-		new Class[] {long.class, String.class, int.class};
-	private static final Class<?>[] _getSpecificGroupActivitiesParameterTypes5 =
-		new Class[] {
-			long.class, String.class, int.class, boolean.class, boolean.class,
-			boolean.class, boolean.class, boolean.class, boolean.class,
-			boolean.class, boolean.class
-		};
-	private static final Class<?>[] _getGroupHistoryParameterTypes6 =
+	private static final Class<?>[] _getGroupActivityParameterTypes3 =
 		new Class[] {long.class, String.class, int.class};
 
 }

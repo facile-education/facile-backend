@@ -274,74 +274,10 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "get-users-completion", method="GET")
-    public JSONObject getUsersCompletion (String query, long schoolId, long roleId) {
-        JSONObject result = new JSONObject();
-
-        User user;
-        try {
-            user = getGuestOrUser();
-            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                return result;
-            }
-            if (!RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-                throw new Exception();
-            }
-            logger.info("User " + user.getFullName() + " search users with query " + query);
-        } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
-        }
-
-        try {
-            List<Long> schoolIds = new ArrayList<>();
-            if (schoolId > 0) {
-                schoolIds.add(schoolId);
-            }
-
-            List<Long> roleIds = new ArrayList<>();
-            if (roleId > 0) {
-                roleIds.add(roleId);
-            }
-
-            OrderByComparator obc = new UserLastNameCaseInsensitiveComparator(true);
-
-            List<User> results = ContactLocalServiceUtil.directorySearch(user, query, new ArrayList<>(), schoolIds, roleIds,
-                    null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
-            // TODO Convert to JSON with user profil and school ? -> UserUtils ?
-            JSONArray contacts = new JSONArray();
-
-            for (User contact : results) {
-                JSONObject contactJSON = new JSONObject();
-                contactJSON.put(JSONConstants.USER_ID, contact.getUserId());
-                contactJSON.put(JSONConstants.FIRST_NAME, contact.getFirstName());
-                contactJSON.put(JSONConstants.LAST_NAME, contact.getLastName());
-                contactJSON.put(JSONConstants.SCREEN_NAME, contact.getScreenName());
-                Organization contactSchool = UserOrgsLocalServiceUtil.getEtabRatachement(contact);
-                contactJSON.put(JSONConstants.SCHOOL_ID, contactSchool.getOrganizationId());
-                contactJSON.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(contactSchool.getName(), true));
-                // List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserSchools(contact);
-                // contactJSON.put("schoolId", userSchools.get(0).getOrganizationId());
-                // contactJSON.put("schoolName", userSchools.get(0).getName());
-                contactJSON.put(JSONConstants.ROLES, RoleUtilsLocalServiceUtil.displayUserRoles(contact));
-                contacts.put(contactJSON);
-            }
-            result.put(JSONConstants.RESULTS, contacts);
-            result.put(JSONConstants.SUCCESS, true);
-
-            return result;
-        } catch (Exception e) {
-            logger.error("Error in auto-completion", e);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
-        }
-    }
-
     @JSONWebService(value = "get-group-members", method = "GET")
     public JSONObject getGroupMembers(long groupId) {
         JSONObject result = new JSONObject();
-
+        
         User user;
         try {
             user = getGuestOrUser();
@@ -366,11 +302,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 if (groupMembers != null) {
                     for (User member : groupMembers) {
                         if (member.isActive()) {
-                            JSONObject jsonMember = new JSONObject();
-                            jsonMember.put(JSONConstants.USER_ID, member.getUserId());
-                            jsonMember.put(JSONConstants.USER_NAME, member.getLastName() + " " + member.getFirstName());
-                            jsonMember.put(JSONConstants.FIRST_NAME, member.getFirstName());
-                            jsonMember.put(JSONConstants.LAST_NAME, member.getLastName());
+                            JSONObject jsonMember = ContactLocalServiceUtil.convertUserToJson(member);
                             jsonMember.put(JSONConstants.IS_TEACHER, RoleUtilsLocalServiceUtil.isTeacher(member));
                             jsonMember.put(JSONConstants.IS_PARENT, RoleUtilsLocalServiceUtil.isParent(member));
                             jsonMember.put(JSONConstants.IS_STUDENT, RoleUtilsLocalServiceUtil.isStudent(member));
@@ -386,9 +318,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 if (groupMembers != null) {
                     for (User member : groupMembers) {
                         if (member.isActive() && (!isClassOrCours || !RoleUtilsLocalServiceUtil.isParent(member))) {
-                            JSONObject jsonMember = new JSONObject();
-                            jsonMember.put(JSONConstants.USER_ID, member.getUserId());
-                            jsonMember.put(JSONConstants.USER_NAME, member.getLastName() + " " + member.getFirstName());
+                            JSONObject jsonMember = ContactLocalServiceUtil.convertUserToJson(member);
                             jsonMember.put(JSONConstants.IS_TEACHER, RoleUtilsLocalServiceUtil.isTeacher(member));
                             jsonMember.put(JSONConstants.IS_PARENT, RoleUtilsLocalServiceUtil.isParent(member));
                             jsonMember.put(JSONConstants.IS_STUDENT, RoleUtilsLocalServiceUtil.isStudent(member));
@@ -410,88 +340,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
     @JSONWebService(value = "get-group-activity", method = "GET")
     public JSONObject getGroupActivity(long groupId, String maxDate, int nbResults) {
-        JSONObject result = new JSONObject();
-        result.put(JSONConstants.SUCCESS, false);
 
-        User user;
-        try {
-            user = getGuestOrUser();
-            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                return result;
-            }
-            logger.info("User " + user.getFullName() + " fetches activity for groupId " + groupId);
-        } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
-        }
-
-        try {
-            JSONArray jsonActivities = new JSONArray();
-            List<Long> groupIds = new ArrayList<>();
-            groupIds.add(groupId);
-            Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
-            List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults);
-            for (GroupActivity groupActivity : groupActivities) {
-                JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);
-                if (jsonActivity != null) {
-                    jsonActivities.put(jsonActivity);
-                }
-            }
-            result.put(JSONConstants.ACTIVITIES, jsonActivities);
-            result.put(JSONConstants.SUCCESS, true);
-
-        } catch (Exception e) {
-            logger.error("Error while fetching activity for groupId " + groupId, e);
-        }
-
-        return result;
-    }
-
-    @JSONWebService(value = "get-specific-group-activities", method = "GET")
-    public JSONObject getSpecificGroupActivities(long groupId, String maxDate, int nbResults, boolean allHistory, boolean containNews, boolean containDocs, boolean containMembership, boolean containPendingFirings, boolean containFirings, boolean containHomework, boolean containSessions) {
-        JSONObject result = new JSONObject();
-
-        result.put(JSONConstants.SUCCESS, false);
-
-        User user;
-        try {
-            user = getGuestOrUser();
-            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                return result;
-            }
-
-            logger.info("User " + user.getFullName() + " fetches activity for groupId " + groupId);
-        } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
-        }
-
-        try {
-            JSONArray jsonActivities = new JSONArray();
-            List<Long> groupIds = new ArrayList<>();
-            groupIds.add(groupId);
-            Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
-            List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults, allHistory, containNews, containDocs, containMembership, containPendingFirings, containFirings, containHomework, containSessions);
-            for (GroupActivity groupActivity : groupActivities) {
-                JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);
-                if (jsonActivity != null) {
-                    jsonActivities.put(jsonActivity);
-                }
-            }
-            result.put(JSONConstants.ACTIVITIES, jsonActivities);
-            result.put(JSONConstants.SUCCESS, true);
-
-        } catch (Exception e) {
-            logger.error("Error while fetching activity for groupId " + groupId, e);
-        }
-
-        return result;
-    }
-
-    @JSONWebService(value = "get-group-history", method = "GET")
-    public JSONObject getGroupHistory(long groupId, String maxDate, int nbResults) {
         JSONObject result = new JSONObject();
         result.put(JSONConstants.SUCCESS, false);
 
@@ -510,10 +359,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
         try {
             JSONArray jsonActivities = new JSONArray();
-            List<Long> groupIds = new ArrayList<>();
-            groupIds.add(groupId);
-            Date maximumDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(maxDate);
-            List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getGroupsHistory(user.getUserId(), groupIds, maximumDate, nbResults);
+            Date maximumDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDate);
+            List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getFullGroupActivities(user.getUserId(), groupId, maximumDate, nbResults);
             for (GroupActivity groupActivity : groupActivities) {
                 JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);
                 if (jsonActivity != null) {

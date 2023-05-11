@@ -102,7 +102,9 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
     }
 
     public List<Activity> getGroupsActivities(long userId, List<Long> groupIdList, Date minDate, Date maxDate,
-                                              boolean fullHistory) {
+                                              boolean includeUserActivity, boolean withFileCreation,
+                                              boolean withFileModification, boolean withFolderCreation,
+                                              boolean withFolderModification) {
         List<Activity> activityList = new ArrayList<>();
 
         Session session = null;
@@ -114,7 +116,7 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
             DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Activity.class, classLoader);
 
             // Full history contains current user's activity
-            if (!fullHistory) {
+            if (!includeUserActivity) {
                 dynamicQuery.add(PropertyFactoryUtil.forName("userId").ne(userId));
             }
 
@@ -131,7 +133,9 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
             for (Activity activity : activityList) {
                 try {
                     int type = activity.getType();
-                    if (type == ActivityConstants.TYPE_FILE_CREATION || type == ActivityConstants.TYPE_FILE_MODIFICATION || type == ActivityConstants.TYPE_FILE_MOVE) {
+                    if ((type == ActivityConstants.TYPE_FILE_CREATION && withFileCreation) ||
+                            (type == ActivityConstants.TYPE_FILE_MODIFICATION && withFileModification) ||
+                            (type == ActivityConstants.TYPE_FILE_MOVE && withFileModification)) {
 
                         // Check that the user has the READ permission on the file
                         FileEntry fileEntry = DLAppServiceUtil.getFileEntry(activity.getFileEntryId());
@@ -140,7 +144,9 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
                         }
 
                         // Folders activity appear in full history only
-                    } else if (type != ActivityConstants.TYPE_FOLDER_DELETION && fullHistory) {
+                    } else if ((type == ActivityConstants.TYPE_FOLDER_CREATION && withFolderCreation) ||
+                            (type == ActivityConstants.TYPE_FOLDER_MODIFICATION && withFolderModification) ||
+                            (type == ActivityConstants.TYPE_FOLDER_MOVE && withFolderModification)) {
 
                         // Check that the user has the READ permission on the folder
                         Folder folder = DLAppServiceUtil.getFolder(activity.getFolderId());
@@ -148,7 +154,7 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
                             filteredActivityList.add(activity);
                         }
                     } else if (type == ActivityConstants.TYPE_FILE_DELETION || type == ActivityConstants.TYPE_FOLDER_DELETION) {
-                        // TODO Can user see it ?
+                        // No one can see them because it implies some accessibility issues
                         //filteredActivityList.add(activity);
                     }
                 } catch (Exception e) {

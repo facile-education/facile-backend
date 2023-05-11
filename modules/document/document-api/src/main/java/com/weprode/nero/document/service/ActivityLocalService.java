@@ -253,11 +253,9 @@ public interface ActivityLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Activity> getGroupsActivity(
 		long userId, List<Long> groupIdList, Date minDate, Date maxDate,
-		boolean fullHistory);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Activity> getGroupsHistory(
-		long userId, List<Long> groupIdList, Date minDate, Date maxDate);
+		boolean includeUserActivity, boolean withFileCreation,
+		boolean withFileModification, boolean withFolderCreation,
+		boolean withFolderModification);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();

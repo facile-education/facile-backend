@@ -230,8 +230,8 @@ public class DLAppUtil {
                 }
             }
 
-            if (fileEntry != null) {
-                // Register activity
+            // Register activity except for ._NEWS_ folder
+            if (fileEntry != null && !folder.getName().equals(DocumentConstants.NEWS_FOLDER_NAME)) {
                 ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_CREATION);
             }
 

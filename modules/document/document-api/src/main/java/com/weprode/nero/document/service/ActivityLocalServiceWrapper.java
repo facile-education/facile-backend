@@ -312,20 +312,14 @@ public class ActivityLocalServiceWrapper
 		getGroupsActivity(
 			long userId, java.util.List<Long> groupIdList,
 			java.util.Date minDate, java.util.Date maxDate,
-			boolean fullHistory) {
+			boolean includeUserActivity, boolean withFileCreation,
+			boolean withFileModification, boolean withFolderCreation,
+			boolean withFolderModification) {
 
 		return _activityLocalService.getGroupsActivity(
-			userId, groupIdList, minDate, maxDate, fullHistory);
-	}
-
-	@Override
-	public java.util.List<com.weprode.nero.document.model.Activity>
-		getGroupsHistory(
-			long userId, java.util.List<Long> groupIdList,
-			java.util.Date minDate, java.util.Date maxDate) {
-
-		return _activityLocalService.getGroupsHistory(
-			userId, groupIdList, minDate, maxDate);
+			userId, groupIdList, minDate, maxDate, includeUserActivity,
+			withFileCreation, withFileModification, withFolderCreation,
+			withFolderModification);
 	}
 
 	@Override

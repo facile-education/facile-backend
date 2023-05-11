@@ -50,6 +50,11 @@ public interface DocumentUtilsService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.DocumentUtilsServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the document utils remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link DocumentUtilsServiceUtil} if injection and service tracking are not available.
 	 */
+	@JSONWebService(method = "GET", value = "get-document-group-activity")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getDocumentGroupActivity(
+		long groupId, String maxDate, int nbResults);
+
 	@JSONWebService(method = "GET", value = "get-global-documents-properties")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getGlobalDocumentsProperties()

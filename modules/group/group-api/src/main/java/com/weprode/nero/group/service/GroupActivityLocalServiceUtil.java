@@ -42,35 +42,31 @@ public class GroupActivityLocalServiceUtil {
 	}
 
 	public static List<com.weprode.nero.group.model.GroupActivity>
-		getGroupsActivities(
+		getDashboardGroupsActivities(
 			long userId, List<Long> groupIds, java.util.Date maxDate,
-			int nbResults) {
+			int nbResults, boolean withNews, boolean withDocs,
+			boolean withMemberships, boolean withSchoollife,
+			boolean withSessions) {
 
-		return getService().getGroupsActivities(
-			userId, groupIds, maxDate, nbResults);
+		return getService().getDashboardGroupsActivities(
+			userId, groupIds, maxDate, nbResults, withNews, withDocs,
+			withMemberships, withSchoollife, withSessions);
 	}
 
 	public static List<com.weprode.nero.group.model.GroupActivity>
-		getGroupsActivities(
-			long userId, List<Long> groupIds, java.util.Date maxDate,
-			int nbResults, boolean allHistory, boolean containNews,
-			boolean containDocs, boolean containMembership,
-			boolean containPendingFirings, boolean containFirings,
-			boolean containHomework, boolean containsSessions) {
+		getDocumentGroupActivities(
+			long userId, long groupId, java.util.Date maxDate, int nbResults) {
 
-		return getService().getGroupsActivities(
-			userId, groupIds, maxDate, nbResults, allHistory, containNews,
-			containDocs, containMembership, containPendingFirings,
-			containFirings, containHomework, containsSessions);
+		return getService().getDocumentGroupActivities(
+			userId, groupId, maxDate, nbResults);
 	}
 
 	public static List<com.weprode.nero.group.model.GroupActivity>
-		getGroupsHistory(
-			long userId, List<Long> groupIds, java.util.Date maxDate,
-			int nbResults) {
+		getFullGroupActivities(
+			long userId, long groupId, java.util.Date maxDate, int nbResults) {
 
-		return getService().getGroupsHistory(
-			userId, groupIds, maxDate, nbResults);
+		return getService().getFullGroupActivities(
+			userId, groupId, maxDate, nbResults);
 	}
 
 	/**

@@ -1,9 +1,11 @@
 package com.weprode.nero.group.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.dao.orm.*;
-
-import org.json.JSONObject;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Order;
+import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -16,6 +18,8 @@ import com.weprode.nero.group.model.MembershipActivity;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.MembershipActivityLocalServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -124,53 +128,31 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
         return membershipActivity;
     }
 
-    public List<MembershipActivity> getMembershipActivities(List<Long> groupIdList, long actionUserId, int start, int end) {
-        if (groupIdList == null || groupIdList.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        DynamicQuery dynamicQuery = MembershipActivityLocalServiceUtil.dynamicQuery();
-        dynamicQuery.add(PropertyFactoryUtil.forName("actionUserId").ne(actionUserId));
-
-        // Using 'in' is much faster than disjunctions
-        Long[] groupIds = new Long[groupIdList.size()];
-        int idx = 0;
-        for (Long groupId : groupIdList) {
-            groupIds[idx] = groupId;
-            idx++;
-        }
-        dynamicQuery.add(PropertyFactoryUtil.forName("groupId").in(groupIds));
-
-        // Order by modification date
-        Order movementDateOrder = OrderFactoryUtil.desc("movementDate");
-        dynamicQuery.addOrder(movementDateOrder);
-
-        dynamicQuery.setLimit(start, end);
-
-        List<MembershipActivity> membershipActivityList = new ArrayList<>();
-        try {
-            // Execute the query
-            membershipActivityList = MembershipActivityLocalServiceUtil.dynamicQuery(dynamicQuery);
-        } catch (Exception e) {
-            logger.error(e);
-        }
-
-        return membershipActivityList;
-    }
-
-    public List<MembershipActivity> getMembershipHistory (long userId, List<Long> groupIdList, Date minDate, Date maxDate) {
-        return getMembershipActivity(userId, groupIdList, minDate, maxDate, true);
-    }
-
-    public List<MembershipActivity> getMembershipActivity (long userId, List<Long> groupIdList, Date minDate, Date maxDate, boolean includeSelf) {
-        if (groupIdList == null || groupIdList.isEmpty()) {
+    public List<MembershipActivity> getMembershipActivity (long userId, List<Long> groupIdList, Date minDate, Date maxDate,
+                                                           boolean includeUserActions, boolean onlyWithUserBeingTarget, boolean withAdd, boolean withRemovals) {
+        if (groupIdList == null || groupIdList.isEmpty() || (!withAdd && !withRemovals)) {
             return new ArrayList<>();
         }
 
         DynamicQuery dynamicQuery = MembershipActivityLocalServiceUtil.dynamicQuery();
 
-        if (!includeSelf) {
+        if (!includeUserActions) {
             dynamicQuery.add(PropertyFactoryUtil.forName("actionUserId").ne(userId));
+        }
+
+        // If we want only actions where the user is a target
+        if (onlyWithUserBeingTarget) {
+            dynamicQuery.add(RestrictionsFactoryUtil.like("targetUserIds", "%" + userId + "%"));
+        }
+
+        // Add only
+        if (withAdd && !withRemovals) {
+            dynamicQuery.add(PropertyFactoryUtil.forName("incoming").eq(true));
+        }
+
+        // Removals only
+        if (!withAdd && withRemovals) {
+            dynamicQuery.add(PropertyFactoryUtil.forName("incoming").eq(false));
         }
 
         Long[] groupIds = groupIdList.toArray(new Long[0]);
@@ -268,6 +250,7 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
 
         try {
             jsonMembershipActivity.put(JSONConstants.ACTIVITY_ID, membershipActivity.getMembershipActivityId());
+            jsonMembershipActivity.put(JSONConstants.GROUP_ID, membershipActivity.getGroupId());
             jsonMembershipActivity.put(JSONConstants.ACTION_USER_ID, membershipActivity.getActionUserId());
 
             // Action user name
@@ -275,39 +258,27 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
             jsonMembershipActivity.put(JSONConstants.ACTION_USER_NAME, actionUser.getFullName());
             jsonMembershipActivity.put(JSONConstants.AUTHOR, actionUser.getFullName());
 
-            // Target user names
-            StringBuilder targetUserNames = new StringBuilder();
-            String shortTargetUserNames = "";
+            // Target users
             String targetUserIds = membershipActivity.getTargetUserIds();
             String[] targetUserIdsTab = targetUserIds.split(",");
 
-            if (targetUserIdsTab.length > 0) {
-                if (targetUserIdsTab.length > 1) {
-                    shortTargetUserNames = targetUserIdsTab.length + " personnes";
-                }
+            JSONArray targetUsers = new JSONArray();
+            for (String targetUserIdStr : targetUserIdsTab) {
+                try {
+                    long targetUserId = Long.parseLong(targetUserIdStr);
+                    User targetUser = UserLocalServiceUtil.getUser(targetUserId);
+                    JSONObject jsonUser = new JSONObject();
+                    jsonUser.put(JSONConstants.USER_ID, targetUser.getUserId());
+                    jsonUser.put(JSONConstants.FIRST_NAME, targetUser.getFirstName());
+                    jsonUser.put(JSONConstants.LAST_NAME, targetUser.getLastName());
 
-                for (int i = 0 ; i < targetUserIdsTab.length ; i++) {
-                    String targetUserIdStr = targetUserIdsTab[i];
-
-                    try {
-                        long targetUserId = Long.parseLong(targetUserIdStr);
-                        User targetUser = UserLocalServiceUtil.getUser(targetUserId);
-                        targetUserNames.append(targetUser.getFullName());
-
-                        if (targetUserIdsTab.length >= 2 && i == targetUserIdsTab.length - 2) {
-                            targetUserNames.append(" et ");
-                        }
-                        if (i < targetUserIdsTab.length - 2) {
-                            targetUserNames.append(", ");
-                        }
-                    } catch (Exception e) {
-                        logger.debug(e);
-                    }
+                    targetUsers.put(jsonUser);
+                } catch (Exception e) {
+                    logger.debug(e);
                 }
             }
-            jsonMembershipActivity.put(JSONConstants.TARGET_USER_NAMES, targetUserNames.toString());
-            jsonMembershipActivity.put(JSONConstants.SHORT_TARGET_USER_NAMES, shortTargetUserNames);
-            jsonMembershipActivity.put(JSONConstants.TARGET, shortTargetUserNames.isEmpty() ? targetUserNames.toString() : shortTargetUserNames);
+
+            jsonMembershipActivity.put(JSONConstants.USERS, targetUsers);
             jsonMembershipActivity.put(JSONConstants.TYPE, membershipActivity.getIncoming() ? ActivityConstants.TYPE_ADD_MEMBERSHIP : ActivityConstants.TYPE_REMOVE_MEMBERSHIP);
             jsonMembershipActivity.put(JSONConstants.MODIFICATION_DATE, sdf.format(membershipActivity.getMovementDate()));
             jsonMembershipActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(membershipActivity.getGroupId()));

@@ -92,24 +92,6 @@ public class GroupUtilsServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject getUsersCompletion(
-			String query, long schoolId, long roleId)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				GroupUtilsServiceUtil.getUsersCompletion(
-					query, schoolId, roleId);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
 	public static org.json.JSONObject getGroupMembers(long groupId)
 		throws RemoteException {
 
@@ -133,47 +115,6 @@ public class GroupUtilsServiceSoap {
 		try {
 			org.json.JSONObject returnValue =
 				GroupUtilsServiceUtil.getGroupActivity(
-					groupId, maxDate, nbResults);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static org.json.JSONObject getSpecificGroupActivities(
-			long groupId, String maxDate, int nbResults, boolean allHistory,
-			boolean containNews, boolean containDocs, boolean containMembership,
-			boolean containPendingFirings, boolean containFirings,
-			boolean containHomework, boolean containSessions)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				GroupUtilsServiceUtil.getSpecificGroupActivities(
-					groupId, maxDate, nbResults, allHistory, containNews,
-					containDocs, containMembership, containPendingFirings,
-					containFirings, containHomework, containSessions);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static org.json.JSONObject getGroupHistory(
-			long groupId, String maxDate, int nbResults)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				GroupUtilsServiceUtil.getGroupHistory(
 					groupId, maxDate, nbResults);
 
 			return returnValue;
