@@ -399,6 +399,22 @@ public class JSONConstants {
     public static final String CATEGORIES = "categories";
     public static final String PERSONALS = "Personnels";
 
+    // News
+    public static final String SCHOOLS_GROUPS = "schoolsGroups";
+    public static final String AUTHOR_ID = "authorId";
+    public static final String AUTHOR_NAME = "authorName";
+    public static final String NEWS_ID = "newsId";
+    public static final String SHORT_CONTENT = "shortContent";
+    public static final String IS_IMPORTANT = "isImportant";
+    public static final String PUBLICATION_DATE = "publicationDate";
+    public static final String HAS_ATTACHED_FILES = "hasAttachedFiles";
+    public static final String IS_EDITABLE = "isEditable";
+    public static final String THUMBNAIL_URL = "thumbnailUrl";
+    public static final String READ_INFOS = "readInfos";
+    public static final String CREATED_NEWS = "createdNews";
+    public static final String EDITED_NEWS = "editedNews";
+    public static final String NB_UNREAD_NEWS = "nbUnreadNews";
+
     // Statistics
     public static final String DATASETS = "datasets";
     public static final String POINT_BORDER_COLOR = "pointBorderColor";

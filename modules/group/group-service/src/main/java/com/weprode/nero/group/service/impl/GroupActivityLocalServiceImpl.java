@@ -1,8 +1,6 @@
 package com.weprode.nero.group.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -15,6 +13,8 @@ import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.model.MembershipActivity;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupActivityLocalServiceBaseImpl;
+import com.weprode.nero.news.model.News;
+import com.weprode.nero.news.service.NewsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
@@ -27,11 +27,16 @@ import com.weprode.nero.schedule.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.school.life.model.Renvoi;
 import com.weprode.nero.school.life.service.RenvoiLocalServiceUtil;
 import com.weprode.nero.school.life.service.persistence.RenvoiPK;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Component(
         property = "model.class.name=com.weprode.nero.group.model.GroupActivity",
@@ -78,14 +83,13 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 logger.info("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
 
                 // Group news
-                // TODO News
-                /*if (containNews) {
+                if (containNews) {
                     List<News> groupNews = NewsLocalServiceUtil.getNews(user, 0, new Date(), 10, true, false, false);
                     for (News news : groupNews) {
                         GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
                         groupActivities.add(newsActivity);
                     }
-                }*/
+                }
 
                 // Document activity
                 if (containDocs) {
@@ -209,8 +213,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         try {
             if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_NEWS) {
 
-                // TODO News
-                // jsonActivity = NewsLocalServiceUtil.convertNewsToJson(groupActivity.getActivityId(), userId, false);
+                jsonActivity = NewsLocalServiceUtil.convertNewsToJson(groupActivity.getActivityId(), userId, false);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_ACTIVITY) {
 

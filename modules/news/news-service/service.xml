@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.news">
+	<namespace>News</namespace>
+
+	<entity name="News" local-service="true" remote-service="true" >
+		<column name="newsId" type="long" primary="true" />
+		<column name="title" type="String" />
+		<column name="content" type="String" />
+		<column name="authorId" type="long" />
+		<column name="isSchoolNews" type="boolean"/>
+		<column name="isImportant" type="boolean"/>
+		<column name="expirationDate" type="Date"/>
+		<column name="publicationDate" type="Date"/>
+		<column name="modificationDate" type="Date"/>
+		<column name="imageId" type="long"/>
+
+		<finder return-type="Collection" name="authorId">
+			<finder-column name="authorId" />
+		</finder>
+	</entity>
+
+	<entity name="NewsPopulation" local-service="true" remote-service="false">
+		<column name="newsId" type="long" primary="true" />
+		<column name="groupId" type="long" primary="true" />
+		<column name="roleId" type="long" primary="true"/>
+
+		<finder return-type="Collection" name="groupId_roleId">
+			<finder-column name="groupId" />
+			<finder-column name="roleId" />
+		</finder>
+
+		<finder return-type="Collection" name="newsId">
+			<finder-column name="newsId" />
+		</finder>
+
+		<finder return-type="Collection" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+
+	<entity name="NewsRead" local-service="true" remote-service="false">
+		<column name="newsId" type="long" primary="true" />
+		<column name="userId" type="long" primary="true" />
+		<column name="readDate" type="Date" />
+
+		<finder return-type="Collection" name="newsId">
+			<finder-column name="newsId"/>
+		</finder>
+	</entity>
+
+	<entity name="NewsAttachedFile" local-service="true" remote-service="false">
+		<column name="newsId" type="long" primary="true" />
+		<column name="fileId" type="long" primary="true" />
+		<column name="fileName" type="String" />
+
+		<finder return-type="Collection" name="newsId">
+			<finder-column name="newsId"/>
+		</finder>
+	</entity>
+</service-builder>

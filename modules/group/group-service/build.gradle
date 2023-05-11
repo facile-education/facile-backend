@@ -9,6 +9,7 @@ dependencies {
 	compile project(":modules:school-life:school-life-api")
 	compile project(":modules:messaging:messaging-api")
 	compile project(":modules:contact:contact-api")
+	compile project(":modules:news:news-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 	compileOnly group: 'org.json', name: 'json'
