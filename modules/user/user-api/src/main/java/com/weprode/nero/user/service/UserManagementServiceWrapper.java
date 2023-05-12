@@ -74,8 +74,11 @@ public class UserManagementServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject updatePassword(long userId, String password) {
-		return _userManagementService.updatePassword(userId, password);
+	public org.json.JSONObject updatePassword(
+		long userId, String password, boolean resetPassword) {
+
+		return _userManagementService.updatePassword(
+			userId, password, resetPassword);
 	}
 
 	@Override

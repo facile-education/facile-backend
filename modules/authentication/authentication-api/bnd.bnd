@@ -1,0 +1,7 @@
+Bundle-Name: authentication-api
+Bundle-SymbolicName: com.weprode.nero.authentication.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.nero.authentication.service
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../authentication-service/service.xml

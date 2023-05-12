@@ -126,12 +126,13 @@ public class UserManagementServiceSoap {
 	}
 
 	public static org.json.JSONObject updatePassword(
-			long userId, String password)
+			long userId, String password, boolean resetPassword)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				UserManagementServiceUtil.updatePassword(userId, password);
+				UserManagementServiceUtil.updatePassword(
+					userId, password, resetPassword);
 
 			return returnValue;
 		}

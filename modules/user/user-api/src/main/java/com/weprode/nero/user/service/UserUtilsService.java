@@ -50,6 +50,8 @@ public interface UserUtilsService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.user.service.impl.UserUtilsServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the user utils remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link UserUtilsServiceUtil} if injection and service tracking are not available.
 	 */
+	@JSONWebService(method = "GET", value = "accept-terms-of-use")
+	public JSONObject acceptTermsOfUse();
 
 	/**
 	 * Returns the OSGi service identifier.

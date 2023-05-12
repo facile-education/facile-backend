@@ -184,7 +184,8 @@ public class UserManagementServiceHttp {
 	}
 
 	public static org.json.JSONObject updatePassword(
-		HttpPrincipal httpPrincipal, long userId, String password) {
+		HttpPrincipal httpPrincipal, long userId, String password,
+		boolean resetPassword) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -192,7 +193,7 @@ public class UserManagementServiceHttp {
 				_updatePasswordParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, userId, password);
+				methodKey, userId, password, resetPassword);
 
 			Object returnObj = null;
 
@@ -232,6 +233,6 @@ public class UserManagementServiceHttp {
 	private static final Class<?>[] _getManualUsersParameterTypes3 =
 		new Class[] {long.class, String.class, int.class, int.class};
 	private static final Class<?>[] _updatePasswordParameterTypes5 =
-		new Class[] {long.class, String.class};
+		new Class[] {long.class, String.class, boolean.class};
 
 }

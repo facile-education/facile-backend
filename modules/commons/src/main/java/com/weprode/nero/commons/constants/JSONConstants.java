@@ -454,6 +454,12 @@ public class JSONConstants {
     public static final String VERSIONS = "versions";
     public static final String VERSION_DETAILS = "versionDetails";
     public static final String TERMS_OF_USE = "termsOfUse";
+    public static final String AGREED_TERMS_OF_USE = "agreedTermsOfUse";
+    public static final String PASSWORD_CHANGE = "passwordChange";
+
+    // Timeouts
+    public static final String SESSION_TIMEOUT = "session.timeout";
+    public static final String SESSION_TIMEOUT_WARNING = "session.timeout.warning";
 
     // Success
     public static final String SUCCESS = "success";

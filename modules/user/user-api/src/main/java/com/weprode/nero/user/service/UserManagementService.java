@@ -76,6 +76,7 @@ public interface UserManagementService extends BaseService {
 	public String getOSGiServiceIdentifier();
 
 	@JSONWebService(method = "GET", value = "update-password")
-	public JSONObject updatePassword(long userId, String password);
+	public JSONObject updatePassword(
+		long userId, String password, boolean resetPassword);
 
 }

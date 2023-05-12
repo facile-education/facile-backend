@@ -283,7 +283,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
     }
 
     @JSONWebService(value = "update-password", method = "GET")
-    public JSONObject updatePassword(long userId, String password) {
+    public JSONObject updatePassword(long userId, String password, boolean resetPassword) {
         JSONObject result = new JSONObject();
 
         User adminUser;
@@ -302,7 +302,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
             // Update in DB
             // Ask password change at next user's connexion
             User targetUser = UserLocalServiceUtil.getUser(userId);
-            String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(targetUser, password, password, true);
+            String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(targetUser, password, password, resetPassword);
             if (errorMessage.equals("")) {
                 result.put(JSONConstants.SUCCESS, true);
             } else {

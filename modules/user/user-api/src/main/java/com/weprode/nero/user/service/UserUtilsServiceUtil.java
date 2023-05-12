@@ -33,6 +33,9 @@ public class UserUtilsServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.user.service.impl.UserUtilsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static org.json.JSONObject acceptTermsOfUse() {
+		return getService().acceptTermsOfUse();
+	}
 
 	/**
 	 * Returns the OSGi service identifier.
