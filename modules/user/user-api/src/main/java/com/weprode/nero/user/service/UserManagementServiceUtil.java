@@ -69,9 +69,9 @@ public class UserManagementServiceUtil {
 	}
 
 	public static org.json.JSONObject updatePassword(
-		long userId, java.lang.String password) {
+		long userId, java.lang.String password, boolean resetPassword) {
 
-		return getService().updatePassword(userId, password);
+		return getService().updatePassword(userId, password, resetPassword);
 	}
 
 	public static UserManagementService getService() {

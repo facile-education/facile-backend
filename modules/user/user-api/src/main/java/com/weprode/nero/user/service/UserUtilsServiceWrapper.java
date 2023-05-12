@@ -30,6 +30,11 @@ public class UserUtilsServiceWrapper
 		_userUtilsService = userUtilsService;
 	}
 
+	@Override
+	public org.json.JSONObject acceptTermsOfUse() {
+		return _userUtilsService.acceptTermsOfUse();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

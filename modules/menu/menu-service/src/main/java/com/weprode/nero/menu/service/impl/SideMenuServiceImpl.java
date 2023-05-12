@@ -1,5 +1,7 @@
 package com.weprode.nero.menu.service.impl;
 
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -53,6 +55,11 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
 
         result.put(JSONConstants.MENU, getMenuAsJSON(userMenu));
         result.put(JSONConstants.EXPANDED, false);
+
+        // Timeouts
+        result.put(JSONConstants.SESSION_TIMEOUT, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT));
+        result.put(JSONConstants.SESSION_TIMEOUT_WARNING, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT_WARNING));
+
         result.put(JSONConstants.SUCCESS, true);
 
         return result;

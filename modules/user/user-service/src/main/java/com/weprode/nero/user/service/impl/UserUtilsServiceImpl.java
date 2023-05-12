@@ -120,6 +120,13 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
             }
         }
         result.put(JSONConstants.USER_SCHOOLS, userSchoolsJson);
+
+        // Terms of use
+        result.put(JSONConstants.AGREED_TERMS_OF_USE, user.getAgreedToTermsOfUse());
+
+        // Password change
+        result.put(JSONConstants.PASSWORD_CHANGE, user.getPasswordReset());
+
         result.put(JSONConstants.SUCCESS, true);
 
         return result;
@@ -167,6 +174,34 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
             result.put(JSONConstants.SUCCESS, false);
         }
 
+        return result;
+    }
+
+    @JSONWebService(value = "accept-terms-of-use", method = "GET")
+    public JSONObject acceptTermsOfUse() {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                throw new AuthException();
+            }
+        } catch (Exception e) {
+            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        }
+
+        try {
+            user.setAgreedToTermsOfUse(true);
+            UserLocalServiceUtil.updateUser(user);
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error accepting terms of use for user " + user.getUserId(), e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
         return result;
     }
 
