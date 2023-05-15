@@ -65,12 +65,12 @@ import java.rmi.RemoteException;
 public class HomeworkServiceSoap {
 
 	public static org.json.JSONObject getHomeworks(
-			long studentId, String minDateStr)
+			long studentId, String minDate, boolean undoneOnly)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue = HomeworkServiceUtil.getHomeworks(
-				studentId, minDateStr);
+				studentId, minDate, undoneOnly);
 
 			return returnValue;
 		}

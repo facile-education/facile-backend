@@ -281,6 +281,7 @@ public class JSONConstants {
 
     // Homework
     public static final String HOMEWORK_ID = "homeworkId";
+    public static final String HOMEWORKS = "homeworks";
     public static final String ESTIMATED_TIME = "estimatedTime";
     public static final String FROM_DATE = "fromDate";
     public static final String TO_DATE = "toDate";

@@ -70,27 +70,34 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.START_DATE, sdf.format(this.getSessionStart()));
         jsonSession.put(JSONConstants.END_DATE, sdf.format(this.getSessionEnd()));
         jsonSession.put(JSONConstants.DESCRIPTION, this.getDescription());
-
-        // Class name
+        jsonSession.put(JSONConstants.SUBJECT, this.getSubject());
         jsonSession.put(JSONConstants.CLASS_NAME, getSessionGroupName(false));
-
-        if (!includeDetails) {
-            return jsonSession;
-        }
-
-        // Details
         jsonSession.put(JSONConstants.GROUP_ID, this.getGroupId());
+        jsonSession.put(JSONConstants.GROUP_NAME, this.getSessionGroupName(false));
         jsonSession.put(JSONConstants.ROOM, this.getRoom());
         jsonSession.put(JSONConstants.IS_MANUAL, this.getIsManual());
         jsonSession.put(JSONConstants.IS_PUBLISH, this.getPublished());
+
+        // Color
+        String color = "";
+        if (RoleUtilsLocalServiceUtil.isStudent(user)) {
+            // Color is based on the parent class
+            List<Long> groupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(this.getSessionId());
+            long groupId = (groupIds != null && !groupIds.isEmpty()) ? groupIds.get(0) : this.getGroupId();
+            color = SubjectGroupColorLocalServiceUtil.getSubjectGroupColor(groupId, this.getSubject());
+        } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(user.getUserId(), this.getGroupId());
+        }
+        jsonSession.put(JSONConstants.COLOR, color);
 
         // Teachers
         List<User> sessionTeachers = SessionTeacherLocalServiceUtil.getTeachers(this.getSessionId());
         jsonSession.put(JSONConstants.TEACHERS, JSONProxy.convertUsersToJson(sessionTeachers));
         jsonSession.put(JSONConstants.IS_CURRENT_USER_TEACHER, sessionTeachers.contains(user));
 
-        // Subject
-        jsonSession.put(JSONConstants.SUBJECT, this.getSubject());
+        if (!includeDetails) {
+            return jsonSession;
+        }
 
         // Audio instructions
         // TODO Attachments
@@ -120,10 +127,6 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.PREVIOUS_SESSIONS, JSONProxy.convertSessionsToSimpleJson(previousSessions));
         jsonSession.put(JSONConstants.NEXT_SESSIONS, JSONProxy.convertSessionsToSimpleJson(nextSessions));
 
-        // Color
-        String color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(user.getUserId(), this.getGroupId());
-        jsonSession.put(JSONConstants.COLOR, color);
-
         // Is progression driven ?
         boolean isProgressionDriven = ItemAssignmentLocalServiceUtil.isSessionAffected(this.getSessionId());
         jsonSession.put(JSONConstants.IS_PROGRESSION_DRIVEN, isProgressionDriven);
@@ -141,7 +144,7 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
                     jsonSession.put(JSONConstants.PROGRESSION_OWNER, progressionOwner.getFullName());
                 }
             } catch (Exception e) {
-                logger.debug(e);
+                logger.error("Error getting progression infos for session " + this.getSessionId(), e);
             }
         }
 

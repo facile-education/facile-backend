@@ -1,12 +1,8 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -19,12 +15,12 @@ import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.HomeworkServiceBaseImpl;
-
 import com.weprode.nero.schedule.utils.JSONProxy;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +36,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 	private static final Log logger = LogFactoryUtil.getLog(HomeworkServiceImpl.class);
 
 	@JSONWebService(value = "get-homeworks", method = "GET")
-	public JSONObject getHomeworks(long studentId, String minDateStr) throws SystemException, PortalException {
+	public JSONObject getHomeworks(long studentId, String minDate, boolean undoneOnly) throws SystemException, PortalException {
 		JSONObject result = new JSONObject();
 		
 		User currentUser;
@@ -49,38 +45,40 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			if (!RoleUtilsLocalServiceUtil.isStudentOrParent(currentUser)) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		Date minDate;
+		Date date;
 		try {
-			minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDateStr);
+			date = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDate);
 		} catch (Exception e) {
-			logger.error("Error when parsing minDate " + minDateStr + " while retrieving homeworks to do", e);
-			minDate = new Date();
+			logger.error("Error when parsing minDate " + minDate + " while retrieving homeworks to do", e);
+			date = new Date();
 		}
 
 		JSONArray homeworks = new JSONArray();
 
-		List<Homework> homeworkList = new ArrayList<>();
-		if (RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
-			homeworkList = HomeworkLocalServiceUtil.getTeacherHomeworks(currentUser, minDate, 0);
+		User targetUser = currentUser;
+		if (RoleUtilsLocalServiceUtil.isParent(currentUser)) {
+			targetUser = UserLocalServiceUtil.getUser(studentId);
 		}
-		else if (RoleUtilsLocalServiceUtil.isStudent(currentUser)) {
-			homeworkList = HomeworkLocalServiceUtil.getStudentHomeworks(currentUser, minDate);
-		}
-		else if (RoleUtilsLocalServiceUtil.isParent(currentUser)) {
-			User studentUser = UserLocalServiceUtil.getUser(studentId);
-			homeworkList = HomeworkLocalServiceUtil.getStudentHomeworks(studentUser, minDate);
-		}
+
+		List<Homework> homeworkList = HomeworkLocalServiceUtil.getStudentHomeworks(targetUser, date);
 
 		// Convert to JSON
 		for (Homework homework : homeworkList) {
-			JSONObject homeworkJson = homework.convertToJSON(currentUser);
-			homeworks.put(homeworkJson);
+			// Filter undone only if needed
+			if (!undoneOnly || StudentHomeworkLocalServiceUtil.hasStudentDoneHomework(targetUser.getUserId(), homework.getHomeworkId())) {
+				JSONObject homeworkJson = homework.convertToJSON(targetUser);
+				homeworks.put(homeworkJson);
+			}
 		}
-		result.put(JSONConstants.GROUPS, homeworks);
+
+		result.put(JSONConstants.HOMEWORKS, homeworks);
 		result.put(JSONConstants.SUCCESS, true);
 		return result;
 	}
