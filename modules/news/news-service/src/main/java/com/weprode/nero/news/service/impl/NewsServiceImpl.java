@@ -119,7 +119,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
     }
 
     @JSONWebService(value = "get-school-news", method = "GET")
-    public JSONObject getSchoolNews(Date maxDate, int nbNews, boolean importantOnly, boolean unreadOnly) {
+    public JSONObject getSchoolNews(String maxDateString, int nbNews, boolean importantOnly, boolean unreadOnly) {
         JSONObject result = new JSONObject();
 
         User user;
@@ -131,6 +131,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return result;
         }
         try {
+            Date maxDate = new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).parse(maxDateString);
             logger.info("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + " school news before " + maxDate);
             List<News> newsList = NewsLocalServiceUtil.getNews(user,0, maxDate, nbNews,false, importantOnly, unreadOnly);
 

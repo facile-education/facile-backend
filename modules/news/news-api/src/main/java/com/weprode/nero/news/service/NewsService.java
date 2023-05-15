@@ -23,8 +23,6 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
-import java.util.Date;
-
 import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -85,7 +83,8 @@ public interface NewsService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-school-news")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSchoolNews(
-		Date maxDate, int nbNews, boolean importantOnly, boolean unreadOnly);
+		String maxDateString, int nbNews, boolean importantOnly,
+		boolean unreadOnly);
 
 	@JSONWebService(method = "GET", value = "get-school-news-broadcast-groups")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
