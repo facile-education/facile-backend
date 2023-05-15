@@ -5,14 +5,40 @@ import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
+import com.liferay.mail.kernel.model.MailMessage;
+import com.liferay.mail.kernel.service.MailService;
+import com.liferay.mail.kernel.template.MailTemplate;
+import com.liferay.mail.kernel.template.MailTemplateContext;
+import com.liferay.mail.kernel.template.MailTemplateContextBuilder;
+import com.liferay.mail.kernel.template.MailTemplateFactoryUtil;
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.UserEmailAddressException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.PasswordPolicy;
+import com.liferay.portal.kernel.model.Ticket;
+import com.liferay.portal.kernel.model.TicketConstants;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.*;
+import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceWrapper;
+import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceWrapper;
+import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
 import com.weprode.nero.messaging.model.Message;
@@ -29,7 +55,10 @@ import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import javax.mail.internet.InternetAddress;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -83,6 +112,130 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 		NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
 
 		return user;
+	}
+
+	@Override
+	public boolean sendPassword(
+			long companyId, String emailAddress, String fromName,
+			String fromAddress, String subject, String body,
+			ServiceContext serviceContext)
+			throws PortalException {
+
+		emailAddress = StringUtil.toLowerCase(StringUtil.trim(emailAddress));
+
+		if (Validator.isNull(emailAddress)) {
+			throw new UserEmailAddressException.MustNotBeNull();
+		}
+
+		User user = UserLocalServiceUtil.fetchUserByEmailAddress(companyId, emailAddress);
+
+		PasswordPolicy passwordPolicy = user.getPasswordPolicy();
+
+		Date expirationDate = null;
+
+		if ((passwordPolicy != null) &&
+				(passwordPolicy.getResetTicketMaxAge() > 0)) {
+
+			expirationDate = new Date(
+					System.currentTimeMillis() +
+							(passwordPolicy.getResetTicketMaxAge() * 1000));
+		}
+
+		Ticket ticket = TicketLocalServiceUtil.addDistinctTicket(
+				companyId, User.class.getName(), user.getUserId(),
+				TicketConstants.TYPE_PASSWORD, null, expirationDate,
+				serviceContext);
+
+		String passwordResetURL = StringBundler.concat(
+				serviceContext.getPortalURL(), serviceContext.getPathMain(),
+				"/portal/update_password?p_l_id=", serviceContext.getPlid(),
+				"&ticketKey=", ticket.getKey());
+
+		sendPasswordNotification(
+				user, companyId, null, passwordResetURL, fromName, fromAddress,
+				subject, body, serviceContext);
+
+		return false;
+	}
+
+	protected void sendPasswordNotification(
+			User user, long companyId, String newPassword, String passwordResetURL,
+			String fromName, String fromAddress, String subject, String body,
+			ServiceContext serviceContext) {
+
+		if (Validator.isNull(fromName)) {
+			fromName = PrefsPropsUtil.getString(companyId, PropsKeys.ADMIN_EMAIL_FROM_NAME);
+		}
+
+		if (Validator.isNull(fromAddress)) {
+			fromAddress = PrefsPropsUtil.getString(companyId, PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+		}
+
+		String toName = user.getFullName();
+		String toAddress = user.getEmailAddress();
+
+		MailTemplateContextBuilder mailTemplateContextBuilder =
+				MailTemplateFactoryUtil.createMailTemplateContextBuilder();
+
+		mailTemplateContextBuilder.put("[$FROM_ADDRESS$]", fromAddress);
+		mailTemplateContextBuilder.put("[$FROM_NAME$]", HtmlUtil.escape(fromName));
+		mailTemplateContextBuilder.put("[$PASSWORD_RESET_URL$]", passwordResetURL);
+		mailTemplateContextBuilder.put("[$PORTAL_URL$]", serviceContext.getPortalURL());
+		mailTemplateContextBuilder.put("[$REMOTE_ADDRESS$]", serviceContext.getRemoteAddr());
+		mailTemplateContextBuilder.put("[$REMOTE_HOST$]", HtmlUtil.escape(serviceContext.getRemoteHost()));
+		mailTemplateContextBuilder.put("[$TO_ADDRESS$]", toAddress);
+		mailTemplateContextBuilder.put("[$TO_NAME$]", HtmlUtil.escape(toName));
+		mailTemplateContextBuilder.put("[$USER_ID$]", String.valueOf(user.getUserId()));
+		mailTemplateContextBuilder.put("[$USER_SCREENNAME$]", HtmlUtil.escape(user.getScreenName()));
+
+		MailTemplateContext mailTemplateContext = mailTemplateContextBuilder.build();
+
+		try {
+			sendNotificationEmail(
+					fromAddress, fromName, toAddress, user, subject,
+					body, mailTemplateContext);
+		}
+		catch (PortalException portalException) {
+			ReflectionUtil.throwException(portalException);
+		}
+	}
+
+	@BeanReference(type = MailService.class)
+	protected MailService mailService;
+
+	private void sendNotificationEmail(
+			String fromAddress, String fromName, String toAddress, User toUser,
+			String subject, String body,
+			MailTemplateContext mailTemplateContext)
+			throws PortalException {
+
+		try {
+			MailTemplate subjectTemplate =
+					MailTemplateFactoryUtil.createMailTemplate(subject, false);
+
+			MailTemplate bodyTemplate =
+					MailTemplateFactoryUtil.createMailTemplate(body, true);
+
+			MailMessage mailMessage = new MailMessage(
+					new InternetAddress(fromAddress, fromName),
+					new InternetAddress(toAddress, toUser.getFullName()),
+					subjectTemplate.renderAsString(
+							toUser.getLocale(), mailTemplateContext),
+					bodyTemplate.renderAsString(
+							toUser.getLocale(), mailTemplateContext),
+					true);
+
+			Company company = CompanyLocalServiceUtil.getCompany(toUser.getCompanyId());
+
+			mailMessage.setMessageId(
+					PortalUtil.getMailId(
+							company.getMx(), "user", System.currentTimeMillis()));
+
+			mailService.sendEmail(mailMessage);
+		}
+		catch (IOException ioException) {
+			throw new SystemException(ioException);
+		}
 	}
 
 //	@Override

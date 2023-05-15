@@ -9,6 +9,7 @@ dependencies {
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 	compileOnly group: 'org.json', name: 'json'
 	compileOnly group: "org.osgi", name: "org.osgi.service.jaxrs", version: "1.0.0"
+	compile "javax.mail:mail:1.4.7"
 
 	implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
 	implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
