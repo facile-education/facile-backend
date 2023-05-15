@@ -47,7 +47,7 @@ public class ShibbolethAutoLogin implements AutoLogin {
 
 
         try {
-            logger.info("Shibboleth Autologin");
+            logger.debug("Shibboleth Autologin");
 
             user = loginFromSession(companyId, session);
             if (Validator.isNotNull(user)) {

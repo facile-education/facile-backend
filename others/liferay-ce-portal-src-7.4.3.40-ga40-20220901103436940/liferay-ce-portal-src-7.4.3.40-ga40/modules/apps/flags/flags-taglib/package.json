@@ -1,0 +1,14 @@
+{
+	"dependencies": {
+	},
+	"main": "flags/js/index.es.js",
+	"name": "@liferay/flags-taglib",
+	"private": true,
+	"scripts": {
+		"build": "liferay-npm-scripts build",
+		"checkFormat": "liferay-npm-scripts check",
+		"format": "liferay-npm-scripts fix",
+		"test": "liferay-npm-scripts test"
+	},
+	"version": "6.1.1"
+}
