@@ -337,8 +337,8 @@ public class AccessLocalServiceWrapper
 	}
 
 	@Override
-	public boolean saveSchoolAccesses(long schoolId, String accesses) {
-		return _accessLocalService.saveSchoolAccesses(schoolId, accesses);
+	public void saveSchoolAccesses(long schoolId, String accesses) {
+		_accessLocalService.saveSchoolAccesses(schoolId, accesses);
 	}
 
 	/**

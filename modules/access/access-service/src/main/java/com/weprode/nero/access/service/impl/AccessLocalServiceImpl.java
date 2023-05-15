@@ -79,42 +79,36 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		return schoolAccesses;
 	}
 
-	public boolean saveSchoolAccesses (long schoolId, String accesses) {
+	public void saveSchoolAccesses (long schoolId, String accesses) {
 
-		try {
-			// Delete existing categories / accesses / profiles
-			AccessCategoryLocalServiceUtil.removeBySchoolId(schoolId);
-			JSONArray schoolAccesses = new JSONArray(accesses);
-			// Loop over categories
-			for (int catIdx = 0 ; catIdx < schoolAccesses.length() ; catIdx++) {
-				JSONObject jsonCategory = schoolAccesses.getJSONObject(catIdx);
-				// Create category
-				AccessCategory category = AccessCategoryLocalServiceUtil.addCategory(schoolId, jsonCategory.getString(AccessConstants.CATEGORY_NAME), jsonCategory.getInt(AccessConstants.POSITION));
+		// Delete existing categories / accesses / profiles
+		AccessCategoryLocalServiceUtil.removeBySchoolId(schoolId);
+		JSONArray schoolAccesses = new JSONArray(accesses);
+		// Loop over categories
+		for (int catIdx = 0 ; catIdx < schoolAccesses.length() ; catIdx++) {
+			JSONObject jsonCategory = schoolAccesses.getJSONObject(catIdx);
+			// Create category
+			AccessCategory category = AccessCategoryLocalServiceUtil.addCategory(schoolId, jsonCategory.getString(AccessConstants.CATEGORY_NAME), jsonCategory.getInt(AccessConstants.POSITION));
 
-				// Loop over accesses
-				JSONArray jsonAccesses = jsonCategory.getJSONArray(AccessConstants.ACCESSES);
-				for (int accessIdx = 0 ; accessIdx < jsonAccesses.length() ; accessIdx++) {
-					JSONObject jsonAccess = jsonAccesses.getJSONObject(accessIdx);
-					// Create access
-					Access access = AccessLocalServiceUtil.addAccess(category.getCategoryId(),
-							jsonAccess.getString(AccessConstants.TITLE),
-							jsonAccess.getString(AccessConstants.URL),
-							jsonAccess.getString(AccessConstants.THUMBNAIL),
-							jsonAccess.getInt(AccessConstants.POSITION));
-					// Create profiles
-					JSONArray jsonProfiles = jsonAccess.getJSONArray(AccessConstants.PROFILES);
-					for (int profileIdx = 0 ; profileIdx < jsonProfiles.length() ; profileIdx++) {
-						long roleId = jsonProfiles.getLong(profileIdx);
-						AccessProfileLocalServiceUtil.addAccessProfile(access.getAccessId(), roleId);
-					}
+			// Loop over accesses
+			JSONArray jsonAccesses = jsonCategory.getJSONArray(AccessConstants.ACCESSES);
+			for (int accessIdx = 0 ; accessIdx < jsonAccesses.length() ; accessIdx++) {
+				JSONObject jsonAccess = jsonAccesses.getJSONObject(accessIdx);
+				// Create access
+				Access access = AccessLocalServiceUtil.addAccess(category.getCategoryId(),
+						jsonAccess.getString(AccessConstants.TITLE),
+						jsonAccess.getString(AccessConstants.URL),
+						jsonAccess.getString(AccessConstants.THUMBNAIL),
+						jsonAccess.getInt(AccessConstants.POSITION));
+				// Create profiles
+				JSONArray jsonProfiles = jsonAccess.getJSONArray(AccessConstants.PROFILES);
+				for (int profileIdx = 0 ; profileIdx < jsonProfiles.length() ; profileIdx++) {
+					long roleId = jsonProfiles.getLong(profileIdx);
+					AccessProfileLocalServiceUtil.addAccessProfile(access.getAccessId(), roleId);
 				}
 			}
-			logger.info("Saved accesses for schoolId " + schoolId);
-
-		} catch (Exception e) {
-			logger.error("Error saving school accesses for schoolId " + schoolId, e);
 		}
-		return false;
+		logger.info("Saved accesses for schoolId " + schoolId);
 	}
 
 	public JSONArray getUserAccesses (User user) {

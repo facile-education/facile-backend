@@ -306,8 +306,8 @@ public class AccessLocalServiceUtil {
 		getService().removeByCategoryId(categoryId);
 	}
 
-	public static boolean saveSchoolAccesses(long schoolId, String accesses) {
-		return getService().saveSchoolAccesses(schoolId, accesses);
+	public static void saveSchoolAccesses(long schoolId, String accesses) {
+		getService().saveSchoolAccesses(schoolId, accesses);
 	}
 
 	/**
