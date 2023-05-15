@@ -31,11 +31,12 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getHomeworks(long studentId, String minDateStr)
+	public org.json.JSONObject getHomeworks(
+			long studentId, String minDate, boolean undoneOnly)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _homeworkService.getHomeworks(studentId, minDateStr);
+		return _homeworkService.getHomeworks(studentId, minDate, undoneOnly);
 	}
 
 	/**

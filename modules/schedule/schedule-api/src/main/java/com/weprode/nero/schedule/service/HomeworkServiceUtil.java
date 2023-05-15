@@ -37,10 +37,10 @@ public class HomeworkServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.schedule.service.impl.HomeworkServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static org.json.JSONObject getHomeworks(
-			long studentId, String minDateStr)
+			long studentId, String minDate, boolean undoneOnly)
 		throws PortalException, SystemException {
 
-		return getService().getHomeworks(studentId, minDateStr);
+		return getService().getHomeworks(studentId, minDate, undoneOnly);
 	}
 
 	/**

@@ -52,7 +52,8 @@ public interface HomeworkService extends BaseService {
 	 */
 	@JSONWebService(method = "GET", value = "get-homeworks")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getHomeworks(long studentId, String minDateStr)
+	public JSONObject getHomeworks(
+			long studentId, String minDate, boolean undoneOnly)
 		throws PortalException, SystemException;
 
 	/**

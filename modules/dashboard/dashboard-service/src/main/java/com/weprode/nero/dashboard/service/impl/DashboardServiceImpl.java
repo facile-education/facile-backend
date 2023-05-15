@@ -131,8 +131,8 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
 
     @JSONWebService(value = "get-user-schedule", method = "GET")
     public JSONObject getUserSchedule(long userId, String date, boolean goForward) {
-
         JSONObject result = new JSONObject();
+
         try {
             User user = UserLocalServiceUtil.getUser(userId);
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -171,7 +171,6 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             cal.add(Calendar.DATE, 1);
             Date maxDate = cal.getTime();
 
-
             JSONArray jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(userId, minDate, maxDate);
             for (int i = 0 ; i < jsonSchoollifeSessions.length() ; i++) {
                 JSONObject jsonSchoollifeSession = jsonSchoollifeSessions.getJSONObject(i);
@@ -195,6 +194,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             result.put(JSONConstants.SUCCESS, false);
             logger.error("Error when getting userId "+userId+" schedule", e);
         }
+
         return result;
     }
 

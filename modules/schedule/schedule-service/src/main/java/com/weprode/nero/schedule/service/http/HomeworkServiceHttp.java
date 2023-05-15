@@ -53,7 +53,8 @@ import com.weprode.nero.schedule.service.HomeworkServiceUtil;
 public class HomeworkServiceHttp {
 
 	public static org.json.JSONObject getHomeworks(
-			HttpPrincipal httpPrincipal, long studentId, String minDateStr)
+			HttpPrincipal httpPrincipal, long studentId, String minDate,
+			boolean undoneOnly)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
@@ -63,7 +64,7 @@ public class HomeworkServiceHttp {
 				_getHomeworksParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, studentId, minDateStr);
+				methodKey, studentId, minDate, undoneOnly);
 
 			Object returnObj = null;
 
@@ -135,7 +136,7 @@ public class HomeworkServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(HomeworkServiceHttp.class);
 
 	private static final Class<?>[] _getHomeworksParameterTypes0 = new Class[] {
-		long.class, String.class
+		long.class, String.class, boolean.class
 	};
 	private static final Class<?>[] _setHomeworkDoneParameterTypes1 =
 		new Class[] {long.class, boolean.class};
