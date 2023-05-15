@@ -1,14 +1,18 @@
 package com.weprode.nero.schedule.service.persistence.impl;
 
-import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.dao.orm.*;
+import com.liferay.portal.kernel.dao.orm.Criterion;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.model.SessionTeacher;
-import com.weprode.nero.schedule.service.HomeworkLocalService;
+import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.persistence.HomeworkFinder;
 import org.osgi.service.component.annotations.Component;
 
@@ -23,9 +27,6 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
         implements HomeworkFinder {
 
     private static final Log logger = LogFactoryUtil.getLog(HomeworkFinderImpl.class);
-
-    @BeanReference(type = HomeworkLocalService.class)
-    private HomeworkLocalService homeworkLocalService;
 
     public List<Homework> getTeacherHomeworks(User teacher, Date minDate, long groupId) throws SystemException {
         List<Homework> homeworkList = new ArrayList<>();
@@ -61,7 +62,7 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
             }
 
             // Run the dynamic query
-            return homeworkLocalService.dynamicQuery(dynamicQuery);
+            return HomeworkLocalServiceUtil.dynamicQuery(dynamicQuery);
         }
 
         return homeworkList;
@@ -98,7 +99,7 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
             dynamicQuery.add(criterion);
 
             // Run the dynamic query
-            homeworkList.addAll(homeworkLocalService.dynamicQuery(dynamicQuery));
+            homeworkList.addAll(HomeworkLocalServiceUtil.dynamicQuery(dynamicQuery));
         }
 
         return homeworkList;
