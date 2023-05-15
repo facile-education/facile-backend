@@ -84,6 +84,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 	public JSONObject saveSchoolAccesses(long schoolId, String accesses) {
 
 		JSONObject result = new JSONObject();
+		result.put(JSONConstants.SUCCESS, false);
 
 		User user;
 		try {
@@ -91,29 +92,26 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
 				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
 				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
 				return result;
 			}
 		} catch (Exception e) {
 			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
 
 		try {
 			logger.info("User " + user.getUserId() + " saves accesses for school " + schoolId);
 			AccessLocalServiceUtil.saveSchoolAccesses(schoolId, accesses);
-			result.put(JSONConstants.SUCCESS, true);
+			result.put(JSONConstants.SUCCESS, true);	// Only set to TRUE in case of success
 
 		} catch (Exception e) {
-			logger.error("Error fetching accesses for user " + user.getUserId(), e);
+			logger.error("Error saving school accesses for schoolId " + schoolId, e);
 		}
 		return result;
 	}

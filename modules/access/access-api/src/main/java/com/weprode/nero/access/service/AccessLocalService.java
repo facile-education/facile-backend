@@ -274,7 +274,7 @@ public interface AccessLocalService
 
 	public void removeByCategoryId(long categoryId);
 
-	public boolean saveSchoolAccesses(long schoolId, String accesses);
+	public void saveSchoolAccesses(long schoolId, String accesses);
 
 	/**
 	 * Updates the access in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
