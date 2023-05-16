@@ -36,7 +36,10 @@ public class AccessSoap implements Serializable {
 		soapModel.setAccessId(model.getAccessId());
 		soapModel.setCategoryId(model.getCategoryId());
 		soapModel.setTitle(model.getTitle());
-		soapModel.setUrl(model.getUrl());
+		soapModel.setType(model.getType());
+		soapModel.setExternalUrl(model.getExternalUrl());
+		soapModel.setFolderId(model.getFolderId());
+		soapModel.setFileId(model.getFileId());
 		soapModel.setThumbnail(model.getThumbnail());
 		soapModel.setPosition(model.getPosition());
 
@@ -123,12 +126,36 @@ public class AccessSoap implements Serializable {
 		_title = title;
 	}
 
-	public String getUrl() {
-		return _url;
+	public int getType() {
+		return _type;
 	}
 
-	public void setUrl(String url) {
-		_url = url;
+	public void setType(int type) {
+		_type = type;
+	}
+
+	public String getExternalUrl() {
+		return _externalUrl;
+	}
+
+	public void setExternalUrl(String externalUrl) {
+		_externalUrl = externalUrl;
+	}
+
+	public long getFolderId() {
+		return _folderId;
+	}
+
+	public void setFolderId(long folderId) {
+		_folderId = folderId;
+	}
+
+	public long getFileId() {
+		return _fileId;
+	}
+
+	public void setFileId(long fileId) {
+		_fileId = fileId;
 	}
 
 	public String getThumbnail() {
@@ -151,7 +178,10 @@ public class AccessSoap implements Serializable {
 	private long _accessId;
 	private long _categoryId;
 	private String _title;
-	private String _url;
+	private int _type;
+	private String _externalUrl;
+	private long _folderId;
+	private long _fileId;
 	private String _thumbnail;
 	private int _position;
 

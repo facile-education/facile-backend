@@ -44,7 +44,10 @@ public class AccessWrapper
 		attributes.put("accessId", getAccessId());
 		attributes.put("categoryId", getCategoryId());
 		attributes.put("title", getTitle());
-		attributes.put("url", getUrl());
+		attributes.put("type", getType());
+		attributes.put("externalUrl", getExternalUrl());
+		attributes.put("folderId", getFolderId());
+		attributes.put("fileId", getFileId());
 		attributes.put("thumbnail", getThumbnail());
 		attributes.put("position", getPosition());
 
@@ -77,10 +80,28 @@ public class AccessWrapper
 			setTitle(title);
 		}
 
-		String url = (String)attributes.get("url");
+		Integer type = (Integer)attributes.get("type");
 
-		if (url != null) {
-			setUrl(url);
+		if (type != null) {
+			setType(type);
+		}
+
+		String externalUrl = (String)attributes.get("externalUrl");
+
+		if (externalUrl != null) {
+			setExternalUrl(externalUrl);
+		}
+
+		Long folderId = (Long)attributes.get("folderId");
+
+		if (folderId != null) {
+			setFolderId(folderId);
+		}
+
+		Long fileId = (Long)attributes.get("fileId");
+
+		if (fileId != null) {
+			setFileId(fileId);
 		}
 
 		String thumbnail = (String)attributes.get("thumbnail");
@@ -119,6 +140,36 @@ public class AccessWrapper
 	@Override
 	public long getCategoryId() {
 		return model.getCategoryId();
+	}
+
+	/**
+	 * Returns the external url of this access.
+	 *
+	 * @return the external url of this access
+	 */
+	@Override
+	public String getExternalUrl() {
+		return model.getExternalUrl();
+	}
+
+	/**
+	 * Returns the file ID of this access.
+	 *
+	 * @return the file ID of this access
+	 */
+	@Override
+	public long getFileId() {
+		return model.getFileId();
+	}
+
+	/**
+	 * Returns the folder ID of this access.
+	 *
+	 * @return the folder ID of this access
+	 */
+	@Override
+	public long getFolderId() {
+		return model.getFolderId();
 	}
 
 	/**
@@ -162,13 +213,13 @@ public class AccessWrapper
 	}
 
 	/**
-	 * Returns the url of this access.
+	 * Returns the type of this access.
 	 *
-	 * @return the url of this access
+	 * @return the type of this access
 	 */
 	@Override
-	public String getUrl() {
-		return model.getUrl();
+	public int getType() {
+		return model.getType();
 	}
 
 	/**
@@ -204,6 +255,36 @@ public class AccessWrapper
 	@Override
 	public void setCategoryId(long categoryId) {
 		model.setCategoryId(categoryId);
+	}
+
+	/**
+	 * Sets the external url of this access.
+	 *
+	 * @param externalUrl the external url of this access
+	 */
+	@Override
+	public void setExternalUrl(String externalUrl) {
+		model.setExternalUrl(externalUrl);
+	}
+
+	/**
+	 * Sets the file ID of this access.
+	 *
+	 * @param fileId the file ID of this access
+	 */
+	@Override
+	public void setFileId(long fileId) {
+		model.setFileId(fileId);
+	}
+
+	/**
+	 * Sets the folder ID of this access.
+	 *
+	 * @param folderId the folder ID of this access
+	 */
+	@Override
+	public void setFolderId(long folderId) {
+		model.setFolderId(folderId);
 	}
 
 	/**
@@ -247,13 +328,13 @@ public class AccessWrapper
 	}
 
 	/**
-	 * Sets the url of this access.
+	 * Sets the type of this access.
 	 *
-	 * @param url the url of this access
+	 * @param type the type of this access
 	 */
 	@Override
-	public void setUrl(String url) {
-		model.setUrl(url);
+	public void setType(int type) {
+		model.setType(type);
 	}
 
 	/**

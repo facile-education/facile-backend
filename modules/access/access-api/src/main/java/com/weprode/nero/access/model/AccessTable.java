@@ -38,8 +38,14 @@ public class AccessTable extends BaseTable<AccessTable> {
 		"categoryId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<AccessTable, String> title = createColumn(
 		"title", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<AccessTable, String> url = createColumn(
-		"url", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<AccessTable, Integer> type = createColumn(
+		"type_", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
+	public final Column<AccessTable, String> externalUrl = createColumn(
+		"externalUrl", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<AccessTable, Long> folderId = createColumn(
+		"folderId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<AccessTable, Long> fileId = createColumn(
+		"fileId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<AccessTable, String> thumbnail = createColumn(
 		"thumbnail", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<AccessTable, Integer> position = createColumn(

@@ -59,7 +59,7 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -69,8 +69,14 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 		sb.append(categoryId);
 		sb.append(", title=");
 		sb.append(title);
-		sb.append(", url=");
-		sb.append(url);
+		sb.append(", type=");
+		sb.append(type);
+		sb.append(", externalUrl=");
+		sb.append(externalUrl);
+		sb.append(", folderId=");
+		sb.append(folderId);
+		sb.append(", fileId=");
+		sb.append(fileId);
 		sb.append(", thumbnail=");
 		sb.append(thumbnail);
 		sb.append(", position=");
@@ -101,12 +107,17 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 			accessImpl.setTitle(title);
 		}
 
-		if (url == null) {
-			accessImpl.setUrl("");
+		accessImpl.setType(type);
+
+		if (externalUrl == null) {
+			accessImpl.setExternalUrl("");
 		}
 		else {
-			accessImpl.setUrl(url);
+			accessImpl.setExternalUrl(externalUrl);
 		}
+
+		accessImpl.setFolderId(folderId);
+		accessImpl.setFileId(fileId);
 
 		if (thumbnail == null) {
 			accessImpl.setThumbnail("");
@@ -130,7 +141,13 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 
 		categoryId = objectInput.readLong();
 		title = objectInput.readUTF();
-		url = objectInput.readUTF();
+
+		type = objectInput.readInt();
+		externalUrl = objectInput.readUTF();
+
+		folderId = objectInput.readLong();
+
+		fileId = objectInput.readLong();
 		thumbnail = objectInput.readUTF();
 
 		position = objectInput.readInt();
@@ -156,12 +173,18 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 			objectOutput.writeUTF(title);
 		}
 
-		if (url == null) {
+		objectOutput.writeInt(type);
+
+		if (externalUrl == null) {
 			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeUTF(url);
+			objectOutput.writeUTF(externalUrl);
 		}
+
+		objectOutput.writeLong(folderId);
+
+		objectOutput.writeLong(fileId);
 
 		if (thumbnail == null) {
 			objectOutput.writeUTF("");
@@ -177,7 +200,10 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 	public long accessId;
 	public long categoryId;
 	public String title;
-	public String url;
+	public int type;
+	public String externalUrl;
+	public long folderId;
+	public long fileId;
 	public String thumbnail;
 	public int position;
 

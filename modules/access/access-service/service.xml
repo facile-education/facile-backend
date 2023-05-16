@@ -22,7 +22,10 @@
 		<column name="accessId" primary="true" type="long" />
 		<column name="categoryId" type="long" />
 		<column name="title" type="String" />
-		<column name="url" type="String" />
+		<column name="type" type="int" />
+		<column name="externalUrl" type="String" />
+		<column name="folderId" type="long" />
+		<column name="fileId" type="long" />
 		<column name="thumbnail" type="String" />
 		<column name="position" type="int" />
 
