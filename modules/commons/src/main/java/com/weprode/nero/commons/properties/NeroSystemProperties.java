@@ -35,6 +35,7 @@ public class NeroSystemProperties {
 	public static final String PARENT_SYNCHRO_FOLDER = "synchro.drop.folder";
 	public static final String SCHEDULE_SYNCHRO_FOLDER = "synchro.schedule.drop.folder";
 
+	public static final String MATOMO_ENABLED = "piwik.enabled";
 	public static final String MATOMO_API_URL = "piwik.api_url";
 	public static final String MATOMO_AUTH_TOKEN = "piwik.token_auth";
 	public static final String MATOMO_SITE_ID = "piwik.siteId";

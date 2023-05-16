@@ -1,6 +1,8 @@
 package com.weprode.nero.statistic.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.nero.commons.properties.NeroSystemProperties;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -313,6 +315,12 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        }
+
+        // If no Matomo url specified, return empty object
+        if (PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) == null || !PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true")) {
             result.put(JSONConstants.SUCCESS, false);
             return result;
         }
