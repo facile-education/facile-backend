@@ -155,14 +155,16 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 	private List<Organization> getUserClasses(User user, Organization school) {
 		List<Organization> schoolClasses = new ArrayList<>();
-		if (RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-			// No classes for teachers, students and parents
+		if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+			// No classes for students and parents
 		} else {
 			// Affected roles: doyen, psychologue, conseiller social
 			if (RoleUtilsLocalServiceUtil.isDoyen(user)
 					|| RoleUtilsLocalServiceUtil.isConseillerSocial(user)
 					|| RoleUtilsLocalServiceUtil.isPsychologue(user)) {
 				schoolClasses = UserOrgsLocalServiceUtil.getRoleAffectedClasses(user);
+			} else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+				schoolClasses = UserOrgsLocalServiceUtil.getUserClasses(user, false, school.getOrganizationId());
 			} else {
 				// All school's classes
 				List<Integer> types = new ArrayList<>();
