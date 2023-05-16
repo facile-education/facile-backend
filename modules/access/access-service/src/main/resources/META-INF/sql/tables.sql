@@ -3,7 +3,10 @@ create table Access_Access (
 	accessId LONG not null primary key,
 	categoryId LONG,
 	title VARCHAR(75) null,
-	url VARCHAR(75) null,
+	type_ INTEGER,
+	externalUrl VARCHAR(75) null,
+	folderId LONG,
+	fileId LONG,
 	thumbnail VARCHAR(75) null,
 	position INTEGER
 );

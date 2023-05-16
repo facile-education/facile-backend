@@ -75,8 +75,9 @@ public class AccessModelImpl
 	public static final Object[][] TABLE_COLUMNS = {
 		{"uuid_", Types.VARCHAR}, {"accessId", Types.BIGINT},
 		{"categoryId", Types.BIGINT}, {"title", Types.VARCHAR},
-		{"url", Types.VARCHAR}, {"thumbnail", Types.VARCHAR},
-		{"position", Types.INTEGER}
+		{"type_", Types.INTEGER}, {"externalUrl", Types.VARCHAR},
+		{"folderId", Types.BIGINT}, {"fileId", Types.BIGINT},
+		{"thumbnail", Types.VARCHAR}, {"position", Types.INTEGER}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -87,13 +88,16 @@ public class AccessModelImpl
 		TABLE_COLUMNS_MAP.put("accessId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("categoryId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("url", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("type_", Types.INTEGER);
+		TABLE_COLUMNS_MAP.put("externalUrl", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("folderId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("fileId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("thumbnail", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("position", Types.INTEGER);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Access_Access (uuid_ VARCHAR(75) null,accessId LONG not null primary key,categoryId LONG,title VARCHAR(75) null,url VARCHAR(75) null,thumbnail VARCHAR(75) null,position INTEGER)";
+		"create table Access_Access (uuid_ VARCHAR(75) null,accessId LONG not null primary key,categoryId LONG,title VARCHAR(75) null,type_ INTEGER,externalUrl VARCHAR(75) null,folderId LONG,fileId LONG,thumbnail VARCHAR(75) null,position INTEGER)";
 
 	public static final String TABLE_SQL_DROP = "drop table Access_Access";
 
@@ -160,7 +164,10 @@ public class AccessModelImpl
 		model.setAccessId(soapModel.getAccessId());
 		model.setCategoryId(soapModel.getCategoryId());
 		model.setTitle(soapModel.getTitle());
-		model.setUrl(soapModel.getUrl());
+		model.setType(soapModel.getType());
+		model.setExternalUrl(soapModel.getExternalUrl());
+		model.setFolderId(soapModel.getFolderId());
+		model.setFileId(soapModel.getFileId());
 		model.setThumbnail(soapModel.getThumbnail());
 		model.setPosition(soapModel.getPosition());
 
@@ -320,9 +327,18 @@ public class AccessModelImpl
 		attributeGetterFunctions.put("title", Access::getTitle);
 		attributeSetterBiConsumers.put(
 			"title", (BiConsumer<Access, String>)Access::setTitle);
-		attributeGetterFunctions.put("url", Access::getUrl);
+		attributeGetterFunctions.put("type", Access::getType);
 		attributeSetterBiConsumers.put(
-			"url", (BiConsumer<Access, String>)Access::setUrl);
+			"type", (BiConsumer<Access, Integer>)Access::setType);
+		attributeGetterFunctions.put("externalUrl", Access::getExternalUrl);
+		attributeSetterBiConsumers.put(
+			"externalUrl", (BiConsumer<Access, String>)Access::setExternalUrl);
+		attributeGetterFunctions.put("folderId", Access::getFolderId);
+		attributeSetterBiConsumers.put(
+			"folderId", (BiConsumer<Access, Long>)Access::setFolderId);
+		attributeGetterFunctions.put("fileId", Access::getFileId);
+		attributeSetterBiConsumers.put(
+			"fileId", (BiConsumer<Access, Long>)Access::setFileId);
 		attributeGetterFunctions.put("thumbnail", Access::getThumbnail);
 		attributeSetterBiConsumers.put(
 			"thumbnail", (BiConsumer<Access, String>)Access::setThumbnail);
@@ -427,22 +443,67 @@ public class AccessModelImpl
 
 	@JSON
 	@Override
-	public String getUrl() {
-		if (_url == null) {
-			return "";
-		}
-		else {
-			return _url;
-		}
+	public int getType() {
+		return _type;
 	}
 
 	@Override
-	public void setUrl(String url) {
+	public void setType(int type) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_url = url;
+		_type = type;
+	}
+
+	@JSON
+	@Override
+	public String getExternalUrl() {
+		if (_externalUrl == null) {
+			return "";
+		}
+		else {
+			return _externalUrl;
+		}
+	}
+
+	@Override
+	public void setExternalUrl(String externalUrl) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_externalUrl = externalUrl;
+	}
+
+	@JSON
+	@Override
+	public long getFolderId() {
+		return _folderId;
+	}
+
+	@Override
+	public void setFolderId(long folderId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_folderId = folderId;
+	}
+
+	@JSON
+	@Override
+	public long getFileId() {
+		return _fileId;
+	}
+
+	@Override
+	public void setFileId(long fileId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_fileId = fileId;
 	}
 
 	@JSON
@@ -540,7 +601,10 @@ public class AccessModelImpl
 		accessImpl.setAccessId(getAccessId());
 		accessImpl.setCategoryId(getCategoryId());
 		accessImpl.setTitle(getTitle());
-		accessImpl.setUrl(getUrl());
+		accessImpl.setType(getType());
+		accessImpl.setExternalUrl(getExternalUrl());
+		accessImpl.setFolderId(getFolderId());
+		accessImpl.setFileId(getFileId());
 		accessImpl.setThumbnail(getThumbnail());
 		accessImpl.setPosition(getPosition());
 
@@ -558,7 +622,11 @@ public class AccessModelImpl
 		accessImpl.setCategoryId(
 			this.<Long>getColumnOriginalValue("categoryId"));
 		accessImpl.setTitle(this.<String>getColumnOriginalValue("title"));
-		accessImpl.setUrl(this.<String>getColumnOriginalValue("url"));
+		accessImpl.setType(this.<Integer>getColumnOriginalValue("type_"));
+		accessImpl.setExternalUrl(
+			this.<String>getColumnOriginalValue("externalUrl"));
+		accessImpl.setFolderId(this.<Long>getColumnOriginalValue("folderId"));
+		accessImpl.setFileId(this.<Long>getColumnOriginalValue("fileId"));
 		accessImpl.setThumbnail(
 			this.<String>getColumnOriginalValue("thumbnail"));
 		accessImpl.setPosition(
@@ -658,13 +726,19 @@ public class AccessModelImpl
 			accessCacheModel.title = null;
 		}
 
-		accessCacheModel.url = getUrl();
+		accessCacheModel.type = getType();
 
-		String url = accessCacheModel.url;
+		accessCacheModel.externalUrl = getExternalUrl();
 
-		if ((url != null) && (url.length() == 0)) {
-			accessCacheModel.url = null;
+		String externalUrl = accessCacheModel.externalUrl;
+
+		if ((externalUrl != null) && (externalUrl.length() == 0)) {
+			accessCacheModel.externalUrl = null;
 		}
+
+		accessCacheModel.folderId = getFolderId();
+
+		accessCacheModel.fileId = getFileId();
 
 		accessCacheModel.thumbnail = getThumbnail();
 
@@ -768,7 +842,10 @@ public class AccessModelImpl
 	private long _accessId;
 	private long _categoryId;
 	private String _title;
-	private String _url;
+	private int _type;
+	private String _externalUrl;
+	private long _folderId;
+	private long _fileId;
 	private String _thumbnail;
 	private int _position;
 
@@ -805,7 +882,10 @@ public class AccessModelImpl
 		_columnOriginalValues.put("accessId", _accessId);
 		_columnOriginalValues.put("categoryId", _categoryId);
 		_columnOriginalValues.put("title", _title);
-		_columnOriginalValues.put("url", _url);
+		_columnOriginalValues.put("type_", _type);
+		_columnOriginalValues.put("externalUrl", _externalUrl);
+		_columnOriginalValues.put("folderId", _folderId);
+		_columnOriginalValues.put("fileId", _fileId);
 		_columnOriginalValues.put("thumbnail", _thumbnail);
 		_columnOriginalValues.put("position", _position);
 	}
@@ -816,6 +896,7 @@ public class AccessModelImpl
 		Map<String, String> attributeNames = new HashMap<>();
 
 		attributeNames.put("uuid_", "uuid");
+		attributeNames.put("type_", "type");
 
 		_attributeNames = Collections.unmodifiableMap(attributeNames);
 	}
@@ -839,11 +920,17 @@ public class AccessModelImpl
 
 		columnBitmasks.put("title", 8L);
 
-		columnBitmasks.put("url", 16L);
+		columnBitmasks.put("type_", 16L);
 
-		columnBitmasks.put("thumbnail", 32L);
+		columnBitmasks.put("externalUrl", 32L);
 
-		columnBitmasks.put("position", 64L);
+		columnBitmasks.put("folderId", 64L);
+
+		columnBitmasks.put("fileId", 128L);
+
+		columnBitmasks.put("thumbnail", 256L);
+
+		columnBitmasks.put("position", 512L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

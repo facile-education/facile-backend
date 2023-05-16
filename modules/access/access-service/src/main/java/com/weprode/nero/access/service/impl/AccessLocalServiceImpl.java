@@ -97,7 +97,10 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 				// Create access
 				Access access = AccessLocalServiceUtil.addAccess(category.getCategoryId(),
 						jsonAccess.getString(AccessConstants.TITLE),
+						jsonAccess.getInt(AccessConstants.TYPE),
 						jsonAccess.getString(AccessConstants.URL),
+						jsonAccess.getLong(AccessConstants.FOLDER_ID),
+						jsonAccess.getLong(AccessConstants.FILE_ID),
 						jsonAccess.getString(AccessConstants.THUMBNAIL),
 						jsonAccess.getInt(AccessConstants.POSITION));
 				// Create profiles
@@ -189,17 +192,23 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		JSONObject jsonAccess = new JSONObject();
 		jsonAccess.put(AccessConstants.ACCESS_ID, access.getAccessId());
 		jsonAccess.put(AccessConstants.TITLE, access.getTitle());
-		jsonAccess.put(AccessConstants.URL, access.getUrl());
+		jsonAccess.put(AccessConstants.TYPE, access.getType());
+		jsonAccess.put(AccessConstants.URL, access.getExternalUrl());
+		jsonAccess.put(AccessConstants.FOLDER_ID, access.getFolderId());
+		jsonAccess.put(AccessConstants.FILE_ID, access.getFileId());
 		jsonAccess.put(AccessConstants.THUMBNAIL, access.getThumbnail());
 		jsonAccess.put(AccessConstants.POSITION, access.getPosition());
 		return jsonAccess;
 	}
 
-	public Access addAccess(long categoryId, String title, String url, String thumbnail, int position) {
+	public Access addAccess(long categoryId, String title, int type, String url, long folderId, long fileId, String thumbnail, int position) {
 		Access access = accessPersistence.create(counterLocalService.increment());
 		access.setCategoryId(categoryId);
 		access.setTitle(title);
-		access.setUrl(url);
+		access.setType(type);
+		access.setExternalUrl(url);
+		access.setFolderId(folderId);
+		access.setFileId(fileId);
 		access.setThumbnail(thumbnail);
 		access.setPosition(position);
 		return accessPersistence.update(access);

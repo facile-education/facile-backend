@@ -112,19 +112,61 @@ public interface AccessModel extends BaseModel<Access> {
 	public void setTitle(String title);
 
 	/**
-	 * Returns the url of this access.
+	 * Returns the type of this access.
 	 *
-	 * @return the url of this access
+	 * @return the type of this access
 	 */
-	@AutoEscape
-	public String getUrl();
+	public int getType();
 
 	/**
-	 * Sets the url of this access.
+	 * Sets the type of this access.
 	 *
-	 * @param url the url of this access
+	 * @param type the type of this access
 	 */
-	public void setUrl(String url);
+	public void setType(int type);
+
+	/**
+	 * Returns the external url of this access.
+	 *
+	 * @return the external url of this access
+	 */
+	@AutoEscape
+	public String getExternalUrl();
+
+	/**
+	 * Sets the external url of this access.
+	 *
+	 * @param externalUrl the external url of this access
+	 */
+	public void setExternalUrl(String externalUrl);
+
+	/**
+	 * Returns the folder ID of this access.
+	 *
+	 * @return the folder ID of this access
+	 */
+	public long getFolderId();
+
+	/**
+	 * Sets the folder ID of this access.
+	 *
+	 * @param folderId the folder ID of this access
+	 */
+	public void setFolderId(long folderId);
+
+	/**
+	 * Returns the file ID of this access.
+	 *
+	 * @return the file ID of this access
+	 */
+	public long getFileId();
+
+	/**
+	 * Sets the file ID of this access.
+	 *
+	 * @param fileId the file ID of this access
+	 */
+	public void setFileId(long fileId);
 
 	/**
 	 * Returns the thumbnail of this access.

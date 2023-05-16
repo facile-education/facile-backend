@@ -61,11 +61,12 @@ public class AccessLocalServiceUtil {
 	}
 
 	public static Access addAccess(
-		long categoryId, String title, String url, String thumbnail,
-		int position) {
+		long categoryId, String title, int type, String url, long folderId,
+		long fileId, String thumbnail, int position) {
 
 		return getService().addAccess(
-			categoryId, title, url, thumbnail, position);
+			categoryId, title, type, url, folderId, fileId, thumbnail,
+			position);
 	}
 
 	public static org.json.JSONObject convertToJson(Access access) {

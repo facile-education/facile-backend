@@ -6,7 +6,10 @@
 		<field name="accessId" type="long" />
 		<field name="categoryId" type="long" />
 		<field name="title" type="String" />
-		<field name="url" type="String" />
+		<field name="type" type="int" />
+		<field name="externalUrl" type="String" />
+		<field name="folderId" type="long" />
+		<field name="fileId" type="long" />
 		<field name="thumbnail" type="String" />
 		<field name="position" type="int" />
 	</model>

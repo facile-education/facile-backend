@@ -81,8 +81,8 @@ public interface AccessLocalService
 	public Access addAccess(Access access);
 
 	public Access addAccess(
-		long categoryId, String title, String url, String thumbnail,
-		int position);
+		long categoryId, String title, int type, String url, long folderId,
+		long fileId, String thumbnail, int position);
 
 	public JSONObject convertToJson(Access access);
 
