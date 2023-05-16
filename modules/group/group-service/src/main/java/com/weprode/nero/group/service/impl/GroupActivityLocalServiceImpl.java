@@ -73,7 +73,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             // Do not exceed 1 month back in time
             while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
                 // Fetch activities from minDate = maxDate minus 7 days
-                logger.info("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
+                logger.debug("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
 
                 // Group news
                 if (withNews) {
