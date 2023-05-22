@@ -1,5 +1,6 @@
 create table Messaging_Message (
 	messageId LONG not null primary key,
+	companyId LONG,
 	folderId LONG,
 	threadId LONG,
 	sendMessageId LONG,

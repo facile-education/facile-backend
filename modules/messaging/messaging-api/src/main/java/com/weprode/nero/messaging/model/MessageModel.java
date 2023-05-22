@@ -16,6 +16,7 @@ package com.weprode.nero.messaging.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.ShardedModel;
 
 import java.util.Date;
 
@@ -33,7 +34,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * @generated
  */
 @ProviderType
-public interface MessageModel extends BaseModel<Message> {
+public interface MessageModel extends BaseModel<Message>, ShardedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -68,6 +69,22 @@ public interface MessageModel extends BaseModel<Message> {
 	 * @param messageId the message ID of this message
 	 */
 	public void setMessageId(long messageId);
+
+	/**
+	 * Returns the company ID of this message.
+	 *
+	 * @return the company ID of this message
+	 */
+	@Override
+	public long getCompanyId();
+
+	/**
+	 * Sets the company ID of this message.
+	 *
+	 * @param companyId the company ID of this message
+	 */
+	@Override
+	public void setCompanyId(long companyId);
 
 	/**
 	 * Returns the folder ID of this message.

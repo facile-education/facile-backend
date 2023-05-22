@@ -3,6 +3,7 @@
 <model-hints>
 	<model name="com.weprode.nero.messaging.model.Message">
 		<field name="messageId" type="long" />
+		<field name="companyId" type="long" />
 		<field name="folderId" type="long" />
 		<field name="threadId" type="long" />
 		<field name="sendMessageId" type="long" />
