@@ -6,6 +6,7 @@
 
 	<entity name="Message" local-service="true" remote-service="true">
 		<column name="messageId" type="long" primary="true"/>
+		<column name="companyId" type="long"/>
 
 		<column name="folderId" type="long"/>
 		<column name="threadId" type="long"/>

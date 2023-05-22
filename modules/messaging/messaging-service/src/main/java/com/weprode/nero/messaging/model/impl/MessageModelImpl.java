@@ -73,13 +73,14 @@ public class MessageModelImpl
 	public static final String TABLE_NAME = "Messaging_Message";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"messageId", Types.BIGINT}, {"folderId", Types.BIGINT},
-		{"threadId", Types.BIGINT}, {"sendMessageId", Types.BIGINT},
-		{"senderId", Types.BIGINT}, {"sendDate", Types.TIMESTAMP},
-		{"senderName", Types.VARCHAR}, {"messageSubject", Types.VARCHAR},
-		{"messageContent", Types.VARCHAR}, {"isNew", Types.BOOLEAN},
-		{"readDate", Types.TIMESTAMP}, {"isAnswered", Types.BOOLEAN},
-		{"isForwarded", Types.BOOLEAN}, {"type_", Types.INTEGER}
+		{"messageId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"folderId", Types.BIGINT}, {"threadId", Types.BIGINT},
+		{"sendMessageId", Types.BIGINT}, {"senderId", Types.BIGINT},
+		{"sendDate", Types.TIMESTAMP}, {"senderName", Types.VARCHAR},
+		{"messageSubject", Types.VARCHAR}, {"messageContent", Types.VARCHAR},
+		{"isNew", Types.BOOLEAN}, {"readDate", Types.TIMESTAMP},
+		{"isAnswered", Types.BOOLEAN}, {"isForwarded", Types.BOOLEAN},
+		{"type_", Types.INTEGER}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -87,6 +88,7 @@ public class MessageModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("messageId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("folderId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("threadId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("sendMessageId", Types.BIGINT);
@@ -103,7 +105,7 @@ public class MessageModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Messaging_Message (messageId LONG not null primary key,folderId LONG,threadId LONG,sendMessageId LONG,senderId LONG,sendDate DATE null,senderName VARCHAR(75) null,messageSubject STRING null,messageContent STRING null,isNew BOOLEAN,readDate DATE null,isAnswered BOOLEAN,isForwarded BOOLEAN,type_ INTEGER)";
+		"create table Messaging_Message (messageId LONG not null primary key,companyId LONG,folderId LONG,threadId LONG,sendMessageId LONG,senderId LONG,sendDate DATE null,senderName VARCHAR(75) null,messageSubject STRING null,messageContent STRING null,isNew BOOLEAN,readDate DATE null,isAnswered BOOLEAN,isForwarded BOOLEAN,type_ INTEGER)";
 
 	public static final String TABLE_SQL_DROP = "drop table Messaging_Message";
 
@@ -180,6 +182,7 @@ public class MessageModelImpl
 		Message model = new MessageImpl();
 
 		model.setMessageId(soapModel.getMessageId());
+		model.setCompanyId(soapModel.getCompanyId());
 		model.setFolderId(soapModel.getFolderId());
 		model.setThreadId(soapModel.getThreadId());
 		model.setSendMessageId(soapModel.getSendMessageId());
@@ -344,6 +347,9 @@ public class MessageModelImpl
 		attributeGetterFunctions.put("messageId", Message::getMessageId);
 		attributeSetterBiConsumers.put(
 			"messageId", (BiConsumer<Message, Long>)Message::setMessageId);
+		attributeGetterFunctions.put("companyId", Message::getCompanyId);
+		attributeSetterBiConsumers.put(
+			"companyId", (BiConsumer<Message, Long>)Message::setCompanyId);
 		attributeGetterFunctions.put("folderId", Message::getFolderId);
 		attributeSetterBiConsumers.put(
 			"folderId", (BiConsumer<Message, Long>)Message::setFolderId);
@@ -410,6 +416,21 @@ public class MessageModelImpl
 		}
 
 		_messageId = messageId;
+	}
+
+	@JSON
+	@Override
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	@Override
+	public void setCompanyId(long companyId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_companyId = companyId;
 	}
 
 	@JSON
@@ -707,7 +728,7 @@ public class MessageModelImpl
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(
-			0, Message.class.getName(), getPrimaryKey());
+			getCompanyId(), Message.class.getName(), getPrimaryKey());
 	}
 
 	@Override
@@ -737,6 +758,7 @@ public class MessageModelImpl
 		MessageImpl messageImpl = new MessageImpl();
 
 		messageImpl.setMessageId(getMessageId());
+		messageImpl.setCompanyId(getCompanyId());
 		messageImpl.setFolderId(getFolderId());
 		messageImpl.setThreadId(getThreadId());
 		messageImpl.setSendMessageId(getSendMessageId());
@@ -762,6 +784,8 @@ public class MessageModelImpl
 
 		messageImpl.setMessageId(
 			this.<Long>getColumnOriginalValue("messageId"));
+		messageImpl.setCompanyId(
+			this.<Long>getColumnOriginalValue("companyId"));
 		messageImpl.setFolderId(this.<Long>getColumnOriginalValue("folderId"));
 		messageImpl.setThreadId(this.<Long>getColumnOriginalValue("threadId"));
 		messageImpl.setSendMessageId(
@@ -857,6 +881,8 @@ public class MessageModelImpl
 		MessageCacheModel messageCacheModel = new MessageCacheModel();
 
 		messageCacheModel.messageId = getMessageId();
+
+		messageCacheModel.companyId = getCompanyId();
 
 		messageCacheModel.folderId = getFolderId();
 
@@ -1007,6 +1033,7 @@ public class MessageModelImpl
 	}
 
 	private long _messageId;
+	private long _companyId;
 	private long _folderId;
 	private long _threadId;
 	private long _sendMessageId;
@@ -1051,6 +1078,7 @@ public class MessageModelImpl
 		_columnOriginalValues = new HashMap<String, Object>();
 
 		_columnOriginalValues.put("messageId", _messageId);
+		_columnOriginalValues.put("companyId", _companyId);
 		_columnOriginalValues.put("folderId", _folderId);
 		_columnOriginalValues.put("threadId", _threadId);
 		_columnOriginalValues.put("sendMessageId", _sendMessageId);
@@ -1089,31 +1117,33 @@ public class MessageModelImpl
 
 		columnBitmasks.put("messageId", 1L);
 
-		columnBitmasks.put("folderId", 2L);
+		columnBitmasks.put("companyId", 2L);
 
-		columnBitmasks.put("threadId", 4L);
+		columnBitmasks.put("folderId", 4L);
 
-		columnBitmasks.put("sendMessageId", 8L);
+		columnBitmasks.put("threadId", 8L);
 
-		columnBitmasks.put("senderId", 16L);
+		columnBitmasks.put("sendMessageId", 16L);
 
-		columnBitmasks.put("sendDate", 32L);
+		columnBitmasks.put("senderId", 32L);
 
-		columnBitmasks.put("senderName", 64L);
+		columnBitmasks.put("sendDate", 64L);
 
-		columnBitmasks.put("messageSubject", 128L);
+		columnBitmasks.put("senderName", 128L);
 
-		columnBitmasks.put("messageContent", 256L);
+		columnBitmasks.put("messageSubject", 256L);
 
-		columnBitmasks.put("isNew", 512L);
+		columnBitmasks.put("messageContent", 512L);
 
-		columnBitmasks.put("readDate", 1024L);
+		columnBitmasks.put("isNew", 1024L);
 
-		columnBitmasks.put("isAnswered", 2048L);
+		columnBitmasks.put("readDate", 2048L);
 
-		columnBitmasks.put("isForwarded", 4096L);
+		columnBitmasks.put("isAnswered", 4096L);
 
-		columnBitmasks.put("type_", 8192L);
+		columnBitmasks.put("isForwarded", 8192L);
+
+		columnBitmasks.put("type_", 16384L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

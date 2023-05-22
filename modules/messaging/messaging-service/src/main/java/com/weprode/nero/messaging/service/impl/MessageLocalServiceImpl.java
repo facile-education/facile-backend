@@ -11,11 +11,14 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
@@ -27,7 +30,12 @@ import com.weprode.nero.messaging.model.Message;
 import com.weprode.nero.messaging.model.MessageContent;
 import com.weprode.nero.messaging.model.MessageFolder;
 import com.weprode.nero.messaging.model.MessagingThread;
-import com.weprode.nero.messaging.service.*;
+import com.weprode.nero.messaging.service.MessageAttachFileLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageContentLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageFolderLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageRecipientsLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessagingConfigLocalServiceUtil;
 import com.weprode.nero.messaging.service.base.MessageLocalServiceBaseImpl;
 import com.weprode.nero.messaging.utils.MessagingUtil;
 import com.weprode.nero.messaging.utils.ThreadSendMessage;
@@ -114,10 +122,12 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         return new MessagingThread(threadId, messageList);
     }
 
+    @Indexable(type = IndexableType.REINDEX)
     public Message addMessage(long folderId, long senderId, Date sendDate, long threadId, String messageSubject, String messageContent, boolean isNew, int type, long sendMessageId) {
         try {
             final long messageId = counterLocalService.increment();
             Message message = this.createMessage(messageId);
+            message.setCompanyId(PortalUtil.getDefaultCompanyId());
 
             message.setFolderId(folderId);
 
@@ -277,6 +287,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         return false;
     }
 
+    @Indexable(type = IndexableType.REINDEX)
     public JSONObject saveDraft(long senderId, long draftMessageId, String subject, String content, List<Long> recipientIds, List<Long> attachFileIds, boolean isSupport) {
         JSONObject result = new JSONObject();
 
@@ -479,6 +490,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         return messageList;
     }
 
+    @Indexable(type = IndexableType.DELETE)
     public void deleteMessageAndDependencies(long messageId) throws NoSuchMessageException, SystemException {
         // Message content, recipients and attached files are duplicated among all recipients, so no need to keep old messages anymore
         try {

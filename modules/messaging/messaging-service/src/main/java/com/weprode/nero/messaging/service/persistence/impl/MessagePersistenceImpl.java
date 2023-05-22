@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -2736,6 +2737,8 @@ public class MessagePersistenceImpl
 
 		message.setNew(true);
 		message.setPrimaryKey(messageId);
+
+		message.setCompanyId(CompanyThreadLocal.getCompanyId());
 
 		return message;
 	}

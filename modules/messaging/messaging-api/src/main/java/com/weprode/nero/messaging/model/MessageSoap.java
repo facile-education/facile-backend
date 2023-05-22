@@ -34,6 +34,7 @@ public class MessageSoap implements Serializable {
 		MessageSoap soapModel = new MessageSoap();
 
 		soapModel.setMessageId(model.getMessageId());
+		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setFolderId(model.getFolderId());
 		soapModel.setThreadId(model.getThreadId());
 		soapModel.setSendMessageId(model.getSendMessageId());
@@ -106,6 +107,14 @@ public class MessageSoap implements Serializable {
 
 	public void setMessageId(long messageId) {
 		_messageId = messageId;
+	}
+
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
 	}
 
 	public long getFolderId() {
@@ -225,6 +234,7 @@ public class MessageSoap implements Serializable {
 	}
 
 	private long _messageId;
+	private long _companyId;
 	private long _folderId;
 	private long _threadId;
 	private long _sendMessageId;

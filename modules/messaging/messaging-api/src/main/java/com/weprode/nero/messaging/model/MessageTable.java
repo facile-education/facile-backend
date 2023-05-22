@@ -34,6 +34,8 @@ public class MessageTable extends BaseTable<MessageTable> {
 
 	public final Column<MessageTable, Long> messageId = createColumn(
 		"messageId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<MessageTable, Long> companyId = createColumn(
+		"companyId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<MessageTable, Long> folderId = createColumn(
 		"folderId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<MessageTable, Long> threadId = createColumn(

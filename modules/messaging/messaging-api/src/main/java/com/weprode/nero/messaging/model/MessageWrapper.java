@@ -43,6 +43,7 @@ public class MessageWrapper
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("messageId", getMessageId());
+		attributes.put("companyId", getCompanyId());
 		attributes.put("folderId", getFolderId());
 		attributes.put("threadId", getThreadId());
 		attributes.put("sendMessageId", getSendMessageId());
@@ -66,6 +67,12 @@ public class MessageWrapper
 
 		if (messageId != null) {
 			setMessageId(messageId);
+		}
+
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
 		}
 
 		Long folderId = (Long)attributes.get("folderId");
@@ -150,6 +157,16 @@ public class MessageWrapper
 	@Override
 	public Message cloneWithOriginalValues() {
 		return wrap(model.cloneWithOriginalValues());
+	}
+
+	/**
+	 * Returns the company ID of this message.
+	 *
+	 * @return the company ID of this message
+	 */
+	@Override
+	public long getCompanyId() {
+		return model.getCompanyId();
 	}
 
 	/**
@@ -335,6 +352,16 @@ public class MessageWrapper
 	@Override
 	public void persist() {
 		model.persist();
+	}
+
+	/**
+	 * Sets the company ID of this message.
+	 *
+	 * @param companyId the company ID of this message
+	 */
+	@Override
+	public void setCompanyId(long companyId) {
+		model.setCompanyId(companyId);
 	}
 
 	/**

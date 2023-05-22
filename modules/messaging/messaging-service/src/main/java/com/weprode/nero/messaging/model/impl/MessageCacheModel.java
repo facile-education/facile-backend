@@ -61,10 +61,12 @@ public class MessageCacheModel implements CacheModel<Message>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(29);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("{messageId=");
 		sb.append(messageId);
+		sb.append(", companyId=");
+		sb.append(companyId);
 		sb.append(", folderId=");
 		sb.append(folderId);
 		sb.append(", threadId=");
@@ -101,6 +103,7 @@ public class MessageCacheModel implements CacheModel<Message>, Externalizable {
 		MessageImpl messageImpl = new MessageImpl();
 
 		messageImpl.setMessageId(messageId);
+		messageImpl.setCompanyId(companyId);
 		messageImpl.setFolderId(folderId);
 		messageImpl.setThreadId(threadId);
 		messageImpl.setSendMessageId(sendMessageId);
@@ -156,6 +159,8 @@ public class MessageCacheModel implements CacheModel<Message>, Externalizable {
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		messageId = objectInput.readLong();
 
+		companyId = objectInput.readLong();
+
 		folderId = objectInput.readLong();
 
 		threadId = objectInput.readLong();
@@ -181,6 +186,8 @@ public class MessageCacheModel implements CacheModel<Message>, Externalizable {
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(messageId);
+
+		objectOutput.writeLong(companyId);
 
 		objectOutput.writeLong(folderId);
 
@@ -223,6 +230,7 @@ public class MessageCacheModel implements CacheModel<Message>, Externalizable {
 	}
 
 	public long messageId;
+	public long companyId;
 	public long folderId;
 	public long threadId;
 	public long sendMessageId;
