@@ -1,3 +1,6 @@
+create index IX_29FA94DA on Organization_ClassCoursMapping (classOrgId, coursOrgId);
+create index IX_22A8691F on Organization_ClassCoursMapping (coursOrgId);
+
 create index IX_C278DE3E on Organization_OrgCiteScolaire (parentENTStructureUAI[$COLUMN_LENGTH:75$]);
 
 create index IX_717D2295 on Organization_OrgDetails (schoolId, isArchive);

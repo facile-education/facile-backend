@@ -422,6 +422,11 @@ public class CDTSessionLocalServiceWrapper
 			schoolId, startDate, endDate);
 	}
 
+	@Override
+	public String getSessionColor(long sessionId, long userId) {
+		return _cdtSessionLocalService.getSessionColor(sessionId, userId);
+	}
+
 	/**
 	 * Get session student list
 	 */

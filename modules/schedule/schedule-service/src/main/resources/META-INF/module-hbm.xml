@@ -4,14 +4,13 @@
 <hibernate-mapping auto-import="false" default-lazy="false">
 	<import class="com.weprode.nero.schedule.model.CDTSession" />
 	<import class="com.weprode.nero.schedule.model.DailySchedule" />
+	<import class="com.weprode.nero.schedule.model.GroupColor" />
 	<import class="com.weprode.nero.schedule.model.Homework" />
 	<import class="com.weprode.nero.schedule.model.ScheduleConfiguration" />
-	<import class="com.weprode.nero.schedule.model.SessionParentClass" />
 	<import class="com.weprode.nero.schedule.model.SessionStudent" />
 	<import class="com.weprode.nero.schedule.model.SessionTeacher" />
 	<import class="com.weprode.nero.schedule.model.StudentHomework" />
 	<import class="com.weprode.nero.schedule.model.SubjectGroupColor" />
-	<import class="com.weprode.nero.schedule.model.TeacherGroupColor" />
 	<import class="com.weprode.nero.schedule.model.WeeklySchedule" />
 	<class name="com.weprode.nero.schedule.model.impl.CDTSessionImpl" table="Schedule_CDTSession">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionId" type="long">
@@ -38,6 +37,12 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionStartHour" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionEndHour" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
+	<class name="com.weprode.nero.schedule.model.impl.GroupColorImpl" table="Schedule_GroupColor">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="color" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
 	<class name="com.weprode.nero.schedule.model.impl.HomeworkImpl" table="Schedule_Homework">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="homeworkId" type="long">
 			<generator class="assigned" />
@@ -62,13 +67,6 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="endDayTime" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="startSessionsDate" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="endSessionsDate" type="org.hibernate.type.TimestampType" />
-	</class>
-	<class name="com.weprode.nero.schedule.model.impl.SessionParentClassImpl" table="Schedule_SessionParentClass">
-		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionParentClassId" type="long">
-			<generator class="assigned" />
-		</id>
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.weprode.nero.schedule.model.impl.SessionStudentImpl" table="Schedule_SessionStudent">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionStudentId" type="long">
@@ -103,14 +101,6 @@
 			<generator class="assigned" />
 		</id>
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="subject" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="color" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-	</class>
-	<class name="com.weprode.nero.schedule.model.impl.TeacherGroupColorImpl" table="Schedule_TeacherGroupColor">
-		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="teacherGroupColorId" type="long">
-			<generator class="assigned" />
-		</id>
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="teacherId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="color" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>

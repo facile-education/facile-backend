@@ -2,23 +2,25 @@ package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.schedule.service.TeacherGroupColorLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SchoollifeSlot;
 import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
 import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.school.life.service.base.SchoollifeSessionLocalServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 @Component(
         property = "model.class.name=com.weprode.nero.school.life.model.SchoollifeSession",
@@ -198,10 +200,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
                             jsonSession.put(JSONConstants.ROOM, teacherSlot.getRoom());
                             jsonSession.put(JSONConstants.TITLE, getSessionName(slotSession.getSchoollifeSessionId()));
                             jsonSession.put(JSONConstants.SUBJECT, getSessionName(slotSession.getSchoollifeSessionId()));
-
-                            // Color is picked in the color pool, the groupId is replaced by the schoollife type
-                            String color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(teacherId, slotSession.getType());
-                            jsonSession.put(JSONConstants.COLOR, color);
+                            jsonSession.put(JSONConstants.COLOR, getColorFromSchoollifeType(slotSession.getType()));
 
                             jsonSessions.put(jsonSession);
                         }
@@ -213,6 +212,18 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
         }
 
         return jsonSessions;
+    }
+
+
+    private String getColorFromSchoollifeType(int schoollifeType) {
+        switch (schoollifeType) {
+            case 1: return "#f00";
+            case 2: return "#EDA12A";
+            case 3: return "#3694B7";
+            case 4: return "#8763CA";
+            case 5: return "#32AC71";
+            default: return "#000";
+        }
     }
 
     public boolean setRollCalled(long schoollifeSessionId) {

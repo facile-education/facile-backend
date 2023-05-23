@@ -375,6 +375,10 @@ public class CDTSessionLocalServiceUtil {
 		return getService().getSchoolSessions(schoolId, startDate, endDate);
 	}
 
+	public static String getSessionColor(long sessionId, long userId) {
+		return getService().getSessionColor(sessionId, userId);
+	}
+
 	/**
 	 * Get session student list
 	 */

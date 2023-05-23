@@ -60,4 +60,22 @@
 		</finder>
 	</entity>
 
+	<entity name="ClassCoursMapping" local-service="true" remote-service="false">
+
+		<column name="mappingId" type="long" primary="true" />
+		<column name="classOrgId" type="long" />
+		<column name="coursOrgId" type="long" />
+
+		<finder return-type="Collection" name="classOrgId">
+			<finder-column name="classOrgId" />
+		</finder>
+		<finder return-type="Collection" name="coursOrgId">
+			<finder-column name="coursOrgId" />
+		</finder>
+		<finder return-type="Collection" name="classOrgId_CoursOrgId">
+			<finder-column name="classOrgId" />
+			<finder-column name="coursOrgId" />
+		</finder>
+	</entity>
+
 </service-builder>

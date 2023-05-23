@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 
 <model-hints>
+	<model name="com.weprode.nero.organization.model.ClassCoursMapping">
+		<field name="mappingId" type="long" />
+		<field name="classOrgId" type="long" />
+		<field name="coursOrgId" type="long" />
+	</model>
 	<model name="com.weprode.nero.organization.model.OrgCiteScolaire">
 		<field name="parentENTStructureUAI" type="String" />
 		<field name="childENTStructureUAI" type="String" />

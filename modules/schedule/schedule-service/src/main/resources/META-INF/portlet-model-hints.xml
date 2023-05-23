@@ -26,6 +26,10 @@
 		<field name="sessionStartHour" type="String" />
 		<field name="sessionEndHour" type="String" />
 	</model>
+	<model name="com.weprode.nero.schedule.model.GroupColor">
+		<field name="groupId" type="long" />
+		<field name="color" type="String" />
+	</model>
 	<model name="com.weprode.nero.schedule.model.Homework">
 		<field name="homeworkId" type="long" />
 		<field name="type" type="long" />
@@ -48,11 +52,6 @@
 		<field name="endDayTime" type="String" />
 		<field name="startSessionsDate" type="Date" />
 		<field name="endSessionsDate" type="Date" />
-	</model>
-	<model name="com.weprode.nero.schedule.model.SessionParentClass">
-		<field name="sessionParentClassId" type="long" />
-		<field name="sessionId" type="long" />
-		<field name="groupId" type="long" />
 	</model>
 	<model name="com.weprode.nero.schedule.model.SessionStudent">
 		<field name="sessionStudentId" type="long" />
@@ -79,12 +78,6 @@
 	<model name="com.weprode.nero.schedule.model.SubjectGroupColor">
 		<field name="subjectGroupColorId" type="long" />
 		<field name="subject" type="String" />
-		<field name="groupId" type="long" />
-		<field name="color" type="String" />
-	</model>
-	<model name="com.weprode.nero.schedule.model.TeacherGroupColor">
-		<field name="teacherGroupColorId" type="long" />
-		<field name="teacherId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="color" type="String" />
 	</model>

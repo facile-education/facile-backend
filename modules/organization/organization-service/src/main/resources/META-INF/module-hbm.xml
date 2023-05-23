@@ -2,9 +2,17 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.weprode.nero.organization.model.ClassCoursMapping" />
 	<import class="com.weprode.nero.organization.model.OrgCiteScolaire" />
 	<import class="com.weprode.nero.organization.model.OrgDetails" />
 	<import class="com.weprode.nero.organization.model.OrgMapping" />
+	<class name="com.weprode.nero.organization.model.impl.ClassCoursMappingImpl" table="Organization_ClassCoursMapping">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="mappingId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="classOrgId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="coursOrgId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
 	<class name="com.weprode.nero.organization.model.impl.OrgCiteScolaireImpl" table="Organization_OrgCiteScolaire">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="childENTStructureUAI" type="java.lang.String">
 			<generator class="assigned" />

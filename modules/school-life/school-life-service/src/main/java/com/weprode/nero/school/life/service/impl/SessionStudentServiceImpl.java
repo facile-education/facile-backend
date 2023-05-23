@@ -2,9 +2,6 @@ package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -19,9 +16,7 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.SessionParentClassLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
-import com.weprode.nero.schedule.service.SubjectGroupColorLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SessionStudent;
@@ -32,6 +27,8 @@ import com.weprode.nero.school.life.service.base.SessionStudentServiceBaseImpl;
 import com.weprode.nero.school.life.service.persistence.SessionStudentPK;
 import com.weprode.nero.school.life.utils.NotificationUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -97,6 +94,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
         }
 
         try {
+            User user = getGuestOrUser();
             SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
             Date minDate = df.parse(minDateStr);
             Date maxDate = df.parse(maxDateStr);
@@ -140,14 +138,10 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
                     teacherArray.put(jsonTeacher);
                 }
-
                 cdtSessionJson.put(JSONConstants.TEACHERS, teacherArray);
 
-                // Color is based on the parent class
-                List<Long> groupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(cdtSession.getSessionId());
-                long groupId = (groupIds != null && !groupIds.isEmpty()) ? groupIds.get(0) : cdtSession.getGroupId();
-                String color = SubjectGroupColorLocalServiceUtil.getSubjectGroupColor(groupId, cdtSession.getSubject());
-                cdtSessionJson.put(JSONConstants.COLOR, color);
+                // Color
+                cdtSessionJson.put(JSONConstants.COLOR, CDTSessionLocalServiceUtil.getSessionColor(cdtSession.getSessionId(), user.getUserId()));
 
                 jsonSessions.put(cdtSessionJson);
             }

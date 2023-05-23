@@ -5,6 +5,8 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.weprode.nero.organization.service.ClassCoursMappingLocalServiceUtil;
+import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -240,28 +242,38 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 	}
 
 	public List<CDTSession> getGroupSessions(long groupId, Date minDate, Date maxDate, boolean includeSubClasses) {
-		DateFormat sdf = new SimpleDateFormat("dd/mMM/yyyy HH:mm:ss");
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		logger.info("Fetching sessions for groupId " + groupId + " from " + sdf.format(minDate) + " to " + sdf.format(maxDate) + " with subclasses " + includeSubClasses);
 
 		List<CDTSession> sessions = new ArrayList<>();
 		try {
-			List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
-			for (CDTSession groupSession : groupSessions) {
-				if (groupSession.getSessionStart().after(minDate) && groupSession.getSessionStart().before(maxDate)) {
-					sessions.add(groupSession);
+			// If group is a community
+			Group group = GroupLocalServiceUtil.getGroup(groupId);
+			if (group.isRegularSite()) {
+				List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
+				for (CDTSession groupSession : groupSessions) {
+					if (groupSession.getSessionStart().after(minDate) && groupSession.getSessionStart().before(maxDate)) {
+						sessions.add(groupSession);
+					}
+				}
+			} else {
+				// Organization
+				Organization org = OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
+				// If org is a cours, get its sessions
+				if (OrgDetailsLocalServiceUtil.isCours(org.getOrganizationId())) {
+					List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
+					for (CDTSession groupSession : groupSessions) {
+						if (groupSession.getSessionStart().after(minDate) && groupSession.getSessionStart().before(maxDate)) {
+							sessions.add(groupSession);
+						}
+					}
+				} else if (OrgDetailsLocalServiceUtil.isClass(org.getOrganizationId())) {
+					// If group is a class, get the sessions of the class's cours
+					List<Long> coursGroupIds = ClassCoursMappingLocalServiceUtil.getClassCours(groupId);
+					sessions = cdtSessionFinder.getGroupsSessions(coursGroupIds, minDate, maxDate);
 				}
 			}
 
-			if (includeSubClasses) {
-				// Add sessions in SessionParent table
-				List<Long> subSessionIds = SessionParentClassLocalServiceUtil.getGroupSessions(groupId);
-				for (Long subSessionId : subSessionIds) {
-					CDTSession subSession = CDTSessionLocalServiceUtil.getCDTSession(subSessionId);
-					if (subSession.getSessionStart().after(minDate) && subSession.getSessionStart().before(maxDate)) {
-						sessions.add(subSession);
-					}
-				}
-			}
 		} catch (Exception e) {
 			logger.error("Error getting sessions for group " + groupId, e);
 		}
@@ -471,6 +483,18 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 		return cal.getTime();
 	}
 
+	public String getSessionColor(long sessionId, long userId) {
+
+		try {
+			CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
+			return GroupColorLocalServiceUtil.getColor(session.getGroupId());
+		} catch (Exception e) {
+			logger.error("Error getting color for session " + sessionId + " and user " + userId, e);
+		}
+		// Default
+		return "#EA4335";
+	}
+
 	/**
 	 * Delete a CDTSession with all its dependencies (homeworks, attachments..)
 	 */
@@ -478,11 +502,8 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 		// Remove SessionTeacher
 		SessionTeacherLocalServiceUtil.removeBySessionId(sessionId);
 
-		// Remove SesisonStudents
+		// Remove SessionStudents
 		SessionStudentLocalServiceUtil.removeBySessionId(sessionId);
-
-		// Remove ParentClasses
-		SessionParentClassLocalServiceUtil.deleteBySessionId(sessionId);
 
 		// Remove homeworks from this session
 		HomeworkLocalServiceUtil.deleteSessionHomeworks(sessionId);

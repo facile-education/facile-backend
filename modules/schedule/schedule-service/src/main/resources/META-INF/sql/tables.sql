@@ -32,6 +32,11 @@ create table Schedule_DailySchedule (
 	primary key (schoolId, sessionId)
 );
 
+create table Schedule_GroupColor (
+	groupId LONG not null primary key,
+	color VARCHAR(75) null
+);
+
 create table Schedule_Homework (
 	homeworkId LONG not null primary key,
 	type_ LONG,

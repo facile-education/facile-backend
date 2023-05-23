@@ -25,24 +25,6 @@
 		</finder>
 	</entity>
 
-	<!-- Store all parent classes for sub-classes sessions -->
-	<entity name="SessionParentClass" local-service="true" remote-service="false">
-		<column name="sessionParentClassId" type="long" primary="true"/>
-		<column name="sessionId" type="long" />
-		<column name="groupId" type="long" />
-
-		<finder return-type="Collection" name="sessionId">
-			<finder-column name="sessionId" />
-		</finder>
-		<finder return-type="Collection" name="groupId">
-			<finder-column name="groupId" />
-		</finder>
-		<finder return-type="Collection" name="sessionId_groupId">
-			<finder-column name="sessionId" />
-			<finder-column name="groupId" />
-		</finder>
-	</entity>
-
 	<!-- Manage which teacher operates for a given session -->
 	<entity name="SessionTeacher" local-service="true" remote-service="true">
 		<column name="sessionTeacherId" type="long" primary="true"/>
@@ -144,22 +126,14 @@
 		</finder>
 	</entity>
 
-	<entity name="TeacherGroupColor" local-service="true" remote-service="false">
-		<column name="teacherGroupColorId" type="long" primary="true"/>
-		<column name="teacherId" type="long"/>
-		<column name="groupId" type="long"/>
+	<entity name="GroupColor" local-service="true" remote-service="false">
+
+		<column name="groupId" type="long" primary="true"/>
 		<column name="color" type="String" />
 
-		<finder return-type="Collection" name="teacherId">
-			<finder-column name="teacherId" />
-		</finder>
-
-		<finder return-type="Collection" name="teacherId_groupId">
-			<finder-column name="teacherId" />
-			<finder-column name="groupId" />
-		</finder>
 	</entity>
 
+	<!-- Not used in GVA but kept for France color management through subjects (for students) -->
 	<entity name="SubjectGroupColor" local-service="true" remote-service="false">
 		<column name="subjectGroupColorId" type="long" primary="true"/>
 		<column name="subject" type="String"/>

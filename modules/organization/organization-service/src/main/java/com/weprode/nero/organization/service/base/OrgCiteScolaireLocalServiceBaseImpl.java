@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.organization.model.OrgCiteScolaire;
 import com.weprode.nero.organization.service.OrgCiteScolaireLocalService;
 import com.weprode.nero.organization.service.OrgCiteScolaireLocalServiceUtil;
+import com.weprode.nero.organization.service.persistence.ClassCoursMappingPersistence;
 import com.weprode.nero.organization.service.persistence.OrgCiteScolairePersistence;
 import com.weprode.nero.organization.service.persistence.OrgDetailsPersistence;
 import com.weprode.nero.organization.service.persistence.OrgMappingPersistence;
@@ -422,6 +423,9 @@ public abstract class OrgCiteScolaireLocalServiceBaseImpl
 			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
+
+	@Reference
+	protected ClassCoursMappingPersistence classCoursMappingPersistence;
 
 	protected OrgCiteScolaireLocalService orgCiteScolaireLocalService;
 
