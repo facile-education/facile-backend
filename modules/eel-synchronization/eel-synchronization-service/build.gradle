@@ -7,6 +7,7 @@ dependencies {
 	compile project(":modules:preference:preference-api")
 	compile project(":modules:schedule:schedule-api")
 	compile project(":modules:messaging:messaging-api")
+	compile project(":modules:about:about-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 	compileOnly group: 'org.json', name: 'json'

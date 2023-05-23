@@ -45,15 +45,14 @@ import com.weprode.nero.schedule.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.schedule.service.persistence.CDTSessionFinder;
 import com.weprode.nero.schedule.service.persistence.CDTSessionPersistence;
 import com.weprode.nero.schedule.service.persistence.DailySchedulePersistence;
+import com.weprode.nero.schedule.service.persistence.GroupColorPersistence;
 import com.weprode.nero.schedule.service.persistence.HomeworkFinder;
 import com.weprode.nero.schedule.service.persistence.HomeworkPersistence;
 import com.weprode.nero.schedule.service.persistence.ScheduleConfigurationPersistence;
-import com.weprode.nero.schedule.service.persistence.SessionParentClassPersistence;
 import com.weprode.nero.schedule.service.persistence.SessionStudentPersistence;
 import com.weprode.nero.schedule.service.persistence.SessionTeacherPersistence;
 import com.weprode.nero.schedule.service.persistence.StudentHomeworkPersistence;
 import com.weprode.nero.schedule.service.persistence.SubjectGroupColorPersistence;
-import com.weprode.nero.schedule.service.persistence.TeacherGroupColorPersistence;
 import com.weprode.nero.schedule.service.persistence.WeeklySchedulePersistence;
 
 import java.io.Serializable;
@@ -480,6 +479,9 @@ public abstract class SessionStudentLocalServiceBaseImpl
 	protected DailySchedulePersistence dailySchedulePersistence;
 
 	@Reference
+	protected GroupColorPersistence groupColorPersistence;
+
+	@Reference
 	protected HomeworkPersistence homeworkPersistence;
 
 	@Reference
@@ -487,9 +489,6 @@ public abstract class SessionStudentLocalServiceBaseImpl
 
 	@Reference
 	protected ScheduleConfigurationPersistence scheduleConfigurationPersistence;
-
-	@Reference
-	protected SessionParentClassPersistence sessionParentClassPersistence;
 
 	protected SessionStudentLocalService sessionStudentLocalService;
 
@@ -504,9 +503,6 @@ public abstract class SessionStudentLocalServiceBaseImpl
 
 	@Reference
 	protected SubjectGroupColorPersistence subjectGroupColorPersistence;
-
-	@Reference
-	protected TeacherGroupColorPersistence teacherGroupColorPersistence;
 
 	@Reference
 	protected WeeklySchedulePersistence weeklySchedulePersistence;

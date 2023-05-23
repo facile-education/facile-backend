@@ -14,15 +14,11 @@
 
 package com.weprode.nero.schedule.model.impl;
 
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
-import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
@@ -35,10 +31,11 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.StudentHomework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.SessionParentClassLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.utils.JSONProxy;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -103,32 +100,25 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         jsonHomework.put("attachFiles", JSONProxy.convertAttachFiles(user, homeworkAttachFiles, false));
         jsonHomework.put("attachExercices", JSONProxy.convertAttachFiles(user, homeworkAttachFiles, true));*/
 
-        // Class name
-        String className = "";
-        String schoolName = "";
+        long referenceSessionId = (this.getTargetSessionId() != 0) ? this.getTargetSessionId() : this.getSourceSessionId();
+
+        // Cours name
+        String coursName = "";
         try {
+            long groupId = this.getGroupId();
             if (this.getGroupId() == 0) {
-                // SubClass
-                long referenceSessionId = (this.getTargetSessionId() != 0) ? this.getTargetSessionId() : this.getSourceSessionId();
-                className = SessionParentClassLocalServiceUtil.getParentClassName(referenceSessionId);
-            } else {
-                Group group = GroupLocalServiceUtil.getGroup(this.getGroupId());
-                className = OrgUtilsLocalServiceUtil.formatOrgName(group.getName(), false);
-                if (!group.isRegularSite()) {
-                    // Institutional -> school name
-                    schoolName = OrgUtilsLocalServiceUtil.formatOrgName(OrganizationLocalServiceUtil.getOrganization(group.getOrganizationId()).getParentOrganization().getName() , true);
-                    jsonHomework.put(JSONConstants.SCHOOL_NAME, schoolName);
-                }
+                // Use either source or target session to get the homework's groupId
+                groupId = CDTSessionLocalServiceUtil.getCDTSession(referenceSessionId).getGroupId();
             }
+            Group group = GroupLocalServiceUtil.getGroup(groupId);
+            coursName = OrgUtilsLocalServiceUtil.formatOrgName(group.getName(), false);
         } catch (Exception e) {
-            logger.error("Cannot fetch className for homeworkId = " + this.getHomeworkId(), e);
+            logger.error("Cannot fetch coursName for homeworkId = " + this.getHomeworkId(), e);
         }
-        jsonHomework.put(JSONConstants.CLASS_NAME, className);
-
-        long sessionIdReference = (this.getTargetSessionId() != 0) ? this.getTargetSessionId() : this.getSourceSessionId();
+        jsonHomework.put(JSONConstants.COURS, coursName);
 
         try {
-            CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sessionIdReference);
+            CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(referenceSessionId);
             jsonHomework.put(JSONConstants.SUBJECT, cdtSession.getSubject());
         } catch (Exception e) {
             logger.error("Error when getting lesson subject for homeworkId " + this.getHomeworkId(), e);
@@ -141,7 +131,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
             // Teacher case
 
             // Build the student list for the associated class/group
-            List<User> targetSessionStudents = CDTSessionLocalServiceUtil.getSessionStudents(sessionIdReference);
+            List<User> targetSessionStudents = CDTSessionLocalServiceUtil.getSessionStudents(referenceSessionId);
             List<User> sourceSessionStudents = CDTSessionLocalServiceUtil.getSessionStudents(this.getSourceSessionId());
 
             JSONArray targetSessionStudentsJson = JSONProxy.convertUsersToJson(targetSessionStudents);

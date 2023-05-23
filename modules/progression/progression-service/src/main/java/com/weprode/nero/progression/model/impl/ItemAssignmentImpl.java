@@ -27,10 +27,9 @@ import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
-import com.weprode.nero.schedule.service.TeacherGroupColorLocalServiceUtil;
 import org.json.JSONObject;
-
 
 import java.text.SimpleDateFormat;
 
@@ -67,7 +66,7 @@ public class ItemAssignmentImpl extends ItemAssignmentBaseImpl {
                 jsonAssignment.put(JSONConstants.GROUP_NAME, groupName);
             }
 
-            String color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(userId, cdtSession.getGroupId());
+            String color = GroupColorLocalServiceUtil.getColor(cdtSession.getGroupId());
             jsonAssignment.put(JSONConstants.COLOR, color);
 
         } catch (Exception e) {

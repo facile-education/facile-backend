@@ -312,6 +312,9 @@ public interface CDTSessionLocalService
 			Long schoolId, Date startDate, Date endDate)
 		throws SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String getSessionColor(long sessionId, long userId);
+
 	/**
 	 * Get session student list
 	 */

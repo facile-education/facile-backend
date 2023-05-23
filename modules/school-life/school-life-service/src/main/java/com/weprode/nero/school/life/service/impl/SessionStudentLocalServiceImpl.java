@@ -1,9 +1,6 @@
 package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -11,7 +8,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
-import com.weprode.nero.schedule.service.SubjectGroupColorLocalServiceUtil;
+import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SchoollifeSlot;
@@ -21,6 +18,8 @@ import com.weprode.nero.school.life.service.SchoollifeSlotLocalServiceUtil;
 import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.school.life.service.base.SessionStudentLocalServiceBaseImpl;
 import com.weprode.nero.school.life.service.persistence.SessionStudentPK;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -229,8 +228,8 @@ public class SessionStudentLocalServiceImpl extends SessionStudentLocalServiceBa
                                     jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());
                                     schoollifeSessionJson.put(JSONConstants.TEACHER, jsonTeacher);
 
-                                    // Color is picked in the color pool, like other subjects
-                                    String color = SubjectGroupColorLocalServiceUtil.getSubjectGroupColor(studentClass.getGroupId(), sessionName);
+                                    // Color
+                                    String color = GroupColorLocalServiceUtil.getColor(studentClass.getGroupId());
                                     schoollifeSessionJson.put(JSONConstants.COLOR, color);
 
                                     jsonSessions.put(schoollifeSessionJson);

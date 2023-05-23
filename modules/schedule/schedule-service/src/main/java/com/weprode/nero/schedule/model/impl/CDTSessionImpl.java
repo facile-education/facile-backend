@@ -79,16 +79,7 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.IS_PUBLISH, this.getPublished());
 
         // Color
-        String color = "";
-        if (RoleUtilsLocalServiceUtil.isStudent(user)) {
-            // Color is based on the parent class
-            List<Long> groupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(this.getSessionId());
-            long groupId = (groupIds != null && !groupIds.isEmpty()) ? groupIds.get(0) : this.getGroupId();
-            color = SubjectGroupColorLocalServiceUtil.getSubjectGroupColor(groupId, this.getSubject());
-        } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(user.getUserId(), this.getGroupId());
-        }
-        jsonSession.put(JSONConstants.COLOR, color);
+        jsonSession.put(JSONConstants.COLOR, CDTSessionLocalServiceUtil.getSessionColor(this.getSessionId(), user.getUserId()));
 
         // Teachers
         List<User> sessionTeachers = SessionTeacherLocalServiceUtil.getTeachers(this.getSessionId());
@@ -188,7 +179,6 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.IS_PUBLISH, this.getPublished());
         jsonSession.put(JSONConstants.TITLE, this.getTitle());
         jsonSession.put(JSONConstants.CLASS_NAME, className);
-        // jsonSession.put("parentGroupIds", parentGroupIds);
         jsonSession.put(JSONConstants.SUBJECT, this.getSubject());
         jsonSession.put(JSONConstants.IS_PERSONAL_GROUP, isPersonalGroup);
 
@@ -198,20 +188,13 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.IS_CURRENT_USER_TEACHER, sessionTeachers.contains(user));
 
         // Color
-        String color; // default
-
-        // If user is student or parent or personal getting sessions for a given class -> use SubjectGroup colors
-        // If user if a teacher or personal getting sessions for a given teacher -> use TeacherGroup colors
         if (colorsTeacherId != 0) {
-            color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(colorsTeacherId, this.getGroupId());
+            logger.info("Get color for teacher " + colorsTeacherId);
+            jsonSession.put(JSONConstants.COLOR, CDTSessionLocalServiceUtil.getSessionColor(this.getSessionId(), colorsTeacherId));
         } else {
-            // Color is based on the class, not the cours -> use the parent class
-            List<Long> groupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(this.getSessionId());
-            long groupId = (groupIds != null && !groupIds.isEmpty()) ? groupIds.get(0) : this.getGroupId();
-            color = SubjectGroupColorLocalServiceUtil.getSubjectGroupColor(groupId, this.getSubject());
+            logger.info("Get color for user " + user.getUserId());
+            jsonSession.put(JSONConstants.COLOR, CDTSessionLocalServiceUtil.getSessionColor(this.getSessionId(), user.getUserId()));
         }
-
-        jsonSession.put(JSONConstants.COLOR, color);
 
         // Attach files
         // TODO Attachments
@@ -309,33 +292,28 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         String groupName = "";
 
         try {
-            if (this.getSessionId() == 0) {
-                groupName = SessionParentClassLocalServiceUtil.getParentClassName(this.getSessionId());
-
-            } else {
-                Group group = null;
-                try {
-                    group = GroupLocalServiceUtil.getGroup(this.getGroupId());
-                } catch (Exception e) {
-                    logger.debug(e);
-                }
-
-                if (group != null) {
-                    if (group.isRegularSite()) {
-                        // Personal group
-                        groupName = group.getName();
-                        int index = groupName.indexOf("LFR_ORGANIZATION");
-                        if (index > 0) {
-                            groupName = groupName.substring(0, index);
-                        }
-                    } else {
-                        // Institutional group
-                        Organization organization = OrganizationLocalServiceUtil.getOrganization(group.getOrganizationId());
-                        groupName =  OrgUtilsLocalServiceUtil.formatOrgName(organization.getName(), withSchoolName);
-                    }
-                }
-
+            Group group = null;
+            try {
+                group = GroupLocalServiceUtil.getGroup(this.getGroupId());
+            } catch (Exception e) {
+                logger.debug(e);
             }
+
+            if (group != null) {
+                if (group.isRegularSite()) {
+                    // Personal group
+                    groupName = group.getName();
+                    int index = groupName.indexOf("LFR_ORGANIZATION");
+                    if (index > 0) {
+                        groupName = groupName.substring(0, index);
+                    }
+                } else {
+                    // Institutional group
+                    Organization organization = OrganizationLocalServiceUtil.getOrganization(group.getOrganizationId());
+                    groupName =  OrgUtilsLocalServiceUtil.formatOrgName(organization.getName(), withSchoolName);
+                }
+            }
+
         } catch (Exception e) {
             logger.error("Error when getting cdt session group name", e);
         }

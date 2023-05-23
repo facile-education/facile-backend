@@ -8,13 +8,18 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.*;
+import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.ldap.util.LDAPUtil;
+import com.weprode.nero.about.service.EntVersionUserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.model.Subject;
@@ -26,6 +31,7 @@ import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.messaging.service.MessagingConfigLocalServiceUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.model.OrgMapping;
+import com.weprode.nero.organization.service.ClassCoursMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
@@ -38,11 +44,14 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
-import com.weprode.nero.schedule.service.SessionParentClassLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.user.model.LDAPMapping;
 import com.weprode.nero.user.model.UserContact;
-import com.weprode.nero.user.service.*;
+import com.weprode.nero.user.service.AffectationLocalServiceUtil;
+import com.weprode.nero.user.service.LDAPMappingLocalServiceUtil;
+import com.weprode.nero.user.service.UserContactLocalServiceUtil;
+import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
@@ -53,12 +62,33 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
-import java.io.*;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.text.DateFormat;
-import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
@@ -79,9 +109,6 @@ public class GVESynchronizationManager {
 
     // Used to synchronize user classes
     private Map<User, List<Long>> userOrgMap;
-
-    // Used to store all personals and in the end get all administrative people
-    private List<String> personalCnList;
 
     // Structure built for sessions creations
     private Map<String, Map<String, List<SlotData>>> coursMap;
@@ -153,19 +180,19 @@ public class GVESynchronizationManager {
         initSynchronization();
 
         // Build schoolDn
-        String schoolDn = "ou=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
+        String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
 
         Organization school = synchronizeSchool(schoolId);
         processedSchoolIds.add(school.getOrganizationId());
 
-        String classesDn = "ou=CLASSES," + schoolDn;
+        String classesDn = "OU=CLASSES," + schoolDn;
         synchronizeClasses(school, classesDn);
         synchronizeVolees(school, classesDn);
 
-        String subjectsDn = "ou=DISCIPLINES,ou=ENSEIGNANTS," + schoolDn;
+        String subjectsDn = "OU=DISCIPLINES,OU=ENSEIGNANTS," + schoolDn;
         synchronizeTeacherSubjects(school, subjectsDn);
 
-        String sessionsDn = "ou=COURS," + schoolDn;
+        String sessionsDn = "OU=COURS," + schoolDn;
         synchronizeSessions(school, sessionsDn);
 
         // Guests
@@ -173,19 +200,19 @@ public class GVESynchronizationManager {
         synchronizeTeacherGuests(school, schoolDn);
 
         // Roles
-        synchronizeRole(school, "cn=ENT-DIRECTEURS,ou=ENT-DIRECTEURS,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.NATIONAL_4);
-        synchronizeRole(school, "cn=ENT-DIRECTEURS,ou=ENT-DIRECTEURS,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.GROUP_ADMIN);
-        synchronizeRole(school, "cn=ENT-DOYENS,ou=ENT-DOYENS,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.DOYEN);
+        synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.NATIONAL_4);
+        synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.GROUP_ADMIN);
+        synchronizeRole(school, "CN=ENT-DOYENS,OU=ENT-DOYENS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.DOYEN);
 
-        synchronizeRole(school, "cn=ENT-CONSEILLERS-ORIENTATIONS,ou=ENT-EMPS,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CONSEILLER_ORIENTATION);
-        synchronizeRole(school, "cn=ENT-CONSEILLERS-SOCIAUX,ou=ENT-EMPS,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CONSEILLER_SOCIAL);
-        synchronizeRole(school, "cn=ENT-INFIRMIERES,ou=ENT-EMPS,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.INFIRMIERE);
-        synchronizeRole(school, "cn=ENT-PSYCHOLOGUES,ou=ENT-EMPS,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.PSYCHOLOGUE);
+        synchronizeRole(school, "CN=ENT-CONSEILLERS-ORIENTATIONS,OU=ENT-EMPS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CONSEILLER_ORIENTATION);
+        synchronizeRole(school, "CN=ENT-CONSEILLERS-SOCIAUX,OU=ENT-EMPS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CONSEILLER_SOCIAL);
+        synchronizeRole(school, "CN=ENT-INFIRMIERES,OU=ENT-EMPS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.INFIRMIERE);
+        synchronizeRole(school, "CN=ENT-PSYCHOLOGUES,OU=ENT-EMPS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.PSYCHOLOGUE);
 
-        synchronizeRole(school, "cn=ENT-ASSISTANTS-TECHNIQUES,ou=ENT-PAT,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.ASSISTANT_TECHNIQUE);
-        synchronizeRole(school, "cn=ENT-CAISSIERS-COMPTABLES,ou=ENT-PAT,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CAISSIER_COMPTABLE);
-        synchronizeRole(school, "cn=ENT-MEDIATHECAIRES,ou=ENT-PAT,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.BIBLIOTHECAIRE);
-        synchronizeRole(school, "cn=ENT-SECRETAIRES,ou=ENT-PAT,ou=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.SECRETAIRE);
+        synchronizeRole(school, "CN=ENT-ASSISTANTS-TECHNIQUES,OU=ENT-PAT,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.ASSISTANT_TECHNIQUE);
+        synchronizeRole(school, "CN=ENT-CAISSIERS-COMPTABLES,OU=ENT-PAT,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CAISSIER_COMPTABLE);
+        synchronizeRole(school, "CN=ENT-MEDIATHECAIRES,OU=ENT-PAT,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.BIBLIOTHECAIRE);
+        synchronizeRole(school, "CN=ENT-SECRETAIRES,OU=ENT-PAT,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.SECRETAIRE);
 
         synchronizeHoraires(school, schoolId);
         createHoraires(school);
@@ -204,7 +231,7 @@ public class GVESynchronizationManager {
         SearchControls cons = new SearchControls(SearchControls.SUBTREE_SCOPE, 0, 0, null, false, false);
         try {
             // Loop over classes
-            NamingEnumeration<SearchResult> classesEnum = getContext(companyId).search(classesDn, GVE_LDAP_CLASS_FILTER, cons);
+            NamingEnumeration<SearchResult> classesEnum = getContext().search(classesDn, GVE_LDAP_CLASS_FILTER, cons);
             while (classesEnum.hasMoreElements()) {
                 SearchResult classResult = classesEnum.nextElement();
                 logger.info("Loop over class " + classResult.getName());
@@ -237,7 +264,7 @@ public class GVESynchronizationManager {
 
                 // Fetch current members in LDAP
                 String[] attributeIds = {ETAT_GE_PROPRIETAIRE};
-                Attributes attrs = getContext(companyId).getAttributes(classDn, attributeIds);
+                Attributes attrs = getContext().getAttributes(classDn, attributeIds);
 
                 // Attribute ETATGEproprietaire is main teacher
                 List<String> principalTeacherCns = new ArrayList<>();
@@ -245,22 +272,24 @@ public class GVESynchronizationManager {
                     for (int i = 0 ; i < attrs.get(ETAT_GE_PROPRIETAIRE).size(); i++) {
                         String principalTeacherCn = attrs.get(ETAT_GE_PROPRIETAIRE).get(i).toString();
 
-                        logger.info("Found main teacher " + principalTeacherCn);
+                        logger.info("Found main teacher " + principalTeacherCn.split(",")[0]);
                         try {
                             User mainTeacher = getUserFromCn(principalTeacherCn);
-                            principalTeacherCns.add(principalTeacherCn);
-                            addTeacherRole(mainTeacher);
+                            if (mainTeacher != null) {
+                                principalTeacherCns.add(principalTeacherCn);
+                                addTeacherRole(mainTeacher);
 
-                            // Add main teacher role
-                            Role mainTeacherRole = RoleLocalServiceUtil.getRole(mainTeacher.getCompanyId(), NeroRoleConstants.MAIN_TEACHER);
-                            UserGroupRoleLocalServiceUtil.addUserGroupRoles(mainTeacher.getUserId(), classOrg.getGroup().getGroupId(), new long[] {mainTeacherRole.getRoleId()});
-                            logger.info("  Adding teacher "+mainTeacher.getFullName()+" main teacher of class "+classOrg.getName());
+                                // Add main teacher role
+                                Role mainTeacherRole = RoleLocalServiceUtil.getRole(mainTeacher.getCompanyId(), NeroRoleConstants.MAIN_TEACHER);
+                                UserGroupRoleLocalServiceUtil.addUserGroupRoles(mainTeacher.getUserId(), classOrg.getGroup().getGroupId(), new long[]{mainTeacherRole.getRoleId()});
+                                logger.info("Adding teacher " + mainTeacher.getFullName() + " main teacher of class " + classOrg.getName());
 
-                            registerTeacherToSchool(mainTeacher, school);
-                            setSynchroDate(mainTeacher);
+                                registerTeacherToSchool(mainTeacher, school);
+                                setSynchroDate(mainTeacher);
 
-                            // Add teacher to the class
-                            addUserToOrgMap(mainTeacher, classOrg.getOrganizationId());
+                                // Add teacher to the class
+                                addUserToOrgMap(mainTeacher, classOrg.getOrganizationId());
+                            }
                         } catch (Exception e) {
                             logger.error("Error processing teacher " + principalTeacherCn);
                         }
@@ -269,19 +298,19 @@ public class GVESynchronizationManager {
 
                 // Fetch current members in LDAP
                 attributeIds = new String[]{MEMBER};
-                attrs = getContext(companyId).getAttributes(classDn, attributeIds);
+                attrs = getContext().getAttributes(classDn, attributeIds);
 
                 // All members are class students + the principal teacher
                 if (attrs.get(MEMBER) != null) {
                     for (int i = 0 ; i < attrs.get(MEMBER).size(); i++) {
                         String member = attrs.get(MEMBER).get(i).toString();
                         if (!principalTeacherCns.contains(member)) {
-                            logger.info("Found member " + member);
+                            logger.info("Found member " + member.split(",")[0]);
                             User user = getUserFromCn(member);
 
                             if (user != null) {
 
-                                if (member.contains("ou=ELEVES")) {
+                                if (member.contains("OU=ELEVES")) {
 
                                     addStudentRole(user);
                                     registerStudentToSchool(user, school);
@@ -289,7 +318,7 @@ public class GVESynchronizationManager {
                                     setSynchroDate(user);
                                     newStudentIds.add(user.getUserId());
 
-                                } else if (member.contains("ou=ENSEIGNANTS")) {
+                                } else if (member.contains("OU=ENSEIGNANTS")) {
 
                                     addTeacherRole(user);
                                     registerTeacherToSchool(user, school);
@@ -356,12 +385,12 @@ public class GVESynchronizationManager {
         SearchControls cons = new SearchControls(SearchControls.SUBTREE_SCOPE, 0, 0, null, false, false);
         try {
             // Loop over classes
-            NamingEnumeration<SearchResult> classesEnum = getContext(companyId).search(classesDn, GVE_LDAP_CLASS_FILTER, cons);
+            NamingEnumeration<SearchResult> classesEnum = getContext().search(classesDn, GVE_LDAP_CLASS_FILTER, cons);
             while (classesEnum.hasMoreElements()) {
                 SearchResult classResult = classesEnum.nextElement();
                 logger.info("Loop over class " + classResult.getName());
 
-                if (classResult.getName().substring(3).equals("HORS-CLASSE") || classResult.getName().substring(3).startsWith("CLI")) {
+                if (classResult.getName().substring(3).equals("HORS-CLASSE") || classResult.getName().startsWith("CLI", 3)) {
                     continue;
                 }
 
@@ -382,7 +411,7 @@ public class GVESynchronizationManager {
 
                 // Fetch current members in LDAP
                 String[] attributeIds = {ETAT_GE_PROPRIETAIRE};
-                Attributes attrs = getContext(companyId).getAttributes(classDn, attributeIds);
+                Attributes attrs = getContext().getAttributes(classDn, attributeIds);
 
                 // Attribute ETATGEproprietaire is main teacher
                 String principalTeacherCn = "";
@@ -393,12 +422,13 @@ public class GVESynchronizationManager {
                         try {
                             User teacher = getUserFromCn(principalTeacherCn);
 
-                            // Add main teacher role in volee
-                            long voleeGroupId = voleeOrg.getGroup().getGroupId();
-                            Role mainTeacherRole = RoleLocalServiceUtil.getRole(teacher.getCompanyId(), NeroRoleConstants.MAIN_TEACHER);
-                            UserGroupRoleLocalServiceUtil.addUserGroupRoles(teacher.getUserId(), voleeGroupId, new long[] {mainTeacherRole.getRoleId()});
-                            logger.info("  Adding teacher "+teacher.getFullName()+" main teacher of volee "+voleeOrg.getName());
-
+                            if (teacher != null) {
+                                // Add main teacher role in volee
+                                long voleeGroupId = voleeOrg.getGroup().getGroupId();
+                                Role mainTeacherRole = RoleLocalServiceUtil.getRole(teacher.getCompanyId(), NeroRoleConstants.MAIN_TEACHER);
+                                UserGroupRoleLocalServiceUtil.addUserGroupRoles(teacher.getUserId(), voleeGroupId, new long[]{mainTeacherRole.getRoleId()});
+                                logger.info("  Adding teacher " + teacher.getFullName() + " main teacher of volee " + voleeOrg.getName());
+                            }
                         } catch (Exception e) {
                             logger.error("Error processing teacher " + principalTeacherCn);
                         }
@@ -407,7 +437,7 @@ public class GVESynchronizationManager {
 
                 // Fetch current members in LDAP
                 attributeIds = new String[]{MEMBER};
-                attrs = getContext(companyId).getAttributes(classDn, attributeIds);
+                attrs = getContext().getAttributes(classDn, attributeIds);
 
                 // Add members to the volee
                 if (attrs.get(MEMBER) != null) {
@@ -596,7 +626,7 @@ public class GVESynchronizationManager {
         SearchControls cons = new SearchControls(SearchControls.SUBTREE_SCOPE, 0, 0, null, false, false);
         try {
             // Loop over classes
-            NamingEnumeration<SearchResult> subjectsEnum = getContext(companyId).search(subjectsDn, GVE_LDAP_CLASS_FILTER, cons);
+            NamingEnumeration<SearchResult> subjectsEnum = getContext().search(subjectsDn, GVE_LDAP_CLASS_FILTER, cons);
             while (subjectsEnum.hasMoreElements()) {
                 SearchResult subjectResult = subjectsEnum.nextElement();
                 String subjectName = subjectResult.getName().substring(3);
@@ -622,29 +652,30 @@ public class GVESynchronizationManager {
                         (subjectName.startsWith("A") || subjectName.startsWith("E") || subjectName.startsWith("H") || subjectName.startsWith("I") ? " d'" : " de ") + subjectName;
                 Organization subjectOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(school.getCompanyId(), subjectOrgName, school.getOrganizationId(), OrgConstants.SUBJECT_TYPE);
 
-                Attributes attrs = getContext(companyId).getAttributes(subjectDn, attributeIds);
+                Attributes attrs = getContext().getAttributes(subjectDn, attributeIds);
                 if (attrs.get(MEMBER) != null) {
                     for (int i = 0 ; i < attrs.get(MEMBER).size(); i++) {
                         String memberCn = attrs.get(MEMBER).get(i).toString();
                         logger.info("Found member " + memberCn);
-                        personalCnList.add(memberCn);
 
                         // Create teacher if needed
                         try {
                             User teacher = getUserFromCn(memberCn);
-                            logger.info("Found teacher : userId = "+ teacher.getUserId());
+                            if (teacher != null) {
+                                logger.info("Found teacher : userId = "+ teacher.getUserId());
 
-                            // Add teacher role
-                            addTeacherRole(teacher);
+                                // Add teacher role
+                                addTeacherRole(teacher);
 
-                            // Add teacher to subject org
-                            addUserToOrgMap(teacher, subjectOrg.getOrganizationId());
+                                // Add teacher to subject org
+                                addUserToOrgMap(teacher, subjectOrg.getOrganizationId());
 
-                            setSynchroDate(teacher);
-                            registerTeacherToSchool(teacher, school);
+                                setSynchroDate(teacher);
+                                registerTeacherToSchool(teacher, school);
 
-                            // Add him/her the subject
-                            TeacherSubjectLocalServiceUtil.addTeacherSubjectInSchool(teacher.getUserId(), subject.getSubjectId(), school.getOrganizationId());
+                                // Add him/her the subject
+                                TeacherSubjectLocalServiceUtil.addTeacherSubjectInSchool(teacher.getUserId(), subject.getSubjectId(), school.getOrganizationId());
+                            }
                         } catch (Exception e) {
                             logger.error("Error processing teacher " + memberCn);
                         }
@@ -662,22 +693,24 @@ public class GVESynchronizationManager {
     private Organization synchronizeSchool (String schoolId) {
 
         // Get school informations
-        String schoolDn = "ou=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
-        String[] schoolAttributes = {"description"};
+        String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
+        String[] schoolAttributes = {ATTRIBUTE_SCHOOL_DESCRIPTION};
         Organization school = null;
         try {
-            Attributes schoolAttrs = getContext(companyId).getAttributes(schoolDn, schoolAttributes);
-            if (schoolAttrs.get("description") != null) {
-                String schoolName = schoolAttrs.get("description").get().toString();
-                // Replace 'Collège' with 'CO'
-                schoolName = Normalizer.normalize(schoolName, Normalizer.Form.NFD);
-                schoolName = schoolName.replace("[^\\p{ASCII}]", "");
-                schoolName = schoolName.replace("College", "CO");
-                logger.info("School is "+ schoolName);
+            Attributes schoolAttrs = getContext().getAttributes(schoolDn, schoolAttributes);
+            if (schoolAttrs.get(ATTRIBUTE_SCHOOL_DESCRIPTION) != null) {
+                String schoolName = schoolAttrs.get(ATTRIBUTE_SCHOOL_DESCRIPTION).get().toString();
+                logger.info("SchoolName is -"+ schoolName + "-");
+                // Do not normalize because it breaks escaped characters
+                // schoolName = Normalizer.normalize(schoolName, Normalizer.Form.NFD);
+                // schoolName = schoolName.replace("[^\\p{ASCII}]", "");
+                schoolName = schoolName.replace("Cycle d'orientation", "CO");
+                logger.info("Formatted SchoolName is -"+ schoolName + "-");
 
                 // Create school and school-level orgs
                 try {
                     school = OrgUtilsLocalServiceUtil.getOrCreateSchool(companyId, schoolName);
+                    logger.info("Found school " + school.getOrganizationId());
                     OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(school.getOrganizationId());
                     OrgUtilsLocalServiceUtil.getSchoolPATsOrganization(school.getOrganizationId());
                     OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(school.getOrganizationId());
@@ -709,21 +742,23 @@ public class GVESynchronizationManager {
         logger.info("======================================================");
         logger.info("Start synchronizeStudentGuests");
 
-        String studentGuestsCn = "cn=INVITES-ELEVES,ou=GLOBAL," + schoolDn;
+        String studentGuestsCn = "CN=INVITES-ELEVES,OU=GLOBAL," + schoolDn;
 
         try {
             String[] attributeIds = {MEMBER};
-            Attributes attrs = getContext(companyId).getAttributes(studentGuestsCn, attributeIds);
+            Attributes attrs = getContext().getAttributes(studentGuestsCn, attributeIds);
 
             if (attrs.get(MEMBER) != null) {
                 for (int i = 0 ; i < attrs.get(MEMBER).size(); i++) {
                     String memberCn = attrs.get(MEMBER).get(i).toString();
                     logger.info("Found student guest " + memberCn);
                     User student = getUserFromCn(memberCn);
-                    addStudentRole(student);
-                    setSynchroDate(student);
-                    registerStudentToSchool(student, school);
-                    logger.info("Added student guest : "+student.getFullName());
+                    if (student != null) {
+                        addStudentRole(student);
+                        setSynchroDate(student);
+                        registerStudentToSchool(student, school);
+                        logger.info("Added student guest : "+student.getFullName());
+                    }
                 }
             }
         } catch (NamingException e) {
@@ -739,23 +774,24 @@ public class GVESynchronizationManager {
         logger.info("======================================================");
         logger.info("Start synchronizeTeacherGuests");
 
-        String teacherGuestsCn = "cn=INVITES-ENSEIGNANTS,ou=GLOBAL," + schoolDn;
+        String teacherGuestsCn = "CN=INVITES-ENSEIGNANTS,OU=GLOBAL," + schoolDn;
 
         try {
             String[] attributeIds = {MEMBER};
-            Attributes attrs = getContext(companyId).getAttributes(teacherGuestsCn, attributeIds);
+            Attributes attrs = getContext().getAttributes(teacherGuestsCn, attributeIds);
 
             if (attrs.get(MEMBER) != null) {
                 for (int i = 0 ; i < attrs.get(MEMBER).size(); i++) {
                     String memberCn = attrs.get(MEMBER).get(i).toString();
                     logger.info("Found teacher guest " + memberCn);
-                    personalCnList.add(memberCn);
 
                     User teacher = getUserFromCn(memberCn);
-                    addTeacherRole(teacher);
-                    setSynchroDate(teacher);
-                    registerTeacherToSchool(teacher, school);
-                    logger.info("Added teacher guest : "+teacher.getFullName());
+                    if (teacher != null) {
+                        addTeacherRole(teacher);
+                        setSynchroDate(teacher);
+                        registerTeacherToSchool(teacher, school);
+                        logger.info("Added teacher guest : "+teacher.getFullName());
+                    }
                 }
             }
         } catch (NamingException e) {
@@ -772,13 +808,12 @@ public class GVESynchronizationManager {
         logger.info("Start synchronize role " + roleName);
 
         try {
-            String attributeName = MEMBER; // "member" or "owner" ?
-            String[] attributeIds = {attributeName};
-            Attributes attrs = getContext(companyId).getAttributes(roleDn, attributeIds);
+            String[] attributeIds = {ATTRIBUTE_CLASS_MEMBER};
+            Attributes attrs = getContext().getAttributes(roleDn, attributeIds);
 
-            if (attrs.get(attributeName) != null) {
-                for (int i = 0 ; i < attrs.get(attributeName).size(); i++) {
-                    String memberCn = attrs.get(attributeName).get(i).toString();
+            if (attrs.get(ATTRIBUTE_CLASS_MEMBER) != null) {
+                for (int i = 0 ; i < attrs.get(ATTRIBUTE_CLASS_MEMBER).size(); i++) {
+                    String memberCn = attrs.get(ATTRIBUTE_CLASS_MEMBER).get(i).toString();
                     User user = getUserFromCn(memberCn);
                     if (user != null) {
                         try {
@@ -823,16 +858,16 @@ public class GVESynchronizationManager {
         if (cnUserMap.containsKey(fullCn)) {
             return cnUserMap.get(fullCn);
         } else {
-            String[] attributeIds = {"givenName", "mail", "sn", "description"};
+            String[] attributeIds = {ATTRIBUTE_USER_SN, ATTRIBUTE_USER_GIVEN_NAME, ATTRIBUTE_USER_MAIL, ATTRIBUTE_USER_EMPLOYEE_ID};
 
             try {
                 // Get specified LDAP attributes
-                Attributes attrs = getContext(companyId).getAttributes(fullCn, attributeIds);
+                Attributes attrs = getContext().getAttributes(fullCn, attributeIds);
 
-                String givenName    = LDAPUtil.getAttributeString(attrs, "givenName");
-                String sn   		= LDAPUtil.getAttributeString(attrs, "sn");
-                String mail   		= LDAPUtil.getAttributeString(attrs, "mail");
-                String uid			= LDAPUtil.getAttributeString(attrs, "description");
+                String givenName    = LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_GIVEN_NAME);
+                String sn   		= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_SN);
+                String mail   		= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_MAIL);
+                String uid			= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_EMPLOYEE_ID);
                 String shortCn = extractCn(fullCn);
 
                 // First fetch by screenname
@@ -840,7 +875,6 @@ public class GVESynchronizationManager {
                 try {
                     candidate = UserLocalServiceUtil.fetchUserByScreenName(companyId, shortCn);
                     updateMapping(candidate.getUserId(), uid);
-
                 } catch (Exception e) {
                     logger.debug(e);
                 }
@@ -850,10 +884,6 @@ public class GVESynchronizationManager {
                     logger.info("Not found any user with screenName = " + shortCn + " -> fetching it by email " + mail);
                     try {
                         candidate = UserLocalServiceUtil.fetchUserByEmailAddress(companyId, mail);
-
-                        // TODO : update screenname ? It breaks external access and opens EEL access
-                        //_log.info("Updating screenName from " + candidate.getScreenName() + " to " + shortCn);
-                        //candidate = UserLocalServiceUtil.updateScreenName(candidate.getUserId(), shortCn);
 
                         // TODO : transform user to non-manual ?
                         updateMapping(candidate.getUserId(), uid);
@@ -933,22 +963,14 @@ public class GVESynchronizationManager {
                     return candidate;
                 }
 
-            } catch (NamingException e) {
-                logger.error("LDAP error when fetching user in LDAP", e);
-                throw e;
             } catch (Exception e) {
                 logger.error("Error fetching user in LDAP");
             }
         }
-
         return null;
     }
 
-    /**
-     * Import a user
-     */
     public User createUser (String shortCn, String lastName, String firstName, String mail, String uid) throws Exception {
-        User defaultUser = UserLocalServiceUtil.getDefaultUser(companyId);
 
         boolean autoPassword = true;
         boolean autoScreenName = false;
@@ -988,9 +1010,6 @@ public class GVESynchronizationManager {
                         0, true, 1, 1, 2000, StringPool.BLANK, null,
                         null, null, null, false, serviceContext);
 
-                if (createdUserList == null) {
-                    createdUserList = new ArrayList<>();
-                }
                 createdUserList.add(user);
 
                 Date today = new Date();
@@ -1107,23 +1126,24 @@ public class GVESynchronizationManager {
     private void updateMapping(long userId, String uid) {
 
         //_log.info("Updating LDAP mapping for userId "+userId + " with UID="+uid);
+        if (uid == null || uid.equals("")) {
+            return;
+        }
         LDAPMapping ldapMapping = null;
         try {
             ldapMapping = LDAPMappingLocalServiceUtil.getLDAPMapping(userId);
+        } catch (Exception e) {
+            logger.debug("Error fetching LDAPMapping for userId " + userId);
+        }
+
+        if (ldapMapping == null) {
+            ldapMapping = LDAPMappingLocalServiceUtil.createLDAPMapping(userId);
+        }
+        try {
             ldapMapping.setUID(uid.replace("NBDS-", ""));
             LDAPMappingLocalServiceUtil.updateLDAPMapping(ldapMapping);
         } catch (Exception e) {
             logger.debug(e);
-        }
-
-        if (ldapMapping == null) {
-            try {
-                ldapMapping = LDAPMappingLocalServiceUtil.createLDAPMapping(userId);
-                ldapMapping.setUID(uid.replace("NBDS-", ""));
-                LDAPMappingLocalServiceUtil.updateLDAPMapping(ldapMapping);
-            } catch (Exception e) {
-                logger.debug(e);
-            }
         }
     }
 
@@ -1134,12 +1154,12 @@ public class GVESynchronizationManager {
         SearchControls cons = new SearchControls(SearchControls.SUBTREE_SCOPE, 0, 0, null, false, false);
         try {
             // Loop over degrees
-            String[] degrees = {"ou=9", "ou=10", "ou=11", "ou=X"};
+            String[] degrees = {"OU=9", "OU=10", "OU=11", "OU=X"};
             for (String degree : degrees) {
 
                 String degreeDn = degree + "," + sessionsDn;
 
-                NamingEnumeration<SearchResult> sessionEnum = getContext(companyId).search(degreeDn, GVE_LDAP_CLASS_FILTER, cons);
+                NamingEnumeration<SearchResult> sessionEnum = getContext().search(degreeDn, GVE_LDAP_CLASS_FILTER, cons);
                 while (sessionEnum.hasMoreElements()) {
                     SearchResult sessionResult = sessionEnum.nextElement();
                     String sessionDn = sessionResult.getName() + "," + degreeDn;
@@ -1149,10 +1169,10 @@ public class GVESynchronizationManager {
             }
 
         } catch (NamingException e) {
-            logger.error("LDAP error when synchronizing teachers and subjects", e);
+            logger.error("LDAP error when synchronizing sessions", e);
             throw e;
         } catch (Exception e) {
-            logger.error("Error in synchronizing teachers and subjects", e);
+            logger.error("Error in synchronizing sessions", e);
         }
     }
 
@@ -1191,7 +1211,7 @@ public class GVESynchronizationManager {
 
             String[] attributeIds = {MEMBER};
             int nbStudents = 0;
-            Attributes attrs = getContext(companyId).getAttributes(sessionDn, attributeIds);
+            Attributes attrs = getContext().getAttributes(sessionDn, attributeIds);
             if (attrs.get(MEMBER) != null) {
                 for (int i = 0 ; i < attrs.get(MEMBER).size(); i++) {
                     String memberCn = attrs.get(MEMBER).get(i).toString();
@@ -1202,17 +1222,21 @@ public class GVESynchronizationManager {
                     if (memberCn.contains("ELEVES")) {
                         User student = getUserFromCn(memberCn);
 
-                        // Add student to the 'cours' org
-                        addUserToOrgMap(student, coursOrg.getOrganizationId());
+                        if (student != null) {
+                            // Add student to the 'cours' org
+                            addUserToOrgMap(student, coursOrg.getOrganizationId());
 
-                        // Add student to session map
-                        studentMap.get(sessionName).add(student);
-                        nbStudents++;
+                            // Add student to session map
+                            studentMap.get(sessionName).add(student);
+                            nbStudents++;
+                        }
                     } else {
                         User teacher = getUserFromCn(memberCn);
 
-                        // Add teacher to the 'cours' org
-                        addUserToOrgMap(teacher, coursOrg.getOrganizationId());
+                        if (teacher != null) {
+                            // Add teacher to the 'cours' org
+                            addUserToOrgMap(teacher, coursOrg.getOrganizationId());
+                        }
                     }
                 }
             }
@@ -1377,7 +1401,7 @@ public class GVESynchronizationManager {
         // Loop over other lines
         for (int i = 1 ; i < csvLines.size() ; i++) {
             String csvLine = csvLines.get(i);
-            logger.info(csvLine);
+            logger.info(i + "/" + csvLines.size() + " : " + csvLine);
             String[] csvLineTab = csvLine.split(CSV_SEPARATOR);
 
             //  - Column 0 : slot
@@ -1390,7 +1414,7 @@ public class GVESynchronizationManager {
             //  - Column 7 : class name
             //  - Column 8 : teacher 4-letter name (unused)
             //  - Column 9 : teacher SIRH
-            //  - Column 10 : teacher fullname
+            //  - Column 10 : teacher full name
             //  - Column 11 : teacher name
             //  - Column 12 : teacher givenName
             //  - Column 13 : subject
@@ -1461,7 +1485,6 @@ public class GVESynchronizationManager {
                                     }
 
                                     slotData.addTeacherFrequency(teacher.getUserId(), frequency, sessionName);
-                                    slotData.addParentClassGroupId(classOrg.getGroupId());
                                     slotData.addParentClassOrgId(classOrg.getOrganizationId());
                                 }
                             }
@@ -1487,8 +1510,6 @@ public class GVESynchronizationManager {
             slotData.setRoom(room);
             slotData.setSubject(subject);
             slotData.addTeacherFrequency(teacher.getUserId(), frequency, sessionName);
-
-            slotData.addParentClassGroupId(classOrg.getGroupId());
             slotData.addParentClassOrgId(classOrg.getOrganizationId());
 
             coursMap.get(shortSessionName).get(slot).add(slotData);
@@ -1502,34 +1523,34 @@ public class GVESynchronizationManager {
 
         // Replace all special (§ and +) chars by '_'
         newSessionName = newSessionName.replace("\u00A7", "_").replace("\\+", "_");
-        logger.info("getSessionName temp is " + newSessionName);
+        logger.debug("getSessionName temp is " + newSessionName);
 
         // If session name ends with G1 or G2, keep the suffix
         // Else if 2 letters then 4 numerics, then shorten to 6 chars
         // Else if 2 letters then 1 special char then 4 numerics, then shorten to 7 chars
         // Else, keep the cours name
 
-        String regex1 = "[A-Z]{2}[0-9]{4}.*";
-        String regex2 = "[A-Z]{2}[_.+]{1}[0-9]{4}.*";
+        String regex1 = "[A-Z]{2}\\d{4}.*";
+        String regex2 = "[A-Z]{2}[_.+]\\d{4}.*";
 
         if (newSessionName.endsWith("G1") || newSessionName.endsWith("G2")) {
-            logger.info("======================= KEEP FULL NAME ===================");
+            logger.debug("======================= KEEP FULL NAME ===================");
             // Nothing so that we generate groups with complete session name
         }
         // If session is 2 letters and 4 numerics, shorten to 6 chars
         else if (Pattern.matches(regex1, newSessionName)) {
-            logger.info("======================= SHORTEN TO 6 ===================");
+            logger.debug("======================= SHORTEN TO 6 ===================");
             newSessionName = newSessionName.substring(0, (Math.min(newSessionName.length(), 6)));
         }
         // If session is 2 letters, a special char and 4 numerics, shorten to 7 chars
         else if (Pattern.matches(regex2, newSessionName)) {
-            logger.info("======================= SHORTEN TO 7 ===================");
+            logger.debug("======================= SHORTEN TO 7 ===================");
             newSessionName = newSessionName.substring(0, (Math.min(newSessionName.length(), 7)));
         } else {
             // Language or science groups -> keep full name
-            logger.info("--------- ELSE");
+            logger.debug("--------- ELSE");
         }
-        logger.info("sessionName " + sessionName + " transformed into " + newSessionName);
+        logger.debug("sessionName " + sessionName + " transformed into " + newSessionName);
         return newSessionName;
 
     }
@@ -1574,6 +1595,7 @@ public class GVESynchronizationManager {
             coursCal.set(Calendar.SECOND, 0);
             Date coursStartDate = coursCal.getTime();
             List<CDTSession> existingCoursSessions = CDTSessionLocalServiceUtil.getGroupSessions(coursOrg.getGroupId(), coursStartDate, schoolYearEndDate, false);
+            logger.info("Found " + existingCoursSessions.size() + "sessions for cours " + coursOrg.getName());
 
             // Will contain all processed sessionIds
             List<Long> newSessionIds = new ArrayList<>();
@@ -1594,11 +1616,11 @@ public class GVESynchronizationManager {
                     List<SessionInfos> sessionInfosList = getSessionInfos(slot, slotData);
 
                     logger.info("");
-                    logger.info("===================================================================================================");
+                    logger.info("===========");
                     logger.info("Building CDT sessions for class " + coursOrg.getName() + " (" +classIndex+ "/" + coursMap.size()+ ")"
                             + ", slot " + slot + " (" +slotIndex+ "/" +slotMap.size()+"), room " + room + ", sessionName = " + coursName
                             + " with subject " + slotData.getSubject()
-                            + " and parentClassGroupIds = " + slotData.getParentClassGroupIds().toString());
+                            + " and parentClassOrgIds = " + slotData.getParentClassOrgIds().toString());
 
                     // Add teachers into cours + parent classes + volees + school + school-level
                     List<Long> allSlotTeacherIds = getTeacherIds(slotData);
@@ -1632,16 +1654,6 @@ public class GVESynchronizationManager {
                         }
                     }
 
-                    // Existing sessions for this cours org : from today at 6 in the morning to the schoolyear'end date
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(new Date());
-                    cal.set(Calendar.HOUR_OF_DAY, 6);
-                    cal.set(Calendar.MINUTE, 0);
-                    cal.set(Calendar.SECOND, 0);
-                    Date startDate = cal.getTime();
-                    List<CDTSession> existingSessions = new ArrayList<>(CDTSessionLocalServiceUtil.getGroupSessions(coursOrg.getGroupId(), startDate, schoolYearEndDate, false));
-                    logger.info("Found " + existingSessions.size() + " existing sessions");
-
                     logger.info("There is " + sessionInfosList.size() + " session infos to process");
                     for (SessionInfos sessionInfos : sessionInfosList) {
 
@@ -1657,7 +1669,7 @@ public class GVESynchronizationManager {
                         //end tmp
 
 
-                        CDTSession existingSession = getExistingSession(existingSessions, sessionInfos.getStartsessionDate(), sessionInfos.getEndSessionDate(), sessionInfos.getFullCoursName(), room);
+                        CDTSession existingSession = getExistingSession(existingCoursSessions, sessionInfos.getStartsessionDate(), sessionInfos.getEndSessionDate(), sessionInfos.getFullCoursName(), room);
 
                         if (existingSession != null) {
 
@@ -1680,12 +1692,12 @@ public class GVESynchronizationManager {
                             updateTeachers(existingSession, teacherIdList, sessionInfosList.size() > 1);
 
                             // Update parentGroupIds if needed
-                            updateParentClassGroupIds(existingSession.getSessionId(), slotData.getParentClassGroupIds());
+                            ClassCoursMappingLocalServiceUtil.updateClassCoursMapping(coursOrg.getOrganizationId(), slotData.getParentClassOrgIds());
 
                             // Add fullCoursName if needed
                             if (!existingSession.getFullCoursName().contains(sessionInfos.getFullCoursName())) {
                                 existingSession.setFullCoursName(existingSession.getFullCoursName() + "," + sessionInfos.getFullCoursName());
-                                logger.info(" > ADD fullCoursName " + sessionInfos.getFullCoursName());
+                                logger.debug(" > ADD fullCoursName " + sessionInfos.getFullCoursName());
                                 try {
                                     CDTSessionLocalServiceUtil.updateCDTSession(existingSession);
                                 } catch (Exception e) {
@@ -1700,10 +1712,10 @@ public class GVESynchronizationManager {
                                         sessionInfos.getStartsessionDate(), sessionInfos.getEndSessionDate(), teacherIdList, room, coursName, sessionInfos.getFullCoursName(), "", true, false);
                                 logger.info("CREATED SESSION " + createdSession.getSessionId() + " for coursName = " + coursName + " and from " + fullFormat.format(sessionInfos.getStartsessionDate()) + " to " + fullFormat.format(sessionInfos.getEndSessionDate()));
                                 newSessionIds.add(createdSession.getSessionId());
-                                existingSessions.add(createdSession);
+                                existingCoursSessions.add(createdSession);
 
                                 // Add parentGroupIds
-                                updateParentClassGroupIds(createdSession.getSessionId(), slotData.getParentClassGroupIds());
+                                ClassCoursMappingLocalServiceUtil.updateClassCoursMapping(coursOrg.getOrganizationId(), slotData.getParentClassOrgIds());
 
                             } catch (Exception e) {
                                 logger.error("Error creating CDT session", e);
@@ -1766,7 +1778,7 @@ public class GVESynchronizationManager {
 
     private String extractVolee (String coursName) {
 
-        if (Pattern.matches("[A-Z]{2}[._][0-9]{4}.*", coursName)) {
+        if (Pattern.matches("[A-Z]{2}[._]\\d{4}.*", coursName)) {
             return coursName.substring(3,5);
         } else {
             String volee = coursName.substring(2,4);
@@ -1824,17 +1836,6 @@ public class GVESynchronizationManager {
             }
         } catch (Exception e) {
             logger.error("Error while updating teachers", e);
-        }
-    }
-
-    private void updateParentClassGroupIds (Long sessionId, List<Long> newParentClassGroupIds) {
-        List<Long> existingParentGroupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(sessionId);
-
-        for (Long newParentGroupId : newParentClassGroupIds) {
-            if (!existingParentGroupIds.contains(newParentGroupId)) {
-                SessionParentClassLocalServiceUtil.addSessionParentClass(sessionId, newParentGroupId);
-                logger.debug(">>> ADDING parentGroupId " + newParentGroupId + " to sessionId " + sessionId);
-            }
         }
     }
 
@@ -1907,12 +1908,12 @@ public class GVESynchronizationManager {
     private List<SessionInfos> getSessionInfos(String slot, SlotData slotData) {
         List<SessionInfos> sessionInfosList = new ArrayList<>();
 
-        logger.info(" >> slot = " + slot);
+        logger.debug(" >> slot = " + slot);
 
         // Convert slot to day number and hour number
         int slotDay = getSlotDay(slot);
         String startTimeStr = startSlotMap.get(slot.substring(1, 3));
-        logger.info(" >> startTimeStr = " + startTimeStr);
+        logger.debug(" >> startTimeStr = " + startTimeStr);
         int slotStartHour = Integer.parseInt(startTimeStr.substring(0, 2));
         int slotStartMinute = Integer.parseInt(startTimeStr.substring(3, 5));
         String endTimeStr = endSlotMap.get(slot.substring(1, 3));
@@ -1952,6 +1953,7 @@ public class GVESynchronizationManager {
                 cal.setTime(rangeStartDate);
                 cal.set(Calendar.HOUR_OF_DAY, slotStartHour);
                 cal.set(Calendar.MINUTE, slotStartMinute);
+                cal.set(Calendar.SECOND, 0);
 
                 // Get first matching day of week
                 for (int i = 0 ; i<7 ; i++) {
@@ -2020,6 +2022,7 @@ public class GVESynchronizationManager {
                 // Start date
                 cal.set(Calendar.HOUR_OF_DAY, slotStartHour);
                 cal.set(Calendar.MINUTE, slotStartMinute);
+                cal.set(Calendar.SECOND, 0);
                 Date startDate = cal.getTime();
 
                 // End date
@@ -2048,7 +2051,7 @@ public class GVESynchronizationManager {
 
     private boolean is1H(Calendar cal) {
         if (h1Weeks.contains(cal.get(Calendar.WEEK_OF_YEAR))) {
-            logger.info("date " + cal.getTime() +" is 1H. Week of year is " + cal.get(Calendar.WEEK_OF_YEAR));
+            logger.debug("date " + cal.getTime() +" is 1H. Week of year is " + cal.get(Calendar.WEEK_OF_YEAR));
             return true;
         }
 
@@ -2057,7 +2060,7 @@ public class GVESynchronizationManager {
 
     private boolean is2H(Calendar cal) {
         if (h2Weeks.contains(cal.get(Calendar.WEEK_OF_YEAR))) {
-            logger.info("date " + cal.getTime() +" is 2H. Week of year is " + cal.get(Calendar.WEEK_OF_YEAR));
+            logger.debug("date " + cal.getTime() +" is 2H. Week of year is " + cal.get(Calendar.WEEK_OF_YEAR));
             return true;
         }
 
@@ -2103,12 +2106,10 @@ public class GVESynchronizationManager {
         String room;
         String subject;
         List<TeacherFrequency> teacherFrequencyList;
-        List<Long> parentClassGroupIds;	// For CDT search
         List<Long> parentClassOrgIds;	// For registering teachers to parent classes
 
         public SlotData() {
             teacherFrequencyList = new ArrayList<>();
-            parentClassGroupIds = new ArrayList<>();
             parentClassOrgIds = new ArrayList<>();
         }
 
@@ -2125,16 +2126,6 @@ public class GVESynchronizationManager {
         }
         public String getRoom() {
             return this.room;
-        }
-
-        public void addParentClassGroupId(Long groupId) {
-            if (!this.parentClassGroupIds.contains(groupId)) {
-                this.parentClassGroupIds.add(groupId);
-            }
-        }
-
-        public List<Long> getParentClassGroupIds() {
-            return parentClassGroupIds;
         }
 
         public void addParentClassOrgId(Long orgId) {
@@ -2304,7 +2295,7 @@ public class GVESynchronizationManager {
 
     }
 
-    public LdapContext getContext(long companyId) {
+    public LdapContext getContext() throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException, KeyManagementException, UnrecoverableKeyException {
         if (ctx != null) {
             return ctx;
         }
@@ -2312,19 +2303,38 @@ public class GVESynchronizationManager {
         String baseProviderURL 	= PropsUtil.get(GVE_LDAP_BASE_PROVIDER_URL);
         String principal 		= PropsUtil.get(GVE_LDAP_SECURITY_PRINCIPAL);
         String credentials 		= PropsUtil.get(GVE_LDAP_SECURITY_CREDENTIALS);
-
+        // logger.info("Get LDAPS context for baseProviderURL=" + baseProviderURL + " , principal = " + principal +", groupDn=" + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS));
         Properties environmentProperties = new Properties();
 
+        // Get truststore containing certification chain
+        String storePassword = System.getProperty("javax.net.ssl.trustStorePassword"); //"changeit";
+        InputStream trustStream = new FileInputStream(System.getProperty("javax.net.ssl.trustStore"));
+        char[] trustPassword = storePassword.toCharArray();
+
+        KeyStore trustStore = KeyStore.getInstance("JKS");
+        trustStore.load(trustStream, trustPassword);
+
+        TrustManagerFactory trustFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        trustFactory.init(trustStore);
+        TrustManager[] trustManagers = trustFactory.getTrustManagers();
+
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, trustManagers, null);
+
+        SSLSocketFactory sslsocketfactory = sslContext.getSocketFactory();
+
         environmentProperties.put(Context.INITIAL_CONTEXT_FACTORY,  "com.sun.jndi.ldap.LdapCtxFactory");
+        environmentProperties.put(Context.SECURITY_AUTHENTICATION, "simple");
+        environmentProperties.put(Context.SECURITY_PROTOCOL, "ssl");
         environmentProperties.put(Context.PROVIDER_URL, baseProviderURL);
         environmentProperties.put(Context.SECURITY_PRINCIPAL, principal);
         environmentProperties.put(Context.SECURITY_CREDENTIALS, credentials);
-        // environmentProperties.put(Context.REFERRAL, PropsUtil.get(LDAP_REFERRAL));
+        environmentProperties.put("java.naming.ldap.factory.socket", sslsocketfactory.getClass().getName());
+        environmentProperties.put("java.naming.ldap.version", "3");
 
         try {
             ctx = new InitialLdapContext(environmentProperties, null);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.warn("Failed to bind to the LDAP server", e);
         }
 
@@ -2340,7 +2350,6 @@ public class GVESynchronizationManager {
         createdUserList = new ArrayList<>();
         userOrgMap = new HashMap<>();
         studentMap = new HashMap<>();
-        personalCnList = new ArrayList<>();
         reportData = new ReportData();
 
         try {
@@ -2351,6 +2360,7 @@ public class GVESynchronizationManager {
 
         DateFormat sdf = new SimpleDateFormat(JSONConstants.FRENCH_FORMAT);
         try {
+            // TODO use Horaires management
             schoolYearStartDate = sdf.parse("22/08/2022");
             schoolYearSemesterDate = sdf.parse("22/01/2023"); // The sunday before changing semester date
             schoolYearEndDate = sdf.parse("01/07/2023");
@@ -2358,6 +2368,7 @@ public class GVESynchronizationManager {
             logger.debug(e1);
         }
 
+        // TODO use Horaires management
         h1Weeks = new ArrayList<>();
         h1Weeks.add(34);
         h1Weeks.add(36);
@@ -2405,6 +2416,7 @@ public class GVESynchronizationManager {
         // First day is the first day of vacation period
         // Second day is the first day of work after the vacation period
         vacations = new HashMap<>();
+        // TODO use Horaires management
         try {
             vacations.put(sdf.parse("08/09/2022"), sdf.parse("09/09/2022"));
             vacations.put(sdf.parse("24/10/2022"), sdf.parse("31/10/2022"));
@@ -2529,12 +2541,11 @@ public class GVESynchronizationManager {
             try {
                 logger.info("Init new user " + createdUser.getFullName());
 
-                // Send welcome message
-                //InternalMessageLocalServiceUtil.sendWelcomeMessage(createdUser);
+                // TODO Send welcome message
+                // MessageLocalServiceUtil.sendWelcomeMessage(createdUser);
 
                 // Mark latest ent news as read so that it does not pop at first connection
-                // TODO Update info
-                // EntVersionUserLocalServiceUtil.markLastVersionAsRead(createdUser.getUserId());
+                EntVersionUserLocalServiceUtil.markLastVersionAsRead(createdUser.getUserId());
 
             } catch (Exception e) {
                 logger.error("Error when initiating created account", e);
@@ -2678,13 +2689,18 @@ public class GVESynchronizationManager {
     private static final String GVE_LDAP_BASE_PROVIDER_URL = "gve.ldap.base.provider.url";
     private static final String GVE_LDAP_SECURITY_PRINCIPAL = "gve.ldap.security.principal";
     private static final String GVE_LDAP_SECURITY_CREDENTIALS = "gve.ldap.security.credentials";
-
     private static final String GVE_LDAP_BASE_DN_GROUPS = "gve.ldap.base.dn.groups";
 
-    private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=ETATGEgroupOfNames)";
-
-    private static final String ETAT_GE_PROPRIETAIRE = "ETATGEproprietaire";
+    private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=eTATGEgroup)";
+    private static final String ETAT_GE_PROPRIETAIRE = "eTATGEproprietaire";
     private static final String MEMBER = "member";
+
+    private static final String ATTRIBUTE_SCHOOL_DESCRIPTION = "description";
+    private static final String ATTRIBUTE_CLASS_MEMBER = "member";
+    private static final String ATTRIBUTE_USER_SN = "sn";
+    private static final String ATTRIBUTE_USER_GIVEN_NAME = "givenName";
+    private static final String ATTRIBUTE_USER_MAIL = "mail";
+    private static final String ATTRIBUTE_USER_EMPLOYEE_ID = "employeeId";
 
     private static final String CSV_SEPARATOR = ",";
 

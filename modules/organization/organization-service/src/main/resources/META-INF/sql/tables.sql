@@ -1,3 +1,9 @@
+create table Organization_ClassCoursMapping (
+	mappingId LONG not null primary key,
+	classOrgId LONG,
+	coursOrgId LONG
+);
+
 create table Organization_OrgCiteScolaire (
 	parentENTStructureUAI VARCHAR(75) null,
 	childENTStructureUAI VARCHAR(75) not null primary key

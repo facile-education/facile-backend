@@ -177,7 +177,7 @@ public class UserUtilsFinderImpl extends UserUtilsFinderBaseImpl
                 String[] searchQueryTab = searchQuery.split(" ");
                 StringBuilder searchQueryLike = new StringBuilder("%");
                 for (String searchItem : searchQueryTab) {
-                    searchQueryLike.append(searchItem).append("%");
+                    searchQueryLike.append(searchItem.toLowerCase()).append("%");
                 }
                 where.append("OR (lower(concat(u.firstName, ' ', u.lastName)) LIKE \"" + searchQueryLike + "\") ");
                 where.append("OR (lower(concat(u.lastName, ' ', u.firstName)) LIKE \"" + searchQueryLike + "\") ");

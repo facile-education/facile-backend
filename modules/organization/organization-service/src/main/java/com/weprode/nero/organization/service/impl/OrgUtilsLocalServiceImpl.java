@@ -26,16 +26,10 @@ import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.base.OrgUtilsLocalServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.SessionParentClassLocalServiceUtil;
-import com.weprode.nero.schedule.service.SubjectGroupColorLocalServiceUtil;
-import com.weprode.nero.schedule.service.TeacherGroupColorLocalServiceUtil;
+import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Component(
@@ -101,6 +95,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
                     formattedSchoolName, OrganizationConstants.TYPE_ORGANIZATION,
                     RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
                     StringPool.BLANK, true, new ServiceContext());
+            logger.info("Created school " + formattedSchoolName);
         }
 
         if (!entStructureUAI.equals("0")){
@@ -176,6 +171,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
                     defaultUserId, schoolId, orgName, OrganizationConstants.TYPE_ORGANIZATION,
                     RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
                     StringPool.BLANK, true, new ServiceContext());
+            logger.info("Created organization " + orgName + " (id " + org.getOrganizationId() + ")");
         }
 
         // If type is -1, no need to update the OrgDetails
@@ -264,32 +260,16 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
                 color = "#7F00FF";
             } else {
                 // Org is a cours
-                // If user if a teacher -> use TeacherGroup colors
-                if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                    color = TeacherGroupColorLocalServiceUtil.getTeacherGroupColor(user.getUserId(), org.getGroupId());
+                // If user if a teacher -> use GroupColor
+                if (RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+                    color = GroupColorLocalServiceUtil.getColor(org.getGroupId());
                 } else if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
                     color = "#311B92"; // CDTColorUtil.getNewColor(3);
-                } else {
-                    // Student or parent -> use SubjectGroup colors
-                    // Color is based on the class, not the cours -> use the parent class
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(new Date());
-                    cal.add(Calendar.DATE, -30);
-                    Date minDate = cal.getTime();
-                    List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupSessions(org.getGroupId(), minDate, new Date(), false);
-                    if (!sessions.isEmpty()) {
-                        List<Long> groupIds = SessionParentClassLocalServiceUtil.getSessionParentGroupIds(sessions.get(0).getSessionId());
-                        if (!groupIds.isEmpty()) {
-                            String subject = sessions.get(0).getSubject();
-                            color = SubjectGroupColorLocalServiceUtil.getSubjectGroupColor(groupIds.get(0), subject);
-                        }
-                    }
                 }
             }
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("Error fetching color for org " + org.getOrganizationId(), e);
         }
-
         return color;
     }
 

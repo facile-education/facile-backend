@@ -236,8 +236,9 @@ public interface SubjectGroupColorLocalService
 		throws PortalException;
 
 	/**
-	 * Returns the color for given teacherId and groupId
+	 * Returns the color for given groupId and subject
 	 * Create it if it does not exist
+	 * Not used in GVA mode, but may be used in France (where teachers have classes and not cours)
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getSubjectGroupColor(long groupId, String subject);

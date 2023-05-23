@@ -23,8 +23,9 @@ public class SubjectGroupColorLocalServiceImpl
 	private static final Log logger = LogFactoryUtil.getLog(SubjectGroupColorLocalServiceImpl.class);
 
 	/**
-	 * Returns the color for given teacherId and groupId
+	 * Returns the color for given groupId and subject
 	 * Create it if it does not exist
+	 * Not used in GVA mode, but may be used in France (where teachers have classes and not cours)
 	 */
 	public String getSubjectGroupColor(long groupId, String subject) {
 		String color = "";
