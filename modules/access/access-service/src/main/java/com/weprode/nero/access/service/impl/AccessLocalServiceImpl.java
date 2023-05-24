@@ -14,11 +14,14 @@
 
 package com.weprode.nero.access.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.weprode.nero.access.AccessConstants;
 import com.weprode.nero.access.model.Access;
 import com.weprode.nero.access.model.AccessCategory;
@@ -27,6 +30,7 @@ import com.weprode.nero.access.service.AccessCategoryLocalServiceUtil;
 import com.weprode.nero.access.service.AccessLocalServiceUtil;
 import com.weprode.nero.access.service.AccessProfileLocalServiceUtil;
 import com.weprode.nero.access.service.base.AccessLocalServiceBaseImpl;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -106,7 +110,8 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 				// Create profiles
 				JSONArray jsonProfiles = jsonAccess.getJSONArray(AccessConstants.PROFILES);
 				for (int profileIdx = 0 ; profileIdx < jsonProfiles.length() ; profileIdx++) {
-					long roleId = jsonProfiles.getLong(profileIdx);
+					JSONObject jsonProfile = jsonProfiles.getJSONObject(profileIdx);
+					long roleId = jsonProfile.getLong(JSONConstants.ROLE_ID);
 					AccessProfileLocalServiceUtil.addAccessProfile(access.getAccessId(), roleId);
 				}
 			}
@@ -195,7 +200,21 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		jsonAccess.put(AccessConstants.TYPE, access.getType());
 		jsonAccess.put(AccessConstants.URL, access.getExternalUrl());
 		jsonAccess.put(AccessConstants.FOLDER_ID, access.getFolderId());
+		if (access.getFolderId() > 0) {
+			try {
+				jsonAccess.put(AccessConstants.FOLDER_NAME, DLAppServiceUtil.getFolder(access.getFolderId()).getName());
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
 		jsonAccess.put(AccessConstants.FILE_ID, access.getFileId());
+		if (access.getFileId() > 0) {
+			try {
+				jsonAccess.put(AccessConstants.FOLDER_NAME, DLAppServiceUtil.getFileEntry(access.getFileId()).getFileName());
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
 		jsonAccess.put(AccessConstants.THUMBNAIL, access.getThumbnail());
 		jsonAccess.put(AccessConstants.POSITION, access.getPosition());
 		return jsonAccess;

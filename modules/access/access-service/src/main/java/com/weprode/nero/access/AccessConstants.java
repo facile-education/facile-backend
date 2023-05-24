@@ -12,7 +12,9 @@ public class AccessConstants {
     public static final String TYPE = "type";
     public static final String URL = "url";
     public static final String FOLDER_ID = "folderId";
+    public static final String FOLDER_NAME = "folderName";
     public static final String FILE_ID = "fileId";
+    public static final String FILE_NAME = "fileName";
 
 
     public static final String THUMBNAIL = "thumbnail";
