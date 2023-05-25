@@ -187,6 +187,13 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public void hideDLFolder(long folderId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_folderUtilsLocalService.hideDLFolder(folderId);
+	}
+
+	@Override
 	public boolean isGroupFolder(
 		com.liferay.portal.kernel.repository.model.Folder folder) {
 

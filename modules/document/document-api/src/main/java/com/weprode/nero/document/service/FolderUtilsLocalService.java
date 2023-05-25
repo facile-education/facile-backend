@@ -118,6 +118,8 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 	public Folder getUserRootFolder(long userId)
 		throws PortalException, SystemException;
 
+	public void hideDLFolder(long folderId) throws PortalException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isGroupFolder(Folder folder);
 
