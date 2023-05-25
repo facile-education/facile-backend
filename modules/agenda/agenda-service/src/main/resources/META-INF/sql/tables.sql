@@ -1,5 +1,6 @@
 create table Agenda_Event (
 	eventId LONG not null primary key,
+	companyId LONG,
 	startDate DATE null,
 	endDate DATE null,
 	title VARCHAR(75) null,

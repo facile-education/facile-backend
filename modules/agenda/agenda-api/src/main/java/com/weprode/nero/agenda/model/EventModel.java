@@ -16,6 +16,7 @@ package com.weprode.nero.agenda.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.ShardedModel;
 
 import java.util.Date;
 
@@ -33,7 +34,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * @generated
  */
 @ProviderType
-public interface EventModel extends BaseModel<Event> {
+public interface EventModel extends BaseModel<Event>, ShardedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -68,6 +69,22 @@ public interface EventModel extends BaseModel<Event> {
 	 * @param eventId the event ID of this event
 	 */
 	public void setEventId(long eventId);
+
+	/**
+	 * Returns the company ID of this event.
+	 *
+	 * @return the company ID of this event
+	 */
+	@Override
+	public long getCompanyId();
+
+	/**
+	 * Sets the company ID of this event.
+	 *
+	 * @param companyId the company ID of this event
+	 */
+	@Override
+	public void setCompanyId(long companyId);
 
 	/**
 	 * Returns the start date of this event.

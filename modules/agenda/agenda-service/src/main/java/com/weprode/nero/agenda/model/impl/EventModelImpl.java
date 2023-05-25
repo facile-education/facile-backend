@@ -66,10 +66,10 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 	public static final String TABLE_NAME = "Agenda_Event";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"eventId", Types.BIGINT}, {"startDate", Types.TIMESTAMP},
-		{"endDate", Types.TIMESTAMP}, {"title", Types.VARCHAR},
-		{"description", Types.VARCHAR}, {"location", Types.VARCHAR},
-		{"authorId", Types.BIGINT}
+		{"eventId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"startDate", Types.TIMESTAMP}, {"endDate", Types.TIMESTAMP},
+		{"title", Types.VARCHAR}, {"description", Types.VARCHAR},
+		{"location", Types.VARCHAR}, {"authorId", Types.BIGINT}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -77,6 +77,7 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 
 	static {
 		TABLE_COLUMNS_MAP.put("eventId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("startDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("endDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
@@ -86,7 +87,7 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Agenda_Event (eventId LONG not null primary key,startDate DATE null,endDate DATE null,title VARCHAR(75) null,description VARCHAR(75) null,location VARCHAR(75) null,authorId LONG)";
+		"create table Agenda_Event (eventId LONG not null primary key,companyId LONG,startDate DATE null,endDate DATE null,title VARCHAR(75) null,description VARCHAR(75) null,location VARCHAR(75) null,authorId LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table Agenda_Event";
 
@@ -243,6 +244,9 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 		attributeGetterFunctions.put("eventId", Event::getEventId);
 		attributeSetterBiConsumers.put(
 			"eventId", (BiConsumer<Event, Long>)Event::setEventId);
+		attributeGetterFunctions.put("companyId", Event::getCompanyId);
+		attributeSetterBiConsumers.put(
+			"companyId", (BiConsumer<Event, Long>)Event::setCompanyId);
 		attributeGetterFunctions.put("startDate", Event::getStartDate);
 		attributeSetterBiConsumers.put(
 			"startDate", (BiConsumer<Event, Date>)Event::setStartDate);
@@ -280,6 +284,20 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 		}
 
 		_eventId = eventId;
+	}
+
+	@Override
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	@Override
+	public void setCompanyId(long companyId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_companyId = companyId;
 	}
 
 	@Override
@@ -408,7 +426,7 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(
-			0, Event.class.getName(), getPrimaryKey());
+			getCompanyId(), Event.class.getName(), getPrimaryKey());
 	}
 
 	@Override
@@ -438,6 +456,7 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 		EventImpl eventImpl = new EventImpl();
 
 		eventImpl.setEventId(getEventId());
+		eventImpl.setCompanyId(getCompanyId());
 		eventImpl.setStartDate(getStartDate());
 		eventImpl.setEndDate(getEndDate());
 		eventImpl.setTitle(getTitle());
@@ -455,6 +474,7 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 		EventImpl eventImpl = new EventImpl();
 
 		eventImpl.setEventId(this.<Long>getColumnOriginalValue("eventId"));
+		eventImpl.setCompanyId(this.<Long>getColumnOriginalValue("companyId"));
 		eventImpl.setStartDate(this.<Date>getColumnOriginalValue("startDate"));
 		eventImpl.setEndDate(this.<Date>getColumnOriginalValue("endDate"));
 		eventImpl.setTitle(this.<String>getColumnOriginalValue("title"));
@@ -538,6 +558,8 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 		EventCacheModel eventCacheModel = new EventCacheModel();
 
 		eventCacheModel.eventId = getEventId();
+
+		eventCacheModel.companyId = getCompanyId();
 
 		Date startDate = getStartDate();
 
@@ -672,6 +694,7 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 	}
 
 	private long _eventId;
+	private long _companyId;
 	private Date _startDate;
 	private Date _endDate;
 	private String _title;
@@ -707,6 +730,7 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 		_columnOriginalValues = new HashMap<String, Object>();
 
 		_columnOriginalValues.put("eventId", _eventId);
+		_columnOriginalValues.put("companyId", _companyId);
 		_columnOriginalValues.put("startDate", _startDate);
 		_columnOriginalValues.put("endDate", _endDate);
 		_columnOriginalValues.put("title", _title);
@@ -728,17 +752,19 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 
 		columnBitmasks.put("eventId", 1L);
 
-		columnBitmasks.put("startDate", 2L);
+		columnBitmasks.put("companyId", 2L);
 
-		columnBitmasks.put("endDate", 4L);
+		columnBitmasks.put("startDate", 4L);
 
-		columnBitmasks.put("title", 8L);
+		columnBitmasks.put("endDate", 8L);
 
-		columnBitmasks.put("description", 16L);
+		columnBitmasks.put("title", 16L);
 
-		columnBitmasks.put("location", 32L);
+		columnBitmasks.put("description", 32L);
 
-		columnBitmasks.put("authorId", 64L);
+		columnBitmasks.put("location", 64L);
+
+		columnBitmasks.put("authorId", 128L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

@@ -42,6 +42,7 @@ public class EventWrapper
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("eventId", getEventId());
+		attributes.put("companyId", getCompanyId());
 		attributes.put("startDate", getStartDate());
 		attributes.put("endDate", getEndDate());
 		attributes.put("title", getTitle());
@@ -58,6 +59,12 @@ public class EventWrapper
 
 		if (eventId != null) {
 			setEventId(eventId);
+		}
+
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
 		}
 
 		Date startDate = (Date)attributes.get("startDate");
@@ -110,6 +117,16 @@ public class EventWrapper
 	@Override
 	public long getAuthorId() {
 		return model.getAuthorId();
+	}
+
+	/**
+	 * Returns the company ID of this event.
+	 *
+	 * @return the company ID of this event
+	 */
+	@Override
+	public long getCompanyId() {
+		return model.getCompanyId();
 	}
 
 	/**
@@ -195,6 +212,16 @@ public class EventWrapper
 	@Override
 	public void setAuthorId(long authorId) {
 		model.setAuthorId(authorId);
+	}
+
+	/**
+	 * Sets the company ID of this event.
+	 *
+	 * @param companyId the company ID of this event
+	 */
+	@Override
+	public void setCompanyId(long companyId) {
+		model.setCompanyId(companyId);
 	}
 
 	/**

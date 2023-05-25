@@ -34,6 +34,7 @@ public class EventSoap implements Serializable {
 		EventSoap soapModel = new EventSoap();
 
 		soapModel.setEventId(model.getEventId());
+		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setStartDate(model.getStartDate());
 		soapModel.setEndDate(model.getEndDate());
 		soapModel.setTitle(model.getTitle());
@@ -100,6 +101,14 @@ public class EventSoap implements Serializable {
 		_eventId = eventId;
 	}
 
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
+	}
+
 	public Date getStartDate() {
 		return _startDate;
 	}
@@ -149,6 +158,7 @@ public class EventSoap implements Serializable {
 	}
 
 	private long _eventId;
+	private long _companyId;
 	private Date _startDate;
 	private Date _endDate;
 	private String _title;
