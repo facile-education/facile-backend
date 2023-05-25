@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.progression.model.Progression;
 import com.weprode.nero.progression.model.ProgressionFolder;
 import com.weprode.nero.progression.service.ProgressionFolderLocalServiceUtil;
@@ -34,6 +35,7 @@ public class ProgressionLocalServiceImpl extends ProgressionLocalServiceBaseImpl
 
         Progression progression = progressionPersistence.create(progressionId);
 
+        progression.setCompanyId(PortalUtil.getDefaultCompanyId());
         progression.setTeacherId(teacherId);
         progression.setCreateDate(now);
         progression.setModifiedDate(now);
