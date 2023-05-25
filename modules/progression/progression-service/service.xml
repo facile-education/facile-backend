@@ -6,6 +6,7 @@
 
 	<entity name="Progression" local-service="true" remote-service="true">
 		<column name="progressionId" type="long" primary="true" />
+		<column name="companyId" type="long" />
 		<column name="teacherId" type="long"/>
 		<column name="createDate" type="Date"/>
 		<column name="modifiedDate" type="Date"/>
@@ -52,6 +53,7 @@
 
 	<entity name="ProgressionItem" local-service="true" remote-service="true">
 		<column name="progressionItemId" type="long" primary="true" />
+		<column name="companyId" type="long" />
 		<column name="progressionId" type="long"/>
 		<column name="sessionId" type="long" />
 		<column name="homeworkId" type="long" />

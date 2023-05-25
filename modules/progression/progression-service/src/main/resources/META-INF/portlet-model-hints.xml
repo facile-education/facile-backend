@@ -30,6 +30,7 @@
 	</model>
 	<model name="com.weprode.nero.progression.model.Progression">
 		<field name="progressionId" type="long" />
+		<field name="companyId" type="long" />
 		<field name="teacherId" type="long" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
@@ -48,6 +49,7 @@
 	</model>
 	<model name="com.weprode.nero.progression.model.ProgressionItem">
 		<field name="progressionItemId" type="long" />
+		<field name="companyId" type="long" />
 		<field name="progressionId" type="long" />
 		<field name="sessionId" type="long" />
 		<field name="homeworkId" type="long" />

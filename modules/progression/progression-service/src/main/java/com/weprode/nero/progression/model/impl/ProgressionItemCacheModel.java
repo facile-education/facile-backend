@@ -63,10 +63,12 @@ public class ProgressionItemCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{progressionItemId=");
 		sb.append(progressionItemId);
+		sb.append(", companyId=");
+		sb.append(companyId);
 		sb.append(", progressionId=");
 		sb.append(progressionId);
 		sb.append(", sessionId=");
@@ -97,6 +99,7 @@ public class ProgressionItemCacheModel
 		ProgressionItemImpl progressionItemImpl = new ProgressionItemImpl();
 
 		progressionItemImpl.setProgressionItemId(progressionItemId);
+		progressionItemImpl.setCompanyId(companyId);
 		progressionItemImpl.setProgressionId(progressionId);
 		progressionItemImpl.setSessionId(sessionId);
 		progressionItemImpl.setHomeworkId(homeworkId);
@@ -137,6 +140,8 @@ public class ProgressionItemCacheModel
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		progressionItemId = objectInput.readLong();
 
+		companyId = objectInput.readLong();
+
 		progressionId = objectInput.readLong();
 
 		sessionId = objectInput.readLong();
@@ -158,6 +163,8 @@ public class ProgressionItemCacheModel
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(progressionItemId);
+
+		objectOutput.writeLong(companyId);
 
 		objectOutput.writeLong(progressionId);
 
@@ -190,6 +197,7 @@ public class ProgressionItemCacheModel
 	}
 
 	public long progressionItemId;
+	public long companyId;
 	public long progressionId;
 	public long sessionId;
 	public long homeworkId;

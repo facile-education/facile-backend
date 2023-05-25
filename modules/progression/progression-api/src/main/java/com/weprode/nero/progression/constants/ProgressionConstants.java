@@ -6,6 +6,9 @@ public class ProgressionConstants {
         throw new IllegalStateException("Constants class");
     }
 
+    public static final int SESSION_TYPE = 1;
+    public static final int HOMEWORK_TYPE = 2;
+
     public static final int TYPE_TEXT = 1;
     public static final int TYPE_RECORD = 2;
     public static final int TYPE_LINK = 3;

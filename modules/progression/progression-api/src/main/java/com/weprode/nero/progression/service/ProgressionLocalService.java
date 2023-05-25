@@ -62,6 +62,7 @@ public interface ProgressionLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.progression.service.impl.ProgressionLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the progression local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link ProgressionLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public Progression addProgression(
 			long teacherId, String name, String description, long subjectId,
 			String volee, String color)
@@ -130,6 +131,7 @@ public interface ProgressionLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public Progression deleteProgression(Progression progression);
 
+	@Indexable(type = IndexableType.DELETE)
 	public void deleteProgressionById(long userId, long progressionId)
 		throws PortalException, SystemException;
 
@@ -266,6 +268,7 @@ public interface ProgressionLocalService
 	public List<Progression> getTeacherProgressions(long teacherId)
 		throws SystemException;
 
+	@Indexable(type = IndexableType.REINDEX)
 	public Progression updateProgression(
 			long progressionId, String name, String description, long subjectId,
 			String volee, String color)

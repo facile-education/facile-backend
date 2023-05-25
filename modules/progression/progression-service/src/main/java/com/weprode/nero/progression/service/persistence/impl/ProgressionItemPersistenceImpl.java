@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
@@ -1977,6 +1978,8 @@ public class ProgressionItemPersistenceImpl
 
 		progressionItem.setNew(true);
 		progressionItem.setPrimaryKey(progressionItemId);
+
+		progressionItem.setCompanyId(CompanyThreadLocal.getCompanyId());
 
 		return progressionItem;
 	}

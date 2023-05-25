@@ -34,6 +34,7 @@ public class ProgressionItemSoap implements Serializable {
 		ProgressionItemSoap soapModel = new ProgressionItemSoap();
 
 		soapModel.setProgressionItemId(model.getProgressionItemId());
+		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setProgressionId(model.getProgressionId());
 		soapModel.setSessionId(model.getSessionId());
 		soapModel.setHomeworkId(model.getHomeworkId());
@@ -109,6 +110,14 @@ public class ProgressionItemSoap implements Serializable {
 
 	public void setProgressionItemId(long progressionItemId) {
 		_progressionItemId = progressionItemId;
+	}
+
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
 	}
 
 	public long getProgressionId() {
@@ -196,6 +205,7 @@ public class ProgressionItemSoap implements Serializable {
 	}
 
 	private long _progressionItemId;
+	private long _companyId;
 	private long _progressionId;
 	private long _sessionId;
 	private long _homeworkId;

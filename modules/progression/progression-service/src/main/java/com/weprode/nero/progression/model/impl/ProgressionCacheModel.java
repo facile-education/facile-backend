@@ -63,10 +63,12 @@ public class ProgressionCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{progressionId=");
 		sb.append(progressionId);
+		sb.append(", companyId=");
+		sb.append(companyId);
 		sb.append(", teacherId=");
 		sb.append(teacherId);
 		sb.append(", createDate=");
@@ -93,6 +95,7 @@ public class ProgressionCacheModel
 		ProgressionImpl progressionImpl = new ProgressionImpl();
 
 		progressionImpl.setProgressionId(progressionId);
+		progressionImpl.setCompanyId(companyId);
 		progressionImpl.setTeacherId(teacherId);
 
 		if (createDate == Long.MIN_VALUE) {
@@ -148,6 +151,8 @@ public class ProgressionCacheModel
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		progressionId = objectInput.readLong();
 
+		companyId = objectInput.readLong();
+
 		teacherId = objectInput.readLong();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
@@ -162,6 +167,8 @@ public class ProgressionCacheModel
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(progressionId);
+
+		objectOutput.writeLong(companyId);
 
 		objectOutput.writeLong(teacherId);
 		objectOutput.writeLong(createDate);
@@ -199,6 +206,7 @@ public class ProgressionCacheModel
 	}
 
 	public long progressionId;
+	public long companyId;
 	public long teacherId;
 	public long createDate;
 	public long modifiedDate;

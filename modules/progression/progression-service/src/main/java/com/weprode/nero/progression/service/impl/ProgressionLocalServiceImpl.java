@@ -5,6 +5,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.weprode.nero.progression.model.Progression;
 import com.weprode.nero.progression.model.ProgressionFolder;
 import com.weprode.nero.progression.service.ProgressionFolderLocalServiceUtil;
@@ -22,6 +24,7 @@ public class ProgressionLocalServiceImpl extends ProgressionLocalServiceBaseImpl
 
     private final Log logger = LogFactoryUtil.getLog(ProgressionLocalServiceImpl.class);
 
+    @Indexable(type = IndexableType.REINDEX)
     public Progression addProgression(long teacherId, String name,
                                       String description, long subjectId, String volee, String color)
             throws SystemException {
@@ -43,6 +46,7 @@ public class ProgressionLocalServiceImpl extends ProgressionLocalServiceBaseImpl
         return progressionPersistence.update(progression);
     }
 
+    @Indexable(type = IndexableType.REINDEX)
     public Progression updateProgression(long progressionId, String name,
                                          String description, long subjectId, String volee, String color) throws SystemException {
         Progression progression = progressionPersistence.fetchByPrimaryKey(progressionId);
@@ -71,6 +75,7 @@ public class ProgressionLocalServiceImpl extends ProgressionLocalServiceBaseImpl
         }
     }
 
+    @Indexable(type = IndexableType.DELETE)
     public void deleteProgressionById(long userId, long progressionId)
             throws PortalException, SystemException {
         // Remove progression folders

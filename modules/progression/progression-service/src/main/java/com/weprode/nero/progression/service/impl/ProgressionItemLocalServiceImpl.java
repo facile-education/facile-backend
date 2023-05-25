@@ -9,6 +9,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.progression.constants.ProgressionConstants;
@@ -28,6 +30,7 @@ public class ProgressionItemLocalServiceImpl extends ProgressionItemLocalService
 
     private final Log logger = LogFactoryUtil.getLog(ItemContentLocalServiceImpl.class);
 
+    @Indexable(type = IndexableType.REINDEX)
     public ProgressionItem addItem(long progressionId, long userId, long folderId, boolean isHomework) throws SystemException {
         long progressionItemId = counterLocalService.increment();
 
@@ -77,6 +80,7 @@ public class ProgressionItemLocalServiceImpl extends ProgressionItemLocalService
         return item;
     }
 
+    @Indexable(type = IndexableType.REINDEX)
     public ProgressionItem updateItem (long progressionItemId, long folderId, String name, int type, String duration, int order) throws SystemException, NoSuchItemException {
         ProgressionItem item = progressionItemPersistence.findByPrimaryKey(progressionItemId);
 
@@ -133,6 +137,7 @@ public class ProgressionItemLocalServiceImpl extends ProgressionItemLocalService
         return item;
     }
 
+    @Indexable(type = IndexableType.DELETE)
     public void deleteItem (long userId, long progressionItemId) throws PortalException, SystemException {
         List<ItemAssignment> itemAssignments = ItemAssignmentLocalServiceUtil.getItemAssignments(progressionItemId);
 

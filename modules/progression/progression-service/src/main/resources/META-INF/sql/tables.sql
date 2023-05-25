@@ -29,6 +29,7 @@ create table Progression_ItemContent (
 
 create table Progression_Progression (
 	progressionId LONG not null primary key,
+	companyId LONG,
 	teacherId LONG,
 	createDate DATE null,
 	modifiedDate DATE null,
@@ -49,6 +50,7 @@ create table Progression_ProgressionFolder (
 
 create table Progression_ProgressionItem (
 	progressionItemId LONG not null primary key,
+	companyId LONG,
 	progressionId LONG,
 	sessionId LONG,
 	homeworkId LONG,
