@@ -43,6 +43,7 @@ public class ProgressionItemWrapper
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("progressionItemId", getProgressionItemId());
+		attributes.put("companyId", getCompanyId());
 		attributes.put("progressionId", getProgressionId());
 		attributes.put("sessionId", getSessionId());
 		attributes.put("homeworkId", getHomeworkId());
@@ -63,6 +64,12 @@ public class ProgressionItemWrapper
 
 		if (progressionItemId != null) {
 			setProgressionItemId(progressionItemId);
+		}
+
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
 		}
 
 		Long progressionId = (Long)attributes.get("progressionId");
@@ -141,6 +148,16 @@ public class ProgressionItemWrapper
 		long userId, boolean isContentIncluded) {
 
 		return model.convertToJSON(userId, isContentIncluded);
+	}
+
+	/**
+	 * Returns the company ID of this progression item.
+	 *
+	 * @return the company ID of this progression item
+	 */
+	@Override
+	public long getCompanyId() {
+		return model.getCompanyId();
 	}
 
 	/**
@@ -276,6 +293,16 @@ public class ProgressionItemWrapper
 	@Override
 	public void persist() {
 		model.persist();
+	}
+
+	/**
+	 * Sets the company ID of this progression item.
+	 *
+	 * @param companyId the company ID of this progression item
+	 */
+	@Override
+	public void setCompanyId(long companyId) {
+		model.setCompanyId(companyId);
 	}
 
 	/**

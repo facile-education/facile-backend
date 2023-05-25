@@ -43,6 +43,7 @@ public class ProgressionWrapper
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("progressionId", getProgressionId());
+		attributes.put("companyId", getCompanyId());
 		attributes.put("teacherId", getTeacherId());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
@@ -61,6 +62,12 @@ public class ProgressionWrapper
 
 		if (progressionId != null) {
 			setProgressionId(progressionId);
+		}
+
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
 		}
 
 		Long teacherId = (Long)attributes.get("teacherId");
@@ -130,6 +137,16 @@ public class ProgressionWrapper
 	@Override
 	public String getColor() {
 		return model.getColor();
+	}
+
+	/**
+	 * Returns the company ID of this progression.
+	 *
+	 * @return the company ID of this progression
+	 */
+	@Override
+	public long getCompanyId() {
+		return model.getCompanyId();
 	}
 
 	/**
@@ -235,6 +252,16 @@ public class ProgressionWrapper
 	@Override
 	public void setColor(String color) {
 		model.setColor(color);
+	}
+
+	/**
+	 * Sets the company ID of this progression.
+	 *
+	 * @param companyId the company ID of this progression
+	 */
+	@Override
+	public void setCompanyId(long companyId) {
+		model.setCompanyId(companyId);
 	}
 
 	/**

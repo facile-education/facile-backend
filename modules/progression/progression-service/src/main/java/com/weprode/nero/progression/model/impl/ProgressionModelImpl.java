@@ -74,11 +74,11 @@ public class ProgressionModelImpl
 	public static final String TABLE_NAME = "Progression_Progression";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"progressionId", Types.BIGINT}, {"teacherId", Types.BIGINT},
-		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"name", Types.VARCHAR}, {"description", Types.VARCHAR},
-		{"volee", Types.VARCHAR}, {"subjectId", Types.BIGINT},
-		{"color", Types.VARCHAR}
+		{"progressionId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"teacherId", Types.BIGINT}, {"createDate", Types.TIMESTAMP},
+		{"modifiedDate", Types.TIMESTAMP}, {"name", Types.VARCHAR},
+		{"description", Types.VARCHAR}, {"volee", Types.VARCHAR},
+		{"subjectId", Types.BIGINT}, {"color", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -86,6 +86,7 @@ public class ProgressionModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("progressionId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("teacherId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
@@ -97,7 +98,7 @@ public class ProgressionModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Progression_Progression (progressionId LONG not null primary key,teacherId LONG,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,description VARCHAR(75) null,volee VARCHAR(75) null,subjectId LONG,color VARCHAR(75) null)";
+		"create table Progression_Progression (progressionId LONG not null primary key,companyId LONG,teacherId LONG,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,description VARCHAR(75) null,volee VARCHAR(75) null,subjectId LONG,color VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Progression_Progression";
@@ -163,6 +164,7 @@ public class ProgressionModelImpl
 		Progression model = new ProgressionImpl();
 
 		model.setProgressionId(soapModel.getProgressionId());
+		model.setCompanyId(soapModel.getCompanyId());
 		model.setTeacherId(soapModel.getTeacherId());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
@@ -327,6 +329,10 @@ public class ProgressionModelImpl
 		attributeSetterBiConsumers.put(
 			"progressionId",
 			(BiConsumer<Progression, Long>)Progression::setProgressionId);
+		attributeGetterFunctions.put("companyId", Progression::getCompanyId);
+		attributeSetterBiConsumers.put(
+			"companyId",
+			(BiConsumer<Progression, Long>)Progression::setCompanyId);
 		attributeGetterFunctions.put("teacherId", Progression::getTeacherId);
 		attributeSetterBiConsumers.put(
 			"teacherId",
@@ -388,6 +394,21 @@ public class ProgressionModelImpl
 	public long getOriginalProgressionId() {
 		return GetterUtil.getLong(
 			this.<Long>getColumnOriginalValue("progressionId"));
+	}
+
+	@JSON
+	@Override
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	@Override
+	public void setCompanyId(long companyId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_companyId = companyId;
 	}
 
 	@JSON
@@ -573,7 +594,7 @@ public class ProgressionModelImpl
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(
-			0, Progression.class.getName(), getPrimaryKey());
+			getCompanyId(), Progression.class.getName(), getPrimaryKey());
 	}
 
 	@Override
@@ -603,6 +624,7 @@ public class ProgressionModelImpl
 		ProgressionImpl progressionImpl = new ProgressionImpl();
 
 		progressionImpl.setProgressionId(getProgressionId());
+		progressionImpl.setCompanyId(getCompanyId());
 		progressionImpl.setTeacherId(getTeacherId());
 		progressionImpl.setCreateDate(getCreateDate());
 		progressionImpl.setModifiedDate(getModifiedDate());
@@ -623,6 +645,8 @@ public class ProgressionModelImpl
 
 		progressionImpl.setProgressionId(
 			this.<Long>getColumnOriginalValue("progressionId"));
+		progressionImpl.setCompanyId(
+			this.<Long>getColumnOriginalValue("companyId"));
 		progressionImpl.setTeacherId(
 			this.<Long>getColumnOriginalValue("teacherId"));
 		progressionImpl.setCreateDate(
@@ -716,6 +740,8 @@ public class ProgressionModelImpl
 			new ProgressionCacheModel();
 
 		progressionCacheModel.progressionId = getProgressionId();
+
+		progressionCacheModel.companyId = getCompanyId();
 
 		progressionCacheModel.teacherId = getTeacherId();
 
@@ -862,6 +888,7 @@ public class ProgressionModelImpl
 	}
 
 	private long _progressionId;
+	private long _companyId;
 	private long _teacherId;
 	private Date _createDate;
 	private Date _modifiedDate;
@@ -900,6 +927,7 @@ public class ProgressionModelImpl
 		_columnOriginalValues = new HashMap<String, Object>();
 
 		_columnOriginalValues.put("progressionId", _progressionId);
+		_columnOriginalValues.put("companyId", _companyId);
 		_columnOriginalValues.put("teacherId", _teacherId);
 		_columnOriginalValues.put("createDate", _createDate);
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
@@ -923,21 +951,23 @@ public class ProgressionModelImpl
 
 		columnBitmasks.put("progressionId", 1L);
 
-		columnBitmasks.put("teacherId", 2L);
+		columnBitmasks.put("companyId", 2L);
 
-		columnBitmasks.put("createDate", 4L);
+		columnBitmasks.put("teacherId", 4L);
 
-		columnBitmasks.put("modifiedDate", 8L);
+		columnBitmasks.put("createDate", 8L);
 
-		columnBitmasks.put("name", 16L);
+		columnBitmasks.put("modifiedDate", 16L);
 
-		columnBitmasks.put("description", 32L);
+		columnBitmasks.put("name", 32L);
 
-		columnBitmasks.put("volee", 64L);
+		columnBitmasks.put("description", 64L);
 
-		columnBitmasks.put("subjectId", 128L);
+		columnBitmasks.put("volee", 128L);
 
-		columnBitmasks.put("color", 256L);
+		columnBitmasks.put("subjectId", 256L);
+
+		columnBitmasks.put("color", 512L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

@@ -16,6 +16,7 @@ package com.weprode.nero.progression.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.ShardedModel;
 
 import java.util.Date;
 
@@ -33,7 +34,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * @generated
  */
 @ProviderType
-public interface ProgressionModel extends BaseModel<Progression> {
+public interface ProgressionModel extends BaseModel<Progression>, ShardedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -68,6 +69,22 @@ public interface ProgressionModel extends BaseModel<Progression> {
 	 * @param progressionId the progression ID of this progression
 	 */
 	public void setProgressionId(long progressionId);
+
+	/**
+	 * Returns the company ID of this progression.
+	 *
+	 * @return the company ID of this progression
+	 */
+	@Override
+	public long getCompanyId();
+
+	/**
+	 * Sets the company ID of this progression.
+	 *
+	 * @param companyId the company ID of this progression
+	 */
+	@Override
+	public void setCompanyId(long companyId);
 
 	/**
 	 * Returns the teacher ID of this progression.

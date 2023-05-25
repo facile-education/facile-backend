@@ -73,9 +73,9 @@ public class ProgressionItemModelImpl
 	public static final String TABLE_NAME = "Progression_ProgressionItem";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"progressionItemId", Types.BIGINT}, {"progressionId", Types.BIGINT},
-		{"sessionId", Types.BIGINT}, {"homeworkId", Types.BIGINT},
-		{"progressionFolderId", Types.BIGINT},
+		{"progressionItemId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"progressionId", Types.BIGINT}, {"sessionId", Types.BIGINT},
+		{"homeworkId", Types.BIGINT}, {"progressionFolderId", Types.BIGINT},
 		{"modifiedDate", Types.TIMESTAMP}, {"itemName", Types.VARCHAR},
 		{"isHomework", Types.BOOLEAN}, {"duration", Types.VARCHAR},
 		{"type_", Types.INTEGER}, {"order_", Types.INTEGER}
@@ -86,6 +86,7 @@ public class ProgressionItemModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("progressionItemId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("progressionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("sessionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("homeworkId", Types.BIGINT);
@@ -99,7 +100,7 @@ public class ProgressionItemModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Progression_ProgressionItem (progressionItemId LONG not null primary key,progressionId LONG,sessionId LONG,homeworkId LONG,progressionFolderId LONG,modifiedDate DATE null,itemName VARCHAR(75) null,isHomework BOOLEAN,duration VARCHAR(75) null,type_ INTEGER,order_ INTEGER)";
+		"create table Progression_ProgressionItem (progressionItemId LONG not null primary key,companyId LONG,progressionId LONG,sessionId LONG,homeworkId LONG,progressionFolderId LONG,modifiedDate DATE null,itemName VARCHAR(75) null,isHomework BOOLEAN,duration VARCHAR(75) null,type_ INTEGER,order_ INTEGER)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Progression_ProgressionItem";
@@ -183,6 +184,7 @@ public class ProgressionItemModelImpl
 		ProgressionItem model = new ProgressionItemImpl();
 
 		model.setProgressionItemId(soapModel.getProgressionItemId());
+		model.setCompanyId(soapModel.getCompanyId());
 		model.setProgressionId(soapModel.getProgressionId());
 		model.setSessionId(soapModel.getSessionId());
 		model.setHomeworkId(soapModel.getHomeworkId());
@@ -354,6 +356,11 @@ public class ProgressionItemModelImpl
 			(BiConsumer<ProgressionItem, Long>)
 				ProgressionItem::setProgressionItemId);
 		attributeGetterFunctions.put(
+			"companyId", ProgressionItem::getCompanyId);
+		attributeSetterBiConsumers.put(
+			"companyId",
+			(BiConsumer<ProgressionItem, Long>)ProgressionItem::setCompanyId);
+		attributeGetterFunctions.put(
 			"progressionId", ProgressionItem::getProgressionId);
 		attributeSetterBiConsumers.put(
 			"progressionId",
@@ -433,6 +440,21 @@ public class ProgressionItemModelImpl
 	public long getOriginalProgressionItemId() {
 		return GetterUtil.getLong(
 			this.<Long>getColumnOriginalValue("progressionItemId"));
+	}
+
+	@JSON
+	@Override
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	@Override
+	public void setCompanyId(long companyId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_companyId = companyId;
 	}
 
 	@JSON
@@ -674,7 +696,7 @@ public class ProgressionItemModelImpl
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(
-			0, ProgressionItem.class.getName(), getPrimaryKey());
+			getCompanyId(), ProgressionItem.class.getName(), getPrimaryKey());
 	}
 
 	@Override
@@ -704,6 +726,7 @@ public class ProgressionItemModelImpl
 		ProgressionItemImpl progressionItemImpl = new ProgressionItemImpl();
 
 		progressionItemImpl.setProgressionItemId(getProgressionItemId());
+		progressionItemImpl.setCompanyId(getCompanyId());
 		progressionItemImpl.setProgressionId(getProgressionId());
 		progressionItemImpl.setSessionId(getSessionId());
 		progressionItemImpl.setHomeworkId(getHomeworkId());
@@ -726,6 +749,8 @@ public class ProgressionItemModelImpl
 
 		progressionItemImpl.setProgressionItemId(
 			this.<Long>getColumnOriginalValue("progressionItemId"));
+		progressionItemImpl.setCompanyId(
+			this.<Long>getColumnOriginalValue("companyId"));
 		progressionItemImpl.setProgressionId(
 			this.<Long>getColumnOriginalValue("progressionId"));
 		progressionItemImpl.setSessionId(
@@ -831,6 +856,8 @@ public class ProgressionItemModelImpl
 			new ProgressionItemCacheModel();
 
 		progressionItemCacheModel.progressionItemId = getProgressionItemId();
+
+		progressionItemCacheModel.companyId = getCompanyId();
 
 		progressionItemCacheModel.progressionId = getProgressionId();
 
@@ -963,6 +990,7 @@ public class ProgressionItemModelImpl
 	}
 
 	private long _progressionItemId;
+	private long _companyId;
 	private long _progressionId;
 	private long _sessionId;
 	private long _homeworkId;
@@ -1005,6 +1033,7 @@ public class ProgressionItemModelImpl
 		_columnOriginalValues = new HashMap<String, Object>();
 
 		_columnOriginalValues.put("progressionItemId", _progressionItemId);
+		_columnOriginalValues.put("companyId", _companyId);
 		_columnOriginalValues.put("progressionId", _progressionId);
 		_columnOriginalValues.put("sessionId", _sessionId);
 		_columnOriginalValues.put("homeworkId", _homeworkId);
@@ -1041,25 +1070,27 @@ public class ProgressionItemModelImpl
 
 		columnBitmasks.put("progressionItemId", 1L);
 
-		columnBitmasks.put("progressionId", 2L);
+		columnBitmasks.put("companyId", 2L);
 
-		columnBitmasks.put("sessionId", 4L);
+		columnBitmasks.put("progressionId", 4L);
 
-		columnBitmasks.put("homeworkId", 8L);
+		columnBitmasks.put("sessionId", 8L);
 
-		columnBitmasks.put("progressionFolderId", 16L);
+		columnBitmasks.put("homeworkId", 16L);
 
-		columnBitmasks.put("modifiedDate", 32L);
+		columnBitmasks.put("progressionFolderId", 32L);
 
-		columnBitmasks.put("itemName", 64L);
+		columnBitmasks.put("modifiedDate", 64L);
 
-		columnBitmasks.put("isHomework", 128L);
+		columnBitmasks.put("itemName", 128L);
 
-		columnBitmasks.put("duration", 256L);
+		columnBitmasks.put("isHomework", 256L);
 
-		columnBitmasks.put("type_", 512L);
+		columnBitmasks.put("duration", 512L);
 
-		columnBitmasks.put("order_", 1024L);
+		columnBitmasks.put("type_", 1024L);
+
+		columnBitmasks.put("order_", 2048L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

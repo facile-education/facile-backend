@@ -34,6 +34,8 @@ public class ProgressionTable extends BaseTable<ProgressionTable> {
 
 	public final Column<ProgressionTable, Long> progressionId = createColumn(
 		"progressionId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<ProgressionTable, Long> companyId = createColumn(
+		"companyId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<ProgressionTable, Long> teacherId = createColumn(
 		"teacherId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<ProgressionTable, Date> createDate = createColumn(

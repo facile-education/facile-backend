@@ -36,6 +36,8 @@ public class ProgressionItemTable extends BaseTable<ProgressionItemTable> {
 	public final Column<ProgressionItemTable, Long> progressionItemId =
 		createColumn(
 			"progressionItemId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<ProgressionItemTable, Long> companyId = createColumn(
+		"companyId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<ProgressionItemTable, Long> progressionId =
 		createColumn(
 			"progressionId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
