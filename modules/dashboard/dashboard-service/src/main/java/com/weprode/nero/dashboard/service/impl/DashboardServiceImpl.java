@@ -4,7 +4,6 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -87,21 +86,22 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             }
 
             // Students and parents can add news only if they are administrator of a personal group
-            boolean isGroupAdmin = false;
-            if (isStudentOrParent) {
-                List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
-                for (Group userGroup : userGroups) {
-                    if (RoleUtilsLocalServiceUtil.isUserGroupAdmin(user, userGroup.getGroupId())) {
-                        isGroupAdmin = true;
-                        break;
-                    }
-                }
-            }
+            // Commented out for now
+//            boolean isGroupAdmin = false;
+//            if (isStudentOrParent) {
+//                List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
+//                for (Group userGroup : userGroups) {
+//                    if (RoleUtilsLocalServiceUtil.isUserGroupAdmin(user, userGroup.getGroupId())) {
+//                        isGroupAdmin = true;
+//                        break;
+//                    }
+//                }
+//            }
 
             // Check delegations
             boolean isDelegate = NewsAdminLocalServiceUtil.isUserDelegate(user);
             result.put(JSONConstants.IS_DELEGATE, isDelegate);
-            result.put(JSONConstants.CAN_ADD_GROUP_NEWS, isAgent || (isStudentOrParent && isGroupAdmin));
+            result.put(JSONConstants.CAN_ADD_GROUP_NEWS, isAgent); // || (isStudentOrParent && isGroupAdmin));
             result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate);
             result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate);
 

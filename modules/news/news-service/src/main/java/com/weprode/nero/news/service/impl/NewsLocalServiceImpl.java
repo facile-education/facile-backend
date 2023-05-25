@@ -190,12 +190,18 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
                 List<Integer> types = new ArrayList<>();
 
-                // Teachers can write news to theirs cours and subjects only
+                // Teachers can write news to theirs cours, classes and subjects only
                 if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
                     types.add(OrgConstants.COURS_TYPE);
                     List<Organization> schoolCours = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, null, false, userSchool.getOrganizationId());
                     if (!schoolCours.isEmpty()) {
                         jsonSchool.put(JSONConstants.COURS, getOrgTypePopulations(schoolCours, user.getUserId()));
+                    }
+
+                    types.add(OrgConstants.CLASS_TYPE);
+                    List<Organization> schoolClasses = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, null, false, userSchool.getOrganizationId());
+                    if (!schoolClasses.isEmpty()) {
+                        jsonSchool.put(JSONConstants.CLASSES, getOrgTypePopulations(schoolClasses, user.getUserId()));
                     }
 
                     types = new ArrayList<>();
@@ -210,7 +216,11 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
                 List<Organization> schoolClasses = new ArrayList<>();
                 // Conseiller d'orientation can write news to all classes
-                if (RoleUtilsLocalServiceUtil.isConseillerOrientation(user)) {
+                if (RoleUtilsLocalServiceUtil.isConseillerOrientation(user) ||
+                        RoleUtilsLocalServiceUtil.isSecretariat(user) ||
+                        RoleUtilsLocalServiceUtil.isAdministrative(user) ||
+                        RoleUtilsLocalServiceUtil.isInfirmiere(user) ||
+                        RoleUtilsLocalServiceUtil.isBibliothecaire(user)) {
                     types.add(OrgConstants.CLASS_TYPE);
                     schoolClasses.addAll(OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, null, false));
                 }
@@ -220,6 +230,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 }
                 // Doyens, psychologues and conseiller social
                 schoolClasses.addAll(UserOrgsLocalServiceUtil.getRoleAffectedClasses(user));
+
                 if (!schoolClasses.isEmpty()) {
                     jsonSchool.put(JSONConstants.CLASSES, getOrgTypePopulations(schoolClasses, user.getUserId()));
                 }
