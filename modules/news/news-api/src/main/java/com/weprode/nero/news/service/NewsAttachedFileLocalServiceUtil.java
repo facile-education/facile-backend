@@ -279,6 +279,10 @@ public class NewsAttachedFileLocalServiceUtil {
 		return getService().getNewsAttachedFiles(start, end);
 	}
 
+	public static List<NewsAttachedFile> getNewsAttachedFiles(long newsId) {
+		return getService().getNewsAttachedFiles(newsId);
+	}
+
 	/**
 	 * Returns the number of news attached files.
 	 *

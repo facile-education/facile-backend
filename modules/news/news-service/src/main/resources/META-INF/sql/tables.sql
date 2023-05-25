@@ -1,5 +1,6 @@
 create table News_News (
 	newsId LONG not null primary key,
+	companyId LONG,
 	title VARCHAR(75) null,
 	content VARCHAR(75) null,
 	authorId LONG,

@@ -3,6 +3,7 @@
 <model-hints>
 	<model name="com.weprode.nero.news.model.News">
 		<field name="newsId" type="long" />
+		<field name="companyId" type="long" />
 		<field name="title" type="String" />
 		<field name="content" type="String" />
 		<field name="authorId" type="long" />

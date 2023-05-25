@@ -34,6 +34,7 @@ public class NewsSoap implements Serializable {
 		NewsSoap soapModel = new NewsSoap();
 
 		soapModel.setNewsId(model.getNewsId());
+		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setTitle(model.getTitle());
 		soapModel.setContent(model.getContent());
 		soapModel.setAuthorId(model.getAuthorId());
@@ -101,6 +102,14 @@ public class NewsSoap implements Serializable {
 
 	public void setNewsId(long newsId) {
 		_newsId = newsId;
+	}
+
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
 	}
 
 	public String getTitle() {
@@ -184,6 +193,7 @@ public class NewsSoap implements Serializable {
 	}
 
 	private long _newsId;
+	private long _companyId;
 	private String _title;
 	private String _content;
 	private long _authorId;

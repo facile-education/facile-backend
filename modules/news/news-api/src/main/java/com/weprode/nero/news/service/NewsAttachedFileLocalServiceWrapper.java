@@ -308,6 +308,13 @@ public class NewsAttachedFileLocalServiceWrapper
 		return _newsAttachedFileLocalService.getNewsAttachedFiles(start, end);
 	}
 
+	@Override
+	public java.util.List<com.weprode.nero.news.model.NewsAttachedFile>
+		getNewsAttachedFiles(long newsId) {
+
+		return _newsAttachedFileLocalService.getNewsAttachedFiles(newsId);
+	}
+
 	/**
 	 * Returns the number of news attached files.
 	 *
