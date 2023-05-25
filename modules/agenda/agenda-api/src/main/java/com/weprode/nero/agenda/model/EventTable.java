@@ -34,6 +34,8 @@ public class EventTable extends BaseTable<EventTable> {
 
 	public final Column<EventTable, Long> eventId = createColumn(
 		"eventId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<EventTable, Long> companyId = createColumn(
+		"companyId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<EventTable, Date> startDate = createColumn(
 		"startDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<EventTable, Date> endDate = createColumn(

@@ -61,10 +61,12 @@ public class EventCacheModel implements CacheModel<Event>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{eventId=");
 		sb.append(eventId);
+		sb.append(", companyId=");
+		sb.append(companyId);
 		sb.append(", startDate=");
 		sb.append(startDate);
 		sb.append(", endDate=");
@@ -87,6 +89,7 @@ public class EventCacheModel implements CacheModel<Event>, Externalizable {
 		EventImpl eventImpl = new EventImpl();
 
 		eventImpl.setEventId(eventId);
+		eventImpl.setCompanyId(companyId);
 
 		if (startDate == Long.MIN_VALUE) {
 			eventImpl.setStartDate(null);
@@ -133,6 +136,8 @@ public class EventCacheModel implements CacheModel<Event>, Externalizable {
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		eventId = objectInput.readLong();
+
+		companyId = objectInput.readLong();
 		startDate = objectInput.readLong();
 		endDate = objectInput.readLong();
 		title = objectInput.readUTF();
@@ -145,6 +150,8 @@ public class EventCacheModel implements CacheModel<Event>, Externalizable {
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(eventId);
+
+		objectOutput.writeLong(companyId);
 		objectOutput.writeLong(startDate);
 		objectOutput.writeLong(endDate);
 
@@ -173,6 +180,7 @@ public class EventCacheModel implements CacheModel<Event>, Externalizable {
 	}
 
 	public long eventId;
+	public long companyId;
 	public long startDate;
 	public long endDate;
 	public String title;

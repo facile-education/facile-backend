@@ -6,8 +6,11 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.agenda.exception.NoSuchEventException;
 import com.weprode.nero.agenda.model.Event;
 import com.weprode.nero.agenda.service.EventLocalServiceUtil;
@@ -36,6 +39,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(EventLocalServiceImpl.class);
 
+    @Indexable(type = IndexableType.REINDEX)
     public Event createEvent(long authorId, String title, String description, String location, Date startDate, Date endDate, JSONArray populations) throws SystemException {
         // If mandatory fields are not set, return null
         if (title.equals("") || startDate == null || endDate == null || populations.length() == 0) {
@@ -44,6 +48,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         }
 
         Event event = eventPersistence.create(counterLocalService.increment());
+        event.setCompanyId(PortalUtil.getDefaultCompanyId());
         event.setAuthorId(authorId);
         event.setTitle(title);
         event.setDescription(description);
@@ -71,6 +76,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         return event;
     }
 
+    @Indexable(type = IndexableType.REINDEX)
     public Event modifyEvent(long eventId, String title, String description, String location, Date startDate, Date endDate, JSONArray populations) throws SystemException {
         // If mandatory fields are not set, return null
         if (title.equals("") || startDate == null || endDate == null || populations.length() == 0) {
@@ -101,6 +107,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         return event;
     }
 
+    @Indexable(type = IndexableType.DELETE)
     public Event deleteEventWithDependencies(long eventId) throws SystemException, NoSuchEventException {
         eventPersistence.remove(eventId);
 
