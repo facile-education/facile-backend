@@ -61,10 +61,12 @@ public class NewsCacheModel implements CacheModel<News>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{newsId=");
 		sb.append(newsId);
+		sb.append(", companyId=");
+		sb.append(companyId);
 		sb.append(", title=");
 		sb.append(title);
 		sb.append(", content=");
@@ -93,6 +95,7 @@ public class NewsCacheModel implements CacheModel<News>, Externalizable {
 		NewsImpl newsImpl = new NewsImpl();
 
 		newsImpl.setNewsId(newsId);
+		newsImpl.setCompanyId(companyId);
 
 		if (title == null) {
 			newsImpl.setTitle("");
@@ -143,6 +146,8 @@ public class NewsCacheModel implements CacheModel<News>, Externalizable {
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		newsId = objectInput.readLong();
+
+		companyId = objectInput.readLong();
 		title = objectInput.readUTF();
 		content = objectInput.readUTF();
 
@@ -161,6 +166,8 @@ public class NewsCacheModel implements CacheModel<News>, Externalizable {
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(newsId);
+
+		objectOutput.writeLong(companyId);
 
 		if (title == null) {
 			objectOutput.writeUTF("");
@@ -189,6 +196,7 @@ public class NewsCacheModel implements CacheModel<News>, Externalizable {
 	}
 
 	public long newsId;
+	public long companyId;
 	public String title;
 	public String content;
 	public long authorId;

@@ -246,6 +246,9 @@ public interface NewsAttachedFileLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<NewsAttachedFile> getNewsAttachedFiles(int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<NewsAttachedFile> getNewsAttachedFiles(long newsId);
+
 	/**
 	 * Returns the number of news attached files.
 	 *

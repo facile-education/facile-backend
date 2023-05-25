@@ -6,6 +6,7 @@
 
 	<entity name="News" local-service="true" remote-service="true" >
 		<column name="newsId" type="long" primary="true" />
+		<column name="companyId" type="long" />
 		<column name="title" type="String" />
 		<column name="content" type="String" />
 		<column name="authorId" type="long" />

@@ -42,6 +42,7 @@ public class NewsWrapper
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("newsId", getNewsId());
+		attributes.put("companyId", getCompanyId());
 		attributes.put("title", getTitle());
 		attributes.put("content", getContent());
 		attributes.put("authorId", getAuthorId());
@@ -61,6 +62,12 @@ public class NewsWrapper
 
 		if (newsId != null) {
 			setNewsId(newsId);
+		}
+
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
 		}
 
 		String title = (String)attributes.get("title");
@@ -131,6 +138,16 @@ public class NewsWrapper
 	@Override
 	public long getAuthorId() {
 		return model.getAuthorId();
+	}
+
+	/**
+	 * Returns the company ID of this news.
+	 *
+	 * @return the company ID of this news
+	 */
+	@Override
+	public long getCompanyId() {
+		return model.getCompanyId();
 	}
 
 	/**
@@ -266,6 +283,16 @@ public class NewsWrapper
 	@Override
 	public void setAuthorId(long authorId) {
 		model.setAuthorId(authorId);
+	}
+
+	/**
+	 * Sets the company ID of this news.
+	 *
+	 * @param companyId the company ID of this news
+	 */
+	@Override
+	public void setCompanyId(long companyId) {
+		model.setCompanyId(companyId);
 	}
 
 	/**

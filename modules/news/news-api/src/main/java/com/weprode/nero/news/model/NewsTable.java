@@ -34,6 +34,8 @@ public class NewsTable extends BaseTable<NewsTable> {
 
 	public final Column<NewsTable, Long> newsId = createColumn(
 		"newsId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<NewsTable, Long> companyId = createColumn(
+		"companyId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<NewsTable, String> title = createColumn(
 		"title", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<NewsTable, String> content = createColumn(

@@ -42,6 +42,10 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
         return false;
     }
 
+    public List<NewsAttachedFile> getNewsAttachedFiles(long newsId) {
+        return newsAttachedFilePersistence.findBynewsId(newsId);
+    }
+
     public JSONArray convertNewsFiles(long newsId) {
         JSONArray jsonFiles = new JSONArray();
 

@@ -14,11 +14,14 @@ import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
@@ -61,12 +64,14 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(NewsLocalServiceImpl.class);
 
+    @Indexable(type = IndexableType.REINDEX)
     public News addNews(long authorId, String title, String content, boolean isSchoolNews, boolean isImportant,
                         long imageId, Date publicationDate, Date expirationDate, JSONArray populations, List<Long> attachFileIds) {
         logger.info("User " + authorId + " creates a news named " + title + " for " + populations.length() + " groups and with " + (attachFileIds != null ? attachFileIds.size() : 0) + " attached files");
 
         try {
             News news = newsPersistence.create(counterLocalService.increment());
+            news.setCompanyId(PortalUtil.getDefaultCompanyId());
             news.setAuthorId(authorId);
             news.setTitle(title);
             news.setContent(content);
@@ -98,6 +103,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         return null;
     }
 
+    @Indexable(type = IndexableType.REINDEX)
     public News editNews(long newsId, String title, String content, boolean isImportant,
                          long imageId, Date publicationDate, Date expirationDate, JSONArray populations, List<Long> attachFileIds) {
         logger.info("Author edits news " + newsId + " named " + title + " for " + populations.length() + " groups and with " + (attachFileIds != null ? attachFileIds.size() : 0) + " attached files");
@@ -555,6 +561,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
     }
 
+    @Indexable(type = IndexableType.DELETE)
     public News deleteNewsAndDependencies(long newsId) throws SystemException, NoSuchNewsException {
         // Delete attached files before populations because we need populations here
         NewsAttachedFileLocalServiceUtil.deleteByNewsId(newsId);

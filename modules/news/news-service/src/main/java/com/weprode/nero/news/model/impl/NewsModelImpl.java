@@ -72,10 +72,10 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 	public static final String TABLE_NAME = "News_News";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"newsId", Types.BIGINT}, {"title", Types.VARCHAR},
-		{"content", Types.VARCHAR}, {"authorId", Types.BIGINT},
-		{"isSchoolNews", Types.BOOLEAN}, {"isImportant", Types.BOOLEAN},
-		{"expirationDate", Types.TIMESTAMP},
+		{"newsId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"title", Types.VARCHAR}, {"content", Types.VARCHAR},
+		{"authorId", Types.BIGINT}, {"isSchoolNews", Types.BOOLEAN},
+		{"isImportant", Types.BOOLEAN}, {"expirationDate", Types.TIMESTAMP},
 		{"publicationDate", Types.TIMESTAMP},
 		{"modificationDate", Types.TIMESTAMP}, {"imageId", Types.BIGINT}
 	};
@@ -85,6 +85,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 
 	static {
 		TABLE_COLUMNS_MAP.put("newsId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("content", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("authorId", Types.BIGINT);
@@ -97,7 +98,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table News_News (newsId LONG not null primary key,title VARCHAR(75) null,content VARCHAR(75) null,authorId LONG,isSchoolNews BOOLEAN,isImportant BOOLEAN,expirationDate DATE null,publicationDate DATE null,modificationDate DATE null,imageId LONG)";
+		"create table News_News (newsId LONG not null primary key,companyId LONG,title VARCHAR(75) null,content VARCHAR(75) null,authorId LONG,isSchoolNews BOOLEAN,isImportant BOOLEAN,expirationDate DATE null,publicationDate DATE null,modificationDate DATE null,imageId LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table News_News";
 
@@ -154,6 +155,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		News model = new NewsImpl();
 
 		model.setNewsId(soapModel.getNewsId());
+		model.setCompanyId(soapModel.getCompanyId());
 		model.setTitle(soapModel.getTitle());
 		model.setContent(soapModel.getContent());
 		model.setAuthorId(soapModel.getAuthorId());
@@ -310,6 +312,9 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		attributeGetterFunctions.put("newsId", News::getNewsId);
 		attributeSetterBiConsumers.put(
 			"newsId", (BiConsumer<News, Long>)News::setNewsId);
+		attributeGetterFunctions.put("companyId", News::getCompanyId);
+		attributeSetterBiConsumers.put(
+			"companyId", (BiConsumer<News, Long>)News::setCompanyId);
 		attributeGetterFunctions.put("title", News::getTitle);
 		attributeSetterBiConsumers.put(
 			"title", (BiConsumer<News, String>)News::setTitle);
@@ -361,6 +366,21 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		}
 
 		_newsId = newsId;
+	}
+
+	@JSON
+	@Override
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	@Override
+	public void setCompanyId(long companyId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_companyId = companyId;
 	}
 
 	@JSON
@@ -557,7 +577,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(
-			0, News.class.getName(), getPrimaryKey());
+			getCompanyId(), News.class.getName(), getPrimaryKey());
 	}
 
 	@Override
@@ -587,6 +607,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		NewsImpl newsImpl = new NewsImpl();
 
 		newsImpl.setNewsId(getNewsId());
+		newsImpl.setCompanyId(getCompanyId());
 		newsImpl.setTitle(getTitle());
 		newsImpl.setContent(getContent());
 		newsImpl.setAuthorId(getAuthorId());
@@ -607,6 +628,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		NewsImpl newsImpl = new NewsImpl();
 
 		newsImpl.setNewsId(this.<Long>getColumnOriginalValue("newsId"));
+		newsImpl.setCompanyId(this.<Long>getColumnOriginalValue("companyId"));
 		newsImpl.setTitle(this.<String>getColumnOriginalValue("title"));
 		newsImpl.setContent(this.<String>getColumnOriginalValue("content"));
 		newsImpl.setAuthorId(this.<Long>getColumnOriginalValue("authorId"));
@@ -697,6 +719,8 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		NewsCacheModel newsCacheModel = new NewsCacheModel();
 
 		newsCacheModel.newsId = getNewsId();
+
+		newsCacheModel.companyId = getCompanyId();
 
 		newsCacheModel.title = getTitle();
 
@@ -838,6 +862,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 	}
 
 	private long _newsId;
+	private long _companyId;
 	private String _title;
 	private String _content;
 	private long _authorId;
@@ -876,6 +901,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		_columnOriginalValues = new HashMap<String, Object>();
 
 		_columnOriginalValues.put("newsId", _newsId);
+		_columnOriginalValues.put("companyId", _companyId);
 		_columnOriginalValues.put("title", _title);
 		_columnOriginalValues.put("content", _content);
 		_columnOriginalValues.put("authorId", _authorId);
@@ -900,23 +926,25 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 
 		columnBitmasks.put("newsId", 1L);
 
-		columnBitmasks.put("title", 2L);
+		columnBitmasks.put("companyId", 2L);
 
-		columnBitmasks.put("content", 4L);
+		columnBitmasks.put("title", 4L);
 
-		columnBitmasks.put("authorId", 8L);
+		columnBitmasks.put("content", 8L);
 
-		columnBitmasks.put("isSchoolNews", 16L);
+		columnBitmasks.put("authorId", 16L);
 
-		columnBitmasks.put("isImportant", 32L);
+		columnBitmasks.put("isSchoolNews", 32L);
 
-		columnBitmasks.put("expirationDate", 64L);
+		columnBitmasks.put("isImportant", 64L);
 
-		columnBitmasks.put("publicationDate", 128L);
+		columnBitmasks.put("expirationDate", 128L);
 
-		columnBitmasks.put("modificationDate", 256L);
+		columnBitmasks.put("publicationDate", 256L);
 
-		columnBitmasks.put("imageId", 512L);
+		columnBitmasks.put("modificationDate", 512L);
+
+		columnBitmasks.put("imageId", 1024L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

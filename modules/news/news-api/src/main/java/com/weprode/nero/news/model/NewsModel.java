@@ -16,6 +16,7 @@ package com.weprode.nero.news.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.ShardedModel;
 
 import java.util.Date;
 
@@ -33,7 +34,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * @generated
  */
 @ProviderType
-public interface NewsModel extends BaseModel<News> {
+public interface NewsModel extends BaseModel<News>, ShardedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -68,6 +69,22 @@ public interface NewsModel extends BaseModel<News> {
 	 * @param newsId the news ID of this news
 	 */
 	public void setNewsId(long newsId);
+
+	/**
+	 * Returns the company ID of this news.
+	 *
+	 * @return the company ID of this news
+	 */
+	@Override
+	public long getCompanyId();
+
+	/**
+	 * Sets the company ID of this news.
+	 *
+	 * @param companyId the company ID of this news
+	 */
+	@Override
+	public void setCompanyId(long companyId);
 
 	/**
 	 * Returns the title of this news.
