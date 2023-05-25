@@ -161,6 +161,10 @@ public class FolderUtilsLocalServiceUtil {
 		return getService().getUserRootFolder(userId);
 	}
 
+	public static void hideDLFolder(long folderId) throws PortalException {
+		getService().hideDLFolder(folderId);
+	}
+
 	public static boolean isGroupFolder(
 		com.liferay.portal.kernel.repository.model.Folder folder) {
 

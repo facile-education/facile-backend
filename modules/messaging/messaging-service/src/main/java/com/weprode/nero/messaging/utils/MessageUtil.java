@@ -21,7 +21,11 @@ import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.messaging.constants.MessagingConstants;
 import com.weprode.nero.messaging.model.Message;
 import com.weprode.nero.messaging.model.MessageFolder;
-import com.weprode.nero.messaging.service.*;
+import com.weprode.nero.messaging.service.MessageAttachFileLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageContentLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageFolderLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageRecipientsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -178,6 +182,7 @@ public class MessageUtil {
 						"PJ du message " + messageId,
 						"PJ du message " + messageId,
 						new ServiceContext());
+				FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
 
 				for (Long attachFileId : attachFileIds) {
 					logger.info("Copying file " + attachFileId + " to IM_BOX, folder " + attachedFilesFolder.getFolderId());

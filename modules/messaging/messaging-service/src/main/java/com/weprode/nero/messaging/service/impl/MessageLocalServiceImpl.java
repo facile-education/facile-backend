@@ -348,6 +348,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
                             "PJ du message " + message.getMessageId(),
                             "PJ du message " + message.getMessageId(),
                             new ServiceContext());
+                    FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
 
                     for (Long attachFileId : attachFileIds) {
                         logger.info("Copying file " + attachFileId + " to sender's folder " + attachedFilesFolder.getFolderId());

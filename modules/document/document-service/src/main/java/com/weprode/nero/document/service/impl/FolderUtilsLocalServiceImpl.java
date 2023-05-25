@@ -99,6 +99,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					DocumentConstants.SENDING_BOX_FOLDER_NAME,
 					"Boite d envoi tmp",
 					new ServiceContext());
+			hideDLFolder(folder.getFolderId());
 			PermissionUtilsLocalServiceUtil.setViewPermissionForRessources(folder);
 		}
 
@@ -113,6 +114,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			folder = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.IM_BOX_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
 			folder = DLAppServiceUtil.addFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.IM_BOX_FOLDER_NAME, "PJs de messagerie", new ServiceContext());
+			hideDLFolder(folder.getFolderId());
 			PermissionUtilsLocalServiceUtil.setViewPermissionForRessources(folder);
 		}
 
@@ -132,6 +134,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					DocumentConstants.TMP_FILE_FOLDER_NAME,
 					"Fichiers temporaires",
 					new ServiceContext());
+			hideDLFolder(tmpFolder.getFolderId());
 		}
 
 		return tmpFolder;
@@ -150,6 +153,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					DocumentConstants.PROGRESSION_FOLDER_NAME,
 					"Dossier pour les documents des progression",
 					new ServiceContext());
+			hideDLFolder(folder.getFolderId());
 		}
 
 		return folder;
@@ -552,6 +556,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					DocumentConstants.NEWS_FOLDER_NAME,
 					"Dossier pour les pièces jointes d'actualités",
 					new ServiceContext());
+			hideDLFolder(folder.getFolderId());
 		}
 
 		return folder;
@@ -566,5 +571,12 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		}
 
 		return false;
+	}
+
+	public void hideDLFolder (long folderId) throws PortalException {
+		// Hide folder
+		DLFolder dlFolder = DLFolderLocalServiceUtil.getFolder(folderId);
+		dlFolder.setHidden(true);
+		DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
 	}
 }
