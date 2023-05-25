@@ -44,6 +44,7 @@ public class MessageModelDocumentContributor
             document.addNumber(Field.COMPANY_ID, message.getCompanyId());
             User owner = MessageFolderLocalServiceUtil.getFolderUser(message.getFolderId());
             document.addNumber(Field.GROUP_ID, owner.getGroupId());
+            document.addNumber(Field.SCOPE_GROUP_ID, owner.getGroupId());
 
             document.addText(Field.CONTENT, normalize(HtmlParserUtil.extractText(content.getMessageContent())));
             document.addDate(Field.DISPLAY_DATE, message.getSendDate());
