@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
@@ -64,14 +63,12 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(NewsLocalServiceImpl.class);
 
-    @Indexable(type = IndexableType.REINDEX)
     public News addNews(long authorId, String title, String content, boolean isSchoolNews, boolean isImportant,
                         long imageId, Date publicationDate, Date expirationDate, JSONArray populations, List<Long> attachFileIds) {
         logger.info("User " + authorId + " creates a news named " + title + " for " + populations.length() + " groups and with " + (attachFileIds != null ? attachFileIds.size() : 0) + " attached files");
 
         try {
             News news = newsPersistence.create(counterLocalService.increment());
-            news.setCompanyId(PortalUtil.getDefaultCompanyId());
             news.setAuthorId(authorId);
             news.setTitle(title);
             news.setContent(content);
@@ -185,9 +182,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
         try {
             // First, loop over user's schools
-            JSONArray broadcastTree = new JSONArray();
+            JSONObject broadcastTree = new JSONObject();
 
             List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserSchools(user);
+            JSONArray jsonSchools = new JSONArray();
             for (Organization userSchool : userSchools) {
 
                 JSONObject jsonSchool = new JSONObject();
@@ -221,15 +219,15 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 // Classes
 
                 List<Organization> schoolClasses = new ArrayList<>();
-                // Conseiller d'orientation can write news to all classes
-                if (RoleUtilsLocalServiceUtil.isConseillerOrientation(user) ||
-                        RoleUtilsLocalServiceUtil.isSecretariat(user) ||
-                        RoleUtilsLocalServiceUtil.isAdministrative(user) ||
-                        RoleUtilsLocalServiceUtil.isInfirmiere(user) ||
-                        RoleUtilsLocalServiceUtil.isBibliothecaire(user)) {
-                    types.add(OrgConstants.CLASS_TYPE);
-                    schoolClasses.addAll(OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, null, false));
-                }
+                // Personals can write news to no class
+//                if (RoleUtilsLocalServiceUtil.isConseillerOrientation(user) ||
+//                        RoleUtilsLocalServiceUtil.isSecretariat(user) ||
+//                        RoleUtilsLocalServiceUtil.isAdministrative(user) ||
+//                        RoleUtilsLocalServiceUtil.isInfirmiere(user) ||
+//                        RoleUtilsLocalServiceUtil.isBibliothecaire(user)) {
+//                    types.add(OrgConstants.CLASS_TYPE);
+//                    schoolClasses.addAll(OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, null, false));
+//                }
                 // Main teachers
                 if (RoleUtilsLocalServiceUtil.isMainTeacher(user)) {
                     schoolClasses.addAll(UserOrgsLocalServiceUtil.getAffectedClasses(user, RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId()));
@@ -240,26 +238,23 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 if (!schoolClasses.isEmpty()) {
                     jsonSchool.put(JSONConstants.CLASSES, getOrgTypePopulations(schoolClasses, user.getUserId()));
                 }
-                broadcastTree.put(jsonSchool);
+                jsonSchools.put(jsonSchool);
             }
+            broadcastTree.put(JSONConstants.SCHOOLS, jsonSchools);
 
             // Communities
-            JSONObject jsonSchool = new JSONObject();
-            jsonSchool.put(JSONConstants.SCHOOL_NAME, ContactConstants.COMMUNITIES);
-            jsonSchool.put(JSONConstants.SCHOOL_ORG_ID, 0);
-            JSONArray jsonPersGroups = new JSONArray();
+            JSONArray jsonCommunities = new JSONArray();
             List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
             for (Group userGroup : userGroups) {
-                JSONObject jsonGroup = new JSONObject();
-                jsonGroup.put(JSONConstants.GROUP_NAME, userGroup.getName());
-                jsonGroup.put(JSONConstants.POPULATION_NAME, userGroup.getName());
-                jsonGroup.put(JSONConstants.GROUP_ID, userGroup.getGroupId());
-                jsonGroup.put(JSONConstants.ROLE_ID, 0);
-                jsonGroup.put(JSONConstants.IS_COMMUNITY, true);
-                jsonPersGroups.put(jsonGroup);
+                JSONObject jsonCommunity = new JSONObject();
+                jsonCommunity.put(JSONConstants.GROUP_NAME, userGroup.getName());
+                jsonCommunity.put(JSONConstants.POPULATION_NAME, userGroup.getName());
+                jsonCommunity.put(JSONConstants.GROUP_ID, userGroup.getGroupId());
+                jsonCommunity.put(JSONConstants.ROLE_ID, 0);
+                jsonCommunity.put(JSONConstants.IS_COMMUNITY, true);
+                jsonCommunities.put(jsonCommunity);
             }
-            jsonSchool.put(JSONConstants.GROUPS, jsonPersGroups);
-            broadcastTree.put(jsonSchool);
+            broadcastTree.put(ContactConstants.COMMUNITIES, jsonCommunities);
 
             result.put(JSONConstants.SCHOOLS_GROUPS, broadcastTree);
             result.put(JSONConstants.SUCCESS, true);
@@ -334,19 +329,26 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         JSONArray jsonGroups = new JSONArray();
 
         for (Organization org : orgs) {
-            JSONObject jsonGroup = new JSONObject();
-            jsonGroup.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
-            jsonGroup.put(JSONConstants.GROUP_ID, org.getGroupId());
+            try {
+                JSONObject jsonGroup = new JSONObject();
+                jsonGroup.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
+                jsonGroup.put(JSONConstants.GROUP_ID, org.getGroupId());
 
-            boolean isSubject = OrgDetailsLocalServiceUtil.isSubject(org.getOrganizationId());
-            long teacherRoleId = RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId();
-            jsonGroup.put(JSONConstants.ROLE_ID, isSubject ? teacherRoleId : 0);
-            jsonGroup.put(JSONConstants.IS_SELECTABLE, isSubject);
-            // No sub-population for subjects
-            if (!isSubject) {
-                jsonGroup.put(JSONConstants.POPULATIONS, getOrgPopulations(org, userId));
+                boolean isSubject = OrgDetailsLocalServiceUtil.isSubject(org.getOrganizationId());
+                long teacherRoleId = RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId();
+                jsonGroup.put(JSONConstants.ROLE_ID, isSubject ? teacherRoleId : 0);
+                jsonGroup.put(JSONConstants.IS_SELECTABLE, isSubject);
+                // No sub-population for subjects
+                if (!isSubject) {
+                    jsonGroup.put(JSONConstants.POPULATIONS, getOrgPopulations(org, userId));
+                } else {
+                    String populationName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);
+                    jsonGroup.put(JSONConstants.POPULATION_NAME, populationName);
+                }
+                jsonGroups.put(jsonGroup);
+            } catch (Exception e) {
+                logger.error("Error building news populations for user " + userId, e);
             }
-            jsonGroups.put(jsonGroup);
         }
 
         return jsonGroups;
