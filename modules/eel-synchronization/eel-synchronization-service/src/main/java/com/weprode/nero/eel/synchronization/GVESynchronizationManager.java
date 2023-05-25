@@ -1590,12 +1590,12 @@ public class GVESynchronizationManager {
             // Get the existing sessions for this cours, from now at 6 in the morning to the schoolyear's end
             Calendar coursCal = Calendar.getInstance();
             coursCal.setTime(new Date());
-            coursCal.set(Calendar.HOUR, 6);
+            coursCal.set(Calendar.HOUR_OF_DAY, 6);
             coursCal.set(Calendar.MINUTE, 0);
             coursCal.set(Calendar.SECOND, 0);
             Date coursStartDate = coursCal.getTime();
             List<CDTSession> existingCoursSessions = CDTSessionLocalServiceUtil.getGroupSessions(coursOrg.getGroupId(), coursStartDate, schoolYearEndDate, false);
-            logger.info("Found " + existingCoursSessions.size() + "sessions for cours " + coursOrg.getName());
+            logger.info("Found " + existingCoursSessions.size() + " sessions for cours " + coursOrg.getName());
 
             // Will contain all processed sessionIds
             List<Long> newSessionIds = new ArrayList<>();

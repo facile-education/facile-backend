@@ -7,8 +7,8 @@ public class CDTColorUtil {
     }
 
     public static String getRandomColor() {
-        int colorIndex = (int)(Math.random() * mainColorsPool.length);
-        return mainColorsPool[colorIndex];
+        int colorIndex = (int)(Math.random() * (mainColorsPool.length + additionalColorsPool.length));
+        return getNewColor(colorIndex);
     }
 
     // Pick main colors first, then additional

@@ -189,10 +189,8 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
 
         // Color
         if (colorsTeacherId != 0) {
-            logger.info("Get color for teacher " + colorsTeacherId);
             jsonSession.put(JSONConstants.COLOR, CDTSessionLocalServiceUtil.getSessionColor(this.getSessionId(), colorsTeacherId));
         } else {
-            logger.info("Get color for user " + user.getUserId());
             jsonSession.put(JSONConstants.COLOR, CDTSessionLocalServiceUtil.getSessionColor(this.getSessionId(), user.getUserId()));
         }
 
