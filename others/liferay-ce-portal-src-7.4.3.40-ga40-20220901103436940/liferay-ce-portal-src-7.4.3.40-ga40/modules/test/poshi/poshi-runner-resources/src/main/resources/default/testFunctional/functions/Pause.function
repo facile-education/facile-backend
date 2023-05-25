@@ -1,9 +1,0 @@
-@default = "pause"
-definition {
-
-	@summary-ignore = "true"
-	function pause {
-		selenium.pause();
-	}
-
-}

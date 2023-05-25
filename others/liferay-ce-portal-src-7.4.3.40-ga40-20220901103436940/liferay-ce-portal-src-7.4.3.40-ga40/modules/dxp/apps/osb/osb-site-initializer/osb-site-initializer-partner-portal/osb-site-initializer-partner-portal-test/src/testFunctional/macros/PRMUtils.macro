@@ -1,9 +1,0 @@
-definition {
-
-	macro assertPageTitle {
-		AssertElementPresent(
-			key_title = "${pageTitle}",
-			locator1 = "Header#H1_TITLE");
-	}
-
-}

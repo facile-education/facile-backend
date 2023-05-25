@@ -1,4 +1,0 @@
-com.liferay.portal.dao.db.HypersonicDBFactory
-com.liferay.portal.dao.db.MariaDBDBFactory
-com.liferay.portal.dao.db.MySQLDBFactory
-com.liferay.portal.dao.db.PostgreSQLDBFactory

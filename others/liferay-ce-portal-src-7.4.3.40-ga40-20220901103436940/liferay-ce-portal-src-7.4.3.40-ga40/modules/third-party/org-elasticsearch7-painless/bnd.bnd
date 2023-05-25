@@ -1,3 +1,0 @@
-Bundle-SymbolicName: org.elasticsearch7.painless
-Bundle-Version: 7.9.0.LIFERAY-PATCHED-1
-Export-Package: org.elasticsearch.painless.*;-split-package:=merge-first

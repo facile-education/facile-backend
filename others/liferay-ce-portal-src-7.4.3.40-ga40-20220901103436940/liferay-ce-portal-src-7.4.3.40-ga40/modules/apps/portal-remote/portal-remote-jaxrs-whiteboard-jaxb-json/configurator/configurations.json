@@ -1,5 +1,0 @@
-{
-	"org.apache.aries.jax.rs.jackson": {
-		"osgi.jaxrs.application.select": "(!(liferay.jackson=false))"
-	}
-}

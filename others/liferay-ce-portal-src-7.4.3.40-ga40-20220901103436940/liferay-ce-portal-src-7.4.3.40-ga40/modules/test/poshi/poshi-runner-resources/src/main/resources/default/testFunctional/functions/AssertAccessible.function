@@ -1,8 +1,0 @@
-@default = "assertAccessible"
-definition {
-
-	function assertAccessible {
-		selenium.assertAccessible();
-	}
-
-}

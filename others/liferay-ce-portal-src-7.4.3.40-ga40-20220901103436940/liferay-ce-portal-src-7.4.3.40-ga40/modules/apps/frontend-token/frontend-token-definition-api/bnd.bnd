@@ -1,4 +1,0 @@
-Bundle-Name: Liferay Frontend Token Definition API
-Bundle-SymbolicName: com.liferay.frontend.token.definition.api
-Bundle-Version: 3.1.2
-Export-Package: com.liferay.frontend.token.definition
