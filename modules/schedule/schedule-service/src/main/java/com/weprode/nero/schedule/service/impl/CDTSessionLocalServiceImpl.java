@@ -1,15 +1,9 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.weprode.nero.organization.service.ClassCoursMappingLocalServiceUtil;
-import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -22,17 +16,25 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.group.model.GroupMembership;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
+import com.weprode.nero.organization.service.ClassCoursMappingLocalServiceUtil;
+import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.model.CDTSession;
+import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
+import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
+import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
+import com.weprode.nero.schedule.service.SessionStudentLocalServiceUtil;
+import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
+import com.weprode.nero.schedule.service.base.CDTSessionLocalServiceBaseImpl;
 import com.weprode.nero.schedule.utils.HomeworkUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
-import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.service.*;
-import com.weprode.nero.schedule.service.base.CDTSessionLocalServiceBaseImpl;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -250,6 +252,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 			// If group is a community
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
 			if (group.isRegularSite()) {
+				logger.info("> Group is a community");
 				List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
 				for (CDTSession groupSession : groupSessions) {
 					if (groupSession.getSessionStart().after(minDate) && groupSession.getSessionStart().before(maxDate)) {
@@ -261,6 +264,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 				Organization org = OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
 				// If org is a cours, get its sessions
 				if (OrgDetailsLocalServiceUtil.isCours(org.getOrganizationId())) {
+					logger.info("> Group is a cours");
 					List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
 					for (CDTSession groupSession : groupSessions) {
 						if (groupSession.getSessionStart().after(minDate) && groupSession.getSessionStart().before(maxDate)) {
@@ -268,8 +272,15 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 						}
 					}
 				} else if (OrgDetailsLocalServiceUtil.isClass(org.getOrganizationId())) {
+					logger.info("> Group is a class");
 					// If group is a class, get the sessions of the class's cours
-					List<Long> coursGroupIds = ClassCoursMappingLocalServiceUtil.getClassCours(groupId);
+					List<Long> coursOrgIds = ClassCoursMappingLocalServiceUtil.getClassCours(org.getOrganizationId());
+					logger.info("> that has " + coursOrgIds.size() + " cours");
+					List<Long> coursGroupIds = new ArrayList<>();
+					for (Long coursOrgId : coursOrgIds) {
+						Organization coursOrg = OrganizationLocalServiceUtil.getOrganization(coursOrgId);
+						coursGroupIds.add(coursOrg.getGroupId());
+					}
 					sessions = cdtSessionFinder.getGroupsSessions(coursGroupIds, minDate, maxDate);
 				}
 			}

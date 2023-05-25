@@ -35,8 +35,7 @@ public class GroupColorLocalServiceImpl extends GroupColorLocalServiceBaseImpl {
 
 	public String getColor(long groupId) {
 
-		GroupColor groupColor = null;
-		String color = "";
+		GroupColor groupColor;
 		try {
 			groupColor = groupColorPersistence.findByPrimaryKey(groupId);
 			if (groupColor != null) {
@@ -50,8 +49,9 @@ public class GroupColorLocalServiceImpl extends GroupColorLocalServiceBaseImpl {
 
 		// Get existing used colors count to get a fresh new one from the color pool
 		int nbExistingGroupColors = groupColorPersistence.countAll();
-		color = CDTColorUtil.getNewColor(nbExistingGroupColors);
+		String color = CDTColorUtil.getRandomColor();
 		groupColor.setColor(color);
+		logger.info("nbTotal = " + nbExistingGroupColors + " : picked color " + color + " for groupId " + groupId);
 		groupColorPersistence.update(groupColor);
 
 		return color;
