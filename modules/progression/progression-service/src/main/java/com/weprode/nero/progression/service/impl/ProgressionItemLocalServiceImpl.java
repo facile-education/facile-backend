@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.progression.constants.ProgressionConstants;
 import com.weprode.nero.progression.exception.NoSuchItemException;
@@ -35,6 +36,7 @@ public class ProgressionItemLocalServiceImpl extends ProgressionItemLocalService
         long progressionItemId = counterLocalService.increment();
 
         ProgressionItem item = progressionItemPersistence.create(progressionItemId);
+        item.setCompanyId(PortalUtil.getDefaultCompanyId());
         item.setProgressionId(progressionId);
         item.setProgressionFolderId(folderId);
         item.setModifiedDate(new Date());
