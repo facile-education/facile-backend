@@ -77,7 +77,7 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		// User Max upload Size
 		// So far, user max upload size is the portal max upload size but in the future it could depend on his roles and cota's gesture
 		long maxUploadSize = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAX_UPLOAD_SIZE));
-		result.put(JSONConstants.MAX_UPLOAD_SIZE, maxUploadSize);
+		result.put(JSONConstants.MAX_UPLOAD_SIZE, 100000000);
 
 		result.put(JSONConstants.HAS_MINDMAP_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "mindmap"));
 		result.put(JSONConstants.HAS_GEOGEBRA_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "geogebra"));

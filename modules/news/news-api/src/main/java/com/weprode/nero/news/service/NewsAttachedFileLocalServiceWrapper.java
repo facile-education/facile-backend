@@ -34,8 +34,8 @@ public class NewsAttachedFileLocalServiceWrapper
 	}
 
 	@Override
-	public boolean addFile(long newsId, long fileId) {
-		return _newsAttachedFileLocalService.addFile(newsId, fileId);
+	public boolean addFile(long newsId, long groupId, long fileId) {
+		return _newsAttachedFileLocalService.addFile(newsId, groupId, fileId);
 	}
 
 	/**
@@ -57,23 +57,21 @@ public class NewsAttachedFileLocalServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONArray convertNewsFiles(long newsId) {
-		return _newsAttachedFileLocalService.convertNewsFiles(newsId);
+	public org.json.JSONArray convertNewsFiles(long newsId, long userId) {
+		return _newsAttachedFileLocalService.convertNewsFiles(newsId, userId);
 	}
 
 	/**
 	 * Creates a new news attached file with the primary key. Does not add the news attached file to the database.
 	 *
-	 * @param newsAttachedFilePK the primary key for the new news attached file
+	 * @param newsFileId the primary key for the new news attached file
 	 * @return the new news attached file
 	 */
 	@Override
 	public com.weprode.nero.news.model.NewsAttachedFile createNewsAttachedFile(
-		com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-			newsAttachedFilePK) {
+		long newsFileId) {
 
-		return _newsAttachedFileLocalService.createNewsAttachedFile(
-			newsAttachedFilePK);
+		return _newsAttachedFileLocalService.createNewsAttachedFile(newsFileId);
 	}
 
 	/**
@@ -96,6 +94,25 @@ public class NewsAttachedFileLocalServiceWrapper
 	}
 
 	/**
+	 * Deletes the news attached file with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect NewsAttachedFileLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
+	 * @param newsFileId the primary key of the news attached file
+	 * @return the news attached file that was removed
+	 * @throws PortalException if a news attached file with the primary key could not be found
+	 */
+	@Override
+	public com.weprode.nero.news.model.NewsAttachedFile deleteNewsAttachedFile(
+			long newsFileId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _newsAttachedFileLocalService.deleteNewsAttachedFile(newsFileId);
+	}
+
+	/**
 	 * Deletes the news attached file from the database. Also notifies the appropriate model listeners.
 	 *
 	 * <p>
@@ -111,27 +128,6 @@ public class NewsAttachedFileLocalServiceWrapper
 
 		return _newsAttachedFileLocalService.deleteNewsAttachedFile(
 			newsAttachedFile);
-	}
-
-	/**
-	 * Deletes the news attached file with the primary key from the database. Also notifies the appropriate model listeners.
-	 *
-	 * <p>
-	 * <strong>Important:</strong> Inspect NewsAttachedFileLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
-	 * </p>
-	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
-	 * @return the news attached file that was removed
-	 * @throws PortalException if a news attached file with the primary key could not be found
-	 */
-	@Override
-	public com.weprode.nero.news.model.NewsAttachedFile deleteNewsAttachedFile(
-			com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-				newsAttachedFilePK)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _newsAttachedFileLocalService.deleteNewsAttachedFile(
-			newsAttachedFilePK);
 	}
 
 	/**
@@ -251,11 +247,9 @@ public class NewsAttachedFileLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.news.model.NewsAttachedFile fetchNewsAttachedFile(
-		com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-			newsAttachedFilePK) {
+		long newsFileId) {
 
-		return _newsAttachedFileLocalService.fetchNewsAttachedFile(
-			newsAttachedFilePK);
+		return _newsAttachedFileLocalService.fetchNewsAttachedFile(newsFileId);
 	}
 
 	@Override
@@ -276,18 +270,16 @@ public class NewsAttachedFileLocalServiceWrapper
 	/**
 	 * Returns the news attached file with the primary key.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file
 	 * @throws PortalException if a news attached file with the primary key could not be found
 	 */
 	@Override
 	public com.weprode.nero.news.model.NewsAttachedFile getNewsAttachedFile(
-			com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-				newsAttachedFilePK)
+			long newsFileId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _newsAttachedFileLocalService.getNewsAttachedFile(
-			newsAttachedFilePK);
+		return _newsAttachedFileLocalService.getNewsAttachedFile(newsFileId);
 	}
 
 	/**

@@ -31,12 +31,14 @@ public class NewsAttachedFileTable extends BaseTable<NewsAttachedFileTable> {
 	public static final NewsAttachedFileTable INSTANCE =
 		new NewsAttachedFileTable();
 
+	public final Column<NewsAttachedFileTable, Long> newsFileId = createColumn(
+		"newsFileId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<NewsAttachedFileTable, Long> newsId = createColumn(
-		"newsId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+		"newsId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<NewsAttachedFileTable, Long> groupId = createColumn(
+		"groupId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<NewsAttachedFileTable, Long> fileId = createColumn(
-		"fileId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
-	public final Column<NewsAttachedFileTable, String> fileName = createColumn(
-		"fileName", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+		"fileId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 
 	private NewsAttachedFileTable() {
 		super("News_NewsAttachedFile", NewsAttachedFileTable::new);

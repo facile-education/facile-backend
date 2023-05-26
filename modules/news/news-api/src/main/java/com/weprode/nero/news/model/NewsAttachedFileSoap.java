@@ -14,8 +14,6 @@
 
 package com.weprode.nero.news.model;
 
-import com.weprode.nero.news.service.persistence.NewsAttachedFilePK;
-
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -34,9 +32,10 @@ public class NewsAttachedFileSoap implements Serializable {
 	public static NewsAttachedFileSoap toSoapModel(NewsAttachedFile model) {
 		NewsAttachedFileSoap soapModel = new NewsAttachedFileSoap();
 
+		soapModel.setNewsFileId(model.getNewsFileId());
 		soapModel.setNewsId(model.getNewsId());
+		soapModel.setGroupId(model.getGroupId());
 		soapModel.setFileId(model.getFileId());
-		soapModel.setFileName(model.getFileName());
 
 		return soapModel;
 	}
@@ -90,13 +89,20 @@ public class NewsAttachedFileSoap implements Serializable {
 	public NewsAttachedFileSoap() {
 	}
 
-	public NewsAttachedFilePK getPrimaryKey() {
-		return new NewsAttachedFilePK(_newsId, _fileId);
+	public long getPrimaryKey() {
+		return _newsFileId;
 	}
 
-	public void setPrimaryKey(NewsAttachedFilePK pk) {
-		setNewsId(pk.newsId);
-		setFileId(pk.fileId);
+	public void setPrimaryKey(long pk) {
+		setNewsFileId(pk);
+	}
+
+	public long getNewsFileId() {
+		return _newsFileId;
+	}
+
+	public void setNewsFileId(long newsFileId) {
+		_newsFileId = newsFileId;
 	}
 
 	public long getNewsId() {
@@ -107,6 +113,14 @@ public class NewsAttachedFileSoap implements Serializable {
 		_newsId = newsId;
 	}
 
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		_groupId = groupId;
+	}
+
 	public long getFileId() {
 		return _fileId;
 	}
@@ -115,16 +129,9 @@ public class NewsAttachedFileSoap implements Serializable {
 		_fileId = fileId;
 	}
 
-	public String getFileName() {
-		return _fileName;
-	}
-
-	public void setFileName(String fileName) {
-		_fileName = fileName;
-	}
-
+	private long _newsFileId;
 	private long _newsId;
+	private long _groupId;
 	private long _fileId;
-	private String _fileName;
 
 }

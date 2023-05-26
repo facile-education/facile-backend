@@ -52,12 +52,17 @@
 	</entity>
 
 	<entity name="NewsAttachedFile" local-service="true" remote-service="false">
-		<column name="newsId" type="long" primary="true" />
-		<column name="fileId" type="long" primary="true" />
-		<column name="fileName" type="String" />
+		<column name="newsFileId" type="long" primary="true" />
+		<column name="newsId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="fileId" type="long" />
 
 		<finder return-type="Collection" name="newsId">
 			<finder-column name="newsId"/>
+		</finder>
+		<finder return-type="Collection" name="newsId_groupId">
+			<finder-column name="newsId"/>
+			<finder-column name="groupId"/>
 		</finder>
 	</entity>
 </service-builder>

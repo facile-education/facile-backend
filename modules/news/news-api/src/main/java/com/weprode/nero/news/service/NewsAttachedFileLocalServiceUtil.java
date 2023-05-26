@@ -46,8 +46,8 @@ public class NewsAttachedFileLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.news.service.impl.NewsAttachedFileLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static boolean addFile(long newsId, long fileId) {
-		return getService().addFile(newsId, fileId);
+	public static boolean addFile(long newsId, long groupId, long fileId) {
+		return getService().addFile(newsId, groupId, fileId);
 	}
 
 	/**
@@ -66,21 +66,20 @@ public class NewsAttachedFileLocalServiceUtil {
 		return getService().addNewsAttachedFile(newsAttachedFile);
 	}
 
-	public static org.json.JSONArray convertNewsFiles(long newsId) {
-		return getService().convertNewsFiles(newsId);
+	public static org.json.JSONArray convertNewsFiles(
+		long newsId, long userId) {
+
+		return getService().convertNewsFiles(newsId, userId);
 	}
 
 	/**
 	 * Creates a new news attached file with the primary key. Does not add the news attached file to the database.
 	 *
-	 * @param newsAttachedFilePK the primary key for the new news attached file
+	 * @param newsFileId the primary key for the new news attached file
 	 * @return the new news attached file
 	 */
-	public static NewsAttachedFile createNewsAttachedFile(
-		com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-			newsAttachedFilePK) {
-
-		return getService().createNewsAttachedFile(newsAttachedFilePK);
+	public static NewsAttachedFile createNewsAttachedFile(long newsFileId) {
+		return getService().createNewsAttachedFile(newsFileId);
 	}
 
 	/**
@@ -98,6 +97,23 @@ public class NewsAttachedFileLocalServiceUtil {
 	}
 
 	/**
+	 * Deletes the news attached file with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect NewsAttachedFileLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
+	 * @param newsFileId the primary key of the news attached file
+	 * @return the news attached file that was removed
+	 * @throws PortalException if a news attached file with the primary key could not be found
+	 */
+	public static NewsAttachedFile deleteNewsAttachedFile(long newsFileId)
+		throws PortalException {
+
+		return getService().deleteNewsAttachedFile(newsFileId);
+	}
+
+	/**
 	 * Deletes the news attached file from the database. Also notifies the appropriate model listeners.
 	 *
 	 * <p>
@@ -111,25 +127,6 @@ public class NewsAttachedFileLocalServiceUtil {
 		NewsAttachedFile newsAttachedFile) {
 
 		return getService().deleteNewsAttachedFile(newsAttachedFile);
-	}
-
-	/**
-	 * Deletes the news attached file with the primary key from the database. Also notifies the appropriate model listeners.
-	 *
-	 * <p>
-	 * <strong>Important:</strong> Inspect NewsAttachedFileLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
-	 * </p>
-	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
-	 * @return the news attached file that was removed
-	 * @throws PortalException if a news attached file with the primary key could not be found
-	 */
-	public static NewsAttachedFile deleteNewsAttachedFile(
-			com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-				newsAttachedFilePK)
-		throws PortalException {
-
-		return getService().deleteNewsAttachedFile(newsAttachedFilePK);
 	}
 
 	/**
@@ -227,11 +224,8 @@ public class NewsAttachedFileLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static NewsAttachedFile fetchNewsAttachedFile(
-		com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-			newsAttachedFilePK) {
-
-		return getService().fetchNewsAttachedFile(newsAttachedFilePK);
+	public static NewsAttachedFile fetchNewsAttachedFile(long newsFileId) {
+		return getService().fetchNewsAttachedFile(newsFileId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
@@ -250,16 +244,14 @@ public class NewsAttachedFileLocalServiceUtil {
 	/**
 	 * Returns the news attached file with the primary key.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file
 	 * @throws PortalException if a news attached file with the primary key could not be found
 	 */
-	public static NewsAttachedFile getNewsAttachedFile(
-			com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-				newsAttachedFilePK)
+	public static NewsAttachedFile getNewsAttachedFile(long newsFileId)
 		throws PortalException {
 
-		return getService().getNewsAttachedFile(newsAttachedFilePK);
+		return getService().getNewsAttachedFile(newsFileId);
 	}
 
 	/**

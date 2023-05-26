@@ -22,11 +22,12 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="imageId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.weprode.nero.news.model.impl.NewsAttachedFileImpl" table="News_NewsAttachedFile">
-		<composite-id class="com.weprode.nero.news.service.persistence.NewsAttachedFilePK" name="primaryKey">
-			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="newsId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		</composite-id>
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="newsFileId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="newsId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.weprode.nero.news.model.impl.NewsPopulationImpl" table="News_NewsPopulation">
 		<composite-id class="com.weprode.nero.news.service.persistence.NewsPopulationPK" name="primaryKey">

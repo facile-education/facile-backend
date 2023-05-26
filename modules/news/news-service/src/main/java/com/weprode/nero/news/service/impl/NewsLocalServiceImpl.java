@@ -1,6 +1,8 @@
 package com.weprode.nero.news.service.impl;
 
+import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -21,6 +23,7 @@ import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
@@ -475,9 +478,9 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
 
         if (withDetails) {
-            jsonNews.put(JSONConstants.ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.convertNewsFiles(newsId));
-            jsonNews.put(JSONConstants.POPULATIONS, NewsPopulationLocalServiceUtil.convertNewsPopulations(newsId, userId));
+            jsonNews.put(JSONConstants.ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.convertNewsFiles(newsId, userId));
             if (news.getAuthorId() == userId) {
+                jsonNews.put(JSONConstants.POPULATIONS, NewsPopulationLocalServiceUtil.convertNewsPopulations(newsId, userId));
                 jsonNews.put(JSONConstants.READ_INFOS, NewsReadLocalServiceUtil.getNewsReadStatus(newsId));
             }
         }
@@ -487,14 +490,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
 
     private void manageAttachedFiles(long newsId, JSONArray populations, List<Long> attachFileIds, boolean isCreation) throws SystemException {
+
         if (!isCreation) {
             // Delete previous attached files
             NewsAttachedFileLocalServiceUtil.deleteByNewsId(newsId);
-        }
-
-        // Recreate them
-        for (Long attachFileId : attachFileIds) {
-            NewsAttachedFileLocalServiceUtil.addFile(newsId, attachFileId);
         }
 
         // Build a map to group populations by groupId
@@ -504,27 +503,23 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             long groupId = population.getLong(JSONConstants.GROUP_ID);
             long roleId = population.getLong(JSONConstants.ROLE_ID);
             populationsMap.computeIfAbsent(groupId, k -> new ArrayList<>()).add(roleId);
-//            if (!populationsMap.containsKey(groupId)) {
-//                populationsMap.put(groupId, new ArrayList<>());
-//
-//            }
-//            populationsMap.get(groupId).add(roleId);
         }
 
         // Loop over groups
         for (Map.Entry<Long, List<Long>> entry : populationsMap.entrySet()) {
-            logger.info("Manage attached files for groupId " + entry.getKey());
+            long groupId = entry.getKey();
+            logger.info("Manage attached files for groupId " + groupId);
             try {
-                Folder groupNewsFolder = FolderUtilsLocalServiceUtil.getGroupNewsFolder(entry.getKey());
+                Folder groupNewsFolder = FolderUtilsLocalServiceUtil.getGroupNewsFolder(groupId);
                 // Check subFolder newsId
-                List<Folder> folderList = DLAppServiceUtil.getFolders(entry.getKey(), groupNewsFolder.getFolderId());
+                List<Folder> folderList = DLAppServiceUtil.getFolders(groupId, groupNewsFolder.getFolderId());
                 Folder newsIdFolder = null;
                 for (Folder folder : folderList) {
                     if (folder.getName().equals("" + newsId)) {
                         newsIdFolder = folder;
                         logger.info("Folder newsId " + newsId + "already exists -> this is an edit");
                         // Delete existing attached files
-                        List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(entry.getKey(), folder.getFolderId());
+                        List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, folder.getFolderId());
                         for (FileEntry fileEntry : fileList) {
                             logger.info("Deleting existing attached file " + fileEntry.getTitle());
                             DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
@@ -534,33 +529,56 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
                 // Create newsId folder if it does not exist
                 if (newsIdFolder == null) {
-                    logger.info("Creating news folder for newsId " + newsId + " and groupId " + entry.getKey());
-                    newsIdFolder = DLAppServiceUtil.addFolder(
-                            entry.getKey(),
+                    logger.info("Creating news folder for newsId " + newsId + " and groupId " + groupId);
+                    newsIdFolder = DLAppLocalServiceUtil.addFolder(
+                            UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+                            groupId,
                             groupNewsFolder.getFolderId(),
                             "" + newsId,
                             "Dossier PJ de la news " + newsId,
                             new ServiceContext());
                 }
 
-                // Add attached files
-                for (Long attachedFileId : attachFileIds) {
-                    logger.info("Adding fileEntryId " + attachedFileId + " to folder " + newsIdFolder.getFolderId());
-                    FileUtilsLocalServiceUtil.copyFileEntry(newsIdFolder.getUserId(), attachedFileId, newsIdFolder.getFolderId(), true);
-                }
+                List<Long> agentRoleIds = RoleUtilsLocalServiceUtil.getAgentsRoleIds();
 
                 // Delete all permissions on newsId folder
                 ResourcePermissionLocalServiceUtil.deleteResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, newsIdFolder.getFolderId());
 
-                // Set VIEW permissions for the good roles
+                // Set VIEW permissions for the destination roles
                 for (long roleId : entry.getValue()) {
-                    ResourcePermissionLocalServiceUtil.setResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+newsIdFolder.getFolderId(), roleId, new String[]{"VIEW"});
+                    ResourcePermissionLocalServiceUtil.setResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_GROUP, ""+newsIdFolder.getFolderId(), roleId, new String[]{"VIEW"});
+                }
+                // Set permissions to all agents
+                for (long agentRoleId : agentRoleIds) {
+                    ResourcePermissionLocalServiceUtil.setResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+newsIdFolder.getFolderId(), agentRoleId, new String[]{"VIEW", "ADD_DOCUMENT", "UPDATE", "DELETE"});
+                }
+
+
+                // Add attached files
+                for (Long attachedFileId : attachFileIds) {
+                    logger.info("Adding fileEntryId " + attachedFileId + " to folder " + newsIdFolder.getFolderId());
+                    FileEntry copiedFileEntry = FileUtilsLocalServiceUtil.copyFileEntry(newsIdFolder.getUserId(), attachedFileId, newsIdFolder.getFolderId(), true);
+
+                    // Set VIEW permissions to all agents
+                    for (long agentRoleId : agentRoleIds) {
+                        ResourcePermissionLocalServiceUtil.setResourcePermissions(copiedFileEntry.getCompanyId(), DLFileEntry.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+copiedFileEntry.getFileEntryId(), agentRoleId, new String[]{"VIEW"});
+                    }
+
+                    // Set VIEW permissions for the destination roles
+                    for (long roleId : entry.getValue()) {
+                        ResourcePermissionLocalServiceUtil.setResourcePermissions(copiedFileEntry.getCompanyId(), DLFileEntry.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+copiedFileEntry.getFileEntryId(), roleId, new String[]{"VIEW"});
+                    }
+
+                    // Create the NewsAttachedFiles
+                    NewsAttachedFileLocalServiceUtil.addFile(newsId, groupId, copiedFileEntry.getFileEntryId());
+
                 }
 
             } catch (Exception e) {
                 logger.error("Error adding attached files for newsId " + newsId + " and groupId " + entry.getKey(), e);
             }
         }
+
     }
 
     @Indexable(type = IndexableType.DELETE)

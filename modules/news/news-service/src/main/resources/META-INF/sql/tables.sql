@@ -13,10 +13,10 @@ create table News_News (
 );
 
 create table News_NewsAttachedFile (
-	newsId LONG not null,
-	fileId LONG not null,
-	fileName VARCHAR(75) null,
-	primary key (newsId, fileId)
+	newsFileId LONG not null primary key,
+	newsId LONG,
+	groupId LONG,
+	fileId LONG
 );
 
 create table News_NewsPopulation (

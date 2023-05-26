@@ -15,9 +15,10 @@
 		<field name="imageId" type="long" />
 	</model>
 	<model name="com.weprode.nero.news.model.NewsAttachedFile">
+		<field name="newsFileId" type="long" />
 		<field name="newsId" type="long" />
+		<field name="groupId" type="long" />
 		<field name="fileId" type="long" />
-		<field name="fileName" type="String" />
 	</model>
 	<model name="com.weprode.nero.news.model.NewsPopulation">
 		<field name="newsId" type="long" />
