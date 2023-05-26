@@ -316,12 +316,14 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
             result.put(JSONConstants.SUCCESS, false);
+            logger.error("Permission exception when getting stats");
             return result;
         }
 
         // If no Matomo url specified, return empty object
         if (PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) == null || !PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true")) {
             result.put(JSONConstants.SUCCESS, false);
+            logger.error("No Matomo url specified");
             return result;
         }
 
