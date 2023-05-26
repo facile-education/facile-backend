@@ -14,18 +14,20 @@
 
 package com.weprode.nero.news.model.impl;
 
+import com.liferay.expando.kernel.model.ExpandoBridge;
+import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.news.model.NewsAttachedFile;
 import com.weprode.nero.news.model.NewsAttachedFileModel;
-import com.weprode.nero.news.service.persistence.NewsAttachedFilePK;
 
 import java.io.Serializable;
 
@@ -66,30 +68,31 @@ public class NewsAttachedFileModelImpl
 	public static final String TABLE_NAME = "News_NewsAttachedFile";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"newsId", Types.BIGINT}, {"fileId", Types.BIGINT},
-		{"fileName", Types.VARCHAR}
+		{"newsFileId", Types.BIGINT}, {"newsId", Types.BIGINT},
+		{"groupId", Types.BIGINT}, {"fileId", Types.BIGINT}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
 		new HashMap<String, Integer>();
 
 	static {
+		TABLE_COLUMNS_MAP.put("newsFileId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("newsId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("fileId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("fileName", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table News_NewsAttachedFile (newsId LONG not null,fileId LONG not null,fileName VARCHAR(75) null,primary key (newsId, fileId))";
+		"create table News_NewsAttachedFile (newsFileId LONG not null primary key,newsId LONG,groupId LONG,fileId LONG)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table News_NewsAttachedFile";
 
 	public static final String ORDER_BY_JPQL =
-		" ORDER BY newsAttachedFile.id.newsId ASC, newsAttachedFile.id.fileId ASC";
+		" ORDER BY newsAttachedFile.newsFileId ASC";
 
 	public static final String ORDER_BY_SQL =
-		" ORDER BY News_NewsAttachedFile.newsId ASC, News_NewsAttachedFile.fileId ASC";
+		" ORDER BY News_NewsAttachedFile.newsFileId ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -101,14 +104,20 @@ public class NewsAttachedFileModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long NEWSID_COLUMN_BITMASK = 1L;
+	public static final long GROUPID_COLUMN_BITMASK = 1L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long NEWSID_COLUMN_BITMASK = 2L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long FILEID_COLUMN_BITMASK = 2L;
+	public static final long NEWSFILEID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -128,24 +137,23 @@ public class NewsAttachedFileModelImpl
 	}
 
 	@Override
-	public NewsAttachedFilePK getPrimaryKey() {
-		return new NewsAttachedFilePK(_newsId, _fileId);
+	public long getPrimaryKey() {
+		return _newsFileId;
 	}
 
 	@Override
-	public void setPrimaryKey(NewsAttachedFilePK primaryKey) {
-		setNewsId(primaryKey.newsId);
-		setFileId(primaryKey.fileId);
+	public void setPrimaryKey(long primaryKey) {
+		setNewsFileId(primaryKey);
 	}
 
 	@Override
 	public Serializable getPrimaryKeyObj() {
-		return new NewsAttachedFilePK(_newsId, _fileId);
+		return _newsFileId;
 	}
 
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
-		setPrimaryKey((NewsAttachedFilePK)primaryKeyObj);
+		setPrimaryKey(((Long)primaryKeyObj).longValue());
 	}
 
 	@Override
@@ -251,24 +259,43 @@ public class NewsAttachedFileModelImpl
 			attributeSetterBiConsumers =
 				new LinkedHashMap<String, BiConsumer<NewsAttachedFile, ?>>();
 
+		attributeGetterFunctions.put(
+			"newsFileId", NewsAttachedFile::getNewsFileId);
+		attributeSetterBiConsumers.put(
+			"newsFileId",
+			(BiConsumer<NewsAttachedFile, Long>)
+				NewsAttachedFile::setNewsFileId);
 		attributeGetterFunctions.put("newsId", NewsAttachedFile::getNewsId);
 		attributeSetterBiConsumers.put(
 			"newsId",
 			(BiConsumer<NewsAttachedFile, Long>)NewsAttachedFile::setNewsId);
+		attributeGetterFunctions.put("groupId", NewsAttachedFile::getGroupId);
+		attributeSetterBiConsumers.put(
+			"groupId",
+			(BiConsumer<NewsAttachedFile, Long>)NewsAttachedFile::setGroupId);
 		attributeGetterFunctions.put("fileId", NewsAttachedFile::getFileId);
 		attributeSetterBiConsumers.put(
 			"fileId",
 			(BiConsumer<NewsAttachedFile, Long>)NewsAttachedFile::setFileId);
-		attributeGetterFunctions.put("fileName", NewsAttachedFile::getFileName);
-		attributeSetterBiConsumers.put(
-			"fileName",
-			(BiConsumer<NewsAttachedFile, String>)
-				NewsAttachedFile::setFileName);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
 		_attributeSetterBiConsumers = Collections.unmodifiableMap(
 			(Map)attributeSetterBiConsumers);
+	}
+
+	@Override
+	public long getNewsFileId() {
+		return _newsFileId;
+	}
+
+	@Override
+	public void setNewsFileId(long newsFileId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_newsFileId = newsFileId;
 	}
 
 	@Override
@@ -295,6 +322,29 @@ public class NewsAttachedFileModelImpl
 	}
 
 	@Override
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	@Override
+	public void setGroupId(long groupId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_groupId = groupId;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalGroupId() {
+		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("groupId"));
+	}
+
+	@Override
 	public long getFileId() {
 		return _fileId;
 	}
@@ -306,25 +356,6 @@ public class NewsAttachedFileModelImpl
 		}
 
 		_fileId = fileId;
-	}
-
-	@Override
-	public String getFileName() {
-		if (_fileName == null) {
-			return "";
-		}
-		else {
-			return _fileName;
-		}
-	}
-
-	@Override
-	public void setFileName(String fileName) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_fileName = fileName;
 	}
 
 	public long getColumnBitmask() {
@@ -352,6 +383,19 @@ public class NewsAttachedFileModelImpl
 	}
 
 	@Override
+	public ExpandoBridge getExpandoBridge() {
+		return ExpandoBridgeFactoryUtil.getExpandoBridge(
+			0, NewsAttachedFile.class.getName(), getPrimaryKey());
+	}
+
+	@Override
+	public void setExpandoBridgeAttributes(ServiceContext serviceContext) {
+		ExpandoBridge expandoBridge = getExpandoBridge();
+
+		expandoBridge.setAttributes(serviceContext);
+	}
+
+	@Override
 	public NewsAttachedFile toEscapedModel() {
 		if (_escapedModel == null) {
 			Function<InvocationHandler, NewsAttachedFile>
@@ -370,9 +414,10 @@ public class NewsAttachedFileModelImpl
 	public Object clone() {
 		NewsAttachedFileImpl newsAttachedFileImpl = new NewsAttachedFileImpl();
 
+		newsAttachedFileImpl.setNewsFileId(getNewsFileId());
 		newsAttachedFileImpl.setNewsId(getNewsId());
+		newsAttachedFileImpl.setGroupId(getGroupId());
 		newsAttachedFileImpl.setFileId(getFileId());
-		newsAttachedFileImpl.setFileName(getFileName());
 
 		newsAttachedFileImpl.resetOriginalValues();
 
@@ -383,21 +428,31 @@ public class NewsAttachedFileModelImpl
 	public NewsAttachedFile cloneWithOriginalValues() {
 		NewsAttachedFileImpl newsAttachedFileImpl = new NewsAttachedFileImpl();
 
+		newsAttachedFileImpl.setNewsFileId(
+			this.<Long>getColumnOriginalValue("newsFileId"));
 		newsAttachedFileImpl.setNewsId(
 			this.<Long>getColumnOriginalValue("newsId"));
+		newsAttachedFileImpl.setGroupId(
+			this.<Long>getColumnOriginalValue("groupId"));
 		newsAttachedFileImpl.setFileId(
 			this.<Long>getColumnOriginalValue("fileId"));
-		newsAttachedFileImpl.setFileName(
-			this.<String>getColumnOriginalValue("fileName"));
 
 		return newsAttachedFileImpl;
 	}
 
 	@Override
 	public int compareTo(NewsAttachedFile newsAttachedFile) {
-		NewsAttachedFilePK primaryKey = newsAttachedFile.getPrimaryKey();
+		long primaryKey = newsAttachedFile.getPrimaryKey();
 
-		return getPrimaryKey().compareTo(primaryKey);
+		if (getPrimaryKey() < primaryKey) {
+			return -1;
+		}
+		else if (getPrimaryKey() > primaryKey) {
+			return 1;
+		}
+		else {
+			return 0;
+		}
 	}
 
 	@Override
@@ -412,9 +467,9 @@ public class NewsAttachedFileModelImpl
 
 		NewsAttachedFile newsAttachedFile = (NewsAttachedFile)object;
 
-		NewsAttachedFilePK primaryKey = newsAttachedFile.getPrimaryKey();
+		long primaryKey = newsAttachedFile.getPrimaryKey();
 
-		if (getPrimaryKey().equals(primaryKey)) {
+		if (getPrimaryKey() == primaryKey) {
 			return true;
 		}
 		else {
@@ -424,7 +479,7 @@ public class NewsAttachedFileModelImpl
 
 	@Override
 	public int hashCode() {
-		return getPrimaryKey().hashCode();
+		return (int)getPrimaryKey();
 	}
 
 	/**
@@ -457,19 +512,13 @@ public class NewsAttachedFileModelImpl
 		NewsAttachedFileCacheModel newsAttachedFileCacheModel =
 			new NewsAttachedFileCacheModel();
 
-		newsAttachedFileCacheModel.newsAttachedFilePK = getPrimaryKey();
+		newsAttachedFileCacheModel.newsFileId = getNewsFileId();
 
 		newsAttachedFileCacheModel.newsId = getNewsId();
 
+		newsAttachedFileCacheModel.groupId = getGroupId();
+
 		newsAttachedFileCacheModel.fileId = getFileId();
-
-		newsAttachedFileCacheModel.fileName = getFileName();
-
-		String fileName = newsAttachedFileCacheModel.fileName;
-
-		if ((fileName != null) && (fileName.length() == 0)) {
-			newsAttachedFileCacheModel.fileName = null;
-		}
 
 		return newsAttachedFileCacheModel;
 	}
@@ -562,9 +611,10 @@ public class NewsAttachedFileModelImpl
 
 	}
 
+	private long _newsFileId;
 	private long _newsId;
+	private long _groupId;
 	private long _fileId;
-	private String _fileName;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<NewsAttachedFile, Object> function =
@@ -593,9 +643,10 @@ public class NewsAttachedFileModelImpl
 	private void _setColumnOriginalValues() {
 		_columnOriginalValues = new HashMap<String, Object>();
 
+		_columnOriginalValues.put("newsFileId", _newsFileId);
 		_columnOriginalValues.put("newsId", _newsId);
+		_columnOriginalValues.put("groupId", _groupId);
 		_columnOriginalValues.put("fileId", _fileId);
-		_columnOriginalValues.put("fileName", _fileName);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -609,11 +660,13 @@ public class NewsAttachedFileModelImpl
 	static {
 		Map<String, Long> columnBitmasks = new HashMap<>();
 
-		columnBitmasks.put("newsId", 1L);
+		columnBitmasks.put("newsFileId", 1L);
 
-		columnBitmasks.put("fileId", 2L);
+		columnBitmasks.put("newsId", 2L);
 
-		columnBitmasks.put("fileName", 4L);
+		columnBitmasks.put("groupId", 4L);
+
+		columnBitmasks.put("fileId", 8L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

@@ -19,6 +19,7 @@ import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.exception.FileNameException;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
@@ -29,14 +30,17 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.document.constants.PermissionConstants;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
@@ -49,6 +53,7 @@ import com.weprode.nero.document.utils.DLAppUtil;
 import com.weprode.nero.document.utils.FileNameUtil;
 import com.weprode.nero.document.utils.ZipUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -151,7 +156,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					user.getGroup().getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.PROGRESSION_FOLDER_NAME,
-					"Dossier pour les documents des progression",
+					"Dossier pour les documents des progressions",
 					new ServiceContext());
 			hideDLFolder(folder.getFolderId());
 		}
@@ -184,26 +189,6 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		}
 
 		return folder;
-	}*/
-
-	// TODO News
-	/*public static Folder getNewsFolder(long groupId, boolean createIt) throws PortalException, SystemException {
-		Folder rootFolder = null;
-
-		try {
-			rootFolder = DLAppServiceUtil.getFolder(groupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.ACTU_IMG_FOLDER_NAME);
-		} catch (Exception e) {
-			if (createIt) {
-				rootFolder = DLAppServiceUtil.addFolder(
-						groupId,
-						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-						DocumentConstants.ACTU_IMG_FOLDER_NAME,
-						"Dossier pour les images des actualites.",
-						new ServiceContext());
-			}
-		}
-
-		return rootFolder;
 	}*/
 
 	/**
@@ -526,7 +511,8 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			try {
 				Group group = GroupLocalServiceUtil.getGroup(groupId);
 				logger.info("Creating root folder for group " + group.getName(LocaleUtil.getDefault()));
-				Folder createdFolder = DLAppServiceUtil.addFolder(
+				Folder createdFolder = DLAppLocalServiceUtil.addFolder(
+						UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
 						groupId,
 						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 						DocumentConstants.GROUP_FOLDER_NAME,
@@ -550,12 +536,22 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		try {
 			folder = DLAppServiceUtil.getFolder(groupId, groupRootFolder.getFolderId(), DocumentConstants.NEWS_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
-			folder = DLAppServiceUtil.addFolder(
+			folder = DLAppLocalServiceUtil.addFolder(
+					UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
 					groupId,
 					groupRootFolder.getFolderId(),
 					DocumentConstants.NEWS_FOLDER_NAME,
 					"Dossier pour les pièces jointes d'actualités",
 					new ServiceContext());
+
+			// Add permissions for all agent roleIds
+			List<Long> allRoleIds = new ArrayList<>(RoleUtilsLocalServiceUtil.getAgentsRoleIds());
+			allRoleIds.add(RoleUtilsLocalServiceUtil.getStudentRole().getRoleId());
+			allRoleIds.add(RoleUtilsLocalServiceUtil.getParentRole().getRoleId());
+			for (long agentRoleId : allRoleIds) {
+				logger.info("Add view perm on folder " + folder.getFolderId() + " for roleId " + agentRoleId);
+				ResourcePermissionLocalServiceUtil.setResourcePermissions(folder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+folder.getFolderId(), agentRoleId, new String[]{"VIEW", "ADD_DOCUMENT", "UPDATE", "DELETE"});
+			}
 			hideDLFolder(folder.getFolderId());
 		}
 

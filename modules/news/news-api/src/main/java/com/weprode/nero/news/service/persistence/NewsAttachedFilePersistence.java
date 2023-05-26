@@ -19,8 +19,6 @@ import com.liferay.portal.kernel.service.persistence.BasePersistence;
 import com.weprode.nero.news.exception.NoSuchAttachedFileException;
 import com.weprode.nero.news.model.NewsAttachedFile;
 
-import java.util.Set;
-
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -160,14 +158,14 @@ public interface NewsAttachedFilePersistence
 	/**
 	 * Returns the news attached files before and after the current news attached file in the ordered set where newsId = &#63;.
 	 *
-	 * @param newsAttachedFilePK the primary key of the current news attached file
+	 * @param newsFileId the primary key of the current news attached file
 	 * @param newsId the news ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next news attached file
 	 * @throws NoSuchAttachedFileException if a news attached file with the primary key could not be found
 	 */
 	public NewsAttachedFile[] findBynewsId_PrevAndNext(
-			NewsAttachedFilePK newsAttachedFilePK, long newsId,
+			long newsFileId, long newsId,
 			com.liferay.portal.kernel.util.OrderByComparator<NewsAttachedFile>
 				orderByComparator)
 		throws NoSuchAttachedFileException;
@@ -188,6 +186,161 @@ public interface NewsAttachedFilePersistence
 	public int countBynewsId(long newsId);
 
 	/**
+	 * Returns all the news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @return the matching news attached files
+	 */
+	public java.util.List<NewsAttachedFile> findBynewsId_groupId(
+		long newsId, long groupId);
+
+	/**
+	 * Returns a range of all the news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>NewsAttachedFileModelImpl</code>.
+	 * </p>
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of news attached files
+	 * @param end the upper bound of the range of news attached files (not inclusive)
+	 * @return the range of matching news attached files
+	 */
+	public java.util.List<NewsAttachedFile> findBynewsId_groupId(
+		long newsId, long groupId, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>NewsAttachedFileModelImpl</code>.
+	 * </p>
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of news attached files
+	 * @param end the upper bound of the range of news attached files (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching news attached files
+	 */
+	public java.util.List<NewsAttachedFile> findBynewsId_groupId(
+		long newsId, long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<NewsAttachedFile>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>NewsAttachedFileModelImpl</code>.
+	 * </p>
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of news attached files
+	 * @param end the upper bound of the range of news attached files (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching news attached files
+	 */
+	public java.util.List<NewsAttachedFile> findBynewsId_groupId(
+		long newsId, long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<NewsAttachedFile>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Returns the first news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching news attached file
+	 * @throws NoSuchAttachedFileException if a matching news attached file could not be found
+	 */
+	public NewsAttachedFile findBynewsId_groupId_First(
+			long newsId, long groupId,
+			com.liferay.portal.kernel.util.OrderByComparator<NewsAttachedFile>
+				orderByComparator)
+		throws NoSuchAttachedFileException;
+
+	/**
+	 * Returns the first news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching news attached file, or <code>null</code> if a matching news attached file could not be found
+	 */
+	public NewsAttachedFile fetchBynewsId_groupId_First(
+		long newsId, long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator<NewsAttachedFile>
+			orderByComparator);
+
+	/**
+	 * Returns the last news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching news attached file
+	 * @throws NoSuchAttachedFileException if a matching news attached file could not be found
+	 */
+	public NewsAttachedFile findBynewsId_groupId_Last(
+			long newsId, long groupId,
+			com.liferay.portal.kernel.util.OrderByComparator<NewsAttachedFile>
+				orderByComparator)
+		throws NoSuchAttachedFileException;
+
+	/**
+	 * Returns the last news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching news attached file, or <code>null</code> if a matching news attached file could not be found
+	 */
+	public NewsAttachedFile fetchBynewsId_groupId_Last(
+		long newsId, long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator<NewsAttachedFile>
+			orderByComparator);
+
+	/**
+	 * Returns the news attached files before and after the current news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsFileId the primary key of the current news attached file
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next news attached file
+	 * @throws NoSuchAttachedFileException if a news attached file with the primary key could not be found
+	 */
+	public NewsAttachedFile[] findBynewsId_groupId_PrevAndNext(
+			long newsFileId, long newsId, long groupId,
+			com.liferay.portal.kernel.util.OrderByComparator<NewsAttachedFile>
+				orderByComparator)
+		throws NoSuchAttachedFileException;
+
+	/**
+	 * Removes all the news attached files where newsId = &#63; and groupId = &#63; from the database.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 */
+	public void removeBynewsId_groupId(long newsId, long groupId);
+
+	/**
+	 * Returns the number of news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @return the number of matching news attached files
+	 */
+	public int countBynewsId_groupId(long newsId, long groupId);
+
+	/**
 	 * Caches the news attached file in the entity cache if it is enabled.
 	 *
 	 * @param newsAttachedFile the news attached file
@@ -204,19 +357,19 @@ public interface NewsAttachedFilePersistence
 	/**
 	 * Creates a new news attached file with the primary key. Does not add the news attached file to the database.
 	 *
-	 * @param newsAttachedFilePK the primary key for the new news attached file
+	 * @param newsFileId the primary key for the new news attached file
 	 * @return the new news attached file
 	 */
-	public NewsAttachedFile create(NewsAttachedFilePK newsAttachedFilePK);
+	public NewsAttachedFile create(long newsFileId);
 
 	/**
 	 * Removes the news attached file with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file that was removed
 	 * @throws NoSuchAttachedFileException if a news attached file with the primary key could not be found
 	 */
-	public NewsAttachedFile remove(NewsAttachedFilePK newsAttachedFilePK)
+	public NewsAttachedFile remove(long newsFileId)
 		throws NoSuchAttachedFileException;
 
 	public NewsAttachedFile updateImpl(NewsAttachedFile newsAttachedFile);
@@ -224,22 +377,20 @@ public interface NewsAttachedFilePersistence
 	/**
 	 * Returns the news attached file with the primary key or throws a <code>NoSuchAttachedFileException</code> if it could not be found.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file
 	 * @throws NoSuchAttachedFileException if a news attached file with the primary key could not be found
 	 */
-	public NewsAttachedFile findByPrimaryKey(
-			NewsAttachedFilePK newsAttachedFilePK)
+	public NewsAttachedFile findByPrimaryKey(long newsFileId)
 		throws NoSuchAttachedFileException;
 
 	/**
 	 * Returns the news attached file with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file, or <code>null</code> if a news attached file with the primary key could not be found
 	 */
-	public NewsAttachedFile fetchByPrimaryKey(
-		NewsAttachedFilePK newsAttachedFilePK);
+	public NewsAttachedFile fetchByPrimaryKey(long newsFileId);
 
 	/**
 	 * Returns all the news attached files.
@@ -308,7 +459,5 @@ public interface NewsAttachedFilePersistence
 	 * @return the number of news attached files
 	 */
 	public int countAll();
-
-	public Set<String> getCompoundPKColumnNames();
 
 }

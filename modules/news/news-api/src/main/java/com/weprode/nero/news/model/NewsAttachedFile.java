@@ -39,31 +39,12 @@ public interface NewsAttachedFile
 	 *
 	 * Never modify this interface directly. Add methods to <code>com.weprode.nero.news.model.impl.NewsAttachedFileImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public static final Accessor<NewsAttachedFile, Long> NEWS_ID_ACCESSOR =
+	public static final Accessor<NewsAttachedFile, Long> NEWS_FILE_ID_ACCESSOR =
 		new Accessor<NewsAttachedFile, Long>() {
 
 			@Override
 			public Long get(NewsAttachedFile newsAttachedFile) {
-				return newsAttachedFile.getNewsId();
-			}
-
-			@Override
-			public Class<Long> getAttributeClass() {
-				return Long.class;
-			}
-
-			@Override
-			public Class<NewsAttachedFile> getTypeClass() {
-				return NewsAttachedFile.class;
-			}
-
-		};
-	public static final Accessor<NewsAttachedFile, Long> FILE_ID_ACCESSOR =
-		new Accessor<NewsAttachedFile, Long>() {
-
-			@Override
-			public Long get(NewsAttachedFile newsAttachedFile) {
-				return newsAttachedFile.getFileId();
+				return newsAttachedFile.getNewsFileId();
 			}
 
 			@Override

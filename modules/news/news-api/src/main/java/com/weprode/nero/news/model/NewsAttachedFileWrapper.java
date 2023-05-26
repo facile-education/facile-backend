@@ -41,31 +41,38 @@ public class NewsAttachedFileWrapper
 	public Map<String, Object> getModelAttributes() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
+		attributes.put("newsFileId", getNewsFileId());
 		attributes.put("newsId", getNewsId());
+		attributes.put("groupId", getGroupId());
 		attributes.put("fileId", getFileId());
-		attributes.put("fileName", getFileName());
 
 		return attributes;
 	}
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
+		Long newsFileId = (Long)attributes.get("newsFileId");
+
+		if (newsFileId != null) {
+			setNewsFileId(newsFileId);
+		}
+
 		Long newsId = (Long)attributes.get("newsId");
 
 		if (newsId != null) {
 			setNewsId(newsId);
 		}
 
+		Long groupId = (Long)attributes.get("groupId");
+
+		if (groupId != null) {
+			setGroupId(groupId);
+		}
+
 		Long fileId = (Long)attributes.get("fileId");
 
 		if (fileId != null) {
 			setFileId(fileId);
-		}
-
-		String fileName = (String)attributes.get("fileName");
-
-		if (fileName != null) {
-			setFileName(fileName);
 		}
 	}
 
@@ -85,13 +92,23 @@ public class NewsAttachedFileWrapper
 	}
 
 	/**
-	 * Returns the file name of this news attached file.
+	 * Returns the group ID of this news attached file.
 	 *
-	 * @return the file name of this news attached file
+	 * @return the group ID of this news attached file
 	 */
 	@Override
-	public String getFileName() {
-		return model.getFileName();
+	public long getGroupId() {
+		return model.getGroupId();
+	}
+
+	/**
+	 * Returns the news file ID of this news attached file.
+	 *
+	 * @return the news file ID of this news attached file
+	 */
+	@Override
+	public long getNewsFileId() {
+		return model.getNewsFileId();
 	}
 
 	/**
@@ -110,9 +127,7 @@ public class NewsAttachedFileWrapper
 	 * @return the primary key of this news attached file
 	 */
 	@Override
-	public com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-		getPrimaryKey() {
-
+	public long getPrimaryKey() {
 		return model.getPrimaryKey();
 	}
 
@@ -132,13 +147,23 @@ public class NewsAttachedFileWrapper
 	}
 
 	/**
-	 * Sets the file name of this news attached file.
+	 * Sets the group ID of this news attached file.
 	 *
-	 * @param fileName the file name of this news attached file
+	 * @param groupId the group ID of this news attached file
 	 */
 	@Override
-	public void setFileName(String fileName) {
-		model.setFileName(fileName);
+	public void setGroupId(long groupId) {
+		model.setGroupId(groupId);
+	}
+
+	/**
+	 * Sets the news file ID of this news attached file.
+	 *
+	 * @param newsFileId the news file ID of this news attached file
+	 */
+	@Override
+	public void setNewsFileId(long newsFileId) {
+		model.setNewsFileId(newsFileId);
 	}
 
 	/**
@@ -157,10 +182,7 @@ public class NewsAttachedFileWrapper
 	 * @param primaryKey the primary key of this news attached file
 	 */
 	@Override
-	public void setPrimaryKey(
-		com.weprode.nero.news.service.persistence.NewsAttachedFilePK
-			primaryKey) {
-
+	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
 	}
 

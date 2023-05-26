@@ -1,5 +1,6 @@
 package com.weprode.nero.news.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -13,7 +14,6 @@ import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.news.model.NewsAttachedFile;
 import com.weprode.nero.news.model.NewsPopulation;
 import com.weprode.nero.news.service.base.NewsAttachedFileLocalServiceBaseImpl;
-import com.weprode.nero.news.service.persistence.NewsAttachedFilePK;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -29,10 +29,12 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
 
     private static final Log logger = LogFactoryUtil.getLog(NewsAttachedFileLocalServiceImpl.class);
 
-    public boolean addFile(long newsId, long fileId) {
+    public boolean addFile(long newsId, long groupId, long fileId) {
         try {
-            NewsAttachedFilePK newsAttachFilePK = new NewsAttachedFilePK(newsId, fileId);
-            NewsAttachedFile newsAttachedFile = newsAttachedFilePersistence.create(newsAttachFilePK);
+            NewsAttachedFile newsAttachedFile = newsAttachedFilePersistence.create(counterLocalService.increment());
+            newsAttachedFile.setNewsId(newsId);
+            newsAttachedFile.setGroupId(groupId);
+            newsAttachedFile.setFileId(fileId);
             newsAttachedFilePersistence.update(newsAttachedFile);
 
             return true;
@@ -46,23 +48,31 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
         return newsAttachedFilePersistence.findBynewsId(newsId);
     }
 
-    public JSONArray convertNewsFiles(long newsId) {
+    public JSONArray convertNewsFiles(long newsId, long userId) {
         JSONArray jsonFiles = new JSONArray();
 
         try {
             List<NewsAttachedFile> newsAttachedFiles = newsAttachedFilePersistence.findBynewsId(newsId);
-            for (NewsAttachedFile newsAttachedFile : newsAttachedFiles) {
-                try {
-                    JSONObject jsonAttachment = new JSONObject();
-                    FileEntry fileEntry = DLAppServiceUtil.getFileEntry(newsAttachedFile.getFileId());
-                    jsonAttachment.put(JSONConstants.ID, newsAttachedFile.getFileId());
-                    jsonAttachment.put(JSONConstants.NAME, fileEntry.getTitle());
-                    jsonAttachment.put(JSONConstants.TYPE, "File");
-                    jsonAttachment.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
-                    jsonAttachment.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
-                    jsonFiles.put(jsonAttachment);
-                } catch (Exception e) {
-                    logger.error("Error converting attached file ", e);
+            if (newsAttachedFiles != null && !newsAttachedFiles.isEmpty()) {
+                // Pick 1 random groupId - hope no big deal with permissions
+                long groupId = newsAttachedFiles.get(0).getGroupId();
+
+                // Get all attached files for this pair newsId / groupId
+                List<NewsAttachedFile> attachedFiles = newsAttachedFilePersistence.findBynewsId_groupId(newsId, groupId);
+
+                for (NewsAttachedFile newsAttachedFile : attachedFiles) {
+                    try {
+                        JSONObject jsonAttachment = new JSONObject();
+                        FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(newsAttachedFile.getFileId());
+                        jsonAttachment.put(JSONConstants.ID, newsAttachedFile.getFileId());
+                        jsonAttachment.put(JSONConstants.NAME, fileEntry.getTitle());
+                        jsonAttachment.put(JSONConstants.TYPE, "File");
+                        jsonAttachment.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
+                        jsonAttachment.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
+                        jsonFiles.put(jsonAttachment);
+                    } catch (Exception e) {
+                        logger.error("Error converting attached file ", e);
+                    }
                 }
             }
         } catch (Exception e) {

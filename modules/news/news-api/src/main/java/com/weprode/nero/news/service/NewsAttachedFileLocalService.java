@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 import com.weprode.nero.news.model.NewsAttachedFile;
-import com.weprode.nero.news.service.persistence.NewsAttachedFilePK;
 
 import java.io.Serializable;
 
@@ -65,7 +64,7 @@ public interface NewsAttachedFileLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.news.service.impl.NewsAttachedFileLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the news attached file local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link NewsAttachedFileLocalServiceUtil} if injection and service tracking are not available.
 	 */
-	public boolean addFile(long newsId, long fileId);
+	public boolean addFile(long newsId, long groupId, long fileId);
 
 	/**
 	 * Adds the news attached file to the database. Also notifies the appropriate model listeners.
@@ -81,17 +80,16 @@ public interface NewsAttachedFileLocalService
 	public NewsAttachedFile addNewsAttachedFile(
 		NewsAttachedFile newsAttachedFile);
 
-	public JSONArray convertNewsFiles(long newsId);
+	public JSONArray convertNewsFiles(long newsId, long userId);
 
 	/**
 	 * Creates a new news attached file with the primary key. Does not add the news attached file to the database.
 	 *
-	 * @param newsAttachedFilePK the primary key for the new news attached file
+	 * @param newsFileId the primary key for the new news attached file
 	 * @return the new news attached file
 	 */
 	@Transactional(enabled = false)
-	public NewsAttachedFile createNewsAttachedFile(
-		NewsAttachedFilePK newsAttachedFilePK);
+	public NewsAttachedFile createNewsAttachedFile(long newsFileId);
 
 	/**
 	 * @throws PortalException
@@ -100,6 +98,21 @@ public interface NewsAttachedFileLocalService
 		throws PortalException;
 
 	public void deleteByNewsId(long newsId) throws SystemException;
+
+	/**
+	 * Deletes the news attached file with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect NewsAttachedFileLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
+	 * @param newsFileId the primary key of the news attached file
+	 * @return the news attached file that was removed
+	 * @throws PortalException if a news attached file with the primary key could not be found
+	 */
+	@Indexable(type = IndexableType.DELETE)
+	public NewsAttachedFile deleteNewsAttachedFile(long newsFileId)
+		throws PortalException;
 
 	/**
 	 * Deletes the news attached file from the database. Also notifies the appropriate model listeners.
@@ -114,22 +127,6 @@ public interface NewsAttachedFileLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public NewsAttachedFile deleteNewsAttachedFile(
 		NewsAttachedFile newsAttachedFile);
-
-	/**
-	 * Deletes the news attached file with the primary key from the database. Also notifies the appropriate model listeners.
-	 *
-	 * <p>
-	 * <strong>Important:</strong> Inspect NewsAttachedFileLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
-	 * </p>
-	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
-	 * @return the news attached file that was removed
-	 * @throws PortalException if a news attached file with the primary key could not be found
-	 */
-	@Indexable(type = IndexableType.DELETE)
-	public NewsAttachedFile deleteNewsAttachedFile(
-			NewsAttachedFilePK newsAttachedFilePK)
-		throws PortalException;
 
 	/**
 	 * @throws PortalException
@@ -211,8 +208,7 @@ public interface NewsAttachedFileLocalService
 		DynamicQuery dynamicQuery, Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public NewsAttachedFile fetchNewsAttachedFile(
-		NewsAttachedFilePK newsAttachedFilePK);
+	public NewsAttachedFile fetchNewsAttachedFile(long newsFileId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -223,13 +219,12 @@ public interface NewsAttachedFileLocalService
 	/**
 	 * Returns the news attached file with the primary key.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file
 	 * @throws PortalException if a news attached file with the primary key could not be found
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public NewsAttachedFile getNewsAttachedFile(
-			NewsAttachedFilePK newsAttachedFilePK)
+	public NewsAttachedFile getNewsAttachedFile(long newsFileId)
 		throws PortalException;
 
 	/**

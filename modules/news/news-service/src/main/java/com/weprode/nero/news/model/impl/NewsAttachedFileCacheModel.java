@@ -19,7 +19,6 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.model.CacheModel;
 
 import com.weprode.nero.news.model.NewsAttachedFile;
-import com.weprode.nero.news.service.persistence.NewsAttachedFilePK;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -48,9 +47,7 @@ public class NewsAttachedFileCacheModel
 		NewsAttachedFileCacheModel newsAttachedFileCacheModel =
 			(NewsAttachedFileCacheModel)object;
 
-		if (newsAttachedFilePK.equals(
-				newsAttachedFileCacheModel.newsAttachedFilePK)) {
-
+		if (newsFileId == newsAttachedFileCacheModel.newsFileId) {
 			return true;
 		}
 
@@ -59,19 +56,21 @@ public class NewsAttachedFileCacheModel
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, newsAttachedFilePK);
+		return HashUtil.hash(0, newsFileId);
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(9);
 
-		sb.append("{newsId=");
+		sb.append("{newsFileId=");
+		sb.append(newsFileId);
+		sb.append(", newsId=");
 		sb.append(newsId);
+		sb.append(", groupId=");
+		sb.append(groupId);
 		sb.append(", fileId=");
 		sb.append(fileId);
-		sb.append(", fileName=");
-		sb.append(fileName);
 		sb.append("}");
 
 		return sb.toString();
@@ -81,15 +80,10 @@ public class NewsAttachedFileCacheModel
 	public NewsAttachedFile toEntityModel() {
 		NewsAttachedFileImpl newsAttachedFileImpl = new NewsAttachedFileImpl();
 
+		newsAttachedFileImpl.setNewsFileId(newsFileId);
 		newsAttachedFileImpl.setNewsId(newsId);
+		newsAttachedFileImpl.setGroupId(groupId);
 		newsAttachedFileImpl.setFileId(fileId);
-
-		if (fileName == null) {
-			newsAttachedFileImpl.setFileName("");
-		}
-		else {
-			newsAttachedFileImpl.setFileName(fileName);
-		}
 
 		newsAttachedFileImpl.resetOriginalValues();
 
@@ -98,31 +92,29 @@ public class NewsAttachedFileCacheModel
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
+		newsFileId = objectInput.readLong();
+
 		newsId = objectInput.readLong();
 
-		fileId = objectInput.readLong();
-		fileName = objectInput.readUTF();
+		groupId = objectInput.readLong();
 
-		newsAttachedFilePK = new NewsAttachedFilePK(newsId, fileId);
+		fileId = objectInput.readLong();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
+		objectOutput.writeLong(newsFileId);
+
 		objectOutput.writeLong(newsId);
 
-		objectOutput.writeLong(fileId);
+		objectOutput.writeLong(groupId);
 
-		if (fileName == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(fileName);
-		}
+		objectOutput.writeLong(fileId);
 	}
 
+	public long newsFileId;
 	public long newsId;
+	public long groupId;
 	public long fileId;
-	public String fileName;
-	public transient NewsAttachedFilePK newsAttachedFilePK;
 
 }

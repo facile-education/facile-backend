@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.news.model.NewsAttachedFile;
 import com.weprode.nero.news.service.NewsAttachedFileLocalService;
 import com.weprode.nero.news.service.NewsAttachedFileLocalServiceUtil;
-import com.weprode.nero.news.service.persistence.NewsAttachedFilePK;
 import com.weprode.nero.news.service.persistence.NewsAttachedFilePersistence;
 import com.weprode.nero.news.service.persistence.NewsFinder;
 import com.weprode.nero.news.service.persistence.NewsPersistence;
@@ -105,15 +104,13 @@ public abstract class NewsAttachedFileLocalServiceBaseImpl
 	/**
 	 * Creates a new news attached file with the primary key. Does not add the news attached file to the database.
 	 *
-	 * @param newsAttachedFilePK the primary key for the new news attached file
+	 * @param newsFileId the primary key for the new news attached file
 	 * @return the new news attached file
 	 */
 	@Override
 	@Transactional(enabled = false)
-	public NewsAttachedFile createNewsAttachedFile(
-		NewsAttachedFilePK newsAttachedFilePK) {
-
-		return newsAttachedFilePersistence.create(newsAttachedFilePK);
+	public NewsAttachedFile createNewsAttachedFile(long newsFileId) {
+		return newsAttachedFilePersistence.create(newsFileId);
 	}
 
 	/**
@@ -123,17 +120,16 @@ public abstract class NewsAttachedFileLocalServiceBaseImpl
 	 * <strong>Important:</strong> Inspect NewsAttachedFileLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file that was removed
 	 * @throws PortalException if a news attached file with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public NewsAttachedFile deleteNewsAttachedFile(
-			NewsAttachedFilePK newsAttachedFilePK)
+	public NewsAttachedFile deleteNewsAttachedFile(long newsFileId)
 		throws PortalException {
 
-		return newsAttachedFilePersistence.remove(newsAttachedFilePK);
+		return newsAttachedFilePersistence.remove(newsFileId);
 	}
 
 	/**
@@ -254,26 +250,22 @@ public abstract class NewsAttachedFileLocalServiceBaseImpl
 	}
 
 	@Override
-	public NewsAttachedFile fetchNewsAttachedFile(
-		NewsAttachedFilePK newsAttachedFilePK) {
-
-		return newsAttachedFilePersistence.fetchByPrimaryKey(
-			newsAttachedFilePK);
+	public NewsAttachedFile fetchNewsAttachedFile(long newsFileId) {
+		return newsAttachedFilePersistence.fetchByPrimaryKey(newsFileId);
 	}
 
 	/**
 	 * Returns the news attached file with the primary key.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file
 	 * @throws PortalException if a news attached file with the primary key could not be found
 	 */
 	@Override
-	public NewsAttachedFile getNewsAttachedFile(
-			NewsAttachedFilePK newsAttachedFilePK)
+	public NewsAttachedFile getNewsAttachedFile(long newsFileId)
 		throws PortalException {
 
-		return newsAttachedFilePersistence.findByPrimaryKey(newsAttachedFilePK);
+		return newsAttachedFilePersistence.findByPrimaryKey(newsFileId);
 	}
 
 	@Override
@@ -286,7 +278,7 @@ public abstract class NewsAttachedFileLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(NewsAttachedFile.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("primaryKey.newsId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("newsFileId");
 
 		return actionableDynamicQuery;
 	}
@@ -303,8 +295,7 @@ public abstract class NewsAttachedFileLocalServiceBaseImpl
 		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
 		indexableActionableDynamicQuery.setModelClass(NewsAttachedFile.class);
 
-		indexableActionableDynamicQuery.setPrimaryKeyPropertyName(
-			"primaryKey.newsId");
+		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("newsFileId");
 
 		return indexableActionableDynamicQuery;
 	}
@@ -317,7 +308,7 @@ public abstract class NewsAttachedFileLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(NewsAttachedFile.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("primaryKey.newsId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("newsFileId");
 	}
 
 	/**
@@ -328,7 +319,7 @@ public abstract class NewsAttachedFileLocalServiceBaseImpl
 		throws PortalException {
 
 		return newsAttachedFilePersistence.create(
-			(NewsAttachedFilePK)primaryKeyObj);
+			((Long)primaryKeyObj).longValue());
 	}
 
 	/**

@@ -14,10 +14,7 @@
 
 package com.weprode.nero.news.model;
 
-import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
-
-import com.weprode.nero.news.service.persistence.NewsAttachedFilePK;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -46,14 +43,28 @@ public interface NewsAttachedFileModel extends BaseModel<NewsAttachedFile> {
 	 *
 	 * @return the primary key of this news attached file
 	 */
-	public NewsAttachedFilePK getPrimaryKey();
+	public long getPrimaryKey();
 
 	/**
 	 * Sets the primary key of this news attached file.
 	 *
 	 * @param primaryKey the primary key of this news attached file
 	 */
-	public void setPrimaryKey(NewsAttachedFilePK primaryKey);
+	public void setPrimaryKey(long primaryKey);
+
+	/**
+	 * Returns the news file ID of this news attached file.
+	 *
+	 * @return the news file ID of this news attached file
+	 */
+	public long getNewsFileId();
+
+	/**
+	 * Sets the news file ID of this news attached file.
+	 *
+	 * @param newsFileId the news file ID of this news attached file
+	 */
+	public void setNewsFileId(long newsFileId);
 
 	/**
 	 * Returns the news ID of this news attached file.
@@ -70,6 +81,20 @@ public interface NewsAttachedFileModel extends BaseModel<NewsAttachedFile> {
 	public void setNewsId(long newsId);
 
 	/**
+	 * Returns the group ID of this news attached file.
+	 *
+	 * @return the group ID of this news attached file
+	 */
+	public long getGroupId();
+
+	/**
+	 * Sets the group ID of this news attached file.
+	 *
+	 * @param groupId the group ID of this news attached file
+	 */
+	public void setGroupId(long groupId);
+
+	/**
 	 * Returns the file ID of this news attached file.
 	 *
 	 * @return the file ID of this news attached file
@@ -82,21 +107,6 @@ public interface NewsAttachedFileModel extends BaseModel<NewsAttachedFile> {
 	 * @param fileId the file ID of this news attached file
 	 */
 	public void setFileId(long fileId);
-
-	/**
-	 * Returns the file name of this news attached file.
-	 *
-	 * @return the file name of this news attached file
-	 */
-	@AutoEscape
-	public String getFileName();
-
-	/**
-	 * Sets the file name of this news attached file.
-	 *
-	 * @param fileName the file name of this news attached file
-	 */
-	public void setFileName(String fileName);
 
 	@Override
 	public NewsAttachedFile cloneWithOriginalValues();

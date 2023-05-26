@@ -251,19 +251,19 @@ public class NewsAttachedFileUtil {
 	/**
 	 * Returns the news attached files before and after the current news attached file in the ordered set where newsId = &#63;.
 	 *
-	 * @param newsAttachedFilePK the primary key of the current news attached file
+	 * @param newsFileId the primary key of the current news attached file
 	 * @param newsId the news ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next news attached file
 	 * @throws NoSuchAttachedFileException if a news attached file with the primary key could not be found
 	 */
 	public static NewsAttachedFile[] findBynewsId_PrevAndNext(
-			NewsAttachedFilePK newsAttachedFilePK, long newsId,
+			long newsFileId, long newsId,
 			OrderByComparator<NewsAttachedFile> orderByComparator)
 		throws com.weprode.nero.news.exception.NoSuchAttachedFileException {
 
 		return getPersistence().findBynewsId_PrevAndNext(
-			newsAttachedFilePK, newsId, orderByComparator);
+			newsFileId, newsId, orderByComparator);
 	}
 
 	/**
@@ -283,6 +283,193 @@ public class NewsAttachedFileUtil {
 	 */
 	public static int countBynewsId(long newsId) {
 		return getPersistence().countBynewsId(newsId);
+	}
+
+	/**
+	 * Returns all the news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @return the matching news attached files
+	 */
+	public static List<NewsAttachedFile> findBynewsId_groupId(
+		long newsId, long groupId) {
+
+		return getPersistence().findBynewsId_groupId(newsId, groupId);
+	}
+
+	/**
+	 * Returns a range of all the news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>NewsAttachedFileModelImpl</code>.
+	 * </p>
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of news attached files
+	 * @param end the upper bound of the range of news attached files (not inclusive)
+	 * @return the range of matching news attached files
+	 */
+	public static List<NewsAttachedFile> findBynewsId_groupId(
+		long newsId, long groupId, int start, int end) {
+
+		return getPersistence().findBynewsId_groupId(
+			newsId, groupId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>NewsAttachedFileModelImpl</code>.
+	 * </p>
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of news attached files
+	 * @param end the upper bound of the range of news attached files (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching news attached files
+	 */
+	public static List<NewsAttachedFile> findBynewsId_groupId(
+		long newsId, long groupId, int start, int end,
+		OrderByComparator<NewsAttachedFile> orderByComparator) {
+
+		return getPersistence().findBynewsId_groupId(
+			newsId, groupId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>NewsAttachedFileModelImpl</code>.
+	 * </p>
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of news attached files
+	 * @param end the upper bound of the range of news attached files (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching news attached files
+	 */
+	public static List<NewsAttachedFile> findBynewsId_groupId(
+		long newsId, long groupId, int start, int end,
+		OrderByComparator<NewsAttachedFile> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findBynewsId_groupId(
+			newsId, groupId, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching news attached file
+	 * @throws NoSuchAttachedFileException if a matching news attached file could not be found
+	 */
+	public static NewsAttachedFile findBynewsId_groupId_First(
+			long newsId, long groupId,
+			OrderByComparator<NewsAttachedFile> orderByComparator)
+		throws com.weprode.nero.news.exception.NoSuchAttachedFileException {
+
+		return getPersistence().findBynewsId_groupId_First(
+			newsId, groupId, orderByComparator);
+	}
+
+	/**
+	 * Returns the first news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching news attached file, or <code>null</code> if a matching news attached file could not be found
+	 */
+	public static NewsAttachedFile fetchBynewsId_groupId_First(
+		long newsId, long groupId,
+		OrderByComparator<NewsAttachedFile> orderByComparator) {
+
+		return getPersistence().fetchBynewsId_groupId_First(
+			newsId, groupId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching news attached file
+	 * @throws NoSuchAttachedFileException if a matching news attached file could not be found
+	 */
+	public static NewsAttachedFile findBynewsId_groupId_Last(
+			long newsId, long groupId,
+			OrderByComparator<NewsAttachedFile> orderByComparator)
+		throws com.weprode.nero.news.exception.NoSuchAttachedFileException {
+
+		return getPersistence().findBynewsId_groupId_Last(
+			newsId, groupId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching news attached file, or <code>null</code> if a matching news attached file could not be found
+	 */
+	public static NewsAttachedFile fetchBynewsId_groupId_Last(
+		long newsId, long groupId,
+		OrderByComparator<NewsAttachedFile> orderByComparator) {
+
+		return getPersistence().fetchBynewsId_groupId_Last(
+			newsId, groupId, orderByComparator);
+	}
+
+	/**
+	 * Returns the news attached files before and after the current news attached file in the ordered set where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsFileId the primary key of the current news attached file
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next news attached file
+	 * @throws NoSuchAttachedFileException if a news attached file with the primary key could not be found
+	 */
+	public static NewsAttachedFile[] findBynewsId_groupId_PrevAndNext(
+			long newsFileId, long newsId, long groupId,
+			OrderByComparator<NewsAttachedFile> orderByComparator)
+		throws com.weprode.nero.news.exception.NoSuchAttachedFileException {
+
+		return getPersistence().findBynewsId_groupId_PrevAndNext(
+			newsFileId, newsId, groupId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the news attached files where newsId = &#63; and groupId = &#63; from the database.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 */
+	public static void removeBynewsId_groupId(long newsId, long groupId) {
+		getPersistence().removeBynewsId_groupId(newsId, groupId);
+	}
+
+	/**
+	 * Returns the number of news attached files where newsId = &#63; and groupId = &#63;.
+	 *
+	 * @param newsId the news ID
+	 * @param groupId the group ID
+	 * @return the number of matching news attached files
+	 */
+	public static int countBynewsId_groupId(long newsId, long groupId) {
+		return getPersistence().countBynewsId_groupId(newsId, groupId);
 	}
 
 	/**
@@ -306,26 +493,24 @@ public class NewsAttachedFileUtil {
 	/**
 	 * Creates a new news attached file with the primary key. Does not add the news attached file to the database.
 	 *
-	 * @param newsAttachedFilePK the primary key for the new news attached file
+	 * @param newsFileId the primary key for the new news attached file
 	 * @return the new news attached file
 	 */
-	public static NewsAttachedFile create(
-		NewsAttachedFilePK newsAttachedFilePK) {
-
-		return getPersistence().create(newsAttachedFilePK);
+	public static NewsAttachedFile create(long newsFileId) {
+		return getPersistence().create(newsFileId);
 	}
 
 	/**
 	 * Removes the news attached file with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file that was removed
 	 * @throws NoSuchAttachedFileException if a news attached file with the primary key could not be found
 	 */
-	public static NewsAttachedFile remove(NewsAttachedFilePK newsAttachedFilePK)
+	public static NewsAttachedFile remove(long newsFileId)
 		throws com.weprode.nero.news.exception.NoSuchAttachedFileException {
 
-		return getPersistence().remove(newsAttachedFilePK);
+		return getPersistence().remove(newsFileId);
 	}
 
 	public static NewsAttachedFile updateImpl(
@@ -337,27 +522,24 @@ public class NewsAttachedFileUtil {
 	/**
 	 * Returns the news attached file with the primary key or throws a <code>NoSuchAttachedFileException</code> if it could not be found.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file
 	 * @throws NoSuchAttachedFileException if a news attached file with the primary key could not be found
 	 */
-	public static NewsAttachedFile findByPrimaryKey(
-			NewsAttachedFilePK newsAttachedFilePK)
+	public static NewsAttachedFile findByPrimaryKey(long newsFileId)
 		throws com.weprode.nero.news.exception.NoSuchAttachedFileException {
 
-		return getPersistence().findByPrimaryKey(newsAttachedFilePK);
+		return getPersistence().findByPrimaryKey(newsFileId);
 	}
 
 	/**
 	 * Returns the news attached file with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param newsAttachedFilePK the primary key of the news attached file
+	 * @param newsFileId the primary key of the news attached file
 	 * @return the news attached file, or <code>null</code> if a news attached file with the primary key could not be found
 	 */
-	public static NewsAttachedFile fetchByPrimaryKey(
-		NewsAttachedFilePK newsAttachedFilePK) {
-
-		return getPersistence().fetchByPrimaryKey(newsAttachedFilePK);
+	public static NewsAttachedFile fetchByPrimaryKey(long newsFileId) {
+		return getPersistence().fetchByPrimaryKey(newsFileId);
 	}
 
 	/**
@@ -439,10 +621,6 @@ public class NewsAttachedFileUtil {
 	 */
 	public static int countAll() {
 		return getPersistence().countAll();
-	}
-
-	public static Set<String> getCompoundPKColumnNames() {
-		return getPersistence().getCompoundPKColumnNames();
 	}
 
 	public static NewsAttachedFilePersistence getPersistence() {

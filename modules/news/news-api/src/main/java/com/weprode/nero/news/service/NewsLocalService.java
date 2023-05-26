@@ -132,6 +132,7 @@ public interface NewsLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public News deleteNews(News news);
 
+	@Indexable(type = IndexableType.DELETE)
 	public News deleteNewsAndDependencies(long newsId)
 		throws NoSuchNewsException, SystemException;
 
@@ -214,6 +215,7 @@ public interface NewsLocalService
 	public long dynamicQueryCount(
 		DynamicQuery dynamicQuery, Projection projection);
 
+	@Indexable(type = IndexableType.REINDEX)
 	public News editNews(
 		long newsId, String title, String content, boolean isImportant,
 		long imageId, Date publicationDate, Date expirationDate,
