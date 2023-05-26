@@ -29,6 +29,7 @@ import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.news.exception.NoSuchNewsException;
 import com.weprode.nero.news.model.News;
@@ -463,6 +464,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             String text = HtmlParserUtil.extractText(news.getContent());
             jsonNews.put(JSONConstants.SHORT_CONTENT, text.substring(0, Math.min(200, text.length())));
         }
+        jsonNews.put(JSONConstants.TYPE, ActivityConstants.TYPE_NEWS);
         jsonNews.put(JSONConstants.IS_IMPORTANT, news.isIsImportant());
         jsonNews.put(JSONConstants.PUBLICATION_DATE, new SimpleDateFormat(DATE_FORMAT).format(news.getPublicationDate()));
         jsonNews.put(JSONConstants.EXPIRATION_DATE, new SimpleDateFormat(DATE_FORMAT).format(news.getExpirationDate()));
@@ -475,6 +477,12 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         if (news.getImageId() != 0) {
             FileEntry thumbnailFileEntry = DLAppServiceUtil.getFileEntry(news.getImageId());
             jsonNews.put(JSONConstants.THUMBNAIL_URL, FileUtilsLocalServiceUtil.getDisplayUrl(thumbnailFileEntry, 0, "", user.getUserId(), true));
+        } else {
+            if (news.getIsSchoolNews()) {
+                jsonNews.put(JSONConstants.THUMBNAIL_URL, JSONConstants.SCHOOL_NEWS_DEFAULT_THUMBNAIL);
+            } else {
+                jsonNews.put(JSONConstants.THUMBNAIL_URL, JSONConstants.NEWS_DEFAULT_THUMBNAIL);
+            }
         }
 
         if (withDetails) {

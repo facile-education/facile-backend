@@ -162,6 +162,11 @@ public class JSONConstants {
     public static final String SUBJECTS= "subjects";
     public static final String SUBJECT= "subject";
 
+    // Default image keys
+    public static final String NEWS_DEFAULT_THUMBNAIL= "default_news_0";
+    public static final String SCHOOL_NEWS_DEFAULT_THUMBNAIL= "default_school_news_0";
+
+
     // Activity
     public static final String ACTIVITIES = "activities";
     public static final String MODIFICATION_DATE = "modificationDate";
