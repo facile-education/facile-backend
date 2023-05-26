@@ -47,11 +47,17 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return result;
         }
 
-        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+        if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        } else if (!isSchoolNews && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
             result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
             result.put(JSONConstants.SUCCESS, false);
             return result;
         }
+
+
         try {
             Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
             Date expiration = ScheduleConfigurationLocalServiceUtil.getDefaultSchoolYearEndDate();
