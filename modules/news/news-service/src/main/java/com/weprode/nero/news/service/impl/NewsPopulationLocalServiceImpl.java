@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
+import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.news.model.NewsPopulation;
 import com.weprode.nero.news.service.base.NewsPopulationLocalServiceBaseImpl;
 import com.weprode.nero.news.service.persistence.NewsPopulationPK;
@@ -48,7 +49,11 @@ public class NewsPopulationLocalServiceImpl extends NewsPopulationLocalServiceBa
                     jsonPopulation.put(JSONConstants.GROUP_ID, population.getGroupId());
                     jsonPopulation.put(JSONConstants.ROLE_ID, population.getRoleId());
                     Group group = GroupLocalServiceUtil.getGroup(population.getGroupId());
-                    jsonPopulation.put(JSONConstants.POPULATION_NAME, ContactLocalServiceUtil.getPopulationName(group.getClassPK(), population.getRoleId(), userId));
+                    if (group.isRegularSite()) {
+                        jsonPopulation.put(JSONConstants.POPULATION_NAME, GroupUtilsLocalServiceUtil.getGroupName(population.getGroupId()));
+                    } else {
+                        jsonPopulation.put(JSONConstants.POPULATION_NAME, ContactLocalServiceUtil.getPopulationName(group.getClassPK(), population.getRoleId(), userId));
+                    }
                     jsonPopulations.put(jsonPopulation);
                 } catch (Exception e) {
                     logger.info("Error converting population for newsId " + newsId);
