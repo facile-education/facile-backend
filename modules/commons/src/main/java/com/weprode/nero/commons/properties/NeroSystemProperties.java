@@ -11,7 +11,7 @@ public class NeroSystemProperties {
 	public static final String TERMS_OF_USE_FILE = "ent.chart";
 	public static final String NOTIFICATIONS_ENABLED = "ent.notifications.enable";
 
-	public static final String MAX_UPLOAD_SIZE = "data.limit.dl.storage.max.size";
+	public static final String MAX_UPLOAD_SIZE = "documents.max.upload.size";
 	public static final String XSS_IFRAME_WHITELIST = "xss.iframe.whitelist";
 
 	public static final String GVE_VOLEES = "gve.volees";
