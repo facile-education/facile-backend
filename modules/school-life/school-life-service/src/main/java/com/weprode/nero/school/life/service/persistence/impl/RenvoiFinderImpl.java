@@ -27,9 +27,7 @@ public class RenvoiFinderImpl extends RenvoiFinderBaseImpl
     @Reference
     private CustomSQL customSQL;
 
-    public static final String GET_GROUPS_RENVOIS =
-            RenvoiFinder.class.getName() +
-                    ".getGroupsRenvois";
+    public static final String GET_GROUPS_RENVOIS = "getGroupsRenvois";
 
     public List<Renvoi> getGroupRenvois(List<Long> groupIds, Date minDate, Date maxDate, int start, int end) {
         Session session = null;

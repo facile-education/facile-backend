@@ -285,6 +285,15 @@ public class NewsLocalServiceUtil {
 			unreadOnly);
 	}
 
+	public static List<News> getNewsActivities(
+			com.liferay.portal.kernel.model.User user, long groupId,
+			java.util.Date minDate, java.util.Date maxDate, int nbNews)
+		throws SystemException {
+
+		return getService().getNewsActivities(
+			user, groupId, minDate, maxDate, nbNews);
+	}
+
 	public static int getNewsCount(
 			com.liferay.portal.kernel.model.User user, long groupId,
 			boolean groupNews, boolean importantOnly, boolean unreadOnly)

@@ -25,4 +25,18 @@
 			[$OTHER$]
         ]]>
     </sql>
+    <sql id="com.weprode.nero.news.service.persistence.NewsFinder.getNewsActivities">
+        <![CDATA[
+	        SELECT DISTINCT news.*
+        	FROM News_News news
+			JOIN News_NewsPopulation pop ON news.newsId = pop.newsId
+			LEFT JOIN News_NewsRead newsread on news.newsId = newsread.newsId
+			WHERE news.publicationDate between ? AND ?
+			AND news.isSchoolNews = 0
+			AND ((pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$]) AND news.expirationDate > ?) OR news.authorId = ?)
+			GROUP BY news.newsId
+			ORDER BY news.publicationDate DESC
+            LIMIT ?
+        ]]>
+    </sql>
 </custom-sql>

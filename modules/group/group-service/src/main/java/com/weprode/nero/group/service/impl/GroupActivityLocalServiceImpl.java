@@ -77,7 +77,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
                 // Group news
                 if (withNews) {
-                    List<News> groupNews = NewsLocalServiceUtil.getNews(user, 0, new Date(), 10, true, false, false);
+                    logger.info("Fetch news for user " + user.getFullName());
+                    List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, 0, minDate, maxDate, 10);
                     for (News news : groupNews) {
                         GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
                         groupActivities.add(newsActivity);
@@ -390,6 +391,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             homeworkActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getFromDate()));
             homeworkActivity.put(JSONConstants.TARGET_DATE, df.format(homework.getTargetDate()));
             homeworkActivity.put(JSONConstants.GROUP_ID, homework.getGroupId());
+            homeworkActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(homework.getGroupId()));
             homeworkActivity.put(JSONConstants.AUTHOR, teacher.getFullName());
             homeworkActivity.put(JSONConstants.IS_FOR_ALL_STUDENTS, !homework.getIsCustomStudentList());
             if (homework.getIsCustomStudentList()) {
@@ -410,6 +412,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             sessionActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(activityDate));
             User lastEditor = SessionTeacherLocalServiceUtil.getLastEditor(session.getSessionId(), activityDate);
             sessionActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
+            sessionActivity.put(JSONConstants.GROUP_ID, session.getGroupId());
+            sessionActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(session.getGroupId()));
             sessionActivity.put(JSONConstants.TARGET, session.getTitle());
             sessionActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_SESSION);
         } catch (Exception e) {

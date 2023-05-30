@@ -29,10 +29,9 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
     @Reference
     private CustomSQL customSQL;
 
-    public static final String GET_NEWS =
-            NewsFinder.class.getName() + ".getNews";
-    public static final String GET_NEWS_COUNT =
-            NewsFinder.class.getName() + ".getNewsCount";
+    public static final String GET_NEWS_ACTIVITIES = NewsFinder.class.getName() + ".getNewsActivities";
+    public static final String GET_NEWS = NewsFinder.class.getName() + ".getNews";
+    public static final String GET_NEWS_COUNT = NewsFinder.class.getName() + ".getNewsCount";
 
     public List<News> getNews(long userId, List<Long> groupIds, List<Long> roleIds, Date maxDate, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) {
         Session session = null;
@@ -119,6 +118,42 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
         return 0;
     }
+
+    public List<News> getNewsActivities(long userId, List<Long> groupIds, List<Long> roleIds, Date minDate, Date maxDate, int nbNews) {
+        Session session = null;
+
+        try {
+            session = openSession();
+
+            String sql = customSQL.get(getClass(), GET_NEWS_ACTIVITIES);
+            sql = StringUtil.replace(sql, "[$GROUP_IDS$]", buildIdList(groupIds));
+            sql = StringUtil.replace(sql, "[$ROLE_IDS$]", buildIdList(roleIds));
+            logger.debug("News sql = " + sql);
+
+            SQLQuery q = session.createSQLQuery(sql);
+            //q.setCacheable(false);
+            q.addEntity("News_News", NewsImpl.class);
+
+            QueryPos qPos = QueryPos.getInstance(q);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            qPos.add(sdf.format(minDate));
+            qPos.add(sdf.format(maxDate));
+            qPos.add(sdf.format(new Date()));
+            qPos.add(userId);
+            qPos.add(nbNews);
+
+            return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+        } catch (Exception e) {
+            logger.error("Error while fetching news", e);
+        } finally {
+            closeSession(session);
+        }
+
+        return Collections.emptyList();
+    }
+
 
     private String buildIdList(List<Long> groupIds) {
         StringBuilder groupIdsStr = new StringBuilder();

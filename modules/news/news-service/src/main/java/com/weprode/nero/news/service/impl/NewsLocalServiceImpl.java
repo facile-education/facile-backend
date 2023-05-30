@@ -31,6 +31,7 @@ import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
+import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.news.exception.NoSuchNewsException;
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.model.NewsPopulation;
@@ -180,6 +181,29 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
         return newsFinder.getNewsCount(user.getUserId(), groupIds, roleIds, groupNews, importantOnly, unreadOnly);
     }
+
+    public List<News> getNewsActivities(User user, long groupId, Date minDate, Date maxDate, int nbNews) throws SystemException {
+        // Get user role ids
+        List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
+
+        List<Long> roleIds = new ArrayList<>();
+        for (Role role : roles) {
+            roleIds.add(role.getRoleId());
+        }
+        // For communities and one role school level orgs (Enseignants, Personnels...)
+        roleIds.add((long) 0);
+
+        // Get user groupIds
+        List<Long> groupIds = new ArrayList<>();
+        if (groupId == 0) {
+            groupIds.addAll(CommunityInfosLocalServiceUtil.getUserGroupIds(user.getUserId()));
+        } else {
+            groupIds.add(groupId);
+        }
+
+        return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews);
+    }
+
 
     public JSONObject getGroupNewsBroadcastGroups(User user) {
         JSONObject result = new JSONObject();
@@ -482,6 +506,17 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 jsonNews.put(JSONConstants.THUMBNAIL_URL, JSONConstants.SCHOOL_NEWS_DEFAULT_THUMBNAIL);
             } else {
                 jsonNews.put(JSONConstants.THUMBNAIL_URL, JSONConstants.NEWS_DEFAULT_THUMBNAIL);
+            }
+        }
+
+        // Group name is the first found in the news group list to which belongs the user
+        List<Long> userGroupIds = CommunityInfosLocalServiceUtil.getUserGroupIds(userId);
+        List<NewsPopulation> populations = NewsPopulationLocalServiceUtil.getNewsPopulations(newsId);
+        for (NewsPopulation population : populations) {
+            logger.info("Loop over population groupId = " + population.getGroupId() + " and roleId = " + population.getRoleId());
+            if (userGroupIds.contains(population.getGroupId()) && (population.getRoleId() == 0 || RoleLocalServiceUtil.hasUserRole(userId, population.getRoleId()))) {
+                jsonNews.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(population.getGroupId()));
+                break;
             }
         }
 

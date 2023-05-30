@@ -7,6 +7,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.document.model.Activity;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
@@ -119,6 +121,9 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
             if (!includeUserActivity) {
                 dynamicQuery.add(PropertyFactoryUtil.forName("userId").ne(userId));
             }
+
+            // Skip default user (news attached files)
+            dynamicQuery.add(PropertyFactoryUtil.forName("userId").ne(UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())));
 
             Long[] groupIds = groupIdList.toArray(new Long[0]);
             dynamicQuery.add(PropertyFactoryUtil.forName("groupId").in(groupIds));
