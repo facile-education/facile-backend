@@ -311,6 +311,16 @@ public class NewsLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.weprode.nero.news.model.News> getNewsActivities(
+			com.liferay.portal.kernel.model.User user, long groupId,
+			java.util.Date minDate, java.util.Date maxDate, int nbNews)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _newsLocalService.getNewsActivities(
+			user, groupId, minDate, maxDate, nbNews);
+	}
+
+	@Override
 	public int getNewsCount(
 			com.liferay.portal.kernel.model.User user, long groupId,
 			boolean groupNews, boolean importantOnly, boolean unreadOnly)

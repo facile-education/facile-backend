@@ -250,6 +250,11 @@ public interface NewsLocalService
 		throws SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<News> getNewsActivities(
+			User user, long groupId, Date minDate, Date maxDate, int nbNews)
+		throws SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getNewsCount(
 			User user, long groupId, boolean groupNews, boolean importantOnly,
 			boolean unreadOnly)

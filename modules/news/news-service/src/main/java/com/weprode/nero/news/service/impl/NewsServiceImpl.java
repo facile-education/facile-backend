@@ -47,7 +47,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return result;
         }
 
-        if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+        if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
             result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
             result.put(JSONConstants.SUCCESS, false);
             return result;
@@ -92,9 +92,16 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         }
 
         try {
-            // Only the author of the news can edit it
+            // Who can edit a news ?
+            // School news : the author, a direction member or a secretary
+            // Group news : only the author
             News news = NewsLocalServiceUtil.getNews(newsId);
-            if (news.getAuthorId() != user.getUserId()) {
+            if (news.getIsSchoolNews() && news.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
+                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+            if (!news.getIsSchoolNews() && news.getAuthorId() != user.getUserId()) {
                 result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;

@@ -51,7 +51,6 @@ public class GroupColorLocalServiceImpl extends GroupColorLocalServiceBaseImpl {
 		int nbExistingGroupColors = groupColorPersistence.countAll();
 		String color = CDTColorUtil.getRandomColor();
 		groupColor.setColor(color);
-		logger.info("nbTotal = " + nbExistingGroupColors + " : picked color " + color + " for groupId " + groupId);
 		groupColorPersistence.update(groupColor);
 
 		return color;
