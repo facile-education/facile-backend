@@ -317,34 +317,39 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		try {
 			Organization org = OrganizationLocalServiceUtil.getOrganization(orgId);
 			String orgName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);
-			if (roleId == RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()) {
-				populationName = NeroRoleConstants.STUDENT_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getParentRole().getRoleId()) {
-				populationName = NeroRoleConstants.PARENT_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId()) {
-				populationName = NeroRoleConstants.TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId()) {
-				populationName = NeroRoleConstants.DIRECTION_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId()) {
-				populationName = NeroRoleConstants.DOYEN_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId()) {
-				populationName = NeroRoleConstants.MAIN_TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId()) {
-				populationName = NeroRoleConstants.CONSEILLER_ORIENTATION_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId()) {
-				populationName = NeroRoleConstants.CONSEILLER_SOCIAL_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId()) {
-				populationName = NeroRoleConstants.INFIRMIERE_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId()) {
-				populationName = NeroRoleConstants.PSYCHOLOGUE_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getAssistantTechniqueRole().getRoleId()) {
-				populationName = NeroRoleConstants.ASSISTANT_TECHNIQUE_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId()) {
-				populationName = NeroRoleConstants.CAISSIER_COMPTABLE_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId()) {
-				populationName = NeroRoleConstants.BIBLIOTHECAIRE_INCLUSIVE + ContactConstants.OF + orgName;
-			} else if (roleId == RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId()) {
-				populationName = NeroRoleConstants.SECRETAIRE_INCLUSIVE + ContactConstants.OF + orgName;
+			// Subject orgs already have the role inside
+			if (OrgDetailsLocalServiceUtil.isSubject(orgId)) {
+				populationName = orgName;
+			} else {
+				if (roleId == RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()) {
+					populationName = NeroRoleConstants.STUDENT_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getParentRole().getRoleId()) {
+					populationName = NeroRoleConstants.PARENT_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId()) {
+					populationName = NeroRoleConstants.TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId()) {
+					populationName = NeroRoleConstants.DIRECTION_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId()) {
+					populationName = NeroRoleConstants.DOYEN_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId()) {
+					populationName = NeroRoleConstants.MAIN_TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId()) {
+					populationName = NeroRoleConstants.CONSEILLER_ORIENTATION_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId()) {
+					populationName = NeroRoleConstants.CONSEILLER_SOCIAL_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId()) {
+					populationName = NeroRoleConstants.INFIRMIERE_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId()) {
+					populationName = NeroRoleConstants.PSYCHOLOGUE_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getAssistantTechniqueRole().getRoleId()) {
+					populationName = NeroRoleConstants.ASSISTANT_TECHNIQUE_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId()) {
+					populationName = NeroRoleConstants.CAISSIER_COMPTABLE_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId()) {
+					populationName = NeroRoleConstants.BIBLIOTHECAIRE_INCLUSIVE + ContactConstants.OF + orgName;
+				} else if (roleId == RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId()) {
+					populationName = NeroRoleConstants.SECRETAIRE_INCLUSIVE + ContactConstants.OF + orgName;
+				}
 			}
 			// If user is multi-school, and if the org is not a school, suffix each population by the school's name
 			User user = UserLocalServiceUtil.getUser(userId);
