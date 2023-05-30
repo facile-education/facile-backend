@@ -496,7 +496,11 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         jsonNews.put(JSONConstants.HAS_ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.hasAttachedFiles(newsId));
         // Author and direction can edit/delete the event
         User user = UserLocalServiceUtil.getUser(userId);
-        jsonNews.put(JSONConstants.IS_EDITABLE, news.getAuthorId() == userId || RoleUtilsLocalServiceUtil.isDirectionMember(user));
+        if (news.getIsSchoolNews()) {
+            jsonNews.put(JSONConstants.IS_EDITABLE, news.getAuthorId() == userId || RoleUtilsLocalServiceUtil.isDirectionMember(user));
+        } else {
+            jsonNews.put(JSONConstants.IS_EDITABLE, news.getAuthorId() == userId);
+        }
         // Thumbnail
         if (news.getImageId() != 0) {
             FileEntry thumbnailFileEntry = DLAppServiceUtil.getFileEntry(news.getImageId());
