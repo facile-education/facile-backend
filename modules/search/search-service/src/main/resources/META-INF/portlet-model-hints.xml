@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.weprode.nero.search.model.SearchHistory">
+		<field name="searchHistoryId" type="long" />
+		<field name="userId" type="long" />
+		<field name="query" type="String" />
+		<field name="queryDate" type="Date" />
+	</model>
+</model-hints>

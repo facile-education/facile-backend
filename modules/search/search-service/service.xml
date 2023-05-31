@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.search">
+	<namespace>Search</namespace>
+
+	<entity name="SearchEngine" local-service="true" remote-service="true" />
+
+	<entity name="SearchHistory" local-service="true" remote-service="false">
+		<column name="searchHistoryId" type="long" primary="true"/>
+		<column name="userId" type="long"/>
+		<column name="query" type="String"/>
+		<column name="queryDate" type="Date"/>
+
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+</service-builder>
