@@ -1,0 +1,1 @@
+create index IX_70B8A735 on Search_SearchHistory (userId);

@@ -427,6 +427,7 @@ public class JSONConstants {
     public static final String NB_UNREAD_NEWS = "nbUnreadNews";
 
     // Agenda
+    public static final String EVENT = "event";
     public static final String EVENTS = "events";
     public static final String EVENT_ID = "eventId";
     public static final String NB_UNREAD_EVENTS = "nbUnreadEvents";
@@ -512,6 +513,16 @@ public class JSONConstants {
     public static final String TERMS_OF_USE = "termsOfUse";
     public static final String AGREED_TERMS_OF_USE = "agreedTermsOfUse";
     public static final String PASSWORD_CHANGE = "passwordChange";
+
+    // Search Engine
+    public static final String HISTORY_ID = "historyId";
+    public static final String QUERY = "query";
+    public static final String ENTITY_ID = "entityId";
+    public static final String DISPLAYABLE = "displayable";
+    public static final String MESSAGING_FOLDER = "messagingFolder";
+    public static final String RESULT = "result";
+    public static final String SECTION = "section";
+    public static final String SCORE = "score";
 
     // Timeouts
     public static final String SESSION_TIMEOUT = "session.timeout";
