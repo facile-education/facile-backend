@@ -85,15 +85,15 @@ public class DashboardServiceSoap {
 	}
 
 	public static org.json.JSONObject getDashboardActivity(
-			String maxDate, int nbResults, boolean withNews, boolean withDocs,
-			boolean withSchoollife, boolean withSessions)
+			long groupId, String maxDate, int nbResults, boolean withNews,
+			boolean withDocs, boolean withSchoollife, boolean withSessions)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				DashboardServiceUtil.getDashboardActivity(
-					maxDate, nbResults, withNews, withDocs, withSchoollife,
-					withSessions);
+					groupId, maxDate, nbResults, withNews, withDocs,
+					withSchoollife, withSessions);
 
 			return returnValue;
 		}

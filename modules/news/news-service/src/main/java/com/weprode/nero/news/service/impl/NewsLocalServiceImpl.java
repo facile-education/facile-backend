@@ -461,7 +461,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             List<NewsPopulation> newsPopulations = newsPopulationPersistence.findBynewsId(newsId);
             if (newsPopulations != null) {
                 for (NewsPopulation newsPopulation : newsPopulations) {
-                    if (roleIds.contains(newsPopulation.getRoleId()) && userGroupIds.contains(newsPopulation.getGroupId())) {
+                    if ((newsPopulation.getRoleId() == 0 || roleIds.contains(newsPopulation.getRoleId())) && userGroupIds.contains(newsPopulation.getGroupId())) {
                         return true;
                     }
                 }

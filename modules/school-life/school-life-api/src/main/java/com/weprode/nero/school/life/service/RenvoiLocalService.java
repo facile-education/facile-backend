@@ -217,7 +217,8 @@ public interface RenvoiLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Renvoi> getDoyenSchoolRenvois(User user);
+	public List<Renvoi> getDoyenSchoolRenvois(
+		User user, Date minDate, Date maxDate);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Renvoi> getGroupRenvois(
@@ -274,7 +275,8 @@ public interface RenvoiLocalService
 	public int getRenvoisCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Renvoi> getSchoolRenvois(long schoolId);
+	public List<Renvoi> getSchoolRenvois(
+		long schoolId, Date minDate, Date maxDate);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Renvoi> getTeacherPendingRenvois(long teacherId);

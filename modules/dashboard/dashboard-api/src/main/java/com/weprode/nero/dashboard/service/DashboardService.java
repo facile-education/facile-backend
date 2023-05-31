@@ -53,8 +53,8 @@ public interface DashboardService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-dashboard-activity")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getDashboardActivity(
-		String maxDate, int nbResults, boolean withNews, boolean withDocs,
-		boolean withSchoollife, boolean withSessions);
+		long groupId, String maxDate, int nbResults, boolean withNews,
+		boolean withDocs, boolean withSchoollife, boolean withSessions);
 
 	/**
 	 * Returns the OSGi service identifier.

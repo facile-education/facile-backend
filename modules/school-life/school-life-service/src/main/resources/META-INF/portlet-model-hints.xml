@@ -8,6 +8,7 @@
 	<model name="com.weprode.nero.school.life.model.Renvoi">
 		<field name="schoollifeSessionId" type="long" />
 		<field name="studentId" type="long" />
+		<field name="orgId" type="long" />
 		<field name="schoolId" type="long" />
 		<field name="renvoiDate" type="Date" />
 		<field name="teacherId" type="long" />

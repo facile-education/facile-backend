@@ -62,12 +62,14 @@ public class RenvoiCacheModel implements CacheModel<Renvoi>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{schoollifeSessionId=");
 		sb.append(schoollifeSessionId);
 		sb.append(", studentId=");
 		sb.append(studentId);
+		sb.append(", orgId=");
+		sb.append(orgId);
 		sb.append(", schoolId=");
 		sb.append(schoolId);
 		sb.append(", renvoiDate=");
@@ -95,6 +97,7 @@ public class RenvoiCacheModel implements CacheModel<Renvoi>, Externalizable {
 
 		renvoiImpl.setSchoollifeSessionId(schoollifeSessionId);
 		renvoiImpl.setStudentId(studentId);
+		renvoiImpl.setOrgId(orgId);
 		renvoiImpl.setSchoolId(schoolId);
 
 		if (renvoiDate == Long.MIN_VALUE) {
@@ -129,6 +132,8 @@ public class RenvoiCacheModel implements CacheModel<Renvoi>, Externalizable {
 
 		studentId = objectInput.readLong();
 
+		orgId = objectInput.readLong();
+
 		schoolId = objectInput.readLong();
 		renvoiDate = objectInput.readLong();
 
@@ -151,6 +156,8 @@ public class RenvoiCacheModel implements CacheModel<Renvoi>, Externalizable {
 		objectOutput.writeLong(schoollifeSessionId);
 
 		objectOutput.writeLong(studentId);
+
+		objectOutput.writeLong(orgId);
 
 		objectOutput.writeLong(schoolId);
 		objectOutput.writeLong(renvoiDate);
@@ -175,6 +182,7 @@ public class RenvoiCacheModel implements CacheModel<Renvoi>, Externalizable {
 
 	public long schoollifeSessionId;
 	public long studentId;
+	public long orgId;
 	public long schoolId;
 	public long renvoiDate;
 	public long teacherId;

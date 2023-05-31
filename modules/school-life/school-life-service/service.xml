@@ -82,6 +82,7 @@
 	<entity name="Renvoi" local-service="true" remote-service="true">
 		<column name="schoollifeSessionId" type="long" primary="true" />
 		<column name="studentId" type="long" primary="true" />
+		<column name="orgId" type="long" />
 		<column name="schoolId" type="long" />
 		<column name="renvoiDate" type="Date" />
 		<column name="teacherId" type="long" />

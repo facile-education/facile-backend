@@ -260,9 +260,12 @@ public class RenvoiLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.weprode.nero.school.life.model.Renvoi>
-		getDoyenSchoolRenvois(com.liferay.portal.kernel.model.User user) {
+		getDoyenSchoolRenvois(
+			com.liferay.portal.kernel.model.User user, java.util.Date minDate,
+			java.util.Date maxDate) {
 
-		return _renvoiLocalService.getDoyenSchoolRenvois(user);
+		return _renvoiLocalService.getDoyenSchoolRenvois(
+			user, minDate, maxDate);
 	}
 
 	@Override
@@ -349,9 +352,10 @@ public class RenvoiLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.weprode.nero.school.life.model.Renvoi>
-		getSchoolRenvois(long schoolId) {
+		getSchoolRenvois(
+			long schoolId, java.util.Date minDate, java.util.Date maxDate) {
 
-		return _renvoiLocalService.getSchoolRenvois(schoolId);
+		return _renvoiLocalService.getSchoolRenvois(schoolId, minDate, maxDate);
 	}
 
 	@Override

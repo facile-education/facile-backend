@@ -43,6 +43,7 @@ public class RenvoiWrapper
 
 		attributes.put("schoollifeSessionId", getSchoollifeSessionId());
 		attributes.put("studentId", getStudentId());
+		attributes.put("orgId", getOrgId());
 		attributes.put("schoolId", getSchoolId());
 		attributes.put("renvoiDate", getRenvoiDate());
 		attributes.put("teacherId", getTeacherId());
@@ -68,6 +69,12 @@ public class RenvoiWrapper
 
 		if (studentId != null) {
 			setStudentId(studentId);
+		}
+
+		Long orgId = (Long)attributes.get("orgId");
+
+		if (orgId != null) {
+			setOrgId(orgId);
 		}
 
 		Long schoolId = (Long)attributes.get("schoolId");
@@ -123,6 +130,16 @@ public class RenvoiWrapper
 	@Override
 	public Renvoi cloneWithOriginalValues() {
 		return wrap(model.cloneWithOriginalValues());
+	}
+
+	/**
+	 * Returns the org ID of this renvoi.
+	 *
+	 * @return the org ID of this renvoi
+	 */
+	@Override
+	public long getOrgId() {
+		return model.getOrgId();
 	}
 
 	/**
@@ -240,6 +257,16 @@ public class RenvoiWrapper
 	@Override
 	public void persist() {
 		model.persist();
+	}
+
+	/**
+	 * Sets the org ID of this renvoi.
+	 *
+	 * @param orgId the org ID of this renvoi
+	 */
+	@Override
+	public void setOrgId(long orgId) {
+		model.setOrgId(orgId);
 	}
 
 	/**

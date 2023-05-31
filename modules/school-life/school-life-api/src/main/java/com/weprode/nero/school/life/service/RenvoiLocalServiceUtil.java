@@ -239,9 +239,10 @@ public class RenvoiLocalServiceUtil {
 	}
 
 	public static List<Renvoi> getDoyenSchoolRenvois(
-		com.liferay.portal.kernel.model.User user) {
+		com.liferay.portal.kernel.model.User user, java.util.Date minDate,
+		java.util.Date maxDate) {
 
-		return getService().getDoyenSchoolRenvois(user);
+		return getService().getDoyenSchoolRenvois(user, minDate, maxDate);
 	}
 
 	public static List<Renvoi> getGroupRenvois(
@@ -314,8 +315,10 @@ public class RenvoiLocalServiceUtil {
 		return getService().getRenvoisCount();
 	}
 
-	public static List<Renvoi> getSchoolRenvois(long schoolId) {
-		return getService().getSchoolRenvois(schoolId);
+	public static List<Renvoi> getSchoolRenvois(
+		long schoolId, java.util.Date minDate, java.util.Date maxDate) {
+
+		return getService().getSchoolRenvois(schoolId, minDate, maxDate);
 	}
 
 	public static List<Renvoi> getTeacherPendingRenvois(long teacherId) {

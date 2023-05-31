@@ -54,6 +54,12 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
             renvoi.setReason("");
             renvoi.setSourceTeacherId(sourceTeacherId);
             renvoi.setSchoolId(schoolId);
+            List<Organization> studentOrgs = UserOrgsLocalServiceUtil.getUserClasses(student, false);
+            if (studentOrgs != null && !studentOrgs.isEmpty()) {
+                renvoi.setOrgId(studentOrgs.get(0).getOrganizationId());
+            } else {
+                renvoi.setOrgId(0);
+            }
             renvoi.setStatus(SchoollifeConstants.RENVOI_STATUS_CREATED);
             renvoi = renvoiPersistence.update(renvoi);
 
@@ -97,16 +103,23 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
         return false;
     }
 
-    public List<Renvoi> getSchoolRenvois(long schoolId) {
-        List<Renvoi> renvois = new ArrayList<>();
+    public List<Renvoi> getSchoolRenvois(long schoolId, Date minDate, Date maxDate) {
 
+        List<Renvoi> schoolRenvois = new ArrayList<>();
         try {
-            renvois = renvoiPersistence.findByschoolId(schoolId);
+            List<Renvoi> renvois = renvoiPersistence.findByschoolId(schoolId);
+            if (renvois != null) {
+                for (Renvoi renvoi : renvois) {
+                    if (renvoi.getRenvoiDate().after(minDate) && renvoi.getRenvoiDate().before(maxDate)) {
+                        schoolRenvois.add(renvoi);
+                    }
+                }
+            }
         } catch (Exception e) {
             logger.error("Error fetching pending renvois", e);
         }
 
-        return renvois;
+        return schoolRenvois;
     }
 
     public List<Renvoi> getTeacherPendingRenvois(long teacherId) {
@@ -154,7 +167,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
         return jsonPendingRenvoi;
     }
 
-    public List<Renvoi> getDoyenSchoolRenvois(User user) {
+    public List<Renvoi> getDoyenSchoolRenvois(User user, Date minDate, Date maxDate) {
         List<Renvoi> userSchoolRenvois = new ArrayList<>();
 
         // Limit analysis to main teachers and doyens and co-teachers
@@ -162,27 +175,29 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
         if (RoleUtilsLocalServiceUtil.isMainTeacher(user) || RoleUtilsLocalServiceUtil.isDoyen(user)) {
 
             long schoolId = UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId();
-            List<Renvoi> schoolRenvois = RenvoiLocalServiceUtil.getSchoolRenvois(schoolId);
+            List<Renvoi> schoolRenvois = RenvoiLocalServiceUtil.getSchoolRenvois(schoolId, minDate, maxDate);
             for (Renvoi schoolRenvoi : schoolRenvois) {
 
                 try {
-                    User student = UserLocalServiceUtil.getUser(schoolRenvoi.getStudentId());
                     // Get student class
-                    List<Organization> studentClasses = UserOrgsLocalServiceUtil.getUserClasses(student, false);
-                    if (!studentClasses.isEmpty()) {
-
-                        Organization studentClass = studentClasses.get(0);
-
-                        if ((RoleUtilsLocalServiceUtil.isMainTeacher(user, studentClass.getOrganizationId()) ||
-                                RoleUtilsLocalServiceUtil.isDoyen(user, studentClass.getOrganizationId()) ||
+                    long studentClassOrgId = schoolRenvoi.getOrgId();
+                    if (studentClassOrgId == 0) {
+                        // Student's orgId was added since RS23 only
+                        User student = UserLocalServiceUtil.getUser(schoolRenvoi.getStudentId());
+                        List<Organization> studentClasses = UserOrgsLocalServiceUtil.getUserClasses(student, false);
+                        if (!studentClasses.isEmpty()) {
+                            studentClassOrgId = studentClasses.get(0).getOrganizationId();
+                        }
+                    }
+                    if ((RoleUtilsLocalServiceUtil.isMainTeacher(user, studentClassOrgId) ||
+                                RoleUtilsLocalServiceUtil.isDoyen(user, studentClassOrgId) ||
                                 SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), schoolRenvoi.getSourceSessionId()))
                                 && user.getUserId() != schoolRenvoi.getSourceTeacherId()) {
                             userSchoolRenvois.add(schoolRenvoi);
                         }
-                    }
 
                 } catch (Exception e) {
-                    logger.error("Error while fetching school renvois for user " + user.getUserId());
+                    logger.error("Error while fetching school renvois for user " + user.getUserId(), e);
                 }
             }
         }

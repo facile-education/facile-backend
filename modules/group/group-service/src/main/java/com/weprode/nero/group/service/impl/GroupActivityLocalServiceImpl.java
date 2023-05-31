@@ -73,11 +73,10 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             // Do not exceed 1 month back in time
             while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
                 // Fetch activities from minDate = maxDate minus 7 days
-                logger.debug("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
+                logger.info("Fetching group activities for userId " + userId + " from " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(minDate) + " to " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(maxDate) + " : having " + groupActivities.size() + " results");
 
                 // Group news
                 if (withNews) {
-                    logger.info("Fetch news for user " + user.getFullName());
                     List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, 0, minDate, maxDate, 10);
                     for (News news : groupNews) {
                         GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
@@ -118,7 +117,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
                 // Doyens and main teachers see the renvois for the students of classes that are affected to him
                 if (withSchoollife) {
-                    List<Renvoi> schoolRenvois = RenvoiLocalServiceUtil.getDoyenSchoolRenvois(user);
+                    List<Renvoi> schoolRenvois = RenvoiLocalServiceUtil.getDoyenSchoolRenvois(user, minDate, maxDate);
                     for (Renvoi schoolRenvoi : schoolRenvois) {
                         if (schoolRenvoi.getRenvoiDate().after(minDate) && schoolRenvoi.getRenvoiDate().before(maxDate)) {
                             GroupActivity schoolRenvoiActivity = new GroupActivity(schoolRenvoi.getSchoollifeSessionId(), schoolRenvoi.getStudentId(), schoolRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI);

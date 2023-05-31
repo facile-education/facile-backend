@@ -37,6 +37,7 @@ public class RenvoiSoap implements Serializable {
 
 		soapModel.setSchoollifeSessionId(model.getSchoollifeSessionId());
 		soapModel.setStudentId(model.getStudentId());
+		soapModel.setOrgId(model.getOrgId());
 		soapModel.setSchoolId(model.getSchoolId());
 		soapModel.setRenvoiDate(model.getRenvoiDate());
 		soapModel.setTeacherId(model.getTeacherId());
@@ -115,6 +116,14 @@ public class RenvoiSoap implements Serializable {
 		_studentId = studentId;
 	}
 
+	public long getOrgId() {
+		return _orgId;
+	}
+
+	public void setOrgId(long orgId) {
+		_orgId = orgId;
+	}
+
 	public long getSchoolId() {
 		return _schoolId;
 	}
@@ -181,6 +190,7 @@ public class RenvoiSoap implements Serializable {
 
 	private long _schoollifeSessionId;
 	private long _studentId;
+	private long _orgId;
 	private long _schoolId;
 	private Date _renvoiDate;
 	private long _teacherId;
