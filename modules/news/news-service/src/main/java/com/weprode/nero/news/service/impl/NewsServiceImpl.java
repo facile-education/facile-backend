@@ -258,6 +258,10 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
                 logger.info("User " + user.getFullName() + " fetches details for news " + newsId);
                 JSONObject jsonNews = NewsLocalServiceUtil.convertNewsToJson(newsId, user.getUserId(), true);
                 result.put(JSONConstants.NEWS, jsonNews);
+            } else {
+                result.put(JSONConstants.SUCCESS, false);
+                logger.error("User have not the right to read news");
+                return result;
             }
 
             result.put(JSONConstants.SUCCESS, true);
