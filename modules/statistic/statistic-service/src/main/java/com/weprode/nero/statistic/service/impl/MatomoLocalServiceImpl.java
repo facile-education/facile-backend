@@ -4,12 +4,10 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -17,7 +15,6 @@ import com.weprode.nero.application.model.Application;
 import com.weprode.nero.application.service.ApplicationLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
-import com.weprode.nero.menu.enums.MenuEntry;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.constants.NeroRoleConstants;
@@ -25,6 +22,9 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.statistic.constants.MatomoConstants;
 import com.weprode.nero.statistic.service.base.MatomoLocalServiceBaseImpl;
 import com.weprode.nero.statistic.utils.UserProfile;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.BufferedReader;
@@ -33,7 +33,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component(
         service = AopService.class
@@ -42,16 +48,16 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
 
     private final Log logger = LogFactoryUtil.getLog(MatomoLocalServiceImpl.class);
 
-    private static final String MATOMO_SCHOOL_VAR = "customVariableValue3"; // dimension1
-    private static final String MATOMO_PROFILE_VAR = "customVariableValue2"; // dimension2
-    private static final String MATOMO_SERVICE_VAR = "pageUrl"; // dimension3
+    private static final String MATOMO_SCHOOL_VAR = "dimension1";
+    private static final String MATOMO_PROFILE_VAR = "dimension2";
+    private static final String MATOMO_SERVICE_VAR = "dimension4";
 
     // TODO Refactor to regroup code
     // TODO Optimize requests on compare (do one request instead of several)
     public JSONObject fetchStatistics(User user, String compareOn, String period, Date startDate, Date endDate,
                                       List<Long> profileIds, List<Long> schoolIds, List<Long> serviceIds) throws PortalException, SystemException, IOException {
 
-        logger.debug("About to fetch statistics from " + startDate + " to " + endDate + ", compare on " + compareOn
+        logger.info("About to fetch statistics from " + startDate + " to " + endDate + ", compare on " + compareOn
                 + " with profileIds = " + profileIds + ", schoolIds = " + schoolIds + " and serviceIds = " + serviceIds);
         Map<String, String> args = new HashMap<>();
         String url = PropsUtil.get(NeroSystemProperties.MATOMO_API_URL);
@@ -199,18 +205,9 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
 
         // Add service filter
         for (Long serviceId : serviceIds) {
-            if (serviceId != 0) {
-                try {
-                    Application application = ApplicationLocalServiceUtil.getApplication(serviceId);
-
-                    for (MenuEntry entry : MenuEntry.getFullMenu()) {
-                        if (application.getMenuEntryId() == entry.getId()) {
-                            segment.append(MATOMO_SERVICE_VAR).append("=@").append(entry.getKey()).append(",");
-                        }
-                    }
-                } catch (Exception e) {
-                    logger.error("Failed to get service url for serviceId " + serviceId, e);
-                }
+            boolean hasFoundService = false;
+            if (serviceId != -1) { // -1 means all services
+                segment.append(MATOMO_SERVICE_VAR).append("==").append(serviceId).append(",");
             }
         }
 
@@ -324,7 +321,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
             if (specificUrl.endsWith("&")) {
                 specificUrl = specificUrl.substring(0, specificUrl.length()-1);
             }
-            logger.debug("Statistics url : " + specificUrl);
+            logger.info("Statistics url : " + specificUrl);
 
             InputStream is = new URL(specificUrl).openStream();
             JSONObject dataset = new JSONObject();
@@ -387,4 +384,17 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
 
         return dataJson;
     }
+
+    public long getUserProfileId(User user) {
+        List<Role> roles = RoleUtilsLocalServiceUtil.getUserEntRoles(user);
+        for (Role role : roles) {
+            for (UserProfile userProfile : UserProfile.values()) {
+                if (userProfile.getRoleId() == role.getRoleId()) {
+                    return userProfile.getMatomoId();
+                }
+            }
+        }
+        return 0;
+    }
+
 }

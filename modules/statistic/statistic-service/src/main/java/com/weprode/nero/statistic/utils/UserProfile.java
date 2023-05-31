@@ -1,5 +1,7 @@
 package com.weprode.nero.statistic.utils;
 
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.User;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.List;
  */
 // TODO use roleId for statistics ?
 public enum UserProfile {
-    ALL(0L, "Tous", RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()),
+    ALL(0L, "Tous", 0),
     STUDENT(1L, "El\u00E8ve", RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()),
     TEACHER(2L, "Enseignant.te", RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId()),
     PARENT(3L, "Responsable l\u00e9gal", RoleUtilsLocalServiceUtil.getParentRole().getRoleId()),
@@ -51,13 +53,15 @@ public enum UserProfile {
         return roleId;
     }
 
-    public static UserProfile getRoleUserProfile(long roleId) {
-        for (UserProfile userProfile : UserProfile.values()) {
-            if (userProfile.getRoleId() == roleId) {
-                return userProfile;
+    public static UserProfile getUserProfile(User user) {
+        List<Role> roles = RoleUtilsLocalServiceUtil.getUserEntRoles(user);
+        for (Role role : roles) {
+            for (UserProfile userProfile : UserProfile.values()) {
+                if (userProfile.getRoleId() == role.getRoleId()) {
+                    return userProfile;
+                }
             }
         }
-
         return UserProfile.OTHER;
     }
 

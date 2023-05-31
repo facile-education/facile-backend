@@ -81,7 +81,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             }
 
             List<Long> serviceIds = new ArrayList<>();
-            if (serviceId > 0) {
+            if (serviceId >= 0) {
                 serviceIds.add(serviceId);
             }
 
@@ -343,6 +343,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, "", MatomoConstants.PERIOD_DAY, startDate, endDate,
                     profileIds, schoolIds, serviceIds);
 
+            logger.info("matomo data=" + data);
             JSONArray datasets = data.getJSONArray(JSONConstants.DATASETS);
             JSONArray dayData = datasets.getJSONObject(0).getJSONArray(JSONConstants.DATA);
             int nbConnexions = 0;
