@@ -4,10 +4,13 @@ import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
@@ -18,7 +21,6 @@ import com.weprode.nero.news.service.NewsAttachedFileLocalServiceUtil;
 import com.weprode.nero.news.service.NewsPopulationLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,21 +35,19 @@ public class NewsModelDocumentContributor
     @Override
     public void contribute(Document document, News news) {
         try {
-            // titre de news,
-            // contenu de news,
-            // auteur,
-            // nom des pièces jointes,
-            //TODO contenu textuel des pièces jointes
             document.addDate(Field.MODIFIED_DATE, news.getModificationDate());
-            document.addText(Field.TITLE, normalize(news.getTitle()));
+            document.addText(Field.TITLE, news.getTitle());
             document.addNumber(Field.COMPANY_ID, news.getCompanyId());
 
-            document.addText(Field.CONTENT, normalize(HtmlParserUtil.extractText(news.getContent())));
+            document.addText(Field.CONTENT, HtmlParserUtil.extractText(news.getContent()));
             document.addDate(Field.DISPLAY_DATE, news.getPublicationDate());
             document.addNumber(Field.USER_ID, news.getAuthorId());
             User author = UserLocalServiceUtil.getUser(news.getAuthorId());
-            document.addText(Field.USER_NAME, normalize(author.getFullName()));
+            document.addText(Field.USER_NAME, author.getFullName());
             document.addNumber(Field.TYPE, news.isIsSchoolNews() ? 1 : 0);
+
+            Role userRole = RoleLocalServiceUtil.getRole(news.getCompanyId(), RoleConstants.USER);
+            document.addText(Field.ROLE_ID, new String[]{String.valueOf(userRole.getRoleId())});
 
             List<NewsPopulation> populations = NewsPopulationLocalServiceUtil.getNewsPopulations(news.getNewsId());
             String[] populationIds = new String[populations.size()];
@@ -69,7 +69,7 @@ public class NewsModelDocumentContributor
 
             for (NewsAttachedFile attachedFile : NewsAttachedFileLocalServiceUtil.getNewsAttachedFiles(news.getNewsId())) {
                 FileEntry attachment = DLAppServiceUtil.getFileEntry(attachedFile.getFileId());
-                fileNames.add(normalize(attachment.getTitle()));
+                fileNames.add(attachment.getTitle());
             }
 
             String[] attachmentNames = fileNames.toArray(String[]::new);
@@ -79,10 +79,6 @@ public class NewsModelDocumentContributor
         } catch (PortalException e) {
             logger.warn("Unable to index news " + news.getNewsId(), e);
         }
-    }
-
-    private String normalize(String str) {
-        return Normalizer.normalize(str, Normalizer.Form.NFKD).replaceAll("\\p{M}", "");
     }
 
     private static final Log logger = LogFactoryUtil.getLog(

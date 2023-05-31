@@ -3,9 +3,12 @@ package com.weprode.nero.progression.search;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
@@ -17,7 +20,6 @@ import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +35,15 @@ public class ProgressionItemModelDocumentContributor
     public void contribute(Document document, ProgressionItem progressionItem) {
         try {
             document.addDate(Field.MODIFIED_DATE, progressionItem.getModifiedDate());
-            document.addText(Field.TITLE, normalize(progressionItem.getItemName()));
+            document.addText(Field.TITLE, progressionItem.getItemName());
             document.addNumber(Field.COMPANY_ID, progressionItem.getCompanyId());
             Progression progression = ProgressionLocalServiceUtil.getProgression(progressionItem.getProgressionId());
             User author = UserLocalServiceUtil.getUser(progression.getTeacherId());
             document.addNumber(Field.GROUP_ID, author.getGroupId());
             document.addNumber(Field.SCOPE_GROUP_ID, author.getGroupId());
+
+            Role userRole = RoleLocalServiceUtil.getRole(progressionItem.getCompanyId(), RoleConstants.USER);
+            document.addText(Field.ROLE_ID, new String[]{String.valueOf(userRole.getRoleId())});
 
             StringBuilder content = new StringBuilder();
             for (ItemContent itemContent : ItemContentLocalServiceUtil.getContentsByItemId(progressionItem.getProgressionItemId())) {
@@ -47,10 +52,10 @@ public class ProgressionItemModelDocumentContributor
                 }
             }
 
-            document.addText(Field.CONTENT, normalize(HtmlParserUtil.extractText(content.toString())));
+            document.addText(Field.CONTENT, HtmlParserUtil.extractText(content.toString()));
             document.addDate(Field.DISPLAY_DATE, progressionItem.getModifiedDate());
             document.addNumber(Field.USER_ID, progression.getTeacherId());
-            document.addText(Field.USER_NAME, normalize(author.getFullName()));
+            document.addText(Field.USER_NAME, author.getFullName());
             document.addNumber(Field.TYPE, progressionItem.isIsHomework() ? ProgressionConstants.HOMEWORK_TYPE : ProgressionConstants.SESSION_TYPE);
 
             // TODO link, attachments ?
@@ -63,10 +68,6 @@ public class ProgressionItemModelDocumentContributor
         } catch (PortalException e) {
             logger.warn("Unable to index progressionItem " + progressionItem.getProgressionItemId(), e);
         }
-    }
-
-    private String normalize(String str) {
-        return Normalizer.normalize(str, Normalizer.Form.NFKD).replaceAll("\\p{M}", "");
     }
 
     private static final Log logger = LogFactoryUtil.getLog(

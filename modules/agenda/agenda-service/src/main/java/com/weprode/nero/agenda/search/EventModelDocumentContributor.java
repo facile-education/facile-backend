@@ -3,9 +3,12 @@ package com.weprode.nero.agenda.search;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
@@ -14,7 +17,6 @@ import com.weprode.nero.agenda.model.EventPopulation;
 import com.weprode.nero.agenda.service.EventPopulationLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +36,17 @@ public class EventModelDocumentContributor
             // auteur,
             // nom des pièces jointes,
             document.addDate(Field.MODIFIED_DATE, event.getStartDate());
-            document.addText(Field.TITLE, normalize(event.getTitle()));
+            document.addText(Field.TITLE, event.getTitle());
             document.addNumber(Field.COMPANY_ID, event.getCompanyId());
 
-            document.addText(Field.CONTENT, normalize(HtmlParserUtil.extractText(event.getDescription())));
+            document.addText(Field.CONTENT, HtmlParserUtil.extractText(event.getDescription()));
             document.addDate(Field.DISPLAY_DATE, event.getStartDate());
             document.addNumber(Field.USER_ID, event.getAuthorId());
             User author = UserLocalServiceUtil.getUser(event.getAuthorId());
-            document.addText(Field.USER_NAME, normalize(author.getFullName()));
+            document.addText(Field.USER_NAME, author.getFullName());
+
+            Role userRole = RoleLocalServiceUtil.getRole(event.getCompanyId(), RoleConstants.USER);
+            document.addText(Field.ROLE_ID, new String[]{String.valueOf(userRole.getRoleId())});
 
             List<EventPopulation> populations = EventPopulationLocalServiceUtil.getEventPopulations(event.getEventId());
             String[] populationIds = new String[populations.size()];
@@ -63,10 +68,6 @@ public class EventModelDocumentContributor
         } catch (PortalException e) {
             logger.warn("Unable to index event " + event.getEventId(), e);
         }
-    }
-
-    private String normalize(String str) {
-        return Normalizer.normalize(str, Normalizer.Form.NFKD).replaceAll("\\p{M}", "");
     }
 
     private static final Log logger = LogFactoryUtil.getLog(
