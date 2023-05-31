@@ -2,11 +2,9 @@ package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
-import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
@@ -16,10 +14,8 @@ import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.HomeworkLocalServiceBaseImpl;
-
 import org.osgi.service.component.annotations.Component;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -350,7 +346,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			logger.error("Error when running dynamic query to get all homeworks for student "+teacher.getUserId()+" at given date range", e);
 		}
 
-		logger.info("Teacher "+teacher.getFullName()+" has given "+homeworkList.size()+" homeworks to do for year starting on "+new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(minDate));
+		// logger.info("Teacher "+teacher.getFullName()+" has given "+homeworkList.size()+" homeworks to do for year starting on "+new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(minDate));
 
 		return homeworkList;
 	}

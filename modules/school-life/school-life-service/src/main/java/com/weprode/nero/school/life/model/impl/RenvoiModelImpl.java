@@ -72,8 +72,9 @@ public class RenvoiModelImpl
 
 	public static final Object[][] TABLE_COLUMNS = {
 		{"schoollifeSessionId", Types.BIGINT}, {"studentId", Types.BIGINT},
-		{"schoolId", Types.BIGINT}, {"renvoiDate", Types.TIMESTAMP},
-		{"teacherId", Types.BIGINT}, {"sourceSessionId", Types.BIGINT},
+		{"orgId", Types.BIGINT}, {"schoolId", Types.BIGINT},
+		{"renvoiDate", Types.TIMESTAMP}, {"teacherId", Types.BIGINT},
+		{"sourceSessionId", Types.BIGINT},
 		{"sourceSchoollifeSessionId", Types.BIGINT},
 		{"sourceTeacherId", Types.BIGINT}, {"reason", Types.VARCHAR},
 		{"status", Types.INTEGER}
@@ -85,6 +86,7 @@ public class RenvoiModelImpl
 	static {
 		TABLE_COLUMNS_MAP.put("schoollifeSessionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("studentId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("orgId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("schoolId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("renvoiDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("teacherId", Types.BIGINT);
@@ -96,7 +98,7 @@ public class RenvoiModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Schoollife_Renvoi (schoollifeSessionId LONG not null,studentId LONG not null,schoolId LONG,renvoiDate DATE null,teacherId LONG,sourceSessionId LONG,sourceSchoollifeSessionId LONG,sourceTeacherId LONG,reason STRING null,status INTEGER,primary key (schoollifeSessionId, studentId))";
+		"create table Schoollife_Renvoi (schoollifeSessionId LONG not null,studentId LONG not null,orgId LONG,schoolId LONG,renvoiDate DATE null,teacherId LONG,sourceSessionId LONG,sourceSchoollifeSessionId LONG,sourceTeacherId LONG,reason STRING null,status INTEGER,primary key (schoollifeSessionId, studentId))";
 
 	public static final String TABLE_SQL_DROP = "drop table Schoollife_Renvoi";
 
@@ -175,6 +177,7 @@ public class RenvoiModelImpl
 
 		model.setSchoollifeSessionId(soapModel.getSchoollifeSessionId());
 		model.setStudentId(soapModel.getStudentId());
+		model.setOrgId(soapModel.getOrgId());
 		model.setSchoolId(soapModel.getSchoolId());
 		model.setRenvoiDate(soapModel.getRenvoiDate());
 		model.setTeacherId(soapModel.getTeacherId());
@@ -338,6 +341,9 @@ public class RenvoiModelImpl
 		attributeGetterFunctions.put("studentId", Renvoi::getStudentId);
 		attributeSetterBiConsumers.put(
 			"studentId", (BiConsumer<Renvoi, Long>)Renvoi::setStudentId);
+		attributeGetterFunctions.put("orgId", Renvoi::getOrgId);
+		attributeSetterBiConsumers.put(
+			"orgId", (BiConsumer<Renvoi, Long>)Renvoi::setOrgId);
 		attributeGetterFunctions.put("schoolId", Renvoi::getSchoolId);
 		attributeSetterBiConsumers.put(
 			"schoolId", (BiConsumer<Renvoi, Long>)Renvoi::setSchoolId);
@@ -403,6 +409,21 @@ public class RenvoiModelImpl
 		}
 
 		_studentId = studentId;
+	}
+
+	@JSON
+	@Override
+	public long getOrgId() {
+		return _orgId;
+	}
+
+	@Override
+	public void setOrgId(long orgId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_orgId = orgId;
 	}
 
 	@JSON
@@ -605,6 +626,7 @@ public class RenvoiModelImpl
 
 		renvoiImpl.setSchoollifeSessionId(getSchoollifeSessionId());
 		renvoiImpl.setStudentId(getStudentId());
+		renvoiImpl.setOrgId(getOrgId());
 		renvoiImpl.setSchoolId(getSchoolId());
 		renvoiImpl.setRenvoiDate(getRenvoiDate());
 		renvoiImpl.setTeacherId(getTeacherId());
@@ -626,6 +648,7 @@ public class RenvoiModelImpl
 		renvoiImpl.setSchoollifeSessionId(
 			this.<Long>getColumnOriginalValue("schoollifeSessionId"));
 		renvoiImpl.setStudentId(this.<Long>getColumnOriginalValue("studentId"));
+		renvoiImpl.setOrgId(this.<Long>getColumnOriginalValue("orgId"));
 		renvoiImpl.setSchoolId(this.<Long>getColumnOriginalValue("schoolId"));
 		renvoiImpl.setRenvoiDate(
 			this.<Date>getColumnOriginalValue("renvoiDate"));
@@ -710,6 +733,8 @@ public class RenvoiModelImpl
 		renvoiCacheModel.schoollifeSessionId = getSchoollifeSessionId();
 
 		renvoiCacheModel.studentId = getStudentId();
+
+		renvoiCacheModel.orgId = getOrgId();
 
 		renvoiCacheModel.schoolId = getSchoolId();
 
@@ -831,6 +856,7 @@ public class RenvoiModelImpl
 
 	private long _schoollifeSessionId;
 	private long _studentId;
+	private long _orgId;
 	private long _schoolId;
 	private Date _renvoiDate;
 	private long _teacherId;
@@ -869,6 +895,7 @@ public class RenvoiModelImpl
 
 		_columnOriginalValues.put("schoollifeSessionId", _schoollifeSessionId);
 		_columnOriginalValues.put("studentId", _studentId);
+		_columnOriginalValues.put("orgId", _orgId);
 		_columnOriginalValues.put("schoolId", _schoolId);
 		_columnOriginalValues.put("renvoiDate", _renvoiDate);
 		_columnOriginalValues.put("teacherId", _teacherId);
@@ -895,21 +922,23 @@ public class RenvoiModelImpl
 
 		columnBitmasks.put("studentId", 2L);
 
-		columnBitmasks.put("schoolId", 4L);
+		columnBitmasks.put("orgId", 4L);
 
-		columnBitmasks.put("renvoiDate", 8L);
+		columnBitmasks.put("schoolId", 8L);
 
-		columnBitmasks.put("teacherId", 16L);
+		columnBitmasks.put("renvoiDate", 16L);
 
-		columnBitmasks.put("sourceSessionId", 32L);
+		columnBitmasks.put("teacherId", 32L);
 
-		columnBitmasks.put("sourceSchoollifeSessionId", 64L);
+		columnBitmasks.put("sourceSessionId", 64L);
 
-		columnBitmasks.put("sourceTeacherId", 128L);
+		columnBitmasks.put("sourceSchoollifeSessionId", 128L);
 
-		columnBitmasks.put("reason", 256L);
+		columnBitmasks.put("sourceTeacherId", 256L);
 
-		columnBitmasks.put("status", 512L);
+		columnBitmasks.put("reason", 512L);
+
+		columnBitmasks.put("status", 1024L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

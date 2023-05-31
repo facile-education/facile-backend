@@ -36,6 +36,8 @@ public class RenvoiTable extends BaseTable<RenvoiTable> {
 		"schoollifeSessionId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<RenvoiTable, Long> studentId = createColumn(
 		"studentId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<RenvoiTable, Long> orgId = createColumn(
+		"orgId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<RenvoiTable, Long> schoolId = createColumn(
 		"schoolId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<RenvoiTable, Date> renvoiDate = createColumn(

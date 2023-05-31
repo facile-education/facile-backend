@@ -7,6 +7,7 @@ create table Schoollife_Notification (
 create table Schoollife_Renvoi (
 	schoollifeSessionId LONG not null,
 	studentId LONG not null,
+	orgId LONG,
 	schoolId LONG,
 	renvoiDate DATE null,
 	teacherId LONG,

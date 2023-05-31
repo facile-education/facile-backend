@@ -35,7 +35,7 @@ import com.weprode.nero.school.life.model.SchoollifeSession;
 
 import java.io.Serializable;
 
-import java.util.*;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -81,8 +81,8 @@ public interface SchoollifeSessionLocalService
 		SchoollifeSession schoollifeSession);
 
 	public SchoollifeSession addSession(
-		long schoollifeSlotId, long schoolId, java.util.Date startDate,
-		java.util.Date endDate, int type);
+		long schoollifeSlotId, long schoolId, Date startDate, Date endDate,
+		int type);
 
 	/**
 	 * @throws PortalException
@@ -137,8 +137,7 @@ public interface SchoollifeSessionLocalService
 
 	public boolean deleteSession(long schoollifeSessionId);
 
-	public boolean deleteSlotSessions(
-		long schoollifeSlotId, java.util.Date limitDate);
+	public boolean deleteSlotSessions(long schoollifeSlotId, Date limitDate);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T> T dslQuery(DSLQuery dslQuery);
@@ -277,15 +276,15 @@ public interface SchoollifeSessionLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray getTeacherSessions(
-		long teacherId, java.util.Date minDate, java.util.Date maxDate);
+		long teacherId, Date minDate, Date maxDate);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<SchoollifeSession> getUnnotifiedSessions(
-		int type, java.util.Date startDate, java.util.Date endDate);
+		int type, Date startDate, Date endDate);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<SchoollifeSession> getWeekSessions(
-		long schoolId, int type, java.util.Date fromDate);
+		long schoolId, int type, Date fromDate);
 
 	public boolean setRollCalled(long schoollifeSessionId);
 

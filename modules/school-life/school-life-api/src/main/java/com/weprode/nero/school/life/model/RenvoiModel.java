@@ -86,6 +86,20 @@ public interface RenvoiModel extends BaseModel<Renvoi> {
 	public void setStudentId(long studentId);
 
 	/**
+	 * Returns the org ID of this renvoi.
+	 *
+	 * @return the org ID of this renvoi
+	 */
+	public long getOrgId();
+
+	/**
+	 * Sets the org ID of this renvoi.
+	 *
+	 * @param orgId the org ID of this renvoi
+	 */
+	public void setOrgId(long orgId);
+
+	/**
 	 * Returns the school ID of this renvoi.
 	 *
 	 * @return the school ID of this renvoi
