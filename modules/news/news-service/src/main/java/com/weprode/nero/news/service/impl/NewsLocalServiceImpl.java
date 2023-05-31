@@ -70,6 +70,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(NewsLocalServiceImpl.class);
 
+    @Indexable(type = IndexableType.REINDEX)
     public News addNews(long authorId, String title, String content, boolean isSchoolNews, boolean isImportant,
                         long imageId, Date publicationDate, Date expirationDate, JSONArray populations, List<Long> attachFileIds) {
         logger.info("User " + authorId + " creates a news named " + title + " for " + populations.length() + " groups and with " + (attachFileIds != null ? attachFileIds.size() : 0) + " attached files");
