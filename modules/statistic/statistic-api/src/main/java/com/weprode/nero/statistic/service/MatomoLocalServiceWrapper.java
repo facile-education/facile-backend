@@ -65,6 +65,11 @@ public class MatomoLocalServiceWrapper
 	}
 
 	@Override
+	public long getUserProfileId(com.liferay.portal.kernel.model.User user) {
+		return _matomoLocalService.getUserProfileId(user);
+	}
+
+	@Override
 	public MatomoLocalService getWrappedService() {
 		return _matomoLocalService;
 	}

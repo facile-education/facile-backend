@@ -19,6 +19,7 @@ import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.statistic.service.MatomoLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.UserContactLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
@@ -89,6 +90,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         result.put(JSONConstants.IS_DOYEN, RoleUtilsLocalServiceUtil.isDoyen(user));
         result.put(JSONConstants.IS_DIRECTION_MEMBER, RoleUtilsLocalServiceUtil.isDirectionMember(user));
         result.put(JSONConstants.IS_SECRETARIAT, RoleUtilsLocalServiceUtil.isSecretariat(user));
+        result.put(JSONConstants.PROFILE_ID, MatomoLocalServiceUtil.getUserProfileId(user));
 
         // Children
         List<User> children = UserRelationshipLocalServiceUtil.getChildren(user.getUserId());

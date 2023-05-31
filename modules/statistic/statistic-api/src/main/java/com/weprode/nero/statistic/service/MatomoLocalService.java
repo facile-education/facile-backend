@@ -72,4 +72,7 @@ public interface MatomoLocalService extends BaseLocalService {
 		Long serviceId, java.util.List<Long> schoolIds,
 		java.util.List<Long> profileIds);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long getUserProfileId(User user);
+
 }

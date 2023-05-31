@@ -64,6 +64,12 @@ public class MatomoLocalServiceUtil {
 		return getService().getServiceSegment(serviceId, schoolIds, profileIds);
 	}
 
+	public static long getUserProfileId(
+		com.liferay.portal.kernel.model.User user) {
+
+		return getService().getUserProfileId(user);
+	}
+
 	public static MatomoLocalService getService() {
 		return _service;
 	}
