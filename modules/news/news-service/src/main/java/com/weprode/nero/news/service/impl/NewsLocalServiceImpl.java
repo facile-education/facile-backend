@@ -497,6 +497,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         jsonNews.put(JSONConstants.EXPIRATION_DATE, new SimpleDateFormat(DATE_FORMAT).format(news.getExpirationDate()));
         jsonNews.put(JSONConstants.HAS_READ, NewsReadLocalServiceUtil.hasUserReadNews(userId, newsId));
         jsonNews.put(JSONConstants.HAS_ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.hasAttachedFiles(newsId));
+        jsonNews.put(JSONConstants.IS_SCHOOL_NEWS, news.getIsSchoolNews());
         // Author and direction can edit/delete the event
         User user = UserLocalServiceUtil.getUser(userId);
         if (news.getIsSchoolNews()) {
