@@ -62,7 +62,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
             } else {
                 // Institutional group
                 Organization organization = OrganizationLocalServiceUtil.getOrganization(group.getOrganizationId());
-                groupName = OrgUtilsLocalServiceUtil.formatOrgName(organization.getName(), true);
+                groupName = OrgUtilsLocalServiceUtil.formatOrgName(organization.getName(), false);
             }
         } catch (Exception e) {
             logger.debug(e);

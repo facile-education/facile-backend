@@ -10,6 +10,7 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.group.constants.ActivityConstants;
+import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
@@ -54,6 +55,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
             renvoi.setReason("");
             renvoi.setSourceTeacherId(sourceTeacherId);
             renvoi.setSchoolId(schoolId);
+            // Class Org Id
             List<Organization> studentOrgs = UserOrgsLocalServiceUtil.getUserClasses(student, false);
             if (studentOrgs != null && !studentOrgs.isEmpty()) {
                 renvoi.setOrgId(studentOrgs.get(0).getOrganizationId());
@@ -215,6 +217,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
                 // Execute the query
                 List<Renvoi> renvois = renvoiFinder.getGroupRenvois(groupIds, minDate, maxDate, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
+                logger.info("GetGroupRenvois returns " + renvois.size());
                 for (Renvoi renvoi : renvois) {
                     if (user.getUserId() == renvoi.getTeacherId()) {
                         groupRenvois.add(renvoi);
@@ -259,10 +262,12 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
                 CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(schoolRenvoi.getSourceSessionId());
                 jsonSchoolRenvoi.put(JSONConstants.SESSION_SUBJECT, cdtSession.getSubject());
                 jsonSchoolRenvoi.put(JSONConstants.SESSION_DATE, df.format(cdtSession.getSessionStart()));
+                jsonSchoolRenvoi.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(cdtSession.getGroupId()));
             } else {
                 SchoollifeSession schoollifeSession = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoolRenvoi.getSourceSchoollifeSessionId());
                 jsonSchoolRenvoi.put(JSONConstants.SESSION_SUBJECT, SchoollifeSessionLocalServiceUtil.getSessionName(schoolRenvoi.getSourceSchoollifeSessionId()));
                 jsonSchoolRenvoi.put(JSONConstants.SESSION_DATE, df.format(schoollifeSession.getStartDate()));
+                jsonSchoolRenvoi.put(JSONConstants.GROUP_NAME, SchoollifeSessionLocalServiceUtil.getSessionName(schoolRenvoi.getSourceSchoollifeSessionId()));
             }
 
             User sourceTeacher = UserLocalServiceUtil.getUser(schoolRenvoi.getSourceTeacherId());

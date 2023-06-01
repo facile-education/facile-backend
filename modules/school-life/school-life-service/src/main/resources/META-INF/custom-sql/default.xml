@@ -2,9 +2,10 @@
 <custom-sql>
     <sql id="getGroupsRenvois">
         <![CDATA[
-			SELECT r.* FROM schoollife_renvoi r
-			JOIN cdt_cdtsession cs on cs.sessionId = r.sourceSessionId
-			WHERE cs.groupId IN ([$groupIds$])
+			SELECT r.* FROM Schoollife_Renvoi r
+			JOIN Schedule_CDTSession cs on cs.sessionId = r.sourceSessionId
+			JOIN Group_ g on g.classPK = r.orgId
+			WHERE (cs.groupId IN ([$groupIds$]) OR g.groupId IN ([$groupIds$]))
 			AND r.renvoiDate BETWEEN ? AND ?
 		]]>
     </sql>

@@ -4,7 +4,9 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.model.Activity;
@@ -109,9 +111,15 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 if (withSchoollife) {
                     List<Renvoi> pendingRenvois = RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId());
                     for (Renvoi pendingRenvoi : pendingRenvois) {
+                        // First filter on dates
                         if (pendingRenvoi.getRenvoiDate().after(minDate) && pendingRenvoi.getRenvoiDate().before(maxDate)) {
-                            GroupActivity pendingRenvoiActivity = new GroupActivity(pendingRenvoi.getSchoollifeSessionId(), pendingRenvoi.getStudentId(), pendingRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI);
-                            groupActivities.add(pendingRenvoiActivity);
+                            // Then filter on group : either coursGroupId or classOrgId
+                            Organization renvoiClass = OrganizationLocalServiceUtil.getOrganization(pendingRenvoi.getOrgId());
+                            CDTSession sourceSession = CDTSessionLocalServiceUtil.getCDTSession(pendingRenvoi.getSourceSessionId());
+                            if (groupIds.contains(sourceSession.getGroupId()) || groupIds.contains(renvoiClass.getGroupId())) {
+                                GroupActivity pendingRenvoiActivity = new GroupActivity(pendingRenvoi.getSchoollifeSessionId(), pendingRenvoi.getStudentId(), pendingRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI);
+                                groupActivities.add(pendingRenvoiActivity);
+                            }
                         }
                     }
                 }
@@ -120,7 +128,10 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 if (withSchoollife) {
                     List<Renvoi> schoolRenvois = RenvoiLocalServiceUtil.getDoyenSchoolRenvois(user, minDate, maxDate);
                     for (Renvoi schoolRenvoi : schoolRenvois) {
-                        if (schoolRenvoi.getRenvoiDate().after(minDate) && schoolRenvoi.getRenvoiDate().before(maxDate)) {
+                        Organization renvoiClass = schoolRenvoi.getOrgId() == 0 ? null : OrganizationLocalServiceUtil.getOrganization(schoolRenvoi.getOrgId());
+                        CDTSession sourceSession = CDTSessionLocalServiceUtil.getCDTSession(schoolRenvoi.getSourceSessionId());
+                        // Filter to group if 1 selected
+                        if (groupIds.size() > 1 || ((groupIds.contains(sourceSession.getGroupId()) || renvoiClass == null || groupIds.contains(renvoiClass.getGroupId())))) {
                             GroupActivity schoolRenvoiActivity = new GroupActivity(schoolRenvoi.getSchoollifeSessionId(), schoolRenvoi.getStudentId(), schoolRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI);
                             groupActivities.add(schoolRenvoiActivity);
                         }
@@ -161,7 +172,11 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 List<Group> userCommunities = CommunityInfosLocalServiceUtil.getUserCommunities(userId, false, false);
                 for (Group userCommunity : userCommunities) {
                     CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(userCommunity.getGroupId());
-                    if (communityInfos.getStatus() == 3 && communityInfos.getExpirationDate().after(minDate) && communityInfos.getExpirationDate().before(maxDate) && RoleUtilsLocalServiceUtil.isUserGroupAdmin(user, userCommunity.getGroupId())) {
+                    if (communityInfos.getStatus() == 3 &&
+                            (groupIds.size() > 1 || groupIds.get(0) == communityInfos.getGroupId()) &&
+                            communityInfos.getExpirationDate().after(minDate) &&
+                            communityInfos.getExpirationDate().before(maxDate) &&
+                            RoleUtilsLocalServiceUtil.isUserGroupAdmin(user, userCommunity.getGroupId())) {
                         GroupActivity sessionActivity = new GroupActivity(userCommunity.getGroupId(), 0, communityInfos.getExpirationDate(), ActivityConstants.ACTIVITY_TYPE_EXPIRED_GROUP);
                         groupActivities.add(sessionActivity);
                     }
@@ -232,12 +247,9 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 // No pending firings
                 // Doyens and main teachers see the renvois for the students of classes that are affected to him
                 List<Renvoi> schoolRenvois = RenvoiLocalServiceUtil.getGroupRenvois(user, groupIds, minDate, maxDate);
-
                 for (Renvoi schoolRenvoi : schoolRenvois) {
-                    if (schoolRenvoi.getRenvoiDate().after(minDate) && schoolRenvoi.getRenvoiDate().before(maxDate)) {
-                        GroupActivity schoolRenvoiActivity = new GroupActivity(schoolRenvoi.getSchoollifeSessionId(), schoolRenvoi.getStudentId(), schoolRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI);
-                        groupActivities.add(schoolRenvoiActivity);
-                    }
+                    GroupActivity schoolRenvoiActivity = new GroupActivity(schoolRenvoi.getSchoollifeSessionId(), schoolRenvoi.getStudentId(), schoolRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI);
+                    groupActivities.add(schoolRenvoiActivity);
                 }
 
                 // Homeworks given
@@ -385,7 +397,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         JSONObject homeworkActivity = new JSONObject();
 
         try {
-            DateFormat df = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
             homeworkActivity.put(JSONConstants.HOMEWORK_ID, homework.getHomeworkId());
             User teacher = UserLocalServiceUtil.getUser(homework.getTeacherId());
             homeworkActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getFromDate()));
@@ -409,12 +421,13 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         JSONObject sessionActivity = new JSONObject();
 
         try {
-            sessionActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(activityDate));
+            sessionActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(activityDate));
             User lastEditor = SessionTeacherLocalServiceUtil.getLastEditor(session.getSessionId(), activityDate);
             sessionActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
             sessionActivity.put(JSONConstants.GROUP_ID, session.getGroupId());
             sessionActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(session.getGroupId()));
             sessionActivity.put(JSONConstants.TARGET, session.getTitle());
+            sessionActivity.put(JSONConstants.TARGET_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(session.getSessionStart()));
             sessionActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_SESSION);
         } catch (Exception e) {
             logger.error("Error converting session activity for session " + session.getSessionId(), e);
