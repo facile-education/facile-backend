@@ -52,6 +52,12 @@ public interface GeneralStatService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.statistic.service.impl.GeneralStatServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the general stat remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link GeneralStatServiceUtil} if injection and service tracking are not available.
 	 */
+	@JSONWebService(method = "GET", value = "get-actions-count")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getActionsCount(
+		java.util.Date startDate, java.util.Date endDate, long schoolId,
+		long serviceId, String comparator);
+
 	@JSONWebService(method = "GET", value = "get-active-users-count")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getActiveUsersCount(
@@ -92,6 +98,6 @@ public interface GeneralStatService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSessionsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId,
-		long serviceId, String comparator);
+		String comparator);
 
 }

@@ -48,14 +48,18 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
 
     private final Log logger = LogFactoryUtil.getLog(MatomoLocalServiceImpl.class);
 
-    private static final String MATOMO_SCHOOL_VAR = "dimension1";
-    private static final String MATOMO_PROFILE_VAR = "dimension2";
-    private static final String MATOMO_SERVICE_VAR = "dimension4";
+    // Custom 'visit' dimension1 : schoolId
+    private static final String MATOMO_SCHOOL_DIMENSION = "dimension1";
+    // Custom 'visit' dimension2 : profileId
+    private static final String MATOMO_PROFILE_DIMENSION = "dimension2";
+    // Custom 'visit' dimension3 : old service_id not used anymore
+    // Custom 'action' dimension4 : serviceId
+    private static final String MATOMO_SERVICE_DIMENSION = "dimension4";
 
     // TODO Refactor to regroup code
     // TODO Optimize requests on compare (do one request instead of several)
     public JSONObject fetchStatistics(User user, String compareOn, String period, Date startDate, Date endDate,
-                                      List<Long> profileIds, List<Long> schoolIds, List<Long> serviceIds) throws PortalException, SystemException, IOException {
+                                      List<Long> profileIds, List<Long> schoolIds, List<Long> serviceIds, boolean actions) throws PortalException, SystemException, IOException {
 
         logger.info("About to fetch statistics from " + startDate + " to " + endDate + ", compare on " + compareOn
                 + " with profileIds = " + profileIds + ", schoolIds = " + schoolIds + " and serviceIds = " + serviceIds);
@@ -66,7 +70,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
         args.put("idSite", PropsUtil.get(NeroSystemProperties.MATOMO_SITE_ID));
         args.put("module","API");
         args.put("format","json");
-        args.put("method","VisitsSummary.getVisits");
+        args.put("method", actions ? "VisitsSummary.getActions" : "VisitsSummary.getVisits");
 
         // is it comparison ?
         if (compareOn == null) {
@@ -120,6 +124,10 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
                 metadata.add(NeroRoleConstants.PERSONAL_INCLUSIVE.substring(0, NeroRoleConstants.PERSONAL_INCLUSIVE.length() - 1));
                 segments.add(getSegment(personalProfileIds, schoolIds, serviceIds));
             }
+            // Add total segment
+            metadata.add("Total");
+            segments.add(getSegment(new ArrayList<>(), schoolIds, serviceIds));
+
         } else if (compareOn.equals(MatomoConstants.SCHOOL_COMPARE)) {
             for (Long schoolId : schoolIds) {
                 logger.debug("Comparison over schoolId " + schoolId);
@@ -180,7 +188,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
         // Add school filter
         for (Long schoolId : schoolIds) {
             if (schoolId != 0) {
-                segment.append(MATOMO_SCHOOL_VAR).append("==").append(schoolId).append(",");
+                segment.append(MATOMO_SCHOOL_DIMENSION).append("==").append(schoolId).append(",");
             }
         }
 
@@ -193,7 +201,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
         // Add profile filter
         for (Long profileId : profileIds) {
             if (profileId != 0) {
-                segment.append(MATOMO_PROFILE_VAR).append("==").append(profileId).append(",");
+                segment.append(MATOMO_PROFILE_DIMENSION).append("==").append(profileId).append(",");
             }
         }
 
@@ -205,9 +213,8 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
 
         // Add service filter
         for (Long serviceId : serviceIds) {
-            boolean hasFoundService = false;
             if (serviceId != -1) { // -1 means all services
-                segment.append(MATOMO_SERVICE_VAR).append("==").append(serviceId).append(",");
+                segment.append(MATOMO_SERVICE_DIMENSION).append("==").append(serviceId).append(",");
             }
         }
 
@@ -321,7 +328,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
             if (specificUrl.endsWith("&")) {
                 specificUrl = specificUrl.substring(0, specificUrl.length()-1);
             }
-            logger.info("Statistics url : " + specificUrl);
+            logger.debug("Statistics url : " + specificUrl);
 
             InputStream is = new URL(specificUrl).openStream();
             JSONObject dataset = new JSONObject();

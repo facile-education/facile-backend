@@ -54,13 +54,46 @@ public class GeneralStatServiceHttp {
 
 	public static org.json.JSONObject getSessionsCount(
 		HttpPrincipal httpPrincipal, java.util.Date startDate,
-		java.util.Date endDate, long schoolId, long serviceId,
-		String comparator) {
+		java.util.Date endDate, long schoolId, String comparator) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				GeneralStatServiceUtil.class, "getSessionsCount",
 				_getSessionsCountParameterTypes0);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, startDate, endDate, schoolId, comparator);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject getActionsCount(
+		HttpPrincipal httpPrincipal, java.util.Date startDate,
+		java.util.Date endDate, long schoolId, long serviceId,
+		String comparator) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				GeneralStatServiceUtil.class, "getActionsCount",
+				_getActionsCountParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, startDate, endDate, schoolId, serviceId, comparator);
@@ -93,7 +126,7 @@ public class GeneralStatServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GeneralStatServiceUtil.class, "getActiveUsersCount",
-				_getActiveUsersCountParameterTypes1);
+				_getActiveUsersCountParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, startDate, endDate, schoolId);
@@ -126,7 +159,7 @@ public class GeneralStatServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GeneralStatServiceUtil.class, "getFilesCount",
-				_getFilesCountParameterTypes2);
+				_getFilesCountParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, startDate, endDate, schoolId);
@@ -159,7 +192,7 @@ public class GeneralStatServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GeneralStatServiceUtil.class, "getHomeworksCount",
-				_getHomeworksCountParameterTypes3);
+				_getHomeworksCountParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, startDate, endDate, schoolId);
@@ -192,7 +225,7 @@ public class GeneralStatServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GeneralStatServiceUtil.class, "getNewsCount",
-				_getNewsCountParameterTypes4);
+				_getNewsCountParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, startDate, endDate, schoolId);
@@ -225,7 +258,7 @@ public class GeneralStatServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GeneralStatServiceUtil.class, "getMessagesCount",
-				_getMessagesCountParameterTypes5);
+				_getMessagesCountParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, startDate, endDate, schoolId);
@@ -257,7 +290,7 @@ public class GeneralStatServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GeneralStatServiceUtil.class, "getDashboardStatistics",
-				_getDashboardStatisticsParameterTypes7);
+				_getDashboardStatisticsParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -287,21 +320,25 @@ public class GeneralStatServiceHttp {
 
 	private static final Class<?>[] _getSessionsCountParameterTypes0 =
 		new Class[] {
+			java.util.Date.class, java.util.Date.class, long.class, String.class
+		};
+	private static final Class<?>[] _getActionsCountParameterTypes1 =
+		new Class[] {
 			java.util.Date.class, java.util.Date.class, long.class, long.class,
 			String.class
 		};
-	private static final Class<?>[] _getActiveUsersCountParameterTypes1 =
+	private static final Class<?>[] _getActiveUsersCountParameterTypes2 =
 		new Class[] {java.util.Date.class, java.util.Date.class, long.class};
-	private static final Class<?>[] _getFilesCountParameterTypes2 =
+	private static final Class<?>[] _getFilesCountParameterTypes3 =
 		new Class[] {java.util.Date.class, java.util.Date.class, long.class};
-	private static final Class<?>[] _getHomeworksCountParameterTypes3 =
+	private static final Class<?>[] _getHomeworksCountParameterTypes4 =
 		new Class[] {java.util.Date.class, java.util.Date.class, long.class};
-	private static final Class<?>[] _getNewsCountParameterTypes4 = new Class[] {
+	private static final Class<?>[] _getNewsCountParameterTypes5 = new Class[] {
 		java.util.Date.class, java.util.Date.class, long.class
 	};
-	private static final Class<?>[] _getMessagesCountParameterTypes5 =
+	private static final Class<?>[] _getMessagesCountParameterTypes6 =
 		new Class[] {java.util.Date.class, java.util.Date.class, long.class};
-	private static final Class<?>[] _getDashboardStatisticsParameterTypes7 =
+	private static final Class<?>[] _getDashboardStatisticsParameterTypes8 =
 		new Class[] {};
 
 }

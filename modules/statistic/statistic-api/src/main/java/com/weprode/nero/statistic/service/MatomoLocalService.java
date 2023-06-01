@@ -24,7 +24,8 @@ import com.liferay.portal.kernel.transaction.Transactional;
 
 import java.io.IOException;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -54,10 +55,9 @@ public interface MatomoLocalService extends BaseLocalService {
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject fetchStatistics(
-			User user, String compareOn, String period,
-			java.util.Date startDate, java.util.Date endDate,
-			java.util.List<Long> profileIds, java.util.List<Long> schoolIds,
-			java.util.List<Long> serviceIds)
+			User user, String compareOn, String period, Date startDate,
+			Date endDate, List<Long> profileIds, List<Long> schoolIds,
+			List<Long> serviceIds, boolean actions)
 		throws IOException, PortalException, SystemException;
 
 	/**
@@ -69,8 +69,7 @@ public interface MatomoLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getServiceSegment(
-		Long serviceId, java.util.List<Long> schoolIds,
-		java.util.List<Long> profileIds);
+		Long serviceId, List<Long> schoolIds, List<Long> profileIds);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public long getUserProfileId(User user);

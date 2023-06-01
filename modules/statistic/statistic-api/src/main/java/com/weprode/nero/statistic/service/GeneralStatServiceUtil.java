@@ -33,6 +33,14 @@ public class GeneralStatServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.statistic.service.impl.GeneralStatServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static org.json.JSONObject getActionsCount(
+		java.util.Date startDate, java.util.Date endDate, long schoolId,
+		long serviceId, java.lang.String comparator) {
+
+		return getService().getActionsCount(
+			startDate, endDate, schoolId, serviceId, comparator);
+	}
+
 	public static org.json.JSONObject getActiveUsersCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
@@ -78,10 +86,10 @@ public class GeneralStatServiceUtil {
 
 	public static org.json.JSONObject getSessionsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId,
-		long serviceId, java.lang.String comparator) {
+		java.lang.String comparator) {
 
 		return getService().getSessionsCount(
-			startDate, endDate, schoolId, serviceId, comparator);
+			startDate, endDate, schoolId, comparator);
 	}
 
 	public static GeneralStatService getService() {

@@ -31,6 +31,15 @@ public class GeneralStatServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getActionsCount(
+		java.util.Date startDate, java.util.Date endDate, long schoolId,
+		long serviceId, String comparator) {
+
+		return _generalStatService.getActionsCount(
+			startDate, endDate, schoolId, serviceId, comparator);
+	}
+
+	@Override
 	public org.json.JSONObject getActiveUsersCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId) {
 
@@ -86,10 +95,10 @@ public class GeneralStatServiceWrapper
 	@Override
 	public org.json.JSONObject getSessionsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId,
-		long serviceId, String comparator) {
+		String comparator) {
 
 		return _generalStatService.getSessionsCount(
-			startDate, endDate, schoolId, serviceId, comparator);
+			startDate, endDate, schoolId, comparator);
 	}
 
 	@Override
