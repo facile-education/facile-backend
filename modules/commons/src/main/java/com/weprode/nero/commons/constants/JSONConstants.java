@@ -56,6 +56,7 @@ public class JSONConstants {
     public static final String APPLICATION_KEY = "applicationKey";
     public static final String CATEGORY = "category";
     public static final String IMAGE = "image";
+    public static final String IMAGE_URL = "imageUrl";
     public static final String HAS_CUSTOM_URL = "hasCustomUrl";
     public static final String EXPORT_USER = "exportUser";
     public static final String EXPORT_PARENT = "exportParent";

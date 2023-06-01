@@ -52,13 +52,45 @@ import com.weprode.nero.preference.service.UserPropertiesServiceUtil;
  */
 public class UserPropertiesServiceHttp {
 
+	public static org.json.JSONObject updateSideMenuState(
+		HttpPrincipal httpPrincipal, boolean isExpanded) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				UserPropertiesServiceUtil.class, "updateSideMenuState",
+				_updateSideMenuStateParameterTypes0);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, isExpanded);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject updateUserPicture(
 		HttpPrincipal httpPrincipal, java.io.File picture) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				UserPropertiesServiceUtil.class, "updateUserPicture",
-				_updateUserPictureParameterTypes0);
+				_updateUserPictureParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, picture);
 
@@ -89,7 +121,7 @@ public class UserPropertiesServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				UserPropertiesServiceUtil.class, "updateThemeColor",
-				_updateThemeColorParameterTypes1);
+				_updateThemeColorParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, color);
 
@@ -120,7 +152,7 @@ public class UserPropertiesServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				UserPropertiesServiceUtil.class, "updateReportFrequency",
-				_updateReportFrequencyParameterTypes2);
+				_updateReportFrequencyParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, frequency);
@@ -152,7 +184,7 @@ public class UserPropertiesServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				UserPropertiesServiceUtil.class, "updateWebdavState",
-				_updateWebdavStateParameterTypes3);
+				_updateWebdavStateParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, isEnabled);
@@ -184,7 +216,7 @@ public class UserPropertiesServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				UserPropertiesServiceUtil.class, "updateWebdavPassword",
-				_updateWebdavPasswordParameterTypes4);
+				_updateWebdavPasswordParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, password, confirmPassword);
@@ -213,15 +245,17 @@ public class UserPropertiesServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(
 		UserPropertiesServiceHttp.class);
 
-	private static final Class<?>[] _updateUserPictureParameterTypes0 =
-		new Class[] {java.io.File.class};
-	private static final Class<?>[] _updateThemeColorParameterTypes1 =
-		new Class[] {String.class};
-	private static final Class<?>[] _updateReportFrequencyParameterTypes2 =
-		new Class[] {int.class};
-	private static final Class<?>[] _updateWebdavStateParameterTypes3 =
+	private static final Class<?>[] _updateSideMenuStateParameterTypes0 =
 		new Class[] {boolean.class};
-	private static final Class<?>[] _updateWebdavPasswordParameterTypes4 =
+	private static final Class<?>[] _updateUserPictureParameterTypes1 =
+		new Class[] {java.io.File.class};
+	private static final Class<?>[] _updateThemeColorParameterTypes2 =
+		new Class[] {String.class};
+	private static final Class<?>[] _updateReportFrequencyParameterTypes3 =
+		new Class[] {int.class};
+	private static final Class<?>[] _updateWebdavStateParameterTypes4 =
+		new Class[] {boolean.class};
+	private static final Class<?>[] _updateWebdavPasswordParameterTypes5 =
 		new Class[] {String.class, String.class};
 
 }

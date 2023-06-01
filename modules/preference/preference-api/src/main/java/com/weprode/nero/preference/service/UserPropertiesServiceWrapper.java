@@ -48,6 +48,11 @@ public class UserPropertiesServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject updateSideMenuState(boolean isExpanded) {
+		return _userPropertiesService.updateSideMenuState(isExpanded);
+	}
+
+	@Override
 	public org.json.JSONObject updateThemeColor(String color) {
 		return _userPropertiesService.updateThemeColor(color);
 	}
