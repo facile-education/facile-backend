@@ -62,6 +62,9 @@ public interface UserPropertiesService extends BaseService {
 	@JSONWebService(method = "POST", value = "update-report-frequency")
 	public JSONObject updateReportFrequency(int frequency);
 
+	@JSONWebService(method = "POST", value = "update-side-menu-state")
+	public JSONObject updateSideMenuState(boolean isExpanded);
+
 	@JSONWebService(method = "POST", value = "update-theme-color")
 	public JSONObject updateThemeColor(String color);
 

@@ -1,7 +1,9 @@
 package com.weprode.nero.menu.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -54,7 +56,13 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
         List<MenuEntry> userMenu = SideMenuLocalServiceUtil.getUserMenu(user);
 
         result.put(JSONConstants.MENU, getMenuAsJSON(userMenu));
-        result.put(JSONConstants.EXPANDED, false);
+        boolean isMenuExpanded = false;
+        try {
+            isMenuExpanded = !UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getHideMenu();
+        } catch (PortalException e) {
+            logger.error(e);
+        }
+        result.put(JSONConstants.EXPANDED, isMenuExpanded);
 
         // Timeouts
         result.put(JSONConstants.SESSION_TIMEOUT, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT));

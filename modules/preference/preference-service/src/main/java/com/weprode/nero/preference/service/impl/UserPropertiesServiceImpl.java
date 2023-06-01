@@ -47,6 +47,37 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
     private static final int DAILY = 1;
     private static final int WEEKLY = 2;
 
+    @JSONWebService(value = "update-side-menu-state", method = "POST")
+    public JSONObject updateSideMenuState(boolean isExpanded) {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                throw new AuthException();
+            }
+        } catch (Exception e) {
+            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        }
+
+        try {
+            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
+            userProperties.setHideMenu(!isExpanded);
+            UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
+
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            result.put(JSONConstants.SUCCESS, false);
+            logger.error("Could not update menu state for userId " + user.getUserId(), e);
+        }
+
+        return result;
+    }
+
     @JSONWebService(value = "update-user-picture", method = "POST")
     public JSONObject updateUserPicture(File picture) {
         JSONObject result = new JSONObject();
@@ -71,7 +102,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
                 UserLocalServiceUtil.updatePortrait(user.getUserId(), Files.readAllBytes(picture.toPath()));
             }
 
-            result.put("imageUrl", UserConstants.getPortraitURL(PortalUtil.getPathImage(), user.isMale(),
+            result.put(JSONConstants.IMAGE_URL, UserConstants.getPortraitURL(PortalUtil.getPathImage(), user.isMale(),
                     user.getPortraitId(), user.getUserUuid()));
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

@@ -47,6 +47,10 @@ public class UserPropertiesServiceUtil {
 		return getService().updateReportFrequency(frequency);
 	}
 
+	public static org.json.JSONObject updateSideMenuState(boolean isExpanded) {
+		return getService().updateSideMenuState(isExpanded);
+	}
+
 	public static org.json.JSONObject updateThemeColor(java.lang.String color) {
 		return getService().updateThemeColor(color);
 	}
