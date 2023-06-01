@@ -14,6 +14,6 @@ create table About_EntVersionUser (
 
 create table About_UpdateInformation (
 	updateInfoId LONG not null primary key,
-	description VARCHAR(75) null,
+	description STRING null,
 	modifyDate DATE null
 );

@@ -87,7 +87,7 @@ public class EventModelImpl extends BaseModelImpl<Event> implements EventModel {
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Agenda_Event (eventId LONG not null primary key,companyId LONG,startDate DATE null,endDate DATE null,title VARCHAR(75) null,description VARCHAR(75) null,location VARCHAR(75) null,authorId LONG)";
+		"create table Agenda_Event (eventId LONG not null primary key,companyId LONG,startDate DATE null,endDate DATE null,title VARCHAR(75) null,description STRING null,location VARCHAR(75) null,authorId LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table Agenda_Event";
 

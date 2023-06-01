@@ -17,7 +17,9 @@
 	</model>
 	<model name="com.weprode.nero.about.model.UpdateInformation">
 		<field name="updateInfoId" type="long" />
-		<field name="description" type="String" />
+		<field name="description" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
 		<field name="modifyDate" type="Date" />
 	</model>
 </model-hints>
