@@ -40,10 +40,11 @@ public class GroupsLocalServiceUtil {
 	 */
 	public static List<com.liferay.portal.kernel.repository.model.FileEntry>
 			getFolderGroupFiles(
-				com.liferay.portal.kernel.model.User user, long folderId)
+				com.liferay.portal.kernel.model.User user, long folderId,
+				String[] mimeTypes)
 		throws PortalException, SystemException {
 
-		return getService().getFolderGroupFiles(user, folderId);
+		return getService().getFolderGroupFiles(user, folderId, mimeTypes);
 	}
 
 	public static List<com.liferay.portal.kernel.repository.model.Folder>

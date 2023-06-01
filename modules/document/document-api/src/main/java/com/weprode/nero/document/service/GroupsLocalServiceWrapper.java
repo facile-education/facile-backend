@@ -33,11 +33,13 @@ public class GroupsLocalServiceWrapper
 	@Override
 	public java.util.List<com.liferay.portal.kernel.repository.model.FileEntry>
 			getFolderGroupFiles(
-				com.liferay.portal.kernel.model.User user, long folderId)
+				com.liferay.portal.kernel.model.User user, long folderId,
+				String[] mimeTypes)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _groupsLocalService.getFolderGroupFiles(user, folderId);
+		return _groupsLocalService.getFolderGroupFiles(
+			user, folderId, mimeTypes);
 	}
 
 	@Override

@@ -119,11 +119,16 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 		return groupFoldersToReturn;
 	}
 
-	public List<FileEntry> getFolderGroupFiles (User user, long folderId) throws SystemException, PortalException {
+	public List<FileEntry> getFolderGroupFiles (User user, long folderId, String[] mimeTypes) throws SystemException, PortalException {
 		final Folder currFolder = DLAppServiceUtil.getFolder(folderId);
 
 		// Files
-		List<FileEntry> fileEntryList = new ArrayList<>(DLAppServiceUtil.getFileEntries(currFolder.getGroupId(), folderId));
+		List<FileEntry> fileEntryList;
+		if (mimeTypes.length > 0) {
+			fileEntryList = new ArrayList<>(DLAppServiceUtil.getFileEntries(currFolder.getGroupId(), folderId, mimeTypes));
+		} else {
+			fileEntryList = new ArrayList<>(DLAppServiceUtil.getFileEntries(currFolder.getGroupId(), folderId));
+		}
 		List<FileEntry> groupFilesToReturn = new ArrayList<>();
 
 		for (FileEntry file : fileEntryList) {

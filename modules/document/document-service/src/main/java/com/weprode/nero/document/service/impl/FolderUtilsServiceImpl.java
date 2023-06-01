@@ -151,6 +151,17 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "get-all-entities", method = "GET")
 	public JSONObject getAllEntities(long folderId, boolean withDetails) {
+		String[] mimeTypes = new String[0];
+		return this.getAllEntities(folderId, withDetails, mimeTypes);
+	}
+
+	@JSONWebService(value = "get-images-entities", method = "GET")
+	public JSONObject getImagesEntities(long folderId, boolean withDetails) {
+		String[] mimeTypes = DocumentConstants.IMAGE_MIME_TYPES;
+		return this.getAllEntities(folderId, withDetails, mimeTypes);
+	}
+
+	private JSONObject getAllEntities (long folderId, boolean withDetails, String[] mimeTypes) {
 		final JSONObject result = new JSONObject();
 
 		try {
@@ -163,7 +174,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			// Refresh file version to fix shared cache
 			DLFileVersionUtil.clearCache();
 
-			// Get root node if it's not specified in request
+			// Get root node
 			int space = DocumentUtil.getSpace(DLAppServiceUtil.getFolder(folderId), user.getUserId());
 
 			// SubFolders
@@ -177,9 +188,13 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			result.put(JSONConstants.SUB_FOLDERS, folderItems);
 
 			// Files
-			List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(user.getGroupId(), folderId);
+			List<FileEntry> fileList;
+			if (mimeTypes.length > 0) {
+				fileList = DLAppServiceUtil.getFileEntries(user.getGroupId(), folderId, mimeTypes);
+			} else {
+				fileList = DLAppServiceUtil.getFileEntries(user.getGroupId(), folderId);
+			}
 			for (FileEntry fileEntry : fileList) {
-
 				// If user is allowed do view the document (in group documents only)
 				if (!fileEntry.getTitle().startsWith(".")) {
 					JSONObject curr = DLAppJsonFactory.format(user.getUserId(), fileEntry, space, withDetails);

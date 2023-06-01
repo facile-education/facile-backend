@@ -84,13 +84,45 @@ public class GroupsServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getGroupImages(
+		HttpPrincipal httpPrincipal, String nodePath) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				GroupsServiceUtil.class, "getGroupImages",
+				_getGroupImagesParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, nodePath);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject getGroupBreadcrumb(
 		HttpPrincipal httpPrincipal, String nodePath) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				GroupsServiceUtil.class, "getGroupBreadcrumb",
-				_getGroupBreadcrumbParameterTypes1);
+				_getGroupBreadcrumbParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, nodePath);
@@ -122,7 +154,7 @@ public class GroupsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GroupsServiceUtil.class, "recordDownloadActivity",
-				_recordDownloadActivityParameterTypes2);
+				_recordDownloadActivityParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, fileEntryId, versionId);
@@ -154,7 +186,7 @@ public class GroupsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				GroupsServiceUtil.class, "recordViewActivity",
-				_recordViewActivityParameterTypes3);
+				_recordViewActivityParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, fileEntryId, versionId);
@@ -184,11 +216,13 @@ public class GroupsServiceHttp {
 
 	private static final Class<?>[] _getGroupEntitiesParameterTypes0 =
 		new Class[] {String.class};
-	private static final Class<?>[] _getGroupBreadcrumbParameterTypes1 =
+	private static final Class<?>[] _getGroupImagesParameterTypes1 =
 		new Class[] {String.class};
-	private static final Class<?>[] _recordDownloadActivityParameterTypes2 =
+	private static final Class<?>[] _getGroupBreadcrumbParameterTypes3 =
+		new Class[] {String.class};
+	private static final Class<?>[] _recordDownloadActivityParameterTypes4 =
 		new Class[] {long.class, long.class};
-	private static final Class<?>[] _recordViewActivityParameterTypes3 =
+	private static final Class<?>[] _recordViewActivityParameterTypes5 =
 		new Class[] {long.class, long.class};
 
 }

@@ -50,6 +50,7 @@ public class DocumentConstants {
     public static final List<String> OFFICE_SPREADSHEET_EXTENSIONS = Arrays.asList("csv","ods","sxc","tsv","xls","xlsx");
     public static final List<String> OFFICE_PRESENTATION_EXTENSIONS = Arrays.asList("odp","ppt","sxi","pptx");
     public static final List<String> IMAGE_EXTENSIONS = Arrays.asList("gif","jpeg","jpg","png");
+    public static final String[] IMAGE_MIME_TYPES = {"image/gif","image/jpeg","image/png"}; // Mime types corresponding to images supported extensions
     public static final List<String> AUDIO_EXTENSIONS = Arrays.asList("mp3","wav","wma","ogg","ogv");
     public static final List<String> VIDEO_EXTENSIONS = Arrays.asList("mp4","avi","m4v","mpg","mpeg","mov");
 

@@ -54,9 +54,13 @@ public interface GroupsService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getGroupBreadcrumb(String nodePath);
 
-	@JSONWebService(method = "GET")
+	@JSONWebService(method = "GET", value = "get-group-entities")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getGroupEntities(String nodePath);
+
+	@JSONWebService(method = "GET", value = "get-group-images")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getGroupImages(String nodePath);
 
 	/**
 	 * Returns the OSGi service identifier.

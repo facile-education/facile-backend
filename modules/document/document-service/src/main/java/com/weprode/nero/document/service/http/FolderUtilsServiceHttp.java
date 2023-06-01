@@ -220,6 +220,38 @@ public class FolderUtilsServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getImagesEntities(
+		HttpPrincipal httpPrincipal, long folderId, boolean withDetails) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				FolderUtilsServiceUtil.class, "getImagesEntities",
+				_getImagesEntitiesParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, folderId, withDetails);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		FolderUtilsServiceHttp.class);
 
@@ -234,6 +266,8 @@ public class FolderUtilsServiceHttp {
 	private static final Class<?>[] _downloadFolderParameterTypes3 =
 		new Class[] {long.class};
 	private static final Class<?>[] _getAllEntitiesParameterTypes4 =
+		new Class[] {long.class, boolean.class};
+	private static final Class<?>[] _getImagesEntitiesParameterTypes5 =
 		new Class[] {long.class, boolean.class};
 
 }

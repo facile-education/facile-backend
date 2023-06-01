@@ -57,8 +57,19 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 
 	private static final String COLLABORATIVE = "collaborative";
 
-	@JSONWebService(method = "GET")
+	@JSONWebService(value = "get-group-entities", method = "GET")
 	public JSONObject getGroupEntities(String nodePath) {
+		String[] mimeTypes = new String[0];
+		return this.getGroupEntities(nodePath, mimeTypes);
+	}
+
+	@JSONWebService(value = "get-group-images", method = "GET")
+	public JSONObject getGroupImages(String nodePath) {
+		String[] mimeTypes = DocumentConstants.IMAGE_MIME_TYPES;
+		return this.getGroupEntities(nodePath, mimeTypes);
+	}
+
+	private JSONObject getGroupEntities(String nodePath, String[] mimeTypes) {
 
 		JSONObject result = new JSONObject();
 		result.put(JSONConstants.SUCCESS, false);
@@ -77,7 +88,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 			} else {
 				// Specific group's folderId
 				List<Folder> folders = GroupsLocalServiceUtil.getFolderGroupFolders(user, parseLong(nodePath));
-				List<FileEntry> files = GroupsLocalServiceUtil.getFolderGroupFiles(user, parseLong(nodePath));
+				List<FileEntry> files = GroupsLocalServiceUtil.getFolderGroupFiles(user, parseLong(nodePath), mimeTypes);
 				folderArray = GroupsLocalServiceUtil.groupFoldersToJSON(user, folders, false);
 				fileArray = GroupsLocalServiceUtil.groupFilesToJSON(user, files, true);
 			}

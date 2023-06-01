@@ -40,6 +40,11 @@ public class GroupsServiceWrapper
 		return _groupsService.getGroupEntities(nodePath);
 	}
 
+	@Override
+	public org.json.JSONObject getGroupImages(String nodePath) {
+		return _groupsService.getGroupImages(nodePath);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
