@@ -161,8 +161,14 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
                 
                 // Loop over roleIds
                 JSONArray jsonRoleIds = jsonRule.getJSONArray(JSONConstants.ROLE_IDS);
-                JSONArray jsonOrgIds = jsonRule.getJSONArray(JSONConstants.ORG_IDS);
-                JSONArray jsonGroupIds = jsonRule.getJSONArray(JSONConstants.GROUP_IDS);
+                JSONArray jsonOrgIds = null;
+                if (jsonRule.has(JSONConstants.ORG_IDS)) {
+                    jsonOrgIds = jsonRule.getJSONArray(JSONConstants.ORG_IDS);
+                }
+                JSONArray jsonGroupIds = null;
+                if (jsonRule.has(JSONConstants.GROUP_IDS)) {
+                    jsonGroupIds = jsonRule.getJSONArray(JSONConstants.GROUP_IDS);
+                }
                 for (int roleIdx = 0 ; roleIdx < jsonRoleIds.length() ; roleIdx++) {
                     if (jsonOrgIds != null) {
                         for (int orgIdx = 0 ; orgIdx < jsonOrgIds.length() ; orgIdx++) {
