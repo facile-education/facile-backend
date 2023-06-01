@@ -81,7 +81,7 @@ public class UpdateInformationModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table About_UpdateInformation (updateInfoId LONG not null primary key,description VARCHAR(75) null,modifyDate DATE null)";
+		"create table About_UpdateInformation (updateInfoId LONG not null primary key,description STRING null,modifyDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table About_UpdateInformation";

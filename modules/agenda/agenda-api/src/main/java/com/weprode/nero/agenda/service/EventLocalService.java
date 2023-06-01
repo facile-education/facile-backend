@@ -97,6 +97,7 @@ public interface EventLocalService
 	@Transactional(enabled = false)
 	public Event createEvent(long eventId);
 
+	@Indexable(type = IndexableType.REINDEX)
 	public Event createEvent(
 			long authorId, String title, String description, String location,
 			Date startDate, Date endDate, JSONArray populations)
@@ -135,6 +136,7 @@ public interface EventLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public Event deleteEvent(long eventId) throws PortalException;
 
+	@Indexable(type = IndexableType.DELETE)
 	public Event deleteEventWithDependencies(long eventId)
 		throws NoSuchEventException, SystemException;
 
@@ -278,6 +280,7 @@ public interface EventLocalService
 			User user, int startIndex, int nbEvents, boolean unreadOnly)
 		throws SystemException;
 
+	@Indexable(type = IndexableType.REINDEX)
 	public Event modifyEvent(
 			long eventId, String title, String description, String location,
 			Date startDate, Date endDate, JSONArray populations)
