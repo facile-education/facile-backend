@@ -41,12 +41,13 @@ public class MatomoLocalServiceUtil {
 	public static org.json.JSONObject fetchStatistics(
 			com.liferay.portal.kernel.model.User user, String compareOn,
 			String period, java.util.Date startDate, java.util.Date endDate,
-			List<Long> profileIds, List<Long> schoolIds, List<Long> serviceIds)
+			List<Long> profileIds, List<Long> schoolIds, List<Long> serviceIds,
+			boolean actions)
 		throws java.io.IOException, PortalException, SystemException {
 
 		return getService().fetchStatistics(
 			user, compareOn, period, startDate, endDate, profileIds, schoolIds,
-			serviceIds);
+			serviceIds, actions);
 	}
 
 	/**

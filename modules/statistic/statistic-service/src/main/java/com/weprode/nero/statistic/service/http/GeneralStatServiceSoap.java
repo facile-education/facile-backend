@@ -55,12 +55,31 @@ public class GeneralStatServiceSoap {
 
 	public static org.json.JSONObject getSessionsCount(
 			java.util.Date startDate, java.util.Date endDate, long schoolId,
-			long serviceId, String comparator)
+			String comparator)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				GeneralStatServiceUtil.getSessionsCount(
+					startDate, endDate, schoolId, comparator);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getActionsCount(
+			java.util.Date startDate, java.util.Date endDate, long schoolId,
+			long serviceId, String comparator)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				GeneralStatServiceUtil.getActionsCount(
 					startDate, endDate, schoolId, serviceId, comparator);
 
 			return returnValue;

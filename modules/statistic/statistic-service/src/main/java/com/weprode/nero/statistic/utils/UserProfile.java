@@ -16,7 +16,7 @@ public enum UserProfile {
     ALL(0L, "Tous", 0),
     STUDENT(1L, "El\u00E8ve", RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()),
     TEACHER(2L, "Enseignant.te", RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId()),
-    PARENT(3L, "Responsable l\u00e9gal", RoleUtilsLocalServiceUtil.getParentRole().getRoleId()),
+    PARENT(3L, "Responsable l\u00e9gal.e", RoleUtilsLocalServiceUtil.getParentRole().getRoleId()),
     DIRECTOR(4L, "Personnel de direction", RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId()),
     SCHOOL_LIFE(5L, "Personnel de vie scolaire", RoleUtilsLocalServiceUtil.getSchoolLifeRole().getRoleId()),
     ADMINISTRATIVE(6L, "Personnel administratif", RoleUtilsLocalServiceUtil.getAdministrativeRole().getRoleId()),

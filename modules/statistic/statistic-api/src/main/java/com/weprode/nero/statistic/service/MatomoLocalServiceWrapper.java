@@ -35,14 +35,14 @@ public class MatomoLocalServiceWrapper
 			com.liferay.portal.kernel.model.User user, String compareOn,
 			String period, java.util.Date startDate, java.util.Date endDate,
 			java.util.List<Long> profileIds, java.util.List<Long> schoolIds,
-			java.util.List<Long> serviceIds)
+			java.util.List<Long> serviceIds, boolean actions)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException,
 			   java.io.IOException {
 
 		return _matomoLocalService.fetchStatistics(
 			user, compareOn, period, startDate, endDate, profileIds, schoolIds,
-			serviceIds);
+			serviceIds, actions);
 	}
 
 	/**

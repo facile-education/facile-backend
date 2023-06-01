@@ -35,7 +35,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(GeneralStatServiceImpl.class);
 
-    private static final String[] COLOR_POOL = {"#FF7F72", "#B9A1FF", "#6190E0", "#1F51A7"};
+    private static final String[] COLOR_POOL = {"#FF7F72", "#B9A1FF", "#6190E0", "#1F51A7", "#27ae60"};
 
     // For files types
     private static final String[] VIOLET_COLOR_POOL = {"#D7AAE6", "#F7DBFF", "#DEC7E5", "#F3CBFF",
@@ -47,7 +47,67 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             "#A1C2F9", "#45659B", "#597AB1", "#82A7E4", "#7699D3", "#85B7DE"};
 
     @JSONWebService(value = "get-sessions-count", method = "GET")
-    public JSONObject getSessionsCount(Date startDate, Date endDate, long schoolId, long serviceId, String comparator) {
+    public JSONObject getSessionsCount(Date startDate, Date endDate, long schoolId, String comparator) {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+        } catch (Exception e) {
+            logger.error(e);
+            result.put(JSONConstants.SUCCESS, false);
+            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
+            return result;
+        }
+
+        if (!checkUserPermissions(user, schoolId)) {
+            result.put(JSONConstants.SUCCESS, false);
+            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+            return result;
+        }
+
+        String period = MatomoConstants.PERIOD_DAY;
+
+        try {
+            List<Long> profileIds = UserProfile.getAllStatProfileIds();
+
+            List<Long> schoolIds = new ArrayList<>();
+            if (schoolId == 0) {
+                for (Organization school: OrgUtilsLocalServiceUtil.getAllSchools()) {
+                    schoolIds.add(school.getOrganizationId());
+                }
+            } else {
+                schoolIds.add(schoolId);
+            }
+
+            List<Long> serviceIds = new ArrayList<>();
+
+            JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, comparator, period, startDate, endDate,
+                    profileIds, schoolIds, serviceIds, false);
+
+            // Get colors from pool
+            JSONArray datasets = data.getJSONArray(JSONConstants.DATASETS);
+            for (int i = 0 ; i < datasets.length() ; ++i) {
+                JSONObject dataset = datasets.getJSONObject(i);
+                dataset.put(JSONConstants.POINT_BORDER_COLOR, "white");
+                dataset.put(JSONConstants.POINT_BACKGROUND_COLOR, COLOR_POOL[i]);
+                dataset.put(JSONConstants.BORDER_COLOR, COLOR_POOL[i]);
+                dataset.put(JSONConstants.BACKGROUND_COLOR, COLOR_POOL[i] + "75");
+            }
+
+            result.put(JSONConstants.DATASETS, datasets);
+            result.put(JSONConstants.LABELS, data.getJSONArray(JSONConstants.LABELS));
+            result.put(JSONConstants.SUCCESS, true);
+        } catch(Exception e) {
+            result.put(JSONConstants.SUCCESS, false);
+            logger.error("Could not fetch sessions statistics.", e);
+        }
+
+        return result;
+    }
+
+    @JSONWebService(value = "get-actions-count", method = "GET")
+    public JSONObject getActionsCount(Date startDate, Date endDate, long schoolId, long serviceId, String comparator) {
         JSONObject result = new JSONObject();
 
         User user;
@@ -86,7 +146,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             }
 
             JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, comparator, period, startDate, endDate,
-                    profileIds, schoolIds, serviceIds);
+                    profileIds, schoolIds, serviceIds, true);
 
             // Get colors from pool
             JSONArray datasets = data.getJSONArray(JSONConstants.DATASETS);
@@ -341,7 +401,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
             logger.info("Fetch dashboard statistics from " + startDate + " to " + endDate);
             JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, "", MatomoConstants.PERIOD_DAY, startDate, endDate,
-                    profileIds, schoolIds, serviceIds);
+                    profileIds, schoolIds, serviceIds, false);
 
             logger.info("matomo data=" + data);
             JSONArray datasets = data.getJSONArray(JSONConstants.DATASETS);
@@ -359,7 +419,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             cal.add(Calendar.DATE, -7);
             Date previousWeekStartDate = cal.getTime();
             JSONObject previousWeekData = MatomoLocalServiceUtil.fetchStatistics(user, "", MatomoConstants.PERIOD_DAY, previousWeekStartDate, previousWeekEndDate,
-                    profileIds, schoolIds, serviceIds);
+                    profileIds, schoolIds, serviceIds, false);
 
             JSONArray previousDayData = previousWeekData.getJSONArray(JSONConstants.DATASETS).getJSONObject(0).getJSONArray(JSONConstants.DATA);
             int previousNbConnexions = 0;
