@@ -199,7 +199,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
     }
 
     @JSONWebService(value = "get-dashboard-activity", method = "GET")
-    public JSONObject getDashboardActivity(long groupId, String maxDate, int nbResults, boolean withNews, boolean withDocs, boolean withSchoollife, boolean withSessions) {
+    public JSONObject getDashboardActivity(long groupId, String maxDate, int nbResults, boolean withNews, boolean withDocs, boolean withMemberships, boolean withSchoollife, boolean withSessions) {
         JSONObject result = new JSONObject();
 
         result.put(JSONConstants.SUCCESS, false);
@@ -227,7 +227,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             }
             Date maximumDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(maxDate);
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDashboardGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults,
-                    withNews, withDocs, true, withSchoollife, withSessions);
+                    withNews, withDocs, withMemberships, withSchoollife, withSessions);
             for (GroupActivity groupActivity : groupActivities) {
                 if (lastDashboardAccessDate == null || groupActivity.getActivityDate().after(lastDashboardAccessDate)) {
                     nbNewActivities++;

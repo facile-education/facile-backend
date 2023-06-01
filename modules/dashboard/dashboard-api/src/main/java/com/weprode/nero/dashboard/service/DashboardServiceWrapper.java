@@ -33,11 +33,12 @@ public class DashboardServiceWrapper
 	@Override
 	public org.json.JSONObject getDashboardActivity(
 		long groupId, String maxDate, int nbResults, boolean withNews,
-		boolean withDocs, boolean withSchoollife, boolean withSessions) {
+		boolean withDocs, boolean withMemberships, boolean withSchoollife,
+		boolean withSessions) {
 
 		return _dashboardService.getDashboardActivity(
-			groupId, maxDate, nbResults, withNews, withDocs, withSchoollife,
-			withSessions);
+			groupId, maxDate, nbResults, withNews, withDocs, withMemberships,
+			withSchoollife, withSessions);
 	}
 
 	/**

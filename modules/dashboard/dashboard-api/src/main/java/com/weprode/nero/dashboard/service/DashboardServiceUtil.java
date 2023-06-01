@@ -35,11 +35,12 @@ public class DashboardServiceUtil {
 	 */
 	public static org.json.JSONObject getDashboardActivity(
 		long groupId, java.lang.String maxDate, int nbResults, boolean withNews,
-		boolean withDocs, boolean withSchoollife, boolean withSessions) {
+		boolean withDocs, boolean withMemberships, boolean withSchoollife,
+		boolean withSessions) {
 
 		return getService().getDashboardActivity(
-			groupId, maxDate, nbResults, withNews, withDocs, withSchoollife,
-			withSessions);
+			groupId, maxDate, nbResults, withNews, withDocs, withMemberships,
+			withSchoollife, withSessions);
 	}
 
 	/**
