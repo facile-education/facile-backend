@@ -119,7 +119,7 @@ public class DashboardServiceHttp {
 	public static org.json.JSONObject getDashboardActivity(
 		HttpPrincipal httpPrincipal, long groupId, String maxDate,
 		int nbResults, boolean withNews, boolean withDocs,
-		boolean withSchoollife, boolean withSessions) {
+		boolean withMemberships, boolean withSchoollife, boolean withSessions) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -128,7 +128,7 @@ public class DashboardServiceHttp {
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, groupId, maxDate, nbResults, withNews, withDocs,
-				withSchoollife, withSessions);
+				withMemberships, withSchoollife, withSessions);
 
 			Object returnObj = null;
 
@@ -160,7 +160,7 @@ public class DashboardServiceHttp {
 	private static final Class<?>[] _getDashboardActivityParameterTypes2 =
 		new Class[] {
 			long.class, String.class, int.class, boolean.class, boolean.class,
-			boolean.class, boolean.class
+			boolean.class, boolean.class, boolean.class
 		};
 
 }
