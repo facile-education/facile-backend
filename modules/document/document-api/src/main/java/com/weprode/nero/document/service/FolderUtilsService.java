@@ -65,6 +65,10 @@ public interface FolderUtilsService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getBreadcrumb(long folderId);
 
+	@JSONWebService(method = "GET", value = "get-images-entities")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getImagesEntities(long folderId, boolean withDetails);
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

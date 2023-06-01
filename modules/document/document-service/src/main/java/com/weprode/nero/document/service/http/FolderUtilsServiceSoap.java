@@ -136,6 +136,23 @@ public class FolderUtilsServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject getImagesEntities(
+			long folderId, boolean withDetails)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				FolderUtilsServiceUtil.getImagesEntities(folderId, withDetails);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		FolderUtilsServiceSoap.class);
 

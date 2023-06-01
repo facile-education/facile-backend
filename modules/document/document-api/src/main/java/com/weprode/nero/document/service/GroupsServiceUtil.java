@@ -45,6 +45,12 @@ public class GroupsServiceUtil {
 		return getService().getGroupEntities(nodePath);
 	}
 
+	public static org.json.JSONObject getGroupImages(
+		java.lang.String nodePath) {
+
+		return getService().getGroupImages(nodePath);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

@@ -56,6 +56,12 @@ public class FolderUtilsServiceUtil {
 		return getService().getBreadcrumb(folderId);
 	}
 
+	public static org.json.JSONObject getImagesEntities(
+		long folderId, boolean withDetails) {
+
+		return getService().getImagesEntities(folderId, withDetails);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

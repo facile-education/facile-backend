@@ -69,6 +69,22 @@ public class GroupsServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject getGroupImages(String nodePath)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue = GroupsServiceUtil.getGroupImages(
+				nodePath);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	public static org.json.JSONObject getGroupBreadcrumb(String nodePath)
 		throws RemoteException {
 

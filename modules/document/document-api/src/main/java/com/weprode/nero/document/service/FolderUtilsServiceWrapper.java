@@ -55,6 +55,13 @@ public class FolderUtilsServiceWrapper
 		return _folderUtilsService.getBreadcrumb(folderId);
 	}
 
+	@Override
+	public org.json.JSONObject getImagesEntities(
+		long folderId, boolean withDetails) {
+
+		return _folderUtilsService.getImagesEntities(folderId, withDetails);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
