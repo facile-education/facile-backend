@@ -28,6 +28,11 @@ public class DocumentUtil {
         return isSubEntityOf(file, sendingBoxFolder);
     }
 
+    public static boolean belongToTmpFolder(FileEntry file, long userId) throws SystemException, PortalException {
+        Folder tmpFolder = FolderUtilsLocalServiceUtil.getTmpFolder(userId);
+        return isSubEntityOf(file, tmpFolder);
+    }
+
 //    // recursive search if parent folder is trash root folder
 //    public static boolean belongToTrash(Folder folder, long userId) throws SystemException, PortalException {
 //        Folder trashFolder = FoldersUtil.getTrash(userId);

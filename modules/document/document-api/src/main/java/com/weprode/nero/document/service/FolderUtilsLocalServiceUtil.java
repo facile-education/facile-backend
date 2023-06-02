@@ -148,6 +148,13 @@ public class FolderUtilsLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
+			getThumbnailFolder(long userId)
+		throws PortalException, SystemException {
+
+		return getService().getThumbnailFolder(userId);
+	}
+
+	public static com.liferay.portal.kernel.repository.model.Folder
 			getTmpFolder(long userId)
 		throws PortalException, SystemException {
 

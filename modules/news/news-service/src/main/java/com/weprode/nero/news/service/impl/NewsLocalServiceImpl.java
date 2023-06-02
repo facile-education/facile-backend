@@ -29,12 +29,13 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
+import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
-import com.weprode.nero.news.exception.NoSuchNewsException;
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.model.NewsPopulation;
 import com.weprode.nero.news.service.NewsAttachedFileLocalServiceUtil;
@@ -82,7 +83,6 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             news.setContent(content);
             news.setIsSchoolNews(isSchoolNews);
             news.setIsImportant(isImportant);
-            news.setImageId(imageId);
             news.setPublicationDate(publicationDate);
             news.setExpirationDate(expirationDate);
             news.setModificationDate(new Date());
@@ -93,6 +93,9 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 JSONObject population = populations.getJSONObject(idx);
                 NewsPopulationLocalServiceUtil.addPopulation(news.getNewsId(), population.getLong(JSONConstants.GROUP_ID), population.getLong(JSONConstants.ROLE_ID));
             }
+
+            // Thumbnail
+            createNewsThumbnail(authorId, news, imageId);
 
             // Attached files
             manageAttachedFiles(news.getNewsId(), populations, attachFileIds, true);
@@ -118,7 +121,6 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             news.setTitle(title);
             news.setContent(content);
             news.setIsImportant(isImportant);
-            news.setImageId(imageId);
             news.setPublicationDate(publicationDate);
             news.setExpirationDate(expirationDate);
             news.setModificationDate(new Date());
@@ -131,6 +133,9 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 NewsPopulationLocalServiceUtil.addPopulation(news.getNewsId(), population.getLong(JSONConstants.GROUP_ID), population.getLong(JSONConstants.ROLE_ID));
             }
 
+            // Thumbnail
+            updateNewsThumbnail(news.getAuthorId(), news, imageId);
+
             manageAttachedFiles(news.getNewsId(), populations, attachFileIds, false);
 
             return news;
@@ -139,6 +144,27 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
 
         return null;
+    }
+
+
+    @Indexable(type = IndexableType.DELETE)
+    public News deleteNewsAndDependencies(News news) throws SystemException {
+        // Delete attached files before populations because we need populations here
+        NewsAttachedFileLocalServiceUtil.deleteByNewsId(news.getNewsId());
+
+        try {
+            deleteNewsThumbnail(news);
+        } catch (Exception e) {
+            logger.error("Cannot remove properly news thumbnail for newsId " + news.getNewsId(), e);
+        }
+
+        // Delete populations
+        NewsPopulationLocalServiceUtil.deleteByNewsId(news.getNewsId());
+
+        // Delete news read
+        NewsReadLocalServiceUtil.deleteByNewsId(news.getNewsId());
+
+        return newsPersistence.remove(news);
     }
 
     public List<News> getNews(User user, long groupId, Date maxDate, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) throws SystemException {
@@ -545,6 +571,61 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         return jsonNews;
     }
 
+    private void createNewsThumbnail(long userId, News news, long fileId) {
+        try {
+            // Get original file
+            FileEntry originalPicture = DLAppServiceUtil.getFileEntry(fileId);
+
+            // Get or create news thumbnail folder
+            Folder thumbnailFolder = FolderUtilsLocalServiceUtil.getThumbnailFolder(userId);
+
+            // Copy (or move if original file belong to user tempFolder) file to thumbnail folder
+            FileEntry thumbnail;
+            if (DocumentUtilsLocalServiceUtil.belongToTmpFolder(originalPicture, userId)) {
+                thumbnail = DLAppServiceUtil.moveFileEntry(
+                        fileId,
+                        thumbnailFolder.getFolderId(),
+                        new ServiceContext()
+                );
+            } else {
+                thumbnail = FileUtilsLocalServiceUtil.copyFileEntry(
+                        userId,
+                        originalPicture.getFileEntryId(),
+                        thumbnailFolder.getFolderId(),
+                        true
+                );
+            }
+            PermissionUtilsLocalServiceUtil.setParentPermissionToFile(thumbnail); // Thumbnail inherit of thumbnail's folder permissions
+
+            // Set news imageId to the new file Id
+            news.setImageId(thumbnail.getFileEntryId());
+            newsPersistence.updateImpl(news);
+
+        } catch (Exception e) {
+            logger.error("Cannot set thumbnail file correctly for newsId " + news.getNewsId(), e);
+        }
+    }
+
+    private void deleteNewsThumbnail(News news) throws PortalException {
+        // Get thumbnail file
+        DLAppServiceUtil.deleteFileEntry(news.getImageId()); // TODO: check permissions?
+
+        // Set news imageId to 0
+        news.setImageId(0);
+        newsPersistence.updateImpl(news);
+    }
+
+    private void updateNewsThumbnail(long userId, News news, long fileId) {
+        if (fileId != news.getImageId()) {  // Update image only if the provided id is different from the current
+            try {
+                deleteNewsThumbnail(news);
+                createNewsThumbnail(userId, news, fileId);
+            } catch (Exception e) {
+                logger.error("Cannot update thumbnail for newsId " + news.getNewsId(), e);
+            }
+        }
+    }
+
 
     private void manageAttachedFiles(long newsId, JSONArray populations, List<Long> attachFileIds, boolean isCreation) throws SystemException {
 
@@ -612,7 +693,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 }
                 // Set permissions to all agents
                 for (long agentRoleId : agentRoleIds) {
-                    ResourcePermissionLocalServiceUtil.setResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+newsIdFolder.getFolderId(), agentRoleId, new String[]{ActionKeys.VIEW, ActionKeys.ADD_DOCUMENT, ActionKeys.UPDATE, ActionKeys.DELETE});
+                    ResourcePermissionLocalServiceUtil.setResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, "" + newsIdFolder.getFolderId(), agentRoleId, new String[]{ActionKeys.VIEW, ActionKeys.ADD_DOCUMENT, ActionKeys.UPDATE, ActionKeys.DELETE});
                 }
 
                 // Add attached files
@@ -639,19 +720,5 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             }
         }
 
-    }
-
-    @Indexable(type = IndexableType.DELETE)
-    public News deleteNewsAndDependencies(long newsId) throws SystemException, NoSuchNewsException {
-        // Delete attached files before populations because we need populations here
-        NewsAttachedFileLocalServiceUtil.deleteByNewsId(newsId);
-
-        // Delete populations
-        NewsPopulationLocalServiceUtil.deleteByNewsId(newsId);
-
-        // Delete news read
-        NewsReadLocalServiceUtil.deleteByNewsId(newsId);
-
-        return newsPersistence.remove(newsId);
     }
 }

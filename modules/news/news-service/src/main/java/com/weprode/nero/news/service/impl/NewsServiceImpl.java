@@ -290,7 +290,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             News news = NewsLocalServiceUtil.getNews(newsId);
             if (user.getUserId() == news.getAuthorId()) {
                 logger.info("User " + user.getFullName() + " deletes news " + newsId);
-                NewsLocalServiceUtil.deleteNewsAndDependencies(newsId);
+                NewsLocalServiceUtil.deleteNewsAndDependencies(news);
                 result.put(JSONConstants.SUCCESS, true);
             }
 

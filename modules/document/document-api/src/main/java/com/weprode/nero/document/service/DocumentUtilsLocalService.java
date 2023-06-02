@@ -17,6 +17,7 @@ package com.weprode.nero.document.service;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
@@ -46,6 +47,8 @@ public interface DocumentUtilsLocalService extends BaseLocalService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.DocumentUtilsLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the document utils local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link DocumentUtilsLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	public boolean belongToTmpFolder(FileEntry fileEntry, long userId)
+		throws PortalException;
 
 	/**
 	 * Returns the OSGi service identifier.

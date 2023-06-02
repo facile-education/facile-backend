@@ -133,26 +133,51 @@ public class PermissionUtilsLocalServiceImpl
 	}
 
 	/** Set the VIEW permission to a FileEntry or a Folder for ALL users */
-	public void setViewPermissionForRessources(Object ressource) throws PortalException, SystemException {
+	public void setViewPermissionOnResource(Object resource) throws PortalException, SystemException {
 
 		int scope = ResourceConstants.SCOPE_INDIVIDUAL;
 		String[] actionsId = {ActionKeys.VIEW};
 
 		// Use the 'USER' role to match all users
-		if (ressource instanceof FileEntry) {
+		if (resource instanceof FileEntry) {
 			String name = DLFileEntry.class.getName();
-			FileEntry file = (FileEntry) ressource;
+			FileEntry file = (FileEntry) resource;
 			long roleId = RoleLocalServiceUtil.getRole(file.getCompanyId(), RoleConstants.USER).getRoleId();
 			ResourcePermissionLocalServiceUtil.setResourcePermissions(file.getCompanyId(), name, scope, String.valueOf(file.getPrimaryKey()),roleId, actionsId );
 		}
-		else if (ressource instanceof Folder) {
+		else if (resource instanceof Folder) {
 			String name = DLFolder.class.getName();
-			Folder folder = (Folder) ressource;
+			Folder folder = (Folder) resource;
 			long roleId = RoleLocalServiceUtil.getRole(folder.getCompanyId(), RoleConstants.USER).getRoleId();
 			ResourcePermissionLocalServiceUtil.setResourcePermissions(folder.getCompanyId(), name, scope, String.valueOf(folder.getPrimaryKey()),roleId, actionsId );
 		}
 		else {
-			throw new IllegalArgumentException("Ressources must be an FileEntry or a Folder object");
+			throw new IllegalArgumentException("Resource must be an FileEntry or a Folder object");
+		}
+	}
+
+	public void setUpdatePermissionForRolesOnResource(Object resource, List<Role> roleList) throws PortalException, SystemException {
+
+		int scope = ResourceConstants.SCOPE_INDIVIDUAL;
+		String[] actionsIds = {ActionKeys.VIEW, ActionKeys.UPDATE, ActionKeys.DELETE, ActionKeys.ADD_DOCUMENT};
+		Map<Long, String[]> roleIdActionIds = new HashMap<>();
+		for (Role role : roleList) {
+			roleIdActionIds.put(role.getRoleId(), actionsIds);
+		}
+
+		// Use the 'USER' role to match all users
+		if (resource instanceof FileEntry) {
+			String name = DLFileEntry.class.getName();
+			FileEntry file = (FileEntry) resource;
+			ResourcePermissionLocalServiceUtil.setResourcePermissions(file.getCompanyId(), name, scope, String.valueOf(file.getPrimaryKey()), roleIdActionIds );
+		}
+		else if (resource instanceof Folder) {
+			String name = DLFolder.class.getName();
+			Folder folder = (Folder) resource;
+			ResourcePermissionLocalServiceUtil.setResourcePermissions(folder.getCompanyId(), name, scope, String.valueOf(folder.getPrimaryKey()), roleIdActionIds );
+		}
+		else {
+			throw new IllegalArgumentException("Resource must be an FileEntry or a Folder object");
 		}
 	}
 
