@@ -141,6 +141,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             qPos.add(sdf.format(maxDate));
             qPos.add(sdf.format(new Date()));
             qPos.add(userId);
+            qPos.add(groupIds.size() == 1);
             qPos.add(nbNews);
 
             return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
