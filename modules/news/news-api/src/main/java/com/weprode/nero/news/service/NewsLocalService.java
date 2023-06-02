@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
-import com.weprode.nero.news.exception.NoSuchNewsException;
 import com.weprode.nero.news.model.News;
 
 import java.io.Serializable;
@@ -68,6 +67,7 @@ public interface NewsLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.news.service.impl.NewsLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the news local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link NewsLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public News addNews(
 		long authorId, String title, String content, boolean isSchoolNews,
 		boolean isImportant, long imageId, Date publicationDate,
@@ -133,8 +133,7 @@ public interface NewsLocalService
 	public News deleteNews(News news);
 
 	@Indexable(type = IndexableType.DELETE)
-	public News deleteNewsAndDependencies(long newsId)
-		throws NoSuchNewsException, SystemException;
+	public News deleteNewsAndDependencies(News news) throws SystemException;
 
 	/**
 	 * @throws PortalException

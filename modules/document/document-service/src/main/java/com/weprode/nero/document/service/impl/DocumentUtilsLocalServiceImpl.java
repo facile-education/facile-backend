@@ -16,11 +16,14 @@ package com.weprode.nero.document.service.impl;
 
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.document.service.base.DocumentUtilsLocalServiceBaseImpl;
 
+import com.weprode.nero.document.utils.DocumentUtil;
 import com.weprode.nero.document.utils.ENTWebDAVUtil;
 import org.osgi.service.component.annotations.Component;
 
@@ -47,5 +50,10 @@ public class DocumentUtilsLocalServiceImpl
 
 	public String getWebDavUrl (User user) {
 		return ENTWebDAVUtil.getWebDavUrl(user);
+	}
+
+	// Only here to export to others modules (like News module for example)
+	public boolean belongToTmpFolder (FileEntry fileEntry, long userId) throws PortalException {
+		return DocumentUtil.belongToTmpFolder(fileEntry, userId);
 	}
 }

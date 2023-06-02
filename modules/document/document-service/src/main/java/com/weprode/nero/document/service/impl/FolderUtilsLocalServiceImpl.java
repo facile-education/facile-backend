@@ -30,8 +30,10 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -53,6 +55,8 @@ import com.weprode.nero.document.utils.DLAppUtil;
 import com.weprode.nero.document.utils.FileNameUtil;
 import com.weprode.nero.document.utils.ZipUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
+import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
@@ -105,7 +109,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					"Boite d envoi tmp",
 					new ServiceContext());
 			hideDLFolder(folder.getFolderId());
-			PermissionUtilsLocalServiceUtil.setViewPermissionForRessources(folder);
+			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(folder);
 		}
 
 		return folder;
@@ -120,7 +124,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		} catch (NoSuchFolderException e) {
 			folder = DLAppServiceUtil.addFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.IM_BOX_FOLDER_NAME, "PJs de messagerie", new ServiceContext());
 			hideDLFolder(folder.getFolderId());
-			PermissionUtilsLocalServiceUtil.setViewPermissionForRessources(folder);
+			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(folder);
 		}
 
 		return folder;
@@ -162,6 +166,52 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		}
 
 		return folder;
+	}
+
+	public Folder getThumbnailFolder(long userId) throws PortalException, SystemException {
+		final User user = UserLocalServiceUtil.getUser(userId);
+		Organization rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(user.getCompanyId());
+
+		Folder tumbnailFolder;
+		try {
+			tumbnailFolder = DLAppServiceUtil.getFolder(rootOrg.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.TMP_FILE_FOLDER_NAME);
+		} catch (NoSuchFolderException e) {
+			tumbnailFolder = DLAppServiceUtil.addFolder(
+					rootOrg.getGroupId(),
+					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+					DocumentConstants.THUMBNAILS_FOLDER_NAME,
+					"Dossier global contenant des thumbnails visibles par tous",
+					new ServiceContext());
+			hideDLFolder(tumbnailFolder.getFolderId());
+
+			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(tumbnailFolder);
+
+			List<Role> updateThumbnailsRoles = new ArrayList<>();	// Same that can create a news
+			// Direction members
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getDirectionRole());
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.NATIONAL_23));
+			// TODO: isUserDelegate?
+			// Secretariat
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getSecretariatRole());
+			// Personals
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.NATIONAL_4));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.DOYEN));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CONSEILLER_ORIENTATION));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CONSEILLER_SOCIAL));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.INFIRMIERE));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.PSYCHOLOGUE));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.ASSISTANT_TECHNIQUE));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CAISSIER_COMPTABLE));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.BIBLIOTHECAIRE));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.SECRETAIRE));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.NATIONAL_6));
+			// Teachers
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getTeacherRole());
+			PermissionUtilsLocalServiceUtil.setUpdatePermissionForRolesOnResource(tumbnailFolder, updateThumbnailsRoles);
+
+		}
+
+		return tumbnailFolder;
 	}
 
 	// TODO CDT

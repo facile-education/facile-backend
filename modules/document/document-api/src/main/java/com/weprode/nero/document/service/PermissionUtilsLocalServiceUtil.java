@@ -112,13 +112,21 @@ public class PermissionUtilsLocalServiceUtil {
 		getService().setParentPermissionToFolder(folder);
 	}
 
+	public static void setUpdatePermissionForRolesOnResource(
+			Object resource,
+			List<com.liferay.portal.kernel.model.Role> roleList)
+		throws PortalException, SystemException {
+
+		getService().setUpdatePermissionForRolesOnResource(resource, roleList);
+	}
+
 	/**
 	 * Set the VIEW permission to a FileEntry or a Folder for ALL users
 	 */
-	public static void setViewPermissionForRessources(Object ressource)
+	public static void setViewPermissionOnResource(Object resource)
 		throws PortalException, SystemException {
 
-		getService().setViewPermissionForRessources(ressource);
+		getService().setViewPermissionOnResource(resource);
 	}
 
 	public static void validateFullPermission(

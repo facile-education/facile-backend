@@ -33,6 +33,15 @@ public class DocumentUtilsLocalServiceWrapper
 		_documentUtilsLocalService = documentUtilsLocalService;
 	}
 
+	@Override
+	public boolean belongToTmpFolder(
+			com.liferay.portal.kernel.repository.model.FileEntry fileEntry,
+			long userId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _documentUtilsLocalService.belongToTmpFolder(fileEntry, userId);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

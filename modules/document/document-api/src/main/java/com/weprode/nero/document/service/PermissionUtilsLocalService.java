@@ -93,10 +93,14 @@ public interface PermissionUtilsLocalService extends BaseLocalService {
 	public void setParentPermissionToFolder(Folder folder)
 		throws PortalException, SystemException;
 
+	public void setUpdatePermissionForRolesOnResource(
+			Object resource, java.util.List<Role> roleList)
+		throws PortalException, SystemException;
+
 	/**
 	 * Set the VIEW permission to a FileEntry or a Folder for ALL users
 	 */
-	public void setViewPermissionForRessources(Object ressource)
+	public void setViewPermissionOnResource(Object resource)
 		throws PortalException, SystemException;
 
 	public void validateFullPermission(

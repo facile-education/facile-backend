@@ -14,6 +14,8 @@
 
 package com.weprode.nero.document.service;
 
+import com.liferay.portal.kernel.exception.PortalException;
+
 /**
  * Provides the local service utility for DocumentUtils. This utility wraps
  * <code>com.weprode.nero.document.service.impl.DocumentUtilsLocalServiceImpl</code> and
@@ -33,23 +35,30 @@ public class DocumentUtilsLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.DocumentUtilsLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static boolean belongToTmpFolder(
+			com.liferay.portal.kernel.repository.model.FileEntry fileEntry,
+			long userId)
+		throws PortalException {
+
+		return getService().belongToTmpFolder(fileEntry, userId);
+	}
 
 	/**
 	 * Returns the OSGi service identifier.
 	 *
 	 * @return the OSGi service identifier
 	 */
-	public static java.lang.String getOSGiServiceIdentifier() {
+	public static String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static java.lang.String getWebDavUrl(
+	public static String getWebDavUrl(
 		com.liferay.portal.kernel.model.User user) {
 
 		return getService().getWebDavUrl(user);
 	}
 
-	public static boolean isEmbedUrlWhitelisted(java.lang.String url) {
+	public static boolean isEmbedUrlWhitelisted(String url) {
 		return getService().isEmbedUrlWhitelisted(url);
 	}
 

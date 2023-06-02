@@ -127,11 +127,10 @@ public class NewsLocalServiceUtil {
 		return getService().deleteNews(news);
 	}
 
-	public static News deleteNewsAndDependencies(long newsId)
-		throws com.weprode.nero.news.exception.NoSuchNewsException,
-			   SystemException {
+	public static News deleteNewsAndDependencies(News news)
+		throws SystemException {
 
-		return getService().deleteNewsAndDependencies(newsId);
+		return getService().deleteNewsAndDependencies(news);
 	}
 
 	/**

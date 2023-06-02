@@ -126,15 +126,26 @@ public class PermissionUtilsLocalServiceWrapper
 		_permissionUtilsLocalService.setParentPermissionToFolder(folder);
 	}
 
+	@Override
+	public void setUpdatePermissionForRolesOnResource(
+			Object resource,
+			java.util.List<com.liferay.portal.kernel.model.Role> roleList)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		_permissionUtilsLocalService.setUpdatePermissionForRolesOnResource(
+			resource, roleList);
+	}
+
 	/**
 	 * Set the VIEW permission to a FileEntry or a Folder for ALL users
 	 */
 	@Override
-	public void setViewPermissionForRessources(Object ressource)
+	public void setViewPermissionOnResource(Object resource)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		_permissionUtilsLocalService.setViewPermissionForRessources(ressource);
+		_permissionUtilsLocalService.setViewPermissionOnResource(resource);
 	}
 
 	@Override

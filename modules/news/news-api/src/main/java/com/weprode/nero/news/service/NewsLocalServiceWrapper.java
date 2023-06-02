@@ -127,11 +127,10 @@ public class NewsLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.news.model.News deleteNewsAndDependencies(
-			long newsId)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			   com.weprode.nero.news.exception.NoSuchNewsException {
+			com.weprode.nero.news.model.News news)
+		throws com.liferay.portal.kernel.exception.SystemException {
 
-		return _newsLocalService.deleteNewsAndDependencies(newsId);
+		return _newsLocalService.deleteNewsAndDependencies(news);
 	}
 
 	/**

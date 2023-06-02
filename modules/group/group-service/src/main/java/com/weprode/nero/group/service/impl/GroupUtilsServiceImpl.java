@@ -172,7 +172,6 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             }
 
             for (Group group : communities) {
-                System.out.println("group.getGroupId() = " + group.getGroupId());
                 if (filter.equals("") || containsIgnoreCase(group.getName(), filter)) {
                     JSONObject jsonGroup = new JSONObject();
                     CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(group.getGroupId());

@@ -169,6 +169,15 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.repository.model.Folder getThumbnailFolder(
+			long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _folderUtilsLocalService.getThumbnailFolder(userId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getTmpFolder(
 			long userId)
 		throws com.liferay.portal.kernel.exception.PortalException,
