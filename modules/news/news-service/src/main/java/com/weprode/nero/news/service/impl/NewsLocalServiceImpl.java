@@ -507,8 +507,13 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
         // Thumbnail
         if (news.getImageId() != 0) {
-            FileEntry thumbnailFileEntry = DLAppServiceUtil.getFileEntry(news.getImageId());
-            jsonNews.put(JSONConstants.THUMBNAIL_URL, FileUtilsLocalServiceUtil.getDisplayUrl(thumbnailFileEntry, 0, "", user.getUserId(), true));
+            try {
+                FileEntry thumbnailFileEntry = DLAppServiceUtil.getFileEntry(news.getImageId());
+                jsonNews.put(JSONConstants.THUMBNAIL_URL, FileUtilsLocalServiceUtil.getDisplayUrl(thumbnailFileEntry, 0, "", user.getUserId(), true));
+            } catch (Exception e) {
+                logger.error("Cannot retrieve thumbnail for news " + news.getNewsId() + ", thumbnail fileId = " + news.getImageId(), e);
+            }
+
         } else {
             if (news.getIsSchoolNews()) {
                 jsonNews.put(JSONConstants.THUMBNAIL_URL, JSONConstants.SCHOOL_NEWS_DEFAULT_THUMBNAIL);
@@ -529,6 +534,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
 
         if (withDetails) {
+            jsonNews.put(JSONConstants.THUMBNAIL_ID, news.getImageId());
             jsonNews.put(JSONConstants.ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.convertNewsFiles(newsId, userId));
             if (news.getAuthorId() == userId) {
                 jsonNews.put(JSONConstants.POPULATIONS, NewsPopulationLocalServiceUtil.convertNewsPopulations(newsId, userId));
