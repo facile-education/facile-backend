@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.constants.PermissionConstants;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 
@@ -26,8 +27,12 @@ public class UploadUtil {
 
     private static final Log logger = LogFactoryUtil.getLog(UploadUtil.class);
 
-    // Add new file from workspace
     public static JSONObject uploadFile(User user, long folderId, String fileName, File file, int mode) {
+        return uploadFile(user, folderId, fileName, file, mode, false);
+    }
+
+    // Add new file from workspace
+    public static JSONObject uploadFile(User user, long folderId, String fileName, File file, int mode, boolean withDisplayUrl) {
         JSONObject result = new JSONObject();
         
         result.put(JSONConstants.SUCCESS, false);
@@ -56,12 +61,22 @@ public class UploadUtil {
                 }
 
                 FileEntry uploadedFile = DLAppServiceUtil.getFileEntry(createdPath.get(createdPath.size() - 1));
-                result.put(JSONConstants.UPLOADED_FILE, DLAppJsonFactory.format(user.getUserId(), uploadedFile, space));
                 if (createdPath.size() > 1) {
                     Folder firstCreatedFolder = DLAppServiceUtil.getFolder(createdPath.get(0));
                     result.put(JSONConstants.FIRST_CREATED_FOLDER, DLAppJsonFactory.format(user.getUserId(), firstCreatedFolder, space));
                 }
-                result.put(JSONConstants.UPLOADED_FILE, DLAppJsonFactory.format(user.getUserId(), uploadedFile, space));
+                JSONObject jsonFormattedFile = DLAppJsonFactory.format(user.getUserId(), uploadedFile, space);
+                if (withDisplayUrl) {
+                    String documentURL = FileUtilsLocalServiceUtil.getDisplayUrl(
+                            uploadedFile,
+                            uploadedFile.getLatestFileVersion().getFileVersionId(),
+                            SupportedExtensions.getTypeOfView(uploadedFile.getExtension()),
+                            user.getUserId(),
+                            true
+                    );
+                    jsonFormattedFile.put(JSONConstants.FILE_URL, documentURL);
+                }
+                result.put(JSONConstants.UPLOADED_FILE, jsonFormattedFile);
                 result.put(JSONConstants.SUCCESS, true);
             } else {
                 logger.error("Error : user " + user.getFullName() + " does not have permission to upload file " + fileName + " into folder " + folderId);

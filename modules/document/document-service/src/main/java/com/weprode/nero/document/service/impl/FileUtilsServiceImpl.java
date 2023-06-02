@@ -81,11 +81,11 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 		try {
 			User user = getGuestOrUser();
-			Folder folder = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId());
+			Folder tmpFolder = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId());
 			int mode = DocumentConstants.MODE_REPLACE;
-			logger.info("User " + user.getFullName() + " uploads tmp file " + fileName + " to folderId " + folder.getFolderId() + " in mode " + mode);
+			logger.info("User " + user.getFullName() + " uploads tmp file " + fileName + " to folderId " + tmpFolder.getFolderId() + " in mode " + mode);
 
-			return UploadUtil.uploadFile(user, folder.getFolderId(), fileName, file, mode);
+			return UploadUtil.uploadFile(user, tmpFolder.getFolderId(), fileName, file, mode, true);
 		} catch (Exception e) {
 			logger.error("Error uploading temp file "+ fileName, e);
 			result.put("success", false);
