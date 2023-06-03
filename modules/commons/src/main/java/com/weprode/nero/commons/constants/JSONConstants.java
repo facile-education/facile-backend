@@ -526,6 +526,17 @@ public class JSONConstants {
     public static final String SECTION = "section";
     public static final String SCORE = "score";
 
+    // Schedule configuration
+    public static final String SCHOOL_YEAR_START_DATE = "schoolYearStartDate";
+    public static final String SCHOOL_YEAR_SEMESTER_DATE = "schoolYearSemesterDate";
+    public static final String SCHOOL_YEAR_END_DATE = "schoolYearEndDate";
+    public static final String HOLIDAYS = "holidays";
+    public static final String H1_WEEKS = "h1Weeks";
+    public static final String H2_WEEKS = "h2Weeks";
+    public static final String SLOT_NUMBER = "slotNumber";
+    public static final String SLOT_START_HOUR = "slotStartHour";
+    public static final String SLOT_END_HOUR = "slotEndHour";
+
     // Timeouts
     public static final String SESSION_TIMEOUT = "session.timeout";
     public static final String SESSION_TIMEOUT_WARNING = "session.timeout.warning";

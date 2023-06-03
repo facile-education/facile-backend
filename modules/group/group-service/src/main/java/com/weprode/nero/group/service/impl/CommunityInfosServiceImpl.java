@@ -10,7 +10,12 @@ import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.role.RoleConstants;
-import com.liferay.portal.kernel.service.*;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -22,7 +27,6 @@ import com.weprode.nero.group.service.CommunityInfosService;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.CommunityInfosServiceBaseImpl;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
-import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import org.json.JSONArray;
@@ -31,7 +35,14 @@ import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,8 +92,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         }
 
         try {
-            Date expireDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(
-                    UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
+            Date expireDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
 
             // Create the group
             String friendlyUrl = StringPool.SLASH + groupName;
@@ -247,7 +257,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         }
 
         try {
-            Date expireDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
+            Date expireDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
 
             Group group = GroupLocalServiceUtil.getGroup(groupId);
             group.setName(groupName, user.getLocale());
@@ -414,7 +424,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
 
         try {
             // Get school year end date
-            Date schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getEndSessionsDate();
+            Date schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
 
             CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(groupId);
             communityInfos.setExpirationDate(schoolYearEndDate);

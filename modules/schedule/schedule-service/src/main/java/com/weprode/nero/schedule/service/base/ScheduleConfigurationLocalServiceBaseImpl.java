@@ -44,16 +44,16 @@ import com.weprode.nero.schedule.service.ScheduleConfigurationLocalService;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.persistence.CDTSessionFinder;
 import com.weprode.nero.schedule.service.persistence.CDTSessionPersistence;
-import com.weprode.nero.schedule.service.persistence.DailySchedulePersistence;
 import com.weprode.nero.schedule.service.persistence.GroupColorPersistence;
+import com.weprode.nero.schedule.service.persistence.HolidayPersistence;
 import com.weprode.nero.schedule.service.persistence.HomeworkFinder;
 import com.weprode.nero.schedule.service.persistence.HomeworkPersistence;
 import com.weprode.nero.schedule.service.persistence.ScheduleConfigurationPersistence;
 import com.weprode.nero.schedule.service.persistence.SessionStudentPersistence;
 import com.weprode.nero.schedule.service.persistence.SessionTeacherPersistence;
+import com.weprode.nero.schedule.service.persistence.SlotConfigurationPersistence;
 import com.weprode.nero.schedule.service.persistence.StudentHomeworkPersistence;
 import com.weprode.nero.schedule.service.persistence.SubjectGroupColorPersistence;
-import com.weprode.nero.schedule.service.persistence.WeeklySchedulePersistence;
 
 import java.io.Serializable;
 
@@ -111,13 +111,13 @@ public abstract class ScheduleConfigurationLocalServiceBaseImpl
 	/**
 	 * Creates a new schedule configuration with the primary key. Does not add the schedule configuration to the database.
 	 *
-	 * @param schoolId the primary key for the new schedule configuration
+	 * @param configId the primary key for the new schedule configuration
 	 * @return the new schedule configuration
 	 */
 	@Override
 	@Transactional(enabled = false)
-	public ScheduleConfiguration createScheduleConfiguration(long schoolId) {
-		return scheduleConfigurationPersistence.create(schoolId);
+	public ScheduleConfiguration createScheduleConfiguration(long configId) {
+		return scheduleConfigurationPersistence.create(configId);
 	}
 
 	/**
@@ -127,16 +127,16 @@ public abstract class ScheduleConfigurationLocalServiceBaseImpl
 	 * <strong>Important:</strong> Inspect ScheduleConfigurationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration that was removed
 	 * @throws PortalException if a schedule configuration with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public ScheduleConfiguration deleteScheduleConfiguration(long schoolId)
+	public ScheduleConfiguration deleteScheduleConfiguration(long configId)
 		throws PortalException {
 
-		return scheduleConfigurationPersistence.remove(schoolId);
+		return scheduleConfigurationPersistence.remove(configId);
 	}
 
 	/**
@@ -259,22 +259,22 @@ public abstract class ScheduleConfigurationLocalServiceBaseImpl
 	}
 
 	@Override
-	public ScheduleConfiguration fetchScheduleConfiguration(long schoolId) {
-		return scheduleConfigurationPersistence.fetchByPrimaryKey(schoolId);
+	public ScheduleConfiguration fetchScheduleConfiguration(long configId) {
+		return scheduleConfigurationPersistence.fetchByPrimaryKey(configId);
 	}
 
 	/**
 	 * Returns the schedule configuration with the primary key.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration
 	 * @throws PortalException if a schedule configuration with the primary key could not be found
 	 */
 	@Override
-	public ScheduleConfiguration getScheduleConfiguration(long schoolId)
+	public ScheduleConfiguration getScheduleConfiguration(long configId)
 		throws PortalException {
 
-		return scheduleConfigurationPersistence.findByPrimaryKey(schoolId);
+		return scheduleConfigurationPersistence.findByPrimaryKey(configId);
 	}
 
 	@Override
@@ -287,7 +287,7 @@ public abstract class ScheduleConfigurationLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(ScheduleConfiguration.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("schoolId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("configId");
 
 		return actionableDynamicQuery;
 	}
@@ -305,7 +305,7 @@ public abstract class ScheduleConfigurationLocalServiceBaseImpl
 		indexableActionableDynamicQuery.setModelClass(
 			ScheduleConfiguration.class);
 
-		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("schoolId");
+		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("configId");
 
 		return indexableActionableDynamicQuery;
 	}
@@ -318,7 +318,7 @@ public abstract class ScheduleConfigurationLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(ScheduleConfiguration.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("schoolId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("configId");
 	}
 
 	/**
@@ -492,10 +492,10 @@ public abstract class ScheduleConfigurationLocalServiceBaseImpl
 	protected CDTSessionFinder cdtSessionFinder;
 
 	@Reference
-	protected DailySchedulePersistence dailySchedulePersistence;
+	protected GroupColorPersistence groupColorPersistence;
 
 	@Reference
-	protected GroupColorPersistence groupColorPersistence;
+	protected HolidayPersistence holidayPersistence;
 
 	@Reference
 	protected HomeworkPersistence homeworkPersistence;
@@ -516,13 +516,13 @@ public abstract class ScheduleConfigurationLocalServiceBaseImpl
 	protected SessionTeacherPersistence sessionTeacherPersistence;
 
 	@Reference
+	protected SlotConfigurationPersistence slotConfigurationPersistence;
+
+	@Reference
 	protected StudentHomeworkPersistence studentHomeworkPersistence;
 
 	@Reference
 	protected SubjectGroupColorPersistence subjectGroupColorPersistence;
-
-	@Reference
-	protected WeeklySchedulePersistence weeklySchedulePersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

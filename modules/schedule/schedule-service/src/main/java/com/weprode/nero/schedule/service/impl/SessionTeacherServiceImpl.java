@@ -1,11 +1,7 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -19,15 +15,16 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.model.ScheduleConfiguration;
-import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
-import com.weprode.nero.user.service.AffectationLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.SessionTeacher;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.SessionTeacherServiceBaseImpl;
-
+import com.weprode.nero.user.service.AffectationLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -282,8 +279,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 											Date expirationDate;
 											if (allSlot) {
 												// Expiration date is the school year end date
-												ScheduleConfiguration cdtConfig = ScheduleConfigurationLocalServiceUtil.getSchoolConfiguration(nextSession.getSchoolId());
-												expirationDate = cdtConfig.getEndSessionsDate();
+												expirationDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
 											} else {
 												// Expiration date is the last session's date
 												CDTSession lastSession = CDTSessionLocalServiceUtil.getCDTSession(lastSessionId);

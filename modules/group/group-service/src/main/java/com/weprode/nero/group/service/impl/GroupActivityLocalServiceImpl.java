@@ -21,7 +21,6 @@ import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupActivityLocalServiceBaseImpl;
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.service.NewsLocalServiceUtil;
-import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.Homework;
@@ -69,7 +68,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             Date minDate = cal.getTime();
 
             // Limit date is the school year start date
-            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getStartSessionsDate();
+            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate();
 
             // Get activities by successive range dates going back in time, so that we ensure pagination is fine
             // Do not exceed 1 month back in time
@@ -214,7 +213,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             groupIds.add(groupId);
 
             // Limit date is the school year start date
-            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getStartSessionsDate();
+            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate();
 
             // Get activities by successive range dates going back in time, so that we ensure pagination is fine
             // Do not exceed 1 month back in time
@@ -310,7 +309,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             groupIds.add(groupId);
 
             // Limit date is the school year start date
-            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getScheduleConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getStartSessionsDate();
+            Date limitMinDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate();
 
             // Get activities by successive range dates going back in time, so that we ensure pagination is fine
             // Do not exceed 1 month back in time

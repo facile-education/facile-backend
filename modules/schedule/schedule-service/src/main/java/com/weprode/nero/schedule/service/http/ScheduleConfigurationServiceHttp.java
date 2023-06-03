@@ -84,10 +84,85 @@ public class ScheduleConfigurationServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getScheduleConfiguration(
+		HttpPrincipal httpPrincipal) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				ScheduleConfigurationServiceUtil.class,
+				"getScheduleConfiguration",
+				_getScheduleConfigurationParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject saveScheduleConfiguration(
+		HttpPrincipal httpPrincipal, String startDateStr,
+		String semesterDateStr, String endDateStr, String holidays,
+		String h1Weeks, String h2Weeks) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				ScheduleConfigurationServiceUtil.class,
+				"saveScheduleConfiguration",
+				_saveScheduleConfigurationParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, startDateStr, semesterDateStr, endDateStr, holidays,
+				h1Weeks, h2Weeks);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		ScheduleConfigurationServiceHttp.class);
 
 	private static final Class<?>[] _getConfigurationParameterTypes0 =
 		new Class[] {long.class, long.class};
+	private static final Class<?>[] _getScheduleConfigurationParameterTypes1 =
+		new Class[] {};
+	private static final Class<?>[] _saveScheduleConfigurationParameterTypes2 =
+		new Class[] {
+			String.class, String.class, String.class, String.class,
+			String.class, String.class
+		};
 
 }

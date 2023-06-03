@@ -3,6 +3,7 @@ package com.weprode.nero.eel.synchronization;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -42,9 +43,13 @@ import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
+import com.weprode.nero.schedule.model.SlotConfiguration;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.HolidayLocalServiceUtil;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
+import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
+import com.weprode.nero.schedule.service.SlotConfigurationLocalServiceUtil;
 import com.weprode.nero.user.model.LDAPMapping;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
@@ -79,7 +84,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -122,13 +126,12 @@ public class GVESynchronizationManager {
     private long companyId;
     private Organization rootOrg;
 
+    private Map<String, String> startSlotMap;
+    private Map<String, String> endSlotMap;
+
     private List<Integer> h1Weeks;
     private List<Integer> h2Weeks;
     private Map<Date, Date> vacations;
-
-    Date schoolYearStartDate = null;
-    Date schoolYearSemesterDate = null;
-    Date schoolYearEndDate = null;
 
     ReportData reportData;
 
@@ -174,16 +177,15 @@ public class GVESynchronizationManager {
         logger.info("Synchronization END");
     }
     
-    private void processSchool(String schoolId) throws NamingException {
+    private void processSchool(String schoolId) throws NamingException, PortalException {
 
-        initSlotMaps(schoolId);
-        initSynchronization();
+        initSchoolSynchronization();
 
-        // Build schoolDn
         String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
-
         Organization school = synchronizeSchool(schoolId);
         processedSchoolIds.add(school.getOrganizationId());
+
+        initSlotMaps(school.getOrganizationId());
 
         String classesDn = "OU=CLASSES," + schoolDn;
         synchronizeClasses(school, classesDn);
@@ -221,7 +223,72 @@ public class GVESynchronizationManager {
 
         sendReport(school.getOrganizationId());
     }
-    
+
+    private void initSchoolSynchronization () throws PortalException {
+
+        cnUserMap = new HashMap<>();
+        coursMap = new HashMap<>();
+        createdUserList = new ArrayList<>();
+        userOrgMap = new HashMap<>();
+        studentMap = new HashMap<>();
+        reportData = new ReportData();
+        rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(companyId);
+        h1Weeks = ScheduleConfigurationLocalServiceUtil.getH1Weeks();
+        h2Weeks = ScheduleConfigurationLocalServiceUtil.getH2Weeks();
+
+        // Vacations
+        // First day is the first day of vacation period
+        // Second day is the first day of work after the vacation period
+        vacations = HolidayLocalServiceUtil.getHolidays();
+    }
+
+    private Organization synchronizeSchool (String schoolId) {
+
+        // Get school informations
+        String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
+        String[] schoolAttributes = {ATTRIBUTE_SCHOOL_DESCRIPTION};
+        Organization school = null;
+        try {
+            Attributes schoolAttrs = getContext().getAttributes(schoolDn, schoolAttributes);
+            if (schoolAttrs.get(ATTRIBUTE_SCHOOL_DESCRIPTION) != null) {
+                String schoolName = schoolAttrs.get(ATTRIBUTE_SCHOOL_DESCRIPTION).get().toString();
+                logger.info("SchoolName is -"+ schoolName + "-");
+                // Do not normalize because it breaks escaped characters
+                // schoolName = Normalizer.normalize(schoolName, Normalizer.Form.NFD);
+                // schoolName = schoolName.replace("[^\\p{ASCII}]", "");
+                schoolName = schoolName.replace("Cycle d'orientation", "CO");
+                logger.info("Formatted SchoolName is -"+ schoolName + "-");
+
+                // Create school and school-level orgs
+                try {
+                    school = OrgUtilsLocalServiceUtil.getOrCreateSchool(companyId, schoolName);
+                    logger.info("Found school " + school.getOrganizationId());
+                    OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(school.getOrganizationId());
+                    OrgUtilsLocalServiceUtil.getSchoolPATsOrganization(school.getOrganizationId());
+                    OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(school.getOrganizationId());
+                } catch (Exception e) {
+                    logger.error("Error when creating school with name "+schoolName, e);
+                }
+                OrgMapping orgMapping = null;
+                try {
+                    orgMapping = OrgMappingLocalServiceUtil.getOrgMapping(schoolId);
+                } catch (Exception e) {
+                    logger.debug(e);
+                }
+                if (school != null && orgMapping == null) {
+                    OrgMappingLocalServiceUtil.addOrgMapping(school, schoolId);
+                }
+
+            }
+        } catch (NamingException e) {
+            logger.error("LDAP error when synchronizing school " + schoolId, e);
+        } catch (Exception e) {
+            logger.error("Error while synchronizing school " + schoolId, e);
+        }
+        return school;
+    }
+
+
     private void synchronizeClasses(Organization school, String classesDn) throws NamingException {
 
         // For obsolete classes deletion
@@ -688,52 +755,6 @@ public class GVESynchronizationManager {
         } catch (Exception e) {
             logger.error("Error in synchronizing teachers and subjects", e);
         }
-    }
-
-    private Organization synchronizeSchool (String schoolId) {
-
-        // Get school informations
-        String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
-        String[] schoolAttributes = {ATTRIBUTE_SCHOOL_DESCRIPTION};
-        Organization school = null;
-        try {
-            Attributes schoolAttrs = getContext().getAttributes(schoolDn, schoolAttributes);
-            if (schoolAttrs.get(ATTRIBUTE_SCHOOL_DESCRIPTION) != null) {
-                String schoolName = schoolAttrs.get(ATTRIBUTE_SCHOOL_DESCRIPTION).get().toString();
-                logger.info("SchoolName is -"+ schoolName + "-");
-                // Do not normalize because it breaks escaped characters
-                // schoolName = Normalizer.normalize(schoolName, Normalizer.Form.NFD);
-                // schoolName = schoolName.replace("[^\\p{ASCII}]", "");
-                schoolName = schoolName.replace("Cycle d'orientation", "CO");
-                logger.info("Formatted SchoolName is -"+ schoolName + "-");
-
-                // Create school and school-level orgs
-                try {
-                    school = OrgUtilsLocalServiceUtil.getOrCreateSchool(companyId, schoolName);
-                    logger.info("Found school " + school.getOrganizationId());
-                    OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(school.getOrganizationId());
-                    OrgUtilsLocalServiceUtil.getSchoolPATsOrganization(school.getOrganizationId());
-                    OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(school.getOrganizationId());
-                } catch (Exception e) {
-                    logger.error("Error when creating school with name "+schoolName, e);
-                }
-                OrgMapping orgMapping = null;
-                try {
-                    orgMapping = OrgMappingLocalServiceUtil.getOrgMapping(schoolId);
-                } catch (Exception e) {
-                    logger.debug(e);
-                }
-                if (school != null && orgMapping == null) {
-                    OrgMappingLocalServiceUtil.addOrgMapping(school, schoolId);
-                }
-
-            }
-        } catch (NamingException e) {
-            logger.error("LDAP error when synchronizing school " + schoolId, e);
-        } catch (Exception e) {
-            logger.error("Error while synchronizing school " + schoolId, e);
-        }
-        return school;
     }
 
 
@@ -1594,6 +1615,7 @@ public class GVESynchronizationManager {
             coursCal.set(Calendar.MINUTE, 0);
             coursCal.set(Calendar.SECOND, 0);
             Date coursStartDate = coursCal.getTime();
+            Date schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
             List<CDTSession> existingCoursSessions = CDTSessionLocalServiceUtil.getGroupSessions(coursOrg.getGroupId(), coursStartDate, schoolYearEndDate, false);
             logger.info("Found " + existingCoursSessions.size() + " sessions for cours " + coursOrg.getName());
 
@@ -1669,12 +1691,12 @@ public class GVESynchronizationManager {
                         //end tmp
 
 
-                        CDTSession existingSession = getExistingSession(existingCoursSessions, sessionInfos.getStartsessionDate(), sessionInfos.getEndSessionDate(), sessionInfos.getFullCoursName(), room);
+                        CDTSession existingSession = getExistingSession(existingCoursSessions, sessionInfos.getStartSessionDate(), sessionInfos.getEndSessionDate(), sessionInfos.getFullCoursName(), room);
 
                         if (existingSession != null) {
 
                             // EXISTING SESSION
-                            logger.info("Found existing session at " + fullFormat.format(sessionInfos.getStartsessionDate()) + " - " + fullFormat.format(sessionInfos.getEndSessionDate()));
+                            logger.info("Found existing session at " + fullFormat.format(sessionInfos.getStartSessionDate()) + " - " + fullFormat.format(sessionInfos.getEndSessionDate()));
                             newSessionIds.add(existingSession.getSessionId());
 
                             // Update room if needed
@@ -1709,8 +1731,8 @@ public class GVESynchronizationManager {
                             // Create CDT Session
                             try {
                                 CDTSession createdSession = CDTSessionLocalServiceUtil.createCDTSession(school.getOrganizationId(), coursOrg.getGroupId(), slotData.getSubject(),
-                                        sessionInfos.getStartsessionDate(), sessionInfos.getEndSessionDate(), teacherIdList, room, coursName, sessionInfos.getFullCoursName(), "", true, false);
-                                logger.info("CREATED SESSION " + createdSession.getSessionId() + " for coursName = " + coursName + " and from " + fullFormat.format(sessionInfos.getStartsessionDate()) + " to " + fullFormat.format(sessionInfos.getEndSessionDate()));
+                                        sessionInfos.getStartSessionDate(), sessionInfos.getEndSessionDate(), teacherIdList, room, coursName, sessionInfos.getFullCoursName(), "", true, false);
+                                logger.info("CREATED SESSION " + createdSession.getSessionId() + " for coursName = " + coursName + " and from " + fullFormat.format(sessionInfos.getStartSessionDate()) + " to " + fullFormat.format(sessionInfos.getEndSessionDate()));
                                 newSessionIds.add(createdSession.getSessionId());
                                 existingCoursSessions.add(createdSession);
 
@@ -1930,18 +1952,18 @@ public class GVESynchronizationManager {
                 Calendar cal = Calendar.getInstance(Locale.FRANCE);
                 switch (frequency) {
                     case "1S":
-                        rangeStartDate = schoolYearStartDate;
-                        rangeEndDate = schoolYearSemesterDate;
+                        rangeStartDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate();
+                        rangeEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearSemesterDate();
                         break;
                     case "2S":
-                        rangeStartDate = schoolYearSemesterDate;
-                        rangeEndDate = schoolYearEndDate;
+                        rangeStartDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearSemesterDate();
+                        rangeEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
                         break;
                     case "Annuel":
                     case "1H":
                     case "2H":
-                        rangeStartDate = schoolYearStartDate;
-                        rangeEndDate = schoolYearEndDate;
+                        rangeStartDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate();
+                        rangeEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
                         break;
                     default:
                         logger.error("Unknown frequency " + frequency);
@@ -2180,105 +2202,42 @@ public class GVESynchronizationManager {
         }
     }
 
-    public Map<String, String> startSlotMap;
-    public Map<String, String> endSlotMap;
 
-    private void initSlotMaps(String schoolUAI) {
-        if (schoolUAI.equals("UO0301")) { // La Golette
-            startSlotMap = new HashMap<>();
-            startSlotMap.put("01", "07h40");
-            startSlotMap.put("02", "08h30");
-            startSlotMap.put("03", "09h20");
-            startSlotMap.put("04", "10h20");
-            startSlotMap.put("05", "11h10");
-            startSlotMap.put("06", "12h00");
-            startSlotMap.put("07", "12h50");
-            startSlotMap.put("08", "13h40");
-            startSlotMap.put("09", "14h30");
-            startSlotMap.put("10", "15h20");
-            startSlotMap.put("11", "16h10");
+    private void initSlotMaps(long schoolId) {
 
-            endSlotMap = new HashMap<>();
-            endSlotMap.put("01", "08h25");
-            endSlotMap.put("02", "09h15");
-            endSlotMap.put("03", "10h05");
-            endSlotMap.put("04", "11h05");
-            endSlotMap.put("05", "11h55");
-            endSlotMap.put("06", "12h45");
-            endSlotMap.put("07", "13h35");
-            endSlotMap.put("08", "14h25");
-            endSlotMap.put("09", "15h15");
-            endSlotMap.put("10", "16h05");
-            endSlotMap.put("11", "16h55");
-        } else if (schoolUAI.equals("UO0188")) { // Drize
-            startSlotMap = new HashMap<>();
-            startSlotMap.put("01", "08h30");
-            startSlotMap.put("02", "09h20");
-            startSlotMap.put("03", "10h20");
-            startSlotMap.put("04", "11h10");
-            startSlotMap.put("05", "12h00");
-            startSlotMap.put("06", "12h55");
-            startSlotMap.put("07", "13h45");
-            startSlotMap.put("08", "14h35");
-            startSlotMap.put("09", "15h25");
-            startSlotMap.put("10", "16h20");
-
-            endSlotMap = new HashMap<>();
-            endSlotMap.put("01", "09h15");
-            endSlotMap.put("02", "10h05");
-            endSlotMap.put("03", "11h05");
-            endSlotMap.put("04", "11h55");
-            endSlotMap.put("05", "12h45");
-            endSlotMap.put("06", "13h40");
-            endSlotMap.put("07", "14h30");
-            endSlotMap.put("08", "15h20");
-            endSlotMap.put("09", "16h10");
-            endSlotMap.put("10", "17h10");
-        } else {
-            startSlotMap = new HashMap<>();
-            startSlotMap.put("01", "07h55");
-            startSlotMap.put("02", "08h45");
-            startSlotMap.put("03", "09h35");
-            startSlotMap.put("04", "10h35");
-            startSlotMap.put("05", "11h25");
-            startSlotMap.put("06", "12h50");
-            startSlotMap.put("07", "13h45");
-            startSlotMap.put("08", "14h35");
-            startSlotMap.put("09", "15h30");
-            startSlotMap.put("10", "16h20");
-            startSlotMap.put("11", "17h10");
-
-            endSlotMap = new HashMap<>();
-            endSlotMap.put("01", "08h40");
-            endSlotMap.put("02", "09h30");
-            endSlotMap.put("03", "10h20");
-            endSlotMap.put("04", "11h20");
-            endSlotMap.put("05", "12h10");
-            endSlotMap.put("06", "13h35");
-            endSlotMap.put("07", "14h30");
-            endSlotMap.put("08", "15h15");
-            endSlotMap.put("09", "16h15");
-            endSlotMap.put("10", "17h05");
-            endSlotMap.put("11", "17h55");
+        // Build the String/String map
+        List<SlotConfiguration> schoolSlots = SlotConfigurationLocalServiceUtil.getSchoolSlots(schoolId);
+        startSlotMap = new HashMap<>();
+        endSlotMap = new HashMap<>();
+        for (SlotConfiguration slot : schoolSlots) {
+            // Slot must be 2-char length
+            String slotStr;
+            if (slot.getSlotNumber() < 10) {
+                slotStr = "0" + slot.getSlotNumber();
+            } else {
+                slotStr = "" + slot.getSlotNumber();
+            }
+            startSlotMap.put(slotStr, slot.getSessionStartHour());
+            endSlotMap.put(slotStr, slot.getSessionEndHour());
         }
 
     }
 
     public static class SessionInfos {
-        Date startsessionDate;
+        Date startSessionDate;
         Date endSessionDate;
         String fullCoursName;
         List<Long> teacherIds;
 
         public SessionInfos(Date startDate, Date endDate, String fullCoursName, List<Long> teacherIds) {
-            this.startsessionDate = startDate;
+            this.startSessionDate = startDate;
             this.endSessionDate = endDate;
             this.fullCoursName = fullCoursName;
             this.teacherIds = teacherIds;
         }
 
-        public Date getStartsessionDate() {
-            return startsessionDate;
+        public Date getStartSessionDate() {
+            return startSessionDate;
         }
 
         public Date getEndSessionDate() {
@@ -2307,7 +2266,7 @@ public class GVESynchronizationManager {
         Properties environmentProperties = new Properties();
 
         // Get truststore containing certification chain
-        String storePassword = System.getProperty("javax.net.ssl.trustStorePassword"); //"changeit";
+        String storePassword = System.getProperty("javax.net.ssl.trustStorePassword");
         InputStream trustStream = new FileInputStream(System.getProperty("javax.net.ssl.trustStore"));
         char[] trustPassword = storePassword.toCharArray();
 
@@ -2339,96 +2298,6 @@ public class GVESynchronizationManager {
         }
 
         return ctx;
-    }
-
-    /**
-     * Initializes all variables for synchronization
-     */
-    private void initSynchronization () {
-        cnUserMap = new HashMap<>();
-        coursMap = new HashMap<>();
-        createdUserList = new ArrayList<>();
-        userOrgMap = new HashMap<>();
-        studentMap = new HashMap<>();
-        reportData = new ReportData();
-
-        try {
-            rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(companyId);
-        } catch (Exception e) {
-            logger.error("Error while retrieving root org", e);
-        }
-
-        DateFormat sdf = new SimpleDateFormat(JSONConstants.FRENCH_FORMAT);
-        try {
-            // TODO use Horaires management
-            schoolYearStartDate = sdf.parse("22/08/2022");
-            schoolYearSemesterDate = sdf.parse("22/01/2023"); // The sunday before changing semester date
-            schoolYearEndDate = sdf.parse("01/07/2023");
-        } catch (ParseException e1) {
-            logger.debug(e1);
-        }
-
-        // TODO use Horaires management
-        h1Weeks = new ArrayList<>();
-        h1Weeks.add(34);
-        h1Weeks.add(36);
-        h1Weeks.add(38);
-        h1Weeks.add(40);
-        h1Weeks.add(42);
-        h1Weeks.add(45);
-        h1Weeks.add(47);
-        h1Weeks.add(49);
-        h1Weeks.add(51);
-        h1Weeks.add(3);
-        h1Weeks.add(5);
-        h1Weeks.add(7);
-        h1Weeks.add(10);
-        h1Weeks.add(12);
-        h1Weeks.add(14);
-        h1Weeks.add(18);
-        h1Weeks.add(20);
-        h1Weeks.add(22);
-        h1Weeks.add(24);
-        h1Weeks.add(26);
-
-        h2Weeks = new ArrayList<>();
-        h2Weeks.add(35);
-        h2Weeks.add(37);
-        h2Weeks.add(39);
-        h2Weeks.add(41);
-        h2Weeks.add(44);
-        h2Weeks.add(46);
-        h2Weeks.add(48);
-        h2Weeks.add(50);
-        h2Weeks.add(2);
-        h2Weeks.add(4);
-        h2Weeks.add(6);
-        h2Weeks.add(9);
-        h2Weeks.add(11);
-        h2Weeks.add(13);
-        h2Weeks.add(17);
-        h2Weeks.add(19);
-        h2Weeks.add(21);
-        h2Weeks.add(23);
-        h2Weeks.add(25);
-
-        // Vacations
-        // First day is the first day of vacation period
-        // Second day is the first day of work after the vacation period
-        vacations = new HashMap<>();
-        // TODO use Horaires management
-        try {
-            vacations.put(sdf.parse("08/09/2022"), sdf.parse("09/09/2022"));
-            vacations.put(sdf.parse("24/10/2022"), sdf.parse("31/10/2022"));
-            vacations.put(sdf.parse("25/12/2022"), sdf.parse("09/01/2023"));
-            vacations.put(sdf.parse("20/02/2023"), sdf.parse("27/02/2023"));
-            vacations.put(sdf.parse("07/04/2023"), sdf.parse("24/04/2023"));
-            vacations.put(sdf.parse("01/05/2023"), sdf.parse("02/05/2023"));
-            vacations.put(sdf.parse("18/05/2023"), sdf.parse("22/05/2023"));
-            vacations.put(sdf.parse("29/05/2023"), sdf.parse("30/05/2023"));
-        } catch (Exception e) {
-            logger.error("Error parsing vacations", e);
-        }
     }
 
     private void addUserToOrgMap(User user, long orgId) {

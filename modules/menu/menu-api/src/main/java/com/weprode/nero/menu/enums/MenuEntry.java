@@ -28,7 +28,7 @@ public class MenuEntry {
 
     public static final MenuEntry USER_ADMIN = new MenuEntry(14, StringPool.BLANK, "user-admin", 0, "UserManagement");
     public static final MenuEntry APPLICATION_ADMIN = new MenuEntry(15, StringPool.BLANK, "application-admin", 1, "ApplicationManager");
-    public static final MenuEntry HORAIRES_ADMIN = new MenuEntry(16, StringPool.BLANK, "horaires-admin", 2, "HorairesManager");
+    public static final MenuEntry HORAIRES_ADMIN = new MenuEntry(16, StringPool.BLANK, "horaires-admin", 2, "ScheduleManager");
     public static final MenuEntry ACCESS_ADMIN = new MenuEntry(17, StringPool.BLANK, "access-admin", 3, "AccessManager");
     public static final MenuEntry STATISTICS = new MenuEntry(18, StringPool.BLANK, "statistics", 4, "Statistics");
     public static final MenuEntry MAINTENANCE = new MenuEntry(19, StringPool.BLANK, "maintenance", 5, "Maintenance");

@@ -23,8 +23,6 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
-import java.util.*;
-
 import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -62,5 +60,14 @@ public interface ScheduleConfigurationService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
+
+	@JSONWebService(method = "GET", value = "get-schedule-configuration")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getScheduleConfiguration();
+
+	@JSONWebService(method = "POST", value = "save-schedule-configuration")
+	public JSONObject saveScheduleConfiguration(
+		String startDateStr, String semesterDateStr, String endDateStr,
+		String holidays, String h1Weeks, String h2Weeks);
 
 }

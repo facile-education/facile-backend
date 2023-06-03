@@ -80,12 +80,7 @@ public interface ScheduleConfigurationLocalService
 	public ScheduleConfiguration addScheduleConfiguration(
 		ScheduleConfiguration scheduleConfiguration);
 
-	public ScheduleConfiguration createDefaultSchoolConfiguration(
-		long schoolId);
-
-	public ScheduleConfiguration createOrSetSchoolConfiguration(
-		long schoolId, String startDayTime, String endDayTime,
-		Date startDateSchool, Date endDateSchool);
+	public JSONObject convertAsJson();
 
 	/**
 	 * @throws PortalException
@@ -96,11 +91,11 @@ public interface ScheduleConfigurationLocalService
 	/**
 	 * Creates a new schedule configuration with the primary key. Does not add the schedule configuration to the database.
 	 *
-	 * @param schoolId the primary key for the new schedule configuration
+	 * @param configId the primary key for the new schedule configuration
 	 * @return the new schedule configuration
 	 */
 	@Transactional(enabled = false)
-	public ScheduleConfiguration createScheduleConfiguration(long schoolId);
+	public ScheduleConfiguration createScheduleConfiguration(long configId);
 
 	/**
 	 * @throws PortalException
@@ -116,12 +111,12 @@ public interface ScheduleConfigurationLocalService
 	 * <strong>Important:</strong> Inspect ScheduleConfigurationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration that was removed
 	 * @throws PortalException if a schedule configuration with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public ScheduleConfiguration deleteScheduleConfiguration(long schoolId)
+	public ScheduleConfiguration deleteScheduleConfiguration(long configId)
 		throws PortalException;
 
 	/**
@@ -211,18 +206,16 @@ public interface ScheduleConfigurationLocalService
 		DynamicQuery dynamicQuery, Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ScheduleConfiguration fetchScheduleConfiguration(long schoolId);
+	public ScheduleConfiguration fetchScheduleConfiguration(long configId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
-	/**
-	 * Calculates a default current school year end date (4th of july)
-	 *
-	 * @return the default end date
-	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Date getDefaultSchoolYearEndDate();
+	public List<Integer> getH1Weeks();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Integer> getH2Weeks();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -242,15 +235,18 @@ public interface ScheduleConfigurationLocalService
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Date getProjectStartDate();
+
 	/**
 	 * Returns the schedule configuration with the primary key.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration
 	 * @throws PortalException if a schedule configuration with the primary key could not be found
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ScheduleConfiguration getScheduleConfiguration(long schoolId)
+	public ScheduleConfiguration getScheduleConfiguration(long configId)
 		throws PortalException;
 
 	/**
@@ -277,10 +273,17 @@ public interface ScheduleConfigurationLocalService
 	public int getScheduleConfigurationsCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ScheduleConfiguration getSchoolConfiguration(long schoolId);
+	public Date getSchoolYearEndDate();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getSchoolConfigurationAsJson(long schoolId);
+	public Date getSchoolYearSemesterDate();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Date getSchoolYearStartDate();
+
+	public ScheduleConfiguration setScheduleConfiguration(
+		Date schoolYearStartDate, Date semesterDate, Date schoolYearEndDate,
+		String h1Weeks, String h2Weeks);
 
 	/**
 	 * Updates the schedule configuration in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

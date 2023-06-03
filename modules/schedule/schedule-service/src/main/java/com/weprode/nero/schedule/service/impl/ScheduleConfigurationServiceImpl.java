@@ -1,31 +1,32 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.utils.JSONProxy;
-import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.HolidayLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.ScheduleConfigurationServiceBaseImpl;
-
+import com.weprode.nero.schedule.utils.JSONProxy;
+import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 @Component(
 	property = {
@@ -38,6 +39,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 	private final Log logger = LogFactoryUtil.getLog(ScheduleConfigurationServiceImpl.class);
 
+	// Used to initialize schedule
 	@JSONWebService(value = "get-configuration", method = "GET")
 	public JSONObject getConfiguration(long schoolId, long childId) {
 		JSONObject result = new JSONObject();
@@ -57,37 +59,11 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 			User targetUser = user;
 			if (RoleUtilsLocalServiceUtil.isParent(user)) {
 				List<User> children = UserRelationshipLocalServiceUtil.getChildren(user.getUserId());
-
-				children.sort((child1, child2) -> {
-					String name1 = child1.getLastName() + " " + child1.getFirstName();
-					String name2 = child2.getLastName() + " " + child2.getFirstName();
-
-					return name1.compareTo(name2);
-				});
-				if (childId == 0) {
-					childId = children.get(0).getUserId();
-				}
 				targetUser = children.get(0);
 				result.put(JSONConstants.CHILDREN, JSONProxy.convertUsersToJson(children));
 			}
 
-			// Loop over user's schools
-			List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserSchools(user);
-			List<Long> userSchoolIds = new ArrayList<>();
-			for (Organization userSchool: userSchools) {
-				userSchoolIds.add(userSchool.getOrganizationId());
-			}
-
-			if (schoolId > 0 && (userSchoolIds.contains(schoolId) ||
-					RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
-				result.put(JSONConstants.CONFIGURATION, ScheduleConfigurationLocalServiceUtil.getSchoolConfigurationAsJson(userSchools.get(0).getOrganizationId()));
-			} else if (!userSchools.isEmpty()) {
-				result.put(JSONConstants.CONFIGURATION, ScheduleConfigurationLocalServiceUtil.getSchoolConfigurationAsJson(userSchools.get(0).getOrganizationId()));
-			} else {
-				logger.error("No school found for user id " + user.getUserId());
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
-			}
+			result.put(JSONConstants.CONFIGURATION, ScheduleConfigurationLocalServiceUtil.convertAsJson());
 
 			// Get week start and end date
 			// Check if they are sessions between today and the end of the current week
@@ -149,4 +125,72 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		result.put(JSONConstants.SUCCESS, true);
 		return result;
 	}
+
+	@JSONWebService(value = "get-schedule-configuration", method = "GET")
+	public JSONObject getScheduleConfiguration() {
+
+		JSONObject result = new JSONObject();
+		User user;
+		try {
+			user = getGuestOrUser();
+
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		// Authorized for global admins only
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		JSONObject configuration = ScheduleConfigurationLocalServiceUtil.convertAsJson();
+		configuration.put(JSONConstants.HOLIDAYS, HolidayLocalServiceUtil.getHolidaysAsJson());
+
+		result.put(JSONConstants.CONFIGURATION, configuration);
+		result.put(JSONConstants.SUCCESS, true);
+		return result;
+	}
+
+	@JSONWebService(value = "save-schedule-configuration", method = "POST")
+	public JSONObject saveScheduleConfiguration(String startDateStr, String semesterDateStr, String endDateStr, String holidays, String h1Weeks, String h2Weeks) {
+
+		JSONObject result = new JSONObject();
+		User user;
+		try {
+			user = getGuestOrUser();
+
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		// Authorized for global admins only
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			Date schoolYearStartDate = sdf.parse(startDateStr);
+			Date schoolYearEndDate = sdf.parse(endDateStr);
+			Date semesterDate = sdf.parse(semesterDateStr);
+			ScheduleConfigurationLocalServiceUtil.setScheduleConfiguration(schoolYearStartDate, semesterDate, schoolYearEndDate, h1Weeks, h2Weeks);
+
+			JSONArray jsonHolidays = new JSONArray(holidays);
+			HolidayLocalServiceUtil.saveHolidays(jsonHolidays);
+
+			result.put(JSONConstants.SUCCESS, true);
+		} catch (Exception e) {
+			logger.error("Error when saving global schedule configuration", e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
+
 }

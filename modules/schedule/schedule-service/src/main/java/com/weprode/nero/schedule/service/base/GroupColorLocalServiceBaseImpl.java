@@ -44,16 +44,16 @@ import com.weprode.nero.schedule.service.GroupColorLocalService;
 import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
 import com.weprode.nero.schedule.service.persistence.CDTSessionFinder;
 import com.weprode.nero.schedule.service.persistence.CDTSessionPersistence;
-import com.weprode.nero.schedule.service.persistence.DailySchedulePersistence;
 import com.weprode.nero.schedule.service.persistence.GroupColorPersistence;
+import com.weprode.nero.schedule.service.persistence.HolidayPersistence;
 import com.weprode.nero.schedule.service.persistence.HomeworkFinder;
 import com.weprode.nero.schedule.service.persistence.HomeworkPersistence;
 import com.weprode.nero.schedule.service.persistence.ScheduleConfigurationPersistence;
 import com.weprode.nero.schedule.service.persistence.SessionStudentPersistence;
 import com.weprode.nero.schedule.service.persistence.SessionTeacherPersistence;
+import com.weprode.nero.schedule.service.persistence.SlotConfigurationPersistence;
 import com.weprode.nero.schedule.service.persistence.StudentHomeworkPersistence;
 import com.weprode.nero.schedule.service.persistence.SubjectGroupColorPersistence;
-import com.weprode.nero.schedule.service.persistence.WeeklySchedulePersistence;
 
 import java.io.Serializable;
 
@@ -469,13 +469,13 @@ public abstract class GroupColorLocalServiceBaseImpl
 	@Reference
 	protected CDTSessionFinder cdtSessionFinder;
 
-	@Reference
-	protected DailySchedulePersistence dailySchedulePersistence;
-
 	protected GroupColorLocalService groupColorLocalService;
 
 	@Reference
 	protected GroupColorPersistence groupColorPersistence;
+
+	@Reference
+	protected HolidayPersistence holidayPersistence;
 
 	@Reference
 	protected HomeworkPersistence homeworkPersistence;
@@ -493,13 +493,13 @@ public abstract class GroupColorLocalServiceBaseImpl
 	protected SessionTeacherPersistence sessionTeacherPersistence;
 
 	@Reference
+	protected SlotConfigurationPersistence slotConfigurationPersistence;
+
+	@Reference
 	protected StudentHomeworkPersistence studentHomeworkPersistence;
 
 	@Reference
 	protected SubjectGroupColorPersistence subjectGroupColorPersistence;
-
-	@Reference
-	protected WeeklySchedulePersistence weeklySchedulePersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

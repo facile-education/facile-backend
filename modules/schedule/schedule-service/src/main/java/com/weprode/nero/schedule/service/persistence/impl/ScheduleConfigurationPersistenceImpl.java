@@ -193,16 +193,16 @@ public class ScheduleConfigurationPersistenceImpl
 	/**
 	 * Creates a new schedule configuration with the primary key. Does not add the schedule configuration to the database.
 	 *
-	 * @param schoolId the primary key for the new schedule configuration
+	 * @param configId the primary key for the new schedule configuration
 	 * @return the new schedule configuration
 	 */
 	@Override
-	public ScheduleConfiguration create(long schoolId) {
+	public ScheduleConfiguration create(long configId) {
 		ScheduleConfiguration scheduleConfiguration =
 			new ScheduleConfigurationImpl();
 
 		scheduleConfiguration.setNew(true);
-		scheduleConfiguration.setPrimaryKey(schoolId);
+		scheduleConfiguration.setPrimaryKey(configId);
 
 		return scheduleConfiguration;
 	}
@@ -210,15 +210,15 @@ public class ScheduleConfigurationPersistenceImpl
 	/**
 	 * Removes the schedule configuration with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration that was removed
 	 * @throws NoSuchConfigurationException if a schedule configuration with the primary key could not be found
 	 */
 	@Override
-	public ScheduleConfiguration remove(long schoolId)
+	public ScheduleConfiguration remove(long configId)
 		throws NoSuchConfigurationException {
 
-		return remove((Serializable)schoolId);
+		return remove((Serializable)configId);
 	}
 
 	/**
@@ -364,26 +364,26 @@ public class ScheduleConfigurationPersistenceImpl
 	/**
 	 * Returns the schedule configuration with the primary key or throws a <code>NoSuchConfigurationException</code> if it could not be found.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration
 	 * @throws NoSuchConfigurationException if a schedule configuration with the primary key could not be found
 	 */
 	@Override
-	public ScheduleConfiguration findByPrimaryKey(long schoolId)
+	public ScheduleConfiguration findByPrimaryKey(long configId)
 		throws NoSuchConfigurationException {
 
-		return findByPrimaryKey((Serializable)schoolId);
+		return findByPrimaryKey((Serializable)configId);
 	}
 
 	/**
 	 * Returns the schedule configuration with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration, or <code>null</code> if a schedule configuration with the primary key could not be found
 	 */
 	@Override
-	public ScheduleConfiguration fetchByPrimaryKey(long schoolId) {
-		return fetchByPrimaryKey((Serializable)schoolId);
+	public ScheduleConfiguration fetchByPrimaryKey(long configId) {
+		return fetchByPrimaryKey((Serializable)configId);
 	}
 
 	/**
@@ -575,7 +575,7 @@ public class ScheduleConfigurationPersistenceImpl
 
 	@Override
 	protected String getPKDBName() {
-		return "schoolId";
+		return "configId";
 	}
 
 	@Override

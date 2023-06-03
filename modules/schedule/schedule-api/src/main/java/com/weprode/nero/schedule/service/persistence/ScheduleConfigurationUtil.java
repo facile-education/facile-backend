@@ -148,25 +148,25 @@ public class ScheduleConfigurationUtil {
 	/**
 	 * Creates a new schedule configuration with the primary key. Does not add the schedule configuration to the database.
 	 *
-	 * @param schoolId the primary key for the new schedule configuration
+	 * @param configId the primary key for the new schedule configuration
 	 * @return the new schedule configuration
 	 */
-	public static ScheduleConfiguration create(long schoolId) {
-		return getPersistence().create(schoolId);
+	public static ScheduleConfiguration create(long configId) {
+		return getPersistence().create(configId);
 	}
 
 	/**
 	 * Removes the schedule configuration with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration that was removed
 	 * @throws NoSuchConfigurationException if a schedule configuration with the primary key could not be found
 	 */
-	public static ScheduleConfiguration remove(long schoolId)
+	public static ScheduleConfiguration remove(long configId)
 		throws com.weprode.nero.schedule.exception.
 			NoSuchConfigurationException {
 
-		return getPersistence().remove(schoolId);
+		return getPersistence().remove(configId);
 	}
 
 	public static ScheduleConfiguration updateImpl(
@@ -178,25 +178,25 @@ public class ScheduleConfigurationUtil {
 	/**
 	 * Returns the schedule configuration with the primary key or throws a <code>NoSuchConfigurationException</code> if it could not be found.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration
 	 * @throws NoSuchConfigurationException if a schedule configuration with the primary key could not be found
 	 */
-	public static ScheduleConfiguration findByPrimaryKey(long schoolId)
+	public static ScheduleConfiguration findByPrimaryKey(long configId)
 		throws com.weprode.nero.schedule.exception.
 			NoSuchConfigurationException {
 
-		return getPersistence().findByPrimaryKey(schoolId);
+		return getPersistence().findByPrimaryKey(configId);
 	}
 
 	/**
 	 * Returns the schedule configuration with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration, or <code>null</code> if a schedule configuration with the primary key could not be found
 	 */
-	public static ScheduleConfiguration fetchByPrimaryKey(long schoolId) {
-		return getPersistence().fetchByPrimaryKey(schoolId);
+	public static ScheduleConfiguration fetchByPrimaryKey(long configId) {
+		return getPersistence().fetchByPrimaryKey(configId);
 	}
 
 	/**

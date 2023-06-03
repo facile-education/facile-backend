@@ -54,23 +54,8 @@ public class ScheduleConfigurationLocalServiceWrapper
 	}
 
 	@Override
-	public com.weprode.nero.schedule.model.ScheduleConfiguration
-		createDefaultSchoolConfiguration(long schoolId) {
-
-		return _scheduleConfigurationLocalService.
-			createDefaultSchoolConfiguration(schoolId);
-	}
-
-	@Override
-	public com.weprode.nero.schedule.model.ScheduleConfiguration
-		createOrSetSchoolConfiguration(
-			long schoolId, String startDayTime, String endDayTime,
-			java.util.Date startDateSchool, java.util.Date endDateSchool) {
-
-		return _scheduleConfigurationLocalService.
-			createOrSetSchoolConfiguration(
-				schoolId, startDayTime, endDayTime, startDateSchool,
-				endDateSchool);
+	public org.json.JSONObject convertAsJson() {
+		return _scheduleConfigurationLocalService.convertAsJson();
 	}
 
 	/**
@@ -88,15 +73,15 @@ public class ScheduleConfigurationLocalServiceWrapper
 	/**
 	 * Creates a new schedule configuration with the primary key. Does not add the schedule configuration to the database.
 	 *
-	 * @param schoolId the primary key for the new schedule configuration
+	 * @param configId the primary key for the new schedule configuration
 	 * @return the new schedule configuration
 	 */
 	@Override
 	public com.weprode.nero.schedule.model.ScheduleConfiguration
-		createScheduleConfiguration(long schoolId) {
+		createScheduleConfiguration(long configId) {
 
 		return _scheduleConfigurationLocalService.createScheduleConfiguration(
-			schoolId);
+			configId);
 	}
 
 	/**
@@ -118,17 +103,17 @@ public class ScheduleConfigurationLocalServiceWrapper
 	 * <strong>Important:</strong> Inspect ScheduleConfigurationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration that was removed
 	 * @throws PortalException if a schedule configuration with the primary key could not be found
 	 */
 	@Override
 	public com.weprode.nero.schedule.model.ScheduleConfiguration
-			deleteScheduleConfiguration(long schoolId)
+			deleteScheduleConfiguration(long configId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _scheduleConfigurationLocalService.deleteScheduleConfiguration(
-			schoolId);
+			configId);
 	}
 
 	/**
@@ -257,10 +242,10 @@ public class ScheduleConfigurationLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.schedule.model.ScheduleConfiguration
-		fetchScheduleConfiguration(long schoolId) {
+		fetchScheduleConfiguration(long configId) {
 
 		return _scheduleConfigurationLocalService.fetchScheduleConfiguration(
-			schoolId);
+			configId);
 	}
 
 	@Override
@@ -270,14 +255,14 @@ public class ScheduleConfigurationLocalServiceWrapper
 		return _scheduleConfigurationLocalService.getActionableDynamicQuery();
 	}
 
-	/**
-	 * Calculates a default current school year end date (4th of july)
-	 *
-	 * @return the default end date
-	 */
 	@Override
-	public java.util.Date getDefaultSchoolYearEndDate() {
-		return _scheduleConfigurationLocalService.getDefaultSchoolYearEndDate();
+	public java.util.List<Integer> getH1Weeks() {
+		return _scheduleConfigurationLocalService.getH1Weeks();
+	}
+
+	@Override
+	public java.util.List<Integer> getH2Weeks() {
+		return _scheduleConfigurationLocalService.getH2Weeks();
 	}
 
 	@Override
@@ -310,20 +295,25 @@ public class ScheduleConfigurationLocalServiceWrapper
 			primaryKeyObj);
 	}
 
+	@Override
+	public java.util.Date getProjectStartDate() {
+		return _scheduleConfigurationLocalService.getProjectStartDate();
+	}
+
 	/**
 	 * Returns the schedule configuration with the primary key.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration
 	 * @throws PortalException if a schedule configuration with the primary key could not be found
 	 */
 	@Override
 	public com.weprode.nero.schedule.model.ScheduleConfiguration
-			getScheduleConfiguration(long schoolId)
+			getScheduleConfiguration(long configId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _scheduleConfigurationLocalService.getScheduleConfiguration(
-			schoolId);
+			configId);
 	}
 
 	/**
@@ -357,17 +347,29 @@ public class ScheduleConfigurationLocalServiceWrapper
 	}
 
 	@Override
-	public com.weprode.nero.schedule.model.ScheduleConfiguration
-		getSchoolConfiguration(long schoolId) {
-
-		return _scheduleConfigurationLocalService.getSchoolConfiguration(
-			schoolId);
+	public java.util.Date getSchoolYearEndDate() {
+		return _scheduleConfigurationLocalService.getSchoolYearEndDate();
 	}
 
 	@Override
-	public org.json.JSONObject getSchoolConfigurationAsJson(long schoolId) {
-		return _scheduleConfigurationLocalService.getSchoolConfigurationAsJson(
-			schoolId);
+	public java.util.Date getSchoolYearSemesterDate() {
+		return _scheduleConfigurationLocalService.getSchoolYearSemesterDate();
+	}
+
+	@Override
+	public java.util.Date getSchoolYearStartDate() {
+		return _scheduleConfigurationLocalService.getSchoolYearStartDate();
+	}
+
+	@Override
+	public com.weprode.nero.schedule.model.ScheduleConfiguration
+		setScheduleConfiguration(
+			java.util.Date schoolYearStartDate, java.util.Date semesterDate,
+			java.util.Date schoolYearEndDate, String h1Weeks, String h2Weeks) {
+
+		return _scheduleConfigurationLocalService.setScheduleConfiguration(
+			schoolYearStartDate, semesterDate, schoolYearEndDate, h1Weeks,
+			h2Weeks);
 	}
 
 	/**

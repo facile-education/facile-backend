@@ -4,9 +4,6 @@ create index IX_49043908 on Schedule_Homework (sourceSessionId);
 create index IX_D208C9D2 on Schedule_Homework (targetSessionId);
 create index IX_80B37D72 on Schedule_Homework (targetWeekId);
 
-create index IX_54277A84 on Schedule_SessionParentClass (groupId);
-create index IX_AAEA75EF on Schedule_SessionParentClass (sessionId, groupId);
-
 create index IX_CB2E0838 on Schedule_SessionStudent (sessionId, studentId);
 create index IX_DF74F713 on Schedule_SessionStudent (studentId);
 
@@ -18,5 +15,3 @@ create index IX_E8F7CD08 on Schedule_StudentHomework (homeworkId);
 create index IX_1AABBFC on Schedule_StudentHomework (studentId, homeworkId);
 
 create index IX_F7DA6900 on Schedule_SubjectGroupColor (groupId, subject[$COLUMN_LENGTH:75$]);
-
-create index IX_93CD6281 on Schedule_TeacherGroupColor (teacherId, groupId);

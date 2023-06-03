@@ -82,6 +82,42 @@ public class ScheduleConfigurationServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject getScheduleConfiguration()
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				ScheduleConfigurationServiceUtil.getScheduleConfiguration();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject saveScheduleConfiguration(
+			String startDateStr, String semesterDateStr, String endDateStr,
+			String holidays, String h1Weeks, String h2Weeks)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				ScheduleConfigurationServiceUtil.saveScheduleConfiguration(
+					startDateStr, semesterDateStr, endDateStr, holidays,
+					h1Weeks, h2Weeks);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		ScheduleConfigurationServiceSoap.class);
 
