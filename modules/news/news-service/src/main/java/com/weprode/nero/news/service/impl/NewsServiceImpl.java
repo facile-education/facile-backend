@@ -60,7 +60,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
 
         try {
             Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
-            Date expiration = ScheduleConfigurationLocalServiceUtil.getDefaultSchoolYearEndDate();
+            Date expiration = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
             JSONArray populationJSONArray = new JSONArray(population);
             JSONArray attachFilesArray = new JSONArray(attachFiles);
 
@@ -107,7 +107,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
                 return result;
             }
             Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
-            Date expiration = ScheduleConfigurationLocalServiceUtil.getDefaultSchoolYearEndDate();
+            Date expiration = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
 
             JSONArray populationJSONArray = new JSONArray(population);
             JSONArray attachFilesArray = new JSONArray(attachFiles);

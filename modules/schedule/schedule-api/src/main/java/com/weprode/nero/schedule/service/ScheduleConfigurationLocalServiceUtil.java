@@ -62,18 +62,8 @@ public class ScheduleConfigurationLocalServiceUtil {
 		return getService().addScheduleConfiguration(scheduleConfiguration);
 	}
 
-	public static ScheduleConfiguration createDefaultSchoolConfiguration(
-		long schoolId) {
-
-		return getService().createDefaultSchoolConfiguration(schoolId);
-	}
-
-	public static ScheduleConfiguration createOrSetSchoolConfiguration(
-		long schoolId, String startDayTime, String endDayTime,
-		java.util.Date startDateSchool, java.util.Date endDateSchool) {
-
-		return getService().createOrSetSchoolConfiguration(
-			schoolId, startDayTime, endDayTime, startDateSchool, endDateSchool);
+	public static org.json.JSONObject convertAsJson() {
+		return getService().convertAsJson();
 	}
 
 	/**
@@ -89,13 +79,13 @@ public class ScheduleConfigurationLocalServiceUtil {
 	/**
 	 * Creates a new schedule configuration with the primary key. Does not add the schedule configuration to the database.
 	 *
-	 * @param schoolId the primary key for the new schedule configuration
+	 * @param configId the primary key for the new schedule configuration
 	 * @return the new schedule configuration
 	 */
 	public static ScheduleConfiguration createScheduleConfiguration(
-		long schoolId) {
+		long configId) {
 
-		return getService().createScheduleConfiguration(schoolId);
+		return getService().createScheduleConfiguration(configId);
 	}
 
 	/**
@@ -115,15 +105,15 @@ public class ScheduleConfigurationLocalServiceUtil {
 	 * <strong>Important:</strong> Inspect ScheduleConfigurationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration that was removed
 	 * @throws PortalException if a schedule configuration with the primary key could not be found
 	 */
 	public static ScheduleConfiguration deleteScheduleConfiguration(
-			long schoolId)
+			long configId)
 		throws PortalException {
 
-		return getService().deleteScheduleConfiguration(schoolId);
+		return getService().deleteScheduleConfiguration(configId);
 	}
 
 	/**
@@ -228,9 +218,9 @@ public class ScheduleConfigurationLocalServiceUtil {
 	}
 
 	public static ScheduleConfiguration fetchScheduleConfiguration(
-		long schoolId) {
+		long configId) {
 
-		return getService().fetchScheduleConfiguration(schoolId);
+		return getService().fetchScheduleConfiguration(configId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
@@ -239,13 +229,12 @@ public class ScheduleConfigurationLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
-	/**
-	 * Calculates a default current school year end date (4th of july)
-	 *
-	 * @return the default end date
-	 */
-	public static java.util.Date getDefaultSchoolYearEndDate() {
-		return getService().getDefaultSchoolYearEndDate();
+	public static List<Integer> getH1Weeks() {
+		return getService().getH1Weeks();
+	}
+
+	public static List<Integer> getH2Weeks() {
+		return getService().getH2Weeks();
 	}
 
 	public static
@@ -273,17 +262,21 @@ public class ScheduleConfigurationLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	public static java.util.Date getProjectStartDate() {
+		return getService().getProjectStartDate();
+	}
+
 	/**
 	 * Returns the schedule configuration with the primary key.
 	 *
-	 * @param schoolId the primary key of the schedule configuration
+	 * @param configId the primary key of the schedule configuration
 	 * @return the schedule configuration
 	 * @throws PortalException if a schedule configuration with the primary key could not be found
 	 */
-	public static ScheduleConfiguration getScheduleConfiguration(long schoolId)
+	public static ScheduleConfiguration getScheduleConfiguration(long configId)
 		throws PortalException {
 
-		return getService().getScheduleConfiguration(schoolId);
+		return getService().getScheduleConfiguration(configId);
 	}
 
 	/**
@@ -312,14 +305,25 @@ public class ScheduleConfigurationLocalServiceUtil {
 		return getService().getScheduleConfigurationsCount();
 	}
 
-	public static ScheduleConfiguration getSchoolConfiguration(long schoolId) {
-		return getService().getSchoolConfiguration(schoolId);
+	public static java.util.Date getSchoolYearEndDate() {
+		return getService().getSchoolYearEndDate();
 	}
 
-	public static org.json.JSONObject getSchoolConfigurationAsJson(
-		long schoolId) {
+	public static java.util.Date getSchoolYearSemesterDate() {
+		return getService().getSchoolYearSemesterDate();
+	}
 
-		return getService().getSchoolConfigurationAsJson(schoolId);
+	public static java.util.Date getSchoolYearStartDate() {
+		return getService().getSchoolYearStartDate();
+	}
+
+	public static ScheduleConfiguration setScheduleConfiguration(
+		java.util.Date schoolYearStartDate, java.util.Date semesterDate,
+		java.util.Date schoolYearEndDate, String h1Weeks, String h2Weeks) {
+
+		return getService().setScheduleConfiguration(
+			schoolYearStartDate, semesterDate, schoolYearEndDate, h1Weeks,
+			h2Weeks);
 	}
 
 	/**

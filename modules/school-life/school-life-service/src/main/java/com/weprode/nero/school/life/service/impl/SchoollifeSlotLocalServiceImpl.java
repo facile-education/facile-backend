@@ -3,7 +3,6 @@ package com.weprode.nero.school.life.service.impl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.weprode.nero.schedule.model.ScheduleConfiguration;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SchoollifeSlot;
@@ -41,52 +40,47 @@ public class SchoollifeSlotLocalServiceImpl extends SchoollifeSlotLocalServiceBa
             schoollifeSlot = schoollifeSlotPersistence.update(schoollifeSlot);
 
             // Create sessions from now to the end of the school year
-            ScheduleConfiguration schoolConfig = ScheduleConfigurationLocalServiceUtil.getSchoolConfiguration(schoolId);
-            if (schoolConfig == null) {
-                logger.error("No configuration is set for schoolId " + schoolId);
+            if (startDate.before(ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate()) || startDate.after(ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate())) {
+                logger.error("Error when creating a schoollife slot : school configuration start and end dates are not properly configured");
             } else {
-                if (startDate.before(schoolConfig.getStartSessionsDate()) || startDate.after(schoolConfig.getEndSessionsDate())) {
-                    logger.error("Error when creating a schoollife slot : school configuration start and end dates are not properly configured");
-                } else {
-                    // Current week
-                    Calendar startCal = Calendar.getInstance();
-                    startCal.setTime(startDate);
+                // Current week
+                Calendar startCal = Calendar.getInstance();
+                startCal.setTime(startDate);
 
-                    // Because Calendar.MONDAY = 2
-                    startCal.set(Calendar.DAY_OF_WEEK, day + 1);
+                // Because Calendar.MONDAY = 2
+                startCal.set(Calendar.DAY_OF_WEEK, day + 1);
 
-                    Calendar endCal = Calendar.getInstance();
-                    endCal.setTime(startCal.getTime());
+                Calendar endCal = Calendar.getInstance();
+                endCal.setTime(startCal.getTime());
 
-                    // startHour and endHour are formatted HH:mm
-                    int startH;
-                    int startM;
-                    int endH;
-                    int endM;
-                    try {
-                        startH = Integer.parseInt(startHour.substring(0, 2));
-                        startM = Integer.parseInt(startHour.substring(3, 5));
-                        endH   = Integer.parseInt(endHour.substring(0, 2));
-                        endM   = Integer.parseInt(endHour.substring(3, 5));
-                    } catch (Exception e) {
-                        logger.error("Error parsing startHour and endHour", e);
-                        return null;
-                    }
-
-                    startCal.set(Calendar.HOUR_OF_DAY, startH);
-                    startCal.set(Calendar.MINUTE, startM);
-
-                    endCal.set(Calendar.HOUR_OF_DAY, endH);
-                    endCal.set(Calendar.MINUTE, endM);
-
-                    while (endCal.getTime().before(schoolConfig.getEndSessionsDate())) {
-                        SchoollifeSessionLocalServiceUtil.addSession(schoollifeSlotId, schoolId, startCal.getTime(), endCal.getTime(), type);
-                        startCal.add(Calendar.DATE, 7);
-                        endCal.add(Calendar.DATE, 7);
-                    }
-
-                    logger.info("Created schoollife slot for schoolId " + schoolId + ", day=" + day + ", startHour=" + startHour +", endHour=" + endHour + ", teacherId=" + teacherId + ", type=" + type + ", capacity = " + capacity);
+                // startHour and endHour are formatted HH:mm
+                int startH;
+                int startM;
+                int endH;
+                int endM;
+                try {
+                    startH = Integer.parseInt(startHour.substring(0, 2));
+                    startM = Integer.parseInt(startHour.substring(3, 5));
+                    endH   = Integer.parseInt(endHour.substring(0, 2));
+                    endM   = Integer.parseInt(endHour.substring(3, 5));
+                } catch (Exception e) {
+                    logger.error("Error parsing startHour and endHour", e);
+                    return null;
                 }
+
+                startCal.set(Calendar.HOUR_OF_DAY, startH);
+                startCal.set(Calendar.MINUTE, startM);
+
+                endCal.set(Calendar.HOUR_OF_DAY, endH);
+                endCal.set(Calendar.MINUTE, endM);
+
+                while (endCal.getTime().before(ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate())) {
+                    SchoollifeSessionLocalServiceUtil.addSession(schoollifeSlotId, schoolId, startCal.getTime(), endCal.getTime(), type);
+                    startCal.add(Calendar.DATE, 7);
+                    endCal.add(Calendar.DATE, 7);
+                }
+
+                logger.info("Created schoollife slot for schoolId " + schoolId + ", day=" + day + ", startHour=" + startHour +", endHour=" + endHour + ", teacherId=" + teacherId + ", type=" + type + ", capacity = " + capacity);
             }
 
             return schoollifeSlot;

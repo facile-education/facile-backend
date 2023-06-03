@@ -1,13 +1,3 @@
-create table Schedule_AttachFile (
-	attachFileId LONG not null primary key,
-	homeworkId LONG,
-	sessionId LONG,
-	fileName VARCHAR(75) null,
-	size_ INTEGER,
-	type_ INTEGER,
-	isEditable BOOLEAN
-);
-
 create table Schedule_CDTSession (
 	sessionId LONG not null primary key,
 	sessionStart DATE null,
@@ -24,17 +14,16 @@ create table Schedule_CDTSession (
 	isManual BOOLEAN
 );
 
-create table Schedule_DailySchedule (
-	schoolId LONG not null,
-	sessionId INTEGER not null,
-	sessionStartHour VARCHAR(75) null,
-	sessionEndHour VARCHAR(75) null,
-	primary key (schoolId, sessionId)
-);
-
 create table Schedule_GroupColor (
 	groupId LONG not null primary key,
 	color VARCHAR(75) null
+);
+
+create table Schedule_Holiday (
+	holidayId LONG not null primary key,
+	name VARCHAR(75) null,
+	startDate DATE null,
+	endDate DATE null
 );
 
 create table Schedule_Homework (
@@ -52,25 +41,14 @@ create table Schedule_Homework (
 	isCustomStudentList BOOLEAN
 );
 
-create table Schedule_HomeworkDropboxFolder (
-	homeworkDropboxFolderId LONG not null primary key,
-	homeworkId LONG,
-	teacherId LONG,
-	folderId LONG
-);
-
 create table Schedule_ScheduleConfiguration (
-	schoolId LONG not null primary key,
-	startDayTime VARCHAR(75) null,
-	endDayTime VARCHAR(75) null,
-	startSessionsDate DATE null,
-	endSessionsDate DATE null
-);
-
-create table Schedule_SessionParentClass (
-	sessionParentClassId LONG not null primary key,
-	sessionId LONG,
-	groupId LONG
+	configId LONG not null primary key,
+	projectStartDate DATE null,
+	schoolYearStartDate DATE null,
+	schoolYearSemesterDate DATE null,
+	schoolYearEndDate DATE null,
+	h1Weeks VARCHAR(75) null,
+	h2Weeks VARCHAR(75) null
 );
 
 create table Schedule_SessionStudent (
@@ -88,14 +66,12 @@ create table Schedule_SessionTeacher (
 	modificationDate DATE null
 );
 
-create table Schedule_StudentAttachFile (
-	studentHomeworkAttachFileId LONG not null primary key,
-	attachFileId LONG,
-	studentId LONG,
-	fileEntryId LONG,
-	modifiedDate DATE null,
-	isSent BOOLEAN,
-	sentDate DATE null
+create table Schedule_SlotConfiguration (
+	schoolId LONG not null,
+	slotNumber INTEGER not null,
+	sessionStartHour VARCHAR(75) null,
+	sessionEndHour VARCHAR(75) null,
+	primary key (schoolId, slotNumber)
 );
 
 create table Schedule_StudentHomework (
@@ -113,17 +89,4 @@ create table Schedule_SubjectGroupColor (
 	subject VARCHAR(75) null,
 	groupId LONG,
 	color VARCHAR(75) null
-);
-
-create table Schedule_TeacherGroupColor (
-	teacherGroupColorId LONG not null primary key,
-	teacherId LONG,
-	groupId LONG,
-	color VARCHAR(75) null
-);
-
-create table Schedule_WeeklySchedule (
-	schoolId LONG not null,
-	dayId INTEGER not null,
-	primary key (schoolId, dayId)
 );

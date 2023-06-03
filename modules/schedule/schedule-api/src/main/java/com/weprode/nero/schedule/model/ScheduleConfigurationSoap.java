@@ -35,11 +35,13 @@ public class ScheduleConfigurationSoap implements Serializable {
 
 		ScheduleConfigurationSoap soapModel = new ScheduleConfigurationSoap();
 
-		soapModel.setSchoolId(model.getSchoolId());
-		soapModel.setStartDayTime(model.getStartDayTime());
-		soapModel.setEndDayTime(model.getEndDayTime());
-		soapModel.setStartSessionsDate(model.getStartSessionsDate());
-		soapModel.setEndSessionsDate(model.getEndSessionsDate());
+		soapModel.setConfigId(model.getConfigId());
+		soapModel.setProjectStartDate(model.getProjectStartDate());
+		soapModel.setSchoolYearStartDate(model.getSchoolYearStartDate());
+		soapModel.setSchoolYearSemesterDate(model.getSchoolYearSemesterDate());
+		soapModel.setSchoolYearEndDate(model.getSchoolYearEndDate());
+		soapModel.setH1Weeks(model.getH1Weeks());
+		soapModel.setH2Weeks(model.getH2Weeks());
 
 		return soapModel;
 	}
@@ -95,57 +97,75 @@ public class ScheduleConfigurationSoap implements Serializable {
 	}
 
 	public long getPrimaryKey() {
-		return _schoolId;
+		return _configId;
 	}
 
 	public void setPrimaryKey(long pk) {
-		setSchoolId(pk);
+		setConfigId(pk);
 	}
 
-	public long getSchoolId() {
-		return _schoolId;
+	public long getConfigId() {
+		return _configId;
 	}
 
-	public void setSchoolId(long schoolId) {
-		_schoolId = schoolId;
+	public void setConfigId(long configId) {
+		_configId = configId;
 	}
 
-	public String getStartDayTime() {
-		return _startDayTime;
+	public Date getProjectStartDate() {
+		return _projectStartDate;
 	}
 
-	public void setStartDayTime(String startDayTime) {
-		_startDayTime = startDayTime;
+	public void setProjectStartDate(Date projectStartDate) {
+		_projectStartDate = projectStartDate;
 	}
 
-	public String getEndDayTime() {
-		return _endDayTime;
+	public Date getSchoolYearStartDate() {
+		return _schoolYearStartDate;
 	}
 
-	public void setEndDayTime(String endDayTime) {
-		_endDayTime = endDayTime;
+	public void setSchoolYearStartDate(Date schoolYearStartDate) {
+		_schoolYearStartDate = schoolYearStartDate;
 	}
 
-	public Date getStartSessionsDate() {
-		return _startSessionsDate;
+	public Date getSchoolYearSemesterDate() {
+		return _schoolYearSemesterDate;
 	}
 
-	public void setStartSessionsDate(Date startSessionsDate) {
-		_startSessionsDate = startSessionsDate;
+	public void setSchoolYearSemesterDate(Date schoolYearSemesterDate) {
+		_schoolYearSemesterDate = schoolYearSemesterDate;
 	}
 
-	public Date getEndSessionsDate() {
-		return _endSessionsDate;
+	public Date getSchoolYearEndDate() {
+		return _schoolYearEndDate;
 	}
 
-	public void setEndSessionsDate(Date endSessionsDate) {
-		_endSessionsDate = endSessionsDate;
+	public void setSchoolYearEndDate(Date schoolYearEndDate) {
+		_schoolYearEndDate = schoolYearEndDate;
 	}
 
-	private long _schoolId;
-	private String _startDayTime;
-	private String _endDayTime;
-	private Date _startSessionsDate;
-	private Date _endSessionsDate;
+	public String getH1Weeks() {
+		return _h1Weeks;
+	}
+
+	public void setH1Weeks(String h1Weeks) {
+		_h1Weeks = h1Weeks;
+	}
+
+	public String getH2Weeks() {
+		return _h2Weeks;
+	}
+
+	public void setH2Weeks(String h2Weeks) {
+		_h2Weeks = h2Weeks;
+	}
+
+	private long _configId;
+	private Date _projectStartDate;
+	private Date _schoolYearStartDate;
+	private Date _schoolYearSemesterDate;
+	private Date _schoolYearEndDate;
+	private String _h1Weeks;
+	private String _h2Weeks;
 
 }

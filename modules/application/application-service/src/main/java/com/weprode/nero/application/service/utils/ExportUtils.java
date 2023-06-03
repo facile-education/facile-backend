@@ -3,7 +3,6 @@ package com.weprode.nero.application.service.utils;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -18,18 +17,24 @@ import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.model.ScheduleConfiguration;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.user.model.LDAPMapping;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.LDAPMappingLocalServiceUtil;
 import com.weprode.nero.user.service.UserContactLocalServiceUtil;
+import org.json.JSONObject;
 import org.jsoup.internal.StringUtil;
 
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 public class ExportUtils {
@@ -587,10 +592,8 @@ public class ExportUtils {
             //file.append(messages.getString("date_jour")+ ";" +messages.getString("heure_debut") + ";" + messages.getString("heure_fin")
             // 	+ ";" + messages.getString("ressource") + ";" + messages.getString("description") + ";" + messages.getString("type") + "\n");
 
-            ScheduleConfiguration conf = ScheduleConfigurationLocalServiceUtil.getSchoolConfiguration(etabId);
-
             List<CDTSession> sessions = CDTSessionLocalServiceUtil.getSchoolSessions(etabId,
-                    conf.getStartSessionsDate(), conf.getEndSessionsDate());
+                    ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate(), ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate());
             logger.info("GRR resource export : "+sessions.size()+" sessions for schoolId = " + etabId);
 
             for (CDTSession session : sessions) {

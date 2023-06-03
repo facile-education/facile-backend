@@ -49,7 +49,7 @@ public class ScheduleConfigurationCacheModel
 		ScheduleConfigurationCacheModel scheduleConfigurationCacheModel =
 			(ScheduleConfigurationCacheModel)object;
 
-		if (schoolId == scheduleConfigurationCacheModel.schoolId) {
+		if (configId == scheduleConfigurationCacheModel.configId) {
 			return true;
 		}
 
@@ -58,23 +58,27 @@ public class ScheduleConfigurationCacheModel
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, schoolId);
+		return HashUtil.hash(0, configId);
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(15);
 
-		sb.append("{schoolId=");
-		sb.append(schoolId);
-		sb.append(", startDayTime=");
-		sb.append(startDayTime);
-		sb.append(", endDayTime=");
-		sb.append(endDayTime);
-		sb.append(", startSessionsDate=");
-		sb.append(startSessionsDate);
-		sb.append(", endSessionsDate=");
-		sb.append(endSessionsDate);
+		sb.append("{configId=");
+		sb.append(configId);
+		sb.append(", projectStartDate=");
+		sb.append(projectStartDate);
+		sb.append(", schoolYearStartDate=");
+		sb.append(schoolYearStartDate);
+		sb.append(", schoolYearSemesterDate=");
+		sb.append(schoolYearSemesterDate);
+		sb.append(", schoolYearEndDate=");
+		sb.append(schoolYearEndDate);
+		sb.append(", h1Weeks=");
+		sb.append(h1Weeks);
+		sb.append(", h2Weeks=");
+		sb.append(h2Weeks);
 		sb.append("}");
 
 		return sb.toString();
@@ -85,36 +89,52 @@ public class ScheduleConfigurationCacheModel
 		ScheduleConfigurationImpl scheduleConfigurationImpl =
 			new ScheduleConfigurationImpl();
 
-		scheduleConfigurationImpl.setSchoolId(schoolId);
+		scheduleConfigurationImpl.setConfigId(configId);
 
-		if (startDayTime == null) {
-			scheduleConfigurationImpl.setStartDayTime("");
+		if (projectStartDate == Long.MIN_VALUE) {
+			scheduleConfigurationImpl.setProjectStartDate(null);
 		}
 		else {
-			scheduleConfigurationImpl.setStartDayTime(startDayTime);
+			scheduleConfigurationImpl.setProjectStartDate(
+				new Date(projectStartDate));
 		}
 
-		if (endDayTime == null) {
-			scheduleConfigurationImpl.setEndDayTime("");
+		if (schoolYearStartDate == Long.MIN_VALUE) {
+			scheduleConfigurationImpl.setSchoolYearStartDate(null);
 		}
 		else {
-			scheduleConfigurationImpl.setEndDayTime(endDayTime);
+			scheduleConfigurationImpl.setSchoolYearStartDate(
+				new Date(schoolYearStartDate));
 		}
 
-		if (startSessionsDate == Long.MIN_VALUE) {
-			scheduleConfigurationImpl.setStartSessionsDate(null);
+		if (schoolYearSemesterDate == Long.MIN_VALUE) {
+			scheduleConfigurationImpl.setSchoolYearSemesterDate(null);
 		}
 		else {
-			scheduleConfigurationImpl.setStartSessionsDate(
-				new Date(startSessionsDate));
+			scheduleConfigurationImpl.setSchoolYearSemesterDate(
+				new Date(schoolYearSemesterDate));
 		}
 
-		if (endSessionsDate == Long.MIN_VALUE) {
-			scheduleConfigurationImpl.setEndSessionsDate(null);
+		if (schoolYearEndDate == Long.MIN_VALUE) {
+			scheduleConfigurationImpl.setSchoolYearEndDate(null);
 		}
 		else {
-			scheduleConfigurationImpl.setEndSessionsDate(
-				new Date(endSessionsDate));
+			scheduleConfigurationImpl.setSchoolYearEndDate(
+				new Date(schoolYearEndDate));
+		}
+
+		if (h1Weeks == null) {
+			scheduleConfigurationImpl.setH1Weeks("");
+		}
+		else {
+			scheduleConfigurationImpl.setH1Weeks(h1Weeks);
+		}
+
+		if (h2Weeks == null) {
+			scheduleConfigurationImpl.setH2Weeks("");
+		}
+		else {
+			scheduleConfigurationImpl.setH2Weeks(h2Weeks);
 		}
 
 		scheduleConfigurationImpl.resetOriginalValues();
@@ -124,39 +144,44 @@ public class ScheduleConfigurationCacheModel
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
-		schoolId = objectInput.readLong();
-		startDayTime = objectInput.readUTF();
-		endDayTime = objectInput.readUTF();
-		startSessionsDate = objectInput.readLong();
-		endSessionsDate = objectInput.readLong();
+		configId = objectInput.readLong();
+		projectStartDate = objectInput.readLong();
+		schoolYearStartDate = objectInput.readLong();
+		schoolYearSemesterDate = objectInput.readLong();
+		schoolYearEndDate = objectInput.readLong();
+		h1Weeks = objectInput.readUTF();
+		h2Weeks = objectInput.readUTF();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
-		objectOutput.writeLong(schoolId);
+		objectOutput.writeLong(configId);
+		objectOutput.writeLong(projectStartDate);
+		objectOutput.writeLong(schoolYearStartDate);
+		objectOutput.writeLong(schoolYearSemesterDate);
+		objectOutput.writeLong(schoolYearEndDate);
 
-		if (startDayTime == null) {
+		if (h1Weeks == null) {
 			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeUTF(startDayTime);
+			objectOutput.writeUTF(h1Weeks);
 		}
 
-		if (endDayTime == null) {
+		if (h2Weeks == null) {
 			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeUTF(endDayTime);
+			objectOutput.writeUTF(h2Weeks);
 		}
-
-		objectOutput.writeLong(startSessionsDate);
-		objectOutput.writeLong(endSessionsDate);
 	}
 
-	public long schoolId;
-	public String startDayTime;
-	public String endDayTime;
-	public long startSessionsDate;
-	public long endSessionsDate;
+	public long configId;
+	public long projectStartDate;
+	public long schoolYearStartDate;
+	public long schoolYearSemesterDate;
+	public long schoolYearEndDate;
+	public String h1Weeks;
+	public String h2Weeks;
 
 }

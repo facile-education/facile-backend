@@ -44,45 +44,60 @@ public class ScheduleConfigurationWrapper
 	public Map<String, Object> getModelAttributes() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
-		attributes.put("schoolId", getSchoolId());
-		attributes.put("startDayTime", getStartDayTime());
-		attributes.put("endDayTime", getEndDayTime());
-		attributes.put("startSessionsDate", getStartSessionsDate());
-		attributes.put("endSessionsDate", getEndSessionsDate());
+		attributes.put("configId", getConfigId());
+		attributes.put("projectStartDate", getProjectStartDate());
+		attributes.put("schoolYearStartDate", getSchoolYearStartDate());
+		attributes.put("schoolYearSemesterDate", getSchoolYearSemesterDate());
+		attributes.put("schoolYearEndDate", getSchoolYearEndDate());
+		attributes.put("h1Weeks", getH1Weeks());
+		attributes.put("h2Weeks", getH2Weeks());
 
 		return attributes;
 	}
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long schoolId = (Long)attributes.get("schoolId");
+		Long configId = (Long)attributes.get("configId");
 
-		if (schoolId != null) {
-			setSchoolId(schoolId);
+		if (configId != null) {
+			setConfigId(configId);
 		}
 
-		String startDayTime = (String)attributes.get("startDayTime");
+		Date projectStartDate = (Date)attributes.get("projectStartDate");
 
-		if (startDayTime != null) {
-			setStartDayTime(startDayTime);
+		if (projectStartDate != null) {
+			setProjectStartDate(projectStartDate);
 		}
 
-		String endDayTime = (String)attributes.get("endDayTime");
+		Date schoolYearStartDate = (Date)attributes.get("schoolYearStartDate");
 
-		if (endDayTime != null) {
-			setEndDayTime(endDayTime);
+		if (schoolYearStartDate != null) {
+			setSchoolYearStartDate(schoolYearStartDate);
 		}
 
-		Date startSessionsDate = (Date)attributes.get("startSessionsDate");
+		Date schoolYearSemesterDate = (Date)attributes.get(
+			"schoolYearSemesterDate");
 
-		if (startSessionsDate != null) {
-			setStartSessionsDate(startSessionsDate);
+		if (schoolYearSemesterDate != null) {
+			setSchoolYearSemesterDate(schoolYearSemesterDate);
 		}
 
-		Date endSessionsDate = (Date)attributes.get("endSessionsDate");
+		Date schoolYearEndDate = (Date)attributes.get("schoolYearEndDate");
 
-		if (endSessionsDate != null) {
-			setEndSessionsDate(endSessionsDate);
+		if (schoolYearEndDate != null) {
+			setSchoolYearEndDate(schoolYearEndDate);
+		}
+
+		String h1Weeks = (String)attributes.get("h1Weeks");
+
+		if (h1Weeks != null) {
+			setH1Weeks(h1Weeks);
+		}
+
+		String h2Weeks = (String)attributes.get("h2Weeks");
+
+		if (h2Weeks != null) {
+			setH2Weeks(h2Weeks);
 		}
 	}
 
@@ -92,23 +107,33 @@ public class ScheduleConfigurationWrapper
 	}
 
 	/**
-	 * Returns the end day time of this schedule configuration.
+	 * Returns the config ID of this schedule configuration.
 	 *
-	 * @return the end day time of this schedule configuration
+	 * @return the config ID of this schedule configuration
 	 */
 	@Override
-	public String getEndDayTime() {
-		return model.getEndDayTime();
+	public long getConfigId() {
+		return model.getConfigId();
 	}
 
 	/**
-	 * Returns the end sessions date of this schedule configuration.
+	 * Returns the h1 weeks of this schedule configuration.
 	 *
-	 * @return the end sessions date of this schedule configuration
+	 * @return the h1 weeks of this schedule configuration
 	 */
 	@Override
-	public Date getEndSessionsDate() {
-		return model.getEndSessionsDate();
+	public String getH1Weeks() {
+		return model.getH1Weeks();
+	}
+
+	/**
+	 * Returns the h2 weeks of this schedule configuration.
+	 *
+	 * @return the h2 weeks of this schedule configuration
+	 */
+	@Override
+	public String getH2Weeks() {
+		return model.getH2Weeks();
 	}
 
 	/**
@@ -122,33 +147,43 @@ public class ScheduleConfigurationWrapper
 	}
 
 	/**
-	 * Returns the school ID of this schedule configuration.
+	 * Returns the project start date of this schedule configuration.
 	 *
-	 * @return the school ID of this schedule configuration
+	 * @return the project start date of this schedule configuration
 	 */
 	@Override
-	public long getSchoolId() {
-		return model.getSchoolId();
+	public Date getProjectStartDate() {
+		return model.getProjectStartDate();
 	}
 
 	/**
-	 * Returns the start day time of this schedule configuration.
+	 * Returns the school year end date of this schedule configuration.
 	 *
-	 * @return the start day time of this schedule configuration
+	 * @return the school year end date of this schedule configuration
 	 */
 	@Override
-	public String getStartDayTime() {
-		return model.getStartDayTime();
+	public Date getSchoolYearEndDate() {
+		return model.getSchoolYearEndDate();
 	}
 
 	/**
-	 * Returns the start sessions date of this schedule configuration.
+	 * Returns the school year semester date of this schedule configuration.
 	 *
-	 * @return the start sessions date of this schedule configuration
+	 * @return the school year semester date of this schedule configuration
 	 */
 	@Override
-	public Date getStartSessionsDate() {
-		return model.getStartSessionsDate();
+	public Date getSchoolYearSemesterDate() {
+		return model.getSchoolYearSemesterDate();
+	}
+
+	/**
+	 * Returns the school year start date of this schedule configuration.
+	 *
+	 * @return the school year start date of this schedule configuration
+	 */
+	@Override
+	public Date getSchoolYearStartDate() {
+		return model.getSchoolYearStartDate();
 	}
 
 	@Override
@@ -157,23 +192,33 @@ public class ScheduleConfigurationWrapper
 	}
 
 	/**
-	 * Sets the end day time of this schedule configuration.
+	 * Sets the config ID of this schedule configuration.
 	 *
-	 * @param endDayTime the end day time of this schedule configuration
+	 * @param configId the config ID of this schedule configuration
 	 */
 	@Override
-	public void setEndDayTime(String endDayTime) {
-		model.setEndDayTime(endDayTime);
+	public void setConfigId(long configId) {
+		model.setConfigId(configId);
 	}
 
 	/**
-	 * Sets the end sessions date of this schedule configuration.
+	 * Sets the h1 weeks of this schedule configuration.
 	 *
-	 * @param endSessionsDate the end sessions date of this schedule configuration
+	 * @param h1Weeks the h1 weeks of this schedule configuration
 	 */
 	@Override
-	public void setEndSessionsDate(Date endSessionsDate) {
-		model.setEndSessionsDate(endSessionsDate);
+	public void setH1Weeks(String h1Weeks) {
+		model.setH1Weeks(h1Weeks);
+	}
+
+	/**
+	 * Sets the h2 weeks of this schedule configuration.
+	 *
+	 * @param h2Weeks the h2 weeks of this schedule configuration
+	 */
+	@Override
+	public void setH2Weeks(String h2Weeks) {
+		model.setH2Weeks(h2Weeks);
 	}
 
 	/**
@@ -187,33 +232,43 @@ public class ScheduleConfigurationWrapper
 	}
 
 	/**
-	 * Sets the school ID of this schedule configuration.
+	 * Sets the project start date of this schedule configuration.
 	 *
-	 * @param schoolId the school ID of this schedule configuration
+	 * @param projectStartDate the project start date of this schedule configuration
 	 */
 	@Override
-	public void setSchoolId(long schoolId) {
-		model.setSchoolId(schoolId);
+	public void setProjectStartDate(Date projectStartDate) {
+		model.setProjectStartDate(projectStartDate);
 	}
 
 	/**
-	 * Sets the start day time of this schedule configuration.
+	 * Sets the school year end date of this schedule configuration.
 	 *
-	 * @param startDayTime the start day time of this schedule configuration
+	 * @param schoolYearEndDate the school year end date of this schedule configuration
 	 */
 	@Override
-	public void setStartDayTime(String startDayTime) {
-		model.setStartDayTime(startDayTime);
+	public void setSchoolYearEndDate(Date schoolYearEndDate) {
+		model.setSchoolYearEndDate(schoolYearEndDate);
 	}
 
 	/**
-	 * Sets the start sessions date of this schedule configuration.
+	 * Sets the school year semester date of this schedule configuration.
 	 *
-	 * @param startSessionsDate the start sessions date of this schedule configuration
+	 * @param schoolYearSemesterDate the school year semester date of this schedule configuration
 	 */
 	@Override
-	public void setStartSessionsDate(Date startSessionsDate) {
-		model.setStartSessionsDate(startSessionsDate);
+	public void setSchoolYearSemesterDate(Date schoolYearSemesterDate) {
+		model.setSchoolYearSemesterDate(schoolYearSemesterDate);
+	}
+
+	/**
+	 * Sets the school year start date of this schedule configuration.
+	 *
+	 * @param schoolYearStartDate the school year start date of this schedule configuration
+	 */
+	@Override
+	public void setSchoolYearStartDate(Date schoolYearStartDate) {
+		model.setSchoolYearStartDate(schoolYearStartDate);
 	}
 
 	@Override

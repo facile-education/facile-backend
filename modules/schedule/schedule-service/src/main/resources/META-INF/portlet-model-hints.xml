@@ -20,15 +20,15 @@
 		<field name="groupId" type="long" />
 		<field name="isManual" type="boolean" />
 	</model>
-	<model name="com.weprode.nero.schedule.model.DailySchedule">
-		<field name="schoolId" type="long" />
-		<field name="sessionId" type="int" />
-		<field name="sessionStartHour" type="String" />
-		<field name="sessionEndHour" type="String" />
-	</model>
 	<model name="com.weprode.nero.schedule.model.GroupColor">
 		<field name="groupId" type="long" />
 		<field name="color" type="String" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.Holiday">
+		<field name="holidayId" type="long" />
+		<field name="name" type="String" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
 	</model>
 	<model name="com.weprode.nero.schedule.model.Homework">
 		<field name="homeworkId" type="long" />
@@ -47,11 +47,13 @@
 		<field name="isCustomStudentList" type="boolean" />
 	</model>
 	<model name="com.weprode.nero.schedule.model.ScheduleConfiguration">
-		<field name="schoolId" type="long" />
-		<field name="startDayTime" type="String" />
-		<field name="endDayTime" type="String" />
-		<field name="startSessionsDate" type="Date" />
-		<field name="endSessionsDate" type="Date" />
+		<field name="configId" type="long" />
+		<field name="projectStartDate" type="Date" />
+		<field name="schoolYearStartDate" type="Date" />
+		<field name="schoolYearSemesterDate" type="Date" />
+		<field name="schoolYearEndDate" type="Date" />
+		<field name="h1Weeks" type="String" />
+		<field name="h2Weeks" type="String" />
 	</model>
 	<model name="com.weprode.nero.schedule.model.SessionStudent">
 		<field name="sessionStudentId" type="long" />
@@ -65,6 +67,12 @@
 		<field name="status" type="int" />
 		<field name="substituteId" type="long" />
 		<field name="modificationDate" type="Date" />
+	</model>
+	<model name="com.weprode.nero.schedule.model.SlotConfiguration">
+		<field name="schoolId" type="long" />
+		<field name="slotNumber" type="int" />
+		<field name="sessionStartHour" type="String" />
+		<field name="sessionEndHour" type="String" />
 	</model>
 	<model name="com.weprode.nero.schedule.model.StudentHomework">
 		<field name="studentHomeworkId" type="long" />
@@ -80,9 +88,5 @@
 		<field name="subject" type="String" />
 		<field name="groupId" type="long" />
 		<field name="color" type="String" />
-	</model>
-	<model name="com.weprode.nero.schedule.model.WeeklySchedule">
-		<field name="schoolId" type="long" />
-		<field name="dayId" type="int" />
 	</model>
 </model-hints>

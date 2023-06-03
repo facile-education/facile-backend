@@ -48,6 +48,20 @@ public class ScheduleConfigurationServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static org.json.JSONObject getScheduleConfiguration() {
+		return getService().getScheduleConfiguration();
+	}
+
+	public static org.json.JSONObject saveScheduleConfiguration(
+		java.lang.String startDateStr, java.lang.String semesterDateStr,
+		java.lang.String endDateStr, java.lang.String holidays,
+		java.lang.String h1Weeks, java.lang.String h2Weeks) {
+
+		return getService().saveScheduleConfiguration(
+			startDateStr, semesterDateStr, endDateStr, holidays, h1Weeks,
+			h2Weeks);
+	}
+
 	public static ScheduleConfigurationService getService() {
 		return _service;
 	}

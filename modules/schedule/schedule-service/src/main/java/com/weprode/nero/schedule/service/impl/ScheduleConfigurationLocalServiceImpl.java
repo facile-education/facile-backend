@@ -1,21 +1,16 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.schedule.model.ScheduleConfiguration;
-import com.weprode.nero.schedule.model.WeeklySchedule;
-import com.weprode.nero.schedule.service.WeeklyScheduleLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.ScheduleConfigurationLocalServiceBaseImpl;
-
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,13 +24,16 @@ public class ScheduleConfigurationLocalServiceImpl
 
 	private static final Log logger = LogFactoryUtil.getLog(ScheduleConfigurationLocalServiceImpl.class);
 
-	public ScheduleConfiguration createOrSetSchoolConfiguration(long schoolId, String startDayTime, String endDayTime, Date startDateSchool, Date endDateSchool) {
-		ScheduleConfiguration schoolConfig = null;
+	public ScheduleConfiguration setScheduleConfiguration(Date schoolYearStartDate, Date semesterDate, Date schoolYearEndDate, String h1Weeks, String h2Weeks) {
 
+		ScheduleConfiguration schoolConfig = null;
 		try {
-			schoolConfig = scheduleConfigurationPersistence.findByPrimaryKey(schoolId);
+			List<ScheduleConfiguration> configs = scheduleConfigurationPersistence.findAll();
+			if (configs != null) {
+				schoolConfig = configs.get(0);
+			}
 		} catch (Exception e) {
-			logger.debug(e);
+			logger.error("Error fetching global schedule configuration", e);
 		}
 
 		if (schoolConfig == null) {
@@ -47,11 +45,11 @@ public class ScheduleConfigurationLocalServiceImpl
 		}
 
 		try {
-			schoolConfig.setSchoolId(schoolId);
-			schoolConfig.setStartDayTime(startDayTime);
-			schoolConfig.setEndDayTime(endDayTime);
-			schoolConfig.setStartSessionsDate(startDateSchool);
-			schoolConfig.setEndSessionsDate(endDateSchool);
+			schoolConfig.setSchoolYearStartDate(schoolYearStartDate);
+			schoolConfig.setSchoolYearSemesterDate(semesterDate);
+			schoolConfig.setSchoolYearEndDate(schoolYearEndDate);
+			schoolConfig.setH1Weeks(h1Weeks);
+			schoolConfig.setH2Weeks(h2Weeks);
 			schoolConfig = scheduleConfigurationLocalService.updateScheduleConfiguration(schoolConfig);
 		} catch (Exception e) {
 			return null;
@@ -60,88 +58,97 @@ public class ScheduleConfigurationLocalServiceImpl
 		return schoolConfig;
 	}
 
-	public ScheduleConfiguration createDefaultSchoolConfiguration(long schoolId) {
-		ScheduleConfiguration defaultConfiguration = null;
+	public Date getSchoolYearStartDate() {
 
 		try {
-			defaultConfiguration = scheduleConfigurationPersistence.create(counterLocalService.increment());
-			defaultConfiguration.setSchoolId(schoolId);
-			defaultConfiguration.setStartDayTime("08:00");
-			defaultConfiguration.setEndDayTime("18:00");
+			return scheduleConfigurationPersistence.findAll().get(0).getSchoolYearStartDate();
+		} catch (Exception e) {
+			logger.error("Error fetching school year start date", e);
+		}
+		return null;
+	}
 
-			Calendar startCal = Calendar.getInstance();
-			Calendar endCal = Calendar.getInstance();
+	public Date getSchoolYearSemesterDate() {
 
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(new Date());
-			int monthNb = cal.get(Calendar.MONTH);
-			if (monthNb <= 7) {
-				startCal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 1);
-				endCal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
-			} else {
-				startCal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
-				endCal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
+		try {
+			return scheduleConfigurationPersistence.findAll().get(0).getSchoolYearSemesterDate();
+		} catch (Exception e) {
+			logger.error("Error fetching school year semester date", e);
+		}
+		return null;
+	}
+
+	public Date getSchoolYearEndDate() {
+
+		try {
+			return scheduleConfigurationPersistence.findAll().get(0).getSchoolYearEndDate();
+		} catch (Exception e) {
+			logger.error("Error fetching school year end date", e);
+		}
+		return null;
+	}
+
+	public Date getProjectStartDate() {
+
+		try {
+			return scheduleConfigurationPersistence.findAll().get(0).getProjectStartDate();
+		} catch (Exception e) {
+			logger.error("Error fetching project start date", e);
+		}
+		return null;
+	}
+
+	public List<Integer> getH1Weeks() {
+
+		List<Integer> weeksList = new ArrayList<>();
+		try {
+			String h1Weeks = scheduleConfigurationPersistence.findAll().get(0).getH1Weeks();
+			String[] h1WeeksTab = h1Weeks.split(",");
+			for (String week : h1WeeksTab) {
+				weeksList.add(Integer.parseInt(week));
 			}
-			startCal.set(Calendar.MONTH, Calendar.SEPTEMBER);
-			startCal.set(Calendar.DATE, 1);
-			endCal.set(Calendar.MONTH, Calendar.JULY);
-			endCal.set(Calendar.DATE, 8);
-			defaultConfiguration.setStartSessionsDate(startCal.getTime());
-			defaultConfiguration.setEndSessionsDate(endCal.getTime());
-			defaultConfiguration = scheduleConfigurationPersistence.update(defaultConfiguration);
 		} catch (Exception e) {
-			logger.debug(e);
+			logger.error("Error fetching H1 weeks", e);
 		}
-
-		return defaultConfiguration;
+		return weeksList;
 	}
 
-	public ScheduleConfiguration getSchoolConfiguration(long schoolId) {
-		ScheduleConfiguration schoolConfig = null;
+	public List<Integer> getH2Weeks() {
 
+		List<Integer> weeksList = new ArrayList<>();
 		try {
-			schoolConfig = scheduleConfigurationPersistence.findByPrimaryKey(schoolId);
+			String h1Weeks = scheduleConfigurationPersistence.findAll().get(0).getH2Weeks();
+			String[] h1WeeksTab = h1Weeks.split(",");
+			for (String week : h1WeeksTab) {
+				weeksList.add(Integer.parseInt(week));
+			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("Error fetching H1 weeks", e);
 		}
-		if (schoolConfig == null) {
-			schoolConfig = createDefaultSchoolConfiguration(schoolId);
-		}
-
-		return schoolConfig;
+		return weeksList;
 	}
 
-	public JSONObject getSchoolConfigurationAsJson(long schoolId) {
+	public JSONObject convertAsJson() {
+
 		JSONObject jsonConfig = new JSONObject();
 
-		ScheduleConfiguration schoolConfig = getSchoolConfiguration(schoolId);
-		if (schoolConfig != null) {
-			List<WeeklySchedule> weeklySchedules = WeeklyScheduleLocalServiceUtil.getWeeklyScheduleBySchoolId(schoolId);
-
-			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
-			jsonConfig.put(JSONConstants.START_DAY_TIME, schoolConfig.getStartDayTime());
-			jsonConfig.put(JSONConstants.END_DAY_TIME, schoolConfig.getEndDayTime());
-			// TODO: handle correctly 'startDateProject' (portal-ext property?)
-			jsonConfig.put(JSONConstants.START_DATE_PROJECT, sdf.format(schoolConfig.getStartSessionsDate()));
-			jsonConfig.put(JSONConstants.START_DATE_SCHOOL, sdf.format(schoolConfig.getStartSessionsDate()));
-			jsonConfig.put(JSONConstants.END_DATE_SCHOOL, sdf.format(schoolConfig.getEndSessionsDate()));
-
-			JSONArray dayArray = new JSONArray();
-			for (WeeklySchedule aDay : weeklySchedules) {
-				dayArray.put(aDay.getDayId());
-			}
-			jsonConfig.put(JSONConstants.SCHOOL_DAYS, dayArray);
-
+		try {
+			ScheduleConfiguration config = scheduleConfigurationPersistence.findAll().get(0);
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			jsonConfig.put(JSONConstants.SCHOOL_YEAR_START_DATE, sdf.format(config.getSchoolYearStartDate()));
+			jsonConfig.put(JSONConstants.SCHOOL_YEAR_SEMESTER_DATE, sdf.format(config.getSchoolYearSemesterDate()));
+			jsonConfig.put(JSONConstants.SCHOOL_YEAR_END_DATE, sdf.format(config.getSchoolYearEndDate()));
+			jsonConfig.put(JSONConstants.H1_WEEKS, config.getH1Weeks());
+			jsonConfig.put(JSONConstants.H2_WEEKS, config.getH1Weeks());
+		} catch (Exception e) {
+			logger.error("Error fetching school year end date", e);
 		}
 
 		return jsonConfig;
 	}
 
-	/**
-	 * Calculates a default current school year end date (4th of july)
-	 * @return the default end date
-	 */
-	public Date getDefaultSchoolYearEndDate() {
+	// Kept for souvenir
+	private Date getDefaultSchoolYearEndDate() {
 		Calendar cal = Calendar.getInstance();
 
 		Date today = new Date();

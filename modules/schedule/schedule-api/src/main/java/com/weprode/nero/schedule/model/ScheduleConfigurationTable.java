@@ -34,22 +34,30 @@ public class ScheduleConfigurationTable
 	public static final ScheduleConfigurationTable INSTANCE =
 		new ScheduleConfigurationTable();
 
-	public final Column<ScheduleConfigurationTable, Long> schoolId =
-		createColumn("schoolId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
-	public final Column<ScheduleConfigurationTable, String> startDayTime =
+	public final Column<ScheduleConfigurationTable, Long> configId =
+		createColumn("configId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<ScheduleConfigurationTable, Date> projectStartDate =
 		createColumn(
-			"startDayTime", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<ScheduleConfigurationTable, String> endDayTime =
-		createColumn(
-			"endDayTime", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<ScheduleConfigurationTable, Date> startSessionsDate =
-		createColumn(
-			"startSessionsDate", Date.class, Types.TIMESTAMP,
+			"projectStartDate", Date.class, Types.TIMESTAMP,
 			Column.FLAG_DEFAULT);
-	public final Column<ScheduleConfigurationTable, Date> endSessionsDate =
+	public final Column<ScheduleConfigurationTable, Date> schoolYearStartDate =
 		createColumn(
-			"endSessionsDate", Date.class, Types.TIMESTAMP,
+			"schoolYearStartDate", Date.class, Types.TIMESTAMP,
 			Column.FLAG_DEFAULT);
+	public final Column<ScheduleConfigurationTable, Date>
+		schoolYearSemesterDate = createColumn(
+			"schoolYearSemesterDate", Date.class, Types.TIMESTAMP,
+			Column.FLAG_DEFAULT);
+	public final Column<ScheduleConfigurationTable, Date> schoolYearEndDate =
+		createColumn(
+			"schoolYearEndDate", Date.class, Types.TIMESTAMP,
+			Column.FLAG_DEFAULT);
+	public final Column<ScheduleConfigurationTable, String> h1Weeks =
+		createColumn(
+			"h1Weeks", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<ScheduleConfigurationTable, String> h2Weeks =
+		createColumn(
+			"h2Weeks", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 
 	private ScheduleConfigurationTable() {
 		super(

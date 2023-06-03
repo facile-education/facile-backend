@@ -50,6 +50,21 @@ public class ScheduleConfigurationServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getScheduleConfiguration() {
+		return _scheduleConfigurationService.getScheduleConfiguration();
+	}
+
+	@Override
+	public org.json.JSONObject saveScheduleConfiguration(
+		String startDateStr, String semesterDateStr, String endDateStr,
+		String holidays, String h1Weeks, String h2Weeks) {
+
+		return _scheduleConfigurationService.saveScheduleConfiguration(
+			startDateStr, semesterDateStr, endDateStr, holidays, h1Weeks,
+			h2Weeks);
+	}
+
+	@Override
 	public ScheduleConfigurationService getWrappedService() {
 		return _scheduleConfigurationService;
 	}

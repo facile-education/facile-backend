@@ -451,7 +451,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 				Organization coursOrg = OrganizationLocalServiceUtil.getOrganization(coursGroup.getOrganizationId());
 				fullCoursName = OrgUtilsLocalServiceUtil.formatOrgName(coursOrg.getName(), false);
 				schoolId = coursOrg.getParentOrganizationId();
-				schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolConfiguration(schoolId).getEndSessionsDate();
+				schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
 			} else {
 				fullCoursName = coursGroup.getName();
 				schoolYearEndDate = getSchoolYearEndDate();

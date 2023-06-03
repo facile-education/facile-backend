@@ -40,11 +40,11 @@ public interface ScheduleConfiguration
 	 * Never modify this interface directly. Add methods to <code>com.weprode.nero.schedule.model.impl.ScheduleConfigurationImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public static final Accessor<ScheduleConfiguration, Long>
-		SCHOOL_ID_ACCESSOR = new Accessor<ScheduleConfiguration, Long>() {
+		CONFIG_ID_ACCESSOR = new Accessor<ScheduleConfiguration, Long>() {
 
 			@Override
 			public Long get(ScheduleConfiguration scheduleConfiguration) {
-				return scheduleConfiguration.getSchoolId();
+				return scheduleConfiguration.getConfigId();
 			}
 
 			@Override

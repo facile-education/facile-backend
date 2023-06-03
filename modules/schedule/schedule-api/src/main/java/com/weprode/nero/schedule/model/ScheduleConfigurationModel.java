@@ -57,76 +57,104 @@ public interface ScheduleConfigurationModel
 	public void setPrimaryKey(long primaryKey);
 
 	/**
-	 * Returns the school ID of this schedule configuration.
+	 * Returns the config ID of this schedule configuration.
 	 *
-	 * @return the school ID of this schedule configuration
+	 * @return the config ID of this schedule configuration
 	 */
-	public long getSchoolId();
+	public long getConfigId();
 
 	/**
-	 * Sets the school ID of this schedule configuration.
+	 * Sets the config ID of this schedule configuration.
 	 *
-	 * @param schoolId the school ID of this schedule configuration
+	 * @param configId the config ID of this schedule configuration
 	 */
-	public void setSchoolId(long schoolId);
+	public void setConfigId(long configId);
 
 	/**
-	 * Returns the start day time of this schedule configuration.
+	 * Returns the project start date of this schedule configuration.
 	 *
-	 * @return the start day time of this schedule configuration
+	 * @return the project start date of this schedule configuration
+	 */
+	public Date getProjectStartDate();
+
+	/**
+	 * Sets the project start date of this schedule configuration.
+	 *
+	 * @param projectStartDate the project start date of this schedule configuration
+	 */
+	public void setProjectStartDate(Date projectStartDate);
+
+	/**
+	 * Returns the school year start date of this schedule configuration.
+	 *
+	 * @return the school year start date of this schedule configuration
+	 */
+	public Date getSchoolYearStartDate();
+
+	/**
+	 * Sets the school year start date of this schedule configuration.
+	 *
+	 * @param schoolYearStartDate the school year start date of this schedule configuration
+	 */
+	public void setSchoolYearStartDate(Date schoolYearStartDate);
+
+	/**
+	 * Returns the school year semester date of this schedule configuration.
+	 *
+	 * @return the school year semester date of this schedule configuration
+	 */
+	public Date getSchoolYearSemesterDate();
+
+	/**
+	 * Sets the school year semester date of this schedule configuration.
+	 *
+	 * @param schoolYearSemesterDate the school year semester date of this schedule configuration
+	 */
+	public void setSchoolYearSemesterDate(Date schoolYearSemesterDate);
+
+	/**
+	 * Returns the school year end date of this schedule configuration.
+	 *
+	 * @return the school year end date of this schedule configuration
+	 */
+	public Date getSchoolYearEndDate();
+
+	/**
+	 * Sets the school year end date of this schedule configuration.
+	 *
+	 * @param schoolYearEndDate the school year end date of this schedule configuration
+	 */
+	public void setSchoolYearEndDate(Date schoolYearEndDate);
+
+	/**
+	 * Returns the h1 weeks of this schedule configuration.
+	 *
+	 * @return the h1 weeks of this schedule configuration
 	 */
 	@AutoEscape
-	public String getStartDayTime();
+	public String getH1Weeks();
 
 	/**
-	 * Sets the start day time of this schedule configuration.
+	 * Sets the h1 weeks of this schedule configuration.
 	 *
-	 * @param startDayTime the start day time of this schedule configuration
+	 * @param h1Weeks the h1 weeks of this schedule configuration
 	 */
-	public void setStartDayTime(String startDayTime);
+	public void setH1Weeks(String h1Weeks);
 
 	/**
-	 * Returns the end day time of this schedule configuration.
+	 * Returns the h2 weeks of this schedule configuration.
 	 *
-	 * @return the end day time of this schedule configuration
+	 * @return the h2 weeks of this schedule configuration
 	 */
 	@AutoEscape
-	public String getEndDayTime();
+	public String getH2Weeks();
 
 	/**
-	 * Sets the end day time of this schedule configuration.
+	 * Sets the h2 weeks of this schedule configuration.
 	 *
-	 * @param endDayTime the end day time of this schedule configuration
+	 * @param h2Weeks the h2 weeks of this schedule configuration
 	 */
-	public void setEndDayTime(String endDayTime);
-
-	/**
-	 * Returns the start sessions date of this schedule configuration.
-	 *
-	 * @return the start sessions date of this schedule configuration
-	 */
-	public Date getStartSessionsDate();
-
-	/**
-	 * Sets the start sessions date of this schedule configuration.
-	 *
-	 * @param startSessionsDate the start sessions date of this schedule configuration
-	 */
-	public void setStartSessionsDate(Date startSessionsDate);
-
-	/**
-	 * Returns the end sessions date of this schedule configuration.
-	 *
-	 * @return the end sessions date of this schedule configuration
-	 */
-	public Date getEndSessionsDate();
-
-	/**
-	 * Sets the end sessions date of this schedule configuration.
-	 *
-	 * @param endSessionsDate the end sessions date of this schedule configuration
-	 */
-	public void setEndSessionsDate(Date endSessionsDate);
+	public void setH2Weeks(String h2Weeks);
 
 	@Override
 	public ScheduleConfiguration cloneWithOriginalValues();

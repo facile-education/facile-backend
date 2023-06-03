@@ -73,33 +73,37 @@ public class ScheduleConfigurationModelImpl
 	public static final String TABLE_NAME = "Schedule_ScheduleConfiguration";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"schoolId", Types.BIGINT}, {"startDayTime", Types.VARCHAR},
-		{"endDayTime", Types.VARCHAR}, {"startSessionsDate", Types.TIMESTAMP},
-		{"endSessionsDate", Types.TIMESTAMP}
+		{"configId", Types.BIGINT}, {"projectStartDate", Types.TIMESTAMP},
+		{"schoolYearStartDate", Types.TIMESTAMP},
+		{"schoolYearSemesterDate", Types.TIMESTAMP},
+		{"schoolYearEndDate", Types.TIMESTAMP}, {"h1Weeks", Types.VARCHAR},
+		{"h2Weeks", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
 		new HashMap<String, Integer>();
 
 	static {
-		TABLE_COLUMNS_MAP.put("schoolId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("startDayTime", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("endDayTime", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("startSessionsDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("endSessionsDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("configId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("projectStartDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("schoolYearStartDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("schoolYearSemesterDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("schoolYearEndDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("h1Weeks", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("h2Weeks", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Schedule_ScheduleConfiguration (schoolId LONG not null primary key,startDayTime VARCHAR(75) null,endDayTime VARCHAR(75) null,startSessionsDate DATE null,endSessionsDate DATE null)";
+		"create table Schedule_ScheduleConfiguration (configId LONG not null primary key,projectStartDate DATE null,schoolYearStartDate DATE null,schoolYearSemesterDate DATE null,schoolYearEndDate DATE null,h1Weeks VARCHAR(75) null,h2Weeks VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Schedule_ScheduleConfiguration";
 
 	public static final String ORDER_BY_JPQL =
-		" ORDER BY scheduleConfiguration.schoolId ASC";
+		" ORDER BY scheduleConfiguration.configId ASC";
 
 	public static final String ORDER_BY_SQL =
-		" ORDER BY Schedule_ScheduleConfiguration.schoolId ASC";
+		" ORDER BY Schedule_ScheduleConfiguration.configId ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -112,7 +116,7 @@ public class ScheduleConfigurationModelImpl
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long SCHOOLID_COLUMN_BITMASK = 1L;
+	public static final long CONFIGID_COLUMN_BITMASK = 1L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -145,11 +149,13 @@ public class ScheduleConfigurationModelImpl
 
 		ScheduleConfiguration model = new ScheduleConfigurationImpl();
 
-		model.setSchoolId(soapModel.getSchoolId());
-		model.setStartDayTime(soapModel.getStartDayTime());
-		model.setEndDayTime(soapModel.getEndDayTime());
-		model.setStartSessionsDate(soapModel.getStartSessionsDate());
-		model.setEndSessionsDate(soapModel.getEndSessionsDate());
+		model.setConfigId(soapModel.getConfigId());
+		model.setProjectStartDate(soapModel.getProjectStartDate());
+		model.setSchoolYearStartDate(soapModel.getSchoolYearStartDate());
+		model.setSchoolYearSemesterDate(soapModel.getSchoolYearSemesterDate());
+		model.setSchoolYearEndDate(soapModel.getSchoolYearEndDate());
+		model.setH1Weeks(soapModel.getH1Weeks());
+		model.setH2Weeks(soapModel.getH2Weeks());
 
 		return model;
 	}
@@ -184,17 +190,17 @@ public class ScheduleConfigurationModelImpl
 
 	@Override
 	public long getPrimaryKey() {
-		return _schoolId;
+		return _configId;
 	}
 
 	@Override
 	public void setPrimaryKey(long primaryKey) {
-		setSchoolId(primaryKey);
+		setConfigId(primaryKey);
 	}
 
 	@Override
 	public Serializable getPrimaryKeyObj() {
-		return _schoolId;
+		return _configId;
 	}
 
 	@Override
@@ -309,35 +315,49 @@ public class ScheduleConfigurationModelImpl
 					<String, BiConsumer<ScheduleConfiguration, ?>>();
 
 		attributeGetterFunctions.put(
-			"schoolId", ScheduleConfiguration::getSchoolId);
+			"configId", ScheduleConfiguration::getConfigId);
 		attributeSetterBiConsumers.put(
-			"schoolId",
+			"configId",
 			(BiConsumer<ScheduleConfiguration, Long>)
-				ScheduleConfiguration::setSchoolId);
+				ScheduleConfiguration::setConfigId);
 		attributeGetterFunctions.put(
-			"startDayTime", ScheduleConfiguration::getStartDayTime);
+			"projectStartDate", ScheduleConfiguration::getProjectStartDate);
 		attributeSetterBiConsumers.put(
-			"startDayTime",
-			(BiConsumer<ScheduleConfiguration, String>)
-				ScheduleConfiguration::setStartDayTime);
-		attributeGetterFunctions.put(
-			"endDayTime", ScheduleConfiguration::getEndDayTime);
-		attributeSetterBiConsumers.put(
-			"endDayTime",
-			(BiConsumer<ScheduleConfiguration, String>)
-				ScheduleConfiguration::setEndDayTime);
-		attributeGetterFunctions.put(
-			"startSessionsDate", ScheduleConfiguration::getStartSessionsDate);
-		attributeSetterBiConsumers.put(
-			"startSessionsDate",
+			"projectStartDate",
 			(BiConsumer<ScheduleConfiguration, Date>)
-				ScheduleConfiguration::setStartSessionsDate);
+				ScheduleConfiguration::setProjectStartDate);
 		attributeGetterFunctions.put(
-			"endSessionsDate", ScheduleConfiguration::getEndSessionsDate);
+			"schoolYearStartDate",
+			ScheduleConfiguration::getSchoolYearStartDate);
 		attributeSetterBiConsumers.put(
-			"endSessionsDate",
+			"schoolYearStartDate",
 			(BiConsumer<ScheduleConfiguration, Date>)
-				ScheduleConfiguration::setEndSessionsDate);
+				ScheduleConfiguration::setSchoolYearStartDate);
+		attributeGetterFunctions.put(
+			"schoolYearSemesterDate",
+			ScheduleConfiguration::getSchoolYearSemesterDate);
+		attributeSetterBiConsumers.put(
+			"schoolYearSemesterDate",
+			(BiConsumer<ScheduleConfiguration, Date>)
+				ScheduleConfiguration::setSchoolYearSemesterDate);
+		attributeGetterFunctions.put(
+			"schoolYearEndDate", ScheduleConfiguration::getSchoolYearEndDate);
+		attributeSetterBiConsumers.put(
+			"schoolYearEndDate",
+			(BiConsumer<ScheduleConfiguration, Date>)
+				ScheduleConfiguration::setSchoolYearEndDate);
+		attributeGetterFunctions.put(
+			"h1Weeks", ScheduleConfiguration::getH1Weeks);
+		attributeSetterBiConsumers.put(
+			"h1Weeks",
+			(BiConsumer<ScheduleConfiguration, String>)
+				ScheduleConfiguration::setH1Weeks);
+		attributeGetterFunctions.put(
+			"h2Weeks", ScheduleConfiguration::getH2Weeks);
+		attributeSetterBiConsumers.put(
+			"h2Weeks",
+			(BiConsumer<ScheduleConfiguration, String>)
+				ScheduleConfiguration::setH2Weeks);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -347,87 +367,117 @@ public class ScheduleConfigurationModelImpl
 
 	@JSON
 	@Override
-	public long getSchoolId() {
-		return _schoolId;
+	public long getConfigId() {
+		return _configId;
 	}
 
 	@Override
-	public void setSchoolId(long schoolId) {
+	public void setConfigId(long configId) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_schoolId = schoolId;
+		_configId = configId;
 	}
 
 	@JSON
 	@Override
-	public String getStartDayTime() {
-		if (_startDayTime == null) {
+	public Date getProjectStartDate() {
+		return _projectStartDate;
+	}
+
+	@Override
+	public void setProjectStartDate(Date projectStartDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_projectStartDate = projectStartDate;
+	}
+
+	@JSON
+	@Override
+	public Date getSchoolYearStartDate() {
+		return _schoolYearStartDate;
+	}
+
+	@Override
+	public void setSchoolYearStartDate(Date schoolYearStartDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_schoolYearStartDate = schoolYearStartDate;
+	}
+
+	@JSON
+	@Override
+	public Date getSchoolYearSemesterDate() {
+		return _schoolYearSemesterDate;
+	}
+
+	@Override
+	public void setSchoolYearSemesterDate(Date schoolYearSemesterDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_schoolYearSemesterDate = schoolYearSemesterDate;
+	}
+
+	@JSON
+	@Override
+	public Date getSchoolYearEndDate() {
+		return _schoolYearEndDate;
+	}
+
+	@Override
+	public void setSchoolYearEndDate(Date schoolYearEndDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_schoolYearEndDate = schoolYearEndDate;
+	}
+
+	@JSON
+	@Override
+	public String getH1Weeks() {
+		if (_h1Weeks == null) {
 			return "";
 		}
 		else {
-			return _startDayTime;
+			return _h1Weeks;
 		}
 	}
 
 	@Override
-	public void setStartDayTime(String startDayTime) {
+	public void setH1Weeks(String h1Weeks) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_startDayTime = startDayTime;
+		_h1Weeks = h1Weeks;
 	}
 
 	@JSON
 	@Override
-	public String getEndDayTime() {
-		if (_endDayTime == null) {
+	public String getH2Weeks() {
+		if (_h2Weeks == null) {
 			return "";
 		}
 		else {
-			return _endDayTime;
+			return _h2Weeks;
 		}
 	}
 
 	@Override
-	public void setEndDayTime(String endDayTime) {
+	public void setH2Weeks(String h2Weeks) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_endDayTime = endDayTime;
-	}
-
-	@JSON
-	@Override
-	public Date getStartSessionsDate() {
-		return _startSessionsDate;
-	}
-
-	@Override
-	public void setStartSessionsDate(Date startSessionsDate) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_startSessionsDate = startSessionsDate;
-	}
-
-	@JSON
-	@Override
-	public Date getEndSessionsDate() {
-		return _endSessionsDate;
-	}
-
-	@Override
-	public void setEndSessionsDate(Date endSessionsDate) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_endSessionsDate = endSessionsDate;
+		_h2Weeks = h2Weeks;
 	}
 
 	public long getColumnBitmask() {
@@ -487,11 +537,15 @@ public class ScheduleConfigurationModelImpl
 		ScheduleConfigurationImpl scheduleConfigurationImpl =
 			new ScheduleConfigurationImpl();
 
-		scheduleConfigurationImpl.setSchoolId(getSchoolId());
-		scheduleConfigurationImpl.setStartDayTime(getStartDayTime());
-		scheduleConfigurationImpl.setEndDayTime(getEndDayTime());
-		scheduleConfigurationImpl.setStartSessionsDate(getStartSessionsDate());
-		scheduleConfigurationImpl.setEndSessionsDate(getEndSessionsDate());
+		scheduleConfigurationImpl.setConfigId(getConfigId());
+		scheduleConfigurationImpl.setProjectStartDate(getProjectStartDate());
+		scheduleConfigurationImpl.setSchoolYearStartDate(
+			getSchoolYearStartDate());
+		scheduleConfigurationImpl.setSchoolYearSemesterDate(
+			getSchoolYearSemesterDate());
+		scheduleConfigurationImpl.setSchoolYearEndDate(getSchoolYearEndDate());
+		scheduleConfigurationImpl.setH1Weeks(getH1Weeks());
+		scheduleConfigurationImpl.setH2Weeks(getH2Weeks());
 
 		scheduleConfigurationImpl.resetOriginalValues();
 
@@ -503,16 +557,20 @@ public class ScheduleConfigurationModelImpl
 		ScheduleConfigurationImpl scheduleConfigurationImpl =
 			new ScheduleConfigurationImpl();
 
-		scheduleConfigurationImpl.setSchoolId(
-			this.<Long>getColumnOriginalValue("schoolId"));
-		scheduleConfigurationImpl.setStartDayTime(
-			this.<String>getColumnOriginalValue("startDayTime"));
-		scheduleConfigurationImpl.setEndDayTime(
-			this.<String>getColumnOriginalValue("endDayTime"));
-		scheduleConfigurationImpl.setStartSessionsDate(
-			this.<Date>getColumnOriginalValue("startSessionsDate"));
-		scheduleConfigurationImpl.setEndSessionsDate(
-			this.<Date>getColumnOriginalValue("endSessionsDate"));
+		scheduleConfigurationImpl.setConfigId(
+			this.<Long>getColumnOriginalValue("configId"));
+		scheduleConfigurationImpl.setProjectStartDate(
+			this.<Date>getColumnOriginalValue("projectStartDate"));
+		scheduleConfigurationImpl.setSchoolYearStartDate(
+			this.<Date>getColumnOriginalValue("schoolYearStartDate"));
+		scheduleConfigurationImpl.setSchoolYearSemesterDate(
+			this.<Date>getColumnOriginalValue("schoolYearSemesterDate"));
+		scheduleConfigurationImpl.setSchoolYearEndDate(
+			this.<Date>getColumnOriginalValue("schoolYearEndDate"));
+		scheduleConfigurationImpl.setH1Weeks(
+			this.<String>getColumnOriginalValue("h1Weeks"));
+		scheduleConfigurationImpl.setH2Weeks(
+			this.<String>getColumnOriginalValue("h2Weeks"));
 
 		return scheduleConfigurationImpl;
 	}
@@ -590,42 +648,64 @@ public class ScheduleConfigurationModelImpl
 		ScheduleConfigurationCacheModel scheduleConfigurationCacheModel =
 			new ScheduleConfigurationCacheModel();
 
-		scheduleConfigurationCacheModel.schoolId = getSchoolId();
+		scheduleConfigurationCacheModel.configId = getConfigId();
 
-		scheduleConfigurationCacheModel.startDayTime = getStartDayTime();
+		Date projectStartDate = getProjectStartDate();
 
-		String startDayTime = scheduleConfigurationCacheModel.startDayTime;
-
-		if ((startDayTime != null) && (startDayTime.length() == 0)) {
-			scheduleConfigurationCacheModel.startDayTime = null;
-		}
-
-		scheduleConfigurationCacheModel.endDayTime = getEndDayTime();
-
-		String endDayTime = scheduleConfigurationCacheModel.endDayTime;
-
-		if ((endDayTime != null) && (endDayTime.length() == 0)) {
-			scheduleConfigurationCacheModel.endDayTime = null;
-		}
-
-		Date startSessionsDate = getStartSessionsDate();
-
-		if (startSessionsDate != null) {
-			scheduleConfigurationCacheModel.startSessionsDate =
-				startSessionsDate.getTime();
+		if (projectStartDate != null) {
+			scheduleConfigurationCacheModel.projectStartDate =
+				projectStartDate.getTime();
 		}
 		else {
-			scheduleConfigurationCacheModel.startSessionsDate = Long.MIN_VALUE;
+			scheduleConfigurationCacheModel.projectStartDate = Long.MIN_VALUE;
 		}
 
-		Date endSessionsDate = getEndSessionsDate();
+		Date schoolYearStartDate = getSchoolYearStartDate();
 
-		if (endSessionsDate != null) {
-			scheduleConfigurationCacheModel.endSessionsDate =
-				endSessionsDate.getTime();
+		if (schoolYearStartDate != null) {
+			scheduleConfigurationCacheModel.schoolYearStartDate =
+				schoolYearStartDate.getTime();
 		}
 		else {
-			scheduleConfigurationCacheModel.endSessionsDate = Long.MIN_VALUE;
+			scheduleConfigurationCacheModel.schoolYearStartDate =
+				Long.MIN_VALUE;
+		}
+
+		Date schoolYearSemesterDate = getSchoolYearSemesterDate();
+
+		if (schoolYearSemesterDate != null) {
+			scheduleConfigurationCacheModel.schoolYearSemesterDate =
+				schoolYearSemesterDate.getTime();
+		}
+		else {
+			scheduleConfigurationCacheModel.schoolYearSemesterDate =
+				Long.MIN_VALUE;
+		}
+
+		Date schoolYearEndDate = getSchoolYearEndDate();
+
+		if (schoolYearEndDate != null) {
+			scheduleConfigurationCacheModel.schoolYearEndDate =
+				schoolYearEndDate.getTime();
+		}
+		else {
+			scheduleConfigurationCacheModel.schoolYearEndDate = Long.MIN_VALUE;
+		}
+
+		scheduleConfigurationCacheModel.h1Weeks = getH1Weeks();
+
+		String h1Weeks = scheduleConfigurationCacheModel.h1Weeks;
+
+		if ((h1Weeks != null) && (h1Weeks.length() == 0)) {
+			scheduleConfigurationCacheModel.h1Weeks = null;
+		}
+
+		scheduleConfigurationCacheModel.h2Weeks = getH2Weeks();
+
+		String h2Weeks = scheduleConfigurationCacheModel.h2Weeks;
+
+		if ((h2Weeks != null) && (h2Weeks.length() == 0)) {
+			scheduleConfigurationCacheModel.h2Weeks = null;
 		}
 
 		return scheduleConfigurationCacheModel;
@@ -720,11 +800,13 @@ public class ScheduleConfigurationModelImpl
 
 	}
 
-	private long _schoolId;
-	private String _startDayTime;
-	private String _endDayTime;
-	private Date _startSessionsDate;
-	private Date _endSessionsDate;
+	private long _configId;
+	private Date _projectStartDate;
+	private Date _schoolYearStartDate;
+	private Date _schoolYearSemesterDate;
+	private Date _schoolYearEndDate;
+	private String _h1Weeks;
+	private String _h2Weeks;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<ScheduleConfiguration, Object> function =
@@ -753,11 +835,14 @@ public class ScheduleConfigurationModelImpl
 	private void _setColumnOriginalValues() {
 		_columnOriginalValues = new HashMap<String, Object>();
 
-		_columnOriginalValues.put("schoolId", _schoolId);
-		_columnOriginalValues.put("startDayTime", _startDayTime);
-		_columnOriginalValues.put("endDayTime", _endDayTime);
-		_columnOriginalValues.put("startSessionsDate", _startSessionsDate);
-		_columnOriginalValues.put("endSessionsDate", _endSessionsDate);
+		_columnOriginalValues.put("configId", _configId);
+		_columnOriginalValues.put("projectStartDate", _projectStartDate);
+		_columnOriginalValues.put("schoolYearStartDate", _schoolYearStartDate);
+		_columnOriginalValues.put(
+			"schoolYearSemesterDate", _schoolYearSemesterDate);
+		_columnOriginalValues.put("schoolYearEndDate", _schoolYearEndDate);
+		_columnOriginalValues.put("h1Weeks", _h1Weeks);
+		_columnOriginalValues.put("h2Weeks", _h2Weeks);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -771,15 +856,19 @@ public class ScheduleConfigurationModelImpl
 	static {
 		Map<String, Long> columnBitmasks = new HashMap<>();
 
-		columnBitmasks.put("schoolId", 1L);
+		columnBitmasks.put("configId", 1L);
 
-		columnBitmasks.put("startDayTime", 2L);
+		columnBitmasks.put("projectStartDate", 2L);
 
-		columnBitmasks.put("endDayTime", 4L);
+		columnBitmasks.put("schoolYearStartDate", 4L);
 
-		columnBitmasks.put("startSessionsDate", 8L);
+		columnBitmasks.put("schoolYearSemesterDate", 8L);
 
-		columnBitmasks.put("endSessionsDate", 16L);
+		columnBitmasks.put("schoolYearEndDate", 16L);
+
+		columnBitmasks.put("h1Weeks", 32L);
+
+		columnBitmasks.put("h2Weeks", 64L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}
