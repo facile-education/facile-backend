@@ -3,6 +3,7 @@ package com.weprode.nero.search.service.impl;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -32,6 +33,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component(
         service = AopService.class
@@ -71,10 +74,11 @@ public class SearchEngineLocalServiceImpl extends SearchEngineLocalServiceBaseIm
 
             BooleanQuery globalQuery = queries.booleanQuery();
 
-            // Do not search in user tmp folder
-            long tmpFolderId = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId()).getFolderId();
-            StringQuery docLibraryFilter = queries.string("(NOT folderId:" + tmpFolderId + ")");
-            globalQuery.addFilterQueryClauses(docLibraryFilter);
+            // Do not search content over some folders
+            for (long folderId : getFolderIdsToNotIndex(user)) {
+                StringQuery docLibraryFilter = queries.string("(NOT folderId:" + folderId + ")");
+                globalQuery.addFilterQueryClauses(docLibraryFilter);
+            }
 
             BooleanQuery boolQuery = queries.booleanQuery();
             for (Role role : RoleLocalServiceUtil.getUserRoles(user.getUserId())) {
@@ -122,5 +126,12 @@ public class SearchEngineLocalServiceImpl extends SearchEngineLocalServiceBaseIm
         }
 
         return null;
+    }
+
+    private long[] getFolderIdsToNotIndex(User user) throws PortalException {
+        return new long[]{
+                FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId()).getFolderId(),
+                FolderUtilsLocalServiceUtil.getThumbnailFolder(user.getUserId()).getFolderId()
+        };
     }
 }
