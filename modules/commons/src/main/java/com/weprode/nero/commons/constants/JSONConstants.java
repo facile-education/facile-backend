@@ -539,8 +539,8 @@ public class JSONConstants {
     public static final String SLOT_END_HOUR = "slotEndHour";
 
     // Timeouts
-    public static final String SESSION_TIMEOUT = "session.timeout";
-    public static final String SESSION_TIMEOUT_WARNING = "session.timeout.warning";
+    public static final String SESSION_TIMEOUT = "sessionTimeout";
+    public static final String SESSION_TIMEOUT_WARNING = "sessionTimeoutWarning";
 
     // Success
     public static final String SUCCESS = "success";
