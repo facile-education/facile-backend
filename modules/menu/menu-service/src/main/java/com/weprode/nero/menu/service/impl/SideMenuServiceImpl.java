@@ -65,8 +65,8 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
         result.put(JSONConstants.EXPANDED, isMenuExpanded);
 
         // Timeouts
-        result.put(JSONConstants.SESSION_TIMEOUT, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT));
-        result.put(JSONConstants.SESSION_TIMEOUT_WARNING, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT_WARNING));
+        result.put(JSONConstants.SESSION_TIMEOUT, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT) * 60000);
+        result.put(JSONConstants.SESSION_TIMEOUT_WARNING, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT_WARNING) * 60000);
 
         result.put(JSONConstants.SUCCESS, true);
 
