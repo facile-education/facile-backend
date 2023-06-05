@@ -197,13 +197,13 @@ public class FileUtilsLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.repository.model.FileEntry renameFile(
-			com.liferay.portal.kernel.model.User user,
+			long userId,
 			com.liferay.portal.kernel.repository.model.FileEntry originFile,
 			String newName)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _fileUtilsLocalService.renameFile(user, originFile, newName);
+		return _fileUtilsLocalService.renameFile(userId, originFile, newName);
 	}
 
 	@Override

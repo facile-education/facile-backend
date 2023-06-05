@@ -219,8 +219,8 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		}
 	}
 
-	public FileEntry renameFile (User user, FileEntry originFile, String newName) throws SystemException, PortalException {
-		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.UPDATE)) {     // handle this permission as the RENAME permission (update)
+	public FileEntry renameFile (long userId, FileEntry originFile, String newName) throws SystemException, PortalException {
+		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, originFile, ActionKeys.UPDATE)) {     // handle this permission as the RENAME permission (update)
 			boolean finished = false;
 			int count = 0;
 			String suffix = "";
@@ -254,7 +254,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 					// Register activity
 					DLFolder folder = DLFolderLocalServiceUtil.getFolder(renamedFile.getFolderId());
-					ActivityLocalServiceUtil.addActivity(renamedFile.getFileEntryId(), renamedFile.getFolderId(), user.getUserId(), renamedFile.getGroupId(), renamedFile.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_MODIFICATION);
+					ActivityLocalServiceUtil.addActivity(renamedFile.getFileEntryId(), renamedFile.getFolderId(), userId, renamedFile.getGroupId(), renamedFile.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_MODIFICATION);
 
 				} catch (DuplicateFileEntryException e) {
 					count++;

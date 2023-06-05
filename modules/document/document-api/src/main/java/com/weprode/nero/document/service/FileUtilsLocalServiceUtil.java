@@ -172,12 +172,12 @@ public class FileUtilsLocalServiceUtil {
 
 	public static com.liferay.portal.kernel.repository.model.FileEntry
 			renameFile(
-				com.liferay.portal.kernel.model.User user,
+				long userId,
 				com.liferay.portal.kernel.repository.model.FileEntry originFile,
 				String newName)
 		throws PortalException, SystemException {
 
-		return getService().renameFile(user, originFile, newName);
+		return getService().renameFile(userId, originFile, newName);
 	}
 
 	public static String sanitizeHTMLContent(String content) {

@@ -125,7 +125,8 @@ public interface FileUtilsLocalService extends BaseLocalService {
 			long userId, long fileId, long destFolderId, int mode)
 		throws PortalException, SystemException;
 
-	public FileEntry renameFile(User user, FileEntry originFile, String newName)
+	public FileEntry renameFile(
+			long userId, FileEntry originFile, String newName)
 		throws PortalException, SystemException;
 
 	public String sanitizeHTMLContent(String content);
