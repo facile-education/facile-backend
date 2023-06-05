@@ -128,7 +128,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		try {
 			logger.info("User " + user.getFullName() + " renames file " + fileId + " with name " + fileName);
 			FileEntry fileToRename = DLAppServiceUtil.getFileEntry(fileId);
-			FileEntry renamedFile = FileUtilsLocalServiceUtil.renameFile(user, fileToRename, fileName);
+			FileEntry renamedFile = FileUtilsLocalServiceUtil.renameFile(user.getUserId(), fileToRename, fileName);
 
 			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), renamedFile));
 			result.put(JSONConstants.SUCCESS, true);

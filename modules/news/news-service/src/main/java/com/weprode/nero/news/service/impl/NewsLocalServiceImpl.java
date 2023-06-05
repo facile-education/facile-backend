@@ -595,7 +595,8 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                         true
                 );
             }
-            PermissionUtilsLocalServiceUtil.setParentPermissionToFile(thumbnail); // Thumbnail inherit of thumbnail's folder permissions
+            thumbnail = FileUtilsLocalServiceUtil.renameFile(userId, thumbnail, String.valueOf(news.getNewsId()));  // Rename thumbnail with the newsId value
+            PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(thumbnail); // All ent users can view any thumbnail file
 
             // Set news imageId to the new file Id
             news.setImageId(thumbnail.getFileEntryId());
@@ -608,7 +609,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     private void deleteNewsThumbnail(News news) throws PortalException {
         // Get thumbnail file
-        DLAppServiceUtil.deleteFileEntry(news.getImageId()); // TODO: check permissions?
+        DLAppServiceUtil.deleteFileEntry(news.getImageId());
 
         // Set news imageId to 0
         news.setImageId(0);

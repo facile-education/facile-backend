@@ -169,14 +169,15 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 	}
 
 	public Folder getThumbnailFolder(long userId) throws PortalException, SystemException {
-		final User user = UserLocalServiceUtil.getUser(userId);
-		Organization rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(user.getCompanyId());
+		final long companyId = UserLocalServiceUtil.getUser(userId).getCompanyId();
+		Organization rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(companyId);
 
 		Folder tumbnailFolder;
 		try {
-			tumbnailFolder = DLAppServiceUtil.getFolder(rootOrg.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.TMP_FILE_FOLDER_NAME);
+			tumbnailFolder = DLAppServiceUtil.getFolder(rootOrg.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.THUMBNAILS_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
-			tumbnailFolder = DLAppServiceUtil.addFolder(
+			tumbnailFolder = DLAppLocalServiceUtil.addFolder(
+					UserLocalServiceUtil.getDefaultUser(companyId).getUserId(),
 					rootOrg.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.THUMBNAILS_FOLDER_NAME,
@@ -184,13 +185,14 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					new ServiceContext());
 			hideDLFolder(tumbnailFolder.getFolderId());
 
+			// Set View permission to all
 			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(tumbnailFolder);
 
-			List<Role> updateThumbnailsRoles = new ArrayList<>();	// Same that can create a news
+			// Set Update permission for roles that can create news  /!\ Assume isUserDelegate have one of the following roles
+			List<Role> updateThumbnailsRoles = new ArrayList<>();
 			// Direction members
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getDirectionRole());
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.NATIONAL_23));
-			// TODO: isUserDelegate?
 			// Secretariat
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getSecretariatRole());
 			// Personals
