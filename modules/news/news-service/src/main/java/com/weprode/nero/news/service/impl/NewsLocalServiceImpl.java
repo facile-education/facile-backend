@@ -29,10 +29,9 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
-import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.ThumbnailsLocalServiceUtil;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
-import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
@@ -572,49 +571,24 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
     }
 
     private void createNewsThumbnail(long userId, News news, long fileId) {
-        try {
-            if (fileId > 0) {
-                // Get original file
-                FileEntry originalPicture = DLAppServiceUtil.getFileEntry(fileId);
-
-                // Get or create news thumbnail folder
-                Folder thumbnailFolder = FolderUtilsLocalServiceUtil.getThumbnailFolder(userId);
-
-                // Copy (or move if original file belong to user tempFolder) file to thumbnail folder
-                FileEntry thumbnail;
-                if (DocumentUtilsLocalServiceUtil.belongToTmpFolder(originalPicture, userId)) {
-                    thumbnail = FileUtilsLocalServiceUtil.moveFileEntry(
-                            userId,
-                            fileId,
-                            thumbnailFolder.getFolderId()
-                    );
-                } else {
-                    thumbnail = FileUtilsLocalServiceUtil.copyFileEntry(
-                            userId,
-                            originalPicture.getFileEntryId(),
-                            thumbnailFolder.getFolderId(),
-                            true
-                    );
-                }
-                thumbnail = FileUtilsLocalServiceUtil.renameFile(userId, thumbnail, String.valueOf(news.getNewsId()));  // Rename thumbnail with the newsId value
-                PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(thumbnail); // All ent users can view any thumbnail file
-
-                // Set news imageId to the new file Id
+        if (fileId > 0) {
+            try {
+                FileEntry thumbnail = ThumbnailsLocalServiceUtil.createThumbnailFile(userId, fileId, String.valueOf(news.getNewsId()));
                 news.setImageId(thumbnail.getFileEntryId());
-            } else {
-                news.setImageId(fileId);
+            } catch (Exception e) {
+                news.setImageId(0L);
+                logger.error("Cannot create thumbnail file from fileId " + fileId + " for news id " + news.getNewsId(), e);
             }
-            newsPersistence.updateImpl(news);
-
-        } catch (Exception e) {
-            logger.error("Cannot set thumbnail file correctly for newsId " + news.getNewsId(), e);
+        } else {
+            news.setImageId(fileId);	// Negative numbers (including 0) are used for front default images
         }
+        newsPersistence.updateImpl(news);
     }
 
-    private void deleteNewsThumbnail(News news) throws PortalException {
+    private void deleteNewsThumbnail(News news) {
         if (news.getImageId() > 0) {
             // Get thumbnail file
-            DLAppServiceUtil.deleteFileEntry(news.getImageId());
+            ThumbnailsLocalServiceUtil.deleteThumbnailFile(news.getImageId());
         }
 
         // Set news imageId to 0
@@ -624,12 +598,8 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     private void updateNewsThumbnail(long userId, News news, long fileId) {
         if (fileId != news.getImageId()) {  // Update image only if the provided id is different from the current
-            try {
-                deleteNewsThumbnail(news);
-                createNewsThumbnail(userId, news, fileId);
-            } catch (Exception e) {
-                logger.error("Cannot update thumbnail for newsId " + news.getNewsId(), e);
-            }
+            deleteNewsThumbnail(news);
+            createNewsThumbnail(userId, news, fileId);
         }
     }
 

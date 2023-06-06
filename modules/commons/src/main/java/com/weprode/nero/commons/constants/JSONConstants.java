@@ -168,6 +168,7 @@ public class JSONConstants {
     // Default image keys
     public static final String NEWS_DEFAULT_THUMBNAIL= "default_news_0";
     public static final String SCHOOL_NEWS_DEFAULT_THUMBNAIL= "default_school_news_0";
+    public static final String ACCESS_DEFAULT_THUMBNAIL= "default_access_0";
 
 
     // Activity

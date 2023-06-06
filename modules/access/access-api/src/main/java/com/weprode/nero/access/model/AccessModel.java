@@ -169,19 +169,18 @@ public interface AccessModel extends BaseModel<Access> {
 	public void setFileId(long fileId);
 
 	/**
-	 * Returns the thumbnail of this access.
+	 * Returns the thumbnail ID of this access.
 	 *
-	 * @return the thumbnail of this access
+	 * @return the thumbnail ID of this access
 	 */
-	@AutoEscape
-	public String getThumbnail();
+	public long getThumbnailId();
 
 	/**
-	 * Sets the thumbnail of this access.
+	 * Sets the thumbnail ID of this access.
 	 *
-	 * @param thumbnail the thumbnail of this access
+	 * @param thumbnailId the thumbnail ID of this access
 	 */
-	public void setThumbnail(String thumbnail);
+	public void setThumbnailId(long thumbnailId);
 
 	/**
 	 * Returns the position of this access.

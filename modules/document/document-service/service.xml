@@ -12,6 +12,8 @@
 
 	<entity name="FileUtils" local-service="true" remote-service="true"/>
 
+	<entity name="Thumbnails" local-service="true" remote-service="false"/>
+
 	<entity name="Clipboard" local-service="false" remote-service="true" />
 
 	<entity name="Trash" local-service="false" remote-service="true" />

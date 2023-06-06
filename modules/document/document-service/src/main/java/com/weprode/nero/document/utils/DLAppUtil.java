@@ -195,7 +195,7 @@ public class DLAppUtil {
                         // Find the problematic file and delete it!
                         List<FileEntry> files = DLAppServiceUtil.getFileEntries(folder.getRepositoryId(), folder.getFolderId());
                         for (FileEntry subFile : files) {
-                            if (subFile.getTitle().equals(name)) {
+                            if (subFile.getTitle().equals(name) || subFile.getFileName().equals(name)) {
                                 hasFound = true;
 //								VersionLocalServiceUtil.createMajorVersion(user, subFile.getFileEntryId());	// save the current file as a new version
                                 fileEntry = DLAppServiceUtil.updateFileEntry(
@@ -217,7 +217,7 @@ public class DLAppUtil {
                         }
 
                         if (!hasFound) {
-                            logger.error("Normally have to find the file with the duplicate FileName exception" + name);
+                            logger.error("Normally have to find the file with the duplicate FileName exception " + name);
                             throw new DuplicateFileEntryException();
                         }
                     }

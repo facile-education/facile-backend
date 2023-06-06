@@ -10,7 +10,7 @@
 		<field name="externalUrl" type="String" />
 		<field name="folderId" type="long" />
 		<field name="fileId" type="long" />
-		<field name="thumbnail" type="String" />
+		<field name="thumbnailId" type="long" />
 		<field name="position" type="int" />
 	</model>
 	<model name="com.weprode.nero.access.model.AccessCategory">

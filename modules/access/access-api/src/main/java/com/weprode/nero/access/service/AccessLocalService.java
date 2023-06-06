@@ -81,8 +81,8 @@ public interface AccessLocalService
 	public Access addAccess(Access access);
 
 	public Access addAccess(
-		long categoryId, String title, int type, String url, long folderId,
-		long fileId, String thumbnail, int position);
+		long userId, long categoryId, String title, int type, String url,
+		long folderId, long fileId, long thumbnailId, int position);
 
 	public JSONObject convertToJson(Access access);
 
@@ -274,7 +274,7 @@ public interface AccessLocalService
 
 	public void removeByCategoryId(long categoryId);
 
-	public void saveSchoolAccesses(long schoolId, String accesses);
+	public void saveSchoolAccesses(User user, long schoolId, String accesses);
 
 	/**
 	 * Updates the access in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

@@ -61,11 +61,11 @@ public class AccessLocalServiceUtil {
 	}
 
 	public static Access addAccess(
-		long categoryId, String title, int type, String url, long folderId,
-		long fileId, String thumbnail, int position) {
+		long userId, long categoryId, String title, int type, String url,
+		long folderId, long fileId, long thumbnailId, int position) {
 
 		return getService().addAccess(
-			categoryId, title, type, url, folderId, fileId, thumbnail,
+			userId, categoryId, title, type, url, folderId, fileId, thumbnailId,
 			position);
 	}
 
@@ -307,8 +307,11 @@ public class AccessLocalServiceUtil {
 		getService().removeByCategoryId(categoryId);
 	}
 
-	public static void saveSchoolAccesses(long schoolId, String accesses) {
-		getService().saveSchoolAccesses(schoolId, accesses);
+	public static void saveSchoolAccesses(
+		com.liferay.portal.kernel.model.User user, long schoolId,
+		String accesses) {
+
+		getService().saveSchoolAccesses(user, schoolId, accesses);
 	}
 
 	/**
