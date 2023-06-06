@@ -1,8 +1,5 @@
 package com.weprode.nero.user.service.impl;
 
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -25,6 +22,8 @@ import com.weprode.nero.user.service.UserManagementService;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserManagementServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -282,7 +281,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return jsonUser;
     }
 
-    @JSONWebService(value = "update-password", method = "GET")
+    @JSONWebService(value = "update-password", method = "POST")
     public JSONObject updatePassword(long userId, String password, boolean resetPassword) {
         JSONObject result = new JSONObject();
 
@@ -307,10 +306,8 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 result.put(JSONConstants.SUCCESS, true);
             } else {
                 result.put(JSONConstants.SUCCESS, false);
-                result.put("portal_message", errorMessage);
+                result.put(JSONConstants.ERROR, errorMessage);
             }
-
-            result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
             logger.error("Error while fetching schools for manual user creation", e);

@@ -236,8 +236,8 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "update-webdav-password", method = "POST")
-    public JSONObject updateWebdavPassword(String password, String confirmPassword) {
+    @JSONWebService(value = "update-password", method = "POST")
+    public JSONObject updatePassword(String password, String confirmPassword, boolean isWebdav) {
         JSONObject result = new JSONObject();
 
         User user;
@@ -255,7 +255,17 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
         try {
             if (!password.isEmpty() && password.equals(confirmPassword)) {
-                result = updateUserPasword(user, password, true, true);
+                if (isWebdav) {
+                    result = updateUserPasword(user, password, true, true);
+                } else {
+                    String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(user, password, password, false);
+                    if (errorMessage.equals("")) {
+                        result.put(JSONConstants.SUCCESS, true);
+                    } else {
+                        result.put(JSONConstants.SUCCESS, false);
+                        result.put(JSONConstants.ERROR, errorMessage);
+                    }
+                }
             } else {
                 result.put(JSONConstants.SUCCESS, false);
             }
@@ -272,13 +282,13 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
         String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(user, password, password, false);
         if (!errorMessage.equals("")) {
-            result.put("portal_message", errorMessage);
+            result.put(JSONConstants.ERROR, errorMessage);
             result.put(JSONConstants.SUCCESS, false);
             return result;
         } else {
-            result.put("screenname", user.getScreenName());
+            result.put(JSONConstants.SCREEN_NAME, user.getScreenName());
             if (!isUpdated) {
-                result.put("password", password);
+                result.put(JSONConstants.PASSWORD, password);
             }
 
             // Create the password with the first and last characters is display in clear and the rest is changed to *

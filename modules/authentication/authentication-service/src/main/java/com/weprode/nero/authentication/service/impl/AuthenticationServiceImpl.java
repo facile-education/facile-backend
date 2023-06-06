@@ -55,7 +55,7 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 	public JSONObject checkCredentials(String login, String password) {
 		JSONObject result = new JSONObject();
 
-		result.put("isValid", false);
+		result.put(JSONConstants.IS_VALID, false);
 		try {
 			boolean isValid = false;
 			boolean isActive = false;
@@ -66,6 +66,7 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 			} catch (Exception e) {
 				logger.info("Attempt to login with invalid screenName " + login);
 			}
+
 			if (user != null) {
 				try {
 					isValid = PasswordTrackerLocalServiceUtil.isSameAsCurrentPassword(user.getUserId(), password);
@@ -74,12 +75,13 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 					logger.info("Error when comparing password with current one", e);
 				}
 			}
-			result.put("isValid", isValid);
-			result.put("isActive", isActive);
+			result.put(JSONConstants.IS_VALID, isValid);
+			result.put(JSONConstants.IS_ACTIVE, isActive);
 
 		} catch (SystemException e) {
 			logger.error("Error checking login/password pair", e);
 		}
+
 		return result;
 	}
 
@@ -88,8 +90,8 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 
 		JSONObject result = new JSONObject();
 		result.put(JSONConstants.SUCCESS, false);
-		result.put("isSessionExpired", false);
-		result.put("isSessionWarning", false);
+		result.put(JSONConstants.IS_SESSION_EXPIRED, false);
+		result.put(JSONConstants.IS_SESSION_WARNING, false);
 
 		try {
 			User user = getGuestOrUser();
@@ -97,7 +99,7 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 			Method getSessionUsers = liveUsers.getDeclaredMethod("getSessionUsers", long.class);
 			Object map = getSessionUsers.invoke(null, user.getCompanyId());
 			Map<String, UserTracker> sessionUsers = (ConcurrentHashMap<String, UserTracker>)map;
-			System.out.println("sessionUsers = " + sessionUsers);
+
 			for (Map.Entry<String, UserTracker> sessionUser : sessionUsers.entrySet()) {
 				UserTracker userTracker = sessionUser.getValue();
 				if (userTracker.getUserId() == user.getUserId()) {
@@ -105,8 +107,8 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 					long nbSeconds = System.currentTimeMillis() - session.getLastAccessedTime();
 					logger.info("Nb milli-seconds = " + nbSeconds);
 					if (nbSeconds > session.getMaxInactiveInterval() * 1000L) {
-						result.put("isSessionExpired", false);
-						result.put("isSessionWarning", true);
+						result.put(JSONConstants.IS_SESSION_EXPIRED, false);
+						result.put(JSONConstants.IS_SESSION_WARNING, true);
 						result.put(JSONConstants.SUCCESS, true);
 						return result;
 					}
@@ -116,6 +118,7 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 		} catch (Exception e) {
 			logger.error("Error checking user session validity", e);
 		}
+
 		return result;
 	}
 

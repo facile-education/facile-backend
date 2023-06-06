@@ -210,16 +210,17 @@ public class UserPropertiesServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject updateWebdavPassword(
-		HttpPrincipal httpPrincipal, String password, String confirmPassword) {
+	public static org.json.JSONObject updatePassword(
+		HttpPrincipal httpPrincipal, String password, String confirmPassword,
+		boolean isWebdav) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				UserPropertiesServiceUtil.class, "updateWebdavPassword",
-				_updateWebdavPasswordParameterTypes5);
+				UserPropertiesServiceUtil.class, "updatePassword",
+				_updatePasswordParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, password, confirmPassword);
+				methodKey, password, confirmPassword, isWebdav);
 
 			Object returnObj = null;
 
@@ -255,7 +256,7 @@ public class UserPropertiesServiceHttp {
 		new Class[] {int.class};
 	private static final Class<?>[] _updateWebdavStateParameterTypes4 =
 		new Class[] {boolean.class};
-	private static final Class<?>[] _updateWebdavPasswordParameterTypes5 =
-		new Class[] {String.class, String.class};
+	private static final Class<?>[] _updatePasswordParameterTypes5 =
+		new Class[] {String.class, String.class, boolean.class};
 
 }
