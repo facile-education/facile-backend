@@ -43,6 +43,13 @@ public class UserPropertiesServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static org.json.JSONObject updatePassword(
+		java.lang.String password, java.lang.String confirmPassword,
+		boolean isWebdav) {
+
+		return getService().updatePassword(password, confirmPassword, isWebdav);
+	}
+
 	public static org.json.JSONObject updateReportFrequency(int frequency) {
 		return getService().updateReportFrequency(frequency);
 	}
@@ -57,12 +64,6 @@ public class UserPropertiesServiceUtil {
 
 	public static org.json.JSONObject updateUserPicture(java.io.File picture) {
 		return getService().updateUserPicture(picture);
-	}
-
-	public static org.json.JSONObject updateWebdavPassword(
-		java.lang.String password, java.lang.String confirmPassword) {
-
-		return getService().updateWebdavPassword(password, confirmPassword);
 	}
 
 	public static org.json.JSONObject updateWebdavState(boolean isEnabled) {

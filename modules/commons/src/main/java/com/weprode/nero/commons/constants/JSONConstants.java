@@ -81,6 +81,7 @@ public class JSONConstants {
     public static final String LAST_NAME = "lastName";
     public static final String FULL_NAME = "fullName";
     public static final String SCREEN_NAME = "screenName";
+    public static final String PASSWORD = "password";
     public static final String ADMIN_NAME = "adminName";
     public static final String IS_ADMIN = "isAdmin";
     public static final String IS_SCHOOL_ADMIN = "isSchoolAdmin";
@@ -538,9 +539,12 @@ public class JSONConstants {
     public static final String SLOT_START_HOUR = "slotStartHour";
     public static final String SLOT_END_HOUR = "slotEndHour";
 
-    // Timeouts
+    // Session
+    public static final String IS_VALID = "isValid";
     public static final String SESSION_TIMEOUT = "sessionTimeout";
     public static final String SESSION_TIMEOUT_WARNING = "sessionTimeoutWarning";
+    public static final String IS_SESSION_EXPIRED = "isSessionExpired";
+    public static final String IS_SESSION_WARNING = "isSessionWarning";
 
     // Success
     public static final String SUCCESS = "success";

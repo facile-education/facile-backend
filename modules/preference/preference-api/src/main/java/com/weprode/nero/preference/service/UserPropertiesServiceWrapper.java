@@ -43,6 +43,14 @@ public class UserPropertiesServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject updatePassword(
+		String password, String confirmPassword, boolean isWebdav) {
+
+		return _userPropertiesService.updatePassword(
+			password, confirmPassword, isWebdav);
+	}
+
+	@Override
 	public org.json.JSONObject updateReportFrequency(int frequency) {
 		return _userPropertiesService.updateReportFrequency(frequency);
 	}
@@ -60,14 +68,6 @@ public class UserPropertiesServiceWrapper
 	@Override
 	public org.json.JSONObject updateUserPicture(java.io.File picture) {
 		return _userPropertiesService.updateUserPicture(picture);
-	}
-
-	@Override
-	public org.json.JSONObject updateWebdavPassword(
-		String password, String confirmPassword) {
-
-		return _userPropertiesService.updateWebdavPassword(
-			password, confirmPassword);
 	}
 
 	@Override

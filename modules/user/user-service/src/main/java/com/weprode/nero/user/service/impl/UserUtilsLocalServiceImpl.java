@@ -1,13 +1,17 @@
 package com.weprode.nero.user.service.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.dao.orm.*;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.UserPasswordException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroupRole;
+import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -21,7 +25,12 @@ import org.osgi.service.component.annotations.Component;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.ResourceBundle;
 
 @Component(
         property = "model.class.name=com.weprode.nero.user.model.UserUtils",
@@ -42,16 +51,16 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
     }
 
     public List<User> getUserTeachers(User user) {
-        List<User> teachers = new ArrayList<User>();
+        List<User> teachers = new ArrayList<>();
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
             try {
                 // Loop over user's classes
                 List<Organization> userClasses = UserOrgsLocalServiceUtil.getUserClassesAndCours(user, false);
-                List<Long> orgIds = new ArrayList<Long>();
+                List<Long> orgIds = new ArrayList<>();
                 for (Organization userClass : userClasses) {
                     orgIds.add(userClass.getOrganizationId());
                 }
-                List<Long> roleIds = new ArrayList<Long>();
+                List<Long> roleIds = new ArrayList<>();
                 roleIds.add(RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId());
                 teachers = UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
             } catch (Exception e) {
@@ -221,11 +230,17 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         ResourceBundle messages = ResourceBundle.getBundle("content.Language", user.getLocale());
 
         try {
-            // DB update -> performs all validation checks
-            UserLocalServiceUtil.updatePassword(user.getUserId(), newPassword, confirmPassword, resetPassword);
-            logger.info("Password updated in DB for user "+user.getFullName());
+            String errorMsg =  checkPasswordAgainstPolicy(newPassword, messages);
 
-            return "";
+            if (errorMsg.isBlank()) {
+                // DB update -> performs all validation checks
+                UserLocalServiceUtil.updatePassword(user.getUserId(), newPassword, confirmPassword, resetPassword);
+                logger.info("Password updated in DB for user " + user.getFullName());
+
+                return "";
+            } else {
+                return errorMsg;
+            }
         } catch (UserPasswordException.MustNotBeTrivial e) { // PASSWORD_CONTAINS_TRIVIAL_WORDS:
             return messages.getString("mdp-trop-trivial");
         } catch (UserPasswordException.MustComplyWithModelListeners e) { // PASSWORD_INVALID
@@ -249,7 +264,6 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
 
     /**
      * Purges all expired users
-     * @return the list of purged userIds
      */
     public boolean purgeExpiredUsers () {
         logger.info("Start purgeExpiredUsers");
@@ -285,4 +299,94 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         return true;
     }
 
+    private String checkPasswordAgainstPolicy(String password, ResourceBundle messages) throws PortalException {
+        String errorMessage = messages.getString("mdp-exigences");
+        int nbError = 0;
+        PasswordPolicy passwordPolicy = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId());
+
+        // Check minimum password length
+        int minPasswordLength = passwordPolicy.getMinLength();
+        if (password.length() < minPasswordLength) {
+            ++nbError;
+            errorMessage += "<br/>" + messages.getString("mdp-taille-requise").replace("{n}", String.valueOf(minPasswordLength));
+        }
+
+        // Check lowercase requirements
+        int minLowerCase = passwordPolicy.getMinLowerCase();
+        if (minLowerCase > 0 && countLowerCase(password) < minLowerCase) {
+            ++nbError;
+            errorMessage += "<br/>" + messages.getString("mdp-minuscule-requise").replace("{n}", String.valueOf(minLowerCase));
+        }
+
+        // Check uppercase requirements
+        int minUpperCase = passwordPolicy.getMinUpperCase();
+        if (minUpperCase > 0 && countUpperCase(password) < minUpperCase) {
+            ++nbError;
+            errorMessage += "<br/>" + messages.getString("mdp-majuscule-requise").replace("{n}", String.valueOf(minUpperCase));
+        }
+
+        // Check digit requirements
+        int minDigits = passwordPolicy.getMinNumbers();
+        if (minDigits > 0 && countDigits(password) < minDigits) {
+            ++nbError;
+            errorMessage += "<br/>" + messages.getString("mdp-nombre-requis").replace("{n}", String.valueOf(minDigits));
+        }
+
+        // Check special character requirements
+        int minSymbols = passwordPolicy.getMinSymbols();
+        if (minSymbols > 0 && countSymbols(password) < minSymbols) {
+            ++nbError;
+            errorMessage += "<br/>" + messages.getString("mdp-symbole-requis").replace("{n}", String.valueOf(minSymbols));
+        }
+
+        if (nbError > 0) {
+            return errorMessage;
+        }
+
+        return StringPool.BLANK;
+    }
+
+    private int countLowerCase(String password) {
+        // Count the number of lowercase characters in the password
+        int count = 0;
+        for (char c : password.toCharArray()) {
+            if (Character.isLowerCase(c)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private int countUpperCase(String password) {
+        // Count the number of uppercase characters in the password
+        int count = 0;
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private int countDigits(String password) {
+        // Count the number of digits in the password
+        int count = 0;
+        for (char c : password.toCharArray()) {
+            if (Character.isDigit(c)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private int countSymbols(String password) {
+        // Count the number of special characters in the password
+        int count = 0;
+        for (char c : password.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

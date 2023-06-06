@@ -128,14 +128,14 @@ public class UserPropertiesServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject updateWebdavPassword(
-			String password, String confirmPassword)
+	public static org.json.JSONObject updatePassword(
+			String password, String confirmPassword, boolean isWebdav)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				UserPropertiesServiceUtil.updateWebdavPassword(
-					password, confirmPassword);
+				UserPropertiesServiceUtil.updatePassword(
+					password, confirmPassword, isWebdav);
 
 			return returnValue;
 		}
