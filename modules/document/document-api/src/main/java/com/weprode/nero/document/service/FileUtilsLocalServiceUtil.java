@@ -164,6 +164,13 @@ public class FileUtilsLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.repository.model.FileEntry
+			moveFileEntry(long userId, long fileId, long destFolderId)
+		throws PortalException, SystemException {
+
+		return getService().moveFileEntry(userId, fileId, destFolderId);
+	}
+
+	public static com.liferay.portal.kernel.repository.model.FileEntry
 			moveFileEntry(long userId, long fileId, long destFolderId, int mode)
 		throws PortalException, SystemException {
 

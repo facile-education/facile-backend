@@ -121,6 +121,9 @@ public interface FileUtilsLocalService extends BaseLocalService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isGroupFile(long fileEntryId);
 
+	public FileEntry moveFileEntry(long userId, long fileId, long destFolderId)
+		throws PortalException, SystemException;
+
 	public FileEntry moveFileEntry(
 			long userId, long fileId, long destFolderId, int mode)
 		throws PortalException, SystemException;

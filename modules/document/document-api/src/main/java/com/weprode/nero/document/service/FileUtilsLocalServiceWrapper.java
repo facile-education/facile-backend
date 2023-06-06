@@ -187,6 +187,16 @@ public class FileUtilsLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.repository.model.FileEntry moveFileEntry(
+			long userId, long fileId, long destFolderId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _fileUtilsLocalService.moveFileEntry(
+			userId, fileId, destFolderId);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.repository.model.FileEntry moveFileEntry(
 			long userId, long fileId, long destFolderId, int mode)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
