@@ -77,8 +77,8 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 		sb.append(folderId);
 		sb.append(", fileId=");
 		sb.append(fileId);
-		sb.append(", thumbnail=");
-		sb.append(thumbnail);
+		sb.append(", thumbnailId=");
+		sb.append(thumbnailId);
 		sb.append(", position=");
 		sb.append(position);
 		sb.append("}");
@@ -118,14 +118,7 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 
 		accessImpl.setFolderId(folderId);
 		accessImpl.setFileId(fileId);
-
-		if (thumbnail == null) {
-			accessImpl.setThumbnail("");
-		}
-		else {
-			accessImpl.setThumbnail(thumbnail);
-		}
-
+		accessImpl.setThumbnailId(thumbnailId);
 		accessImpl.setPosition(position);
 
 		accessImpl.resetOriginalValues();
@@ -148,7 +141,8 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 		folderId = objectInput.readLong();
 
 		fileId = objectInput.readLong();
-		thumbnail = objectInput.readUTF();
+
+		thumbnailId = objectInput.readLong();
 
 		position = objectInput.readInt();
 	}
@@ -186,12 +180,7 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 
 		objectOutput.writeLong(fileId);
 
-		if (thumbnail == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(thumbnail);
-		}
+		objectOutput.writeLong(thumbnailId);
 
 		objectOutput.writeInt(position);
 	}
@@ -204,7 +193,7 @@ public class AccessCacheModel implements CacheModel<Access>, Externalizable {
 	public String externalUrl;
 	public long folderId;
 	public long fileId;
-	public String thumbnail;
+	public long thumbnailId;
 	public int position;
 
 }

@@ -48,7 +48,7 @@ public class AccessWrapper
 		attributes.put("externalUrl", getExternalUrl());
 		attributes.put("folderId", getFolderId());
 		attributes.put("fileId", getFileId());
-		attributes.put("thumbnail", getThumbnail());
+		attributes.put("thumbnailId", getThumbnailId());
 		attributes.put("position", getPosition());
 
 		return attributes;
@@ -104,10 +104,10 @@ public class AccessWrapper
 			setFileId(fileId);
 		}
 
-		String thumbnail = (String)attributes.get("thumbnail");
+		Long thumbnailId = (Long)attributes.get("thumbnailId");
 
-		if (thumbnail != null) {
-			setThumbnail(thumbnail);
+		if (thumbnailId != null) {
+			setThumbnailId(thumbnailId);
 		}
 
 		Integer position = (Integer)attributes.get("position");
@@ -193,13 +193,13 @@ public class AccessWrapper
 	}
 
 	/**
-	 * Returns the thumbnail of this access.
+	 * Returns the thumbnail ID of this access.
 	 *
-	 * @return the thumbnail of this access
+	 * @return the thumbnail ID of this access
 	 */
 	@Override
-	public String getThumbnail() {
-		return model.getThumbnail();
+	public long getThumbnailId() {
+		return model.getThumbnailId();
 	}
 
 	/**
@@ -308,13 +308,13 @@ public class AccessWrapper
 	}
 
 	/**
-	 * Sets the thumbnail of this access.
+	 * Sets the thumbnail ID of this access.
 	 *
-	 * @param thumbnail the thumbnail of this access
+	 * @param thumbnailId the thumbnail ID of this access
 	 */
 	@Override
-	public void setThumbnail(String thumbnail) {
-		model.setThumbnail(thumbnail);
+	public void setThumbnailId(long thumbnailId) {
+		model.setThumbnailId(thumbnailId);
 	}
 
 	/**

@@ -49,11 +49,11 @@ public class AccessLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.access.model.Access addAccess(
-		long categoryId, String title, int type, String url, long folderId,
-		long fileId, String thumbnail, int position) {
+		long userId, long categoryId, String title, int type, String url,
+		long folderId, long fileId, long thumbnailId, int position) {
 
 		return _accessLocalService.addAccess(
-			categoryId, title, type, url, folderId, fileId, thumbnail,
+			userId, categoryId, title, type, url, folderId, fileId, thumbnailId,
 			position);
 	}
 
@@ -338,8 +338,11 @@ public class AccessLocalServiceWrapper
 	}
 
 	@Override
-	public void saveSchoolAccesses(long schoolId, String accesses) {
-		_accessLocalService.saveSchoolAccesses(schoolId, accesses);
+	public void saveSchoolAccesses(
+		com.liferay.portal.kernel.model.User user, long schoolId,
+		String accesses) {
+
+		_accessLocalService.saveSchoolAccesses(user, schoolId, accesses);
 	}
 
 	/**

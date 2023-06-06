@@ -40,7 +40,7 @@ public class AccessSoap implements Serializable {
 		soapModel.setExternalUrl(model.getExternalUrl());
 		soapModel.setFolderId(model.getFolderId());
 		soapModel.setFileId(model.getFileId());
-		soapModel.setThumbnail(model.getThumbnail());
+		soapModel.setThumbnailId(model.getThumbnailId());
 		soapModel.setPosition(model.getPosition());
 
 		return soapModel;
@@ -158,12 +158,12 @@ public class AccessSoap implements Serializable {
 		_fileId = fileId;
 	}
 
-	public String getThumbnail() {
-		return _thumbnail;
+	public long getThumbnailId() {
+		return _thumbnailId;
 	}
 
-	public void setThumbnail(String thumbnail) {
-		_thumbnail = thumbnail;
+	public void setThumbnailId(long thumbnailId) {
+		_thumbnailId = thumbnailId;
 	}
 
 	public int getPosition() {
@@ -182,7 +182,7 @@ public class AccessSoap implements Serializable {
 	private String _externalUrl;
 	private long _folderId;
 	private long _fileId;
-	private String _thumbnail;
+	private long _thumbnailId;
 	private int _position;
 
 }

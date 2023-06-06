@@ -46,8 +46,8 @@ public class AccessTable extends BaseTable<AccessTable> {
 		"folderId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<AccessTable, Long> fileId = createColumn(
 		"fileId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
-	public final Column<AccessTable, String> thumbnail = createColumn(
-		"thumbnail", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<AccessTable, Long> thumbnailId = createColumn(
+		"thumbnailId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<AccessTable, Integer> position = createColumn(
 		"position", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
 

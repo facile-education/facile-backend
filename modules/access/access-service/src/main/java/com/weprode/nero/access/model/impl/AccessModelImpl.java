@@ -77,7 +77,7 @@ public class AccessModelImpl
 		{"categoryId", Types.BIGINT}, {"title", Types.VARCHAR},
 		{"type_", Types.INTEGER}, {"externalUrl", Types.VARCHAR},
 		{"folderId", Types.BIGINT}, {"fileId", Types.BIGINT},
-		{"thumbnail", Types.VARCHAR}, {"position", Types.INTEGER}
+		{"thumbnailId", Types.BIGINT}, {"position", Types.INTEGER}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -92,12 +92,12 @@ public class AccessModelImpl
 		TABLE_COLUMNS_MAP.put("externalUrl", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("folderId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("fileId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("thumbnail", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("thumbnailId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("position", Types.INTEGER);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Access_Access (uuid_ VARCHAR(75) null,accessId LONG not null primary key,categoryId LONG,title VARCHAR(75) null,type_ INTEGER,externalUrl VARCHAR(75) null,folderId LONG,fileId LONG,thumbnail VARCHAR(75) null,position INTEGER)";
+		"create table Access_Access (uuid_ VARCHAR(75) null,accessId LONG not null primary key,categoryId LONG,title VARCHAR(75) null,type_ INTEGER,externalUrl VARCHAR(75) null,folderId LONG,fileId LONG,thumbnailId LONG,position INTEGER)";
 
 	public static final String TABLE_SQL_DROP = "drop table Access_Access";
 
@@ -168,7 +168,7 @@ public class AccessModelImpl
 		model.setExternalUrl(soapModel.getExternalUrl());
 		model.setFolderId(soapModel.getFolderId());
 		model.setFileId(soapModel.getFileId());
-		model.setThumbnail(soapModel.getThumbnail());
+		model.setThumbnailId(soapModel.getThumbnailId());
 		model.setPosition(soapModel.getPosition());
 
 		return model;
@@ -339,9 +339,9 @@ public class AccessModelImpl
 		attributeGetterFunctions.put("fileId", Access::getFileId);
 		attributeSetterBiConsumers.put(
 			"fileId", (BiConsumer<Access, Long>)Access::setFileId);
-		attributeGetterFunctions.put("thumbnail", Access::getThumbnail);
+		attributeGetterFunctions.put("thumbnailId", Access::getThumbnailId);
 		attributeSetterBiConsumers.put(
-			"thumbnail", (BiConsumer<Access, String>)Access::setThumbnail);
+			"thumbnailId", (BiConsumer<Access, Long>)Access::setThumbnailId);
 		attributeGetterFunctions.put("position", Access::getPosition);
 		attributeSetterBiConsumers.put(
 			"position", (BiConsumer<Access, Integer>)Access::setPosition);
@@ -508,22 +508,17 @@ public class AccessModelImpl
 
 	@JSON
 	@Override
-	public String getThumbnail() {
-		if (_thumbnail == null) {
-			return "";
-		}
-		else {
-			return _thumbnail;
-		}
+	public long getThumbnailId() {
+		return _thumbnailId;
 	}
 
 	@Override
-	public void setThumbnail(String thumbnail) {
+	public void setThumbnailId(long thumbnailId) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_thumbnail = thumbnail;
+		_thumbnailId = thumbnailId;
 	}
 
 	@JSON
@@ -605,7 +600,7 @@ public class AccessModelImpl
 		accessImpl.setExternalUrl(getExternalUrl());
 		accessImpl.setFolderId(getFolderId());
 		accessImpl.setFileId(getFileId());
-		accessImpl.setThumbnail(getThumbnail());
+		accessImpl.setThumbnailId(getThumbnailId());
 		accessImpl.setPosition(getPosition());
 
 		accessImpl.resetOriginalValues();
@@ -627,8 +622,8 @@ public class AccessModelImpl
 			this.<String>getColumnOriginalValue("externalUrl"));
 		accessImpl.setFolderId(this.<Long>getColumnOriginalValue("folderId"));
 		accessImpl.setFileId(this.<Long>getColumnOriginalValue("fileId"));
-		accessImpl.setThumbnail(
-			this.<String>getColumnOriginalValue("thumbnail"));
+		accessImpl.setThumbnailId(
+			this.<Long>getColumnOriginalValue("thumbnailId"));
 		accessImpl.setPosition(
 			this.<Integer>getColumnOriginalValue("position"));
 
@@ -740,13 +735,7 @@ public class AccessModelImpl
 
 		accessCacheModel.fileId = getFileId();
 
-		accessCacheModel.thumbnail = getThumbnail();
-
-		String thumbnail = accessCacheModel.thumbnail;
-
-		if ((thumbnail != null) && (thumbnail.length() == 0)) {
-			accessCacheModel.thumbnail = null;
-		}
+		accessCacheModel.thumbnailId = getThumbnailId();
 
 		accessCacheModel.position = getPosition();
 
@@ -846,7 +835,7 @@ public class AccessModelImpl
 	private String _externalUrl;
 	private long _folderId;
 	private long _fileId;
-	private String _thumbnail;
+	private long _thumbnailId;
 	private int _position;
 
 	public <T> T getColumnValue(String columnName) {
@@ -886,7 +875,7 @@ public class AccessModelImpl
 		_columnOriginalValues.put("externalUrl", _externalUrl);
 		_columnOriginalValues.put("folderId", _folderId);
 		_columnOriginalValues.put("fileId", _fileId);
-		_columnOriginalValues.put("thumbnail", _thumbnail);
+		_columnOriginalValues.put("thumbnailId", _thumbnailId);
 		_columnOriginalValues.put("position", _position);
 	}
 
@@ -928,7 +917,7 @@ public class AccessModelImpl
 
 		columnBitmasks.put("fileId", 128L);
 
-		columnBitmasks.put("thumbnail", 256L);
+		columnBitmasks.put("thumbnailId", 256L);
 
 		columnBitmasks.put("position", 512L);
 

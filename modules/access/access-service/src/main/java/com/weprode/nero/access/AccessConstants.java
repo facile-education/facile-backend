@@ -17,7 +17,8 @@ public class AccessConstants {
     public static final String FILE_NAME = "fileName";
 
 
-    public static final String THUMBNAIL = "thumbnail";
+    public static final String THUMBNAIL_ID = "thumbnailId";
+    public static final String THUMBNAIL_URL = "thumbnailUrl";
 
     public static final String PROFILES = "profiles";
 

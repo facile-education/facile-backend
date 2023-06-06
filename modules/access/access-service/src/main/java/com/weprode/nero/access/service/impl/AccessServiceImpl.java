@@ -98,7 +98,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 
 		try {
 			logger.info("User " + user.getUserId() + " saves accesses for school " + schoolId);
-			AccessLocalServiceUtil.saveSchoolAccesses(schoolId, accesses);
+			AccessLocalServiceUtil.saveSchoolAccesses(user, schoolId, accesses);
 			result.put(JSONConstants.SUCCESS, true);	// Only set to TRUE in case of success
 
 		} catch (Exception e) {

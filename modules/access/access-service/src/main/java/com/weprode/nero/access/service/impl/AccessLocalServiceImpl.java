@@ -19,9 +19,9 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
-import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.weprode.nero.document.service.ThumbnailsLocalServiceUtil;
 import com.weprode.nero.access.AccessConstants;
 import com.weprode.nero.access.model.Access;
 import com.weprode.nero.access.model.AccessCategory;
@@ -31,6 +31,7 @@ import com.weprode.nero.access.service.AccessLocalServiceUtil;
 import com.weprode.nero.access.service.AccessProfileLocalServiceUtil;
 import com.weprode.nero.access.service.base.AccessLocalServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * @author Cédric Lecarpentier
@@ -83,7 +85,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		return schoolAccesses;
 	}
 
-	public void saveSchoolAccesses (long schoolId, String accesses) {
+	public void saveSchoolAccesses (User user, long schoolId, String accesses) {
 
 		// Delete existing categories / accesses / profiles
 		AccessCategoryLocalServiceUtil.removeBySchoolId(schoolId);
@@ -99,14 +101,17 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 			for (int accessIdx = 0 ; accessIdx < jsonAccesses.length() ; accessIdx++) {
 				JSONObject jsonAccess = jsonAccesses.getJSONObject(accessIdx);
 				// Create access
-				Access access = AccessLocalServiceUtil.addAccess(category.getCategoryId(),
+				Access access = AccessLocalServiceUtil.addAccess(
+						user.getUserId(),
+						category.getCategoryId(),
 						jsonAccess.getString(AccessConstants.TITLE),
 						jsonAccess.getInt(AccessConstants.TYPE),
 						jsonAccess.getString(AccessConstants.URL),
 						jsonAccess.getLong(AccessConstants.FOLDER_ID),
 						jsonAccess.getLong(AccessConstants.FILE_ID),
-						jsonAccess.getString(AccessConstants.THUMBNAIL),
-						jsonAccess.getInt(AccessConstants.POSITION));
+						jsonAccess.getLong(AccessConstants.THUMBNAIL_ID),
+						jsonAccess.getInt(AccessConstants.POSITION)
+				);
 				// Create profiles
 				JSONArray jsonProfiles = jsonAccess.getJSONArray(AccessConstants.PROFILES);
 				for (int profileIdx = 0 ; profileIdx < jsonProfiles.length() ; profileIdx++) {
@@ -215,12 +220,24 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 				logger.error(e);
 			}
 		}
-		jsonAccess.put(AccessConstants.THUMBNAIL, access.getThumbnail());
 		jsonAccess.put(AccessConstants.POSITION, access.getPosition());
+
+		// Thumbnail
+		if (access.getThumbnailId() != 0) {
+			try {
+				FileEntry thumbnailFileEntry = DLAppServiceUtil.getFileEntry(access.getThumbnailId());
+				jsonAccess.put(AccessConstants.THUMBNAIL_URL, FileUtilsLocalServiceUtil.getDisplayUrl(thumbnailFileEntry, 0, "", 0, true)); // assume we don't need userId to get image url
+			} catch (Exception e) {
+				logger.error("Cannot retrieve thumbnail for access " + access.getAccessId() + ", thumbnail fileId = " + access.getThumbnailId(), e);
+			}
+		} else {
+			jsonAccess.put(AccessConstants.THUMBNAIL_URL, JSONConstants.ACCESS_DEFAULT_THUMBNAIL);
+		}
+		jsonAccess.put(AccessConstants.THUMBNAIL_ID, access.getThumbnailId());
 		return jsonAccess;
 	}
 
-	public Access addAccess(long categoryId, String title, int type, String url, long folderId, long fileId, String thumbnail, int position) {
+	public Access addAccess(long userId, long categoryId, String title, int type, String url, long folderId, long fileId, long thumbnailId, int position) {
 		Access access = accessPersistence.create(counterLocalService.increment());
 		access.setCategoryId(categoryId);
 		access.setTitle(title);
@@ -228,8 +245,19 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		access.setExternalUrl(url);
 		access.setFolderId(folderId);
 		access.setFileId(fileId);
-		access.setThumbnail(thumbnail);
 		access.setPosition(position);
+		// Copy thumbnail file to thumbnail folder
+		if (thumbnailId > 0) {
+			try {
+				FileEntry thumbnail = ThumbnailsLocalServiceUtil.createThumbnailFile(userId, thumbnailId, String.valueOf(access.getAccessId()));
+				access.setThumbnailId(thumbnail.getFileEntryId());
+			} catch (Exception e) {
+				access.setThumbnailId(0L);
+				logger.error("Cannot create thumbnail file from fileId " + thumbnailId + " for access id " + access.getAccessId(), e);
+			}
+		} else {
+			access.setThumbnailId(thumbnailId);	// Negative numbers (including 0) are used for front default images
+		}
 		return accessPersistence.update(access);
 	}
 
@@ -238,6 +266,10 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		List<Access> accesses = accessPersistence.findBycategoryId(categoryId);
 		if (accesses != null) {
 			for (Access access : accesses) {
+				// Delete thumbnail file if exist
+				if (access.getThumbnailId() > 0) {
+					ThumbnailsLocalServiceUtil.deleteThumbnailFile(access.getThumbnailId());
+				}
 				accessProfilePersistence.removeByaccessId(access.getAccessId());
 			}
 		}

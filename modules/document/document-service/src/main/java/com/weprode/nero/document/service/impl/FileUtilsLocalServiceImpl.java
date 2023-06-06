@@ -134,7 +134,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 	public FileEntry moveFileEntry(long userId, long fileId, long destFolderId, int mode) throws SystemException, PortalException {
 		final User user = UserLocalServiceUtil.getUser(userId);
 		logger.info("User " + user.getFullName() + " moves file " + fileId + " to destination folder " + destFolderId + " in mode " + mode);
-		final FileEntry originFile = DLAppServiceUtil.getFileEntry(fileId);
+		FileEntry originFile = DLAppServiceUtil.getFileEntry(fileId);
 		Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
 		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.DELETE)
@@ -175,15 +175,16 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 					ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_MOVE);
 
 				} catch (DuplicateFileEntryException e) {
-					logger.error("File already exists in target folder");
+					logger.error("File " + originFile.getTitle() + " (" + fileId + ") already exists in target folder " + destFolderId);
 					if (mode == DocumentConstants.MODE_NORMAL) {
 						throw new DuplicateFileEntryException();
 					} else if (mode == DocumentConstants.MODE_RENAME) {
 						count++;
 						suffix = " (" + count + ")";
-						DLAppServiceUtil.updateFileEntry(
+						System.out.println("Rename " + originFile.getFileEntryId() + " to " + fileTitle + suffix + "." + originFile.getExtension());
+						originFile = DLAppServiceUtil.updateFileEntry(
 								originFile.getFileEntryId(),
-								originFile.getTitle(),
+								originFile.getFileName(),
 								originFile.getMimeType(),
 								fileTitle + suffix + "." + originFile.getExtension(),
 								StringPool.BLANK, // urlTitle
@@ -196,6 +197,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 								null,
 								serviceContext
 						);
+						System.out.println("File renamed title = " + originFile.getTitle() + " rename fileName = " + originFile.getFileName());
 					} else if (mode == DocumentConstants.MODE_REPLACE) {
 						boolean hasFound = false;
 
@@ -241,7 +243,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 				try {
 					renamedFile = DLAppServiceUtil.updateFileEntry(
 							originFile.getFileEntryId(),
-							originFile.getTitle(),
+							originFile.getFileName(),
 							originFile.getMimeType(),
 							newNamewithoutExtension + suffix + "." + originFile.getExtension(),
 							StringPool.BLANK, // urlTitle

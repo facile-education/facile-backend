@@ -7,7 +7,7 @@ create table Access_Access (
 	externalUrl VARCHAR(75) null,
 	folderId LONG,
 	fileId LONG,
-	thumbnail VARCHAR(75) null,
+	thumbnailId LONG,
 	position INTEGER
 );
 
