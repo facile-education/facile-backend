@@ -573,33 +573,37 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     private void createNewsThumbnail(long userId, News news, long fileId) {
         try {
-            // Get original file
-            FileEntry originalPicture = DLAppServiceUtil.getFileEntry(fileId);
+            if (fileId > 0) {
+                // Get original file
+                FileEntry originalPicture = DLAppServiceUtil.getFileEntry(fileId);
 
-            // Get or create news thumbnail folder
-            Folder thumbnailFolder = FolderUtilsLocalServiceUtil.getThumbnailFolder(userId);
+                // Get or create news thumbnail folder
+                Folder thumbnailFolder = FolderUtilsLocalServiceUtil.getThumbnailFolder(userId);
 
-            // Copy (or move if original file belong to user tempFolder) file to thumbnail folder
-            FileEntry thumbnail;
-            if (DocumentUtilsLocalServiceUtil.belongToTmpFolder(originalPicture, userId)) {
-                thumbnail = DLAppServiceUtil.moveFileEntry(
-                        fileId,
-                        thumbnailFolder.getFolderId(),
-                        new ServiceContext()
-                );
+                // Copy (or move if original file belong to user tempFolder) file to thumbnail folder
+                FileEntry thumbnail;
+                if (DocumentUtilsLocalServiceUtil.belongToTmpFolder(originalPicture, userId)) {
+                    thumbnail = FileUtilsLocalServiceUtil.moveFileEntry(
+                            userId,
+                            fileId,
+                            thumbnailFolder.getFolderId()
+                    );
+                } else {
+                    thumbnail = FileUtilsLocalServiceUtil.copyFileEntry(
+                            userId,
+                            originalPicture.getFileEntryId(),
+                            thumbnailFolder.getFolderId(),
+                            true
+                    );
+                }
+                thumbnail = FileUtilsLocalServiceUtil.renameFile(userId, thumbnail, String.valueOf(news.getNewsId()));  // Rename thumbnail with the newsId value
+                PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(thumbnail); // All ent users can view any thumbnail file
+
+                // Set news imageId to the new file Id
+                news.setImageId(thumbnail.getFileEntryId());
             } else {
-                thumbnail = FileUtilsLocalServiceUtil.copyFileEntry(
-                        userId,
-                        originalPicture.getFileEntryId(),
-                        thumbnailFolder.getFolderId(),
-                        true
-                );
+                news.setImageId(fileId);
             }
-            thumbnail = FileUtilsLocalServiceUtil.renameFile(userId, thumbnail, String.valueOf(news.getNewsId()));  // Rename thumbnail with the newsId value
-            PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(thumbnail); // All ent users can view any thumbnail file
-
-            // Set news imageId to the new file Id
-            news.setImageId(thumbnail.getFileEntryId());
             newsPersistence.updateImpl(news);
 
         } catch (Exception e) {
@@ -608,8 +612,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
     }
 
     private void deleteNewsThumbnail(News news) throws PortalException {
-        // Get thumbnail file
-        DLAppServiceUtil.deleteFileEntry(news.getImageId());
+        if (news.getImageId() > 0) {
+            // Get thumbnail file
+            DLAppServiceUtil.deleteFileEntry(news.getImageId());
+        }
 
         // Set news imageId to 0
         news.setImageId(0);
