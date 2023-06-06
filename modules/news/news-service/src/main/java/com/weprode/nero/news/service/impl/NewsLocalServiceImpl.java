@@ -583,10 +583,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 // Copy (or move if original file belong to user tempFolder) file to thumbnail folder
                 FileEntry thumbnail;
                 if (DocumentUtilsLocalServiceUtil.belongToTmpFolder(originalPicture, userId)) {
-                    thumbnail = DLAppServiceUtil.moveFileEntry(
+                    thumbnail = FileUtilsLocalServiceUtil.moveFileEntry(
+                            userId,
                             fileId,
-                            thumbnailFolder.getFolderId(),
-                            new ServiceContext()
+                            thumbnailFolder.getFolderId()
                     );
                 } else {
                     thumbnail = FileUtilsLocalServiceUtil.copyFileEntry(

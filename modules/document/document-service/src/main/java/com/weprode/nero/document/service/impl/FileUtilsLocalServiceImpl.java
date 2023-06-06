@@ -127,6 +127,10 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		}
 	}
 
+	public FileEntry moveFileEntry(long userId, long fileId, long destFolderId) throws SystemException, PortalException {
+		return moveFileEntry(userId, fileId, destFolderId, DocumentConstants.MODE_RENAME);
+	}
+
 	public FileEntry moveFileEntry(long userId, long fileId, long destFolderId, int mode) throws SystemException, PortalException {
 		final User user = UserLocalServiceUtil.getUser(userId);
 		logger.info("User " + user.getFullName() + " moves file " + fileId + " to destination folder " + destFolderId + " in mode " + mode);
