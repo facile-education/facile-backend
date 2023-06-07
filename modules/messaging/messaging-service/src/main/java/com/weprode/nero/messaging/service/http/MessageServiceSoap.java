@@ -288,50 +288,6 @@ public class MessageServiceSoap {
 		}
 	}
 
-	/**
-	 * Test useful method to clean all the user's messaging objects
-	 */
-	public static org.json.JSONObject testCleanUserMessaging(String userIds)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				MessageServiceUtil.testCleanUserMessaging(userIds);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	/**
-	 * Test useful method to clean all the user's messaging objects
-	 */
-	public static org.json.JSONObject testSendMessage(
-			long senderId, String recipients, String subject, String content,
-			String attachedFiles, long draftMessageId, long originMessageId,
-			boolean isReply, boolean isForward, boolean isSupport)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				MessageServiceUtil.testSendMessage(
-					senderId, recipients, subject, content, attachedFiles,
-					draftMessageId, originMessageId, isReply, isForward,
-					isSupport);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
 	public static org.json.JSONObject sendAssistanceMessage(
 			long applicationId, String content, boolean isSuggestion,
 			String attachFiles)

@@ -132,19 +132,4 @@ public interface MessageService extends BaseService {
 	@JSONWebService(method = "POST", value = "set-message-read-status")
 	public JSONObject setMessageReadStatus(String messageIds, boolean isRead);
 
-	/**
-	 * Test useful method to clean all the user's messaging objects
-	 */
-	@JSONWebService(method = "POST")
-	public JSONObject testCleanUserMessaging(String userIds);
-
-	/**
-	 * Test useful method to clean all the user's messaging objects
-	 */
-	@JSONWebService(method = "POST")
-	public JSONObject testSendMessage(
-		long senderId, String recipients, String subject, String content,
-		String attachedFiles, long draftMessageId, long originMessageId,
-		boolean isReply, boolean isForward, boolean isSupport);
-
 }
