@@ -148,29 +148,6 @@ public class MessageServiceUtil {
 		return getService().setMessageReadStatus(messageIds, isRead);
 	}
 
-	/**
-	 * Test useful method to clean all the user's messaging objects
-	 */
-	public static org.json.JSONObject testCleanUserMessaging(
-		java.lang.String userIds) {
-
-		return getService().testCleanUserMessaging(userIds);
-	}
-
-	/**
-	 * Test useful method to clean all the user's messaging objects
-	 */
-	public static org.json.JSONObject testSendMessage(
-		long senderId, java.lang.String recipients, java.lang.String subject,
-		java.lang.String content, java.lang.String attachedFiles,
-		long draftMessageId, long originMessageId, boolean isReply,
-		boolean isForward, boolean isSupport) {
-
-		return getService().testSendMessage(
-			senderId, recipients, subject, content, attachedFiles,
-			draftMessageId, originMessageId, isReply, isForward, isSupport);
-	}
-
 	public static MessageService getService() {
 		return _service;
 	}

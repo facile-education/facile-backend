@@ -444,74 +444,6 @@ public class MessageServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject testCleanUserMessaging(
-		HttpPrincipal httpPrincipal, String userIds) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				MessageServiceUtil.class, "testCleanUserMessaging",
-				_testCleanUserMessagingParameterTypes12);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, userIds);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	public static org.json.JSONObject testSendMessage(
-		HttpPrincipal httpPrincipal, long senderId, String recipients,
-		String subject, String content, String attachedFiles,
-		long draftMessageId, long originMessageId, boolean isReply,
-		boolean isForward, boolean isSupport) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				MessageServiceUtil.class, "testSendMessage",
-				_testSendMessageParameterTypes13);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, senderId, recipients, subject, content,
-				attachedFiles, draftMessageId, originMessageId, isReply,
-				isForward, isSupport);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static org.json.JSONObject sendAssistanceMessage(
 		HttpPrincipal httpPrincipal, long applicationId, String content,
 		boolean isSuggestion, String attachFiles) {
@@ -519,7 +451,7 @@ public class MessageServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				MessageServiceUtil.class, "sendAssistanceMessage",
-				_sendAssistanceMessageParameterTypes14);
+				_sendAssistanceMessageParameterTypes12);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, applicationId, content, isSuggestion, attachFiles);
@@ -580,14 +512,7 @@ public class MessageServiceHttp {
 		new Class[] {String.class};
 	private static final Class<?>[] _getUsersCompletionParameterTypes11 =
 		new Class[] {String.class};
-	private static final Class<?>[] _testCleanUserMessagingParameterTypes12 =
-		new Class[] {String.class};
-	private static final Class<?>[] _testSendMessageParameterTypes13 =
-		new Class[] {
-			long.class, String.class, String.class, String.class, String.class,
-			long.class, long.class, boolean.class, boolean.class, boolean.class
-		};
-	private static final Class<?>[] _sendAssistanceMessageParameterTypes14 =
+	private static final Class<?>[] _sendAssistanceMessageParameterTypes12 =
 		new Class[] {long.class, String.class, boolean.class, String.class};
 
 }

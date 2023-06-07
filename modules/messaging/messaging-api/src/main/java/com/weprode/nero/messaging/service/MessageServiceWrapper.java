@@ -147,28 +147,6 @@ public class MessageServiceWrapper
 		return _messageService.setMessageReadStatus(messageIds, isRead);
 	}
 
-	/**
-	 * Test useful method to clean all the user's messaging objects
-	 */
-	@Override
-	public org.json.JSONObject testCleanUserMessaging(String userIds) {
-		return _messageService.testCleanUserMessaging(userIds);
-	}
-
-	/**
-	 * Test useful method to clean all the user's messaging objects
-	 */
-	@Override
-	public org.json.JSONObject testSendMessage(
-		long senderId, String recipients, String subject, String content,
-		String attachedFiles, long draftMessageId, long originMessageId,
-		boolean isReply, boolean isForward, boolean isSupport) {
-
-		return _messageService.testSendMessage(
-			senderId, recipients, subject, content, attachedFiles,
-			draftMessageId, originMessageId, isReply, isForward, isSupport);
-	}
-
 	@Override
 	public MessageService getWrappedService() {
 		return _messageService;
