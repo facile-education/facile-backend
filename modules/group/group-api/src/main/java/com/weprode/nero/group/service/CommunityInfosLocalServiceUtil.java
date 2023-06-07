@@ -326,10 +326,6 @@ public class CommunityInfosLocalServiceUtil {
 			userId, pedagogicalOnly, activeOnly);
 	}
 
-	public static List<Long> getUserGroupIds(long userId) {
-		return getService().getUserGroupIds(userId);
-	}
-
 	/**
 	 * Updates the community infos in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

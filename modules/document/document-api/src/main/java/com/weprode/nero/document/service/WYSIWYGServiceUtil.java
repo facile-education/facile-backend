@@ -48,7 +48,7 @@ public class WYSIWYGServiceUtil {
 
 	public static org.json.JSONObject saveHTMLContent(
 		java.lang.Long fileVersionId, java.lang.String content,
-		java.lang.Boolean majorVersion) {
+		boolean majorVersion) {
 
 		return getService().saveHTMLContent(
 			fileVersionId, content, majorVersion);

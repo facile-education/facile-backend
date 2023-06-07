@@ -4,7 +4,10 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.messaging.constants.MessagingConstants;
 import com.weprode.nero.messaging.model.Message;
@@ -12,6 +15,7 @@ import com.weprode.nero.messaging.model.MessageFolder;
 import com.weprode.nero.messaging.service.MessageFolderLocalServiceUtil;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.messaging.service.base.MessageFolderServiceBaseImpl;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -33,11 +37,20 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
      * Add personal folder
      */
     @JSONWebService(method = "GET")
-    public JSONObject addFolder(long parentFolderId, String folderName) throws PrincipalException {
+    public JSONObject addFolder(long parentFolderId, String folderName) {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
-        MessageFolder folder = MessageFolderLocalServiceUtil.addFolderMessage(userId, folderName, MessagingConstants.PERSONAL_FOLDER_TYPE, parentFolderId);
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        MessageFolder folder = MessageFolderLocalServiceUtil.addFolderMessage(user.getUserId(), folderName, MessagingConstants.PERSONAL_FOLDER_TYPE, parentFolderId);
 
         JSONObject jsonFolder = convertFolder(folder);
         jsonFolder.put(JSONConstants.SUB_FOLDERS, new JSONArray());
@@ -52,13 +65,22 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
      * Get all user message boxes and root folders
      */
     @JSONWebService(method = "GET")
-    public JSONObject getAllUserFolders() throws PrincipalException {
+    public JSONObject getAllUserFolders() {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
         try {
             JSONArray jsonBoxes = new JSONArray();
-            List<MessageFolder> rootFolders = MessageFolderLocalServiceUtil.getUserSubFolders(userId, 0);
+            List<MessageFolder> rootFolders = MessageFolderLocalServiceUtil.getUserSubFolders(user.getUserId(), 0);
 
             for (MessageFolder rootFolder : rootFolders) {
                 JSONObject jsonFolder = convertFolder(rootFolder);
@@ -73,7 +95,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
 
                 // Personal folders -> loop recursively
                 if (rootFolder.getType() == MessagingConstants.PERSONAL_FOLDER_TYPE) {
-                    JSONArray jsonSubFolders = recursiveFolder(userId, rootFolder.getFolderId());
+                    JSONArray jsonSubFolders = recursiveFolder(user.getUserId(), rootFolder.getFolderId());
                     jsonFolder.put(JSONConstants.SUB_FOLDERS, jsonSubFolders);
                 }
 
@@ -83,7 +105,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             result.put(JSONConstants.FOLDERS, jsonBoxes);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
-            logger.error("Error when fetching messaging boxes for userId " + userId, e);
+            logger.error("Error when fetching messaging boxes for userId " + user.getUserId(), e);
             result.put(JSONConstants.SUCCESS, false);
         }
 
@@ -120,11 +142,22 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
      * Add a folder
      */
     @JSONWebService(method = "GET")
-    public JSONObject renameFolder(long folderId, String newLabel) throws PrincipalException {
+    public JSONObject renameFolder(long folderId, String newLabel) {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
         try {
             MessageFolder folder = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
             folder.setFolderName(newLabel);
@@ -133,7 +166,8 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
-            logger.error("Error when user " + userId + " renames folder " + folderId + " with new name " + newLabel, e);
+            logger.error("Error when user " + user.getUserId() + " renames folder " + folderId + " with new name " + newLabel, e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
@@ -143,25 +177,34 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
      * Remove a folder
      */
     @JSONWebService(method = "GET")
-    public JSONObject deleteFolder(long folderId) throws PrincipalException {
+    public JSONObject deleteFolder(long folderId) {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
         try {
             MessageFolder folderToDelete = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
             if (folderToDelete.getType() != MessagingConstants.PERSONAL_FOLDER_TYPE) {
                 return result;
             }
 
-            MessageFolder trashFolder = MessageFolderLocalServiceUtil.getUserTrashFolder(userId);
+            MessageFolder trashFolder = MessageFolderLocalServiceUtil.getUserTrashFolder(user.getUserId());
 
-            recursiveDelete(userId, folderToDelete, trashFolder.getFolderId());
+            recursiveDelete(user.getUserId(), folderToDelete, trashFolder.getFolderId());
 
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
-            logger.error("Error when removing message folder for userId " + userId + " and folderId " + folderId, e);
+            logger.error("Error when removing message folder for userId " + user.getUserId() + " and folderId " + folderId, e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
@@ -171,7 +214,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
     /**
      * Recursive removal for folder
      */
-    private static void recursiveDelete(long userId, MessageFolder folder, long trashFolderId) throws Exception {
+    private static void recursiveDelete(long userId, MessageFolder folder, long trashFolderId) {
         List<MessageFolder> subFolders = MessageFolderLocalServiceUtil.getUserSubFolders(userId, folder.getFolderId());
 
         for (MessageFolder subFolder : subFolders) {

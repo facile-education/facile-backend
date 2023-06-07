@@ -53,8 +53,7 @@ import com.weprode.nero.messaging.service.MessagingConfigServiceUtil;
 public class MessagingConfigServiceHttp {
 
 	public static org.json.JSONObject getMessagingConfiguration(
-			HttpPrincipal httpPrincipal)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -69,14 +68,6 @@ public class MessagingConfigServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -93,8 +84,7 @@ public class MessagingConfigServiceHttp {
 	}
 
 	public static org.json.JSONObject updateMessagingConfiguration(
-			HttpPrincipal httpPrincipal, String configuration)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, String configuration) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -111,14 +101,6 @@ public class MessagingConfigServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}

@@ -68,6 +68,11 @@ public class UserUtilsLocalServiceWrapper
 		return _userUtilsLocalService.getUserDoyens(user);
 	}
 
+	@Override
+	public java.util.List<Long> getUserGroupIds(long userId) {
+		return _userUtilsLocalService.getUserGroupIds(userId);
+	}
+
 	/**
 	 * This method a list a user based on a list of userId
 	 *
@@ -96,8 +101,6 @@ public class UserUtilsLocalServiceWrapper
 
 	/**
 	 * Purges all expired users
-	 *
-	 * @return the list of purged userIds
 	 */
 	@Override
 	public boolean purgeExpiredUsers() {

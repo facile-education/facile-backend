@@ -110,6 +110,15 @@ public class UserRelationshipLocalServiceImpl extends UserRelationshipLocalServi
         return relatives;
     }
 
+    public boolean isChild(long parentId, long childId) {
+        List<User> userChildren = getChildren(parentId);
+        for (User userChild : userChildren) {
+            if (userChild.getUserId() == childId) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void deleteChild(long childId) {
         try {

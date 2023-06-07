@@ -5,10 +5,13 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.agenda.model.Event;
 import com.weprode.nero.agenda.service.EventLocalServiceUtil;
 import com.weprode.nero.agenda.service.EventReadLocalServiceUtil;
 import com.weprode.nero.agenda.service.base.AgendaServiceBaseImpl;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.NewsAdminLocalServiceUtil;
@@ -39,11 +42,11 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -73,11 +76,11 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -98,17 +101,15 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -140,16 +141,17 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
-            // Only the event's creator is allowed to modify it
+            // Only the event's creator or a direction member is allowed to modify it
             Event event = EventLocalServiceUtil.getEvent(eventId);
-            if (event.getAuthorId() != user.getUserId()) {
+            if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
                 result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
@@ -194,9 +196,9 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            // Only the event's creator is allowed to delete it
+            // Only the event's creator or a direction member is allowed to delete it
             Event event = EventLocalServiceUtil.getEvent(eventId);
-            if (event.getAuthorId() != user.getUserId()) {
+            if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
                 result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
@@ -233,7 +235,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
                 result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsUnRead(user.getUserId(), eventId));
             }
         } catch (Exception e) {
-            logger.error("Error while deleting event " + eventId, e);
+            logger.error("Error while setting event " + eventId + " as read/unread", e);
             result.put(JSONConstants.SUCCESS, false);
         }
 

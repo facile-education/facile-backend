@@ -14,6 +14,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.application.model.BroadcastRule;
 import com.weprode.nero.application.service.BroadcastRuleLocalServiceUtil;
 import com.weprode.nero.application.service.base.BroadcastRuleServiceBaseImpl;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -44,27 +45,20 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
-                    && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
-                    && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            }
-            logger.info("User " + user.getUserId() + " fetches broadcast rules for applicationId " + applicationId + ", schoolId " + schoolId);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
+                && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
+            logger.info("User " + user.getUserId() + " fetches broadcast rules for applicationId " + applicationId + ", schoolId " + schoolId);
             JSONArray jsonRules = new JSONArray();
 
             List<BroadcastRule> rules = BroadcastRuleLocalServiceUtil.getSchoolRules(applicationId, schoolId);
@@ -129,27 +123,20 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
-                    && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
-                    && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            }
-            logger.info("User " + user.getUserId() + " updates broadcast rules for applicationId " + applicationId + ", schoolId " + schoolId + " : rules = " + rules);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
+                && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
+            logger.info("User " + user.getUserId() + " updates broadcast rules for applicationId " + applicationId + ", schoolId " + schoolId + " : rules = " + rules);
             JSONArray jsonRules = new JSONArray(rules);
 
             // First delete all application's rules

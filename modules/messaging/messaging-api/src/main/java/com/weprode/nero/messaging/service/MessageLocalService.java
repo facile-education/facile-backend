@@ -69,6 +69,7 @@ public interface MessageLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.messaging.service.impl.MessageLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the message local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link MessageLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public Message addMessage(
 		long folderId, long senderId, Date sendDate, long threadId,
 		String messageSubject, String messageContent, boolean isNew, int type,
@@ -133,6 +134,7 @@ public interface MessageLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public Message deleteMessage(Message message);
 
+	@Indexable(type = IndexableType.DELETE)
 	public void deleteMessageAndDependencies(long messageId)
 		throws NoSuchMessageException, SystemException;
 
@@ -337,6 +339,7 @@ public interface MessageLocalService
 			List<File> attachmentFileList)
 		throws SystemException;
 
+	@Indexable(type = IndexableType.REINDEX)
 	public JSONObject saveDraft(
 		long senderId, long draftMessageId, String subject, String content,
 		List<Long> recipientIds, List<Long> attachFileIds, boolean isSupport);

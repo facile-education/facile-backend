@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.group.model.CommunityInfos;
@@ -65,19 +66,17 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS,false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-
-            logger.info("User " + user.getFullName() + " creates community " + groupName);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS,false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         // Check group name unicity
+        logger.info("User " + user.getFullName() + " creates community " + groupName);
         Group existingGroup = null;
         try {
             existingGroup = GroupLocalServiceUtil.getGroup(user.getCompanyId(), groupName);
@@ -182,18 +181,16 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            logger.info("User " + user.getFullName() + " is about to create community " + communityName);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
+        if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+        logger.info("User " + user.getFullName() + " is about to create community " + communityName);
         Group existingGroup = null;
         try {
             existingGroup = GroupLocalServiceUtil.getGroup(user.getCompanyId(), communityName);
@@ -234,19 +231,15 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS,false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
-                throw new Exception("Only group admin can update group infos");
-            }
-            logger.info("User " + user.getFullName() + " updates community " + groupId + " with name " + groupName);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS,false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
+        if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+        logger.info("User " + user.getFullName() + " updates community " + groupId + " with name " + groupName);
 
         // Check group name unicity
         try {
@@ -364,17 +357,15 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
-                throw new Exception("Only group admin can remove the community");
-            }
-            logger.info("User " + user.getFullName() + " removes community " + groupId);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
+        if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+        logger.info("User " + user.getFullName() + " removes community " + groupId);
 
         try {
             // Rename group
@@ -409,18 +400,19 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
     public JSONObject extendCommunity(long groupId) {
         JSONObject result = new JSONObject();
         
-        User user = null;
+        User user;
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS,false);
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            logger.info("User " + user.getFullName() + " extends community " + groupId + " to school year end date");
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS,false);
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
+        if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+        logger.info("User " + user.getFullName() + " extends community " + groupId + " to school year end date");
 
         try {
             // Get school year end date

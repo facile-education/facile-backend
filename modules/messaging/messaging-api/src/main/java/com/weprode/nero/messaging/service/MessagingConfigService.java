@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
@@ -53,7 +52,7 @@ public interface MessagingConfigService extends BaseService {
 	 */
 	@JSONWebService(method = "GET", value = "get-messaging-configuration")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getMessagingConfiguration() throws PrincipalException;
+	public JSONObject getMessagingConfiguration();
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -66,7 +65,6 @@ public interface MessagingConfigService extends BaseService {
 	 * Update messaging configuration
 	 */
 	@JSONWebService(method = "POST", value = "update-messaging-configuration")
-	public JSONObject updateMessagingConfiguration(String configuration)
-		throws PrincipalException;
+	public JSONObject updateMessagingConfiguration(String configuration);
 
 }

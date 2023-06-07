@@ -1,14 +1,13 @@
 package com.weprode.nero.role.service.impl;
 
-import com.liferay.portal.kernel.exception.RolePermissionsException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -33,27 +32,25 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 	public JSONObject getMainRoles() {
 		JSONObject result = new JSONObject();
 
-		User agent;
+		User user;
 		try {
-			agent = getGuestOrUser();
-			if (agent.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				throw new AuthException();
-			}
-			if (!RoleUtilsLocalServiceUtil.isTeacher(agent) && 
-                    !RoleUtilsLocalServiceUtil.isPersonal(agent) &&
-					!RoleUtilsLocalServiceUtil.isAdministrator(agent)) {
-				throw new RolePermissionsException();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user) &&
+                !RoleUtilsLocalServiceUtil.isPersonal(user) &&
+				!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
 			JSONArray roles = new JSONArray();
-			for (Role role : RoleUtilsLocalServiceUtil.getUserSearchableRoles(agent)) {
-				JSONObject jsonRole = getRoleAsJSON(role, agent);
+			for (Role role : RoleUtilsLocalServiceUtil.getUserSearchableRoles(user)) {
+				JSONObject jsonRole = getRoleAsJSON(role, user);
 				roles.put(jsonRole);
 			}
 
@@ -71,27 +68,27 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 	public JSONObject getLocalUserRoles() {
 		JSONObject result = new JSONObject();
 
-		User adminUser;
+		User user;
 		try {
-			adminUser = getGuestOrUser();
-			if (adminUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				throw new AuthException();
-			}
-			if (!(RoleUtilsLocalServiceUtil.isAdministrator(adminUser) || RoleUtilsLocalServiceUtil.isDirectionMember(adminUser) ||
-					RoleUtilsLocalServiceUtil.isSchoolAdmin(adminUser) || RoleUtilsLocalServiceUtil.isENTAdmin(adminUser))) {
-				throw new RolePermissionsException();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+				!RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
 			JSONArray localUsersRoles = new JSONArray();
 
 			for (Role role : RoleUtilsLocalServiceUtil.getAvailableRolesForLocalUser()) {
-				JSONObject jsonRole = getRoleAsJSON(role, adminUser);
+				JSONObject jsonRole = getRoleAsJSON(role, user);
 				localUsersRoles.put(jsonRole);
 			}
 			result.put(JSONConstants.ROLES, localUsersRoles);
@@ -113,19 +110,16 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				throw new AuthException();
-			}
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
-					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)
-					&& !RoleUtilsLocalServiceUtil.isSchoolAdmin(user)) {
-				throw new RolePermissionsException();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {

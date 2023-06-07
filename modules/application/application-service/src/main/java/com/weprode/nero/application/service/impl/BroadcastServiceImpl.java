@@ -9,6 +9,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.application.service.base.BroadcastServiceBaseImpl;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONObject;
@@ -32,30 +33,23 @@ public class BroadcastServiceImpl extends BroadcastServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-
-            if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
-                    && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
-                    && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            }
-            logger.info("User " + user.getFullName() + " updates broadcast for applicationId " +
-                    applicationId + " and schoolId " + schoolId + ": isBroadcasted is " +
-                    isBroadcasted + " and applicationUrl = " + applicationUrl);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
+                && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)
+                && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
+            logger.info("User " + user.getFullName() + " updates broadcast for applicationId " +
+                    applicationId + " and schoolId " + schoolId + ": isBroadcasted is " +
+                    isBroadcasted + " and applicationUrl = " + applicationUrl);
             BroadcastLocalServiceUtil.updateBroadcast(applicationId, schoolId, isBroadcasted, applicationUrl);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

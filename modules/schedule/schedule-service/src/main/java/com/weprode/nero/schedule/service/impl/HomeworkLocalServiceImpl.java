@@ -5,7 +5,6 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
-import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
@@ -14,6 +13,7 @@ import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.HomeworkLocalServiceBaseImpl;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -253,7 +253,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 					} else {
 						// If homework target next session then check the group which might be different from current session
 						if (homework.getTargetSessionId() > 0) {
-							List<Long> userGroupIds = CommunityInfosLocalServiceUtil.getUserGroupIds(studentId);
+							List<Long> userGroupIds = UserUtilsLocalServiceUtil.getUserGroupIds(studentId);
 							if (userGroupIds.contains(homework.getGroupId())) {
 								givenHomeworks.add(homework);
 							}
@@ -278,7 +278,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		List<Homework> homeworkList = new ArrayList<>();
 
 		// Get the groupId list for the student
-		List<Long> studentGroupIdList = CommunityInfosLocalServiceUtil.getUserGroupIds(student.getUserId());
+		List<Long> studentGroupIdList = UserUtilsLocalServiceUtil.getUserGroupIds(student.getUserId());
 
 		// Set maxDate to far away in the future
 		Calendar cal = Calendar.getInstance();

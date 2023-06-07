@@ -6,13 +6,13 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -38,36 +38,34 @@ import java.util.List;
 )
 public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
 
-    private static final Log logger = LogFactoryUtil.getLog(UserManagementServiceImpl.class);   
+    private static final Log logger = LogFactoryUtil.getLog(UserManagementServiceImpl.class);
 
     @JSONWebService(value = "create-manual-user", method = "POST")
     public JSONObject createManualUser(String lastName, String firstName, String email, long roleId, long schoolId) {
 
         JSONObject result = new JSONObject();
-        User adminUser;
+        User user;
         try {
-            adminUser = getGuestOrUser();
-            if (adminUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
-            }
-
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(adminUser) || RoleUtilsLocalServiceUtil.isSchoolAdmin(adminUser)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(adminUser) || RoleUtilsLocalServiceUtil.isENTAdmin(adminUser))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
 
         try {
             // Check if email is already used
             User existingUser = null;
             try {
-                existingUser = UserLocalServiceUtil.getUserByEmailAddress(adminUser.getCompanyId(), email);
+                existingUser = UserLocalServiceUtil.getUserByEmailAddress(user.getCompanyId(), email);
             } catch (Exception e) {
                 logger.debug(e);
             }
@@ -86,38 +84,35 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         } catch (Exception e) {
             logger.error("Error while creating user with lastName="+lastName+", firstName="+firstName+" and email="+email, e);
         }
-        
+
         return result;
     }
 
     @JSONWebService(value = "edit-manual-user", method = "POST")
     public JSONObject editManualUser(long userId, String lastName, String firstName, String email, long roleId, long schoolId) {
         JSONObject result = new JSONObject();
-        
-        User adminUser;
-        try {
-            adminUser = getGuestOrUser();
-            if (adminUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
-            }
 
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(adminUser) || RoleUtilsLocalServiceUtil.isSchoolAdmin(adminUser)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(adminUser) || RoleUtilsLocalServiceUtil.isENTAdmin(adminUser))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
             // Check if email is already used
             User modifiedUser = UserLocalServiceUtil.getUser(userId);
             if (!modifiedUser.getEmailAddress().equals(email)) {
-                User existingUser = UserLocalServiceUtil.getUserByEmailAddress(adminUser.getCompanyId(), email);
+                User existingUser = UserLocalServiceUtil.getUserByEmailAddress(user.getCompanyId(), email);
                 if (existingUser != null) {
                     result.put(JSONConstants.SUCCESS, false);
                     result.put(JSONConstants.ERROR_CODE, JSONConstants.EMAIL);
@@ -166,35 +161,32 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
     @JSONWebService(value = "delete-manual-user", method = "GET")
     public JSONObject deleteManualUser(long userId) {
         JSONObject result = new JSONObject();
-        
-        User adminUser;
-        try {
-            adminUser = getGuestOrUser();
-            if (adminUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
-            }
 
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(adminUser) || RoleUtilsLocalServiceUtil.isSchoolAdmin(adminUser)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(adminUser) || RoleUtilsLocalServiceUtil.isENTAdmin(adminUser))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
             User manualUser = UserLocalServiceUtil.getUser(userId);
             if (!manualUser.getAgreedToTermsOfUse()) {
-                logger.info("User " + adminUser.getFullName() + " deletes manual user " + manualUser.getFullName() + " : he has never agreed terms of use, so purging it");
+                logger.info("User " + user.getFullName() + " deletes manual user " + manualUser.getFullName() + " : he has never agreed terms of use, so purging it");
                 UserLocalServiceUtil.deleteUser(manualUser);
             } else {
-                User user = UserLocalServiceUtil.getUser(userId);
-                user.setStatus(WorkflowConstants.STATUS_INACTIVE);
-                UserLocalServiceUtil.updateUser(user);
+                User targetUser = UserLocalServiceUtil.getUser(userId);
+                targetUser.setStatus(WorkflowConstants.STATUS_INACTIVE);
+                UserLocalServiceUtil.updateUser(targetUser);
             }
 
             result.put(JSONConstants.SUCCESS, true);
@@ -202,43 +194,41 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
             logger.error("Error while editing user " + userId, e);
             result.put(JSONConstants.SUCCESS, false);
         }
-        
+
         return result;
     }
 
     @JSONWebService(value = "get-manual-users", method = "GET")
     public JSONObject getManualUsers(long schoolId, String search, int start, int limit) {
         JSONObject result = new JSONObject();
-        
-        try {
-            User user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
-            }
-            logger.info("User " + user.getUserId() + " fetches all manual users for school " + schoolId);
 
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
+            logger.info("User " + user.getUserId() + " fetches all manual users for school " + schoolId);
             List<Long> organizationIds = new ArrayList<>();
             organizationIds.add(schoolId);
 
             OrderByComparator<User> obc = new UserLastNameCaseInsensitiveComparator(true);
 
-            List<User> users = UserSearchLocalServiceUtil.searchUsers(search, organizationIds, null, null, null, true, start, limit, obc);
+            List<User> localUsers = UserSearchLocalServiceUtil.searchUsers(search, organizationIds, null, null, null, true, start, limit, obc);
             JSONArray jsonUsers = new JSONArray();
-            for (User user : users) {
-                JSONObject jsonUser = convertUser(user);
+            for (User localUser : localUsers) {
+                JSONObject jsonUser = convertUser(localUser);
                 jsonUsers.put(jsonUser);
             }
 
@@ -281,20 +271,24 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return jsonUser;
     }
 
-    @JSONWebService(value = "update-password", method = "POST")
+    @JSONWebService(value = "update-password", method = "GET")
     public JSONObject updatePassword(long userId, String password, boolean resetPassword) {
         JSONObject result = new JSONObject();
 
-        User adminUser;
+        User user;
         try {
-            adminUser = getGuestOrUser();
-            if (adminUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {

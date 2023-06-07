@@ -361,6 +361,11 @@ public class UserRelationshipLocalServiceWrapper
 		return _userRelationshipLocalService.getUserRelationshipsCount();
 	}
 
+	@Override
+	public boolean isChild(long parentId, long childId) {
+		return _userRelationshipLocalService.isChild(parentId, childId);
+	}
+
 	/**
 	 * Updates the user relationship in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

@@ -24,7 +24,6 @@ import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,20 +34,6 @@ import java.util.List;
 public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(GroupUtilsLocalServiceImpl.class);
-
-    public List<Group> getGroupsFromOrganizations(List<Organization> orgsToSearchFor) {
-        List<Group> groupToReturn = new ArrayList<>();
-
-        try {
-            if (orgsToSearchFor != null && !orgsToSearchFor.isEmpty()) {
-                groupToReturn.addAll(groupUtilsFinder.findGroupsByOrganizationId(orgsToSearchFor));
-            }
-        } catch (Exception e) {
-            logger.error("Error while getting the group list for given list of organizations", e);
-        }
-
-        return groupToReturn;
-    }
 
     public String getGroupName(long groupId) {
         String groupName = "";

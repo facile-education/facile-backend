@@ -50,6 +50,7 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.NewsAdminLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -181,7 +182,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         // Get user groupIds
         List<Long> groupIds = new ArrayList<>();
         if (groupId == 0) {
-            groupIds.addAll(CommunityInfosLocalServiceUtil.getUserGroupIds(user.getUserId()));
+            groupIds.addAll(UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()));
         } else {
             groupIds.add(groupId);
         }
@@ -203,7 +204,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         // Get user groupIds
         List<Long> groupIds = new ArrayList<>();
         if (groupId == 0) {
-            groupIds.addAll(CommunityInfosLocalServiceUtil.getUserGroupIds(user.getUserId()));
+            groupIds.addAll(UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()));
         } else {
             groupIds.add(groupId);
         }
@@ -225,7 +226,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         // Get user groupIds
         List<Long> groupIds = new ArrayList<>();
         if (groupId == 0) {
-            groupIds.addAll(CommunityInfosLocalServiceUtil.getUserGroupIds(user.getUserId()));
+            groupIds.addAll(UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()));
         } else {
             groupIds.add(groupId);
         }
@@ -477,7 +478,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             }
 
             // Get user group ids
-            List<Long> userGroupIds = CommunityInfosLocalServiceUtil.getUserGroupIds(userId);
+            List<Long> userGroupIds = UserUtilsLocalServiceUtil.getUserGroupIds(userId);
 
             // Get user role ids
             List<Role> roles = RoleLocalServiceUtil.getUserRoles(userId);
@@ -549,10 +550,9 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
 
         // Group name is the first found in the news group list to which belongs the user
-        List<Long> userGroupIds = CommunityInfosLocalServiceUtil.getUserGroupIds(userId);
+        List<Long> userGroupIds = UserUtilsLocalServiceUtil.getUserGroupIds(userId);
         List<NewsPopulation> populations = NewsPopulationLocalServiceUtil.getNewsPopulations(newsId);
         for (NewsPopulation population : populations) {
-            logger.info("Loop over population groupId = " + population.getGroupId() + " and roleId = " + population.getRoleId());
             if (userGroupIds.contains(population.getGroupId()) && (population.getRoleId() == 0 || RoleLocalServiceUtil.hasUserRole(userId, population.getRoleId()))) {
                 jsonNews.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(population.getGroupId()));
                 break;

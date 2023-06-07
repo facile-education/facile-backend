@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
@@ -56,21 +55,20 @@ public interface MessageFolderService extends BaseService {
 	 * Add personal folder
 	 */
 	@JSONWebService(method = "GET")
-	public JSONObject addFolder(long parentFolderId, String folderName)
-		throws PrincipalException;
+	public JSONObject addFolder(long parentFolderId, String folderName);
 
 	/**
 	 * Remove a folder
 	 */
 	@JSONWebService(method = "GET")
-	public JSONObject deleteFolder(long folderId) throws PrincipalException;
+	public JSONObject deleteFolder(long folderId);
 
 	/**
 	 * Get all user message boxes and root folders
 	 */
 	@JSONWebService(method = "GET")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getAllUserFolders() throws PrincipalException;
+	public JSONObject getAllUserFolders();
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -83,7 +81,6 @@ public interface MessageFolderService extends BaseService {
 	 * Add a folder
 	 */
 	@JSONWebService(method = "GET")
-	public JSONObject renameFolder(long folderId, String newLabel)
-		throws PrincipalException;
+	public JSONObject renameFolder(long folderId, String newLabel);
 
 }

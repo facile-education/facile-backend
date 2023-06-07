@@ -1,16 +1,16 @@
 package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
@@ -23,6 +23,8 @@ import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.school.life.service.base.RenvoiServiceBaseImpl;
 import com.weprode.nero.school.life.service.persistence.RenvoiPK;
 import com.weprode.nero.school.life.utils.NotificationUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -45,6 +47,19 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
     @JSONWebService(value = "get-pending-renvois", method = "GET")
     public JSONObject getPendingRenvois() {
         JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
 
         JSONArray jsonRenvois = new JSONArray();
         try {
@@ -97,6 +112,22 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
     public JSONObject registerStudentRenvoi(long schoollifeSessionId, long sourceTeacherId, long studentId, long sourceSessionId, long sourceSchoollifeSessionId, String registrationDate) {
         JSONObject result = new JSONObject();
 
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isDoyen(user) &&
+                !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
         try {
             User teacher = getGuestOrUser();
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -127,6 +158,19 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
     public JSONObject setRenvoiReason(long schoollifeSessionId, long studentId, String reason) {
         JSONObject result = new JSONObject();
 
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
         try {
             User teacher = getGuestOrUser();
             RenvoiLocalServiceUtil.setReason(schoollifeSessionId, studentId, reason);
@@ -144,6 +188,22 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
     @JSONWebService(value = "unregister-student-renvoi", method = "GET")
     public JSONObject unregisterStudentRenvoi(long schoollifeSessionId, long studentId) {
         JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isDoyen(user) &&
+                !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
 
         try {
             User teacher = getGuestOrUser();
@@ -169,6 +229,22 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
     @JSONWebService(value = "get-candidate-sessions", method = "GET")
     public JSONObject getCandidateSessions(long schoollifeSessionId, long studentId) {
         JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isDoyen(user) &&
+                !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
 
         try {
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);

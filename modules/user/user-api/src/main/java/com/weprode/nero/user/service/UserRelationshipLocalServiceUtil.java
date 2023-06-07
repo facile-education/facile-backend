@@ -326,6 +326,10 @@ public class UserRelationshipLocalServiceUtil {
 		return getService().getUserRelationshipsCount();
 	}
 
+	public static boolean isChild(long parentId, long childId) {
+		return getService().isChild(parentId, childId);
+	}
+
 	/**
 	 * Updates the user relationship in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

@@ -43,9 +43,8 @@ public class MessageServiceWrapper
 	 */
 	@Override
 	public org.json.JSONObject getMessageAnswerForwardInfos(
-			long messageId, boolean isReply, boolean isReplyAll,
-			boolean isDraft, boolean isForward)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		long messageId, boolean isReply, boolean isReplyAll, boolean isDraft,
+		boolean isForward) {
 
 		return _messageService.getMessageAnswerForwardInfos(
 			messageId, isReply, isReplyAll, isDraft, isForward);
@@ -60,16 +59,12 @@ public class MessageServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getMessageThread(long messageId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public org.json.JSONObject getMessageThread(long messageId) {
 		return _messageService.getMessageThread(messageId);
 	}
 
 	@Override
-	public org.json.JSONObject getNbMessages(long folderId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public org.json.JSONObject getNbMessages(long folderId) {
 		return _messageService.getNbMessages(folderId);
 	}
 
@@ -84,9 +79,7 @@ public class MessageServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getThreadMessages(long threadId, long folderId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public org.json.JSONObject getThreadMessages(long threadId, long folderId) {
 		return _messageService.getThreadMessages(threadId, folderId);
 	}
 
@@ -126,9 +119,8 @@ public class MessageServiceWrapper
 
 	@Override
 	public org.json.JSONObject sendAssistanceMessage(
-			long applicationId, String content, boolean isSuggestion,
-			String attachFiles)
-		throws Exception {
+		long applicationId, String content, boolean isSuggestion,
+		String attachFiles) {
 
 		return _messageService.sendAssistanceMessage(
 			applicationId, content, isSuggestion, attachFiles);
@@ -136,10 +128,9 @@ public class MessageServiceWrapper
 
 	@Override
 	public org.json.JSONObject sendMessage(
-			String recipients, String subject, String content,
-			String attachedFiles, long draftMessageId, long originMessageId,
-			boolean isReply, boolean isForward, boolean isSupport)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		String recipients, String subject, String content, String attachedFiles,
+		long draftMessageId, long originMessageId, boolean isReply,
+		boolean isForward, boolean isSupport) {
 
 		return _messageService.sendMessage(
 			recipients, subject, content, attachedFiles, draftMessageId,

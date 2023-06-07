@@ -14,8 +14,6 @@
 
 package com.weprode.nero.group.service;
 
-import java.util.List;
-
 /**
  * Provides the local service utility for GroupUtils. This utility wraps
  * <code>com.weprode.nero.group.service.impl.GroupUtilsLocalServiceImpl</code> and
@@ -35,16 +33,8 @@ public class GroupUtilsLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.group.service.impl.GroupUtilsLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static String getGroupName(long groupId) {
+	public static java.lang.String getGroupName(long groupId) {
 		return getService().getGroupName(groupId);
-	}
-
-	public static List<com.liferay.portal.kernel.model.Group>
-		getGroupsFromOrganizations(
-			List<com.liferay.portal.kernel.model.Organization>
-				orgsToSearchFor) {
-
-		return getService().getGroupsFromOrganizations(orgsToSearchFor);
 	}
 
 	/**
@@ -52,14 +42,14 @@ public class GroupUtilsLocalServiceUtil {
 	 *
 	 * @return the OSGi service identifier
 	 */
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
 	/**
 	 * Delete a whole group and its associated objects
 	 */
-	public static void groupCleanup(Long groupId) {
+	public static void groupCleanup(java.lang.Long groupId) {
 		getService().groupCleanup(groupId);
 	}
 

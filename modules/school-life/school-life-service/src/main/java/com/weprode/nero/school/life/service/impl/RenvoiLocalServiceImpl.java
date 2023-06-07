@@ -217,7 +217,6 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
                 // Execute the query
                 List<Renvoi> renvois = renvoiFinder.getGroupRenvois(groupIds, minDate, maxDate, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-                logger.info("GetGroupRenvois returns " + renvois.size());
                 for (Renvoi renvoi : renvois) {
                     if (user.getUserId() == renvoi.getTeacherId()) {
                         groupRenvois.add(renvoi);

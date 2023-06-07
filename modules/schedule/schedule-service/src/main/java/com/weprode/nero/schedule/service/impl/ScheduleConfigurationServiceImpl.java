@@ -47,7 +47,6 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
@@ -89,7 +88,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 			}
 
 			if (sessions != null && !sessions.isEmpty()) {
-				// Set sart date at current week's monday
+				// Set start date at current week's monday
 				cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 				startDate = cal.getTime();
 				SimpleDateFormat englishSdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -133,7 +132,6 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
@@ -143,7 +141,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 		// Authorized for global admins only
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		JSONObject configuration = ScheduleConfigurationLocalServiceUtil.convertAsJson();
@@ -161,7 +159,6 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
@@ -171,7 +168,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 		// Authorized for global admins only
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
@@ -191,6 +188,5 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		}
 		return result;
 	}
-
 
 }

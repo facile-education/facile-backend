@@ -17,6 +17,9 @@ package com.weprode.nero.document.service.impl;
 import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -72,10 +75,16 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 	private JSONObject getGroupEntities(String nodePath, String[] mimeTypes) {
 
 		JSONObject result = new JSONObject();
-		result.put(JSONConstants.SUCCESS, false);
-
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " fetches group entities for folder " + nodePath);
 			JSONArray folderArray;
 			JSONArray fileArray = null;
@@ -99,6 +108,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 
 		} catch (Exception e) {
 			logger.error("Error fetching group entities for folder " + nodePath, e);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
 	}
@@ -106,12 +116,18 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 	@JSONWebService(method = "GET")
 	public JSONObject getGroupBreadcrumb (String nodePath) {
 		JSONObject result = new JSONObject();
-		result.put(JSONConstants.SUCCESS, false);
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			JSONArray breadCrumb;
-
 			final JSONObject groupPermissions = new JSONObject();
 			groupPermissions.put(PermissionConstants.ADD_OBJECT, false);
 			groupPermissions.put(ActionKeys.DELETE, false);
@@ -147,11 +163,16 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 	@JSONWebService(method = "POST")
 	public JSONObject recordDownloadActivity (long fileEntryId, long versionId) {
 		JSONObject result = new JSONObject();
-		result.put(JSONConstants.SUCCESS, false);
-
+		User user;
 		try {
-			User user = getGuestOrUser();
-
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			if (versionId == 0) {
 				versionId = DLFileVersionLocalServiceUtil.getLatestFileVersion(user.getUserId(), fileEntryId).getFileVersionId();
 			}
@@ -176,11 +197,16 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 	@JSONWebService(method = "POST")
 	public JSONObject recordViewActivity (long fileEntryId, long versionId) {
 		JSONObject result = new JSONObject();
-		result.put(JSONConstants.SUCCESS, false);
-
+		User user;
 		try {
-			User user = getGuestOrUser();
-
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			if (versionId == 0) {
 				versionId = DLFileVersionLocalServiceUtil.getLatestFileVersion(user.getUserId(), fileEntryId).getFileVersionId();
 			}

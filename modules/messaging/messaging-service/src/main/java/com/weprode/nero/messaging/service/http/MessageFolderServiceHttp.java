@@ -53,8 +53,7 @@ import com.weprode.nero.messaging.service.MessageFolderServiceUtil;
 public class MessageFolderServiceHttp {
 
 	public static org.json.JSONObject addFolder(
-			HttpPrincipal httpPrincipal, long parentFolderId, String folderName)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, long parentFolderId, String folderName) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -70,14 +69,6 @@ public class MessageFolderServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -94,8 +85,7 @@ public class MessageFolderServiceHttp {
 	}
 
 	public static org.json.JSONObject getAllUserFolders(
-			HttpPrincipal httpPrincipal)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -110,14 +100,6 @@ public class MessageFolderServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -134,8 +116,7 @@ public class MessageFolderServiceHttp {
 	}
 
 	public static org.json.JSONObject renameFolder(
-			HttpPrincipal httpPrincipal, long folderId, String newLabel)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, long folderId, String newLabel) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -151,14 +132,6 @@ public class MessageFolderServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -175,8 +148,7 @@ public class MessageFolderServiceHttp {
 	}
 
 	public static org.json.JSONObject deleteFolder(
-			HttpPrincipal httpPrincipal, long folderId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, long folderId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -192,14 +164,6 @@ public class MessageFolderServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}

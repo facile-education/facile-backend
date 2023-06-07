@@ -7,13 +7,11 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.dashboard.service.base.DashboardServiceBaseImpl;
 import com.weprode.nero.group.model.GroupActivity;
-import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.GroupActivityLocalServiceUtil;
-import com.weprode.nero.news.model.News;
-import com.weprode.nero.news.service.NewsLocalServiceUtil;
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -22,6 +20,7 @@ import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.user.service.NewsAdminLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -52,11 +51,11 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -85,35 +84,12 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
                 result.put(JSONConstants.CHILDREN, jsonChildren);
             }
 
-            // Students and parents can add news only if they are administrator of a personal group
-            // Commented out for now
-//            boolean isGroupAdmin = false;
-//            if (isStudentOrParent) {
-//                List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
-//                for (Group userGroup : userGroups) {
-//                    if (RoleUtilsLocalServiceUtil.isUserGroupAdmin(user, userGroup.getGroupId())) {
-//                        isGroupAdmin = true;
-//                        break;
-//                    }
-//                }
-//            }
-
             // Check delegations
             boolean isDelegate = NewsAdminLocalServiceUtil.isUserDelegate(user);
             result.put(JSONConstants.IS_DELEGATE, isDelegate);
-            result.put(JSONConstants.CAN_ADD_GROUP_NEWS, isAgent); // || (isStudentOrParent && isGroupAdmin));
+            result.put(JSONConstants.CAN_ADD_GROUP_NEWS, isAgent);
             result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate);
             result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate);
-
-            // Get important news
-
-            JSONArray jsonImportantNews = new JSONArray();
-            List<News> importantNews = NewsLocalServiceUtil.getNews(user, 0, new Date(), 10, false, true, true);
-            for (News news : importantNews) {
-                JSONObject jsonNews = NewsLocalServiceUtil.convertNewsToJson(news.getNewsId(), user.getUserId(), true);
-                jsonImportantNews.put(jsonNews);
-            }
-            result.put(JSONConstants.IMPORTANT_NEWS, jsonImportantNews);
 
             // Set last dashboard access date
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
@@ -133,21 +109,44 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
     public JSONObject getUserSchedule(long userId, String date, boolean goForward) {
         JSONObject result = new JSONObject();
 
+        User user;
         try {
-            User user = UserLocalServiceUtil.getUser(userId);
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        // Students, parents and teachers only
+        if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
+        try {
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
             Date scheduleDate = df.parse(date);
+            User targetUser = user;
+
 
             JSONArray eventList = new JSONArray();
             List<CDTSession> cdtSessionList = new ArrayList<>();
             if (RoleUtilsLocalServiceUtil.isStudent(user)) {
-                cdtSessionList = CDTSessionLocalServiceUtil.getNextStudentDaySessions(userId, scheduleDate, goForward);
+                cdtSessionList = CDTSessionLocalServiceUtil.getNextStudentDaySessions(user.getUserId(), scheduleDate, goForward);
+
+            } else if (RoleUtilsLocalServiceUtil.isParent(user)) {
+                // Check that the parents only see the schedule of their own children
+                if (UserRelationshipLocalServiceUtil.isChild(user.getUserId(), userId)) {
+                    cdtSessionList = CDTSessionLocalServiceUtil.getNextStudentDaySessions(userId, scheduleDate, goForward);
+                    targetUser = UserLocalServiceUtil.getUser(userId);
+                }
+
             } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                cdtSessionList = CDTSessionLocalServiceUtil.getNextTeacherDaySessions(userId, scheduleDate, goForward);
+                cdtSessionList = CDTSessionLocalServiceUtil.getNextTeacherDaySessions(user.getUserId(), scheduleDate, goForward);
             }
 
             for (CDTSession cdtSession : cdtSessionList) {
-                JSONObject cdtSessionJson = cdtSession.convertToJSON(false, user);
+                JSONObject cdtSessionJson = cdtSession.convertToJSON(false, targetUser);
                 eventList.put(cdtSessionJson);
             }
 
@@ -202,17 +201,14 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
     public JSONObject getDashboardActivity(long groupId, String maxDate, int nbResults, boolean withNews, boolean withDocs, boolean withMemberships, boolean withSchoollife, boolean withSessions) {
         JSONObject result = new JSONObject();
 
-        result.put(JSONConstants.SUCCESS, false);
         User user;
         try {
             user = getGuestOrUser();
             if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -223,7 +219,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             if (groupId > 0) {
                 groupIds.add(groupId);
             } else {
-                groupIds = CommunityInfosLocalServiceUtil.getUserGroupIds(user.getUserId());
+                groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
             }
             Date maximumDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(maxDate);
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDashboardGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults,

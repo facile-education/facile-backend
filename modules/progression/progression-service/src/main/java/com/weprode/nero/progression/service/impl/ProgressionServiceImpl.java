@@ -45,6 +45,10 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
                 throw new AuthException();
+            } else if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
             }
         } catch (Exception e) {
             result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
@@ -85,6 +89,10 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
                 throw new AuthException();
+            } else if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
             }
         } catch (Exception e) {
             result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
@@ -156,6 +164,10 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
                 throw new AuthException();
+            } else if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
             }
         } catch (Exception e) {
             result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
@@ -165,13 +177,6 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
 
         result.put(JSONConstants.SUCCESS, true);
         try {
-            // Agents only are allowed to create a progression
-            if (RoleUtilsLocalServiceUtil.isStudent(user) || RoleUtilsLocalServiceUtil.isParent(user)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            }
-
             Progression progression = ProgressionLocalServiceUtil.addProgression(user.getUserId(), name, description, subjectId, volee, color);
             result.put("progression", progression.convertToJSON());
         } catch (Exception e) {
@@ -191,6 +196,10 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
                 throw new AuthException();
+            } else if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
             }
         } catch (Exception e) {
             result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
@@ -224,6 +233,10 @@ public class ProgressionServiceImpl extends ProgressionServiceBaseImpl {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
                 throw new AuthException();
+            } else if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
             }
         } catch (Exception e) {
             result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);

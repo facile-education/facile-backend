@@ -47,7 +47,7 @@ public class WYSIWYGServiceWrapper
 
 	@Override
 	public org.json.JSONObject saveHTMLContent(
-		Long fileVersionId, String content, Boolean majorVersion) {
+		Long fileVersionId, String content, boolean majorVersion) {
 
 		return _wysiwygService.saveHTMLContent(
 			fileVersionId, content, majorVersion);

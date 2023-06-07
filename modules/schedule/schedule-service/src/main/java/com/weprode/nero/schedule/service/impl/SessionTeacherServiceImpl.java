@@ -8,7 +8,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -21,6 +20,7 @@ import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.SessionTeacherServiceBaseImpl;
+import com.weprode.nero.schedule.utils.JSONProxy;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,17 +50,15 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				throw new AuthException();
-			} else if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
-					!RoleUtilsLocalServiceUtil.isDoyen(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+				!RoleUtilsLocalServiceUtil.isDoyen(user) &&
+				!RoleUtilsLocalServiceUtil.isSecretariat(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		logger.info(user.getScreenName() + " is fetching teacher infos for sessionId "+sessionId);
@@ -164,17 +162,15 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				throw new AuthException();
-			} else if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
-					!RoleUtilsLocalServiceUtil.isDoyen(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+				!RoleUtilsLocalServiceUtil.isDoyen(user) &&
+				!RoleUtilsLocalServiceUtil.isSecretariat(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		JSONArray teachers;

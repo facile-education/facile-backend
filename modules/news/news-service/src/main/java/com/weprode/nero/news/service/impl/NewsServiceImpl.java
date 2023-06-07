@@ -5,6 +5,9 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.service.NewsLocalServiceUtil;
@@ -31,7 +34,7 @@ import java.util.List;
 )
 public class NewsServiceImpl extends NewsServiceBaseImpl {
 
-    private static final Log logger = LogFactoryUtil.getLog(NewsServiceImpl.class);
+   private static final Log logger = LogFactoryUtil.getLog(NewsServiceImpl.class);
 
     @JSONWebService(value = "add-news", method = "POST")
     public JSONObject addNews(String title, String content, boolean isSchoolNews, boolean isImportant, long imageId, String publicationDate, String population, String attachFiles) {
@@ -40,21 +43,18 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
-        } else if (!isSchoolNews && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+        if (!isSchoolNews && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
 
@@ -85,26 +85,23 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
             // Who can edit a news ?
-            // School news : the author, a direction member or a secretary
+            // School news : direction (all news), secretary/delegate (their own news only)
             // Group news : only the author
             News news = NewsLocalServiceUtil.getNews(newsId);
-            if (news.getIsSchoolNews() && news.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+            if (news.getIsSchoolNews() && news.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             if (!news.getIsSchoolNews() && news.getAuthorId() != user.getUserId()) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
             Date expiration = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
@@ -138,10 +135,11 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
             Date maxDate = new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).parse(maxDateString);
@@ -174,14 +172,18 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
-            result.put(JSONConstants.SUCCESS, NewsReadLocalServiceUtil.setNewsRead(user.getUserId(), newsId));
+            // Check if the user can read news
+            if (NewsLocalServiceUtil.hasUserNews(user.getUserId(), newsId)) {
+                result.put(JSONConstants.SUCCESS, NewsReadLocalServiceUtil.setNewsRead(user.getUserId(), newsId));
+            }
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);
             logger.error("Error saving that news " + newsId + " is read", e);
@@ -197,13 +199,18 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {
             logger.info("User " + user.getFullName() + " fetches group news broadcast groups");
+            // Students and parents cannot write group news
             result = NewsLocalServiceUtil.getGroupNewsBroadcastGroups(user);
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);
@@ -220,21 +227,24 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-        } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
-        }
-        try {
-            if (RoleUtilsLocalServiceUtil.isDirectionMember(user)
-                    || RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
-                    || NewsAdminLocalServiceUtil.isUserDelegate(user)) {
-                logger.info("User " + user.getFullName() + " fetches school news broadcast groups");
-                result = NewsLocalServiceUtil.getSchoolNewsBroadcastGroups(user);
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                && !RoleUtilsLocalServiceUtil.isSecretariat(user)
+                && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
+        try {
+            logger.info("User " + user.getFullName() + " fetches school news broadcast groups");
+            result = NewsLocalServiceUtil.getSchoolNewsBroadcastGroups(user);
+        } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);
-            logger.error("Error getting broadcast groups", e);
+            logger.error("Error getting school news broadcast groups", e);
         }
 
         return result;
@@ -247,10 +257,11 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
             // Check if the user can read news
@@ -267,7 +278,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);
-            logger.error("Error getting broadcasted groups", e);
+            logger.error("Error getting news details for news " + newsId, e);
         }
 
         return result;
@@ -280,15 +291,16 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
-            // Only the author of a news can delete it
+            // Only the author of a news or a direction member can delete it
             News news = NewsLocalServiceUtil.getNews(newsId);
-            if (user.getUserId() == news.getAuthorId()) {
+            if (user.getUserId() == news.getAuthorId() || RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
                 logger.info("User " + user.getFullName() + " deletes news " + newsId);
                 NewsLocalServiceUtil.deleteNewsAndDependencies(news);
                 result.put(JSONConstants.SUCCESS, true);

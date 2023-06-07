@@ -2,6 +2,7 @@ Bundle-Name: commons
 Bundle-SymbolicName: com.weprode.nero.commons
 Bundle-Version: 0.1.0
 Export-Package:\
+    com.weprode.nero.commons,\
     com.weprode.nero.commons.constants,\
 	com.weprode.nero.commons.properties
 -check: EXPORTS

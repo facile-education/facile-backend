@@ -66,6 +66,10 @@ public class UserUtilsLocalServiceUtil {
 		return getService().getUserDoyens(user);
 	}
 
+	public static List<Long> getUserGroupIds(long userId) {
+		return getService().getUserGroupIds(userId);
+	}
+
 	/**
 	 * This method a list a user based on a list of userId
 	 *
@@ -91,8 +95,6 @@ public class UserUtilsLocalServiceUtil {
 
 	/**
 	 * Purges all expired users
-	 *
-	 * @return the list of purged userIds
 	 */
 	public static boolean purgeExpiredUsers() {
 		return getService().purgeExpiredUsers();

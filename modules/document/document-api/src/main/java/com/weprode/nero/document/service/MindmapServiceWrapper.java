@@ -31,7 +31,7 @@ public class MindmapServiceWrapper
 	}
 
 	/**
-	 * Returns the content of the given midmap file
+	 * Returns the content of the given mindmap file
 	 *
 	 * @return JSONObject - the mindmap file name and content
 	 */

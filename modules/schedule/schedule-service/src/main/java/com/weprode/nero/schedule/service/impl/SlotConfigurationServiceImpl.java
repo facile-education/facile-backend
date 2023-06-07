@@ -47,7 +47,6 @@ public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseIm
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}

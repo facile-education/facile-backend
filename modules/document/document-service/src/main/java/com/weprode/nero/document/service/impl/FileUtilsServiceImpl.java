@@ -20,6 +20,8 @@ import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 
 
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -63,8 +65,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject uploadFile(long folderId, String fileName, File file, int mode) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " uploads file " + fileName + " to folderId " + folderId + " in mode " + mode);
 			return UploadUtil.uploadFile(user, folderId, fileName, file, mode);
 		} catch (Exception e) {
@@ -79,8 +89,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject uploadTmpFile(String fileName, File file) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			Folder tmpFolder = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId());
 			int mode = DocumentConstants.MODE_REPLACE;
 			logger.info("User " + user.getFullName() + " uploads tmp file " + fileName + " to folderId " + tmpFolder.getFolderId() + " in mode " + mode);
@@ -98,8 +116,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject renameFile(long fileId, String fileName) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " renames file " + fileId + " with name " + fileName);
 			FileEntry fileToRename = DLAppServiceUtil.getFileEntry(fileId);
 			FileEntry renamedFile = FileUtilsLocalServiceUtil.renameFile(user, fileToRename, fileName);
@@ -120,8 +146,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject createAudioFile(long folderId, String name, File file) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " creates audio file " + name + ".mp3 in folder " + folderId);
 
 			return UploadUtil.uploadFile(user, folderId, name + ".mp3", file, DocumentConstants.MODE_RENAME);
@@ -138,8 +172,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject createGeogebraFile(long folderId, String name) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " creates geogebra file " + name + " in folder " + folderId);
 
 			FileEntry geogebraFile = FileUtilsLocalServiceUtil.createGeogebraFile(user, folderId, name);
@@ -158,8 +200,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject createMindmapFile(long folderId, String name) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " creates mindmap file " + name + " in folder " + folderId);
 
 			FileEntry mindmapFile = FileUtilsLocalServiceUtil.createMindMapFile(user, folderId, name);
@@ -179,8 +229,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject createScratchFile(long folderId, String name) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " creates scratch file " + name + " in folder " + folderId);
 
 			FileEntry scratchFile = FileUtilsLocalServiceUtil.createScratchFile(user, folderId, name);
@@ -200,8 +258,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject createLoolFile(long folderId, String name, String type) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " creates lool file " + name + " in folder " + folderId + " with type " + type);
 
 			FileEntry loolFile = FileUtilsLocalServiceUtil.createLoolFile(user, folderId, name, type);
@@ -220,8 +286,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject createHTMLFile(long folderId, String name) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " creates html file " + name + " in folder " + folderId);
 
 			FileEntry htmlFile = FileUtilsLocalServiceUtil.createHtmlFile(user, folderId, name);
@@ -240,9 +314,17 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject addLock(long fileId) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 
+		try {
 			EditionLock lock = EditionLockLocalServiceUtil.isFileEdited(fileId);
 			if(lock != null) {
 				if (user.getUserId() == lock.getUserId()) {
@@ -289,9 +371,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject removeLock(long fileId) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
-
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			EditionLock lock = EditionLockLocalServiceUtil.isFileEdited(fileId);
 			if(lock != null && lock.getUserId() == user.getUserId()) {
 				logger.info("Removing lock on fileId " + fileId + " for userId " + user.getUserId());
@@ -313,10 +402,17 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject getResource(long fileId, long versionId, boolean readOnly) {
 		JSONObject result = new JSONObject();
 
-		long userId = 0;
+		User user;
 		try {
-			userId = getGuestOrUserId();
-			logger.info("User " + userId + " fetches resource " + fileId + " with version " + versionId + ", readOnly=" + readOnly);
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
+			logger.info("User " + user.getUserId() + " fetches resource " + fileId + " with version " + versionId + ", readOnly=" + readOnly);
 
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
 
@@ -326,7 +422,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 			boolean readOnly_ = readOnly
 					|| versionId != fileEntry.getLatestFileVersion().getFileVersionId()   // read only if there is not the latest version
-					|| (FileUtilsLocalServiceUtil.isGroupFile(fileId) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.UPDATE)); // Or if group file without UPDATE permission
+					|| (FileUtilsLocalServiceUtil.isGroupFile(fileId) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)); // Or if group file without UPDATE permission
 			result.put(JSONConstants.FILE_VERSION_ID, versionId);
 			result.put(JSONConstants.READ_ONLY, readOnly_);
 
@@ -335,13 +431,13 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			result.put(JSONConstants.TYPE_OF_VIEW, typeOfView);
 
 			// Get the file URL to display the document
-			String documentURL = FileUtilsLocalServiceUtil.getDisplayUrl(fileEntry, versionId, typeOfView, userId, readOnly);
+			String documentURL = FileUtilsLocalServiceUtil.getDisplayUrl(fileEntry, versionId, typeOfView, user.getUserId(), readOnly);
 			result.put(JSONConstants.FILE_URL, documentURL);
 
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (PrincipalException e) {
-			logger.error("User " + userId + " does not have the permission to VIEW file " + fileId);
+			logger.error("User " + user.getUserId() + " does not have the permission to VIEW file " + fileId);
 			result.put(JSONConstants.ERROR, "PermissionException");
 			result.put(JSONConstants.SUCCESS, false);
 		} catch (FileExtensionException e) {
@@ -361,8 +457,16 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 	public JSONObject removeLoolToken(String token) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " removes LOOL token " + token);
 			LoolToken loolToken = LoolTokenLocalServiceUtil.getLoolToken(token);
 

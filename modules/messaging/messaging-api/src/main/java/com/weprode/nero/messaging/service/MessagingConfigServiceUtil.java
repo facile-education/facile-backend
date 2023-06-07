@@ -33,9 +33,7 @@ public class MessagingConfigServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.messaging.service.impl.MessagingConfigServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static org.json.JSONObject getMessagingConfiguration()
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public static org.json.JSONObject getMessagingConfiguration() {
 		return getService().getMessagingConfiguration();
 	}
 
@@ -52,8 +50,7 @@ public class MessagingConfigServiceUtil {
 	 * Update messaging configuration
 	 */
 	public static org.json.JSONObject updateMessagingConfiguration(
-			java.lang.String configuration)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		java.lang.String configuration) {
 
 		return getService().updateMessagingConfiguration(configuration);
 	}

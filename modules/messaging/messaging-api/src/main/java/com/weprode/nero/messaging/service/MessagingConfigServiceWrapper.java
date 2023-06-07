@@ -33,9 +33,7 @@ public class MessagingConfigServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getMessagingConfiguration()
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public org.json.JSONObject getMessagingConfiguration() {
 		return _messagingConfigService.getMessagingConfiguration();
 	}
 
@@ -54,8 +52,7 @@ public class MessagingConfigServiceWrapper
 	 */
 	@Override
 	public org.json.JSONObject updateMessagingConfiguration(
-			String configuration)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		String configuration) {
 
 		return _messagingConfigService.updateMessagingConfiguration(
 			configuration);

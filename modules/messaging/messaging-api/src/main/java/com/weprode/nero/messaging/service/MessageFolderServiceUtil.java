@@ -38,8 +38,7 @@ public class MessageFolderServiceUtil {
 	 * Add personal folder
 	 */
 	public static org.json.JSONObject addFolder(
-			long parentFolderId, java.lang.String folderName)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		long parentFolderId, java.lang.String folderName) {
 
 		return getService().addFolder(parentFolderId, folderName);
 	}
@@ -47,18 +46,14 @@ public class MessageFolderServiceUtil {
 	/**
 	 * Remove a folder
 	 */
-	public static org.json.JSONObject deleteFolder(long folderId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public static org.json.JSONObject deleteFolder(long folderId) {
 		return getService().deleteFolder(folderId);
 	}
 
 	/**
 	 * Get all user message boxes and root folders
 	 */
-	public static org.json.JSONObject getAllUserFolders()
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public static org.json.JSONObject getAllUserFolders() {
 		return getService().getAllUserFolders();
 	}
 
@@ -75,8 +70,7 @@ public class MessageFolderServiceUtil {
 	 * Add a folder
 	 */
 	public static org.json.JSONObject renameFolder(
-			long folderId, java.lang.String newLabel)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		long folderId, java.lang.String newLabel) {
 
 		return getService().renameFolder(folderId, newLabel);
 	}

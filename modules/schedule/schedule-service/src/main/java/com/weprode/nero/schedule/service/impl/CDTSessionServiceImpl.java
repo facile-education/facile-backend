@@ -76,7 +76,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 			// 1. CDT sessions
 			List<CDTSession> userSessions = new ArrayList<>();
-			if (groupId != 0) {
+			if (groupId != 0 && !RoleUtilsLocalServiceUtil.isStudentOrParent(currentUser)) {
 				userSessions = CDTSessionLocalServiceUtil.getGroupSessions(groupId, startDate, endDate, true);
 			} else if (RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
 				userSessions = CDTSessionLocalServiceUtil.getStudentSessions(userId, startDate, endDate);
@@ -193,6 +193,9 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isPersonal(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
 		try {
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
 			boolean isCommunity = group.isRegularSite();
@@ -212,11 +215,9 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 			List<Long> teacherIdList = new ArrayList<>();
 			JSONArray jsonTeachers = new JSONArray(teacherIds);
-			if (jsonTeachers != null) {
-				for (int i = 0 ; i < jsonTeachers.length() ; i++) {
-					JSONObject jsonTeacher = jsonTeachers.getJSONObject(i);
-					teacherIdList.add(jsonTeacher.getLong(JSONConstants.USER_ID));
-				}
+			for (int i = 0 ; i < jsonTeachers.length() ; i++) {
+				JSONObject jsonTeacher = jsonTeachers.getJSONObject(i);
+				teacherIdList.add(jsonTeacher.getLong(JSONConstants.USER_ID));
 			}
 
 			// Manually add teachers to group if needed
