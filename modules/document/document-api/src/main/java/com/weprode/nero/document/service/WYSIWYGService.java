@@ -63,6 +63,6 @@ public interface WYSIWYGService extends BaseService {
 
 	@JSONWebService(method = "POST", value = "save-html-content")
 	public JSONObject saveHTMLContent(
-		Long fileVersionId, String content, Boolean majorVersion);
+		Long fileVersionId, String content, boolean majorVersion);
 
 }

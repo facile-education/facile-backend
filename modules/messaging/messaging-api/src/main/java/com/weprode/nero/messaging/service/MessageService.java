@@ -18,13 +18,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
-
-import java.util.*;
 
 import org.json.JSONObject;
 
@@ -66,9 +63,8 @@ public interface MessageService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-message-answer-forward-infos")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getMessageAnswerForwardInfos(
-			long messageId, boolean isReply, boolean isReplyAll,
-			boolean isDraft, boolean isForward)
-		throws PrincipalException;
+		long messageId, boolean isReply, boolean isReplyAll, boolean isDraft,
+		boolean isForward);
 
 	/**
 	 * Get the full recipients list for a message
@@ -79,12 +75,11 @@ public interface MessageService extends BaseService {
 
 	@JSONWebService(method = "GET", value = "get-message-thread")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getMessageThread(long messageId)
-		throws PrincipalException;
+	public JSONObject getMessageThread(long messageId);
 
 	@JSONWebService(method = "GET", value = "get-nb-messages")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getNbMessages(long folderId) throws PrincipalException;
+	public JSONObject getNbMessages(long folderId);
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -95,8 +90,7 @@ public interface MessageService extends BaseService {
 
 	@JSONWebService(method = "GET", value = "get-thread-messages")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getThreadMessages(long threadId, long folderId)
-		throws PrincipalException;
+	public JSONObject getThreadMessages(long threadId, long folderId);
 
 	/**
 	 * Get user messages
@@ -123,16 +117,14 @@ public interface MessageService extends BaseService {
 
 	@JSONWebService(method = "POST", value = "send-assistance-message")
 	public JSONObject sendAssistanceMessage(
-			long applicationId, String content, boolean isSuggestion,
-			String attachFiles)
-		throws Exception;
+		long applicationId, String content, boolean isSuggestion,
+		String attachFiles);
 
 	@JSONWebService(method = "POST", value = "send-message")
 	public JSONObject sendMessage(
-			String recipients, String subject, String content,
-			String attachedFiles, long draftMessageId, long originMessageId,
-			boolean isReply, boolean isForward, boolean isSupport)
-		throws PrincipalException;
+		String recipients, String subject, String content, String attachedFiles,
+		long draftMessageId, long originMessageId, boolean isReply,
+		boolean isForward, boolean isSupport);
 
 	/**
 	 * Change message read status

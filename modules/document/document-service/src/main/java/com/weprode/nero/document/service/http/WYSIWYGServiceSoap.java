@@ -70,7 +70,7 @@ public class WYSIWYGServiceSoap {
 	}
 
 	public static org.json.JSONObject saveHTMLContent(
-			Long fileVersionId, String content, Boolean majorVersion)
+			Long fileVersionId, String content, boolean majorVersion)
 		throws RemoteException {
 
 		try {

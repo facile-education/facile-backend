@@ -22,9 +22,11 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.contact.service.base.ContactServiceBaseImpl;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -54,14 +56,10 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				result.put(JSONConstants.SUCCESS,false);
-				result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.SUCCESS,false);
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
 		logger.info("User " + user.getUserId() + " fetches its contact tree");
@@ -81,14 +79,10 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				result.put(JSONConstants.SUCCESS,false);
-				result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.SUCCESS,false);
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
 		logger.info("User " + user.getUserId() + " gets members of org " + orgId + " with roleId " + roleId);
@@ -110,14 +104,13 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				result.put(JSONConstants.SUCCESS,false);
-				result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.SUCCESS,false);
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		logger.info("User " + user.getUserId() + " searches directory with query '" + query + "', roleId " + roleId + " and schoolId " + schoolId);
@@ -148,14 +141,10 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				result.put(JSONConstants.SUCCESS,false);
-				result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.SUCCESS,false);
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
 		logger.info("User " + user.getUserId() + " gets details of contact " + contactUserId);
@@ -175,14 +164,10 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				result.put(JSONConstants.SUCCESS,false);
-				result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.SUCCESS,false);
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
 		logger.info("User " + user.getUserId() + " gets his students");
@@ -204,14 +189,10 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				result.put(JSONConstants.SUCCESS,false);
-				result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.SUCCESS,false);
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
 		logger.info("User " + user.getUserId() + " gets his relatives");

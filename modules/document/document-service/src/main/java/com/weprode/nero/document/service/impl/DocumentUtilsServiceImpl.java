@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
@@ -33,6 +34,8 @@ import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.base.DocumentUtilsServiceBaseImpl;
 import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.service.GroupActivityLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -59,7 +62,15 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 	public JSONObject getGlobalDocumentsProperties() throws SystemException, PortalException {
 		JSONObject result = new JSONObject();
 
-		User user = getGuestOrUser();
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 		logger.info("Getting global document properties for user " + user.getUserId());
 
 		// Get or create user Roots folders
@@ -100,19 +111,20 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 	public JSONObject getDocumentGroupActivity(long groupId, String maxDate, int nbResults) {
 		JSONObject result = new JSONObject();
 		
-		result.put(JSONConstants.SUCCESS, false);
 		User user;
 		try {
 			user = getGuestOrUser();
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-				result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-				return result;
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() +" fetches document activity for groupId " + groupId);
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
+		// Limited to user's groups and all groups for direction
+		if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		logger.info("User " + user.getFullName() +" fetches document activity for groupId " + groupId);
 
 		try {
 			JSONArray jsonActivities = new JSONArray();
@@ -124,7 +136,6 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 					jsonActivities.put(jsonActivity);
 				}
 			}
-
 			result.put(JSONConstants.ACTIVITIES, jsonActivities);
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {

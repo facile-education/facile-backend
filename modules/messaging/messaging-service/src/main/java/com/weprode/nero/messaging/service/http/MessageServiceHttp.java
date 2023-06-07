@@ -86,8 +86,7 @@ public class MessageServiceHttp {
 	}
 
 	public static org.json.JSONObject getMessageThread(
-			HttpPrincipal httpPrincipal, long messageId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, long messageId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -103,14 +102,6 @@ public class MessageServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -127,8 +118,7 @@ public class MessageServiceHttp {
 	}
 
 	public static org.json.JSONObject getThreadMessages(
-			HttpPrincipal httpPrincipal, long threadId, long folderId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, long threadId, long folderId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -144,14 +134,6 @@ public class MessageServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -168,8 +150,7 @@ public class MessageServiceHttp {
 	}
 
 	public static org.json.JSONObject getNbMessages(
-			HttpPrincipal httpPrincipal, long folderId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, long folderId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -185,14 +166,6 @@ public class MessageServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -241,9 +214,8 @@ public class MessageServiceHttp {
 	}
 
 	public static org.json.JSONObject getMessageAnswerForwardInfos(
-			HttpPrincipal httpPrincipal, long messageId, boolean isReply,
-			boolean isReplyAll, boolean isDraft, boolean isForward)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, long messageId, boolean isReply,
+		boolean isReplyAll, boolean isDraft, boolean isForward) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -259,14 +231,6 @@ public class MessageServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -315,11 +279,10 @@ public class MessageServiceHttp {
 	}
 
 	public static org.json.JSONObject sendMessage(
-			HttpPrincipal httpPrincipal, String recipients, String subject,
-			String content, String attachedFiles, long draftMessageId,
-			long originMessageId, boolean isReply, boolean isForward,
-			boolean isSupport)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, String recipients, String subject,
+		String content, String attachedFiles, long draftMessageId,
+		long originMessageId, boolean isReply, boolean isForward,
+		boolean isSupport) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -336,14 +299,6 @@ public class MessageServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -558,9 +513,8 @@ public class MessageServiceHttp {
 	}
 
 	public static org.json.JSONObject sendAssistanceMessage(
-			HttpPrincipal httpPrincipal, long applicationId, String content,
-			boolean isSuggestion, String attachFiles)
-		throws Exception {
+		HttpPrincipal httpPrincipal, long applicationId, String content,
+		boolean isSuggestion, String attachFiles) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -576,10 +530,6 @@ public class MessageServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof Exception) {
-					throw (Exception)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}

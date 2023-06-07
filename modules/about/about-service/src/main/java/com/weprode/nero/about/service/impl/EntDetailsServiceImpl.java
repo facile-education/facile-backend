@@ -12,7 +12,9 @@ import com.weprode.nero.about.model.EntVersion;
 import com.weprode.nero.about.service.EntDetailsLocalServiceUtil;
 import com.weprode.nero.about.service.EntVersionLocalServiceUtil;
 import com.weprode.nero.about.service.base.EntDetailsServiceBaseImpl;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -39,6 +41,14 @@ public class EntDetailsServiceImpl extends EntDetailsServiceBaseImpl {
 
         Date date = new Date();
         try {
+            User user = getGuestOrUser();
+
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+            if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
             // Ensure the details are properly formatted
             JSONObject detailsJson = new JSONObject(versionDetails);
             // news array must exist (but may be empty)
@@ -67,6 +77,10 @@ public class EntDetailsServiceImpl extends EntDetailsServiceBaseImpl {
         JSONObject result = new JSONObject();
 
         try {
+            User user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
             JSONArray entVersionsJson = new JSONArray();
             List<EntVersion> entVersions = EntVersionLocalServiceUtil.getAllEntVersion();
 
@@ -98,6 +112,10 @@ public class EntDetailsServiceImpl extends EntDetailsServiceBaseImpl {
         result.put(JSONConstants.SUCCESS, true);
         StringBuilder versionDetailsHtml = new StringBuilder();
         try {
+            User user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
             EntVersion entVersion = EntVersionLocalServiceUtil.getEntVersion(versionId);
             versionDetailsHtml.append("Version ").append(entVersion.getVersion()).append(" du ").append(new SimpleDateFormat(JSONConstants.FRENCH_FORMAT).format(entVersion.getVersionDate()));
             versionDetailsHtml.append("</br></br>");
@@ -145,9 +163,7 @@ public class EntDetailsServiceImpl extends EntDetailsServiceBaseImpl {
             User user = getGuestOrUser();
 
             if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
 
             result.put(JSONConstants.TERMS_OF_USE, EntDetailsLocalServiceUtil.getTermsOfUse());

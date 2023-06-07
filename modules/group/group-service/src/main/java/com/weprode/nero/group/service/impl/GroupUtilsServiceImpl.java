@@ -1,6 +1,5 @@
 package com.weprode.nero.group.service.impl;
 
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -11,9 +10,9 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
@@ -31,7 +30,8 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.user.comparator.UserLastNameCaseInsensitiveComparator;
+import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -64,25 +64,18 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            }
-            if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                    !RoleUtilsLocalServiceUtil.isPersonal(user) &&
-                    !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isPersonal(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
         try {
             JSONArray groupsArray = new JSONArray();
 
@@ -122,12 +115,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 }
             }
 
-            if (groupsArray == null) {
-                result.put(JSONConstants.SUCCESS, false);
-            } else{
-                result.put(JSONConstants.SUCCESS, true);
-                result.put(JSONConstants.GROUPS, groupsArray);
-            }
+            result.put(JSONConstants.SUCCESS, true);
+            result.put(JSONConstants.GROUPS, groupsArray);
         } catch (Exception e) {
             logger.error("Error fetching user groups", e);
             result.put(JSONConstants.SUCCESS, false);
@@ -146,14 +135,10 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -224,7 +209,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 organizations = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, null, false, OrgConstants.ALL_SCHOOLS_ID);
             }
 
-            // Doyens, psys and conseillers sociaux see their classes
+            // Doyens, psy and conseillers sociaux see their classes
             organizations.addAll(UserOrgsLocalServiceUtil.getRoleAffectedClasses(user));
 
             for (Organization org : organizations) {
@@ -241,8 +226,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     jsonGroup.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(user, org));
                     // No expiration date for school, subject or volee
                     if (orgDetails.getType() != OrgConstants.SCHOOL_TYPE && orgDetails.getType() != OrgConstants.SUBJECT_TYPE) {
-                        // TODO get date from config
-                        jsonGroup.put(JSONConstants.EXPIRATION_DATE, "2023-08-07");
+                        jsonGroup.put(JSONConstants.EXPIRATION_DATE, dateFormat.format(ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate()));
                     }
                     jsonGroup.put(JSONConstants.IS_EXPIRED, false);
                     jsonGroup.put(JSONConstants.IS_INSTITUTIONAL, true);
@@ -261,12 +245,9 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 }
             }
 
-            if (groupsArray == null) {
-                result.put(JSONConstants.SUCCESS, false);
-            } else{
-                result.put(JSONConstants.SUCCESS, true);
-                result.put(JSONConstants.GROUPS, groupsArray);
-            }
+            result.put(JSONConstants.SUCCESS, true);
+            result.put(JSONConstants.GROUPS, groupsArray);
+
         } catch (Exception e) {
             logger.error("Error fetching user groups", e);
             result.put(JSONConstants.SUCCESS, false);
@@ -282,16 +263,16 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            logger.info("User " + user.getFullName() + " fetches members of group " + groupId);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
+        // Limited to user's groups and all groups for direction
+        if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+        logger.info("User " + user.getFullName() + " fetches members of group " + groupId);
 
         try {
             JSONArray jsonMembers = new JSONArray();
@@ -348,14 +329,16 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            logger.info("User " + user.getFullName() + " fetches activity of group " + groupId);
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
+        // Limited to user's groups and all groups for direction
+        if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+        logger.info("User " + user.getFullName() + " fetches activity of group " + groupId);
 
         try {
             JSONArray jsonActivities = new JSONArray();

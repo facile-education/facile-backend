@@ -16,14 +16,10 @@ package com.weprode.nero.group.service;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
-
-import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -51,10 +47,6 @@ public interface GroupUtilsLocalService extends BaseLocalService {
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getGroupName(long groupId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Group> getGroupsFromOrganizations(
-		List<Organization> orgsToSearchFor);
 
 	/**
 	 * Returns the OSGi service identifier.

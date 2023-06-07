@@ -5,9 +5,9 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.progression.model.ItemAssignment;
 import com.weprode.nero.progression.model.ProgressionItem;
@@ -45,32 +45,25 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
     @JSONWebService(value = "add-session-assignment", method = "POST")
     public JSONObject addSessionAssignment(long itemId, long sessionId) {
         JSONObject result = new JSONObject();
-        
+
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        result.put(JSONConstants.SUCCESS, true);
         try {
             // Check ownership
             if (!ProgressionUtils.ownsProgressionItem(user.getUserId(), itemId)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             // Check that the user is a session's teacher
             if (!SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
-                result.put(JSONConstants.SUCCESS, false);
-                result.put(JSONConstants.ERROR, "Non autorisé à assigner du contenu à cette séance");
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
             logger.info("Teacher " + user.getFullName() + " adds assignment of item " + itemId + " to session " + sessionId);
@@ -80,6 +73,8 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
             CDTSessionLocalServiceUtil.assignSessionContent(sessionId, itemId);
 
             result.put(JSONConstants.ASSIGNMENT, assignment.convertToJSON(user.getUserId()));
+            result.put(JSONConstants.SUCCESS, true);
+
         } catch (Exception e) {
             logger.error("Could not add assignment with itemId="+itemId+" and sessionId="+sessionId, e);
             result.put(JSONConstants.SUCCESS, false);
@@ -95,22 +90,17 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        result.put(JSONConstants.SUCCESS, true);
         try {
             // Check ownership
             if (!ProgressionUtils.ownsProgressionItem(user.getUserId(), itemId)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
             JSONArray jsonHomeworks;
@@ -134,9 +124,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
 
                 // Check that the user is a source session's teacher
                 if (!SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sourceSessionId)) {
-                    result.put(JSONConstants.SUCCESS, false);
-                    result.put(JSONConstants.ERROR, "Non autorisé à assigner un devoir à cette séance");
-                    return result;
+                    return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
                 }
 
                 long targetSessionId = JSONConstants.getLongValue(homeworkToCreate, JSONConstants.TARGET_SESSION_ID, 0);
@@ -171,10 +159,9 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
                     students.add(UserLocalServiceUtil.getUser(jsonStudents.getJSONObject(j).getLong("userId")));
                 }
 
-                Homework homework = null;
                 if (homeworkId == 0) {
                     // This is creation
-                    homework = HomeworkLocalServiceUtil.createHomework(user, description, sourceSessionId, targetSessionId, groupId, toDate, type, estimatedTime, students);
+                    Homework homework = HomeworkLocalServiceUtil.createHomework(user, description, sourceSessionId, targetSessionId, groupId, toDate, type, estimatedTime, students);
 
                     logger.info("Teacher " + user.getFullName() + " assigns homework item " + itemId + " to session " + sourceSessionId + ". Created homeworkId is " + homework.getHomeworkId());
                     ItemAssignment assignment = ItemAssignmentLocalServiceUtil.assignHomework(itemId, sourceSessionId, homework.getHomeworkId());
@@ -193,6 +180,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
                 }
             }
             result.put(JSONConstants.ASSIGNMENTS, jsonAssignments);
+            result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
             logger.error("Could not add homeworks assignment with itemId = " + itemId, e);
@@ -209,29 +197,22 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        result.put(JSONConstants.SUCCESS, true);
         try {
             // Check ownership
             if (!ProgressionUtils.ownsProgressionItem(user.getUserId(), itemId)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
             // Check that the user is a session's teacher
             if (!SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
-                result.put(JSONConstants.SUCCESS, false);
-                result.put(JSONConstants.ERROR, "Non autorisé à assigner du contenu à cette séance");
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
             logger.info("Teacher " + user.getFullName() + " deletes assignment of item " + itemId + " to session " + sessionId);
@@ -253,9 +234,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
                 // Check that the current user is the homework's teacher
                 Homework homework = HomeworkLocalServiceUtil.getHomework(itemAssignment.getHomeworkId());
                 if (homework.getTeacherId() != user.getUserId()) {
-                    result.put(JSONConstants.SUCCESS, false);
-                    result.put(JSONConstants.ERROR, "Non autorisé à supprimer le devoir");
-                    return result;
+                    return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
                 }
                 HomeworkLocalServiceUtil.deleteHomeworkAndDependencies(homework);
 
@@ -265,6 +244,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
                     ProgressionItemLocalServiceUtil.deleteProgressionItem(homeworkSpecificItem.getProgressionItemId());
                 }
             }
+            result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Could not delete assignment with itemId="+itemId+" and sessionId="+sessionId, e);
             result.put(JSONConstants.SUCCESS, false);

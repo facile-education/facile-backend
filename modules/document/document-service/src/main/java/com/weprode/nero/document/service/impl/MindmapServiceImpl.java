@@ -25,6 +25,10 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
 
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -50,16 +54,23 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 	private static final Log logger = LogFactoryUtil.getLog(MindmapServiceImpl.class);
 
 	/**
-	 * Returns the content of the given midmap file
+	 * Returns the content of the given mindmap file
 	 * @return JSONObject - the mindmap file name and content
 	 */
 	@JSONWebService(value = "get-mind-file", method = "GET")
 	public JSONObject getMindFile(long fileVersionId) {
 		JSONObject result = new JSONObject();
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 
 		logger.info("getMindFile with fileVersionId="+fileVersionId);
-
-		result.put(JSONConstants.SUCCESS, true);
 
 		// Get file content
 		try {
@@ -78,11 +89,12 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 
 			result.put(JSONConstants.CONTENT, content);
 			result.put(JSONConstants.NAME, fileEntry.getTitle());
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error while getting file with fileVersionId "+fileVersionId, e);
+			result.put(JSONConstants.SUCCESS, false);
 		}
-
 		return result;
 	}
 
@@ -94,13 +106,21 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 	@JSONWebService(value = "save-mind-file", method = "POST")
 	public JSONObject saveMindFile(String params) throws SystemException {
 		JSONObject result = new JSONObject();
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 
 		try {
 			JSONObject paramMap = new JSONObject(params);
 
 			long fileVersionId = JSONConstants.getLongValue(paramMap, JSONConstants.ID, -1);
 			String content = paramMap.getString("xml");
-			String properties = paramMap.getString("pref");
 
 			if (fileVersionId == -1) {
 				logger.error("fileEntryId was not provided");
@@ -117,7 +137,7 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 			ServiceContext serviceContext = new ServiceContext();
 			serviceContext.setAddGroupPermissions(true);
 
-			// Convert content to byte arraynull
+			// Convert content to byte array
 			byte[] byteArrayContent;
 			assert content != null;
 			byteArrayContent = content.getBytes(StandardCharsets.UTF_8);

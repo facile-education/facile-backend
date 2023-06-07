@@ -6,6 +6,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.NewsAdminLocalServiceUtil;
@@ -29,28 +30,24 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
     public JSONObject addNewsDelegate(long userId, long schoolId) {
         JSONObject result = new JSONObject();
 
+        User user;
         try {
-            User user = getGuestOrUser();
+            user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            }
-            logger.info("User " + user.getUserId() + " adds user " + userId + " as news delegate for school " + schoolId);
-
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
+            logger.info("User " + user.getUserId() + " adds user " + userId + " as news delegate for school " + schoolId);
             result.put(JSONConstants.SUCCESS, NewsAdminLocalServiceUtil.addSchoolDelegate(userId, schoolId));
         } catch (Exception e) {
             logger.error("Error while saving school admins for schoolId " + schoolId, e);
@@ -65,28 +62,24 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
 
         JSONObject result = new JSONObject();
 
+        User user;
         try {
-            User user = getGuestOrUser();
+            user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            }
-            logger.info("User " + user.getUserId() + " removes user " + userId + " as news delegate for school " + schoolId);
-
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
+            logger.info("User " + user.getUserId() + " removes user " + userId + " as news delegate for school " + schoolId);
             result.put(JSONConstants.SUCCESS, NewsAdminLocalServiceUtil.removeSchoolDelegate(userId, schoolId));
         } catch (Exception e) {
             logger.error("Error while saving school admins for schoolId " + schoolId, e);

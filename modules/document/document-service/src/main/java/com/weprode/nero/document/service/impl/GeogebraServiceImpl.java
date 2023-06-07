@@ -25,6 +25,10 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 
 
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -56,7 +60,15 @@ public class GeogebraServiceImpl extends GeogebraServiceBaseImpl {
 
 		JSONObject result = new JSONObject();
 
-		result.put(JSONConstants.SUCCESS, true);
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 
 		// Get file content
 		try {
@@ -69,14 +81,14 @@ public class GeogebraServiceImpl extends GeogebraServiceBaseImpl {
 			byte[] data = new byte[16384];
 			while ((nRead = is.read(data, 0, data.length)) != -1) {
 				buffer.write(data, 0, nRead);
+				buffer.flush();
+				byte[] byteArray = buffer.toByteArray();
+				String content = Base64.encode(byteArray);
+
+				result.put(JSONConstants.CONTENT, content);
+				result.put(JSONConstants.NAME, fileEntry.getTitle());
 			}
-			buffer.flush();
-			byte[] byteArray = buffer.toByteArray();
-			String content = Base64.encode(byteArray);
-
-			result.put(JSONConstants.CONTENT, content);
-			result.put(JSONConstants.NAME, fileEntry.getTitle());
-
+			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error while getting geogebra file with fileVersionId " + fileVersionId, e);
 			result.put(JSONConstants.SUCCESS, false);
@@ -88,6 +100,15 @@ public class GeogebraServiceImpl extends GeogebraServiceBaseImpl {
 	public JSONObject saveGeogebraFile(String params) {
 		JSONObject result = new JSONObject();
 
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 		try {
 			JSONObject paramMap = new JSONObject(params);
 

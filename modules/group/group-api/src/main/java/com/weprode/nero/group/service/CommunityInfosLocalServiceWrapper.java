@@ -365,11 +365,6 @@ public class CommunityInfosLocalServiceWrapper
 			userId, pedagogicalOnly, activeOnly);
 	}
 
-	@Override
-	public java.util.List<Long> getUserGroupIds(long userId) {
-		return _communityInfosLocalService.getUserGroupIds(userId);
-	}
-
 	/**
 	 * Updates the community infos in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

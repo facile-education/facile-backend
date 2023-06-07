@@ -14,7 +14,6 @@
 
 package com.weprode.nero.user.service;
 
-import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.User;
@@ -23,7 +22,7 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -59,13 +58,16 @@ public interface UserUtilsLocalService extends BaseLocalService {
 	public String getOSGiServiceIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getStudentMainTeachers(User student);
+	public List<User> getStudentMainTeachers(User student);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getUserConseillersSociaux(User user);
+	public List<User> getUserConseillersSociaux(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getUserDoyens(User user);
+	public List<User> getUserDoyens(User user);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Long> getUserGroupIds(long userId);
 
 	/**
 	 * This method a list a user based on a list of userId
@@ -73,19 +75,16 @@ public interface UserUtilsLocalService extends BaseLocalService {
 	 * @return List<User> the users object , empty array in case of error
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getUserListFromUserIdList(
-		java.util.List<Long> userIds);
+	public List<User> getUserListFromUserIdList(List<Long> userIds);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getUserPsychologues(User user);
+	public List<User> getUserPsychologues(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getUserTeachers(User user);
+	public List<User> getUserTeachers(User user);
 
 	/**
 	 * Purges all expired users
-	 *
-	 * @return the list of purged userIds
 	 */
 	public boolean purgeExpiredUsers();
 

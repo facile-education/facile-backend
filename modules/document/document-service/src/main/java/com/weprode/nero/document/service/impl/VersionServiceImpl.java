@@ -17,6 +17,9 @@ package com.weprode.nero.document.service.impl;
 import com.liferay.portal.aop.AopService;
 
 
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -46,8 +49,16 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 	public JSONObject getFileVersions(long fileId) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " fetches versions for file " + fileId);
 
 			return VersionLocalServiceUtil.getFileVersions(user, fileId);
@@ -63,8 +74,16 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 	public JSONObject deleteVersion(long fileEntryId, String version) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " deletes version " + version + " for file " + fileEntryId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.deleteVersion(user, fileEntryId, version));
 		} catch (Exception e) {
@@ -79,8 +98,16 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 	public JSONObject restoreVersion(long fileVersionId) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " restores version " + fileVersionId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.restoreVersion(fileVersionId));
 		} catch (Exception e) {
@@ -95,8 +122,16 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 	public JSONObject saveVersionDescription(long fileVersionId, String description) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " saves description for version " + fileVersionId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.saveVersionDescription(fileVersionId, description));
 		} catch (Exception e) {
@@ -111,8 +146,16 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 	public JSONObject createMajorVersion(long fileEntryId) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " creates major version for file " + fileEntryId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.createMajorVersion(user, fileEntryId));
 		} catch (Exception e) {

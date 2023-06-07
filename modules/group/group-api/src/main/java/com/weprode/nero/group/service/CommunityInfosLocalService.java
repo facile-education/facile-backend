@@ -282,9 +282,6 @@ public interface CommunityInfosLocalService
 	public List<Long> getUserCommunitiesIds(
 		long userId, boolean pedagogicalOnly, boolean activeOnly);
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Long> getUserGroupIds(long userId);
-
 	/**
 	 * Updates the community infos in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

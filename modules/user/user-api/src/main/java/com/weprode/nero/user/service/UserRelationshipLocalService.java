@@ -279,6 +279,9 @@ public interface UserRelationshipLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getUserRelationshipsCount();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isChild(long parentId, long childId);
+
 	/**
 	 * Updates the user relationship in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

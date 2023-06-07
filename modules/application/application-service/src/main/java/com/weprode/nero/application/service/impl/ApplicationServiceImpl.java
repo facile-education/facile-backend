@@ -2,12 +2,10 @@ package com.weprode.nero.application.service.impl;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.exception.RolePermissionsException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.application.model.Application;
@@ -16,6 +14,7 @@ import com.weprode.nero.application.service.ApplicationLocalServiceUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.application.service.base.ApplicationServiceBaseImpl;
 import com.weprode.nero.application.service.utils.ExportUtils;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.menu.enums.MenuEntry;
 import com.weprode.nero.menu.service.SideMenuLocalServiceUtil;
@@ -46,19 +45,13 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
             user = getGuestOrUser();
 
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
             if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -81,17 +74,13 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -118,18 +107,14 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -154,18 +139,14 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -187,19 +168,16 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)
-                && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+                && !RoleUtilsLocalServiceUtil.isAdministrator(user)
+                && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -244,19 +222,15 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -279,13 +253,10 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            logger.error("User is not allowed to fetch applications", e);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -314,17 +285,15 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) || !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            logger.error("User is not allowed to fetch all applications", e);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
-
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
         try {
             JSONArray jsonApplications = new JSONArray();
             List<Application> entApplications = ApplicationLocalServiceUtil.getAllApplications();
@@ -354,27 +323,22 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-                throw new AuthException();
-            }
-
-            if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
-                    && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
-                    && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
-                    && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
-                throw new RolePermissionsException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            logger.error("User is not allowed to fetch all applications", e);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
+                && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
+                && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
-        JSONArray applications = new JSONArray();
 
         try {
+            JSONArray applications = new JSONArray();
             List<MenuEntry> entries;
             if (schoolId != 0) {
                 entries = SideMenuLocalServiceUtil.getSchoolMenu(schoolId);
@@ -382,7 +346,6 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
                 entries = MenuEntry.getFullMenu();
             }
 
-            // TODO Add cool to applications ?
             for (MenuEntry entry : entries) {
                 if (entry.getEntries() == null || entry.getEntries().isEmpty()) {
                     applications.put(convertMenuEntryToJSON(entry));
@@ -393,15 +356,12 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
                     }
                 }
             }
-
+            result.put(JSONConstants.SERVICES, applications);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error(e);
             result.put(JSONConstants.SUCCESS, false);
         }
-
-        result.put(JSONConstants.SERVICES, applications);
-
         return result;
     }
 
@@ -409,7 +369,6 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         JSONObject jsonApplication = new JSONObject();
         jsonApplication.put(JSONConstants.APPLICATION_ID, entry.getId());
         jsonApplication.put(JSONConstants.NAME, entry.getKey());
-
         return jsonApplication;
     }
     

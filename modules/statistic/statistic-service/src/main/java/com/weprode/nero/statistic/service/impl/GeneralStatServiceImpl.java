@@ -1,7 +1,10 @@
 package com.weprode.nero.statistic.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import org.json.JSONArray;
 
@@ -53,17 +56,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!checkUserPermissions(user, schoolId)) {
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         String period = MatomoConstants.PERIOD_DAY;
@@ -113,17 +114,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!checkUserPermissions(user, schoolId)) {
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         String period = MatomoConstants.PERIOD_DAY;
@@ -176,17 +175,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!checkUserPermissions(user, schoolId)) {
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         result.put(JSONConstants.COUNT, GeneralStatLocalServiceUtil.countActiveUsers(startDate, endDate, schoolId));
@@ -202,17 +199,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!checkUserPermissions(user, schoolId)) {
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -254,17 +249,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!checkUserPermissions(user, schoolId)) {
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -306,17 +299,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!checkUserPermissions(user, schoolId)) {
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         result.put(JSONConstants.SCHOOL_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(startDate, endDate, schoolId, true));
@@ -333,17 +324,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!checkUserPermissions(user, schoolId)) {
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         result.put(JSONConstants.COUNT, GeneralStatLocalServiceUtil.countMessages(startDate, endDate, schoolId));
@@ -367,17 +356,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.SUCCESS, false);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-            result.put(JSONConstants.SUCCESS, false);
-            logger.error("Permission exception when getting stats");
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         // If no Matomo url specified, return empty object

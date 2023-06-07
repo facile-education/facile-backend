@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.UserPasswordException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.User;
@@ -15,6 +16,8 @@ import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
+import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
@@ -49,6 +52,30 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
             throw new RuntimeException(e);
         }
     }
+
+    public List<Long> getUserGroupIds (long userId) {
+        List<Long> groupIds = new ArrayList<>();
+
+        List<Group> userCommunities = CommunityInfosLocalServiceUtil.getUserCommunities(userId, false, true);
+        for (Group userCommunity : userCommunities) {
+            groupIds.add(userCommunity.getGroupId());
+        }
+
+        List<Integer> types = new ArrayList<>();
+        types.add(OrgConstants.SCHOOL_TYPE);
+        types.add(OrgConstants.CLASS_TYPE);
+        types.add(OrgConstants.COURS_TYPE);
+        types.add(OrgConstants.VOLEE_TYPE);
+        types.add(OrgConstants.SUBJECT_TYPE);
+
+        List<Organization> userOrgs = UserOrgsLocalServiceUtil.getUserOrganizations(userId, types,null, false, OrgConstants.ALL_SCHOOLS_ID);
+        for (Organization userOrg : userOrgs) {
+            groupIds.add(userOrg.getGroupId());
+        }
+
+        return groupIds;
+    }
+
 
     public List<User> getUserTeachers(User user) {
         List<User> teachers = new ArrayList<>();

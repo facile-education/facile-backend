@@ -1,17 +1,16 @@
 package com.weprode.nero.preference.service.impl;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserConstants;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
@@ -44,8 +43,6 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(UserPropertiesServiceImpl.class);
 
     private static final int NONE = 0;
-    private static final int DAILY = 1;
-    private static final int WEEKLY = 2;
 
     @JSONWebService(value = "update-side-menu-state", method = "POST")
     public JSONObject updateSideMenuState(boolean isExpanded) {
@@ -54,14 +51,11 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -85,14 +79,11 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -120,14 +111,11 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -161,14 +149,11 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -196,14 +181,11 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -219,7 +201,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
                 logger.info("About to update password for webdav activation");
                 try {
-                    result = updateUserPasword(user, password, false, true);
+                    result = updateUserPassword(user, password, false);
                 } catch (Exception e) {
                     logger.error("Could not set webdav password for userId " + user.getUserId(), e);
                     result.put(JSONConstants.SUCCESS, false);
@@ -243,20 +225,17 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
             if (!password.isEmpty() && password.equals(confirmPassword)) {
                 if (isWebdav) {
-                    result = updateUserPasword(user, password, true, true);
+                    result = updateUserPassword(user, password, true);
                 } else {
                     String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(user, password, password, false);
                     if (errorMessage.equals("")) {
@@ -277,7 +256,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         return result;
     }
 
-    private JSONObject updateUserPasword(User user, String password, boolean isUpdated, boolean isWebdav) throws PortalException, SystemException {
+    private JSONObject updateUserPassword(User user, String password, boolean isUpdated) throws SystemException {
         JSONObject result = new JSONObject();
 
         String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(user, password, password, false);
@@ -299,16 +278,16 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
             // Send password in IM
             String defaultStyle = "padding: 8px; margin: 0px; font-family: \"Open sans\"; border-left: 2px solid #8b9ea8; border-right: 2px solid #8b9ea8; width: 95.5%;";
-            String msg = "<p style='width: 95.5%;margin: 10px 0px 0px 0px;padding: 8px;font-size: 16px;border-radius: 5px 5px 0px 0px;color: #fff; background:#8b9ea8'>Compte d'acc&egrave;s "+ (isWebdav ? "webdav" : "ENT") + "</p>"+
+            String msg = "<p style='width: 95.5%;margin: 10px 0px 0px 0px;padding: 8px;font-size: 16px;border-radius: 5px 5px 0px 0px;color: #fff; background:#8b9ea8'>Compte d'acc&egrave;s webdav</p>"+
                     "<p style='" + defaultStyle + "'>Bonjour "+user.getFullName()+", </p><br/>";
 
-            if (isWebdav && !isUpdated) {
+            if (!isUpdated) {
                 msg += "<p style='" + defaultStyle + " margin-top: -21px;'>Vous venez d'activer votre compte webdav. </p><br/>" +
                         "<p style='" + defaultStyle + " margin-top: -32px;'>Vos codes d'acc&egrave;s sont: </p><br/>" +
                         "<p style='" + defaultStyle + " margin-top: -32px;'>Identifiant :" + user.getScreenName() + " </p><br/> "+
                         "<p style='" + defaultStyle + " margin-top: -32px;'>Mot de passe :" + password + " </p><br/>";
-            } else if (isUpdated) {
-                msg += "<p style='" + defaultStyle + " margin-top: -21px;'>Votre mot de passe "+ (isWebdav ? "webdav" : "ENT") + " vient d'&ecirc;tre modifi&eacute;.  </p><br/>" +
+            } else {
+                msg += "<p style='" + defaultStyle + " margin-top: -21px;'>Votre mot de passe webdav vient d'&ecirc;tre modifi&eacute;.  </p><br/>" +
                         "<p style='" + defaultStyle + " margin-top: -32px;'>Nouveau mdp: "+hiddenPwd+" </p><br/>";
             }
 

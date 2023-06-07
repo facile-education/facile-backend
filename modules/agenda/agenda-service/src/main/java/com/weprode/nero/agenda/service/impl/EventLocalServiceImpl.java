@@ -18,8 +18,8 @@ import com.weprode.nero.agenda.service.EventPopulationLocalServiceUtil;
 import com.weprode.nero.agenda.service.EventReadLocalServiceUtil;
 import com.weprode.nero.agenda.service.base.EventLocalServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -119,7 +119,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
 
     public List<Event> getUserEvents(User user, int startIndex, int nbEvents, boolean unreadOnly) throws SystemException {
         // Get user groups
-        List<Long> groupIds = CommunityInfosLocalServiceUtil.getUserGroupIds(user.getUserId());
+        List<Long> groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
 
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
@@ -135,7 +135,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
 
     public int countEvents(User user, Date minDate, boolean unreadOnly) throws SystemException {
         // Get user groups
-        List<Long> groupIds = CommunityInfosLocalServiceUtil.getUserGroupIds(user.getUserId());
+        List<Long> groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
 
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());

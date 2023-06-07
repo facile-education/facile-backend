@@ -37,16 +37,6 @@ public class GroupUtilsLocalServiceWrapper
 		return _groupUtilsLocalService.getGroupName(groupId);
 	}
 
-	@Override
-	public java.util.List<com.liferay.portal.kernel.model.Group>
-		getGroupsFromOrganizations(
-			java.util.List<com.liferay.portal.kernel.model.Organization>
-				orgsToSearchFor) {
-
-		return _groupUtilsLocalService.getGroupsFromOrganizations(
-			orgsToSearchFor);
-	}
-
 	/**
 	 * Returns the OSGi service identifier.
 	 *

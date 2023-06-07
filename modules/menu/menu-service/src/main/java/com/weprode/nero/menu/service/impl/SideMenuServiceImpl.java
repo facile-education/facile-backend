@@ -1,24 +1,23 @@
 package com.weprode.nero.menu.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.menu.enums.MenuEntry;
 import com.weprode.nero.menu.service.SideMenuLocalServiceUtil;
 import com.weprode.nero.menu.service.SideMenuService;
 import com.weprode.nero.menu.service.base.SideMenuServiceBaseImpl;
+import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.List;
@@ -43,14 +42,11 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         List<MenuEntry> userMenu = SideMenuLocalServiceUtil.getUserMenu(user);

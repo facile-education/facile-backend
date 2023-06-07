@@ -20,6 +20,9 @@ import com.liferay.document.library.kernel.service.persistence.DLFileVersionUtil
 import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -53,13 +56,19 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "get-breadcrumb", method = "GET")
 	public JSONObject getBreadcrumb(long folderId) {
+
 		JSONObject result = new JSONObject();
 
-		result.put(JSONConstants.SUCCESS, false);
-
+		User user;
 		try {
-			User user = getGuestOrUser();
-
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			List<Folder> folderList = FolderUtilsLocalServiceUtil.getFolderPath(folderId);
 
 			// Format breadCrumb
@@ -88,8 +97,16 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 	public JSONObject createFolder(long targetFolderId, String folderName) throws SystemException {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " creates folder " + folderName + " in folder " + targetFolderId);
 
 			Folder createdFolder = FolderUtilsLocalServiceUtil.createFolder(user, targetFolderId, folderName);
@@ -110,8 +127,16 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 	public JSONObject renameFolder(long folderId, String folderName) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " renames folder " + folderId + " into " + folderName);
 			Folder folderToRename = DLAppServiceUtil.getFolder(folderId);
 			Folder renamedFolder = FolderUtilsLocalServiceUtil.renameFolder(user.getUserId(), folderToRename, folderName);
@@ -131,10 +156,16 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 	public JSONObject downloadFolder(long folderId) {
 
 		JSONObject result = new JSONObject();
-		result.put(JSONConstants.SUCCESS, false);
-
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			Folder folder = DLAppServiceUtil.getFolder(folderId);
 			logger.info("User " + user.getFullName() + " downloads folder " + folderId);
 			result.put(JSONConstants.ZIP_URL, FolderUtilsLocalServiceUtil.downloadFolder(folder, user));
@@ -151,12 +182,30 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 	@JSONWebService(value = "get-all-entities", method = "GET")
 	public JSONObject getAllEntities(long folderId, boolean withDetails) {
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 		String[] mimeTypes = new String[0];
 		return this.getAllEntities(folderId, withDetails, mimeTypes);
 	}
 
 	@JSONWebService(value = "get-images-entities", method = "GET")
 	public JSONObject getImagesEntities(long folderId, boolean withDetails) {
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 		String[] mimeTypes = DocumentConstants.IMAGE_MIME_TYPES;
 		return this.getAllEntities(folderId, withDetails, mimeTypes);
 	}

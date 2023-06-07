@@ -26,6 +26,9 @@ import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.aop.AopService;
 
 
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -60,7 +63,15 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 	public JSONObject getHTMLContent (long fileVersionId) {
 		JSONObject result = new JSONObject();
 
-		result.put(JSONConstants.SUCCESS, true);
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 
 		try {
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
@@ -81,25 +92,35 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 			try {
 				is.close();
 			} catch (IOException e) {
-				logger.error("Error closing inputstream", e);
+				logger.error("Error closing input stream", e);
 			}
 
 			result.put(JSONConstants.CONTENT, content);
 			result.put(JSONConstants.NAME, fileEntry.getTitle());
+			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error while getting file with fileVersionId " + fileVersionId, e);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 
 		return result;
 	}
 
 	@JSONWebService(value = "save-html-content", method = "POST")
-	public JSONObject saveHTMLContent(Long fileVersionId, String content, Boolean majorVersion) {
+	public JSONObject saveHTMLContent(Long fileVersionId, String content, boolean majorVersion) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " saves HTML content for fileVersionId " + fileVersionId);
 
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);

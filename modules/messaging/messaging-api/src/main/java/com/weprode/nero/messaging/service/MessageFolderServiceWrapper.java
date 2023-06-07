@@ -36,8 +36,8 @@ public class MessageFolderServiceWrapper
 	 * Add personal folder
 	 */
 	@Override
-	public org.json.JSONObject addFolder(long parentFolderId, String folderName)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+	public org.json.JSONObject addFolder(
+		long parentFolderId, String folderName) {
 
 		return _messageFolderService.addFolder(parentFolderId, folderName);
 	}
@@ -46,9 +46,7 @@ public class MessageFolderServiceWrapper
 	 * Remove a folder
 	 */
 	@Override
-	public org.json.JSONObject deleteFolder(long folderId)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public org.json.JSONObject deleteFolder(long folderId) {
 		return _messageFolderService.deleteFolder(folderId);
 	}
 
@@ -56,9 +54,7 @@ public class MessageFolderServiceWrapper
 	 * Get all user message boxes and root folders
 	 */
 	@Override
-	public org.json.JSONObject getAllUserFolders()
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public org.json.JSONObject getAllUserFolders() {
 		return _messageFolderService.getAllUserFolders();
 	}
 
@@ -76,9 +72,7 @@ public class MessageFolderServiceWrapper
 	 * Add a folder
 	 */
 	@Override
-	public org.json.JSONObject renameFolder(long folderId, String newLabel)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
-
+	public org.json.JSONObject renameFolder(long folderId, String newLabel) {
 		return _messageFolderService.renameFolder(folderId, newLabel);
 	}
 

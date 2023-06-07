@@ -16,6 +16,9 @@ package com.weprode.nero.document.service.impl;
 
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -48,6 +51,15 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 	public JSONObject deleteDocuments(String folderIdArray, String fileIdArray) {
 		JSONObject result = new JSONObject();
 
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 		// Extract fileIds and folderIds as lists of Long
 		List<Long> fileIds = DocumentUtil.extractLongIds(fileIdArray);
 		List<Long> folderIds = DocumentUtil.extractLongIds(folderIdArray);
@@ -55,7 +67,6 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 		JSONArray failedEntitiesList = new JSONArray();
 
 		try {
-			User user = getGuestOrUser();
 			logger.info("User " + user.getFullName() + " deletes folders " + folderIdArray + " and/or files " + fileIdArray);
 
 			for (long folderId : folderIds) {

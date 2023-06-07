@@ -86,7 +86,7 @@ public class WYSIWYGServiceHttp {
 
 	public static org.json.JSONObject saveHTMLContent(
 		HttpPrincipal httpPrincipal, Long fileVersionId, String content,
-		Boolean majorVersion) {
+		boolean majorVersion) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -122,6 +122,6 @@ public class WYSIWYGServiceHttp {
 	private static final Class<?>[] _getHTMLContentParameterTypes0 =
 		new Class[] {long.class};
 	private static final Class<?>[] _saveHTMLContentParameterTypes1 =
-		new Class[] {Long.class, String.class, Boolean.class};
+		new Class[] {Long.class, String.class, boolean.class};
 
 }

@@ -10,11 +10,12 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.weprode.nero.application.model.Application;
 import com.weprode.nero.application.service.ApplicationLocalServiceUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.contact.constants.ContactConstants;
@@ -24,7 +25,11 @@ import com.weprode.nero.messaging.constants.MessagingConstants;
 import com.weprode.nero.messaging.model.Message;
 import com.weprode.nero.messaging.model.MessageFolder;
 import com.weprode.nero.messaging.model.MessagingThread;
-import com.weprode.nero.messaging.service.*;
+import com.weprode.nero.messaging.service.MessageAttachFileLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageContentLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageFolderLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageRecipientsLocalServiceUtil;
 import com.weprode.nero.messaging.service.base.MessageServiceBaseImpl;
 import com.weprode.nero.messaging.utils.MessageUtil;
 import com.weprode.nero.messaging.utils.MessagingUtil;
@@ -39,7 +44,10 @@ import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
 
 @Component(
         property = {
@@ -58,14 +66,22 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     @JSONWebService(value = "get-threads", method = "GET")
     public JSONObject getThreads(long folderId, String fromDate, int nbDisplayed, boolean unreadOnly) {
         JSONObject result = new JSONObject();
-        
-        result.put(JSONConstants.SUCCESS, false);
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
         try {
             // Check user's permission to fetch those folderId messages
-            long userId = getGuestOrUserId();
-            logger.info("User " + userId + " fetches messages of folderId " + folderId + ", from " + fromDate + (unreadOnly ? " (unread only)" : ""));
-            if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != userId) {
-                logger.error("User " + userId + " try to fetch message from folderId " + folderId + ", but it not belong to him!");
+            logger.info("User " + user.getUserId() + " fetches messages of folderId " + folderId + ", from " + fromDate + (unreadOnly ? " (unread only)" : ""));
+            if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
+                logger.error("User " + user.getUserId() + " try to fetch message from folderId " + folderId + ", but it not belong to him!");
                 result.put(JSONConstants.ERROR, "PermissionException");
                 return result;
             }
@@ -73,55 +89,73 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             // If no date specified, get threads from now
             Date fromDateDate = fromDate.equals("-1") ? new Date() :
                     new SimpleDateFormat(MessagingUtil.messagingDateFormat).parse(fromDate);
-            List<MessagingThread> lastThreads = MessageLocalServiceUtil.getThreads(userId, folderId, fromDateDate, nbDisplayed, unreadOnly);
+            List<MessagingThread> lastThreads = MessageLocalServiceUtil.getThreads(user.getUserId(), folderId, fromDateDate, nbDisplayed, unreadOnly);
             result.put(JSONConstants.THREADS, ThreadUtil.formatThreadList(lastThreads, false, folderId));
 
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Error in getting profile user's threads", e);
+            result.put(JSONConstants.SUCCESS, false);
         }
         return result;
     }
 
     @JSONWebService(value = "get-message-thread", method = "GET")
-    public JSONObject getMessageThread(long messageId) throws PrincipalException {
+    public JSONObject getMessageThread(long messageId) {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
         try {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check if user have the right to see the message (and it threads)
-            if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != userId) {
-                logger.error("User " + userId + " try to fetch message from folderId " +  message.getFolderId() + ", but it not belong to him!");
+            if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
+                logger.error("User " + user.getUserId() + " try to fetch message from folderId " +  message.getFolderId() + ", but it not belong to him!");
                 result.put(JSONConstants.ERROR, "PermissionException");
                 return result;
             }
-            logger.info("User " + userId + " fetches thread from messageId " + messageId);
+            logger.info("User " + user.getUserId() + " fetches thread from messageId " + messageId);
 
             result.put(JSONConstants.MESSAGE_FOLDER_ID, message.getFolderId()); // To be able to select the correct folder in front
             MessagingThread thread = MessageLocalServiceUtil.getMessagingThread(message.getThreadId());
             result.put(JSONConstants.THREAD, ThreadUtil.formatThread(thread, false, message.getFolderId()));
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
-            logger.error("Error getting thread from message " + messageId + " for userId " + userId, e);
+            logger.error("Error getting thread from message " + messageId + " for user.getUserId() " + user.getUserId(), e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
     }
 
     @JSONWebService(value = "get-thread-messages", method = "GET")
-    public JSONObject getThreadMessages(long threadId, long folderId) throws PrincipalException {
+    public JSONObject getThreadMessages(long threadId, long folderId) {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
         try {
-            logger.info("User " + userId + " fetches all messages of threadId " + threadId + " and from folderId " + folderId);
-            MessageFolder trashFolder = MessageFolderLocalServiceUtil.getUserTrashFolder(userId);
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        try {
+            logger.info("User " + user.getUserId() + " fetches all messages of threadId " + threadId + " and from folderId " + folderId);
+            MessageFolder trashFolder = MessageFolderLocalServiceUtil.getUserTrashFolder(user.getUserId());
 
             // Get all other messages of this thread, through all user's folders
-            List<Message> threadMessages = MessageLocalServiceUtil.getUserThreadMessages(userId, threadId);
+            List<Message> threadMessages = MessageLocalServiceUtil.getUserThreadMessages(user.getUserId(), threadId);
             JSONArray jsonMessages = new JSONArray();
 
             for (Message threadMessage : threadMessages) {
@@ -143,25 +177,34 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
-            logger.error("Error getting message details for threadId = " + threadId + " for userId " + userId, e);
+            logger.error("Error getting message details for threadId = " + threadId + " for user.getUserId() " + user.getUserId(), e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
     }
 
     @JSONWebService(value = "get-nb-messages", method = "GET")
-    public JSONObject getNbMessages(long folderId) throws PrincipalException {
+    public JSONObject getNbMessages(long folderId) {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
         try {
             result.put(JSONConstants.NB_MESSAGES, MessageLocalServiceUtil.countMessages(folderId));
             result.put(JSONConstants.NB_UNREAD, MessageLocalServiceUtil.countUnreadMessages(folderId));
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
-            logger.error("Error getting number of new messages for userId " + userId, e);
+            logger.error("Error getting number of new messages for user.getUserId() " + user.getUserId(), e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
@@ -172,7 +215,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     public JSONObject searchMessages(long folderId, String search, int startIndex, int nbResults, boolean unreadOnly) throws PrincipalException {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
+        long user.getUserId() = getGuestOrUserId();
         result.put(JSONConstants.SUCCESS, false);
 
         search = IndexerUtil.normalizeStringEscaped(search);
@@ -181,13 +224,13 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         if (nbResults > -1) {
             endIndex = startIndex + nbResults;
         }
-        logger.info("User " + userId + " searches messages with query " + search + ", in folderId " + folderId);
+        logger.info("User " + user.getUserId() + " searches messages with query " + search + ", in folderId " + folderId);
 
         if (!search.equals("") && folderId != -1) {
             try {
                 final String MODIFIED_DATE_FORMATTED = "modifiedDate_sortable";
 
-                User user = UserLocalServiceUtil.getUser(userId);
+                User user = UserLocalServiceUtil.getUser(user.getUserId());
                 Hits resultsSearch = MessageLocalServiceUtil.search(user.getCompanyId(), 0, folderId,
                         user.getUserId(), 0, search, startIndex, endIndex, new Sort[] {new Sort(MODIFIED_DATE_FORMATTED, false)});
 
@@ -208,7 +251,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                 result.put(JSONConstants.MESSAGES, jsonMessages);
 
             } catch (Exception e) {
-                logger.error("Message search failed for userId " + userId + ", folderId " + folderId + ", search " + search, e);
+                logger.error("Message search failed for user.getUserId() " + user.getUserId() + ", folderId " + folderId + ", search " + search, e);
             }
         }
 
@@ -222,17 +265,25 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     public JSONObject getMessageRecipients(long messageId) {
         JSONObject result = new JSONObject();
 
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
         JSONArray jsonRecipients = new JSONArray();
         try {
-            long userId = getGuestOrUserId();
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check if user have the right to see the message (and it threads)
-            if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != userId) {
-                logger.error("User " + userId + " try to fetch recipients of messageId " +  messageId + ", but it not belong to him!");
+            if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
+                logger.error("User " + user.getUserId() + " try to fetch recipients of messageId " +  messageId + ", but it not belong to him!");
                 result.put(JSONConstants.ERROR, "PermissionException");
                 return result;
             }
-            logger.info("User " + userId + " fetches recipients of messageId " + messageId);
+            logger.info("User " + user.getUserId() + " fetches recipients of messageId " + messageId);
             List<User> recipients = MessageRecipientsLocalServiceUtil.getRecipients(messageId);
 
             for (User recipient : recipients) {
@@ -260,22 +311,30 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
      * Return useful informations for message creation
      */
     @JSONWebService(value = "get-message-answer-forward-infos", method = "GET")
-    public JSONObject getMessageAnswerForwardInfos(long messageId, boolean isReply, boolean isReplyAll, boolean isDraft, boolean isForward) throws PrincipalException {
+    public JSONObject getMessageAnswerForwardInfos(long messageId, boolean isReply, boolean isReplyAll, boolean isDraft, boolean isForward) {
         JSONObject result = new JSONObject();
 
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
         final String PREFIX_REPLY = "Re: ";
         final String PREFIX_FORWARD = "Tr: ";
 
-        long userId = getGuestOrUserId();
         try {
-            logger.info("User " + userId + " fetches answer and forward infos of messageId " + messageId);
+            logger.info("User " + user.getUserId() + " fetches answer and forward infos of messageId " + messageId);
             Message message = MessageLocalServiceUtil.getMessage(messageId);
 
             JSONArray jsonRecipients = new JSONArray();
             List<Long> addedRecipientIds = new ArrayList<>();
 
             // Avoid self answer
-            addedRecipientIds.add(userId);
+            addedRecipientIds.add(user.getUserId());
 
             // Add sender in case of reply or replyAll
             if (isReply || isReplyAll) {
@@ -343,10 +402,18 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     public JSONObject setMessageReadStatus(String messageIds, boolean isRead) {
         JSONObject result = new JSONObject();
 
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
         try {
-            long userId = getGuestOrUserId();
-            logger.info("User " + userId + " sets messageIds " + messageIds + " as " + (isRead ? "read" : "unread"));
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        try {
+            logger.info("User " + user.getUserId() + " sets messageIds " + messageIds + " as " + (isRead ? "read" : "unread"));
             JSONArray jsonMessageIds = new JSONArray(messageIds);
             for (int i = 0 ; i < jsonMessageIds.length() ; i++) {
                 try {
@@ -359,19 +426,27 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Error parsing messages " + messageIds, e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
     }
 
     @JSONWebService(value = "send-message", method = "POST")
-    public JSONObject sendMessage(String recipients, String subject, String content, String attachedFiles, long draftMessageId, long originMessageId, boolean isReply, boolean isForward, boolean isSupport) throws PrincipalException {
+    public JSONObject sendMessage(String recipients, String subject, String content, String attachedFiles, long draftMessageId, long originMessageId, boolean isReply, boolean isForward, boolean isSupport) {
         JSONObject result = new JSONObject();
 
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
         try {
-            User user = getGuestOrUser();
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
 
+        try {
             logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") sends message with subject " + subject + ", content=" + content + ", attachedFiles=" + attachedFiles + " to recipients " + recipients);
 
             JSONArray jsonAttachedFiles = new JSONArray(attachedFiles);
@@ -395,7 +470,8 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("Error when user " + user.getUserId() + " is sending a message", e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
@@ -405,10 +481,17 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     public JSONObject saveDraft(String recipients, String subject, String content, String attachedFiles, long draftMessageId, boolean isSupport) {
         JSONObject result = new JSONObject();
 
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
         try {
-            User user = getGuestOrUser();
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
 
+        try {
             logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") "
                     + "saves draft with subject " + subject);
 
@@ -424,7 +507,8 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             MessageLocalServiceUtil.saveDraft(user.getUserId(), draftMessageId, subject, content, recipientList, attachFileIds, isSupport);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("Error when user " + user.getUserId() + " is saving draft", e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
@@ -437,11 +521,18 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     public JSONObject moveMessages(long folderId, String messageIds) {
         JSONObject result = new JSONObject();
 
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
         long nbMovedMessages = 0;
         try {
-            User user = getGuestOrUser();
-
             logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") " + "moves messages " + messageIds + " to folder " + folderId);
 
             if (folderId == -1) {
@@ -463,7 +554,8 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             }
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
-            logger.error( e);
+            logger.error("Error when user " + user.getUserId() + " moves messages", e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         result.put(JSONConstants.NB_MOVED_MESSAGES, nbMovedMessages);
@@ -478,10 +570,17 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     public JSONObject deleteMessages(String messageIds) {
         JSONObject result = new JSONObject();
 
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
         try {
-            User user = getGuestOrUser();
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
 
+        try {
             logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") " + "deletes messages " + messageIds);
 
             final long trashFolderId = MessageFolderLocalServiceUtil.getUserTrashFolder(user.getUserId()).getFolderId();
@@ -514,8 +613,16 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
 
     @JSONWebService(value = "get-users-completion", method="GET")
     public JSONObject getUsersCompletion (String query) {
+        User user;
         try {
-            User user = getGuestOrUser();
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        try {
             logger.info("User " + user.getFullName() + " uses messaging auto-completion with query " + query);
 
             return ContactCompletionLocalServiceUtil.getCompletionResultAsJSON(query, user, true);
@@ -534,14 +641,24 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     @JSONWebService(method = "POST")
     public JSONObject testCleanUserMessaging(String userIds) {
         JSONObject result = new JSONObject();
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
 
         try {
+            logger.info("User " + user.getUserId() + " deletes all messages of multiple users " + userIds + " !!!");
             MessageLocalServiceUtil.deleteUsersMessages(userIds);
             MessageLocalServiceUtil.deleteUsersPersonalFolders(userIds);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Error in cleaning test users messaging", e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
@@ -553,11 +670,17 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     @JSONWebService(method = "POST")
     public JSONObject testSendMessage(long senderId, String recipients, String subject, String content, String attachedFiles, long draftMessageId, long originMessageId, boolean isReply, boolean isForward, boolean isSupport) {
         JSONObject result = new JSONObject();
-
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
         try {
-            User user = getGuestOrUser();
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
 
+        try {
             logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") "
                     + "sends message to " + recipients +  " with subject " + subject + ", content=" + content + ", recipients=" + recipients + ", attachedFiles=" + attachedFiles);
 
@@ -582,17 +705,26 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("Error sending test message", e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
     }
 
     @JSONWebService(value = "send-assistance-message", method = "POST")
-    public JSONObject sendAssistanceMessage(long applicationId, String content, boolean isSuggestion, String attachFiles) throws Exception {
+    public JSONObject sendAssistanceMessage(long applicationId, String content, boolean isSuggestion, String attachFiles) {
         JSONObject result = new JSONObject();
 
-        User user = getGuestOrUser();
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
 
         ResourceBundle messages = ResourceBundle.getBundle("content.Language", user.getLocale());
         String htmlContent = content.replaceAll("(\r\n|\n)", "<br />");
@@ -639,7 +771,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                     destFinal.add(Long.parseLong(notifyUser));
                 }
             } catch (Exception e) {
-                logger.debug("No additionnal users to notify");
+                logger.debug("No additional users to notify");
             }
 
             boolean sendToLocalAdmins = PrefsPropsUtil.getBoolean(NeroSystemProperties.SUPPORT_LOCAL_ADMINS_ENABLE);

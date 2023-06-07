@@ -1,17 +1,14 @@
 package com.weprode.nero.user.service.impl;
 
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.model.OrgDetails;
@@ -22,6 +19,8 @@ import com.weprode.nero.user.model.Affectation;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
 import com.weprode.nero.user.service.AffectationService;
 import com.weprode.nero.user.service.base.AffectationServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -43,38 +42,34 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
     public JSONObject getAffectedUsers(long schoolId, String filter) {
         JSONObject result = new JSONObject();
 
-        User adminUser;
+        User user;
         try {
-            adminUser = getGuestOrUser();
-            if (adminUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
-            }
-            logger.info("Admin " + adminUser.getUserId() + " fetches all affected users for school " + schoolId + " and filter " + filter);
-
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(adminUser) || RoleUtilsLocalServiceUtil.isSchoolAdmin(adminUser)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(adminUser) || RoleUtilsLocalServiceUtil.isENTAdmin(adminUser))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
             JSONArray jsonUsers = new JSONArray();
-            List<User> users = AffectationLocalServiceUtil.getAffectedUsers(schoolId, filter);
-            for (User user : users) {
+            List<User> affectedUsers = AffectationLocalServiceUtil.getAffectedUsers(schoolId, filter);
+            for (User affectedUser : affectedUsers) {
                 JSONObject jsonUser = new JSONObject();
-                jsonUser.put(JSONConstants.USER_ID, user.getUserId());
-                jsonUser.put(JSONConstants.LAST_NAME, user.getLastName());
-                jsonUser.put(JSONConstants.FIRST_NAME, user.getFirstName());
-                jsonUser.put(JSONConstants.ROLES, RoleUtilsLocalServiceUtil.displayUserRoles(user));
+                jsonUser.put(JSONConstants.USER_ID, affectedUser.getUserId());
+                jsonUser.put(JSONConstants.LAST_NAME, affectedUser.getLastName());
+                jsonUser.put(JSONConstants.FIRST_NAME, affectedUser.getFirstName());
+                jsonUser.put(JSONConstants.ROLES, RoleUtilsLocalServiceUtil.displayUserRoles(affectedUser));
 
                 // Get affectations
-                List<Affectation> userAffectations = AffectationLocalServiceUtil.getUserAffectations(user.getUserId(), schoolId);
+                List<Affectation> userAffectations = AffectationLocalServiceUtil.getUserAffectations(affectedUser.getUserId(), schoolId);
                 JSONArray jsonAffectations = new JSONArray();
                 for (Affectation userAffectation : userAffectations) {
                     try {
@@ -95,7 +90,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
                             jsonAffectations.put(jsonAffectation);
                         }
                     } catch (Exception e) {
-                        logger.error("Error processing affectation for user " + user.getUserId(), e);
+                        logger.error("Error processing affectation for user " + affectedUser.getUserId(), e);
                     }
                 }
                 jsonUser.put(JSONConstants.AFFECTATIONS, jsonAffectations);
@@ -118,25 +113,20 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
     public JSONObject addUserAffectation(long userId, long orgId, String expirationDate) {
         JSONObject result = new JSONObject();
 
-        User adminUser;
+        User user;
         try {
-            adminUser = getGuestOrUser();
-            if (adminUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            logger.info("Admin " + adminUser.getUserId() + " adds affectation for user " + userId + " to orgId " + orgId);
-
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(adminUser) || RoleUtilsLocalServiceUtil.isSchoolAdmin(adminUser)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(adminUser) || RoleUtilsLocalServiceUtil.isENTAdmin(adminUser))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            }
-
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -144,7 +134,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
             if (!expirationDate.equals("")) {
                 expireDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(expirationDate);
             }
-            boolean success = AffectationLocalServiceUtil.addUserAffectation(userId, orgId, adminUser.getUserId(), expireDate);
+            boolean success = AffectationLocalServiceUtil.addUserAffectation(userId, orgId, user.getUserId(), expireDate);
             result.put(JSONConstants.SUCCESS, success);
 
         } catch (Exception e) {
@@ -160,24 +150,20 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
     public JSONObject removeUserAffectation(long userId, long orgId) {
         JSONObject result = new JSONObject();
 
-        User adminUser;
+        User user;
         try {
-            adminUser = getGuestOrUser();
-            if (adminUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
-            }
-            logger.info("Admin " + adminUser.getUserId() + " removes affectation for user " + userId + " to orgId " + orgId);
-
-            if (!(RoleUtilsLocalServiceUtil.isDirectionMember(adminUser) || RoleUtilsLocalServiceUtil.isSchoolAdmin(adminUser)
-                    || RoleUtilsLocalServiceUtil.isAdministrator(adminUser) || RoleUtilsLocalServiceUtil.isENTAdmin(adminUser))) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {

@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -51,6 +52,22 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
     public JSONObject getSessionMembers(long schoollifeSessionId) {
         JSONObject result = new JSONObject();
         JSONArray members = new JSONArray();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isDoyen(user) &&
+                !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
 
         try {
             List<SessionStudent> schoollifeSessionStudents = SessionStudentLocalServiceUtil.getSessionMembers(schoollifeSessionId);
@@ -93,8 +110,16 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
             logger.info("Get sessions for class " + classId + " between " + minDateStr + " and " + maxDateStr);
         }
 
+        User user;
         try {
-            User user = getGuestOrUser();
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        try {
             SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
             Date minDate = df.parse(minDateStr);
             Date maxDate = df.parse(maxDateStr);
@@ -161,6 +186,22 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
     public JSONObject registerStudent(long studentId, long schoollifeSessionId, String comment, String replayTestSubject, boolean notifyParents) {
         JSONObject result = new JSONObject();
 
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isDoyen(user) &&
+                !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
         try {
             User teacher = getGuestOrUser();
             boolean success = SessionStudentLocalServiceUtil.registerStudentToSession(teacher.getUserId(), studentId, schoollifeSessionId, comment, replayTestSubject, notifyParents);
@@ -198,23 +239,20 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
     public JSONObject registerClass(long classId, long schoollifeSessionId, String comment, String replayTestSubject, boolean notifyParents) {
         JSONObject result = new JSONObject();
 
-        User agent;
+        User user;
         try {
-            agent = getGuestOrUser();
-
-            if (agent.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            } else if (!RoleUtilsLocalServiceUtil.isPersonal(agent) && !RoleUtilsLocalServiceUtil.isTeacher(agent)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isDoyen(user) &&
+                !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -235,12 +273,12 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                         roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
                 for (User student: studentList) {
-                    boolean registered = SessionStudentLocalServiceUtil.registerStudentToSession(agent.getUserId(),
+                    boolean registered = SessionStudentLocalServiceUtil.registerStudentToSession(user.getUserId(),
                             student.getUserId(), schoollifeSessionId, comment, replayTestSubject, notifyParents);
 
                     if (registered) {
                         ++ nbRegistered;
-                        NotificationUtil.notifyEtudeRegistration(agent.getUserId(), student.getUserId(), schoollifeSessionId, notifyParents);
+                        NotificationUtil.notifyEtudeRegistration(user.getUserId(), student.getUserId(), schoollifeSessionId, notifyParents);
                         // TODO : clarify
                         // SchoollifeNotificationLocalServiceUtil.addStudentAndParentsNotification(student.getUserId(), schoollifeSessionId);
                     } else {
@@ -264,6 +302,22 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
     @JSONWebService(value = "unregister-student", method = "GET")
     public JSONObject unregisterStudent(long studentId, long schoollifeSessionId, boolean allSessions) {
         JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isDoyen(user) &&
+                !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
 
         try {
             User teacher = getGuestOrUser();
@@ -297,6 +351,22 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
     @JSONWebService(value = "mark-students-present", method = "POST")
     public JSONObject markStudentsPresent(long schoollifeSessionId, String studentsPresence) {
         JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isDoyen(user) &&
+                !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
 
         try {
             JSONArray studentsPresenceJson = new JSONArray(studentsPresence);

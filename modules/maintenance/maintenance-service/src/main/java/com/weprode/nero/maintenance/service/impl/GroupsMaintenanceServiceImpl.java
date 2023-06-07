@@ -17,6 +17,9 @@ package com.weprode.nero.maintenance.service.impl;
 import com.liferay.portal.aop.AopService;
 
 
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -61,7 +64,6 @@ public class GroupsMaintenanceServiceImpl
 
 	private static final Log logger = LogFactoryUtil.getLog(GroupsMaintenanceServiceImpl.class);
 
-
 	@JSONWebService(value = "archive-groups", method = "POST")
 	public JSONObject archiveGroups () {
 		JSONObject result = new JSONObject();
@@ -69,15 +71,14 @@ public class GroupsMaintenanceServiceImpl
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		int nbArchivedOrgs = 0;
@@ -85,8 +86,6 @@ public class GroupsMaintenanceServiceImpl
 			// Compute last schoolYear
 			Calendar cal = Calendar.getInstance();
 
-			// TODO Horaires management
-			//Date currentSchoolYearStartDate = ConfigurationLocalServiceUtil.getConfiguration(UserOrgsLocalServiceUtil.getEtabRatachement(user).getOrganizationId()).getStartSessionsDate();
 			Date currentSchoolYearStartDate = new Date();
 			cal.setTime(currentSchoolYearStartDate);
 			cal.add(Calendar.YEAR, -1);
@@ -167,15 +166,14 @@ public class GroupsMaintenanceServiceImpl
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		logger.warn("Param groupId = "+groupId);
@@ -194,17 +192,15 @@ public class GroupsMaintenanceServiceImpl
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
 
 		GroupCleanupUtil.multipleGroupCleanup(file);
 		result.put(JSONConstants.SUCCESS, true);

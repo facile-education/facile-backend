@@ -107,7 +107,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Teachers see their pending renvois
-                if (withSchoollife) {
+                if (withSchoollife && RoleUtilsLocalServiceUtil.isTeacher(user)) {
                     List<Renvoi> pendingRenvois = RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId());
                     for (Renvoi pendingRenvoi : pendingRenvois) {
                         // First filter on dates
@@ -138,7 +138,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Homeworks given
-                if (withSessions) {
+                if (withSessions && (RoleUtilsLocalServiceUtil.isStudent(user) || RoleUtilsLocalServiceUtil.isTeacher(user))) {
                     List<Homework> givenHomeworks = new ArrayList<>();
                     if (RoleUtilsLocalServiceUtil.isStudent(user)) {
                         givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworks(user, minDate);
@@ -155,7 +155,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Sessions content added
-                if (withSessions) {
+                if (withSessions && (RoleUtilsLocalServiceUtil.isStudent(user) || RoleUtilsLocalServiceUtil.isTeacher(user))) {
                     List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupsSessionActivity(user.getUserId(), groupIds, minDate, maxDate);
                     for (CDTSession session : sessions) {
                         // Get modificationDate
@@ -168,16 +168,18 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Groups expired for reactivation
-                List<Group> userCommunities = CommunityInfosLocalServiceUtil.getUserCommunities(userId, false, false);
-                for (Group userCommunity : userCommunities) {
-                    CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(userCommunity.getGroupId());
-                    if (communityInfos.getStatus() == 3 &&
-                            (groupIds.size() > 1 || groupIds.get(0) == communityInfos.getGroupId()) &&
-                            communityInfos.getExpirationDate().after(minDate) &&
-                            communityInfos.getExpirationDate().before(maxDate) &&
-                            RoleUtilsLocalServiceUtil.isUserGroupAdmin(user, userCommunity.getGroupId())) {
-                        GroupActivity sessionActivity = new GroupActivity(userCommunity.getGroupId(), 0, communityInfos.getExpirationDate(), ActivityConstants.ACTIVITY_TYPE_EXPIRED_GROUP);
-                        groupActivities.add(sessionActivity);
+                if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+                    List<Group> userCommunities = CommunityInfosLocalServiceUtil.getUserCommunities(userId, false, false);
+                    for (Group userCommunity : userCommunities) {
+                        CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(userCommunity.getGroupId());
+                        if (communityInfos.getStatus() == 3 &&
+                                (groupIds.size() > 1 || groupIds.get(0) == communityInfos.getGroupId()) &&
+                                communityInfos.getExpirationDate().after(minDate) &&
+                                communityInfos.getExpirationDate().before(maxDate) &&
+                                RoleUtilsLocalServiceUtil.isUserGroupAdmin(user, userCommunity.getGroupId())) {
+                            GroupActivity sessionActivity = new GroupActivity(userCommunity.getGroupId(), 0, communityInfos.getExpirationDate(), ActivityConstants.ACTIVITY_TYPE_EXPIRED_GROUP);
+                            groupActivities.add(sessionActivity);
+                        }
                     }
                 }
 

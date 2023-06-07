@@ -19,6 +19,9 @@ import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -61,7 +64,15 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 		JSONObject result = new JSONObject();
 
 		JSONArray permissionMatrix = new JSONArray();
-		result.put(JSONConstants.SUCCESS, false);
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 
 		try {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
@@ -95,7 +106,8 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			result.put(JSONConstants.PERMISSION_MATRIX, permissionMatrix);
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("Error fetching file permission matrix", e);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 
 		return result;
@@ -106,7 +118,15 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 		JSONObject result = new JSONObject();
 
 		JSONArray permissionMatrix = new JSONArray();
-		result.put(JSONConstants.SUCCESS, false);
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 
 		try {
 			Folder folder = DLAppServiceUtil.getFolder(folderId);
@@ -139,7 +159,8 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			result.put(JSONConstants.PERMISSION_MATRIX, permissionMatrix);
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
-			logger.error(e);
+			result.put(JSONConstants.SUCCESS, false);
+			logger.error("Error fetching folder permission matrix", e);
 		}
 
 		return result;
@@ -148,10 +169,17 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 	@JSONWebService(method = "POST")
 	public JSONObject saveFolderPermissionMatrix (long folderId, String jsonPermissionMatrix, boolean isRecursive) {
 		JSONObject result = new JSONObject();
-		result.put(JSONConstants.SUCCESS, false);
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " saves permission matrix for folderId " + folderId);
 			Folder folder = DLAppServiceUtil.getFolder(folderId);
 
@@ -167,7 +195,8 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 				result.put(JSONConstants.ERROR, "Permission error");
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("Error saving folder permission matrix", e);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 
 		return result;
@@ -179,8 +208,16 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 
 		result.put(JSONConstants.SUCCESS, false);
 
+		User user;
 		try {
-			User user = getGuestOrUser();
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			logger.info("User " + user.getFullName() + " saves permission matrix for file  " + fileEntryId);
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
 
@@ -196,7 +233,8 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 				result.put(JSONConstants.ERROR, "Permission error");
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("Error saving file permission matrix", e);
+			result.put(JSONConstants.SUCCESS, false);
 		}
 
 		return result;

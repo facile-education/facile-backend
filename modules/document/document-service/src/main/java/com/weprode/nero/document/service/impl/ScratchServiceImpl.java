@@ -24,6 +24,8 @@ import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -68,14 +70,16 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 	public JSONObject getScratchFiles(long userId) {
 		JSONObject result = new JSONObject();
 
+		User user;
 		try {
-			User user = UserLocalServiceUtil.getUser(userId);
-			if (user == null) {
-				result.put(JSONConstants.SUCCESS, false);
-				result.put(JSONConstants.ERROR_MSG, "Unable to find a valid user with userId: " + userId);
-				return result;
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		try {
 			// Get all .scratch documents in schoolbag's root directory
 			JSONArray scratchFiles = new JSONArray();
 			Folder rootFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(user.getUserId());
@@ -106,7 +110,15 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 	public JSONObject getScratchFile(long fileVersionId) {
 		JSONObject result = new JSONObject();
 
-		// Get file content
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 		try {
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 			DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
@@ -143,6 +155,15 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 	public JSONObject saveScratchFile(String params) {
 		JSONObject result = new JSONObject();
 
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
 		try {
 			JSONObject paramMap = new JSONObject(params);
 
@@ -154,7 +175,6 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 				fileName = fileName.concat(".sb3");
 			}
 
-			User user = getGuestOrUser();
 			logger.info("User " + user.getFullName() + " saves scratch fileVersionId " + fileVersionId);
 
 			// Handle the file - If provided, this is an update, else this is a file creation

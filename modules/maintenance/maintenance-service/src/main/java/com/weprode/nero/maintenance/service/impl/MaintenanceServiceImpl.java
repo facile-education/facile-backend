@@ -19,6 +19,9 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.eel.synchronization.service.SynchronizationLocalServiceUtil;
 import com.weprode.nero.maintenance.AnonymizationUtil;
@@ -50,15 +53,14 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
@@ -80,15 +82,14 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
@@ -110,15 +111,14 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
@@ -142,15 +142,14 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
@@ -174,15 +173,14 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-				result.put(JSONConstants.SUCCESS, false);
-				return result;
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
-			result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {

@@ -1,16 +1,13 @@
 package com.weprode.nero.user.service.impl;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
@@ -18,6 +15,8 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchService;
 import com.weprode.nero.user.service.base.UserSearchServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -42,22 +41,16 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         User currentUser;
         try {
             currentUser = getGuestOrUser();
-
             if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            } else if (!RoleUtilsLocalServiceUtil.isAdministrator(currentUser) &&
-                    !RoleUtilsLocalServiceUtil.isPersonal(currentUser) &&
-                    !RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(currentUser) &&
+                !RoleUtilsLocalServiceUtil.isPersonal(currentUser) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -106,20 +99,15 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         User currentUser;
         try {
             currentUser = getGuestOrUser();
-
             if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
-            } else if (!RoleUtilsLocalServiceUtil.isPersonal(currentUser) && !RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
-                result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        if (!RoleUtilsLocalServiceUtil.isPersonal(currentUser) &&
+                !RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
@@ -156,6 +144,15 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
     public JSONObject getSchoolStudents(String search, long schoolId) {
         JSONObject result = new JSONObject();
 
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
         JSONArray jsonStudents = new JSONArray();
         try {
             List<Long> orgIds = new ArrayList<>();
@@ -197,12 +194,10 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
@@ -233,7 +228,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         return result;
     }
 
-    // Returns all watchers (teacher/secretaires/directeur) for schoollife slot creation/edition
+    // Returns all watchers (teacher/secretaires/direction) for schoollife slot creation/edition
     @JSONWebService(value = "get-schoolife-agents", method = "GET")
     public JSONObject getSchoollifeAgents(String search, long schoolId) {
         JSONObject result = new JSONObject();
@@ -242,12 +237,10 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         try {
             user = getGuestOrUser();
             if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                throw new AuthException();
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
-            result.put(JSONConstants.ERROR, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         JSONArray members = new JSONArray();

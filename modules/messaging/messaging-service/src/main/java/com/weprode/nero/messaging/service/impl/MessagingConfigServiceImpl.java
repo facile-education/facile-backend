@@ -4,7 +4,10 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.messaging.model.MessagingConfig;
 import com.weprode.nero.messaging.service.MessagingConfigLocalServiceUtil;
@@ -25,15 +28,23 @@ public class MessagingConfigServiceImpl extends MessagingConfigServiceBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(MessagingConfigServiceImpl.class);
 
     @JSONWebService(value = "get-messaging-configuration", method = "GET")
-    public JSONObject getMessagingConfiguration() throws PrincipalException {
+    public JSONObject getMessagingConfiguration() {
         JSONObject result = new JSONObject();
-        
-        long userId = getGuestOrUserId();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
         result.put(JSONConstants.SUCCESS, false);
         
         JSONObject configuration = new JSONObject();
         try {
-            MessagingConfig messagingConfig = MessagingConfigLocalServiceUtil.getOrCreateMessagingConfig(userId);
+            MessagingConfig messagingConfig = MessagingConfigLocalServiceUtil.getOrCreateMessagingConfig(user.getUserId());
 
             // Signature
             JSONObject signature = new JSONObject();
@@ -70,7 +81,7 @@ public class MessagingConfigServiceImpl extends MessagingConfigServiceBaseImpl {
 
         } catch(Exception e) {
             result.put(JSONConstants.SUCCESS, false);
-            logger.error("Error when fetching messaging configuration for user " + userId, e);
+            logger.error("Error when fetching messaging configuration for user " + user.getUserId(), e);
         }
 
         return result;
@@ -80,11 +91,19 @@ public class MessagingConfigServiceImpl extends MessagingConfigServiceBaseImpl {
      * Update messaging configuration
      */
     @JSONWebService(value = "update-messaging-configuration", method = "POST")
-    public JSONObject updateMessagingConfiguration(String configuration) throws PrincipalException {
+    public JSONObject updateMessagingConfiguration(String configuration) {
         JSONObject result = new JSONObject();
 
-        long userId = getGuestOrUserId();
-        result.put(JSONConstants.SUCCESS, false);
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
         try {
             JSONObject jsonConfiguration = new JSONObject(configuration);
 
@@ -107,7 +126,7 @@ public class MessagingConfigServiceImpl extends MessagingConfigServiceBaseImpl {
             boolean isAutoReplyActive = jsonAutoResponse.getBoolean(JSONConstants.IS_ACTIVE);
             String autoReplyContent = jsonAutoResponse.getString(JSONConstants.CONTENT);
 
-            MessagingConfig messagingConfig = MessagingConfigLocalServiceUtil.getMessagingConfig(userId);
+            MessagingConfig messagingConfig = MessagingConfigLocalServiceUtil.getMessagingConfig(user.getUserId());
             messagingConfig.setIsForwardActive(isForwardActive);
             messagingConfig.setForwardMail(forwardMails.toString());
             messagingConfig.setIsSignatureActive(isSignatureActive);
@@ -118,7 +137,8 @@ public class MessagingConfigServiceImpl extends MessagingConfigServiceBaseImpl {
 
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
-            logger.error("Cannot create configuration JSON for user " + userId, e);
+            logger.error("Cannot create configuration JSON for user " + user.getUserId(), e);
+            result.put(JSONConstants.SUCCESS, false);
         }
 
         return result;
