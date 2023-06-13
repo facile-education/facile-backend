@@ -60,6 +60,7 @@ public class HolidayLocalServiceImpl extends HolidayLocalServiceBaseImpl {
 				Holiday holiday = holidayPersistence.create(counterLocalService.increment());
 				holiday.setStartDate(holidayStartDate);
 				holiday.setEndDate(holidayEndDate);
+				holiday.setName(jsonHoliday.getString(JSONConstants.NAME));
 				holidayPersistence.update(holiday);
 			}
 		} catch (Exception e) {
@@ -76,6 +77,8 @@ public class HolidayLocalServiceImpl extends HolidayLocalServiceBaseImpl {
 			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
 			for (Holiday holiday : holidays) {
 				JSONObject jsonHoliday = new JSONObject();
+				jsonHoliday.put(JSONConstants.ID, holiday.getHolidayId());
+				jsonHoliday.put(JSONConstants.NAME, holiday.getName());
 				jsonHoliday.put(JSONConstants.START_DATE, sdf.format(holiday.getStartDate()));
 				jsonHoliday.put(JSONConstants.END_DATE, sdf.format(holiday.getEndDate()));
 				jsonHolidays.put(jsonHoliday);

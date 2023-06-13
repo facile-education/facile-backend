@@ -84,14 +84,14 @@ public class ScheduleConfigurationServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject getScheduleConfiguration(
+	public static org.json.JSONObject getGlobalConfiguration(
 		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				ScheduleConfigurationServiceUtil.class,
-				"getScheduleConfiguration",
-				_getScheduleConfigurationParameterTypes1);
+				"getGlobalConfiguration",
+				_getGlobalConfigurationParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -116,7 +116,7 @@ public class ScheduleConfigurationServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject saveScheduleConfiguration(
+	public static org.json.JSONObject saveGlobalConfiguration(
 		HttpPrincipal httpPrincipal, String startDateStr,
 		String semesterDateStr, String endDateStr, String holidays,
 		String h1Weeks, String h2Weeks) {
@@ -124,8 +124,8 @@ public class ScheduleConfigurationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ScheduleConfigurationServiceUtil.class,
-				"saveScheduleConfiguration",
-				_saveScheduleConfigurationParameterTypes2);
+				"saveGlobalConfiguration",
+				_saveGlobalConfigurationParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, startDateStr, semesterDateStr, endDateStr, holidays,
@@ -157,9 +157,9 @@ public class ScheduleConfigurationServiceHttp {
 
 	private static final Class<?>[] _getConfigurationParameterTypes0 =
 		new Class[] {long.class, long.class};
-	private static final Class<?>[] _getScheduleConfigurationParameterTypes1 =
+	private static final Class<?>[] _getGlobalConfigurationParameterTypes1 =
 		new Class[] {};
-	private static final Class<?>[] _saveScheduleConfigurationParameterTypes2 =
+	private static final Class<?>[] _saveGlobalConfigurationParameterTypes2 =
 		new Class[] {
 			String.class, String.class, String.class, String.class,
 			String.class, String.class

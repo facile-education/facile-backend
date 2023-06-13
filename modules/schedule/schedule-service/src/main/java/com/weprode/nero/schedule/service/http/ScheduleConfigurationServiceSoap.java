@@ -82,12 +82,12 @@ public class ScheduleConfigurationServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject getScheduleConfiguration()
+	public static org.json.JSONObject getGlobalConfiguration()
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				ScheduleConfigurationServiceUtil.getScheduleConfiguration();
+				ScheduleConfigurationServiceUtil.getGlobalConfiguration();
 
 			return returnValue;
 		}
@@ -98,14 +98,14 @@ public class ScheduleConfigurationServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject saveScheduleConfiguration(
+	public static org.json.JSONObject saveGlobalConfiguration(
 			String startDateStr, String semesterDateStr, String endDateStr,
 			String holidays, String h1Weeks, String h2Weeks)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				ScheduleConfigurationServiceUtil.saveScheduleConfiguration(
+				ScheduleConfigurationServiceUtil.saveGlobalConfiguration(
 					startDateStr, semesterDateStr, endDateStr, holidays,
 					h1Weeks, h2Weeks);
 

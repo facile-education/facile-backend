@@ -126,8 +126,8 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		return result;
 	}
 
-	@JSONWebService(value = "get-schedule-configuration", method = "GET")
-	public JSONObject getScheduleConfiguration() {
+	@JSONWebService(value = "get-global-configuration", method = "GET")
+	public JSONObject getGlobalConfiguration() {
 
 		JSONObject result = new JSONObject();
 		User user;
@@ -153,8 +153,8 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		return result;
 	}
 
-	@JSONWebService(value = "save-schedule-configuration", method = "POST")
-	public JSONObject saveScheduleConfiguration(String startDateStr, String semesterDateStr, String endDateStr, String holidays, String h1Weeks, String h2Weeks) {
+	@JSONWebService(value = "save-global-configuration", method = "POST")
+	public JSONObject saveGlobalConfiguration(String startDateStr, String semesterDateStr, String endDateStr, String holidays, String h1Weeks, String h2Weeks) {
 
 		JSONObject result = new JSONObject();
 		User user;
