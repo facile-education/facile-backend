@@ -34,17 +34,14 @@ public class CDTSessionSoap implements Serializable {
 		CDTSessionSoap soapModel = new CDTSessionSoap();
 
 		soapModel.setSessionId(model.getSessionId());
-		soapModel.setSessionStart(model.getSessionStart());
-		soapModel.setSessionEnd(model.getSessionEnd());
+		soapModel.setStart(model.getStart());
+		soapModel.setEnd(model.getEnd());
 		soapModel.setWeekId(model.getWeekId());
-		soapModel.setPublished(model.isPublished());
-		soapModel.setTitle(model.getTitle());
 		soapModel.setFullCoursName(model.getFullCoursName());
-		soapModel.setDescription(model.getDescription());
 		soapModel.setRoom(model.getRoom());
 		soapModel.setSubject(model.getSubject());
-		soapModel.setSchoolId(model.getSchoolId());
 		soapModel.setGroupId(model.getGroupId());
+		soapModel.setCourseItemId(model.getCourseItemId());
 		soapModel.setIsManual(model.isIsManual());
 
 		return soapModel;
@@ -107,20 +104,20 @@ public class CDTSessionSoap implements Serializable {
 		_sessionId = sessionId;
 	}
 
-	public Date getSessionStart() {
-		return _sessionStart;
+	public Date getStart() {
+		return _start;
 	}
 
-	public void setSessionStart(Date sessionStart) {
-		_sessionStart = sessionStart;
+	public void setStart(Date start) {
+		_start = start;
 	}
 
-	public Date getSessionEnd() {
-		return _sessionEnd;
+	public Date getEnd() {
+		return _end;
 	}
 
-	public void setSessionEnd(Date sessionEnd) {
-		_sessionEnd = sessionEnd;
+	public void setEnd(Date end) {
+		_end = end;
 	}
 
 	public long getWeekId() {
@@ -131,40 +128,12 @@ public class CDTSessionSoap implements Serializable {
 		_weekId = weekId;
 	}
 
-	public boolean getPublished() {
-		return _published;
-	}
-
-	public boolean isPublished() {
-		return _published;
-	}
-
-	public void setPublished(boolean published) {
-		_published = published;
-	}
-
-	public String getTitle() {
-		return _title;
-	}
-
-	public void setTitle(String title) {
-		_title = title;
-	}
-
 	public String getFullCoursName() {
 		return _fullCoursName;
 	}
 
 	public void setFullCoursName(String fullCoursName) {
 		_fullCoursName = fullCoursName;
-	}
-
-	public String getDescription() {
-		return _description;
-	}
-
-	public void setDescription(String description) {
-		_description = description;
 	}
 
 	public String getRoom() {
@@ -183,20 +152,20 @@ public class CDTSessionSoap implements Serializable {
 		_subject = subject;
 	}
 
-	public long getSchoolId() {
-		return _schoolId;
-	}
-
-	public void setSchoolId(long schoolId) {
-		_schoolId = schoolId;
-	}
-
 	public long getGroupId() {
 		return _groupId;
 	}
 
 	public void setGroupId(long groupId) {
 		_groupId = groupId;
+	}
+
+	public long getCourseItemId() {
+		return _courseItemId;
+	}
+
+	public void setCourseItemId(long courseItemId) {
+		_courseItemId = courseItemId;
 	}
 
 	public boolean getIsManual() {
@@ -212,17 +181,14 @@ public class CDTSessionSoap implements Serializable {
 	}
 
 	private long _sessionId;
-	private Date _sessionStart;
-	private Date _sessionEnd;
+	private Date _start;
+	private Date _end;
 	private long _weekId;
-	private boolean _published;
-	private String _title;
 	private String _fullCoursName;
-	private String _description;
 	private String _room;
 	private String _subject;
-	private long _schoolId;
 	private long _groupId;
+	private long _courseItemId;
 	private boolean _isManual;
 
 }

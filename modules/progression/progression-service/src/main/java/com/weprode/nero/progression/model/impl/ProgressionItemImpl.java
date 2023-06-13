@@ -50,7 +50,6 @@ public class ProgressionItemImpl extends ProgressionItemBaseImpl {
         jsonItem.put(JSONConstants.NAME, this.getItemName());
         jsonItem.put(JSONConstants.IS_HOMEWORK, this.getIsHomework());
         jsonItem.put(JSONConstants.TYPE, this.getType());
-        jsonItem.put(JSONConstants.DURATION, this.getDuration());
         jsonItem.put(JSONConstants.ORDER, this.getOrder());
         jsonItem.put(JSONConstants.CONTENTS, new JSONArray());
         jsonItem.put(JSONConstants.ASSIGNMENTS, new JSONArray());

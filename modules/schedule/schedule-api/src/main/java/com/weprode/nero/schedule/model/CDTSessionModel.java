@@ -70,32 +70,32 @@ public interface CDTSessionModel extends BaseModel<CDTSession> {
 	public void setSessionId(long sessionId);
 
 	/**
-	 * Returns the session start of this cdt session.
+	 * Returns the start of this cdt session.
 	 *
-	 * @return the session start of this cdt session
+	 * @return the start of this cdt session
 	 */
-	public Date getSessionStart();
+	public Date getStart();
 
 	/**
-	 * Sets the session start of this cdt session.
+	 * Sets the start of this cdt session.
 	 *
-	 * @param sessionStart the session start of this cdt session
+	 * @param start the start of this cdt session
 	 */
-	public void setSessionStart(Date sessionStart);
+	public void setStart(Date start);
 
 	/**
-	 * Returns the session end of this cdt session.
+	 * Returns the end of this cdt session.
 	 *
-	 * @return the session end of this cdt session
+	 * @return the end of this cdt session
 	 */
-	public Date getSessionEnd();
+	public Date getEnd();
 
 	/**
-	 * Sets the session end of this cdt session.
+	 * Sets the end of this cdt session.
 	 *
-	 * @param sessionEnd the session end of this cdt session
+	 * @param end the end of this cdt session
 	 */
-	public void setSessionEnd(Date sessionEnd);
+	public void setEnd(Date end);
 
 	/**
 	 * Returns the week ID of this cdt session.
@@ -112,42 +112,6 @@ public interface CDTSessionModel extends BaseModel<CDTSession> {
 	public void setWeekId(long weekId);
 
 	/**
-	 * Returns the published of this cdt session.
-	 *
-	 * @return the published of this cdt session
-	 */
-	public boolean getPublished();
-
-	/**
-	 * Returns <code>true</code> if this cdt session is published.
-	 *
-	 * @return <code>true</code> if this cdt session is published; <code>false</code> otherwise
-	 */
-	public boolean isPublished();
-
-	/**
-	 * Sets whether this cdt session is published.
-	 *
-	 * @param published the published of this cdt session
-	 */
-	public void setPublished(boolean published);
-
-	/**
-	 * Returns the title of this cdt session.
-	 *
-	 * @return the title of this cdt session
-	 */
-	@AutoEscape
-	public String getTitle();
-
-	/**
-	 * Sets the title of this cdt session.
-	 *
-	 * @param title the title of this cdt session
-	 */
-	public void setTitle(String title);
-
-	/**
 	 * Returns the full cours name of this cdt session.
 	 *
 	 * @return the full cours name of this cdt session
@@ -161,21 +125,6 @@ public interface CDTSessionModel extends BaseModel<CDTSession> {
 	 * @param fullCoursName the full cours name of this cdt session
 	 */
 	public void setFullCoursName(String fullCoursName);
-
-	/**
-	 * Returns the description of this cdt session.
-	 *
-	 * @return the description of this cdt session
-	 */
-	@AutoEscape
-	public String getDescription();
-
-	/**
-	 * Sets the description of this cdt session.
-	 *
-	 * @param description the description of this cdt session
-	 */
-	public void setDescription(String description);
 
 	/**
 	 * Returns the room of this cdt session.
@@ -208,20 +157,6 @@ public interface CDTSessionModel extends BaseModel<CDTSession> {
 	public void setSubject(String subject);
 
 	/**
-	 * Returns the school ID of this cdt session.
-	 *
-	 * @return the school ID of this cdt session
-	 */
-	public long getSchoolId();
-
-	/**
-	 * Sets the school ID of this cdt session.
-	 *
-	 * @param schoolId the school ID of this cdt session
-	 */
-	public void setSchoolId(long schoolId);
-
-	/**
 	 * Returns the group ID of this cdt session.
 	 *
 	 * @return the group ID of this cdt session
@@ -234,6 +169,20 @@ public interface CDTSessionModel extends BaseModel<CDTSession> {
 	 * @param groupId the group ID of this cdt session
 	 */
 	public void setGroupId(long groupId);
+
+	/**
+	 * Returns the course item ID of this cdt session.
+	 *
+	 * @return the course item ID of this cdt session
+	 */
+	public long getCourseItemId();
+
+	/**
+	 * Sets the course item ID of this cdt session.
+	 *
+	 * @param courseItemId the course item ID of this cdt session
+	 */
+	public void setCourseItemId(long courseItemId);
 
 	/**
 	 * Returns the is manual of this cdt session.

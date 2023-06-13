@@ -25,8 +25,7 @@ import com.weprode.nero.organization.model.OrgDetails;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.base.OrgUtilsLocalServiceBaseImpl;
-import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
+import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -259,13 +258,8 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
             }  else if (OrgDetailsLocalServiceUtil.isSubject(org.getOrganizationId())) {
                 color = "#7F00FF";
             } else {
-                // Org is a cours
-                // If user if a teacher -> use GroupColor
-                if (RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-                    color = GroupColorLocalServiceUtil.getColor(org.getGroupId());
-                } else if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
-                    color = "#311B92"; // CDTColorUtil.getNewColor(3);
-                }
+                // Org is a course
+                color = CourseDetailsLocalServiceUtil.getCourseColor(org.getGroupId());
             }
         } catch (Exception e) {
             logger.error("Error fetching color for org " + org.getOrganizationId(), e);

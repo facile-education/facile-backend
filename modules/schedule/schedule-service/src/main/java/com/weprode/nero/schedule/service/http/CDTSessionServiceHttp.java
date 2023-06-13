@@ -52,17 +52,50 @@ import com.weprode.nero.schedule.service.CDTSessionServiceUtil;
  */
 public class CDTSessionServiceHttp {
 
-	public static org.json.JSONObject getHorairesSessions(
-		HttpPrincipal httpPrincipal, long userId, long groupId, String start,
-		String end, String volee) {
+	public static org.json.JSONObject getUserSessions(
+		HttpPrincipal httpPrincipal, long userId, String minDateStr,
+		String maxDateStr) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				CDTSessionServiceUtil.class, "getHorairesSessions",
-				_getHorairesSessionsParameterTypes0);
+				CDTSessionServiceUtil.class, "getUserSessions",
+				_getUserSessionsParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, userId, groupId, start, end, volee);
+				methodKey, userId, minDateStr, maxDateStr);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject getGroupSessions(
+		HttpPrincipal httpPrincipal, long groupId, String minDateStr,
+		String maxDateStr) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				CDTSessionServiceUtil.class, "getGroupSessions",
+				_getGroupSessionsParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, groupId, minDateStr, maxDateStr);
 
 			Object returnObj = null;
 
@@ -91,7 +124,7 @@ public class CDTSessionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CDTSessionServiceUtil.class, "getTeacherGroups",
-				_getTeacherGroupsParameterTypes1);
+				_getTeacherGroupsParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -122,7 +155,7 @@ public class CDTSessionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CDTSessionServiceUtil.class, "getSessionDetails",
-				_getSessionDetailsParameterTypes2);
+				_getSessionDetailsParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, sessionId);
@@ -156,7 +189,7 @@ public class CDTSessionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CDTSessionServiceUtil.class, "createSession",
-				_createSessionParameterTypes3);
+				_createSessionParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, groupId, subject, room, startDate, endDate,
@@ -186,15 +219,15 @@ public class CDTSessionServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(
 		CDTSessionServiceHttp.class);
 
-	private static final Class<?>[] _getHorairesSessionsParameterTypes0 =
-		new Class[] {
-			long.class, long.class, String.class, String.class, String.class
-		};
-	private static final Class<?>[] _getTeacherGroupsParameterTypes1 =
+	private static final Class<?>[] _getUserSessionsParameterTypes0 =
+		new Class[] {long.class, String.class, String.class};
+	private static final Class<?>[] _getGroupSessionsParameterTypes1 =
+		new Class[] {long.class, String.class, String.class};
+	private static final Class<?>[] _getTeacherGroupsParameterTypes2 =
 		new Class[] {};
-	private static final Class<?>[] _getSessionDetailsParameterTypes2 =
+	private static final Class<?>[] _getSessionDetailsParameterTypes3 =
 		new Class[] {long.class};
-	private static final Class<?>[] _createSessionParameterTypes3 =
+	private static final Class<?>[] _createSessionParameterTypes4 =
 		new Class[] {
 			long.class, String.class, String.class, String.class, String.class,
 			String.class, boolean.class

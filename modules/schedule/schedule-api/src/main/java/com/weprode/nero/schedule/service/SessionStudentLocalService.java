@@ -274,6 +274,9 @@ public interface SessionStudentLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<User> getStudentsBySession(long sessionId);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasStudentSession(long studentId, long sessionId);
+
 	public boolean removeBySessionId(long sessionId);
 
 	/**

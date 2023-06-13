@@ -24,6 +24,9 @@ import com.liferay.portal.kernel.transaction.Transactional;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -48,6 +51,10 @@ public interface UserUtilsLocalService extends BaseLocalService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.user.service.impl.UserUtilsLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the user utils local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link UserUtilsLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	public JSONArray convertUsersToJson(List<User> userList);
+
+	public JSONObject convertUserToJson(User user);
+
 	public String generateLogin(String lastName, String firstName);
 
 	/**

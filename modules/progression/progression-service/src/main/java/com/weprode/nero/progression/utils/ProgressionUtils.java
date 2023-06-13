@@ -2,6 +2,8 @@ package com.weprode.nero.progression.utils;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.weprode.nero.course.model.Homework;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.progression.model.ItemContent;
 import com.weprode.nero.progression.model.Progression;
 import com.weprode.nero.progression.model.ProgressionFolder;
@@ -10,8 +12,6 @@ import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionFolderLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionLocalServiceUtil;
-import com.weprode.nero.schedule.model.Homework;
-import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 
 public class ProgressionUtils {

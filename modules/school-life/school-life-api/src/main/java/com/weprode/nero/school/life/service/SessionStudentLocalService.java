@@ -283,7 +283,7 @@ public interface SessionStudentLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray getStudentSessions(
-		long studentId, Date minDate, Date maxDate, Boolean withFired);
+		long studentId, Date minDate, Date maxDate, boolean withFired);
 
 	public boolean markStudentPresent(
 		long schoollifeSessionId, long studentId, boolean isPresent);

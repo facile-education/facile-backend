@@ -43,17 +43,14 @@ public class CDTSessionWrapper
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("sessionId", getSessionId());
-		attributes.put("sessionStart", getSessionStart());
-		attributes.put("sessionEnd", getSessionEnd());
+		attributes.put("start", getStart());
+		attributes.put("end", getEnd());
 		attributes.put("weekId", getWeekId());
-		attributes.put("published", isPublished());
-		attributes.put("title", getTitle());
 		attributes.put("fullCoursName", getFullCoursName());
-		attributes.put("description", getDescription());
 		attributes.put("room", getRoom());
 		attributes.put("subject", getSubject());
-		attributes.put("schoolId", getSchoolId());
 		attributes.put("groupId", getGroupId());
+		attributes.put("courseItemId", getCourseItemId());
 		attributes.put("isManual", isIsManual());
 
 		return attributes;
@@ -67,16 +64,16 @@ public class CDTSessionWrapper
 			setSessionId(sessionId);
 		}
 
-		Date sessionStart = (Date)attributes.get("sessionStart");
+		Date start = (Date)attributes.get("start");
 
-		if (sessionStart != null) {
-			setSessionStart(sessionStart);
+		if (start != null) {
+			setStart(start);
 		}
 
-		Date sessionEnd = (Date)attributes.get("sessionEnd");
+		Date end = (Date)attributes.get("end");
 
-		if (sessionEnd != null) {
-			setSessionEnd(sessionEnd);
+		if (end != null) {
+			setEnd(end);
 		}
 
 		Long weekId = (Long)attributes.get("weekId");
@@ -85,28 +82,10 @@ public class CDTSessionWrapper
 			setWeekId(weekId);
 		}
 
-		Boolean published = (Boolean)attributes.get("published");
-
-		if (published != null) {
-			setPublished(published);
-		}
-
-		String title = (String)attributes.get("title");
-
-		if (title != null) {
-			setTitle(title);
-		}
-
 		String fullCoursName = (String)attributes.get("fullCoursName");
 
 		if (fullCoursName != null) {
 			setFullCoursName(fullCoursName);
-		}
-
-		String description = (String)attributes.get("description");
-
-		if (description != null) {
-			setDescription(description);
 		}
 
 		String room = (String)attributes.get("room");
@@ -121,16 +100,16 @@ public class CDTSessionWrapper
 			setSubject(subject);
 		}
 
-		Long schoolId = (Long)attributes.get("schoolId");
-
-		if (schoolId != null) {
-			setSchoolId(schoolId);
-		}
-
 		Long groupId = (Long)attributes.get("groupId");
 
 		if (groupId != null) {
 			setGroupId(groupId);
+		}
+
+		Long courseItemId = (Long)attributes.get("courseItemId");
+
+		if (courseItemId != null) {
+			setCourseItemId(courseItemId);
 		}
 
 		Boolean isManual = (Boolean)attributes.get("isManual");
@@ -146,32 +125,30 @@ public class CDTSessionWrapper
 	}
 
 	@Override
-	public org.json.JSONObject convertToJSON() {
-		return model.convertToJSON();
-	}
-
-	@Override
 	public org.json.JSONObject convertToJSON(
-		boolean includeDetails, com.liferay.portal.kernel.model.User user) {
+		com.liferay.portal.kernel.model.User user) {
 
-		return model.convertToJSON(includeDetails, user);
-	}
-
-	@Override
-	public org.json.JSONObject convertToJSON(
-		long colorsTeacherId, com.liferay.portal.kernel.model.User user) {
-
-		return model.convertToJSON(colorsTeacherId, user);
+		return model.convertToJSON(user);
 	}
 
 	/**
-	 * Returns the description of this cdt session.
+	 * Returns the course item ID of this cdt session.
 	 *
-	 * @return the description of this cdt session
+	 * @return the course item ID of this cdt session
 	 */
 	@Override
-	public String getDescription() {
-		return model.getDescription();
+	public long getCourseItemId() {
+		return model.getCourseItemId();
+	}
+
+	/**
+	 * Returns the end of this cdt session.
+	 *
+	 * @return the end of this cdt session
+	 */
+	@Override
+	public Date getEnd() {
+		return model.getEnd();
 	}
 
 	/**
@@ -211,13 +188,6 @@ public class CDTSessionWrapper
 		return model.getNextSessions(user);
 	}
 
-	@Override
-	public java.util.List<CDTSession> getPreviousSessions(
-		com.liferay.portal.kernel.model.User user) {
-
-		return model.getPreviousSessions(user);
-	}
-
 	/**
 	 * Returns the primary key of this cdt session.
 	 *
@@ -226,16 +196,6 @@ public class CDTSessionWrapper
 	@Override
 	public long getPrimaryKey() {
 		return model.getPrimaryKey();
-	}
-
-	/**
-	 * Returns the published of this cdt session.
-	 *
-	 * @return the published of this cdt session
-	 */
-	@Override
-	public boolean getPublished() {
-		return model.getPublished();
 	}
 
 	/**
@@ -249,31 +209,6 @@ public class CDTSessionWrapper
 	}
 
 	/**
-	 * Returns the school ID of this cdt session.
-	 *
-	 * @return the school ID of this cdt session
-	 */
-	@Override
-	public long getSchoolId() {
-		return model.getSchoolId();
-	}
-
-	/**
-	 * Returns the session end of this cdt session.
-	 *
-	 * @return the session end of this cdt session
-	 */
-	@Override
-	public Date getSessionEnd() {
-		return model.getSessionEnd();
-	}
-
-	@Override
-	public String getSessionGroupName(boolean withSchoolName) {
-		return model.getSessionGroupName(withSchoolName);
-	}
-
-	/**
 	 * Returns the session ID of this cdt session.
 	 *
 	 * @return the session ID of this cdt session
@@ -284,13 +219,13 @@ public class CDTSessionWrapper
 	}
 
 	/**
-	 * Returns the session start of this cdt session.
+	 * Returns the start of this cdt session.
 	 *
-	 * @return the session start of this cdt session
+	 * @return the start of this cdt session
 	 */
 	@Override
-	public Date getSessionStart() {
-		return model.getSessionStart();
+	public Date getStart() {
+		return model.getStart();
 	}
 
 	/**
@@ -306,16 +241,6 @@ public class CDTSessionWrapper
 	@Override
 	public String getTeacherList() {
 		return model.getTeacherList();
-	}
-
-	/**
-	 * Returns the title of this cdt session.
-	 *
-	 * @return the title of this cdt session
-	 */
-	@Override
-	public String getTitle() {
-		return model.getTitle();
 	}
 
 	/**
@@ -338,29 +263,29 @@ public class CDTSessionWrapper
 		return model.isIsManual();
 	}
 
-	/**
-	 * Returns <code>true</code> if this cdt session is published.
-	 *
-	 * @return <code>true</code> if this cdt session is published; <code>false</code> otherwise
-	 */
-	@Override
-	public boolean isPublished() {
-		return model.isPublished();
-	}
-
 	@Override
 	public void persist() {
 		model.persist();
 	}
 
 	/**
-	 * Sets the description of this cdt session.
+	 * Sets the course item ID of this cdt session.
 	 *
-	 * @param description the description of this cdt session
+	 * @param courseItemId the course item ID of this cdt session
 	 */
 	@Override
-	public void setDescription(String description) {
-		model.setDescription(description);
+	public void setCourseItemId(long courseItemId) {
+		model.setCourseItemId(courseItemId);
+	}
+
+	/**
+	 * Sets the end of this cdt session.
+	 *
+	 * @param end the end of this cdt session
+	 */
+	@Override
+	public void setEnd(Date end) {
+		model.setEnd(end);
 	}
 
 	/**
@@ -404,16 +329,6 @@ public class CDTSessionWrapper
 	}
 
 	/**
-	 * Sets whether this cdt session is published.
-	 *
-	 * @param published the published of this cdt session
-	 */
-	@Override
-	public void setPublished(boolean published) {
-		model.setPublished(published);
-	}
-
-	/**
 	 * Sets the room of this cdt session.
 	 *
 	 * @param room the room of this cdt session
@@ -421,26 +336,6 @@ public class CDTSessionWrapper
 	@Override
 	public void setRoom(String room) {
 		model.setRoom(room);
-	}
-
-	/**
-	 * Sets the school ID of this cdt session.
-	 *
-	 * @param schoolId the school ID of this cdt session
-	 */
-	@Override
-	public void setSchoolId(long schoolId) {
-		model.setSchoolId(schoolId);
-	}
-
-	/**
-	 * Sets the session end of this cdt session.
-	 *
-	 * @param sessionEnd the session end of this cdt session
-	 */
-	@Override
-	public void setSessionEnd(Date sessionEnd) {
-		model.setSessionEnd(sessionEnd);
 	}
 
 	/**
@@ -454,13 +349,13 @@ public class CDTSessionWrapper
 	}
 
 	/**
-	 * Sets the session start of this cdt session.
+	 * Sets the start of this cdt session.
 	 *
-	 * @param sessionStart the session start of this cdt session
+	 * @param start the start of this cdt session
 	 */
 	@Override
-	public void setSessionStart(Date sessionStart) {
-		model.setSessionStart(sessionStart);
+	public void setStart(Date start) {
+		model.setStart(start);
 	}
 
 	/**
@@ -471,16 +366,6 @@ public class CDTSessionWrapper
 	@Override
 	public void setSubject(String subject) {
 		model.setSubject(subject);
-	}
-
-	/**
-	 * Sets the title of this cdt session.
-	 *
-	 * @param title the title of this cdt session
-	 */
-	@Override
-	public void setTitle(String title) {
-		model.setTitle(title);
 	}
 
 	/**

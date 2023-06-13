@@ -243,6 +243,10 @@ public class SchoollifeSessionLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static String getColorFromSchoollifeType(int schoollifeType) {
+		return getService().getColorFromSchoollifeType(schoollifeType);
+	}
+
 	public static
 		com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery
 			getIndexableActionableDynamicQuery() {

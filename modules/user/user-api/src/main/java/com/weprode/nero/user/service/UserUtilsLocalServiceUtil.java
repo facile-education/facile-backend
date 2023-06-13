@@ -35,6 +35,18 @@ public class UserUtilsLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.user.service.impl.UserUtilsLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static org.json.JSONArray convertUsersToJson(
+		List<com.liferay.portal.kernel.model.User> userList) {
+
+		return getService().convertUsersToJson(userList);
+	}
+
+	public static org.json.JSONObject convertUserToJson(
+		com.liferay.portal.kernel.model.User user) {
+
+		return getService().convertUserToJson(user);
+	}
+
 	public static String generateLogin(String lastName, String firstName) {
 		return getService().generateLogin(lastName, firstName);
 	}

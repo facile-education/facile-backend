@@ -63,32 +63,26 @@ public class CDTSessionCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{sessionId=");
 		sb.append(sessionId);
-		sb.append(", sessionStart=");
-		sb.append(sessionStart);
-		sb.append(", sessionEnd=");
-		sb.append(sessionEnd);
+		sb.append(", start=");
+		sb.append(start);
+		sb.append(", end=");
+		sb.append(end);
 		sb.append(", weekId=");
 		sb.append(weekId);
-		sb.append(", published=");
-		sb.append(published);
-		sb.append(", title=");
-		sb.append(title);
 		sb.append(", fullCoursName=");
 		sb.append(fullCoursName);
-		sb.append(", description=");
-		sb.append(description);
 		sb.append(", room=");
 		sb.append(room);
 		sb.append(", subject=");
 		sb.append(subject);
-		sb.append(", schoolId=");
-		sb.append(schoolId);
 		sb.append(", groupId=");
 		sb.append(groupId);
+		sb.append(", courseItemId=");
+		sb.append(courseItemId);
 		sb.append(", isManual=");
 		sb.append(isManual);
 		sb.append("}");
@@ -102,42 +96,27 @@ public class CDTSessionCacheModel
 
 		cdtSessionImpl.setSessionId(sessionId);
 
-		if (sessionStart == Long.MIN_VALUE) {
-			cdtSessionImpl.setSessionStart(null);
+		if (start == Long.MIN_VALUE) {
+			cdtSessionImpl.setStart(null);
 		}
 		else {
-			cdtSessionImpl.setSessionStart(new Date(sessionStart));
+			cdtSessionImpl.setStart(new Date(start));
 		}
 
-		if (sessionEnd == Long.MIN_VALUE) {
-			cdtSessionImpl.setSessionEnd(null);
+		if (end == Long.MIN_VALUE) {
+			cdtSessionImpl.setEnd(null);
 		}
 		else {
-			cdtSessionImpl.setSessionEnd(new Date(sessionEnd));
+			cdtSessionImpl.setEnd(new Date(end));
 		}
 
 		cdtSessionImpl.setWeekId(weekId);
-		cdtSessionImpl.setPublished(published);
-
-		if (title == null) {
-			cdtSessionImpl.setTitle("");
-		}
-		else {
-			cdtSessionImpl.setTitle(title);
-		}
 
 		if (fullCoursName == null) {
 			cdtSessionImpl.setFullCoursName("");
 		}
 		else {
 			cdtSessionImpl.setFullCoursName(fullCoursName);
-		}
-
-		if (description == null) {
-			cdtSessionImpl.setDescription("");
-		}
-		else {
-			cdtSessionImpl.setDescription(description);
 		}
 
 		if (room == null) {
@@ -154,8 +133,8 @@ public class CDTSessionCacheModel
 			cdtSessionImpl.setSubject(subject);
 		}
 
-		cdtSessionImpl.setSchoolId(schoolId);
 		cdtSessionImpl.setGroupId(groupId);
+		cdtSessionImpl.setCourseItemId(courseItemId);
 		cdtSessionImpl.setIsManual(isManual);
 
 		cdtSessionImpl.resetOriginalValues();
@@ -166,21 +145,17 @@ public class CDTSessionCacheModel
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		sessionId = objectInput.readLong();
-		sessionStart = objectInput.readLong();
-		sessionEnd = objectInput.readLong();
+		start = objectInput.readLong();
+		end = objectInput.readLong();
 
 		weekId = objectInput.readLong();
-
-		published = objectInput.readBoolean();
-		title = objectInput.readUTF();
 		fullCoursName = objectInput.readUTF();
-		description = objectInput.readUTF();
 		room = objectInput.readUTF();
 		subject = objectInput.readUTF();
 
-		schoolId = objectInput.readLong();
-
 		groupId = objectInput.readLong();
+
+		courseItemId = objectInput.readLong();
 
 		isManual = objectInput.readBoolean();
 	}
@@ -188,32 +163,16 @@ public class CDTSessionCacheModel
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(sessionId);
-		objectOutput.writeLong(sessionStart);
-		objectOutput.writeLong(sessionEnd);
+		objectOutput.writeLong(start);
+		objectOutput.writeLong(end);
 
 		objectOutput.writeLong(weekId);
-
-		objectOutput.writeBoolean(published);
-
-		if (title == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(title);
-		}
 
 		if (fullCoursName == null) {
 			objectOutput.writeUTF("");
 		}
 		else {
 			objectOutput.writeUTF(fullCoursName);
-		}
-
-		if (description == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(description);
 		}
 
 		if (room == null) {
@@ -230,25 +189,22 @@ public class CDTSessionCacheModel
 			objectOutput.writeUTF(subject);
 		}
 
-		objectOutput.writeLong(schoolId);
-
 		objectOutput.writeLong(groupId);
+
+		objectOutput.writeLong(courseItemId);
 
 		objectOutput.writeBoolean(isManual);
 	}
 
 	public long sessionId;
-	public long sessionStart;
-	public long sessionEnd;
+	public long start;
+	public long end;
 	public long weekId;
-	public boolean published;
-	public String title;
 	public String fullCoursName;
-	public String description;
 	public String room;
 	public String subject;
-	public long schoolId;
 	public long groupId;
+	public long courseItemId;
 	public boolean isManual;
 
 }

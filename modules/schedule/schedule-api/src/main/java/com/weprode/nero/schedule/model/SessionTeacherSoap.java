@@ -39,6 +39,7 @@ public class SessionTeacherSoap implements Serializable {
 		soapModel.setStatus(model.getStatus());
 		soapModel.setSubstituteId(model.getSubstituteId());
 		soapModel.setModificationDate(model.getModificationDate());
+		soapModel.setPrivateNotes(model.getPrivateNotes());
 
 		return soapModel;
 	}
@@ -145,11 +146,20 @@ public class SessionTeacherSoap implements Serializable {
 		_modificationDate = modificationDate;
 	}
 
+	public String getPrivateNotes() {
+		return _privateNotes;
+	}
+
+	public void setPrivateNotes(String privateNotes) {
+		_privateNotes = privateNotes;
+	}
+
 	private long _sessionTeacherId;
 	private long _sessionId;
 	private long _teacherId;
 	private int _status;
 	private long _substituteId;
 	private Date _modificationDate;
+	private String _privateNotes;
 
 }

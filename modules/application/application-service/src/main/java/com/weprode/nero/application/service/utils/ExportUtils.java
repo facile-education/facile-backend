@@ -16,9 +16,6 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.user.model.LDAPMapping;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.LDAPMappingLocalServiceUtil;
@@ -31,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -584,26 +580,6 @@ public class ExportUtils {
                     }
                 } catch (Exception e) {
                     logger.error("GRR : Error exporting user "+user.getFullName(), e);
-                }
-            }
-
-        } else if (userRole.equalsIgnoreCase("other")) {
-            // date du jour; heure de début; heure de fin; ressource; description; type
-            //file.append(messages.getString("date_jour")+ ";" +messages.getString("heure_debut") + ";" + messages.getString("heure_fin")
-            // 	+ ";" + messages.getString("ressource") + ";" + messages.getString("description") + ";" + messages.getString("type") + "\n");
-
-            List<CDTSession> sessions = CDTSessionLocalServiceUtil.getSchoolSessions(etabId,
-                    ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate(), ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate());
-            logger.info("GRR resource export : "+sessions.size()+" sessions for schoolId = " + etabId);
-
-            for (CDTSession session : sessions) {
-                if (!session.getRoom().isEmpty()) {
-                    SimpleDateFormat dayFormat = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
-                    SimpleDateFormat hourFormat = new SimpleDateFormat("HH'h'mm");
-
-                    // Type A = lesson
-                    file.append(dayFormat.format(new Date()) + ";" + hourFormat.format(session.getSessionStart()) + ";" +
-                            hourFormat.format(session.getSessionEnd()) + ";"+session.getRoom()+";"+ session.getTitle() +";A\n");
                 }
             }
         }

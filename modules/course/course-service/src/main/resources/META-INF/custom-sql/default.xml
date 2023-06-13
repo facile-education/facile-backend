@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <sql id="getSessionContents">
+        <![CDATA[
+            SELECT sessionContent.*
+            FROM Course_SessionContent sessionContent
+            JOIN Schedule_CDTSession cdtSession
+            ON cdtSession.sessionId = sessionContent.sessionId
+            WHERE sessionContent.courseId = ?
+            AND cdtSession.start > ? AND cdtSession.start < ?
+        ]]>
+    </sql>
+    <sql id="getTeacherHomeworksToCorrect">
+        <![CDATA[
+            SELECT homework.*
+            FROM Course_Homework homework
+            JOIN Schedule_SessionTeacher sessionTeacher
+            ON sessionTeacher.sessionId = homework.targetSessionId
+            WHERE sessionTeacher.teacherId = ?
+            AND homework.homeworkType = 1
+        ]]>
+    </sql>
+</custom-sql>

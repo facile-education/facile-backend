@@ -1,6 +1,21 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
+
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -12,6 +27,7 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
@@ -19,10 +35,12 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.CDTSessionServiceBaseImpl;
+
 import com.weprode.nero.schedule.utils.FilterUtil;
-import com.weprode.nero.schedule.utils.JSONProxy;
 import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
 import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
+import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -32,6 +50,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Brian Wing Shun Chan
+ */
 @Component(
 	property = {
 		"json.web.service.context.name=schedule",
@@ -43,8 +64,8 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 	private final Log logger = LogFactoryUtil.getLog(CDTSessionServiceImpl.class);
 
-	@JSONWebService(value = "get-horaires-sessions", method = "GET")
-	public JSONObject getHorairesSessions(long userId, long groupId, String start, String end, String volee) {
+	@JSONWebService(value = "get-user-sessions", method = "GET")
+	public JSONObject getUserSessions(long userId, String minDateStr, String maxDateStr) {
 		JSONObject result = new JSONObject();
 
 		User currentUser;
@@ -56,61 +77,39 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.info("User " + currentUser.getUserId() + " fetches sessions for userId " + userId + " or group " + groupId + " from " + start + " to " + end +" and volee=" + volee);
-		Date startDate;
-		Date endDate;
-		try {
-			startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(start);
-			endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(end);
-		} catch (Exception e) {
-			logger.error("Error when parsing the start or end date while retrieving the user's sessions", e);
-			result.put(JSONConstants.SUCCESS, false);
-			return result;
-		}
+		logger.info("User " + currentUser.getUserId() + " fetches sessions for userId " + userId + " from " + minDateStr + " to " + maxDateStr);
 
 		try {
-			User targetUser = null;
-			if (userId > 0) {
-				targetUser = UserLocalServiceUtil.getUser(userId);
+			SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+			Date minDate = df.parse(minDateStr);
+			Date maxDate = df.parse(maxDateStr);
+			User targetUser = UserLocalServiceUtil.getUser(userId);
+
+			// Students have only the right to fetch their own schedule
+			if (RoleUtilsLocalServiceUtil.isStudent(currentUser) && currentUser.getUserId() != userId) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			// Parents have only the right to fetch their children's schedule
+			if (RoleUtilsLocalServiceUtil.isParent(currentUser) && !UserRelationshipLocalServiceUtil.isChild(currentUser.getUserId(), userId)) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			// 1. CDT sessions
 			List<CDTSession> userSessions = new ArrayList<>();
-			if (groupId != 0 && !RoleUtilsLocalServiceUtil.isStudentOrParent(currentUser)) {
-				userSessions = CDTSessionLocalServiceUtil.getGroupSessions(groupId, startDate, endDate, true);
-			} else if (RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
-				userSessions = CDTSessionLocalServiceUtil.getStudentSessions(userId, startDate, endDate);
+			if (RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
+				userSessions = CDTSessionLocalServiceUtil.getStudentSessions(userId, minDate, maxDate);
 			} else if (RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
-				userSessions = CDTSessionLocalServiceUtil.getTeacherSessions(userId, startDate, endDate);
+				userSessions = CDTSessionLocalServiceUtil.getTeacherSessions(userId, minDate, maxDate);
 			}
 
-			if (!volee.equals("")) {
-				userSessions = FilterUtil.filterSessionsOnVolee(userSessions, volee);
-			}
-
-			// Color management
-			long colorsTeacherId = 0;
-			if (targetUser != null && RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
-				colorsTeacherId = targetUser.getUserId();
-			}
-			result.put(JSONConstants.SESSIONS, JSONProxy.convertSessionsToJson(userSessions, currentUser, colorsTeacherId));
+			result.put(JSONConstants.SESSIONS, CDTSessionLocalServiceUtil.convertSessions(userSessions, currentUser));
 
 			// 2. Schoollife sessions
 			JSONArray jsonSchoollifeSessions = new JSONArray();
-			if (targetUser != null && RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
-				jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), startDate, endDate);
-			} else if (targetUser != null && RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
-				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), startDate, endDate);
-			}
-
-			// Transform teachers
-			for (int i = 0 ; i < jsonSchoollifeSessions.length() ; i++) {
-				JSONObject jsonSchoollifeSession = jsonSchoollifeSessions.getJSONObject(i);
-				JSONArray jsonTeachers = new JSONArray();
-				if (jsonSchoollifeSession.has(JSONConstants.TEACHER)) {
-					jsonTeachers.put(jsonSchoollifeSession.getJSONObject(JSONConstants.TEACHER));
-				}
-				jsonSchoollifeSession.put(JSONConstants.TEACHERS, jsonTeachers);
+			if (RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
+				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), minDate, maxDate);
+			} else if (RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
+				jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), minDate, maxDate);
 			}
 			result.put(JSONConstants.SCHOOLLIFE_SESSIONS, jsonSchoollifeSessions);
 
@@ -121,6 +120,41 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			logger.error(e);
 			return JSONProxy.getJSONReturnInErrorCase("Error when get sessions for agent : " + currentUser.getFullName() + " ( id: " + currentUser.getUserId() + ")");
 		}
+	}
+
+	@JSONWebService(value = "get-group-sessions", method = "GET")
+	public JSONObject getGroupSessions(long groupId, String minDateStr, String maxDateStr) {
+		JSONObject result = new JSONObject();
+
+		User currentUser;
+		try {
+			currentUser = getGuestOrUser();
+			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		logger.info("User " + currentUser.getUserId() + " fetches sessions for group " + groupId + " from " + minDateStr + " to " + maxDateStr);
+
+		try {
+			SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+			Date minDate = df.parse(minDateStr);
+			Date maxDate = df.parse(maxDateStr);
+
+			if (groupId != 0 && !RoleUtilsLocalServiceUtil.isStudentOrParent(currentUser)) {
+				List<CDTSession> userSessions = CDTSessionLocalServiceUtil.getGroupSessions(groupId, minDate, maxDate, true);
+				result.put(JSONConstants.SESSIONS, CDTSessionLocalServiceUtil.convertSessions(userSessions, currentUser));
+				result.put(JSONConstants.SUCCESS, true);
+			} else {
+				result.put(JSONConstants.SUCCESS, false);
+			}
+
+		} catch (Exception e) {
+			logger.error("Error when user " + currentUser.getFullName() + " fetches sessions for group " + groupId, e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
 	}
 
 	@JSONWebService(value = "get-teacher-groups", method = "GET")
@@ -160,7 +194,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 		JSONObject sessionDetails;
 		try {
-			sessionDetails = CDTSessionLocalServiceUtil.fetchCDTSession(sessionId).convertToJSON(true, user);
+			sessionDetails = CDTSessionLocalServiceUtil.fetchCDTSession(sessionId).convertToJSON(user);
 		} catch (SystemException e) {
 			logger.error("Could not fetch sessionId = " + sessionId, e);
 			result.put(JSONConstants.SUCCESS, false);
@@ -169,7 +203,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 		// Student list
 		List<User> studentList = CDTSessionLocalServiceUtil.getSessionStudents(sessionId);
-		JSONArray jsonStudents = JSONProxy.convertUsersToJson(studentList);
+		JSONArray jsonStudents = UserUtilsLocalServiceUtil.convertUsersToJson(studentList);
 		sessionDetails.put(JSONConstants.STUDENTS, jsonStudents);
 
 		result.put(JSONConstants.SESSION_DETAILS, sessionDetails);
@@ -231,7 +265,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 				CDTSessionLocalServiceUtil.createRecurrentSessions(groupId, subject, room, start, end, teacherIdList);
 			} else {
 				logger.info("Creating manual session");
-				CDTSessionLocalServiceUtil.createCDTSession(isCommunity ? 0 : schoolId, groupId, subject, start, end, teacherIdList, room, "Cours de " + subject, fullCoursName, "", false, true);
+				CDTSessionLocalServiceUtil.createSession(groupId, subject, start, end, teacherIdList, room, fullCoursName, true);
 			}
 
 		} catch (Exception e) {

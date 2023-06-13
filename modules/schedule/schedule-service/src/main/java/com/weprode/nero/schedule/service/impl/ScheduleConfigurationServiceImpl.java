@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
@@ -14,8 +15,8 @@ import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.HolidayLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.ScheduleConfigurationServiceBaseImpl;
-import com.weprode.nero.schedule.utils.JSONProxy;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -59,7 +60,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 			if (RoleUtilsLocalServiceUtil.isParent(user)) {
 				List<User> children = UserRelationshipLocalServiceUtil.getChildren(user.getUserId());
 				targetUser = children.get(0);
-				result.put(JSONConstants.CHILDREN, JSONProxy.convertUsersToJson(children));
+				result.put(JSONConstants.CHILDREN, UserUtilsLocalServiceUtil.convertUsersToJson(children));
 			}
 
 			result.put(JSONConstants.CONFIGURATION, ScheduleConfigurationLocalServiceUtil.convertAsJson());

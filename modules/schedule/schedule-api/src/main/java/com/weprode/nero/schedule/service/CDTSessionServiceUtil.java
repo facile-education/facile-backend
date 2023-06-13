@@ -43,12 +43,11 @@ public class CDTSessionServiceUtil {
 			isRecurrent);
 	}
 
-	public static org.json.JSONObject getHorairesSessions(
-		long userId, long groupId, java.lang.String start, java.lang.String end,
-		java.lang.String volee) {
+	public static org.json.JSONObject getGroupSessions(
+		long groupId, java.lang.String minDateStr,
+		java.lang.String maxDateStr) {
 
-		return getService().getHorairesSessions(
-			userId, groupId, start, end, volee);
+		return getService().getGroupSessions(groupId, minDateStr, maxDateStr);
 	}
 
 	/**
@@ -66,6 +65,12 @@ public class CDTSessionServiceUtil {
 
 	public static org.json.JSONObject getTeacherGroups() {
 		return getService().getTeacherGroups();
+	}
+
+	public static org.json.JSONObject getUserSessions(
+		long userId, java.lang.String minDateStr, java.lang.String maxDateStr) {
+
+		return getService().getUserSessions(userId, minDateStr, maxDateStr);
 	}
 
 	public static CDTSessionService getService() {

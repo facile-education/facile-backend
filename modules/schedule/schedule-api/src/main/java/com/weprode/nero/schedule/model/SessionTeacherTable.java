@@ -48,6 +48,9 @@ public class SessionTeacherTable extends BaseTable<SessionTeacherTable> {
 		createColumn(
 			"modificationDate", Date.class, Types.TIMESTAMP,
 			Column.FLAG_DEFAULT);
+	public final Column<SessionTeacherTable, String> privateNotes =
+		createColumn(
+			"privateNotes", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 
 	private SessionTeacherTable() {
 		super("Schedule_SessionTeacher", SessionTeacherTable::new);

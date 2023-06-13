@@ -343,6 +343,12 @@ public class SessionStudentLocalServiceWrapper
 	}
 
 	@Override
+	public boolean hasStudentSession(long studentId, long sessionId) {
+		return _sessionStudentLocalService.hasStudentSession(
+			studentId, sessionId);
+	}
+
+	@Override
 	public boolean removeBySessionId(long sessionId) {
 		return _sessionStudentLocalService.removeBySessionId(sessionId);
 	}

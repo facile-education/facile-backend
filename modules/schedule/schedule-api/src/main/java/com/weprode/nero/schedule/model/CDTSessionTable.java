@@ -34,28 +34,22 @@ public class CDTSessionTable extends BaseTable<CDTSessionTable> {
 
 	public final Column<CDTSessionTable, Long> sessionId = createColumn(
 		"sessionId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
-	public final Column<CDTSessionTable, Date> sessionStart = createColumn(
-		"sessionStart", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
-	public final Column<CDTSessionTable, Date> sessionEnd = createColumn(
-		"sessionEnd", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
+	public final Column<CDTSessionTable, Date> start = createColumn(
+		"start_", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
+	public final Column<CDTSessionTable, Date> end = createColumn(
+		"end_", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, Long> weekId = createColumn(
 		"weekId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
-	public final Column<CDTSessionTable, Boolean> published = createColumn(
-		"published", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
-	public final Column<CDTSessionTable, String> title = createColumn(
-		"title", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, String> fullCoursName = createColumn(
 		"fullCoursName", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<CDTSessionTable, String> description = createColumn(
-		"description", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, String> room = createColumn(
 		"room", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, String> subject = createColumn(
 		"subject", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<CDTSessionTable, Long> schoolId = createColumn(
-		"schoolId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, Long> groupId = createColumn(
 		"groupId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<CDTSessionTable, Long> courseItemId = createColumn(
+		"courseItemId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, Boolean> isManual = createColumn(
 		"isManual", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
 

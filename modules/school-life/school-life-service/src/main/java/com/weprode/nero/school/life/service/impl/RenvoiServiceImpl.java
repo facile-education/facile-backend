@@ -77,7 +77,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                         jsonRenvoi.put(JSONConstants.SOURCE_SCHOOLLIFE_SESSION_ID, 0);
                         CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(pendingRenvoi.getSourceSessionId());
                         jsonRenvoi.put(JSONConstants.SUBJECT, cdtSession.getSubject());
-                        jsonRenvoi.put(JSONConstants.SESSION_DATE, df.format(cdtSession.getSessionStart()));
+                        jsonRenvoi.put(JSONConstants.SESSION_DATE, df.format(cdtSession.getStart()));
                     } else {
                         jsonRenvoi.put(JSONConstants.SOURCE_SESSION_ID, 0);
                         jsonRenvoi.put(JSONConstants.SOURCE_SCHOOLLIFE_SESSION_ID, pendingRenvoi.getSourceSchoollifeSessionId());
@@ -266,10 +266,9 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
             for (CDTSession studentDaySession : studentDaySessions) {
                 JSONObject sessionJson = new JSONObject();
                 sessionJson.put(JSONConstants.SESSION_ID, studentDaySession.getSessionId());
-                sessionJson.put(JSONConstants.TITLE, studentDaySession.getTitle());
                 sessionJson.put(JSONConstants.SUBJECT, studentDaySession.getSubject());
-                sessionJson.put(JSONConstants.START_DATE, df.format(studentDaySession.getSessionStart()));
-                sessionJson.put(JSONConstants.END_DATE, df.format(studentDaySession.getSessionEnd()));
+                sessionJson.put(JSONConstants.START_DATE, df.format(studentDaySession.getStart()));
+                sessionJson.put(JSONConstants.END_DATE, df.format(studentDaySession.getEnd()));
                 sessionJson.put(JSONConstants.ROOM, studentDaySession.getRoom());
 
                 // Teachers

@@ -608,6 +608,35 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return folder;
 	}
 
+	public Folder getGroupCourseFolder(long groupId) throws PortalException, SystemException {
+		Folder folder;
+
+		Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(groupId);
+		try {
+			folder = DLAppServiceUtil.getFolder(groupId, groupRootFolder.getFolderId(), DocumentConstants.COURSE_FOLDER_NAME);
+		} catch (NoSuchFolderException e) {
+			folder = DLAppLocalServiceUtil.addFolder(
+					UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+					groupId,
+					groupRootFolder.getFolderId(),
+					DocumentConstants.COURSE_FOLDER_NAME,
+					"Dossier pour les pièces jointes du cours",
+					new ServiceContext());
+
+			// Add permissions for all agent roleIds
+			List<Long> allRoleIds = new ArrayList<>(RoleUtilsLocalServiceUtil.getAgentsRoleIds());
+			allRoleIds.add(RoleUtilsLocalServiceUtil.getStudentRole().getRoleId());
+			allRoleIds.add(RoleUtilsLocalServiceUtil.getParentRole().getRoleId());
+			for (long agentRoleId : allRoleIds) {
+				logger.info("Add view perm on folder " + folder.getFolderId() + " for roleId " + agentRoleId);
+				ResourcePermissionLocalServiceUtil.setResourcePermissions(folder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+folder.getFolderId(), agentRoleId, new String[]{"VIEW", "ADD_DOCUMENT", "UPDATE", "DELETE"});
+			}
+			hideDLFolder(folder.getFolderId());
+		}
+
+		return folder;
+	}
+
 	public boolean isGroupFolder (Folder folder) {
 		try {
 			Group folderGroup = GroupLocalServiceUtil.getGroup(folder.getGroupId());

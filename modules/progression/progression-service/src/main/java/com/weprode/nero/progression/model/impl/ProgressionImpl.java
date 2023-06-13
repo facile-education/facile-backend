@@ -17,8 +17,8 @@ package com.weprode.nero.progression.model.impl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.eel.synchronization.model.Subject;
-import com.weprode.nero.eel.synchronization.service.SubjectLocalServiceUtil;
+import com.weprode.nero.schedule.model.Subject;
+import com.weprode.nero.schedule.service.SubjectLocalServiceUtil;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;

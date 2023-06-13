@@ -1,22 +1,15 @@
 package com.weprode.nero.schedule.utils;
 
-import org.json.JSONArray;
-
-import org.json.JSONObject;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
-import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
-import com.weprode.nero.schedule.model.CDTSession;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilterUtil {
@@ -24,8 +17,6 @@ public class FilterUtil {
     private FilterUtil() {
         throw new IllegalStateException("Utility class");
     }
-
-    private static final Log logger = LogFactoryUtil.getLog(FilterUtil.class);
 
     public static JSONArray getGroupsForFilter(User teacher) {
         JSONArray schoolsArray = new JSONArray();
@@ -74,44 +65,4 @@ public class FilterUtil {
         return schoolsArray;
     }
 
-    public static List<CDTSession> filterSessionsOnVolee(List<CDTSession> sessionList, String volee) {
-        List<CDTSession> filteredSessionList = new ArrayList<>();
-        
-        if (sessionList != null) {
-            for (CDTSession session : sessionList) {
-
-                try {
-                    // Keep sessions on personal groups
-                    Group sessionGroup = GroupLocalServiceUtil.getGroup(session.getGroupId());
-                    Organization sessionOrg = OrganizationLocalServiceUtil.fetchOrganization(sessionGroup.getClassPK());
-                    if (sessionOrg == null) {
-                        filteredSessionList.add(session);
-                        continue;
-                    }
-
-                    // Keep manually created sessions because volee does not exist
-                    if (session.getIsManual()) {
-                        filteredSessionList.add(session);
-                        continue;
-                    }
-
-                    // Session's title is formatted like MA1034S or MA.1034
-                    // Volee is the 3rd and 4th characters or the 4th and 5th
-                    if (session.getTitle().length() >= 4) {
-                        String sessionVolee = session.getTitle().substring(2, 4);
-                        String sessionVolee2 = session.getTitle().substring(3, 5);
-                        if (sessionVolee.equals(volee) || sessionVolee2.equals(volee)) {
-                            filteredSessionList.add(session);
-                        }
-                    }
-
-                } catch (Exception e) {
-                    logger.error("Error while filtering sessions on volee " + volee, e);
-                }
-            }
-        }
-        
-        return filteredSessionList;
-    }
-    
 }

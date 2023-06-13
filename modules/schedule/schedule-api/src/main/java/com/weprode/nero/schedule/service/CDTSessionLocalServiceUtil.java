@@ -61,26 +61,10 @@ public class CDTSessionLocalServiceUtil {
 		return getService().addCDTSession(cdtSession);
 	}
 
-	public static boolean assignSessionContent(
-		long sessionId, long progressionItemId) {
+	public static org.json.JSONArray convertSessions(
+		List<CDTSession> sessions, com.liferay.portal.kernel.model.User user) {
 
-		return getService().assignSessionContent(sessionId, progressionItemId);
-	}
-
-	public static org.json.JSONArray convertSessionsToJson(
-		List<CDTSession> sessions, com.liferay.portal.kernel.model.User user,
-		long colorsTeacherId) {
-
-		return getService().convertSessionsToJson(
-			sessions, user, colorsTeacherId);
-	}
-
-	public static org.json.JSONObject copySessionContent(
-		com.liferay.portal.kernel.model.User currentUser, long sourceSessionId,
-		long targetSessionId, org.json.JSONArray homeworksAsJSON) {
-
-		return getService().copySessionContent(
-			currentUser, sourceSessionId, targetSessionId, homeworksAsJSON);
+		return getService().convertSessions(sessions, user);
 	}
 
 	/**
@@ -91,22 +75,6 @@ public class CDTSessionLocalServiceUtil {
 	 */
 	public static CDTSession createCDTSession(long sessionId) {
 		return getService().createCDTSession(sessionId);
-	}
-
-	/**
-	 * Create a CDTSession from all its properties
-	 */
-	public static CDTSession createCDTSession(
-			long schoolId, long groupId, String subject,
-			java.util.Date startDate, java.util.Date endDate,
-			List<Long> teacherIdList, String room, String title,
-			String fullCoursName, String description, boolean published,
-			boolean isManual)
-		throws SystemException {
-
-		return getService().createCDTSession(
-			schoolId, groupId, subject, startDate, endDate, teacherIdList, room,
-			title, fullCoursName, description, published, isManual);
 	}
 
 	/**
@@ -125,6 +93,17 @@ public class CDTSessionLocalServiceUtil {
 
 		return getService().createRecurrentSessions(
 			groupId, subject, room, startDate, endDate, teacherIdList);
+	}
+
+	public static CDTSession createSession(
+			long groupId, String subject, java.util.Date startDate,
+			java.util.Date endDate, List<Long> teacherIdList, String room,
+			String fullCoursName, boolean isManual)
+		throws SystemException {
+
+		return getService().createSession(
+			groupId, subject, startDate, endDate, teacherIdList, room,
+			fullCoursName, isManual);
 	}
 
 	/**
@@ -168,13 +147,10 @@ public class CDTSessionLocalServiceUtil {
 		return getService().deletePersistedModel(persistedModel);
 	}
 
-	/**
-	 * Delete a CDTSession with all its dependencies (homeworks, attachments..)
-	 */
-	public static boolean deleteSessionAndDependencies(long sessionId)
+	public static void deleteSessionAndDependencies(long sessionId)
 		throws PortalException, SystemException {
 
-		return getService().deleteSessionAndDependencies(sessionId);
+		getService().deleteSessionAndDependencies(sessionId);
 	}
 
 	public static <T> T dslQuery(DSLQuery dslQuery) {
@@ -375,10 +351,6 @@ public class CDTSessionLocalServiceUtil {
 		return getService().getSchoolSessions(schoolId, startDate, endDate);
 	}
 
-	public static String getSessionColor(long sessionId, long userId) {
-		return getService().getSessionColor(sessionId, userId);
-	}
-
 	/**
 	 * Get session student list
 	 */
@@ -396,6 +368,7 @@ public class CDTSessionLocalServiceUtil {
 
 	/**
 	 * Get all sessions for a given student in a given date range, that are not attached to a group (eg. subClass)
+	 * Returns empty for GVA
 	 */
 	public static List<CDTSession> getStudentSpecificSessions(
 		long studentId, java.util.Date minDate, java.util.Date maxDate) {
@@ -410,8 +383,14 @@ public class CDTSessionLocalServiceUtil {
 		return getService().getTeacherSessions(teacherId, minDate, maxDate);
 	}
 
-	public static boolean resetSessionContent(long sessionId) {
-		return getService().resetSessionContent(sessionId);
+	public static boolean hasUserSession(
+		com.liferay.portal.kernel.model.User user, long sessionId) {
+
+		return getService().hasUserSession(user, sessionId);
+	}
+
+	public static boolean isSession(long itemId) {
+		return getService().isSession(itemId);
 	}
 
 	/**

@@ -4,6 +4,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.messaging.constants.MessagingConstants;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
@@ -75,7 +76,8 @@ public class NotificationUtil {
                         recipientList.add(sessionTeacherId);
                     }
                 }
-                content += "du cours " + cdtSession.getTitle() + " dispens\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
+                String coursName = GroupUtilsLocalServiceUtil.getGroupName(cdtSession.getGroupId());
+                content += "du cours " + coursName + " dispens\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
             } else {
                 content += "du cr\u00e9neau " + SchoollifeSessionLocalServiceUtil.getSessionName(sourceSchoollifeSessionId) + " encadr\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
             }
@@ -130,7 +132,8 @@ public class NotificationUtil {
                         }
                     }
 
-                    content += " du cours " + cdtSession.getTitle() + " dispens\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
+                    String coursName = GroupUtilsLocalServiceUtil.getGroupName(cdtSession.getGroupId());
+                    content += " du cours " + coursName + " dispens\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
                 } else {
                     content += " du cr\u00e9neau " + SchoollifeSessionLocalServiceUtil.getSessionName(sourceSchoollifeSessionId) + " encadr\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
                 }
@@ -165,8 +168,9 @@ public class NotificationUtil {
             Date sourceDate;
             if (renvoi.getSourceSessionId() != 0) {
                 CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(renvoi.getSourceSessionId());
-                sourceDate = cdtSession.getSessionStart();
-                sourceSession = " du cours de " + cdtSession.getTitle();
+                sourceDate = cdtSession.getStart();
+                String coursName = GroupUtilsLocalServiceUtil.getGroupName(cdtSession.getGroupId());
+                sourceSession = " du cours de " + coursName;
             } else {
                 sourceDate = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(renvoi.getSourceSchoollifeSessionId()).getStartDate();
                 sourceSession = " du cr\u00e9neau de " + SchoollifeSessionLocalServiceUtil.getSessionName(renvoi.getSourceSchoollifeSessionId());

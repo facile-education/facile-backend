@@ -1,17 +1,20 @@
 create table Schedule_CDTSession (
 	sessionId LONG not null primary key,
-	sessionStart DATE null,
-	sessionEnd DATE null,
+	start_ DATE null,
+	end_ DATE null,
 	weekId LONG,
-	published BOOLEAN,
-	title VARCHAR(250) null,
 	fullCoursName VARCHAR(75) null,
-	description STRING null,
 	room VARCHAR(75) null,
 	subject VARCHAR(75) null,
-	schoolId LONG,
 	groupId LONG,
+	courseItemId LONG,
 	isManual BOOLEAN
+);
+
+create table Schedule_CourseDetails (
+	courseGroupId LONG not null primary key,
+	color VARCHAR(75) null,
+	subjectId LONG
 );
 
 create table Schedule_GroupColor (
@@ -51,6 +54,20 @@ create table Schedule_ScheduleConfiguration (
 	h2Weeks VARCHAR(75) null
 );
 
+create table Schedule_Session (
+	sessionId LONG not null primary key,
+	start_ DATE null,
+	end_ DATE null,
+	weekId LONG,
+	fullCoursName VARCHAR(75) null,
+	room VARCHAR(75) null,
+	subject VARCHAR(75) null,
+	schoolId LONG,
+	groupId LONG,
+	courseItemId LONG,
+	isManual BOOLEAN
+);
+
 create table Schedule_SessionStudent (
 	sessionStudentId LONG not null primary key,
 	sessionId LONG,
@@ -63,7 +80,8 @@ create table Schedule_SessionTeacher (
 	teacherId LONG,
 	status INTEGER,
 	substituteId LONG,
-	modificationDate DATE null
+	modificationDate DATE null,
+	privateNotes VARCHAR(75) null
 );
 
 create table Schedule_SlotConfiguration (
@@ -84,9 +102,21 @@ create table Schedule_StudentHomework (
 	sentFileId LONG
 );
 
+create table Schedule_Subject (
+	subjectId LONG not null primary key,
+	name VARCHAR(75) null
+);
+
 create table Schedule_SubjectGroupColor (
 	subjectGroupColorId LONG not null primary key,
 	subject VARCHAR(75) null,
 	groupId LONG,
 	color VARCHAR(75) null
+);
+
+create table Schedule_TeacherSubject (
+	teacherSubjectId LONG not null primary key,
+	teacherId LONG,
+	subjectId LONG,
+	schoolId LONG
 );

@@ -94,10 +94,10 @@ public interface SessionTeacherLocalService
 	@Transactional(enabled = false)
 	public SessionTeacher createSessionTeacher(long sessionTeacherId);
 
-	public SessionTeacher createSessionteacher(long sessionId, long teacherId)
+	public SessionTeacher createSessionTeacher(long sessionId, long teacherId)
 		throws SystemException;
 
-	public SessionTeacher createSessionteacher(
+	public SessionTeacher createSessionTeacher(
 			long sessionId, long teacherId, int status)
 		throws SystemException;
 
@@ -240,6 +240,9 @@ public interface SessionTeacherLocalService
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String getPrivateNotes(long teacherId, long sessionId);
+
 	/**
 	 * Returns the session teacher with the primary key.
 	 *
@@ -304,9 +307,13 @@ public interface SessionTeacherLocalService
 	public SessionTeacher removeSubstitute(long sessionId, long substituteId)
 		throws SystemException;
 
+	public void saveNotes(long teacherId, long sessionId, String notes);
+
 	public SessionTeacher substituteTeacher(
 			long teacherId, long sessionId, long substituteId)
 		throws SystemException;
+
+	public void updateModificationDate(long teacherId, long sessionId);
 
 	/**
 	 * Updates the session teacher in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

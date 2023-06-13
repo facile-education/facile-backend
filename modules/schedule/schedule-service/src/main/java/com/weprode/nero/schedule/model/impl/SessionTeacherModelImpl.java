@@ -75,7 +75,8 @@ public class SessionTeacherModelImpl
 	public static final Object[][] TABLE_COLUMNS = {
 		{"sessionTeacherId", Types.BIGINT}, {"sessionId", Types.BIGINT},
 		{"teacherId", Types.BIGINT}, {"status", Types.INTEGER},
-		{"substituteId", Types.BIGINT}, {"modificationDate", Types.TIMESTAMP}
+		{"substituteId", Types.BIGINT}, {"modificationDate", Types.TIMESTAMP},
+		{"privateNotes", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -88,10 +89,11 @@ public class SessionTeacherModelImpl
 		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("substituteId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("modificationDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("privateNotes", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Schedule_SessionTeacher (sessionTeacherId LONG not null primary key,sessionId LONG,teacherId LONG,status INTEGER,substituteId LONG,modificationDate DATE null)";
+		"create table Schedule_SessionTeacher (sessionTeacherId LONG not null primary key,sessionId LONG,teacherId LONG,status INTEGER,substituteId LONG,modificationDate DATE null,privateNotes VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Schedule_SessionTeacher";
@@ -168,6 +170,7 @@ public class SessionTeacherModelImpl
 		model.setStatus(soapModel.getStatus());
 		model.setSubstituteId(soapModel.getSubstituteId());
 		model.setModificationDate(soapModel.getModificationDate());
+		model.setPrivateNotes(soapModel.getPrivateNotes());
 
 		return model;
 	}
@@ -350,6 +353,12 @@ public class SessionTeacherModelImpl
 			"modificationDate",
 			(BiConsumer<SessionTeacher, Date>)
 				SessionTeacher::setModificationDate);
+		attributeGetterFunctions.put(
+			"privateNotes", SessionTeacher::getPrivateNotes);
+		attributeSetterBiConsumers.put(
+			"privateNotes",
+			(BiConsumer<SessionTeacher, String>)
+				SessionTeacher::setPrivateNotes);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -477,6 +486,26 @@ public class SessionTeacherModelImpl
 		_modificationDate = modificationDate;
 	}
 
+	@JSON
+	@Override
+	public String getPrivateNotes() {
+		if (_privateNotes == null) {
+			return "";
+		}
+		else {
+			return _privateNotes;
+		}
+	}
+
+	@Override
+	public void setPrivateNotes(String privateNotes) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_privateNotes = privateNotes;
+	}
+
 	public long getColumnBitmask() {
 		if (_columnBitmask > 0) {
 			return _columnBitmask;
@@ -539,6 +568,7 @@ public class SessionTeacherModelImpl
 		sessionTeacherImpl.setStatus(getStatus());
 		sessionTeacherImpl.setSubstituteId(getSubstituteId());
 		sessionTeacherImpl.setModificationDate(getModificationDate());
+		sessionTeacherImpl.setPrivateNotes(getPrivateNotes());
 
 		sessionTeacherImpl.resetOriginalValues();
 
@@ -561,6 +591,8 @@ public class SessionTeacherModelImpl
 			this.<Long>getColumnOriginalValue("substituteId"));
 		sessionTeacherImpl.setModificationDate(
 			this.<Date>getColumnOriginalValue("modificationDate"));
+		sessionTeacherImpl.setPrivateNotes(
+			this.<String>getColumnOriginalValue("privateNotes"));
 
 		return sessionTeacherImpl;
 	}
@@ -655,6 +687,14 @@ public class SessionTeacherModelImpl
 		}
 		else {
 			sessionTeacherCacheModel.modificationDate = Long.MIN_VALUE;
+		}
+
+		sessionTeacherCacheModel.privateNotes = getPrivateNotes();
+
+		String privateNotes = sessionTeacherCacheModel.privateNotes;
+
+		if ((privateNotes != null) && (privateNotes.length() == 0)) {
+			sessionTeacherCacheModel.privateNotes = null;
 		}
 
 		return sessionTeacherCacheModel;
@@ -753,6 +793,7 @@ public class SessionTeacherModelImpl
 	private int _status;
 	private long _substituteId;
 	private Date _modificationDate;
+	private String _privateNotes;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<SessionTeacher, Object> function =
@@ -787,6 +828,7 @@ public class SessionTeacherModelImpl
 		_columnOriginalValues.put("status", _status);
 		_columnOriginalValues.put("substituteId", _substituteId);
 		_columnOriginalValues.put("modificationDate", _modificationDate);
+		_columnOriginalValues.put("privateNotes", _privateNotes);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -811,6 +853,8 @@ public class SessionTeacherModelImpl
 		columnBitmasks.put("substituteId", 16L);
 
 		columnBitmasks.put("modificationDate", 32L);
+
+		columnBitmasks.put("privateNotes", 64L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

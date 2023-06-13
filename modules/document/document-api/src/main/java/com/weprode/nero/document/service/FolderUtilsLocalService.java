@@ -85,6 +85,10 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Folder getGroupCourseFolder(long groupId)
+		throws PortalException, SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getGroupNewsFolder(long groupId)
 		throws PortalException, SystemException;
 

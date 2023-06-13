@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
@@ -13,6 +27,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.group.model.GroupMembership;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
@@ -20,21 +35,15 @@ import com.weprode.nero.organization.service.ClassCoursMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
-import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
-import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
-import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.CDTSessionLocalServiceBaseImpl;
-import com.weprode.nero.schedule.utils.HomeworkUtil;
+import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
@@ -44,6 +53,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Brian Wing Shun Chan
+ */
 @Component(
 	property = "model.class.name=com.weprode.nero.schedule.model.CDTSession",
 	service = AopService.class
@@ -52,36 +64,68 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 
 	private static final Log logger = LogFactoryUtil.getLog(CDTSessionLocalServiceImpl.class);
 
-	/**
-	 * Create a CDTSession from all its properties
-	 */
-	public CDTSession createCDTSession(long schoolId, long groupId, String subject, Date startDate, Date endDate,
-									   List<Long> teacherIdList, String room, String title, String fullCoursName, String description, boolean published, boolean isManual) throws SystemException {
-		long cdtSessionId = counterLocalService.increment();
-		CDTSession cdtSession = cdtSessionPersistence.create(cdtSessionId);
+	public CDTSession createSession(long groupId, String subject, Date startDate, Date endDate,
+								 List<Long> teacherIdList, String room, String fullCoursName, boolean isManual) throws SystemException {
+		long sessionId = counterLocalService.increment();
+		CDTSession session = cdtSessionPersistence.create(sessionId);
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
 		int weekId = cal.get(Calendar.WEEK_OF_YEAR);
 
-		cdtSession.setSchoolId(schoolId);
-		cdtSession.setGroupId(groupId);
-		cdtSession.setSubject(subject);
-		cdtSession.setSessionStart(startDate);
-		cdtSession.setSessionEnd(endDate);
-		cdtSession.setRoom(room);
-		cdtSession.setTitle(title);
-		cdtSession.setFullCoursName(fullCoursName);
-		cdtSession.setDescription(description);
-		cdtSession.setPublished(published);
-		cdtSession.setIsManual(isManual);
-		cdtSession.setWeekId(weekId);
-		cdtSessionPersistence.update(cdtSession);
+		session.setGroupId(groupId);
+		session.setSubject(subject);
+		session.setStart(startDate);
+		session.setEnd(endDate);
+		session.setRoom(room);
+		session.setFullCoursName(fullCoursName);
+		session.setIsManual(isManual);
+		session.setWeekId(weekId);
+		cdtSessionPersistence.update(session);
 
 		// Update the teacher list
-		SessionTeacherLocalServiceUtil.updateTeacherListForSession(cdtSession.getSessionId(), teacherIdList);
+		SessionTeacherLocalServiceUtil.updateTeacherListForSession(session.getSessionId(), teacherIdList);
 
-		return cdtSession;
+		return session;
+	}
+
+	public boolean createRecurrentSessions(long groupId, String subject, String room, Date startDate, Date endDate, List<Long> teacherIdList) {
+		logger.info("Start creating recurrent sessions");
+
+		// Loop from startDate to the school year end's date
+		try {
+			Group coursGroup = GroupLocalServiceUtil.getGroup(groupId);
+			String fullCoursName;
+			long schoolId = 0;
+			Date schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
+			if (coursGroup.isOrganization()) {
+				Organization coursOrg = OrganizationLocalServiceUtil.getOrganization(coursGroup.getOrganizationId());
+				fullCoursName = OrgUtilsLocalServiceUtil.formatOrgName(coursOrg.getName(), false);
+				schoolId = coursOrg.getParentOrganizationId();
+			} else {
+				fullCoursName = coursGroup.getName();
+			}
+
+			while (startDate.before(schoolYearEndDate)) {
+				logger.info("About to create recurrent session from " + startDate + " to " + endDate);
+				createSession(groupId, subject, startDate, endDate, teacherIdList, room, fullCoursName, true);
+
+				// Add 7 days to start and end dates
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(startDate);
+				cal.add(Calendar.DATE, 7);
+				startDate = cal.getTime();
+				cal.setTime(endDate);
+				cal.add(Calendar.DATE, 7);
+				endDate = cal.getTime();
+			}
+
+		} catch (Exception e) {
+			logger.error("Error while creating recurrent sessions", e);
+			return false;
+		}
+
+		return true;
 	}
 
 	public List<CDTSession> getTeacherSessions(long teacherId, Date minDate, Date maxDate) {
@@ -109,22 +153,22 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 				}
 			}
 
-			List<CDTSession> cdtSessionList = cdtSessionFinder.getGroupsSessions(groupIdList, minDate, maxDate);
+			List<CDTSession> sessionList = cdtSessionFinder.getGroupsSessions(groupIdList, minDate, maxDate);
 
 			// Remove the sessions where the student is not member of the org in the specific date range
 			List<GroupMembership> orgMemberships = GroupMembershipLocalServiceUtil.getStudentGroupMemberships(studentId);
 
-			for (CDTSession cdtSession : cdtSessionList) {
+			for (CDTSession session : sessionList) {
 				boolean hasSpecificDates = false;
 				for (GroupMembership orgMembership : orgMemberships) {
-					if (cdtSession.getGroupId() == orgMembership.getGroupId()) {
+					if (session.getGroupId() == orgMembership.getGroupId()) {
 						hasSpecificDates = true;
 					}
 				}
 
 				// Keep the session if no specific dates or if any, if they match the specific dates
-				if (!hasSpecificDates || GroupMembershipLocalServiceUtil.isStudentOrgMember(studentId, cdtSession.getGroupId(), cdtSession.getSessionStart())) {
-					studentSessionList.add(cdtSession);
+				if (!hasSpecificDates || GroupMembershipLocalServiceUtil.isStudentOrgMember(studentId, session.getGroupId(), session.getStart())) {
+					studentSessionList.add(session);
 				}
 			}
 
@@ -227,6 +271,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 
 	/**
 	 * Get all sessions for a given student in a given date range, that are not attached to a group (eg. subClass)
+	 * Returns empty for GVA
 	 */
 	public List<CDTSession> getStudentSpecificSessions(long studentId, Date minDate, Date maxDate) {
 		// Custom query
@@ -234,9 +279,9 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 
 		// Sort unique
 		List<CDTSession> uniqueCdtSessions = new ArrayList<>();
-		for (CDTSession cdtSession : sessionList) {
-			if (!uniqueCdtSessions.contains(cdtSession)) {
-				uniqueCdtSessions.add(cdtSession);
+		for (CDTSession session : sessionList) {
+			if (!uniqueCdtSessions.contains(session)) {
+				uniqueCdtSessions.add(session);
 			}
 		}
 
@@ -255,7 +300,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 				logger.info("> Group is a community");
 				List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
 				for (CDTSession groupSession : groupSessions) {
-					if (groupSession.getSessionStart().after(minDate) && groupSession.getSessionStart().before(maxDate)) {
+					if (groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
 						sessions.add(groupSession);
 					}
 				}
@@ -267,7 +312,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 					logger.info("> Group is a cours");
 					List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
 					for (CDTSession groupSession : groupSessions) {
-						if (groupSession.getSessionStart().after(minDate) && groupSession.getSessionStart().before(maxDate)) {
+						if (groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
 							sessions.add(groupSession);
 						}
 					}
@@ -299,7 +344,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 		List<User> sessionStudents = new ArrayList<>();
 
 		try {
-			CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
+			CDTSession session = getCDTSession(sessionId);
 
 			if (session.getGroupId() == 0) {
 				// SubClass
@@ -334,97 +379,6 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 		return sessionStudents;
 	}
 
-	public boolean assignSessionContent (long sessionId, long progressionItemId) {
-		try {
-			// Push item text + links + videos + h5p into session's description
-			// Force publication
-			CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
-			String itemContent = ProgressionItemLocalServiceUtil.convertContentAsHtml(progressionItemId);
-			cdtSession.setDescription(itemContent);
-			cdtSession.setPublished(true);
-			CDTSessionLocalServiceUtil.updateCDTSession(cdtSession);
-
-			// Delete existing attach files
-			// TODO Attachments
-			// AttachFileLocalServiceUtil.removeAllSessionAttachFiles(sessionId);
-
-			// Copy attached files
-			List<Long> fileEntryIds = ItemContentLocalServiceUtil.getFileIds(progressionItemId);
-			for (Long fileEntryId : fileEntryIds) {
-				// TODO Attachments
-				// AttachFileLocalServiceUtil.addSessionAttachFile(sessionId, fileEntryId);
-			}
-
-			// Delete existing audio files
-			// TODO Attachments
-			// AttachFileLocalServiceUtil.deleteSessionAudioInstructions(sessionId);
-
-			// Copy audio files
-			List<Long> audioFileEntryIds = ItemContentLocalServiceUtil.getAudioFileIds(progressionItemId);
-			for (Long audioFileEntryId : audioFileEntryIds) {
-				// TODO Attachments
-				//AttachFileLocalServiceUtil.addSessionAttachFile(sessionId, audioFileEntryId);
-				// //AttachFileLocalServiceUtil.addSessionAudioInstructions(sessionId, audioFileName);
-			}
-
-			logger.info("Assigned content of item " + progressionItemId + " to session " + cdtSession.getSessionId());
-			return true;
-		} catch (Exception e) {
-			logger.error("Error assigning item " + progressionItemId + " to session " + sessionId, e);
-		}
-
-		return false;
-	}
-
-	public boolean resetSessionContent (long sessionId) {
-		try {
-			CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
-			cdtSession.setDescription("");
-			CDTSessionLocalServiceUtil.updateCDTSession(cdtSession);
-
-			// Delete attach files in CDT
-			// TODO Attachments
-			// AttachFileLocalServiceUtil.removeAllSessionAttachFiles(sessionId);
-
-			// Delete audio instructions in CDT
-			// TODO Attachments
-			// AttachFileLocalServiceUtil.deleteSessionAudioInstructions(sessionId);
-
-			logger.info("Reset content of session " + cdtSession.getSessionId());
-			return true;
-		} catch (Exception e) {
-			logger.error("Error resetting content of session " + sessionId, e);
-		}
-
-		return false;
-	}
-
-	public JSONObject copySessionContent(User currentUser, long sourceSessionId, long targetSessionId, JSONArray homeworksAsJSON) {
-		try {
-			CDTSession sourceSession = CDTSessionLocalServiceUtil.getCDTSession(sourceSessionId);
-			CDTSession targetSession = CDTSessionLocalServiceUtil.getCDTSession(targetSessionId);
-
-			// Copy session content
-			targetSession.setPublished(sourceSession.getPublished());
-			targetSession.setTitle(sourceSession.getTitle());
-			targetSession.setDescription(sourceSession.getDescription());
-
-			CDTSessionLocalServiceUtil.updateCDTSession(targetSession);
-
-			// Copy session attach files and audio instructions
-			// TODO Attachments
-			// AttachFileLocalServiceUtil.copySession(sourceSession.getSessionId(), targetSession.getSessionId());
-
-			// copy homework
-			HomeworkUtil.copyHomeworksFromSessionToAnother(homeworksAsJSON, targetSession);
-
-			return CDTSessionLocalServiceUtil.fetchCDTSession(targetSession.getSessionId()).convertToJSON(true, currentUser);
-		} catch (Exception e) {
-			logger.error("Error in copying session content", e);
-		}
-
-		return null;
-	}
 
 	/**
 	 * Get the session for a school id that begin between 2 dates
@@ -438,108 +392,43 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 		return cdtSessionFinder.getSessionActivity(userId, groupIds, minDate, maxDate);
 	}
 
-	public boolean createRecurrentSessions(long groupId, String subject, String room, Date startDate, Date endDate, List<Long> teacherIdList) {
-		logger.info("Start creating recurrent sessions");
+	// Used for WS check for session ownership
+	public boolean hasUserSession(User user, long sessionId) {
 
-		// Loop from startDate to the schoolyear end's date
-		try {
-			Group coursGroup = GroupLocalServiceUtil.getGroup(groupId);
-			String fullCoursName = "";
-			long schoolId = 0;
-			Date schoolYearEndDate = null;
-			if (coursGroup.isOrganization()) {
-				Organization coursOrg = OrganizationLocalServiceUtil.getOrganization(coursGroup.getOrganizationId());
-				fullCoursName = OrgUtilsLocalServiceUtil.formatOrgName(coursOrg.getName(), false);
-				schoolId = coursOrg.getParentOrganizationId();
-				schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
-			} else {
-				fullCoursName = coursGroup.getName();
-				schoolYearEndDate = getSchoolYearEndDate();
+		if (RoleUtilsLocalServiceUtil.isTeacher(user) && SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
+			return true;
+		} else if (RoleUtilsLocalServiceUtil.isStudent(user) && SessionStudentLocalServiceUtil.hasStudentSession(user.getUserId(), sessionId)) {
+			return true;
+		} else if (RoleUtilsLocalServiceUtil.isParent(user)) {
+			for (User child : UserRelationshipLocalServiceUtil.getChildren(user.getUserId())) {
+				if (SessionStudentLocalServiceUtil.hasStudentSession(child.getUserId(), sessionId)) {
+					return true;
+				}
 			}
-
-			while (startDate.before(schoolYearEndDate)) {
-				logger.info("About to create recurrent session from " + startDate + " to " + endDate);
-				CDTSessionLocalServiceUtil.createCDTSession(schoolId, groupId, subject, startDate, endDate, teacherIdList, room, "Cours de " + subject, fullCoursName, "", false, true);
-
-				// Add 7 days to start and end dates
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(startDate);
-				cal.add(Calendar.DATE, 7);
-				startDate = cal.getTime();
-				cal.setTime(endDate);
-				cal.add(Calendar.DATE, 7);
-				endDate = cal.getTime();
-			}
-
-		} catch (Exception e) {
-			logger.error("Error while creating recurrent sessions", e);
-			return false;
+			return true;
 		}
-
-		return true;
+		return false;
 	}
 
-	private Date getSchoolYearEndDate() {
-		// After august the 1st, school year end date is the 8th of july of next year
-		// Before august the 1st, school year end date is the 8th of july of current year
-		Calendar cal = Calendar.getInstance();
+	public void deleteSessionAndDependencies(long sessionId) throws PortalException, SystemException {
 
-		cal.setTime(new Date());
-		if (cal.get(Calendar.MONTH) >= Calendar.AUGUST) {
-			cal.add(Calendar.YEAR, 1);
-		}
-		cal.set(Calendar.MONTH, Calendar.JULY);
-		cal.set(Calendar.DAY_OF_MONTH, 8);
-
-		return cal.getTime();
-	}
-
-	public String getSessionColor(long sessionId, long userId) {
-
-		try {
-			CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
-			return GroupColorLocalServiceUtil.getColor(session.getGroupId());
-		} catch (Exception e) {
-			logger.error("Error getting color for session " + sessionId + " and user " + userId, e);
-		}
-		// Default
-		return "#EA4335";
-	}
-
-	/**
-	 * Delete a CDTSession with all its dependencies (homeworks, attachments..)
-	 */
-	public boolean deleteSessionAndDependencies(long sessionId) throws PortalException, SystemException {
-		// Remove SessionTeacher
 		SessionTeacherLocalServiceUtil.removeBySessionId(sessionId);
-
-		// Remove SessionStudents
 		SessionStudentLocalServiceUtil.removeBySessionId(sessionId);
-
-		// Remove homeworks from this session
 		HomeworkLocalServiceUtil.deleteSessionHomeworks(sessionId);
-
-		// Remove attached files
-		// TODO Attachments
-		// AttachFileLocalServiceUtil.removeAllSessionAttachFiles(sessionId);
-
-		// Delete session
-		CDTSessionLocalServiceUtil.deleteCDTSession(sessionId);
-
-		return true;
+		deleteCDTSession(sessionId);
 	}
 
-	public JSONArray convertSessionsToJson(List<CDTSession> sessions, User user, long colorsTeacherId) {
-		JSONArray sessionsArray = new JSONArray();
-
+	public JSONArray convertSessions(List<CDTSession> sessions, User user) {
+		JSONArray jsonSessions = new JSONArray();
 		for (CDTSession session : sessions) {
-			try {
-				sessionsArray.put(session.convertToJSON(colorsTeacherId, user));
-			} catch (Exception e) {
-				logger.error("Error when fetching CDT session for user "+user.getFullName(), e);
-			}
+			jsonSessions.put(session.convertToJSON(user));
 		}
+		return jsonSessions;
+	}
 
-		return sessionsArray;
+	// Used for content association
+	public boolean isSession(long itemId) {
+		CDTSession session = cdtSessionPersistence.fetchByPrimaryKey(itemId);
+		return session != null;
 	}
 }

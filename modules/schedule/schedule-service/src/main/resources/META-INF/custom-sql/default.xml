@@ -6,7 +6,7 @@
             FROM Schedule_CDTSession cdtSession
             JOIN Schedule_SessionTeacher sessionTeacher
             ON cdtSession.sessionId = sessionTeacher.sessionId
-            WHERE cdtSession.sessionStart > ? AND cdtSession.sessionStart < ?
+            WHERE cdtSession.start_ > ? AND cdtSession.start_ < ?
             AND sessionTeacher.teacherId = ?
         ]]>
     </sql>
@@ -16,7 +16,7 @@
             FROM Schedule_CDTSession cdtSession
             JOIN Schedule_SessionStudent sessionStudent
             ON cdtSession.sessionId = sessionStudent.sessionId
-            WHERE cdtSession.sessionStart > ? AND cdtSession.sessionStart < ?
+            WHERE cdtSession.start_ > ? AND cdtSession.start_ < ?
             AND sessionStudent.studentId = ?
         ]]>
     </sql>

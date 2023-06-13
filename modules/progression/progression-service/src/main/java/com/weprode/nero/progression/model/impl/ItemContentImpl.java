@@ -38,10 +38,10 @@ public class ItemContentImpl extends ItemContentBaseImpl {
         SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
         jsonItem.put(JSONConstants.ITEM_ID, this.getProgressionItemId());
-        jsonItem.put(JSONConstants.CONTENT_ID, this.getContentId());
+        jsonItem.put(JSONConstants.BLOCK_ID, this.getContentId());
         jsonItem.put(JSONConstants.MODIFIED_DATE, df.format(this.getModifiedDate()));
-        jsonItem.put(JSONConstants.CONTENT_NAME, this.getContentName());
-        jsonItem.put(JSONConstants.CONTENT_TYPE, this.getContentType());
+        jsonItem.put(JSONConstants.BLOCK_NAME, this.getContentName());
+        jsonItem.put(JSONConstants.BLOCK_TYPE, this.getContentType());
         jsonItem.put(JSONConstants.FILE_ENTRY_ID, String.valueOf(this.getFileEntryId())); // Ids are managed as String in front
         if (this.getFileEntryId() != 0) {
             if (this.getContentType() == ProgressionConstants.TYPE_RECORD) {
@@ -54,11 +54,10 @@ public class ItemContentImpl extends ItemContentBaseImpl {
                 logger.error(e);
             }
         }
-        jsonItem.put(JSONConstants.IS_TO_BE_COMPLETED, this.getIsToBeCompleted());
         jsonItem.put(JSONConstants.ORDER, this.getOrder());
 
         if (isContentIncluded) {
-            jsonItem.put(JSONConstants.CONTENT_VALUE, this.getContentValue());
+            jsonItem.put(JSONConstants.BLOCK_VALUE, this.getContentValue());
         }
 
         return jsonItem;

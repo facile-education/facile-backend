@@ -83,18 +83,18 @@ public class SessionTeacherLocalServiceUtil {
 		return getService().createSessionTeacher(sessionTeacherId);
 	}
 
-	public static SessionTeacher createSessionteacher(
+	public static SessionTeacher createSessionTeacher(
 			long sessionId, long teacherId)
 		throws SystemException {
 
-		return getService().createSessionteacher(sessionId, teacherId);
+		return getService().createSessionTeacher(sessionId, teacherId);
 	}
 
-	public static SessionTeacher createSessionteacher(
+	public static SessionTeacher createSessionTeacher(
 			long sessionId, long teacherId, int status)
 		throws SystemException {
 
-		return getService().createSessionteacher(sessionId, teacherId, status);
+		return getService().createSessionTeacher(sessionId, teacherId, status);
 	}
 
 	/**
@@ -274,6 +274,10 @@ public class SessionTeacherLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	public static String getPrivateNotes(long teacherId, long sessionId) {
+		return getService().getPrivateNotes(teacherId, sessionId);
+	}
+
 	/**
 	 * Returns the session teacher with the primary key.
 	 *
@@ -365,12 +369,20 @@ public class SessionTeacherLocalServiceUtil {
 		return getService().removeSubstitute(sessionId, substituteId);
 	}
 
+	public static void saveNotes(long teacherId, long sessionId, String notes) {
+		getService().saveNotes(teacherId, sessionId, notes);
+	}
+
 	public static SessionTeacher substituteTeacher(
 			long teacherId, long sessionId, long substituteId)
 		throws SystemException {
 
 		return getService().substituteTeacher(
 			teacherId, sessionId, substituteId);
+	}
+
+	public static void updateModificationDate(long teacherId, long sessionId) {
+		getService().updateModificationDate(teacherId, sessionId);
 	}
 
 	/**

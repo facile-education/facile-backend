@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.dashboard.service.base.DashboardServiceBaseImpl;
@@ -66,7 +67,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             result.put(JSONConstants.HAS_ACTIVITY_THREAD_WIDGET, true);
             result.put(JSONConstants.HAS_SCHOOL_NEWS_WIDGET, true);
             result.put(JSONConstants.HAS_DIARY_WIDGET, true);
-            result.put(JSONConstants.HAS_HOMEWORK_WIDGET, isStudentOrParent);
+            result.put(JSONConstants.HAS_HOMEWORK_WIDGET, isStudentOrParent && BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "cdt"));
             result.put(JSONConstants.HAS_EDT_WIDGET, isStudentOrParent || RoleUtilsLocalServiceUtil.isTeacher(user));
             result.put(JSONConstants.HAS_STATISTIC_WIDGET, isDirectionMember);
 
@@ -146,14 +147,14 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             }
 
             for (CDTSession cdtSession : cdtSessionList) {
-                JSONObject cdtSessionJson = cdtSession.convertToJSON(false, targetUser);
+                JSONObject cdtSessionJson = cdtSession.convertToJSON(targetUser);
                 eventList.put(cdtSessionJson);
             }
 
             // Pick 1 session from the list to get its date
             Date reachedDate;
             if (!cdtSessionList.isEmpty()) {
-                reachedDate = cdtSessionList.get(0).getSessionStart();
+                reachedDate = cdtSessionList.get(0).getStart();
             } else {
                 reachedDate = scheduleDate;
             }

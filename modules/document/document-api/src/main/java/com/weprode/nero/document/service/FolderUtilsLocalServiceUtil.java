@@ -104,6 +104,13 @@ public class FolderUtilsLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
+			getGroupCourseFolder(long groupId)
+		throws PortalException, SystemException {
+
+		return getService().getGroupCourseFolder(groupId);
+	}
+
+	public static com.liferay.portal.kernel.repository.model.Folder
 			getGroupNewsFolder(long groupId)
 		throws PortalException, SystemException {
 
