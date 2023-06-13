@@ -54,6 +54,10 @@ public interface ScheduleConfigurationService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getConfiguration(long schoolId, long childId);
 
+	@JSONWebService(method = "GET", value = "get-global-configuration")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getGlobalConfiguration();
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -61,12 +65,8 @@ public interface ScheduleConfigurationService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "get-schedule-configuration")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getScheduleConfiguration();
-
-	@JSONWebService(method = "POST", value = "save-schedule-configuration")
-	public JSONObject saveScheduleConfiguration(
+	@JSONWebService(method = "POST", value = "save-global-configuration")
+	public JSONObject saveGlobalConfiguration(
 		String startDateStr, String semesterDateStr, String endDateStr,
 		String holidays, String h1Weeks, String h2Weeks);
 

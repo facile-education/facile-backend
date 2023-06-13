@@ -39,6 +39,11 @@ public class ScheduleConfigurationServiceWrapper
 			schoolId, childId);
 	}
 
+	@Override
+	public org.json.JSONObject getGlobalConfiguration() {
+		return _scheduleConfigurationService.getGlobalConfiguration();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -50,16 +55,11 @@ public class ScheduleConfigurationServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getScheduleConfiguration() {
-		return _scheduleConfigurationService.getScheduleConfiguration();
-	}
-
-	@Override
-	public org.json.JSONObject saveScheduleConfiguration(
+	public org.json.JSONObject saveGlobalConfiguration(
 		String startDateStr, String semesterDateStr, String endDateStr,
 		String holidays, String h1Weeks, String h2Weeks) {
 
-		return _scheduleConfigurationService.saveScheduleConfiguration(
+		return _scheduleConfigurationService.saveGlobalConfiguration(
 			startDateStr, semesterDateStr, endDateStr, holidays, h1Weeks,
 			h2Weeks);
 	}
