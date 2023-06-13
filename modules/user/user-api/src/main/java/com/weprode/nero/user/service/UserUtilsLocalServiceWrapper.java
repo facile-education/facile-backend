@@ -33,6 +33,20 @@ public class UserUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONArray convertUsersToJson(
+		java.util.List<com.liferay.portal.kernel.model.User> userList) {
+
+		return _userUtilsLocalService.convertUsersToJson(userList);
+	}
+
+	@Override
+	public org.json.JSONObject convertUserToJson(
+		com.liferay.portal.kernel.model.User user) {
+
+		return _userUtilsLocalService.convertUserToJson(user);
+	}
+
+	@Override
 	public String generateLogin(String lastName, String firstName) {
 		return _userUtilsLocalService.generateLogin(lastName, firstName);
 	}

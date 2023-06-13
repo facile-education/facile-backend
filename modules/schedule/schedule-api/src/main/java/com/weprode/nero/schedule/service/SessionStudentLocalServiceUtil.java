@@ -309,6 +309,10 @@ public class SessionStudentLocalServiceUtil {
 		return getService().getStudentsBySession(sessionId);
 	}
 
+	public static boolean hasStudentSession(long studentId, long sessionId) {
+		return getService().hasStudentSession(studentId, sessionId);
+	}
+
 	public static boolean removeBySessionId(long sessionId) {
 		return getService().removeBySessionId(sessionId);
 	}

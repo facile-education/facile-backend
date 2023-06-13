@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
@@ -20,7 +21,6 @@ import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.SessionTeacherServiceBaseImpl;
-import com.weprode.nero.schedule.utils.JSONProxy;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -116,7 +116,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 			}
 
 			Calendar sessionCal = Calendar.getInstance();
-			sessionCal.setTime(session.getSessionStart());
+			sessionCal.setTime(session.getStart());
 
 			List<CDTSession> sessions = new ArrayList<>();
 			sessions.add(session);
@@ -124,10 +124,10 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 			for (CDTSession nextSession : sessions) {
 				// Check that teacher is indeed affected to the session
 				if (SessionTeacherLocalServiceUtil.hasTeacherSession(sessionTeacher.getTeacherId(), nextSession.getSessionId())) {
-					JSONObject nextSessionJSON = nextSession.convertToJSON();
+					JSONObject nextSessionJSON = nextSession.convertToJSON(user);
 
 					Calendar nextCal = Calendar.getInstance();
-					nextCal.setTime(nextSession.getSessionStart());
+					nextCal.setTime(nextSession.getStart());
 					boolean isSameSlot = (sessionCal.get(Calendar.DAY_OF_WEEK) == nextCal.get(Calendar.DAY_OF_WEEK) &&
 							sessionCal.get(Calendar.HOUR) == nextCal.get(Calendar.HOUR) &&
 							sessionCal.get(Calendar.MINUTE) == nextCal.get(Calendar.MINUTE));
@@ -228,12 +228,12 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 				sessions.addAll(session.getNextSessions(teacherUser));
 
 				Calendar sessionCal = Calendar.getInstance();
-				sessionCal.setTime(session.getSessionStart());
+				sessionCal.setTime(session.getStart());
 
 				for (CDTSession nextSession : sessions) {
 
 					Calendar nextCal = Calendar.getInstance();
-					nextCal.setTime(nextSession.getSessionStart());
+					nextCal.setTime(nextSession.getStart());
 					boolean isSameSlot = (sessionCal.get(Calendar.DAY_OF_WEEK) == nextCal.get(Calendar.DAY_OF_WEEK) &&
 							sessionCal.get(Calendar.HOUR) == nextCal.get(Calendar.HOUR) &&
 							sessionCal.get(Calendar.MINUTE) == nextCal.get(Calendar.MINUTE));
@@ -279,7 +279,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 											} else {
 												// Expiration date is the last session's date
 												CDTSession lastSession = CDTSessionLocalServiceUtil.getCDTSession(lastSessionId);
-												expirationDate = lastSession.getSessionEnd();
+												expirationDate = lastSession.getEnd();
 											}
 											AffectationLocalServiceUtil.addUserAffectation(substituteId, org.getOrganizationId(), user.getUserId(), expirationDate);
 										}

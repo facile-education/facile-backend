@@ -16,11 +16,17 @@ package com.weprode.nero.schedule.service.persistence.impl;
 
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.persistence.CDTSessionPersistence;
 import com.weprode.nero.schedule.service.persistence.impl.constants.SchedulePersistenceConstants;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -35,6 +41,18 @@ public abstract class CDTSessionFinderBaseImpl
 
 	public CDTSessionFinderBaseImpl() {
 		setModelClass(CDTSession.class);
+
+		Map<String, String> dbColumnNames = new HashMap<String, String>();
+
+		dbColumnNames.put("start", "start_");
+		dbColumnNames.put("end", "end_");
+
+		setDBColumnNames(dbColumnNames);
+	}
+
+	@Override
+	public Set<String> getBadColumnNames() {
+		return cdtSessionPersistence.getBadColumnNames();
 	}
 
 	@Override
@@ -65,5 +83,8 @@ public abstract class CDTSessionFinderBaseImpl
 
 	@Reference
 	protected CDTSessionPersistence cdtSessionPersistence;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		CDTSessionFinderBaseImpl.class);
 
 }

@@ -56,22 +56,12 @@ public interface CDTSession extends CDTSessionModel, PersistedModel {
 
 		};
 
-	public org.json.JSONObject convertToJSON();
-
 	public org.json.JSONObject convertToJSON(
-		boolean includeDetails, com.liferay.portal.kernel.model.User user);
-
-	public org.json.JSONObject convertToJSON(
-		long colorsTeacherId, com.liferay.portal.kernel.model.User user);
-
-	public java.util.List<CDTSession> getPreviousSessions(
 		com.liferay.portal.kernel.model.User user);
 
 	public java.util.List<CDTSession> getNextSessions(
 		com.liferay.portal.kernel.model.User user);
 
 	public String getTeacherList();
-
-	public String getSessionGroupName(boolean withSchoolName);
 
 }

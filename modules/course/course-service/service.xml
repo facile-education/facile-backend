@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.course">
+	<namespace>Course</namespace>
+
+	<entity name="Course" local-service="true" remote-service="true" />
+
+	<entity name="SessionContent" local-service="true" remote-service="true">
+
+		<column name="sessionId" type="long" primary="true" />
+		<column name="companyId" type="long" />
+		<column name="teacherId" type="long"/>
+		<column name="title" type="String"/>
+		<column name="modificationDate" type="Date"/>
+		<column name="publicationDate" type="Date"/>
+		<column name="isDraft" type="boolean" />
+
+	</entity>
+
+
+	<entity name="Homework" local-service="true" remote-service="true">
+
+		<column name="homeworkId" type="long" primary="true"/>
+		<column name="homeworkType" type="int"/>
+		<column name="courseId" type="long"/>
+		<column name="sourceSessionId" type="long" />
+		<column name="fromDate" type="Date" />
+		<column name="targetSessionId" type="long" />
+		<column name="targetDate" type="Date" />
+		<column name="teacherId" type="long" />
+		<column name="isCustomStudentList" type="boolean" />
+		<column name="publicationDate" type="Date"/>
+		<column name="isDraft" type="boolean" />
+
+		<finder return-type="Collection" name="courseId">
+			<finder-column name="courseId" />
+		</finder>
+		<finder return-type="Collection" name="sourceSessionId">
+			<finder-column name="sourceSessionId" />
+		</finder>
+		<finder return-type="Collection" name="targetSessionId">
+			<finder-column name="targetSessionId" />
+		</finder>
+
+	</entity>
+
+	<!-- Manage user-specific homeworks -->
+	<entity name="StudentHomework" local-service="true" remote-service="false">
+		<column name="studentHomeworkId" type="long" primary="true"/>
+		<column name="homeworkId" type="long"/>
+		<column name="studentId" type="long"/>
+		<column name="isDone" type="boolean" />
+
+		<column name="isSent" type="boolean" />
+		<column name="sentDate" type="Date" />
+		<column name="sentFileId" type="long" />
+
+		<column name="isCorrected" type="boolean" />
+		<column name="comment" type="String" />
+		<column name="correctionDate" type="Date" />
+
+		<finder return-type="Collection" name="homeworkId">
+			<finder-column name="homeworkId" />
+		</finder>
+		<finder return-type="Collection" name="studentId">
+			<finder-column name="studentId" />
+		</finder>
+		<finder return-type="Collection" name="studentId_homeworkId">
+			<finder-column name="studentId" />
+			<finder-column name="homeworkId" />
+		</finder>
+	</entity>
+
+
+	<!-- Text : name and string -->
+	<!-- Record : name and fileEntryId -->
+	<!-- Link : name and string -->
+	<!-- Video : name and fileEntryId -->
+	<!-- File : name and fileEntryId -->
+	<!-- H5P : name and string -->
+	<entity name="ContentBlock" local-service="true" remote-service="true">
+		<column name="blockId" type="long" primary="true"/>
+		<!-- Can be either sessionId or homeworkId -->
+		<column name="courseItemId" type="long" />
+		<column name="modificationDate" type="Date"/>
+		<column name="blockName" type="String"/>
+		<column name="blockValue" type="String"/>
+		<column name="fileEntryId" type="long"/>
+		<column name="blockType" type="int"/>
+		<column name="order" type="int"/>
+
+		<finder return-type="Collection" name="courseItemId">
+			<finder-column name="courseItemId" />
+		</finder>
+	</entity>
+
+</service-builder>

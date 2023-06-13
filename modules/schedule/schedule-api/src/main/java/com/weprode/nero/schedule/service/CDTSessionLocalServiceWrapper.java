@@ -50,29 +50,11 @@ public class CDTSessionLocalServiceWrapper
 	}
 
 	@Override
-	public boolean assignSessionContent(
-		long sessionId, long progressionItemId) {
-
-		return _cdtSessionLocalService.assignSessionContent(
-			sessionId, progressionItemId);
-	}
-
-	@Override
-	public org.json.JSONArray convertSessionsToJson(
+	public org.json.JSONArray convertSessions(
 		java.util.List<com.weprode.nero.schedule.model.CDTSession> sessions,
-		com.liferay.portal.kernel.model.User user, long colorsTeacherId) {
+		com.liferay.portal.kernel.model.User user) {
 
-		return _cdtSessionLocalService.convertSessionsToJson(
-			sessions, user, colorsTeacherId);
-	}
-
-	@Override
-	public org.json.JSONObject copySessionContent(
-		com.liferay.portal.kernel.model.User currentUser, long sourceSessionId,
-		long targetSessionId, org.json.JSONArray homeworksAsJSON) {
-
-		return _cdtSessionLocalService.copySessionContent(
-			currentUser, sourceSessionId, targetSessionId, homeworksAsJSON);
+		return _cdtSessionLocalService.convertSessions(sessions, user);
 	}
 
 	/**
@@ -86,23 +68,6 @@ public class CDTSessionLocalServiceWrapper
 		long sessionId) {
 
 		return _cdtSessionLocalService.createCDTSession(sessionId);
-	}
-
-	/**
-	 * Create a CDTSession from all its properties
-	 */
-	@Override
-	public com.weprode.nero.schedule.model.CDTSession createCDTSession(
-			long schoolId, long groupId, String subject,
-			java.util.Date startDate, java.util.Date endDate,
-			java.util.List<Long> teacherIdList, String room, String title,
-			String fullCoursName, String description, boolean published,
-			boolean isManual)
-		throws com.liferay.portal.kernel.exception.SystemException {
-
-		return _cdtSessionLocalService.createCDTSession(
-			schoolId, groupId, subject, startDate, endDate, teacherIdList, room,
-			title, fullCoursName, description, published, isManual);
 	}
 
 	/**
@@ -123,6 +88,18 @@ public class CDTSessionLocalServiceWrapper
 
 		return _cdtSessionLocalService.createRecurrentSessions(
 			groupId, subject, room, startDate, endDate, teacherIdList);
+	}
+
+	@Override
+	public com.weprode.nero.schedule.model.CDTSession createSession(
+			long groupId, String subject, java.util.Date startDate,
+			java.util.Date endDate, java.util.List<Long> teacherIdList,
+			String room, String fullCoursName, boolean isManual)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _cdtSessionLocalService.createSession(
+			groupId, subject, startDate, endDate, teacherIdList, room,
+			fullCoursName, isManual);
 	}
 
 	/**
@@ -172,15 +149,12 @@ public class CDTSessionLocalServiceWrapper
 		return _cdtSessionLocalService.deletePersistedModel(persistedModel);
 	}
 
-	/**
-	 * Delete a CDTSession with all its dependencies (homeworks, attachments..)
-	 */
 	@Override
-	public boolean deleteSessionAndDependencies(long sessionId)
+	public void deleteSessionAndDependencies(long sessionId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _cdtSessionLocalService.deleteSessionAndDependencies(sessionId);
+		_cdtSessionLocalService.deleteSessionAndDependencies(sessionId);
 	}
 
 	@Override
@@ -422,11 +396,6 @@ public class CDTSessionLocalServiceWrapper
 			schoolId, startDate, endDate);
 	}
 
-	@Override
-	public String getSessionColor(long sessionId, long userId) {
-		return _cdtSessionLocalService.getSessionColor(sessionId, userId);
-	}
-
 	/**
 	 * Get session student list
 	 */
@@ -448,6 +417,7 @@ public class CDTSessionLocalServiceWrapper
 
 	/**
 	 * Get all sessions for a given student in a given date range, that are not attached to a group (eg. subClass)
+	 * Returns empty for GVA
 	 */
 	@Override
 	public java.util.List<com.weprode.nero.schedule.model.CDTSession>
@@ -468,8 +438,15 @@ public class CDTSessionLocalServiceWrapper
 	}
 
 	@Override
-	public boolean resetSessionContent(long sessionId) {
-		return _cdtSessionLocalService.resetSessionContent(sessionId);
+	public boolean hasUserSession(
+		com.liferay.portal.kernel.model.User user, long sessionId) {
+
+		return _cdtSessionLocalService.hasUserSession(user, sessionId);
+	}
+
+	@Override
+	public boolean isSession(long itemId) {
+		return _cdtSessionLocalService.isSession(itemId);
 	}
 
 	/**

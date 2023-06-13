@@ -6,22 +6,21 @@
 
 	<entity name="CDTSession" local-service="true" remote-service="true">
 		<column name="sessionId" type="long" primary="true" />
-		<column name="sessionStart" type="Date" />
-		<column name="sessionEnd" type="Date" />
+		<column name="start" type="Date" />
+		<column name="end" type="Date" />
 		<column name="weekId" type="long" />
-		<column name="published" type="boolean" />
-		<column name="title" type="String" />
 		<column name="fullCoursName" type="String" />
-		<column name="description" type="String" />
 		<column name="room" type="String" />
 		<column name="subject" type="String" />
-		<column name="schoolId" type="long" />
 		<column name="groupId" type="long" />
+		<column name="courseItemId" type="long" />
 		<column name="isManual" type="boolean" />
 
-		<!-- Get all subClass CDTSessions for given school -->
 		<finder return-type="Collection" name="groupId">
 			<finder-column name="groupId" />
+		</finder>
+		<finder return-type="Collection" name="courseItemId">
+			<finder-column name="courseItemId" />
 		</finder>
 	</entity>
 
@@ -33,21 +32,18 @@
 		<column name="status" type="int" />
 		<column name="substituteId" type="long" />
 		<column name="modificationDate" type="Date" />
+		<column name="privateNotes" type="String"/>
 
-		<!-- Teacher view : get all sessions related to a teacher -->
 		<finder return-type="Collection" name="teacherId">
 			<finder-column name="teacherId" />
 		</finder>
-		<!-- Get teacher from session id-->
 		<finder return-type="Collection" name="sessionId">
 			<finder-column name="sessionId" />
 		</finder>
-		<!-- Get session teacher from session id and teacher id -->
 		<finder return-type="SessionTeacher" name="sessionId_teacherId">
 			<finder-column name="sessionId" />
 			<finder-column name="teacherId" />
 		</finder>
-		<!-- Get substituted teacher from session id and substitute id -->
 		<finder return-type="SessionTeacher" name="sessionId_substituteId">
 			<finder-column name="sessionId" />
 			<finder-column name="substituteId" />
@@ -72,82 +68,35 @@
 		</finder>
 	</entity>
 
-	<!-- Manage homeworks -->
-	<entity name="Homework" local-service="true" remote-service="true">
-		<column name="homeworkId" type="long" primary="true"/>
-		<!-- 1=SIMPLE ; 2=EXERCICE, 3=FREE, 4=AUDIO, 5=EDX -->
-		<column name="type" type="long"/>
-		<column name="sourceSessionId" type="long" />
-		<column name="targetSessionId" type="long" />
-		<column name="targetWeekId" type="int" />
-		<column name="targetDate" type="Date" />
-		<column name="groupId" type="long" />
-		<column name="teacherId" type="long" />
-		<column name="description" type="String" />
-		<column name="estimatedTime" type="long" />
-		<column name="fromDate" type="Date" />
-		<column name="isCustomStudentList" type="boolean" />
+	<entity name="Subject" local-service="true" remote-service="true">
+		<column name="subjectId" type="long" primary="true"/>
+		<column name="name" type="String" />
 
-		<!-- Teacher view : get homeworks given for a given session -->
-		<finder return-type="Collection" name="targetSessionId">
-			<finder-column name="targetSessionId" />
-		</finder>
-
-		<!-- Teacher view : get homeworks given during a given session -->
-		<finder return-type="Collection" name="sourceSessionId">
-			<finder-column name="sourceSessionId" />
-		</finder>
-
-		<!-- Calendar panel : get 'free date' homeworks given for a given week -->
-		<finder return-type="Collection" name="targetWeekId">
-			<finder-column name="targetWeekId" />
+		<finder return-type="Collection" name="name">
+			<finder-column name="name" />
 		</finder>
 	</entity>
 
-	<!-- Manage user-specific homeworks -->
-	<entity name="StudentHomework" local-service="true" remote-service="false">
-		<column name="studentHomeworkId" type="long" primary="true"/>
-		<column name="homeworkId" type="long"/>
-		<column name="studentId" type="long"/>
-		<column name="isDone" type="boolean" />
-		<column name="isSent" type="boolean" />
-		<column name="sentDate" type="Date" />
-		<column name="sentFileId" type="long" />
+	<entity name="TeacherSubject" local-service="true" remote-service="false">
+		<column name="teacherSubjectId" type="long" primary="true" />
+		<column name="teacherId" type="long"/>
+		<column name="subjectId" type="long"/>
+		<column name="schoolId" type="long"/>
 
-		<finder return-type="Collection" name="homeworkId">
-			<finder-column name="homeworkId" />
+		<finder return-type="Collection" name="teacherId">
+			<finder-column name="teacherId" />
 		</finder>
-		<finder return-type="Collection" name="studentId">
-			<finder-column name="studentId" />
-		</finder>
-		<finder return-type="Collection" name="studentId_homeworkId">
-			<finder-column name="studentId" />
-			<finder-column name="homeworkId" />
+
+		<finder return-type="Collection" name="schoolId">
+			<finder-column name="schoolId" />
 		</finder>
 	</entity>
 
-	<entity name="GroupColor" local-service="true" remote-service="false">
 
-		<column name="groupId" type="long" primary="true"/>
+	<entity name="CourseDetails" local-service="true" remote-service="false">
+		<column name="courseGroupId" type="long" primary="true"/>
 		<column name="color" type="String" />
-
-	</entity>
-
-	<!-- Not used in GVA but kept for France color management through subjects (for students) -->
-	<entity name="SubjectGroupColor" local-service="true" remote-service="false">
-		<column name="subjectGroupColorId" type="long" primary="true"/>
-		<column name="subject" type="String"/>
-		<column name="groupId" type="long"/>
-		<column name="color" type="String" />
-
-		<finder return-type="Collection" name="groupId">
-			<finder-column name="groupId" />
-		</finder>
-
-		<finder return-type="Collection" name="groupId_subject">
-			<finder-column name="groupId" />
-			<finder-column name="subject" />
-		</finder>
+		<column name="subjectId" type="long" />
 	</entity>
 
 
@@ -157,7 +106,6 @@
 		<column name="sessionStartHour" type="String" />
 		<column name="sessionEndHour" type="String" />
 
-		<!-- Get session hours for a given school -->
 		<finder return-type="Collection" name="schoolId">
 			<finder-column name="schoolId" />
 		</finder>

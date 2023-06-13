@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
@@ -24,6 +25,8 @@ import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserUtilsLocalServiceBaseImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.security.NoSuchAlgorithmException;
@@ -416,4 +419,24 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         }
         return count;
     }
+
+    public JSONArray convertUsersToJson(List<User> userList) {
+
+        JSONArray userListAsJSON = new JSONArray();
+        for (User aUser : userList) {
+            JSONObject aUserAsJson = convertUserToJson(aUser);
+            userListAsJSON.put(aUserAsJson);
+        }
+
+        return userListAsJSON;
+    }
+
+    public JSONObject convertUserToJson(User user) {
+        JSONObject jsonUser = new JSONObject();
+        jsonUser.put(JSONConstants.USER_ID, user.getUserId());
+        jsonUser.put(JSONConstants.FIRST_NAME, user.getFirstName());
+        jsonUser.put(JSONConstants.LAST_NAME, user.getLastName());
+        return jsonUser;
+    }
+
 }

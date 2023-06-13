@@ -40,7 +40,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -81,14 +80,7 @@ public interface CDTSessionLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public CDTSession addCDTSession(CDTSession cdtSession);
 
-	public boolean assignSessionContent(long sessionId, long progressionItemId);
-
-	public JSONArray convertSessionsToJson(
-		List<CDTSession> sessions, User user, long colorsTeacherId);
-
-	public JSONObject copySessionContent(
-		User currentUser, long sourceSessionId, long targetSessionId,
-		JSONArray homeworksAsJSON);
+	public JSONArray convertSessions(List<CDTSession> sessions, User user);
 
 	/**
 	 * Creates a new cdt session with the primary key. Does not add the cdt session to the database.
@@ -100,16 +92,6 @@ public interface CDTSessionLocalService
 	public CDTSession createCDTSession(long sessionId);
 
 	/**
-	 * Create a CDTSession from all its properties
-	 */
-	public CDTSession createCDTSession(
-			long schoolId, long groupId, String subject, Date startDate,
-			Date endDate, List<Long> teacherIdList, String room, String title,
-			String fullCoursName, String description, boolean published,
-			boolean isManual)
-		throws SystemException;
-
-	/**
 	 * @throws PortalException
 	 */
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
@@ -118,6 +100,12 @@ public interface CDTSessionLocalService
 	public boolean createRecurrentSessions(
 		long groupId, String subject, String room, Date startDate, Date endDate,
 		List<Long> teacherIdList);
+
+	public CDTSession createSession(
+			long groupId, String subject, Date startDate, Date endDate,
+			List<Long> teacherIdList, String room, String fullCoursName,
+			boolean isManual)
+		throws SystemException;
 
 	/**
 	 * Deletes the cdt session from the database. Also notifies the appropriate model listeners.
@@ -153,10 +141,7 @@ public interface CDTSessionLocalService
 	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
 		throws PortalException;
 
-	/**
-	 * Delete a CDTSession with all its dependencies (homeworks, attachments..)
-	 */
-	public boolean deleteSessionAndDependencies(long sessionId)
+	public void deleteSessionAndDependencies(long sessionId)
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -312,9 +297,6 @@ public interface CDTSessionLocalService
 			Long schoolId, Date startDate, Date endDate)
 		throws SystemException;
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getSessionColor(long sessionId, long userId);
-
 	/**
 	 * Get session student list
 	 */
@@ -327,6 +309,7 @@ public interface CDTSessionLocalService
 
 	/**
 	 * Get all sessions for a given student in a given date range, that are not attached to a group (eg. subClass)
+	 * Returns empty for GVA
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<CDTSession> getStudentSpecificSessions(
@@ -336,7 +319,11 @@ public interface CDTSessionLocalService
 	public List<CDTSession> getTeacherSessions(
 		long teacherId, Date minDate, Date maxDate);
 
-	public boolean resetSessionContent(long sessionId);
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasUserSession(User user, long sessionId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isSession(long itemId);
 
 	/**
 	 * Updates the cdt session in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

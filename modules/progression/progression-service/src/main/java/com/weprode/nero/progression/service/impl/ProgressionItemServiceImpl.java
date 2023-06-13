@@ -3,8 +3,6 @@ package com.weprode.nero.progression.service.impl;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -17,6 +15,8 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.model.Homework;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.progression.constants.ProgressionConstants;
 import com.weprode.nero.progression.exception.UnauthorizedUrlException;
@@ -28,10 +28,9 @@ import com.weprode.nero.progression.service.ItemContentLocalServiceUtil;
 import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.progression.service.base.ProgressionItemServiceBaseImpl;
 import com.weprode.nero.progression.utils.ProgressionUtils;
-import com.weprode.nero.schedule.model.Homework;
-import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.File;
@@ -510,7 +509,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
                 long progressionItemId = ItemAssignmentLocalServiceUtil.getHomeworkAssignmentItemId(homeworkId);
                 ProgressionItem homeworkItem = ProgressionItemLocalServiceUtil.cloneItemForSpecificHomework(user.getUserId(), progressionItemId, homeworkId);
 
-                // Mark assigment as override	// TODO when content is save with modifications
+                // Mark assignment as override	// TODO when content is save with modifications
                 ItemAssignment itemAssignment = ItemAssignmentLocalServiceUtil.getByItemIdHomeworkId(progressionItemId, homeworkId);
                 ItemAssignmentLocalServiceUtil.markAssigmentAsOverride(progressionItemId, itemAssignment.getSessionId());
 
@@ -554,7 +553,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
             ProgressionItem sessionItem = ProgressionItemLocalServiceUtil.getSpecificSessionItem (sessionId);
 
             // Propagate in C&D
-            CDTSessionLocalServiceUtil.assignSessionContent(sessionId, sessionItem.getProgressionItemId());
+            // TODO
 
             result.put(JSONConstants.ITEM, sessionItem.convertToJSON(user.getUserId()));
 
@@ -597,7 +596,7 @@ public class ProgressionItemServiceImpl extends ProgressionItemServiceBaseImpl {
             ProgressionItem homeworkItem = ProgressionItemLocalServiceUtil.getSpecificHomeworkItem(homeworkId);
 
             // Propagate description + files
-            HomeworkLocalServiceUtil.assignHomeworkContent(homework.getHomeworkId(), homeworkItem.getProgressionItemId());
+            // TODO
 
             result.put(JSONConstants.ITEM, homeworkItem.convertToJSON(user.getUserId()));
 

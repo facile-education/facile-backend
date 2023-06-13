@@ -23,9 +23,8 @@ import com.liferay.portal.security.ldap.util.LDAPUtil;
 import com.weprode.nero.about.service.EntVersionUserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
-import com.weprode.nero.eel.synchronization.model.Subject;
-import com.weprode.nero.eel.synchronization.service.SubjectLocalServiceUtil;
-import com.weprode.nero.eel.synchronization.service.TeacherSubjectLocalServiceUtil;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
+import com.weprode.nero.course.service.SessionContentLocalServiceUtil;
 import com.weprode.nero.messaging.constants.MessagingConstants;
 import com.weprode.nero.messaging.model.MessagingConfig;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
@@ -44,12 +43,15 @@ import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.SlotConfiguration;
+import com.weprode.nero.schedule.model.Subject;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
 import com.weprode.nero.schedule.service.HolidayLocalServiceUtil;
-import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.SlotConfigurationLocalServiceUtil;
+import com.weprode.nero.schedule.service.SubjectLocalServiceUtil;
+import com.weprode.nero.schedule.service.TeacherSubjectLocalServiceUtil;
 import com.weprode.nero.user.model.LDAPMapping;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
@@ -1475,7 +1477,6 @@ public class GVESynchronizationManager {
                 continue;
             }
 
-
             // Build structure
             // Map<String shortSessionName, Map<String slot, SlotData>>
 
@@ -1634,6 +1635,10 @@ public class GVESynchronizationManager {
 
                     String room = slotData.getRoom();
 
+                    // Map course and subject
+                    Subject subject = SubjectLocalServiceUtil.getOrCreateSubject(slotData.getSubject());
+                    CourseDetailsLocalServiceUtil.setCourseSubject(coursOrg.getGroupId(), subject.getSubjectId());
+
                     // Convert slot to startTime/endTime
                     List<SessionInfos> sessionInfosList = getSessionInfos(slot, slotData);
 
@@ -1730,8 +1735,8 @@ public class GVESynchronizationManager {
                         } else {
                             // Create CDT Session
                             try {
-                                CDTSession createdSession = CDTSessionLocalServiceUtil.createCDTSession(school.getOrganizationId(), coursOrg.getGroupId(), slotData.getSubject(),
-                                        sessionInfos.getStartSessionDate(), sessionInfos.getEndSessionDate(), teacherIdList, room, coursName, sessionInfos.getFullCoursName(), "", true, false);
+                                CDTSession createdSession = CDTSessionLocalServiceUtil.createSession(coursOrg.getGroupId(), slotData.getSubject(),
+                                        sessionInfos.getStartSessionDate(), sessionInfos.getEndSessionDate(), teacherIdList, room, sessionInfos.getFullCoursName(), true);
                                 logger.info("CREATED SESSION " + createdSession.getSessionId() + " for coursName = " + coursName + " and from " + fullFormat.format(sessionInfos.getStartSessionDate()) + " to " + fullFormat.format(sessionInfos.getEndSessionDate()));
                                 newSessionIds.add(createdSession.getSessionId());
                                 existingCoursSessions.add(createdSession);
@@ -1753,12 +1758,12 @@ public class GVESynchronizationManager {
             for (CDTSession toDeleteSession : existingCoursSessions) {
                 if (!newSessionIds.contains(toDeleteSession.getSessionId())) {
                     try {
-                        logger.info(" >>> CANDIDATE OBSOLETE SESSION " + toDeleteSession.getSessionId() + " from " + toDeleteSession.getSessionStart().toString() + " to " + toDeleteSession.getSessionEnd());
+                        logger.info(" >>> CANDIDATE OBSOLETE SESSION " + toDeleteSession.getSessionId() + " from " + toDeleteSession.getStart().toString() + " to " + toDeleteSession.getEnd());
                         if (toDeleteSession.getIsManual()) {
                             logger.info("Session "+toDeleteSession.getSessionId()+" not deleted because manually created");
                         } else {
-                            if (toDeleteSession.getDescription().equals("")
-                                    && !HomeworkLocalServiceUtil.hasHomeworksGivenInSession(toDeleteSession.getSessionId())
+                            if (SessionContentLocalServiceUtil.getSessionContent(toDeleteSession.getSessionId()) != null
+                                    && !HomeworkLocalServiceUtil.hasHomeworksGivenDuringSession(toDeleteSession.getSessionId())
                                     && !HomeworkLocalServiceUtil.hasHomeworksToDoForSession(toDeleteSession.getSessionId())) {
 
                                 CDTSessionLocalServiceUtil.deleteSessionAndDependencies(toDeleteSession.getSessionId());
@@ -1879,9 +1884,9 @@ public class GVESynchronizationManager {
         // First filter on startDate and endDate only
         List<CDTSession> sessionCandidates = new ArrayList<>();
         for (CDTSession existingSession : existingSessions) {
-            logger.debug("Compare session " + sdf.format(startDate) + " / " + sdf.format(existingSession.getSessionStart()) + " and " + sdf.format(endDate) + " / " + sdf.format(existingSession.getSessionEnd()) + " and " + room + " / " + existingSession.getRoom());
-            if (isSameDayAndHour(existingSession.getSessionStart(), startDate)
-                    && isSameDayAndHour(existingSession.getSessionEnd(), endDate)) {
+            logger.debug("Compare session " + sdf.format(startDate) + " / " + sdf.format(existingSession.getStart()) + " and " + sdf.format(endDate) + " / " + sdf.format(existingSession.getEnd()) + " and " + room + " / " + existingSession.getRoom());
+            if (isSameDayAndHour(existingSession.getStart(), startDate)
+                    && isSameDayAndHour(existingSession.getEnd(), endDate)) {
                 sessionCandidates.add(existingSession);
             }
         }

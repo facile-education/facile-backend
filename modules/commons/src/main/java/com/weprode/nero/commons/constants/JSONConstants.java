@@ -267,7 +267,7 @@ public class JSONConstants {
     public static final String ROOM = "room";
     public static final String HAS_DESCRIPTION = "hasDescription";
     public static final String IS_MANUAL = "isManual";
-    public static final String IS_PUBLISH = "isPublish";
+    public static final String IS_DRAFT = "isDraft";
     public static final String TITLE = "title";
     public static final String IS_CURRENT_USER_TEACHER = "isCurrentUserTeacher";
     public static final String HAS_HOMEWORK = "hasHomework";
@@ -282,10 +282,11 @@ public class JSONConstants {
     public static final String START_DATE_SCHOOL = "startDateSchool";
     public static final String END_DATE_SCHOOL = "endDateSchool";
     public static final String SCHOOL_DAYS = "schoolDays";
-    public static final String GIVEN_HOMEWORK = "givenHomework";
-    public static final String TO_DO_HOMEWORK = "toDoHomework";
+    public static final String GIVEN_HOMEWORKS = "givenHomeworks";
+    public static final String TO_DO_HOMEWORKS = "toDoHomeworks";
     public static final String LAST_SESSION_ID = "lastSessionId";
     public static final String ALL_SLOTS = "allSlots";
+    public static final String PRIVATE_NOTES = "privateNotes";
 
     // Homework
     public static final String HOMEWORK_ID = "homeworkId";
@@ -303,8 +304,10 @@ public class JSONConstants {
     public static final String IS_WHOLE_CLASS = "isWholeClass";
     public static final String DONE_STUDENTS = "doneStudents";
     public static final String GROUP_STUDENTS = "groupStudents";
+    public static final String SENT_FILE = "sentFile";
 
     // Progression
+    public static final String COURSE_ID = "courseId";
     public static final String PROGRESSION_ID = "progressionId";
     public static final String CREATED_DATE = "createdDate";
     public static final String MODIFIED_DATE = "modifiedDate";
@@ -313,35 +316,37 @@ public class JSONConstants {
     public static final String ITEM_ID = "itemId";
     public static final String ITEMS = "items";
     public static final String ITEM = "item";
+    public static final String SESSION_CONTENT = "sessionContent";
     public static final String FOLDER_ID = "folderId";
     public static final String IS_HOMEWORK = "isHomework";
     public static final String PARENT_ID = "parentId";
-    public static final String DURATION = "duration";
     public static final String ORDER = "order";
     public static final String CONTENTS = "contents";
-    public static final String ASSIGNMENTS = "assignments";
-    public static final String ASSIGNMENT = "assignment";
-    public static final String CONTENT_ID = "contentId";
-    public static final String CONTENT_NAME = "contentName";
-    public static final String CONTENT_TYPE = "contentType";
+    public static final String BLOCK = "block";
+    public static final String BLOCKS = "blocks";
+    public static final String BLOCK_ID = "blockId";
+    public static final String BLOCK_NAME = "blockName";
+    public static final String BLOCK_TYPE = "blockType";
     public static final String LINK = "link";
     public static final String DOWNLOAD_URL = "downloadUrl";
-    public static final String IS_TO_BE_COMPLETED = "isToBeCompleted";
-    public static final String CONTENT_VALUE = "contentValue";
+    public static final String BLOCK_VALUE = "blockValue";
     public static final String ATTACHED_FILE_ID = "attachedFileId";
+    public static final String CORRECTION_DATE = "correctionDate";
     public static final String IS_AUDIO_RECORDING = "isAudioRecording";
-    public static final String ASSIGNED_DATE = "assignedDate";
     public static final String SESSION_START_DATE = "sessionStartDate";
     public static final String SESSION_END_DATE = "sessionEndDate";
     public static final String TARGET_DATE = "targetDate";
+    public static final String SENT_FILES = "sentFiles";
     public static final String PREVIEW = "preview";
     public static final String ASSIGNED_ITEM_ID = "assignedItemId";
+    public static final String ASSIGNED_DATE = "assignedDate";
     public static final String IS_PROGRESSION_DRIVEN = "isProgressionDriven";
     public static final String PROGRESSION_URL = "progressionUrl";
     public static final String PROGRESSION_OWNER = "progressionOwner";
     public static final String PROGRESSION = "progression";
     public static final String SUB_SECTIONS = "subSections";
     public static final String SECTIONS = "sections";
+    public static final String ASSIGNMENTS = "assignments";
 
     // School life
     public static final String STUDENT_NAME = "studentName";

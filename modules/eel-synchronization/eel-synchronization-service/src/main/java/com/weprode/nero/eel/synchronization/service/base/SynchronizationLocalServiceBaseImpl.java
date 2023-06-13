@@ -24,19 +24,14 @@ import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiServic
 import com.liferay.portal.kernel.service.BaseLocalServiceImpl;
 import com.liferay.portal.kernel.util.InfrastructureUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-
 import com.weprode.nero.eel.synchronization.service.SynchronizationLocalService;
 import com.weprode.nero.eel.synchronization.service.SynchronizationLocalServiceUtil;
 import com.weprode.nero.eel.synchronization.service.persistence.ParentSynchroPersistence;
-import com.weprode.nero.eel.synchronization.service.persistence.SubjectPersistence;
-import com.weprode.nero.eel.synchronization.service.persistence.TeacherSubjectPersistence;
-
-import java.lang.reflect.Field;
-
-import javax.sql.DataSource;
-
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Field;
 
 /**
  * Provides the base implementation for the synchronization local service.
@@ -132,13 +127,7 @@ public abstract class SynchronizationLocalServiceBaseImpl
 	@Reference
 	protected ParentSynchroPersistence parentSynchroPersistence;
 
-	@Reference
-	protected SubjectPersistence subjectPersistence;
-
 	protected SynchronizationLocalService synchronizationLocalService;
-
-	@Reference
-	protected TeacherSubjectPersistence teacherSubjectPersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

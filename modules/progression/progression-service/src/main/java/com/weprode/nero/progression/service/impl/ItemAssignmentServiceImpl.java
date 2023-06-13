@@ -9,6 +9,9 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.model.Homework;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
+import com.weprode.nero.course.service.SessionContentLocalServiceUtil;
 import com.weprode.nero.progression.model.ItemAssignment;
 import com.weprode.nero.progression.model.ProgressionItem;
 import com.weprode.nero.progression.service.ItemAssignmentLocalServiceUtil;
@@ -17,9 +20,7 @@ import com.weprode.nero.progression.service.base.ItemAssignmentServiceBaseImpl;
 import com.weprode.nero.progression.service.persistence.ItemAssignmentPK;
 import com.weprode.nero.progression.utils.ProgressionUtils;
 import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,9 +71,8 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
             ItemAssignment assignment = ItemAssignmentLocalServiceUtil.assignSession(itemId, sessionId);
 
             // Push item content to session
-            CDTSessionLocalServiceUtil.assignSessionContent(sessionId, itemId);
-
-            result.put(JSONConstants.ASSIGNMENT, assignment.convertToJSON(user.getUserId()));
+            // TODO
+            //result.put(JSONConstants.ASSIGNMENT, assignment.convertToJSON(user.getUserId()));
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
@@ -133,7 +133,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
                 Date toDate = null;
                 if (targetSessionId != 0) {
                     CDTSession targetSession = CDTSessionLocalServiceUtil.getCDTSession(targetSessionId);
-                    toDate = targetSession.getSessionStart();
+                    toDate = targetSession.getStart();
                 } else {
                     try {
                         toDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(homeworkToCreate.getString(JSONConstants.TO_DATE));
@@ -146,40 +146,34 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
                 // GroupId is the one from sourceSession
                 long groupId = CDTSessionLocalServiceUtil.getCDTSession(sourceSessionId).getGroupId();
 
-                // TODO convert from item.getDuration() could contain 'min'/'h' strings
-                // ProgressionItem item = ProgressionItemLocalServiceUtil.getProgressionItem(itemId);
-                // int estimatedTime = Integer.parseInt(item.getDuration());
-                int estimatedTime = 30;
-                String description = ProgressionItemLocalServiceUtil.convertContentAsHtml(itemId);
-
                 // Students
-                List<User> students = new ArrayList<>();
+                List<Long> studentIds = new ArrayList<>();
                 JSONArray jsonStudents = homeworkToCreate.getJSONArray("selectedStudents");
                 for (int j = 0 ; j < jsonStudents.length() ; j++) {
-                    students.add(UserLocalServiceUtil.getUser(jsonStudents.getJSONObject(j).getLong("userId")));
+                    studentIds.add(jsonStudents.getJSONObject(j).getLong(JSONConstants.USER_ID));
                 }
 
                 if (homeworkId == 0) {
                     // This is creation
-                    Homework homework = HomeworkLocalServiceUtil.createHomework(user, description, sourceSessionId, targetSessionId, groupId, toDate, type, estimatedTime, students);
+                    Homework homework = HomeworkLocalServiceUtil.createHomework(user, sourceSessionId, targetSessionId, groupId, toDate, type, studentIds);
 
                     logger.info("Teacher " + user.getFullName() + " assigns homework item " + itemId + " to session " + sourceSessionId + ". Created homeworkId is " + homework.getHomeworkId());
                     ItemAssignment assignment = ItemAssignmentLocalServiceUtil.assignHomework(itemId, sourceSessionId, homework.getHomeworkId());
                     jsonAssignments.put(assignment.convertToJSON(user.getUserId()));
 
                     // Propagate description + files
-                    HomeworkLocalServiceUtil.assignHomeworkContent(homework.getHomeworkId(), itemId);
+                    // TODO
 
                 } else {
                     // This is update
                     logger.info("Teacher " + user.getFullName() + " updates assignment for homework item " + itemId + " to session " + sourceSessionId);
-                    HomeworkLocalServiceUtil.updateHomeworkTargets(homeworkId, targetSessionId, toDate, students);
+                    HomeworkLocalServiceUtil.updateHomeworkTargets(homeworkId, targetSessionId, toDate, studentIds);
                     ItemAssignmentPK pk = new ItemAssignmentPK(itemId, sourceSessionId);
                     ItemAssignment assignment = ItemAssignmentLocalServiceUtil.getItemAssignment(pk);
                     jsonAssignments.put(assignment.convertToJSON(user.getUserId()));
                 }
             }
-            result.put(JSONConstants.ASSIGNMENTS, jsonAssignments);
+            //result.put(JSONConstants.ASSIGNMENTS, jsonAssignments);
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
@@ -222,7 +216,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
 
             if (itemAssignment.getHomeworkId() == 0) {
                 // This is session
-                CDTSessionLocalServiceUtil.resetSessionContent(sessionId);
+                SessionContentLocalServiceUtil.deleteSessionContent(sessionId);
 
                 // Also delete specific item and contents if any
                 ProgressionItem sessionSpecificItem = ProgressionItemLocalServiceUtil.getSpecificSessionItem(sessionId);

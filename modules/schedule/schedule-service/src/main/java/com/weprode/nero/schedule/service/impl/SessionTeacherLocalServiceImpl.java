@@ -1,7 +1,6 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -12,7 +11,6 @@ import com.weprode.nero.schedule.exception.NoSuchSessionTeacherException;
 import com.weprode.nero.schedule.model.SessionTeacher;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.SessionTeacherLocalServiceBaseImpl;
-
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -31,11 +29,11 @@ public class SessionTeacherLocalServiceImpl
 	public static final int SUBSTITUTE = 1;
 	public static final int SUBSTITUTED = 2;
 
-	public SessionTeacher createSessionteacher(long sessionId, long teacherId) throws SystemException {
-		return createSessionteacher(sessionId, teacherId, 0);
+	public SessionTeacher createSessionTeacher(long sessionId, long teacherId) throws SystemException {
+		return createSessionTeacher(sessionId, teacherId, 0);
 	}
 
-	public SessionTeacher createSessionteacher(long sessionId, long teacherId, int status) throws SystemException {
+	public SessionTeacher createSessionTeacher(long sessionId, long teacherId, int status) throws SystemException {
 		long sessionTeacherId = counterLocalService.increment();
 
 		SessionTeacher sessionTeacher = sessionTeacherPersistence.create(sessionTeacherId);
@@ -166,7 +164,7 @@ public class SessionTeacherLocalServiceImpl
 				}
 			}
 			if (!isFound) {
-				createSessionteacher(sessionId, newTeacherId);
+				createSessionTeacher(sessionId, newTeacherId);
 			}
 		}
 
@@ -191,7 +189,7 @@ public class SessionTeacherLocalServiceImpl
 		SessionTeacher sessionTeacher = sessionTeacherPersistence.fetchBysessionId_teacherId(sessionId, teacherId);
 		updateSessionTeacher(sessionTeacher, sessionTeacher.getStatus() + SUBSTITUTED, substituteId);
 
-		return createSessionteacher(sessionId, substituteId, SUBSTITUTE);
+		return createSessionTeacher(sessionId, substituteId, SUBSTITUTE);
 	}
 
 	// Remove substitute teacher and rollback main teacher status
@@ -210,6 +208,18 @@ public class SessionTeacherLocalServiceImpl
 
 	public boolean isSubstituted (long teacherId, long sessionId) throws SystemException, NoSuchSessionTeacherException {
 		return sessionTeacherPersistence.findBysessionId_teacherId(sessionId, teacherId).getStatus() == SUBSTITUTED;
+	}
+
+	public void updateModificationDate(long teacherId, long sessionId) {
+		try {
+			SessionTeacher sessionTeacher = sessionTeacherPersistence.findBysessionId_teacherId(sessionId, teacherId);
+			if (sessionTeacher != null) {
+				sessionTeacher.setModificationDate(new Date());
+				sessionTeacherPersistence.update(sessionTeacher);
+			}
+		} catch (Exception e) {
+			logger.error("Error updating modification date for sessionId " + sessionId + " and teacherId " + teacherId, e);
+		}
 	}
 
 	// Used for session activity
@@ -238,4 +248,31 @@ public class SessionTeacherLocalServiceImpl
 
 		return null;
 	}
+
+	public void saveNotes(long teacherId, long sessionId, String notes) {
+
+		try {
+			SessionTeacher sessionTeacher = sessionTeacherPersistence.fetchBysessionId_teacherId(sessionId, teacherId);
+			if (sessionTeacher != null) {
+				sessionTeacher.setPrivateNotes(notes);
+				sessionTeacherPersistence.update(sessionTeacher);
+			}
+		} catch (Exception e) {
+			logger.error("Error saving notes for session " + sessionId + " and teacher " + teacherId, e);
+		}
+	}
+
+	public String getPrivateNotes(long teacherId, long sessionId) {
+
+		try {
+			SessionTeacher sessionTeacher = sessionTeacherPersistence.fetchBysessionId_teacherId(sessionId, teacherId);
+			if (sessionTeacher != null) {
+				return sessionTeacher.getPrivateNotes();
+			}
+		} catch (Exception e) {
+			logger.error("Error saving notes for session " + sessionId + " and teacher " + teacherId, e);
+		}
+		return "";
+	}
+
 }

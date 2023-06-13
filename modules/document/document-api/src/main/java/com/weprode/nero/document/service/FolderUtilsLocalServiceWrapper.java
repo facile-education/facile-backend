@@ -115,6 +115,15 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.repository.model.Folder
+			getGroupCourseFolder(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _folderUtilsLocalService.getGroupCourseFolder(groupId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getGroupNewsFolder(
 			long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException,

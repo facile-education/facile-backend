@@ -63,7 +63,7 @@ public class SessionTeacherCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{sessionTeacherId=");
 		sb.append(sessionTeacherId);
@@ -77,6 +77,8 @@ public class SessionTeacherCacheModel
 		sb.append(substituteId);
 		sb.append(", modificationDate=");
 		sb.append(modificationDate);
+		sb.append(", privateNotes=");
+		sb.append(privateNotes);
 		sb.append("}");
 
 		return sb.toString();
@@ -99,6 +101,13 @@ public class SessionTeacherCacheModel
 			sessionTeacherImpl.setModificationDate(new Date(modificationDate));
 		}
 
+		if (privateNotes == null) {
+			sessionTeacherImpl.setPrivateNotes("");
+		}
+		else {
+			sessionTeacherImpl.setPrivateNotes(privateNotes);
+		}
+
 		sessionTeacherImpl.resetOriginalValues();
 
 		return sessionTeacherImpl;
@@ -116,6 +125,7 @@ public class SessionTeacherCacheModel
 
 		substituteId = objectInput.readLong();
 		modificationDate = objectInput.readLong();
+		privateNotes = objectInput.readUTF();
 	}
 
 	@Override
@@ -130,6 +140,13 @@ public class SessionTeacherCacheModel
 
 		objectOutput.writeLong(substituteId);
 		objectOutput.writeLong(modificationDate);
+
+		if (privateNotes == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(privateNotes);
+		}
 	}
 
 	public long sessionTeacherId;
@@ -138,5 +155,6 @@ public class SessionTeacherCacheModel
 	public int status;
 	public long substituteId;
 	public long modificationDate;
+	public String privateNotes;
 
 }

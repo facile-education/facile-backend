@@ -64,14 +64,32 @@ import java.rmi.RemoteException;
 @Deprecated
 public class CDTSessionServiceSoap {
 
-	public static org.json.JSONObject getHorairesSessions(
-			long userId, long groupId, String start, String end, String volee)
+	public static org.json.JSONObject getUserSessions(
+			long userId, String minDateStr, String maxDateStr)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				CDTSessionServiceUtil.getHorairesSessions(
-					userId, groupId, start, end, volee);
+				CDTSessionServiceUtil.getUserSessions(
+					userId, minDateStr, maxDateStr);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getGroupSessions(
+			long groupId, String minDateStr, String maxDateStr)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				CDTSessionServiceUtil.getGroupSessions(
+					groupId, minDateStr, maxDateStr);
 
 			return returnValue;
 		}

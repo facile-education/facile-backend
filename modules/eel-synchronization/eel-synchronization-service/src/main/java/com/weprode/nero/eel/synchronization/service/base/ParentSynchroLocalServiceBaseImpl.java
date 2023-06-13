@@ -43,8 +43,6 @@ import com.weprode.nero.eel.synchronization.model.ParentSynchro;
 import com.weprode.nero.eel.synchronization.service.ParentSynchroLocalService;
 import com.weprode.nero.eel.synchronization.service.ParentSynchroLocalServiceUtil;
 import com.weprode.nero.eel.synchronization.service.persistence.ParentSynchroPersistence;
-import com.weprode.nero.eel.synchronization.service.persistence.SubjectPersistence;
-import com.weprode.nero.eel.synchronization.service.persistence.TeacherSubjectPersistence;
 
 import java.io.Serializable;
 
@@ -463,12 +461,6 @@ public abstract class ParentSynchroLocalServiceBaseImpl
 
 	@Reference
 	protected ParentSynchroPersistence parentSynchroPersistence;
-
-	@Reference
-	protected SubjectPersistence subjectPersistence;
-
-	@Reference
-	protected TeacherSubjectPersistence teacherSubjectPersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

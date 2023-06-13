@@ -327,7 +327,7 @@ public class SessionStudentLocalServiceUtil {
 
 	public static org.json.JSONArray getStudentSessions(
 		long studentId, java.util.Date minDate, java.util.Date maxDate,
-		Boolean withFired) {
+		boolean withFired) {
 
 		return getService().getStudentSessions(
 			studentId, minDate, maxDate, withFired);

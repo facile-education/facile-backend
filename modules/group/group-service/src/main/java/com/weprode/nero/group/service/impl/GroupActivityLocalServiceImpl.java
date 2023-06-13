@@ -9,6 +9,9 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.model.Homework;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
+import com.weprode.nero.course.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.document.model.Activity;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
@@ -23,12 +26,9 @@ import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.service.NewsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
-import com.weprode.nero.schedule.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.school.life.model.Renvoi;
 import com.weprode.nero.school.life.service.RenvoiLocalServiceUtil;
 import com.weprode.nero.school.life.service.persistence.RenvoiPK;
@@ -130,7 +130,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                         Organization renvoiClass = schoolRenvoi.getOrgId() == 0 ? null : OrganizationLocalServiceUtil.getOrganization(schoolRenvoi.getOrgId());
                         CDTSession sourceSession = CDTSessionLocalServiceUtil.getCDTSession(schoolRenvoi.getSourceSessionId());
                         // Filter to group if 1 selected
-                        if (groupIds.size() > 1 || ((groupIds.contains(sourceSession.getGroupId()) || renvoiClass == null || groupIds.contains(renvoiClass.getGroupId())))) {
+                        if (groupIds.size() > 1 || (groupIds.contains(sourceSession.getGroupId()) || renvoiClass == null || groupIds.contains(renvoiClass.getGroupId()))) {
                             GroupActivity schoolRenvoiActivity = new GroupActivity(schoolRenvoi.getSchoollifeSessionId(), schoolRenvoi.getStudentId(), schoolRenvoi.getRenvoiDate(), ActivityConstants.ACTIVITY_TYPE_SCHOOL_RENVOI);
                             groupActivities.add(schoolRenvoiActivity);
                         }
@@ -138,24 +138,16 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Homeworks given
-                if (withSessions && (RoleUtilsLocalServiceUtil.isStudent(user) || RoleUtilsLocalServiceUtil.isTeacher(user))) {
-                    List<Homework> givenHomeworks = new ArrayList<>();
-                    if (RoleUtilsLocalServiceUtil.isStudent(user)) {
-                        givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworks(user, minDate);
-                    } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                        givenHomeworks.addAll(HomeworkLocalServiceUtil.getTeacherHomeworks(user, minDate, 0));
-                    }
-
+                if (withSessions && RoleUtilsLocalServiceUtil.isStudent(user)) {
+                    List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworkActivity(user, minDate, maxDate);
                     for (Homework givenHomework : givenHomeworks) {
-                        if (givenHomework.getFromDate().after(minDate) && givenHomework.getFromDate().before(maxDate) && groupIds.contains(givenHomework.getGroupId())) {
-                            GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getFromDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
-                            groupActivities.add(homeworkActivity);
-                        }
+                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getFromDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
+                        groupActivities.add(homeworkActivity);
                     }
                 }
 
                 // Sessions content added
-                if (withSessions && (RoleUtilsLocalServiceUtil.isStudent(user) || RoleUtilsLocalServiceUtil.isTeacher(user))) {
+                if (withSessions && RoleUtilsLocalServiceUtil.isStudent(user)) {
                     List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupsSessionActivity(user.getUserId(), groupIds, minDate, maxDate);
                     for (CDTSession session : sessions) {
                         // Get modificationDate
@@ -254,15 +246,9 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Homeworks given
-                List<Homework> givenHomeworks = new ArrayList<>();
-                if (RoleUtilsLocalServiceUtil.isStudent(user)) {
-                    givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworks(user, minDate);
-                } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                    givenHomeworks.addAll(HomeworkLocalServiceUtil.getTeacherHomeworks(user, minDate, 0));
-                }
-
+                List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getCourseHomeworks(user, groupId, minDate, maxDate);
                 for (Homework givenHomework : givenHomeworks) {
-                    if (givenHomework.getFromDate().after(minDate) && givenHomework.getFromDate().before(maxDate) && groupIds.contains(givenHomework.getGroupId())) {
+                    if (givenHomework.getFromDate().after(minDate) && givenHomework.getFromDate().before(maxDate) && groupIds.contains(givenHomework.getCourseId())) {
                         GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getFromDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
                         groupActivities.add(homeworkActivity);
                     }
@@ -403,8 +389,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             User teacher = UserLocalServiceUtil.getUser(homework.getTeacherId());
             homeworkActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getFromDate()));
             homeworkActivity.put(JSONConstants.TARGET_DATE, df.format(homework.getTargetDate()));
-            homeworkActivity.put(JSONConstants.GROUP_ID, homework.getGroupId());
-            homeworkActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(homework.getGroupId()));
+            homeworkActivity.put(JSONConstants.GROUP_ID, homework.getCourseId());
+            homeworkActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(homework.getCourseId()));
             homeworkActivity.put(JSONConstants.AUTHOR, teacher.getFullName());
             homeworkActivity.put(JSONConstants.IS_FOR_ALL_STUDENTS, !homework.getIsCustomStudentList());
             if (homework.getIsCustomStudentList()) {
@@ -427,8 +413,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             sessionActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
             sessionActivity.put(JSONConstants.GROUP_ID, session.getGroupId());
             sessionActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(session.getGroupId()));
-            sessionActivity.put(JSONConstants.TARGET, session.getTitle());
-            sessionActivity.put(JSONConstants.TARGET_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(session.getSessionStart()));
+            sessionActivity.put(JSONConstants.TARGET_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(session.getStart()));
             sessionActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_SESSION);
         } catch (Exception e) {
             logger.error("Error converting session activity for session " + session.getSessionId(), e);

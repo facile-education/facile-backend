@@ -66,6 +66,7 @@ public interface ProgressionItemLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.progression.service.impl.ProgressionItemLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the progression item local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link ProgressionItemLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public ProgressionItem addItem(
 			long progressionId, long userId, long folderId, boolean isHomework)
 		throws SystemException;
@@ -106,6 +107,7 @@ public interface ProgressionItemLocalService
 	@Transactional(enabled = false)
 	public ProgressionItem createProgressionItem(long progressionItemId);
 
+	@Indexable(type = IndexableType.DELETE)
 	public void deleteItem(long userId, long progressionItemId)
 		throws PortalException, SystemException;
 
@@ -288,6 +290,7 @@ public interface ProgressionItemLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ProgressionItem getSpecificSessionItem(long sessionId);
 
+	@Indexable(type = IndexableType.REINDEX)
 	public ProgressionItem updateItem(
 			long progressionItemId, long folderId, String name, int type,
 			String duration, int order)

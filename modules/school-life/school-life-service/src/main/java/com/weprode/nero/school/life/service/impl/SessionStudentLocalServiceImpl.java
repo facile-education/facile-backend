@@ -3,12 +3,9 @@ package com.weprode.nero.school.life.service.impl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
-import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SchoollifeSlot;
@@ -188,56 +185,51 @@ public class SessionStudentLocalServiceImpl extends SessionStudentLocalServiceBa
         return getStudentSessions(studentId, minDate, maxDate, true);
     }
 
-    public JSONArray getStudentSessions(long studentId, Date minDate, Date maxDate, Boolean withFired) {
+    public JSONArray getStudentSessions(long studentId, Date minDate, Date maxDate, boolean withFired) {
         JSONArray jsonSessions = new JSONArray();
         
         try {
-            User student = UserLocalServiceUtil.getUser(studentId);
             SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
-            List<Organization> studentClasses = UserOrgsLocalServiceUtil.getUserClasses(student, false);
+            List<SessionStudent> studentSessions = sessionStudentPersistence.findBystudentId(studentId);
+            if (studentSessions != null) {
+                for (SessionStudent studentSession : studentSessions) {
+                    try {
+                        SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(studentSession.getSchoollifeSessionId());
+                        if (withFired || session.getType() != SchoollifeConstants.TYPE_RENVOI) {
+                            if (!session.getStartDate().before(minDate) && session.getStartDate().before(maxDate)) {
+                                JSONObject schoollifeSessionJson = new JSONObject();
+                                schoollifeSessionJson.put(JSONConstants.SCHOOLLIFE_SESSION_ID, studentSession.getSchoollifeSessionId());
+                                schoollifeSessionJson.put(JSONConstants.START_DATE, df.format(session.getStartDate()));
+                                schoollifeSessionJson.put(JSONConstants.END_DATE, df.format(session.getEndDate()));
+                                String sessionName = SchoollifeSessionLocalServiceUtil.getSessionName(studentSession.getSchoollifeSessionId());
+                                schoollifeSessionJson.put(JSONConstants.TITLE, sessionName + (session.getType() == SchoollifeConstants.TYPE_TRAVAUX ? " en " + studentSession.getSubject() : ""));
+                                schoollifeSessionJson.put(JSONConstants.SUBJECT, sessionName);
+                                schoollifeSessionJson.put(JSONConstants.TYPE, session.getType());
+                                schoollifeSessionJson.put(JSONConstants.COMMENT, studentSession.getComment());
+                                schoollifeSessionJson.put(JSONConstants.SUBJECT, studentSession.getSubject());
 
-            if (studentClasses != null && !studentClasses.isEmpty()) {
-                Organization studentClass = UserOrgsLocalServiceUtil.getUserClasses(student, false).get(0);
-                List<SessionStudent> studentSessions = sessionStudentPersistence.findBystudentId(studentId);
+                                SchoollifeSlot slot = SchoollifeSlotLocalServiceUtil.getSchoollifeSlot(session.getSchoollifeSlotId());
+                                schoollifeSessionJson.put(JSONConstants.ROOM, slot.getRoom());
 
-                if (studentSessions != null) {
-                    for (SessionStudent studentSession : studentSessions) {
-                        try {
-                            SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(studentSession.getSchoollifeSessionId());
-                            if (withFired || session.getType() != SchoollifeConstants.TYPE_RENVOI) {
-                                if (!session.getStartDate().before(minDate) && session.getStartDate().before(maxDate)) {
-                                    JSONObject schoollifeSessionJson = new JSONObject();
-                                    schoollifeSessionJson.put(JSONConstants.SCHOOLLIFE_SESSION_ID, studentSession.getSchoollifeSessionId());
-                                    schoollifeSessionJson.put(JSONConstants.START_DATE, df.format(session.getStartDate()));
-                                    schoollifeSessionJson.put(JSONConstants.END_DATE, df.format(session.getEndDate()));
-                                    String sessionName = SchoollifeSessionLocalServiceUtil.getSessionName(studentSession.getSchoollifeSessionId());
-                                    schoollifeSessionJson.put(JSONConstants.TITLE, sessionName + (session.getType() == SchoollifeConstants.TYPE_TRAVAUX ? " en " + studentSession.getSubject() : ""));
-                                    schoollifeSessionJson.put(JSONConstants.SUBJECT, sessionName);
-                                    schoollifeSessionJson.put(JSONConstants.TYPE, session.getType());
-                                    schoollifeSessionJson.put(JSONConstants.COMMENT, studentSession.getComment());
-                                    schoollifeSessionJson.put(JSONConstants.SUBJECT, studentSession.getSubject());
+                                JSONArray jsonTeachers = new JSONArray();
+                                User teacher = UserLocalServiceUtil.getUser(slot.getTeacherId());
+                                JSONObject jsonTeacher = new JSONObject();
+                                jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
+                                jsonTeacher.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
+                                jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());
+                                jsonTeachers.put(jsonTeacher);
+                                schoollifeSessionJson.put(JSONConstants.TEACHERS, jsonTeachers);
 
-                                    SchoollifeSlot slot = SchoollifeSlotLocalServiceUtil.getSchoollifeSlot(session.getSchoollifeSlotId());
-                                    schoollifeSessionJson.put(JSONConstants.ROOM, slot.getRoom());
+                                // Color
+                                String color = SchoollifeSessionLocalServiceUtil.getColorFromSchoollifeType(session.getType());
+                                schoollifeSessionJson.put(JSONConstants.COLOR, color);
 
-                                    User teacher = UserLocalServiceUtil.getUser(slot.getTeacherId());
-                                    JSONObject jsonTeacher = new JSONObject();
-                                    jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
-                                    jsonTeacher.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
-                                    jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());
-                                    schoollifeSessionJson.put(JSONConstants.TEACHER, jsonTeacher);
-
-                                    // Color
-                                    String color = GroupColorLocalServiceUtil.getColor(studentClass.getGroupId());
-                                    schoollifeSessionJson.put(JSONConstants.COLOR, color);
-
-                                    jsonSessions.put(schoollifeSessionJson);
-                                }
+                                jsonSessions.put(schoollifeSessionJson);
                             }
-                        } catch (Exception e) {
-                            logger.debug(e);
                         }
+                    } catch (Exception e) {
+                        logger.debug(e);
                     }
                 }
             }
@@ -247,7 +239,7 @@ public class SessionStudentLocalServiceImpl extends SessionStudentLocalServiceBa
         
         return jsonSessions;
     }
-    
+
     public List<Long> getAbsentStudents(long schoollifeSessionId) {
         List<Long> absentStudentIds = new ArrayList<>();
         

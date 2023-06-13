@@ -19,6 +19,7 @@ public class DocumentConstants {
     public static final String SCHOOL_BAG_FOLDER_NAME = "Mon cartable";
     public static final String GROUP_FOLDER_NAME = "Atelier du groupe";
     public static final String PROGRESSION_FOLDER_NAME = "._PROGRESSION_";
+    public static final String COURSE_FOLDER_NAME = "._COURSE_";
     public static final String NEWS_FOLDER_NAME = "._NEWS_";
 
     public static final String TMP_IMG_FOLDER_NAME = "._TEMPORARY_IMG_";

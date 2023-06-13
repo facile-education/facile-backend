@@ -17,6 +17,7 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
@@ -144,9 +145,8 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
                 JSONObject cdtSessionJson = new JSONObject();
                 cdtSessionJson.put(JSONConstants.CDT_SESSION_ID, cdtSession.getSessionId());
-                cdtSessionJson.put(JSONConstants.START_DATE, df.format(cdtSession.getSessionStart()));
-                cdtSessionJson.put(JSONConstants.END_DATE, df.format(cdtSession.getSessionEnd()));
-                cdtSessionJson.put(JSONConstants.TITLE, cdtSession.getTitle());
+                cdtSessionJson.put(JSONConstants.START_DATE, df.format(cdtSession.getStart()));
+                cdtSessionJson.put(JSONConstants.END_DATE, df.format(cdtSession.getEnd()));
                 cdtSessionJson.put(JSONConstants.ROOM, cdtSession.getRoom());
                 cdtSessionJson.put(JSONConstants.SUBJECT, cdtSession.getSubject());
 
@@ -166,7 +166,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 cdtSessionJson.put(JSONConstants.TEACHERS, teacherArray);
 
                 // Color
-                cdtSessionJson.put(JSONConstants.COLOR, CDTSessionLocalServiceUtil.getSessionColor(cdtSession.getSessionId(), user.getUserId()));
+                cdtSessionJson.put(JSONConstants.COLOR, CourseDetailsLocalServiceUtil.getCourseColor(cdtSession.getGroupId()));
 
                 jsonSessions.put(cdtSessionJson);
             }

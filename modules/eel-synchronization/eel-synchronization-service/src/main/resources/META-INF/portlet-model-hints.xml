@@ -9,14 +9,4 @@
 		<field name="lineCount" type="long" />
 		<field name="errorCount" type="long" />
 	</model>
-	<model name="com.weprode.nero.eel.synchronization.model.Subject">
-		<field name="subjectId" type="long" />
-		<field name="name" type="String" />
-	</model>
-	<model name="com.weprode.nero.eel.synchronization.model.TeacherSubject">
-		<field name="teacherSubjectId" type="long" />
-		<field name="teacherId" type="long" />
-		<field name="subjectId" type="long" />
-		<field name="schoolId" type="long" />
-	</model>
 </model-hints>

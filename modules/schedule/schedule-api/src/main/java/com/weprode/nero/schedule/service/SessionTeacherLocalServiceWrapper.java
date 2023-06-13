@@ -76,20 +76,20 @@ public class SessionTeacherLocalServiceWrapper
 	}
 
 	@Override
-	public com.weprode.nero.schedule.model.SessionTeacher createSessionteacher(
+	public com.weprode.nero.schedule.model.SessionTeacher createSessionTeacher(
 			long sessionId, long teacherId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
-		return _sessionTeacherLocalService.createSessionteacher(
+		return _sessionTeacherLocalService.createSessionTeacher(
 			sessionId, teacherId);
 	}
 
 	@Override
-	public com.weprode.nero.schedule.model.SessionTeacher createSessionteacher(
+	public com.weprode.nero.schedule.model.SessionTeacher createSessionTeacher(
 			long sessionId, long teacherId, int status)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
-		return _sessionTeacherLocalService.createSessionteacher(
+		return _sessionTeacherLocalService.createSessionTeacher(
 			sessionId, teacherId, status);
 	}
 
@@ -305,6 +305,12 @@ public class SessionTeacherLocalServiceWrapper
 		return _sessionTeacherLocalService.getPersistedModel(primaryKeyObj);
 	}
 
+	@Override
+	public String getPrivateNotes(long teacherId, long sessionId) {
+		return _sessionTeacherLocalService.getPrivateNotes(
+			teacherId, sessionId);
+	}
+
 	/**
 	 * Returns the session teacher with the primary key.
 	 *
@@ -418,12 +424,23 @@ public class SessionTeacherLocalServiceWrapper
 	}
 
 	@Override
+	public void saveNotes(long teacherId, long sessionId, String notes) {
+		_sessionTeacherLocalService.saveNotes(teacherId, sessionId, notes);
+	}
+
+	@Override
 	public com.weprode.nero.schedule.model.SessionTeacher substituteTeacher(
 			long teacherId, long sessionId, long substituteId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _sessionTeacherLocalService.substituteTeacher(
 			teacherId, sessionId, substituteId);
+	}
+
+	@Override
+	public void updateModificationDate(long teacherId, long sessionId) {
+		_sessionTeacherLocalService.updateModificationDate(
+			teacherId, sessionId);
 	}
 
 	/**

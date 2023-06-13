@@ -41,11 +41,11 @@ public class CDTSessionServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getHorairesSessions(
-		long userId, long groupId, String start, String end, String volee) {
+	public org.json.JSONObject getGroupSessions(
+		long groupId, String minDateStr, String maxDateStr) {
 
-		return _cdtSessionService.getHorairesSessions(
-			userId, groupId, start, end, volee);
+		return _cdtSessionService.getGroupSessions(
+			groupId, minDateStr, maxDateStr);
 	}
 
 	/**
@@ -66,6 +66,14 @@ public class CDTSessionServiceWrapper
 	@Override
 	public org.json.JSONObject getTeacherGroups() {
 		return _cdtSessionService.getTeacherGroups();
+	}
+
+	@Override
+	public org.json.JSONObject getUserSessions(
+		long userId, String minDateStr, String maxDateStr) {
+
+		return _cdtSessionService.getUserSessions(
+			userId, minDateStr, maxDateStr);
 	}
 
 	@Override

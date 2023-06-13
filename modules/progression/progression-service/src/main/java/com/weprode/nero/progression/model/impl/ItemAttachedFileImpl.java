@@ -29,7 +29,6 @@ public class ItemAttachedFileImpl extends ItemAttachedFileBaseImpl {
         jsonAttachedFile.put(JSONConstants.ITEM_ID, this.getProgressionItemId());
         // TODO fileUrl ?
         jsonAttachedFile.put(JSONConstants.FILE_ENTRY_ID, this.getFileEntryId());
-        jsonAttachedFile.put(JSONConstants.IS_TO_BE_COMPLETED, this.getIsToBeCompleted());
         jsonAttachedFile.put(JSONConstants.IS_AUDIO_RECORDING, this.getIsAudioRecording());
 
         return jsonAttachedFile;

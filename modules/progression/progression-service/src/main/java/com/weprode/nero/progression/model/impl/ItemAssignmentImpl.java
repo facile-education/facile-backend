@@ -21,14 +21,14 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.model.Homework;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.progression.model.ProgressionItem;
 import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.model.Homework;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.GroupColorLocalServiceUtil;
-import com.weprode.nero.schedule.service.HomeworkLocalServiceUtil;
+import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -54,8 +54,8 @@ public class ItemAssignmentImpl extends ItemAssignmentBaseImpl {
         }
         try {
             CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(this.getSessionId());
-            jsonAssignment.put(JSONConstants.SESSION_START_DATE, df.format(cdtSession.getSessionStart()));
-            jsonAssignment.put(JSONConstants.SESSION_END_DATE, df.format(cdtSession.getSessionEnd()));
+            jsonAssignment.put(JSONConstants.SESSION_START_DATE, df.format(cdtSession.getStart()));
+            jsonAssignment.put(JSONConstants.SESSION_END_DATE, df.format(cdtSession.getEnd()));
 
             Group group = GroupLocalServiceUtil.getGroup(cdtSession.getGroupId());
             if (group.isRegularSite()) {
@@ -66,7 +66,7 @@ public class ItemAssignmentImpl extends ItemAssignmentBaseImpl {
                 jsonAssignment.put(JSONConstants.GROUP_NAME, groupName);
             }
 
-            String color = GroupColorLocalServiceUtil.getColor(cdtSession.getGroupId());
+            String color = CourseDetailsLocalServiceUtil.getCourseColor(cdtSession.getGroupId());
             jsonAssignment.put(JSONConstants.COLOR, color);
 
         } catch (Exception e) {

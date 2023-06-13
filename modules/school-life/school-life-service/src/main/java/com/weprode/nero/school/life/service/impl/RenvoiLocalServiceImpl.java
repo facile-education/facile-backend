@@ -155,7 +155,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
             if (renvoi.getSourceSessionId() != 0) {
                 CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(renvoi.getSourceSessionId());
                 jsonPendingRenvoi.put(JSONConstants.SESSION_SUBJECT, cdtSession.getSubject());
-                jsonPendingRenvoi.put(JSONConstants.SESSION_DATE, df.format(cdtSession.getSessionStart()));
+                jsonPendingRenvoi.put(JSONConstants.SESSION_DATE, df.format(cdtSession.getStart()));
                 jsonPendingRenvoi.put(JSONConstants.SESSION_NAME, GroupLocalServiceUtil.getGroup(cdtSession.getGroupId()).getName());
             } else {
                 SchoollifeSession schoollifeSession = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(renvoi.getSourceSchoollifeSessionId());
@@ -260,7 +260,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
             if (schoolRenvoi.getSourceSessionId() != 0) {
                 CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(schoolRenvoi.getSourceSessionId());
                 jsonSchoolRenvoi.put(JSONConstants.SESSION_SUBJECT, cdtSession.getSubject());
-                jsonSchoolRenvoi.put(JSONConstants.SESSION_DATE, df.format(cdtSession.getSessionStart()));
+                jsonSchoolRenvoi.put(JSONConstants.SESSION_DATE, df.format(cdtSession.getStart()));
                 jsonSchoolRenvoi.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(cdtSession.getGroupId()));
             } else {
                 SchoollifeSession schoollifeSession = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoolRenvoi.getSourceSchoollifeSessionId());

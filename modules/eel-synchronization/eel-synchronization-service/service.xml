@@ -6,31 +6,6 @@
 
 	<entity name="Synchronization" local-service="true" remote-service="false" />
 
-	<entity name="Subject" local-service="true" remote-service="true">
-		<column name="subjectId" type="long" primary="true"/>
-		<column name="name" type="String" />
-
-		<!-- Get all subjects for a given "longLabel" -->
-		<finder return-type="Collection" name="name">
-			<finder-column name="name" />
-		</finder>
-	</entity>
-
-	<entity name="TeacherSubject" local-service="true" remote-service="false">
-		<column name="teacherSubjectId" type="long" primary="true" />
-		<column name="teacherId" type="long"/>
-		<column name="subjectId" type="long"/>
-		<column name="schoolId" type="long"/>
-
-		<finder return-type="Collection" name="teacherId">
-			<finder-column name="teacherId" />
-		</finder>
-
-		<finder return-type="Collection" name="schoolId">
-			<finder-column name="schoolId" />
-		</finder>
-	</entity>
-
 	<entity name="ParentSynchro" local-service="true" remote-service="false">
 		<column name="schoolId" type="long" primary="true" />
 		<column name="startDate" type="Date" />

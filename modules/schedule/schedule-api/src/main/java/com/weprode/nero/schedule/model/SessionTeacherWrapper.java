@@ -48,6 +48,7 @@ public class SessionTeacherWrapper
 		attributes.put("status", getStatus());
 		attributes.put("substituteId", getSubstituteId());
 		attributes.put("modificationDate", getModificationDate());
+		attributes.put("privateNotes", getPrivateNotes());
 
 		return attributes;
 	}
@@ -89,6 +90,12 @@ public class SessionTeacherWrapper
 		if (modificationDate != null) {
 			setModificationDate(modificationDate);
 		}
+
+		String privateNotes = (String)attributes.get("privateNotes");
+
+		if (privateNotes != null) {
+			setPrivateNotes(privateNotes);
+		}
 	}
 
 	@Override
@@ -114,6 +121,16 @@ public class SessionTeacherWrapper
 	@Override
 	public long getPrimaryKey() {
 		return model.getPrimaryKey();
+	}
+
+	/**
+	 * Returns the private notes of this session teacher.
+	 *
+	 * @return the private notes of this session teacher
+	 */
+	@Override
+	public String getPrivateNotes() {
+		return model.getPrivateNotes();
 	}
 
 	/**
@@ -189,6 +206,16 @@ public class SessionTeacherWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
+	}
+
+	/**
+	 * Sets the private notes of this session teacher.
+	 *
+	 * @param privateNotes the private notes of this session teacher
+	 */
+	@Override
+	public void setPrivateNotes(String privateNotes) {
+		model.setPrivateNotes(privateNotes);
 	}
 
 	/**

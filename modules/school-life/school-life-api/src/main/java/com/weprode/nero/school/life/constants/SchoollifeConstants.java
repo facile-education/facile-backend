@@ -18,6 +18,12 @@ public class SchoollifeConstants {
     public static final String DEPANNAGE = "D\u00e9pannage";
     public static final String ETUDE = "Cercle d'\u00e9tude";
 
+    public static final String RENVOI_COLOR = "#FF0000";
+    public static final String RETENUE_COLOR = "#EDA12A";
+    public static final String EPREUVE_COLOR = "#3694B7";
+    public static final String DEPANNAGE_COLOR = "#8763CA";
+    public static final String ETUDE_COLOR = "#32AC71";
+
     public static final int RENVOI_STATUS_CREATED = 0;
     public static final int RENVOI_STATUS_CLOSED = 1;
 }

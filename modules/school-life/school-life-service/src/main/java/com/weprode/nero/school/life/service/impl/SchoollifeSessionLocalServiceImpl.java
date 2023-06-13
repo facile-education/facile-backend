@@ -215,13 +215,13 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
     }
 
 
-    private String getColorFromSchoollifeType(int schoollifeType) {
+    public String getColorFromSchoollifeType(int schoollifeType) {
         switch (schoollifeType) {
-            case 1: return "#f00";
-            case 2: return "#EDA12A";
-            case 3: return "#3694B7";
-            case 4: return "#8763CA";
-            case 5: return "#32AC71";
+            case SchoollifeConstants.TYPE_RENVOI: return SchoollifeConstants.RENVOI_COLOR;
+            case SchoollifeConstants.TYPE_RETENUE: return SchoollifeConstants.RETENUE_COLOR;
+            case SchoollifeConstants.TYPE_TRAVAUX: return SchoollifeConstants.EPREUVE_COLOR;
+            case SchoollifeConstants.TYPE_DEPANNAGE: return SchoollifeConstants.DEPANNAGE_COLOR;
+            case SchoollifeConstants.TYPE_ETUDE: return SchoollifeConstants.ETUDE_COLOR;
             default: return "#000";
         }
     }

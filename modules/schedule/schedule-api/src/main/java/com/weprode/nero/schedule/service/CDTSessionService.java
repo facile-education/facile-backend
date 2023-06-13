@@ -55,10 +55,10 @@ public interface CDTSessionService extends BaseService {
 		long groupId, String subject, String room, String startDate,
 		String endDate, String teacherIds, boolean isRecurrent);
 
-	@JSONWebService(method = "GET", value = "get-horaires-sessions")
+	@JSONWebService(method = "GET", value = "get-group-sessions")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getHorairesSessions(
-		long userId, long groupId, String start, String end, String volee);
+	public JSONObject getGroupSessions(
+		long groupId, String minDateStr, String maxDateStr);
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -74,5 +74,10 @@ public interface CDTSessionService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-teacher-groups")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getTeacherGroups();
+
+	@JSONWebService(method = "GET", value = "get-user-sessions")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getUserSessions(
+		long userId, String minDateStr, String maxDateStr);
 
 }

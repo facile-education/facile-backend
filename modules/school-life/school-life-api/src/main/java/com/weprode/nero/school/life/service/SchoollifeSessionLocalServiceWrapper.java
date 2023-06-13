@@ -273,6 +273,12 @@ public class SchoollifeSessionLocalServiceWrapper
 	}
 
 	@Override
+	public String getColorFromSchoollifeType(int schoollifeType) {
+		return _schoollifeSessionLocalService.getColorFromSchoollifeType(
+			schoollifeType);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery
 		getIndexableActionableDynamicQuery() {
 

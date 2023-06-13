@@ -14,6 +14,7 @@
 
 package com.weprode.nero.schedule.model;
 
+import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
 
 import java.util.Date;
@@ -137,6 +138,21 @@ public interface SessionTeacherModel extends BaseModel<SessionTeacher> {
 	 * @param modificationDate the modification date of this session teacher
 	 */
 	public void setModificationDate(Date modificationDate);
+
+	/**
+	 * Returns the private notes of this session teacher.
+	 *
+	 * @return the private notes of this session teacher
+	 */
+	@AutoEscape
+	public String getPrivateNotes();
+
+	/**
+	 * Sets the private notes of this session teacher.
+	 *
+	 * @param privateNotes the private notes of this session teacher
+	 */
+	public void setPrivateNotes(String privateNotes);
 
 	@Override
 	public SessionTeacher cloneWithOriginalValues();

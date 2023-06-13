@@ -1,15 +1,16 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.SessionStudent;
+import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.SessionStudentLocalServiceBaseImpl;
-
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class SessionStudentLocalServiceImpl
 	public SessionStudent addStudentToSession(long sessionId, long studentId) throws SystemException {
 
 		List<SessionStudent> sessionStudentsList = sessionStudentPersistence.findBysessionId_studentId(sessionId, studentId);
-		if (sessionStudentsList != null && sessionStudentsList.size() > 0) {
+		if (sessionStudentsList != null && !sessionStudentsList.isEmpty()) {
 			return sessionStudentsList.get(0);
 		} else {
 			long sessionStudentId = counterLocalService.increment();
@@ -94,6 +95,23 @@ public class SessionStudentLocalServiceImpl
 		}
 
 		return studentIdList;
+	}
+
+	public boolean hasStudentSession (long studentId, long sessionId) {
+		try {
+			CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
+			if (UserUtilsLocalServiceUtil.getUserGroupIds(studentId).contains(session.getGroupId())) {
+				return true;
+			}
+			List<SessionStudent> sessionStudentsList = sessionStudentPersistence.findBysessionId_studentId(sessionId, studentId);
+			if (sessionStudentsList != null && !sessionStudentsList.isEmpty()) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			logger.error("Error determining if student " + studentId + " has session " + sessionId, e);
+		}
+		return false;
 	}
 
 	public boolean removeBySessionId(long sessionId) {

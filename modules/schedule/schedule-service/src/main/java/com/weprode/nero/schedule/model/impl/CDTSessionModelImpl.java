@@ -73,13 +73,11 @@ public class CDTSessionModelImpl
 	public static final String TABLE_NAME = "Schedule_CDTSession";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"sessionId", Types.BIGINT}, {"sessionStart", Types.TIMESTAMP},
-		{"sessionEnd", Types.TIMESTAMP}, {"weekId", Types.BIGINT},
-		{"published", Types.BOOLEAN}, {"title", Types.VARCHAR},
-		{"fullCoursName", Types.VARCHAR}, {"description", Types.VARCHAR},
-		{"room", Types.VARCHAR}, {"subject", Types.VARCHAR},
-		{"schoolId", Types.BIGINT}, {"groupId", Types.BIGINT},
-		{"isManual", Types.BOOLEAN}
+		{"sessionId", Types.BIGINT}, {"start_", Types.TIMESTAMP},
+		{"end_", Types.TIMESTAMP}, {"weekId", Types.BIGINT},
+		{"fullCoursName", Types.VARCHAR}, {"room", Types.VARCHAR},
+		{"subject", Types.VARCHAR}, {"groupId", Types.BIGINT},
+		{"courseItemId", Types.BIGINT}, {"isManual", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -87,22 +85,19 @@ public class CDTSessionModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("sessionId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("sessionStart", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("sessionEnd", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("start_", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("end_", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("weekId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("published", Types.BOOLEAN);
-		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("fullCoursName", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("room", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("subject", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("schoolId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("courseItemId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("isManual", Types.BOOLEAN);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Schedule_CDTSession (sessionId LONG not null primary key,sessionStart DATE null,sessionEnd DATE null,weekId LONG,published BOOLEAN,title VARCHAR(250) null,fullCoursName VARCHAR(75) null,description STRING null,room VARCHAR(75) null,subject VARCHAR(75) null,schoolId LONG,groupId LONG,isManual BOOLEAN)";
+		"create table Schedule_CDTSession (sessionId LONG not null primary key,start_ DATE null,end_ DATE null,weekId LONG,fullCoursName VARCHAR(75) null,room VARCHAR(75) null,subject VARCHAR(75) null,groupId LONG,courseItemId LONG,isManual BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Schedule_CDTSession";
@@ -123,14 +118,20 @@ public class CDTSessionModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long GROUPID_COLUMN_BITMASK = 1L;
+	public static final long COURSEITEMID_COLUMN_BITMASK = 1L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long GROUPID_COLUMN_BITMASK = 2L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long SESSIONID_COLUMN_BITMASK = 2L;
+	public static final long SESSIONID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -162,17 +163,14 @@ public class CDTSessionModelImpl
 		CDTSession model = new CDTSessionImpl();
 
 		model.setSessionId(soapModel.getSessionId());
-		model.setSessionStart(soapModel.getSessionStart());
-		model.setSessionEnd(soapModel.getSessionEnd());
+		model.setStart(soapModel.getStart());
+		model.setEnd(soapModel.getEnd());
 		model.setWeekId(soapModel.getWeekId());
-		model.setPublished(soapModel.isPublished());
-		model.setTitle(soapModel.getTitle());
 		model.setFullCoursName(soapModel.getFullCoursName());
-		model.setDescription(soapModel.getDescription());
 		model.setRoom(soapModel.getRoom());
 		model.setSubject(soapModel.getSubject());
-		model.setSchoolId(soapModel.getSchoolId());
 		model.setGroupId(soapModel.getGroupId());
+		model.setCourseItemId(soapModel.getCourseItemId());
 		model.setIsManual(soapModel.isIsManual());
 
 		return model;
@@ -327,46 +325,34 @@ public class CDTSessionModelImpl
 		attributeSetterBiConsumers.put(
 			"sessionId",
 			(BiConsumer<CDTSession, Long>)CDTSession::setSessionId);
-		attributeGetterFunctions.put(
-			"sessionStart", CDTSession::getSessionStart);
+		attributeGetterFunctions.put("start", CDTSession::getStart);
 		attributeSetterBiConsumers.put(
-			"sessionStart",
-			(BiConsumer<CDTSession, Date>)CDTSession::setSessionStart);
-		attributeGetterFunctions.put("sessionEnd", CDTSession::getSessionEnd);
+			"start", (BiConsumer<CDTSession, Date>)CDTSession::setStart);
+		attributeGetterFunctions.put("end", CDTSession::getEnd);
 		attributeSetterBiConsumers.put(
-			"sessionEnd",
-			(BiConsumer<CDTSession, Date>)CDTSession::setSessionEnd);
+			"end", (BiConsumer<CDTSession, Date>)CDTSession::setEnd);
 		attributeGetterFunctions.put("weekId", CDTSession::getWeekId);
 		attributeSetterBiConsumers.put(
 			"weekId", (BiConsumer<CDTSession, Long>)CDTSession::setWeekId);
-		attributeGetterFunctions.put("published", CDTSession::getPublished);
-		attributeSetterBiConsumers.put(
-			"published",
-			(BiConsumer<CDTSession, Boolean>)CDTSession::setPublished);
-		attributeGetterFunctions.put("title", CDTSession::getTitle);
-		attributeSetterBiConsumers.put(
-			"title", (BiConsumer<CDTSession, String>)CDTSession::setTitle);
 		attributeGetterFunctions.put(
 			"fullCoursName", CDTSession::getFullCoursName);
 		attributeSetterBiConsumers.put(
 			"fullCoursName",
 			(BiConsumer<CDTSession, String>)CDTSession::setFullCoursName);
-		attributeGetterFunctions.put("description", CDTSession::getDescription);
-		attributeSetterBiConsumers.put(
-			"description",
-			(BiConsumer<CDTSession, String>)CDTSession::setDescription);
 		attributeGetterFunctions.put("room", CDTSession::getRoom);
 		attributeSetterBiConsumers.put(
 			"room", (BiConsumer<CDTSession, String>)CDTSession::setRoom);
 		attributeGetterFunctions.put("subject", CDTSession::getSubject);
 		attributeSetterBiConsumers.put(
 			"subject", (BiConsumer<CDTSession, String>)CDTSession::setSubject);
-		attributeGetterFunctions.put("schoolId", CDTSession::getSchoolId);
-		attributeSetterBiConsumers.put(
-			"schoolId", (BiConsumer<CDTSession, Long>)CDTSession::setSchoolId);
 		attributeGetterFunctions.put("groupId", CDTSession::getGroupId);
 		attributeSetterBiConsumers.put(
 			"groupId", (BiConsumer<CDTSession, Long>)CDTSession::setGroupId);
+		attributeGetterFunctions.put(
+			"courseItemId", CDTSession::getCourseItemId);
+		attributeSetterBiConsumers.put(
+			"courseItemId",
+			(BiConsumer<CDTSession, Long>)CDTSession::setCourseItemId);
 		attributeGetterFunctions.put("isManual", CDTSession::getIsManual);
 		attributeSetterBiConsumers.put(
 			"isManual",
@@ -395,32 +381,32 @@ public class CDTSessionModelImpl
 
 	@JSON
 	@Override
-	public Date getSessionStart() {
-		return _sessionStart;
+	public Date getStart() {
+		return _start;
 	}
 
 	@Override
-	public void setSessionStart(Date sessionStart) {
+	public void setStart(Date start) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_sessionStart = sessionStart;
+		_start = start;
 	}
 
 	@JSON
 	@Override
-	public Date getSessionEnd() {
-		return _sessionEnd;
+	public Date getEnd() {
+		return _end;
 	}
 
 	@Override
-	public void setSessionEnd(Date sessionEnd) {
+	public void setEnd(Date end) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_sessionEnd = sessionEnd;
+		_end = end;
 	}
 
 	@JSON
@@ -436,47 +422,6 @@ public class CDTSessionModelImpl
 		}
 
 		_weekId = weekId;
-	}
-
-	@JSON
-	@Override
-	public boolean getPublished() {
-		return _published;
-	}
-
-	@JSON
-	@Override
-	public boolean isPublished() {
-		return _published;
-	}
-
-	@Override
-	public void setPublished(boolean published) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_published = published;
-	}
-
-	@JSON
-	@Override
-	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
-	}
-
-	@Override
-	public void setTitle(String title) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_title = title;
 	}
 
 	@JSON
@@ -497,26 +442,6 @@ public class CDTSessionModelImpl
 		}
 
 		_fullCoursName = fullCoursName;
-	}
-
-	@JSON
-	@Override
-	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
-	}
-
-	@Override
-	public void setDescription(String description) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_description = description;
 	}
 
 	@JSON
@@ -561,21 +486,6 @@ public class CDTSessionModelImpl
 
 	@JSON
 	@Override
-	public long getSchoolId() {
-		return _schoolId;
-	}
-
-	@Override
-	public void setSchoolId(long schoolId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_schoolId = schoolId;
-	}
-
-	@JSON
-	@Override
 	public long getGroupId() {
 		return _groupId;
 	}
@@ -596,6 +506,31 @@ public class CDTSessionModelImpl
 	@Deprecated
 	public long getOriginalGroupId() {
 		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("groupId"));
+	}
+
+	@JSON
+	@Override
+	public long getCourseItemId() {
+		return _courseItemId;
+	}
+
+	@Override
+	public void setCourseItemId(long courseItemId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_courseItemId = courseItemId;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalCourseItemId() {
+		return GetterUtil.getLong(
+			this.<Long>getColumnOriginalValue("courseItemId"));
 	}
 
 	@JSON
@@ -676,17 +611,14 @@ public class CDTSessionModelImpl
 		CDTSessionImpl cdtSessionImpl = new CDTSessionImpl();
 
 		cdtSessionImpl.setSessionId(getSessionId());
-		cdtSessionImpl.setSessionStart(getSessionStart());
-		cdtSessionImpl.setSessionEnd(getSessionEnd());
+		cdtSessionImpl.setStart(getStart());
+		cdtSessionImpl.setEnd(getEnd());
 		cdtSessionImpl.setWeekId(getWeekId());
-		cdtSessionImpl.setPublished(isPublished());
-		cdtSessionImpl.setTitle(getTitle());
 		cdtSessionImpl.setFullCoursName(getFullCoursName());
-		cdtSessionImpl.setDescription(getDescription());
 		cdtSessionImpl.setRoom(getRoom());
 		cdtSessionImpl.setSubject(getSubject());
-		cdtSessionImpl.setSchoolId(getSchoolId());
 		cdtSessionImpl.setGroupId(getGroupId());
+		cdtSessionImpl.setCourseItemId(getCourseItemId());
 		cdtSessionImpl.setIsManual(isIsManual());
 
 		cdtSessionImpl.resetOriginalValues();
@@ -700,24 +632,17 @@ public class CDTSessionModelImpl
 
 		cdtSessionImpl.setSessionId(
 			this.<Long>getColumnOriginalValue("sessionId"));
-		cdtSessionImpl.setSessionStart(
-			this.<Date>getColumnOriginalValue("sessionStart"));
-		cdtSessionImpl.setSessionEnd(
-			this.<Date>getColumnOriginalValue("sessionEnd"));
+		cdtSessionImpl.setStart(this.<Date>getColumnOriginalValue("start_"));
+		cdtSessionImpl.setEnd(this.<Date>getColumnOriginalValue("end_"));
 		cdtSessionImpl.setWeekId(this.<Long>getColumnOriginalValue("weekId"));
-		cdtSessionImpl.setPublished(
-			this.<Boolean>getColumnOriginalValue("published"));
-		cdtSessionImpl.setTitle(this.<String>getColumnOriginalValue("title"));
 		cdtSessionImpl.setFullCoursName(
 			this.<String>getColumnOriginalValue("fullCoursName"));
-		cdtSessionImpl.setDescription(
-			this.<String>getColumnOriginalValue("description"));
 		cdtSessionImpl.setRoom(this.<String>getColumnOriginalValue("room"));
 		cdtSessionImpl.setSubject(
 			this.<String>getColumnOriginalValue("subject"));
-		cdtSessionImpl.setSchoolId(
-			this.<Long>getColumnOriginalValue("schoolId"));
 		cdtSessionImpl.setGroupId(this.<Long>getColumnOriginalValue("groupId"));
+		cdtSessionImpl.setCourseItemId(
+			this.<Long>getColumnOriginalValue("courseItemId"));
 		cdtSessionImpl.setIsManual(
 			this.<Boolean>getColumnOriginalValue("isManual"));
 
@@ -797,35 +722,25 @@ public class CDTSessionModelImpl
 
 		cdtSessionCacheModel.sessionId = getSessionId();
 
-		Date sessionStart = getSessionStart();
+		Date start = getStart();
 
-		if (sessionStart != null) {
-			cdtSessionCacheModel.sessionStart = sessionStart.getTime();
+		if (start != null) {
+			cdtSessionCacheModel.start = start.getTime();
 		}
 		else {
-			cdtSessionCacheModel.sessionStart = Long.MIN_VALUE;
+			cdtSessionCacheModel.start = Long.MIN_VALUE;
 		}
 
-		Date sessionEnd = getSessionEnd();
+		Date end = getEnd();
 
-		if (sessionEnd != null) {
-			cdtSessionCacheModel.sessionEnd = sessionEnd.getTime();
+		if (end != null) {
+			cdtSessionCacheModel.end = end.getTime();
 		}
 		else {
-			cdtSessionCacheModel.sessionEnd = Long.MIN_VALUE;
+			cdtSessionCacheModel.end = Long.MIN_VALUE;
 		}
 
 		cdtSessionCacheModel.weekId = getWeekId();
-
-		cdtSessionCacheModel.published = isPublished();
-
-		cdtSessionCacheModel.title = getTitle();
-
-		String title = cdtSessionCacheModel.title;
-
-		if ((title != null) && (title.length() == 0)) {
-			cdtSessionCacheModel.title = null;
-		}
 
 		cdtSessionCacheModel.fullCoursName = getFullCoursName();
 
@@ -833,14 +748,6 @@ public class CDTSessionModelImpl
 
 		if ((fullCoursName != null) && (fullCoursName.length() == 0)) {
 			cdtSessionCacheModel.fullCoursName = null;
-		}
-
-		cdtSessionCacheModel.description = getDescription();
-
-		String description = cdtSessionCacheModel.description;
-
-		if ((description != null) && (description.length() == 0)) {
-			cdtSessionCacheModel.description = null;
 		}
 
 		cdtSessionCacheModel.room = getRoom();
@@ -859,9 +766,9 @@ public class CDTSessionModelImpl
 			cdtSessionCacheModel.subject = null;
 		}
 
-		cdtSessionCacheModel.schoolId = getSchoolId();
-
 		cdtSessionCacheModel.groupId = getGroupId();
+
+		cdtSessionCacheModel.courseItemId = getCourseItemId();
 
 		cdtSessionCacheModel.isManual = isIsManual();
 
@@ -956,20 +863,19 @@ public class CDTSessionModelImpl
 	}
 
 	private long _sessionId;
-	private Date _sessionStart;
-	private Date _sessionEnd;
+	private Date _start;
+	private Date _end;
 	private long _weekId;
-	private boolean _published;
-	private String _title;
 	private String _fullCoursName;
-	private String _description;
 	private String _room;
 	private String _subject;
-	private long _schoolId;
 	private long _groupId;
+	private long _courseItemId;
 	private boolean _isManual;
 
 	public <T> T getColumnValue(String columnName) {
+		columnName = _attributeNames.getOrDefault(columnName, columnName);
+
 		Function<CDTSession, Object> function = _attributeGetterFunctions.get(
 			columnName);
 
@@ -997,18 +903,26 @@ public class CDTSessionModelImpl
 		_columnOriginalValues = new HashMap<String, Object>();
 
 		_columnOriginalValues.put("sessionId", _sessionId);
-		_columnOriginalValues.put("sessionStart", _sessionStart);
-		_columnOriginalValues.put("sessionEnd", _sessionEnd);
+		_columnOriginalValues.put("start_", _start);
+		_columnOriginalValues.put("end_", _end);
 		_columnOriginalValues.put("weekId", _weekId);
-		_columnOriginalValues.put("published", _published);
-		_columnOriginalValues.put("title", _title);
 		_columnOriginalValues.put("fullCoursName", _fullCoursName);
-		_columnOriginalValues.put("description", _description);
 		_columnOriginalValues.put("room", _room);
 		_columnOriginalValues.put("subject", _subject);
-		_columnOriginalValues.put("schoolId", _schoolId);
 		_columnOriginalValues.put("groupId", _groupId);
+		_columnOriginalValues.put("courseItemId", _courseItemId);
 		_columnOriginalValues.put("isManual", _isManual);
+	}
+
+	private static final Map<String, String> _attributeNames;
+
+	static {
+		Map<String, String> attributeNames = new HashMap<>();
+
+		attributeNames.put("start_", "start");
+		attributeNames.put("end_", "end");
+
+		_attributeNames = Collections.unmodifiableMap(attributeNames);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -1024,29 +938,23 @@ public class CDTSessionModelImpl
 
 		columnBitmasks.put("sessionId", 1L);
 
-		columnBitmasks.put("sessionStart", 2L);
+		columnBitmasks.put("start_", 2L);
 
-		columnBitmasks.put("sessionEnd", 4L);
+		columnBitmasks.put("end_", 4L);
 
 		columnBitmasks.put("weekId", 8L);
 
-		columnBitmasks.put("published", 16L);
+		columnBitmasks.put("fullCoursName", 16L);
 
-		columnBitmasks.put("title", 32L);
+		columnBitmasks.put("room", 32L);
 
-		columnBitmasks.put("fullCoursName", 64L);
+		columnBitmasks.put("subject", 64L);
 
-		columnBitmasks.put("description", 128L);
+		columnBitmasks.put("groupId", 128L);
 
-		columnBitmasks.put("room", 256L);
+		columnBitmasks.put("courseItemId", 256L);
 
-		columnBitmasks.put("subject", 512L);
-
-		columnBitmasks.put("schoolId", 1024L);
-
-		columnBitmasks.put("groupId", 2048L);
-
-		columnBitmasks.put("isManual", 4096L);
+		columnBitmasks.put("isManual", 512L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}
