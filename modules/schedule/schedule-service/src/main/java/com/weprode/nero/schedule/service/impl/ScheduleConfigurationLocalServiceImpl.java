@@ -139,7 +139,7 @@ public class ScheduleConfigurationLocalServiceImpl
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_SEMESTER_DATE, sdf.format(config.getSchoolYearSemesterDate()));
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_END_DATE, sdf.format(config.getSchoolYearEndDate()));
 			jsonConfig.put(JSONConstants.H1_WEEKS, config.getH1Weeks());
-			jsonConfig.put(JSONConstants.H2_WEEKS, config.getH1Weeks());
+			jsonConfig.put(JSONConstants.H2_WEEKS, config.getH2Weeks());
 		} catch (Exception e) {
 			logger.error("Error fetching school year end date", e);
 		}
