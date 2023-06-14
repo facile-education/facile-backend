@@ -101,6 +101,8 @@ public interface NewsPopulationLocalService
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	public void deleteByGroupId(long groupId);
+
 	public void deleteByNewsId(long newsId) throws SystemException;
 
 	/**
@@ -217,6 +219,9 @@ public interface NewsPopulationLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<NewsPopulation> getByGroupId(long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();

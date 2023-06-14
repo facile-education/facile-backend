@@ -63,6 +63,12 @@ public class ContactLocalServiceUtil {
 			user, search, start, limit, comparator);
 	}
 
+	public static org.json.JSONObject getContactDetails(
+		com.liferay.portal.kernel.model.User currentUser, long contactUserId) {
+
+		return getService().getContactDetails(currentUser, contactUserId);
+	}
+
 	public static org.json.JSONArray getContactTree(
 		com.liferay.portal.kernel.model.User user) {
 

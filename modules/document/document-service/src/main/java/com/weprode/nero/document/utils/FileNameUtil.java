@@ -76,8 +76,6 @@ public class FileNameUtil {
             result = new StringBuilder("objet");
         }
 
-        // TODO check the name's length (to be in db)
-
         return result.toString();
     }
 

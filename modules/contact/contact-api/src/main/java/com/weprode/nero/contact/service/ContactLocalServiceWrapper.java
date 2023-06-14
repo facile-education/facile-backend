@@ -62,6 +62,14 @@ public class ContactLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getContactDetails(
+		com.liferay.portal.kernel.model.User currentUser, long contactUserId) {
+
+		return _contactLocalService.getContactDetails(
+			currentUser, contactUserId);
+	}
+
+	@Override
 	public org.json.JSONArray getContactTree(
 		com.liferay.portal.kernel.model.User user) {
 

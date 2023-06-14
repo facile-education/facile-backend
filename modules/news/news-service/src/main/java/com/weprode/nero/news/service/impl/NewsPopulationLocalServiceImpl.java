@@ -69,4 +69,12 @@ public class NewsPopulationLocalServiceImpl extends NewsPopulationLocalServiceBa
 
         newsPopulationPersistence.removeBynewsId(newsId);
     }
+
+    public void deleteByGroupId(long groupId) {
+        newsPopulationPersistence.removeBygroupId(groupId);
+    }
+
+    public List<NewsPopulation> getByGroupId(long groupId) {
+        return newsPopulationPersistence.findBygroupId(groupId);
+    }
 }

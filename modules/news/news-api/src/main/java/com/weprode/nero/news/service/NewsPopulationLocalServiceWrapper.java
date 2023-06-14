@@ -94,6 +94,11 @@ public class NewsPopulationLocalServiceWrapper
 	}
 
 	@Override
+	public void deleteByGroupId(long groupId) {
+		_newsPopulationLocalService.deleteByGroupId(groupId);
+	}
+
+	@Override
 	public void deleteByNewsId(long newsId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
@@ -266,6 +271,13 @@ public class NewsPopulationLocalServiceWrapper
 		getActionableDynamicQuery() {
 
 		return _newsPopulationLocalService.getActionableDynamicQuery();
+	}
+
+	@Override
+	public java.util.List<com.weprode.nero.news.model.NewsPopulation>
+		getByGroupId(long groupId) {
+
+		return _newsPopulationLocalService.getByGroupId(groupId);
 	}
 
 	@Override

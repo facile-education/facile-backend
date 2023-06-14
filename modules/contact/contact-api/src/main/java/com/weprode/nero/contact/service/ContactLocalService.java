@@ -23,7 +23,7 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
-import java.util.*;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,29 +54,30 @@ public interface ContactLocalService extends BaseLocalService {
 	 */
 	public JSONObject convertUserToJson(User user);
 
-	public java.util.List<User> directorySearch(
-		User user, String query, java.util.List<Long> organizationIds,
-		java.util.List<Long> schoolIds, java.util.List<Long> roleIds,
-		java.util.List<Long> subjectIds, int start, int limit,
-		OrderByComparator obc);
+	public List<User> directorySearch(
+		User user, String query, List<Long> organizationIds,
+		List<Long> schoolIds, List<Long> roleIds, List<Long> subjectIds,
+		int start, int limit, OrderByComparator obc);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getAllGroupsContacts(
+	public List<User> getAllGroupsContacts(
 		User user, String search, int start, int limit,
 		OrderByComparator comparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getContactDetails(User currentUser, long contactUserId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray getContactTree(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getListMembers(
-		User currentUser, long roleId, long orgId);
+	public List<User> getListMembers(User currentUser, long roleId, long orgId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getMyRelatives(User user);
+	public List<User> getMyRelatives(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<User> getMyStudents(User user);
+	public List<User> getMyStudents(User user);
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -89,7 +90,7 @@ public interface ContactLocalService extends BaseLocalService {
 	public String getPopulationName(long orgId, long roleId, long userId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<Long> getRecipients(JSONArray recipients, User user)
+	public List<Long> getRecipients(JSONArray recipients, User user)
 		throws SystemException;
 
 }

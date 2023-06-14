@@ -90,6 +90,11 @@ public class NewsLocalServiceWrapper
 		return _newsLocalService.createPersistedModel(primaryKeyObj);
 	}
 
+	@Override
+	public void deleteByGroupId(long groupId) {
+		_newsLocalService.deleteByGroupId(groupId);
+	}
+
 	/**
 	 * Deletes the news with the primary key from the database. Also notifies the appropriate model listeners.
 	 *

@@ -148,10 +148,8 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		}
 
 		logger.info("User " + user.getUserId() + " gets details of contact " + contactUserId);
-		// TODO re-import getContactDetails from lr61 project
-		JSONObject jsonContactDetails = new JSONObject();
-		// JSONObject jsonContactDetails = ContactLocalServiceUtil.getContactDetails(user, contactUserId);
-		result.put("contactInfos", jsonContactDetails);
+		JSONObject jsonContactDetails = ContactLocalServiceUtil.getContactDetails(user, contactUserId);
+		result.put("contactDetails", jsonContactDetails);
 		result.put(JSONConstants.SUCCESS, true);
 		return result;
 	}

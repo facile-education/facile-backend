@@ -1,13 +1,19 @@
 package com.weprode.nero.messaging.utils;
 
+import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.ResourceConstants;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -35,7 +41,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MessageUtil {
 
@@ -174,7 +182,7 @@ public class MessageUtil {
 
 				Folder imBox = FolderUtilsLocalServiceUtil.getIMBox(userId);
 
-				// Create the folder in the sender's sending box
+				// Create the folder in the user's sending box
 				Folder attachedFilesFolder = DLAppLocalServiceUtil.addFolder(
 						userId,
 						imBox.getGroupId(),
@@ -183,6 +191,16 @@ public class MessageUtil {
 						"PJ du message " + messageId,
 						new ServiceContext());
 				FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
+
+				// Set VIEW and ADD_DOCUMENT permissions for 'User' role
+				List<Role> roleList = new ArrayList<>();
+				roleList.add(RoleLocalServiceUtil.getRole(attachedFilesFolder.getCompanyId(), "User"));
+				Map<Long, String[]> roleIdActionIds = new HashMap<>();
+				String[] actionsIds = {ActionKeys.VIEW, ActionKeys.ADD_DOCUMENT};
+				for (Role role : roleList) {
+					roleIdActionIds.put(role.getRoleId(), actionsIds);
+				}
+				ResourcePermissionLocalServiceUtil.setResourcePermissions(attachedFilesFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(attachedFilesFolder.getPrimaryKey()), roleIdActionIds );
 
 				for (Long attachFileId : attachFileIds) {
 					logger.info("Copying file " + attachFileId + " to IM_BOX, folder " + attachedFilesFolder.getFolderId());

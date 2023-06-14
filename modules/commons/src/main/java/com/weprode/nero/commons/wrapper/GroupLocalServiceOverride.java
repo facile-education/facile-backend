@@ -10,8 +10,6 @@ import com.liferay.portal.kernel.service.GroupLocalServiceWrapper;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceWrapper;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
-import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
-import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -58,62 +56,6 @@ public class GroupLocalServiceOverride extends GroupLocalServiceWrapper {
 		}
 
 		return group;
-	}
-
-	@Override
-	public Group deleteGroup(long groupId) throws PortalException {
-
-		// Remove group related data
-		deleteGroupData(getGroup(groupId));
-
-		return super.deleteGroup(groupId);
-	}
-
-	@Override
-	public Group deleteGroup(Group group) throws PortalException {
-
-		// Remove group related content
-		deleteGroupData(group);
-
-		return super.deleteGroup(group);
-	}
-
-	private void deleteGroupData (Group group) {
-
-		if (group.getName().equals("Control Panel") || group.getName().equals("Guest")
-				|| (!group.isOrganization() && !group.isRegularSite())) {
-			return;
-		}
-
-		long groupId = group.getGroupId();
-
-		try {
-			logger.debug("Clean up community infos for groupId " + groupId);
-			CommunityInfosLocalServiceUtil.deleteCommunityInfos(groupId);
-
-		} catch (Exception e) {
-			logger.error("Could not delete community infos for groupId " + groupId);
-		}
-
-		try {
-			logger.debug("Clean up group memberships for groupId " + groupId);
-			GroupMembershipLocalServiceUtil.removeGroupMemberships(groupId);
-		} catch (Exception e) {
-			logger.error("Could not delete group memberships for groupId " + groupId);
-		}
-
-		// TODO clean up news, cdt events, doc activities ?
-//		deleteNews(groupId);
-//		deleteDLFiles(groupId);
-//		deleteCDTEvents(groupId);
-//		deleteDocumentActivity(groupId);
-
-		try {
-			logger.debug("Clean up membership activities for groupId " + groupId);
-			MembershipActivityLocalServiceUtil.deleteGroupActivity(groupId);
-		} catch (Exception e) {
-			logger.error("Could not delete membership activity for groupId " + groupId, e);
-		}
 	}
 
 	// Add the following method to the bottom of your service wrapper

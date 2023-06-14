@@ -98,6 +98,10 @@ public class NewsLocalServiceUtil {
 		return getService().createPersistedModel(primaryKeyObj);
 	}
 
+	public static void deleteByGroupId(long groupId) {
+		getService().deleteByGroupId(groupId);
+	}
+
 	/**
 	 * Deletes the news with the primary key from the database. Also notifies the appropriate model listeners.
 	 *

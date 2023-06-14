@@ -1,5 +1,6 @@
 package com.weprode.nero.application.service.utils;
 
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -8,11 +9,17 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.application.model.Application;
 import com.weprode.nero.application.service.ApplicationLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.commons.properties.NeroSystemProperties;
+import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.nero.messaging.constants.MessagingConstants;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -23,6 +30,9 @@ import com.weprode.nero.user.service.UserContactLocalServiceUtil;
 import org.json.JSONObject;
 import org.jsoup.internal.StringUtil;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,7 +68,7 @@ public class ExportUtils {
         Application application = ApplicationLocalServiceUtil.getById(applicationId);
         String typeExport = application.getApplicationName();
 
-        SimpleDateFormat nameFileDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat nameFileDateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
         String file;
 
@@ -103,26 +113,26 @@ public class ExportUtils {
             return resultExport.toString();
         }
         String type = roleName.equals("other") ? "ressource" : roleName;
-        String filename = "Export_" + typeExport + "_" + type + "_" + nameFileDateFormat.format(today.getTime()) + fileExtension;
-
-        byte[] b = file.getBytes();
+        String fileName = "Export_" + typeExport + "_" + type + "_" + nameFileDateFormat.format(today.getTime()) + fileExtension;
 
         try {
-            // TODO Messaging
-            /* String fileEntryParams = CasierDepositLocalServiceUtil.sendReportToDropbox(currUser, b, filename);
-
-            String hrefPDF = "<a href=\"" + PropsUtil.get(NeroSystemProperties.PORTAL_URL)
-                    + "/c/document_library/get_file?" + fileEntryParams
-                    + "\" target=\\'_blank\\'> <br /> <br />" + filename + "</a> ";
-
-            resultExport.put(JSONConstants.MESSAGE, messages.getString("export_format_txt_depose") + hrefPDF);*/
+            InputStream is = new ByteArrayInputStream(file.getBytes(StandardCharsets.UTF_8));
+            FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(currUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(userId).getFolderId(), "folderName", fileName, is, "html/text");
+            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            String subject = "Export " + typeExport;
+            String content = "Bonjour,<br><br>Veuillez trouver ci-joint l'export " + typeExport + " pour votre etablissement.<br><br>Cordialement,<br>L'équipe technique";
+            List<Long> recipientList = new ArrayList<>();
+            recipientList.add(userId);
+            List<Long> attachFileIds = new ArrayList<>();
+            attachFileIds.add(fileEntry.getFileEntryId());
+            MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_REPORT, attachFileIds, 0, 0);
             resultExport.put(JSONConstants.SUCCESS, true);
 
             logger.info("End export for application " + typeExport + ", schoolId " + schoolId + " and role " + roleName);
             return resultExport.toString();
 
         } catch (Exception e) {
-            logger.error("Error when sending export file to dropbox", e);
+            logger.error("Error when sending message with export file", e);
         }
 
 
@@ -551,11 +561,11 @@ public class ExportUtils {
 
         if (!roles.isEmpty()) {
             // -- Identifiant ; Nom ; Prenom ; Mot de passe ; Adresse email ; Type d'utilisateur ; Statut ; Type d'authentification ; --
-            file.append(messages.getString(IDENTIFIANT)).append(";").append(messages.getString(NOM))
-                    .append(";").append(messages.getString(PRENOM)).append(";")
-                    .append(messages.getString("password")).append(";").append(messages.getString("email_address"))
-                    .append(";").append(messages.getString("user_type")).append(";")
-                    .append(messages.getString("status")).append(";").append(messages.getString("auth_type"))
+            file.append(IDENTIFIANT).append(";").append(NOM)
+                    .append(";").append(PRENOM).append(";")
+                    .append("password").append(";").append("email_address")
+                    .append(";").append("user_type").append(";")
+                    .append("status").append(";").append("auth_type")
                     .append(";\n");
 
             // Type d'utilisateur : "visiteur", "utilisateur", "administrateur"
