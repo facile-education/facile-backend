@@ -14,8 +14,11 @@ import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
+import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
+import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupUtilsLocalServiceBaseImpl;
+import com.weprode.nero.news.service.NewsPopulationLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
@@ -65,7 +68,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
         logger.info("Cleaning group id "+groupId);
 
         // First check if group id exists
-        Group group = null;
+        Group group;
         try {
             group = GroupLocalServiceUtil.getGroup(groupId);
         } catch (Exception e) {
@@ -84,20 +87,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
         deleteDocumentActivity(groupId);
         deleteMembershipActivity(groupId);
 
-        // Liferay group deletion manages:
-
-        // Group
-        // GroupInfos
-        // Layout
-        // LayoutSet
-        // UserGroupRole
-        // MembershipRequest
-        // Blogs
-        // MBCategory
-        // MBStatsUser
-        // MBThread + MBMessages
-        // WikiNode
-        // on BeforeRemove : communityInfos
+        // Liferay group deletion manages: Group, Layout stuff,  UserGroupRole, MembershipRequest, Blogs, MBCategory, MBThread + MBMessages, etc
 
         try {
             if (group.isOrganization()) {
@@ -124,6 +114,8 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
                 OrganizationLocalServiceUtil.deleteOrganization(orgId);
 
             } else {
+                CommunityInfosLocalServiceUtil.deleteCommunityInfos(groupId);
+                GroupMembershipLocalServiceUtil.removeGroupMemberships(groupId);
                 logger.info("Deleting group itself ...");
                 GroupLocalServiceUtil.deleteGroup(groupId);
             }
@@ -140,12 +132,9 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
         logger.info("Deleting news ...");
 
         try {
-            // TODO news
-            // BlogsStatsUserLocalServiceUtil.deleteStatsUserByGroupId(groupId);
-            // BlogEntryInfosLocalServiceUtil.deleteByGroupId(groupId);
-            // BlogsEntryLocalServiceUtil.deleteEntries(groupId);
+            NewsPopulationLocalServiceUtil.deleteByGroupId(groupId);
         } catch (Exception e) {
-            logger.info("No blog stats user for groupId "+groupId);
+            logger.info("Error deleting news for groupId "+groupId);
         }
     }
 
@@ -195,9 +184,9 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
                 }
             }
 
-            logger.info("Deleted "+nbDeletedSessions+" CDT events ...");
+            logger.info("Deleted "+nbDeletedSessions+" sessions ...");
         } catch (Exception e) {
-            logger.error("Could not delete CDT events for groupId "+groupId);
+            logger.error("Could not delete CDT sessions for groupId "+groupId);
         }
     }
 

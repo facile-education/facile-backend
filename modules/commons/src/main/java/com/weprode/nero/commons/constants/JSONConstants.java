@@ -106,6 +106,7 @@ public class JSONConstants {
     public static final String NB_TOTAL_USERS = "nbTotalUsers";
     public static final String CANDIDATES = "candidates";
     public static final String CHILDREN = "children";
+    public static final String PARENTS = "parents";
     public static final String PICTURE = "picture";
     public static final String THEME_COLOR = "themeColor";
     public static final String HAS_WEBDAV_ENABLED = "hasWebdavEnabled";

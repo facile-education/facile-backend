@@ -234,14 +234,12 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
 			boolean isCommunity = group.isRegularSite();
 			String fullCoursName;
-			long schoolId = 0;
 			Organization org = null;
 			if (isCommunity) {
 				fullCoursName = group.getName();
 			} else {
 				org = OrganizationLocalServiceUtil.getOrganization(group.getOrganizationId());
 				fullCoursName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);
-				schoolId = org.getParentOrganizationId();
 			}
 
 			Date start = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDate);

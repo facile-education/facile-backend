@@ -6,18 +6,25 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.weprode.nero.application.model.Application;
 import com.weprode.nero.application.service.ApplicationLocalServiceUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.help.model.*;
-import com.weprode.nero.help.service.*;
+import com.weprode.nero.help.model.HelpCategory;
+import com.weprode.nero.help.model.HelpItem;
+import com.weprode.nero.help.model.HelpLink;
+import com.weprode.nero.help.model.HelpQuestion;
+import com.weprode.nero.help.model.HelpRelation;
+import com.weprode.nero.help.service.HelpCategoryLocalServiceUtil;
+import com.weprode.nero.help.service.HelpItemLocalServiceUtil;
+import com.weprode.nero.help.service.HelpItemRoleLocalServiceUtil;
+import com.weprode.nero.help.service.HelpLinkLocalServiceUtil;
+import com.weprode.nero.help.service.HelpQuestionLocalServiceUtil;
+import com.weprode.nero.help.service.HelpRelationLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.portlet.ResourceRequest;
 import java.util.List;
 
 public class HelpUtil {
@@ -231,16 +238,6 @@ public class HelpUtil {
             JSONArray updatedQuestions = updateQuestions(itemId, questions);
             jsonHelpItem.put(JSONConstants.QUESTIONS, updatedQuestions);
 
-            // Related items
-            // JSONArray relations = jsonHelpItem.getJSONArray(JSONConstants.HELP_RELATIONS);
-            // JSONArray updatedRelations = updateRelations(itemId, relations);
-            // jsonHelpItem.put(JSONConstants.HELP_RELATIONS, updatedRelations);
-
-            // Links
-            // JSONArray links = jsonHelpItem.getJSONArray(JSONConstants.HELP_LINKS);
-            // JSONArray updatedLinks = updateLinks(itemId, links);
-            // jsonHelpItem.put(JSONConstants.HELP_LINKS, updatedLinks);
-
             return jsonHelpItem;
         } catch (Exception e) {
             logger.error("Error while saving help item", e);
@@ -310,54 +307,6 @@ public class HelpUtil {
         return updatedJsonQuestions;
     }
 
-    // Update a list of relations, create new ones, remove obsolete ones
-    private static JSONArray updateRelations(long itemId, JSONArray relations) {
-        // Output
-        JSONArray updatedJsonRelations = new JSONArray();
-
-        // Remove all existing relations
-        HelpRelationLocalServiceUtil.removeRelationsForHelpItem(itemId);
-
-        // Loop over new relations and add them
-        if (relations != null) {
-            for (int i = 0 ; i < relations.length() ; i++) {
-                JSONObject jsonRelation = relations.getJSONObject(i);
-                long relatedItemId = jsonRelation.getLong(JSONConstants.RELATED_ITEM_ID);
-
-                // Create new relation
-                HelpRelation helpRelation = HelpRelationLocalServiceUtil.addHelpRelation(itemId, relatedItemId);
-                logger.info("Created new relation for itemId "+itemId+" with id "+helpRelation.getRelationId());
-                updatedJsonRelations.put(convertRelationToJson(helpRelation));
-            }
-        }
-
-        return updatedJsonRelations;
-    }
-
-    // Update a list of links, create new ones, remove obsolete ones
-    private static JSONArray updateLinks(long itemId, JSONArray links) {
-        // Output
-        JSONArray updatedJsonLinks = new JSONArray();
-
-        // Remove all existing links
-        HelpLinkLocalServiceUtil.removeLinksForHelpItem(itemId);
-
-        // Loop over new links and add them
-        if (links != null) {
-            for (int i = 0 ; i < links.length() ; i++) {
-                JSONObject jsonLink = links.getJSONObject(i);
-                String linkUrl = jsonLink.getString(JSONConstants.LINK_URL);
-                String linkName = jsonLink.getString(JSONConstants.LINK_NAME);
-
-                // Create new link
-                HelpLink helpLink = HelpLinkLocalServiceUtil.addHelpLink(itemId, linkUrl, linkName);
-                logger.info("Created new link for itemId "+itemId+" with id "+helpLink.getLinkId());
-                updatedJsonLinks.put(convertLinkToJson(helpLink));
-            }
-        }
-
-        return updatedJsonLinks;
-    }
 
     public static JSONObject saveHelpCategory(String categoryName, long serviceId) {
         try {
@@ -370,41 +319,6 @@ public class HelpUtil {
         }
 
         return null;
-    }
-
-    public static JSONArray getEntServices() {
-        JSONArray jsonServices = new JSONArray();
-
-        try {
-            List<Application> entApps = ApplicationLocalServiceUtil.getAllApplications();
-            if (entApps != null) {
-                for (Application app : entApps) {
-                    JSONObject jsonService = new JSONObject();
-                    jsonService.put(JSONConstants.APPLICATION_ID, app.getApplicationId());
-                    jsonService.put(JSONConstants.APPLICATION_NAME, app.getApplicationName());
-                    jsonService.put(JSONConstants.APPLICATION_KEY, app.getApplicationKey());
-                    jsonServices.put(jsonService);
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Error when fetching all ENT services");
-        }
-
-        return jsonServices;
-    }
-
-    public static boolean deleteCategory(ResourceRequest resourceRequest) {
-        try {
-            long categoryId = ParamUtil.getLong(resourceRequest, JSONConstants.CATEGORY_ID, 0);
-            // TODO Delete all items HelpItemLocalServiceUtil.deleteHelpItem(itemId)
-            HelpCategoryLocalServiceUtil.deleteHelpCategory(categoryId);
-
-            return true;
-        } catch (Exception e) {
-            logger.error("Error when deleting help item", e);
-        }
-
-        return false;
     }
 
     private static JSONObject convertQuestionToJson(HelpQuestion helpQuestion) {

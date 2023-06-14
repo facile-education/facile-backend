@@ -105,6 +105,8 @@ public interface NewsLocalService
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	public void deleteByGroupId(long groupId);
+
 	/**
 	 * Deletes the news with the primary key from the database. Also notifies the appropriate model listeners.
 	 *

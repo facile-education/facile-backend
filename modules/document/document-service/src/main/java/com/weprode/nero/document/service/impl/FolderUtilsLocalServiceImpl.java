@@ -216,33 +216,6 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return tumbnailFolder;
 	}
 
-	// TODO CDT
-	/*public static Folder getHomeworkFolder(long userId) {
-		Folder folder = null;
-
-		User user;
-		Folder rootFolder;
-		try {
-			user = UserLocalServiceUtil.getUser(userId);
-			rootFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(userId);
-
-			try {
-				folder = DLAppServiceUtil.getFolder(user.getGroupId(), rootFolder.getFolderId(), DocumentConstants.HOMEWORK_FOLDER_NAME);
-			} catch (NoSuchFolderException e) {
-				folder = DLAppServiceUtil.addFolder(
-						user.getGroupId(),
-						rootFolder.getFolderId(),
-						DocumentConstants.HOMEWORK_FOLDER_NAME,
-						"Devoirs rendus via le service Cours et Devoirs",
-						new ServiceContext());
-			}
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-
-		return folder;
-	}*/
-
 	/**
 	 * Return the path of a folder until the Root folder (folderId = 0 excluded) containing also the current folder
 	 * Example: folder 'test' may have path 'monCartable / folder1 / test'

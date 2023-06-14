@@ -1,5 +1,6 @@
 package com.weprode.nero.eel.synchronization;
 
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -9,14 +10,17 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.util.Validator;
+import com.weprode.nero.about.service.EntVersionUserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
+import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.eel.synchronization.model.ParentSynchro;
 import com.weprode.nero.eel.synchronization.service.ParentSynchroLocalServiceUtil;
 import com.weprode.nero.messaging.constants.MessagingConstants;
@@ -31,12 +35,30 @@ import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
-import com.weprode.nero.user.service.*;
+import com.weprode.nero.user.service.AffectationLocalServiceUtil;
+import com.weprode.nero.user.service.LDAPMappingLocalServiceUtil;
+import com.weprode.nero.user.service.UserContactLocalServiceUtil;
+import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
+import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Main class for GVE synchronization process
@@ -314,17 +336,23 @@ public class GVEParentSynchronizationManager {
             List<Long> roleIds = new ArrayList<>();
             roleIds.add(RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId());
 
+            List<Long> recipientList = new ArrayList<>();
             List<User> directionMembers = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
             for (User directionMember : directionMembers) {
                 logger.info("Send report to " + directionMember.getFullName());
-                // TODO Messaging ?
-                // CasierDepositLocalServiceUtil.sendReportToDropbox(directionMember, report, "Rapport d'import des parents.csv");
+                recipientList.add(directionMember.getUserId());
             }
 
-            // Send report to tech team
-            User techTeam = UserLocalServiceUtil.getUser(11105);
-            // TODO Messaging ?
-            // CasierDepositLocalServiceUtil.sendReportToDropbox(techTeam, report, "Rapport d'import des parents " + schoolId + ".csv");
+            String fileName = "Rapport_synchronization_parents_" + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(new Date()) + ".csv";
+            InputStream is = new ByteArrayInputStream(report);
+            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            User noReplyUser = UserLocalServiceUtil.getUser(noReplyUserId);
+            FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(noReplyUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(noReplyUserId).getFolderId(), "folderName", fileName, is, "html/text");
+            String subject = "Synchronization des parents";
+            String content = "Bonjour,<br><br>Veuillez trouver ci-joint la rapport de synchronization des parents pour votre etablissement.<br><br>Cordialement,<br>L'équipe technique";
+            List<Long> attachFileIds = new ArrayList<>();
+            attachFileIds.add(fileEntry.getFileEntryId());
+            MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_REPORT, attachFileIds, 0, 0);
 
         } catch (Exception e) {
             logger.error("Error while synchronizing parents : ", e);
@@ -718,8 +746,7 @@ public class GVEParentSynchronizationManager {
             MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_OTHER);
 
             // Mark latest ent news as read so that it does not pop at first connection
-            // TODO Update info
-            // EntVersionUserLocalServiceUtil.markLastVersionAsRead(user.getUserId());
+            EntVersionUserLocalServiceUtil.markLastVersionAsRead(user.getUserId());
         }
 
         return user;
@@ -727,7 +754,7 @@ public class GVEParentSynchronizationManager {
 
     private static String generatePassword() {
         try {
-            return new PwdGenerator().getPassword(16);
+            return PwdGenerator.getPassword(16);
         } catch (Exception e) {
             logger.debug(e);
         }

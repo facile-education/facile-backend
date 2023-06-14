@@ -11,6 +11,12 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.messaging.model.Message;
+import com.weprode.nero.messaging.model.MessageContent;
+import com.weprode.nero.messaging.service.MessageContentLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
+import com.weprode.nero.news.model.News;
+import com.weprode.nero.news.service.NewsLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.UserContactLocalServiceUtil;
 
@@ -27,7 +33,7 @@ public class AnonymizationUtil {
     // Anonymize all sensible data: lastName, email, phones, screenname
     // Anonymize dlfileentries, dlfileversions, dlfolders
     // Lorem ipsum blog entries, messages
-    public static boolean anonymize() {
+    public static void anonymize() {
 
         anonymizeUsers();
         anonymizeNews();
@@ -36,7 +42,6 @@ public class AnonymizationUtil {
         anonymizeDlFileVersions();
         anonymizeDlFolders();
         logger.info("END Anonymization");
-        return true;
     }
 
     private static void anonymizeUsers () {
@@ -109,7 +114,12 @@ public class AnonymizationUtil {
 
     private static void anonymizeNews () {
         try {
-            // TODO News
+            List<News> newsList = NewsLocalServiceUtil.getNewses(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+            for (News news : newsList) {
+                news.setContent(anonymizeContent(news.getContent()));
+                news.setTitle(anonymizeContent(news.getTitle()));
+                NewsLocalServiceUtil.updateNews(news);
+            }
         } catch (Exception e) {
             logger.error("Error anonymizing blog entries", e);
         }
@@ -117,7 +127,14 @@ public class AnonymizationUtil {
 
     private static void anonymizeMessages () {
         try {
-            // TODO Messages
+            List<Message> messages = MessageLocalServiceUtil.getMessages(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+            for (Message message : messages) {
+                message.setMessageSubject(anonymizeContent(message.getMessageSubject()));
+                MessageLocalServiceUtil.updateMessage(message);
+                MessageContent messageContent = MessageContentLocalServiceUtil.getMessageContent(message.getMessageId());
+                messageContent.setMessageContent(anonymizeContent(messageContent.getMessageContent()));
+                MessageContentLocalServiceUtil.updateMessageContent(messageContent);
+            }
         } catch (Exception e) {
             logger.error("Error anonymizing messages", e);
         }

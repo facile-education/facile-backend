@@ -100,6 +100,10 @@ public class NewsPopulationLocalServiceUtil {
 		return getService().createPersistedModel(primaryKeyObj);
 	}
 
+	public static void deleteByGroupId(long groupId) {
+		getService().deleteByGroupId(groupId);
+	}
+
 	public static void deleteByNewsId(long newsId) throws SystemException {
 		getService().deleteByNewsId(newsId);
 	}
@@ -245,6 +249,10 @@ public class NewsPopulationLocalServiceUtil {
 		getActionableDynamicQuery() {
 
 		return getService().getActionableDynamicQuery();
+	}
+
+	public static List<NewsPopulation> getByGroupId(long groupId) {
+		return getService().getByGroupId(groupId);
 	}
 
 	public static

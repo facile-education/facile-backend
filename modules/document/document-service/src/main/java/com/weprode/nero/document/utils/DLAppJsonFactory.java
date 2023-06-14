@@ -163,7 +163,6 @@ public class DLAppJsonFactory {
                 formattedFolder.put(JSONConstants.SIZE, "error when computing size");
             }
             formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(folder.getCreateDate()));
-            // formattedFolder.put("starred", FavoriteLocalServiceUtil.isInUserFavorites(user, folder.getFolderId())); // TODO: Handle favorite
         }
     }
 
@@ -190,7 +189,6 @@ public class DLAppJsonFactory {
             formattedFile.put(JSONConstants.CREATION_DATE,
                     new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getCreateDate()));
             formattedFile.put(JSONConstants.CREATOR, fileEntry.getUserName());
-            // formattedFile.put("starred", FavoriteLocalServiceUtil.isInUserFavorites(user, fileEntry.getFileEntryId()));   // TODO: Handle favorite
             formattedFile.put(JSONConstants.VERSION, fileEntry.getVersion());
             formattedFile.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
             try {

@@ -722,4 +722,28 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
 
     }
+
+    // Used when deleting a group
+    public void deleteByGroupId(long groupId) {
+
+        logger.info("Deleting news stuff related to groupId " + groupId);
+        // First get all news having population with given groupId, to list all newsIds
+        List<Long> newsIdsToAnalyze = new ArrayList<>();
+        List<NewsPopulation> populations = NewsPopulationLocalServiceUtil.getByGroupId(groupId);
+        for (NewsPopulation newsPopulation : populations) {
+            if (!newsIdsToAnalyze.contains(newsPopulation.getNewsId())) {
+                newsIdsToAnalyze.add(newsPopulation.getNewsId());
+            }
+        }
+        // Delete all NewsPopulations
+        NewsPopulationLocalServiceUtil.deleteByGroupId(groupId);
+
+        // Loop over the news to delete them if no more population linked to it
+        for (Long newsId : newsIdsToAnalyze) {
+            if (NewsPopulationLocalServiceUtil.getNewsPopulations(newsId).isEmpty()) {
+                logger.info("News " + newsId + " is no more related to any population -> removing it");
+                deleteNewsAndDependencies(newsPersistence.fetchByPrimaryKey(newsId));
+            }
+        }
+    }
 }
