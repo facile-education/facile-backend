@@ -76,10 +76,10 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
         Criterion groupIdCriterion = null;
         for (Long groupId : studentGroupIdList){
             if(groupIdCriterion != null){
-                groupIdCriterion = RestrictionsFactoryUtil.or(groupIdCriterion , RestrictionsFactoryUtil.eq("homework.groupId",groupId));
+                groupIdCriterion = RestrictionsFactoryUtil.or(groupIdCriterion , RestrictionsFactoryUtil.eq("homework.courseId",groupId));
             }
             else{
-                groupIdCriterion = RestrictionsFactoryUtil.eq("homework.groupId",groupId);
+                groupIdCriterion = RestrictionsFactoryUtil.eq("homework.courseId",groupId);
             }
         }
 

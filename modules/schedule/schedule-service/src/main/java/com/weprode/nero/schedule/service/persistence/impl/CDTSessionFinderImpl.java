@@ -150,7 +150,7 @@ public class CDTSessionFinderImpl extends CDTSessionFinderBaseImpl
 
             DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(CDTSession.class, classLoader);
             Property schoolIdProperty = PropertyFactoryUtil.forName("schoolId");
-            Property sessionStartProperty = PropertyFactoryUtil.forName("sessionStart");
+            Property sessionStartProperty = PropertyFactoryUtil.forName("start");
 
             if (schoolId > 0) {
                 dynamicQuery.add(schoolIdProperty.eq(schoolId));
@@ -181,7 +181,7 @@ public class CDTSessionFinderImpl extends CDTSessionFinderBaseImpl
             DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(CDTSession.class, classLoader);
             Disjunction disjunctionOrgsId = RestrictionsFactoryUtil.disjunction();
             Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
-            Property sessionStartProperty = PropertyFactoryUtil.forName("sessionStart");
+            Property sessionStartProperty = PropertyFactoryUtil.forName("start");
 
             if (groupIds != null && !groupIds.isEmpty()) {
 
