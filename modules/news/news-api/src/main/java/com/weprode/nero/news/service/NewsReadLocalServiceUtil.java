@@ -271,10 +271,10 @@ public class NewsReadLocalServiceUtil {
 		return getService().getNewsReadsCount();
 	}
 
-	public static org.json.JSONArray getNewsReadStatus(long newsId)
+	public static org.json.JSONArray getNewsReadStatus(long newsId, long userId)
 		throws PortalException, SystemException {
 
-		return getService().getNewsReadStatus(newsId);
+		return getService().getNewsReadStatus(newsId, userId);
 	}
 
 	/**

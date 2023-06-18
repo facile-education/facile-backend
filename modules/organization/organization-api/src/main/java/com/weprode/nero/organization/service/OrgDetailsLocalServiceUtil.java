@@ -308,6 +308,10 @@ public class OrgDetailsLocalServiceUtil {
 		return getService().isSubject(orgId);
 	}
 
+	public static boolean isVolee(long orgId) {
+		return getService().isVolee(orgId);
+	}
+
 	/**
 	 * Updates the org details in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

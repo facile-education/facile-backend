@@ -46,7 +46,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
 
             if (group.isRegularSite()) {
                 // Personal group
-                groupName = group.getName();
+                groupName = group.getDescriptiveName();
             } else {
                 // Institutional group
                 Organization organization = OrganizationLocalServiceUtil.getOrganization(group.getOrganizationId());

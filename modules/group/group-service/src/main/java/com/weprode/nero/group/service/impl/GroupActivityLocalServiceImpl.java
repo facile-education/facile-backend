@@ -74,12 +74,12 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             // Do not exceed 1 month back in time
             while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
                 // Fetch activities from minDate = maxDate minus 7 days
-                logger.info("Fetching group activities for userId " + userId + " from " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(minDate) + " to " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(maxDate) + " : having " + groupActivities.size() + " results");
+                //logger.info("Fetching group activities for userId " + userId + " from " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(minDate) + " to " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(maxDate) + " : having " + groupActivities.size() + " results");
 
                 // Group news
                 if (withNews) {
                     long groupId = groupIds.size() == 1 ? groupIds.get(0) : 0;
-                    List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, groupId, minDate, maxDate, nbResults);
+                    List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, groupId, minDate, maxDate, nbResults, true);
                     for (News news : groupNews) {
                         GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
                         groupActivities.add(newsActivity);
@@ -216,7 +216,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 logger.debug("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
 
                 // Group news
-                List<News> groupNews = NewsLocalServiceUtil.getNews(user, 0, new Date(), 10, true, false, false);
+                List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, groupId, minDate, maxDate, nbResults, false);
                 for (News news : groupNews) {
                     GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
                     groupActivities.add(newsActivity);

@@ -82,6 +82,19 @@ public class OrgDetailsLocalServiceImpl extends OrgDetailsLocalServiceBaseImpl {
         return false;
     }
 
+    public boolean isVolee(long orgId) {
+        try {
+            OrgDetails orgDetails = orgDetailsPersistence.fetchByPrimaryKey(orgId);
+            if (orgDetails != null) {
+                return orgDetails.getType() == OrgConstants.VOLEE_TYPE;
+            }
+        } catch (Exception e) {
+            logger.error("Error when getting if organization "+orgId+" is a volee");
+        }
+
+        return false;
+    }
+
     public boolean isCours(long orgId) {
         try {
             OrgDetails orgDetails = orgDetailsPersistence.fetchByPrimaryKey(orgId);

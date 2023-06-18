@@ -61,13 +61,11 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
             qPos.add(sdf.format(maxDate));
+            qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(userId);
             qPos.add(nbNews);
 
-//            EntityCacheUtil.clearCache(NewsImpl.class.getName());
-//            FinderCacheUtil.clearCache(NewsImpl.class.getName());
-//            clearCache();
             return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
         } catch (Exception e) {
             logger.error("Error while fetching news", e);
@@ -119,19 +117,24 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
         return 0;
     }
 
-    public List<News> getNewsActivities(long userId, List<Long> groupIds, List<Long> roleIds, Date minDate, Date maxDate, int nbNews) {
+    public List<News> getNewsActivities(long userId, List<Long> groupIds, List<Long> roleIds, Date minDate, Date maxDate, int nbNews, boolean groupNewsOnly) {
         Session session = null;
 
         try {
             session = openSession();
 
+            String other = "";
+            if (groupNewsOnly) {
+                other += " AND news.isSchoolNews = 0";
+            }
+
             String sql = customSQL.get(getClass(), GET_NEWS_ACTIVITIES);
             sql = StringUtil.replace(sql, "[$GROUP_IDS$]", buildIdList(groupIds));
             sql = StringUtil.replace(sql, "[$ROLE_IDS$]", buildIdList(roleIds));
-            logger.debug("News sql = " + sql);
+            sql = StringUtil.replace(sql, "[$OTHER$]", other);
+            logger.info("News activity sql = " + sql);
 
             SQLQuery q = session.createSQLQuery(sql);
-            //q.setCacheable(false);
             q.addEntity("News_News", NewsImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
@@ -139,9 +142,11 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
             qPos.add(sdf.format(minDate));
             qPos.add(sdf.format(maxDate));
-            qPos.add(sdf.format(new Date()));
             qPos.add(userId);
-            qPos.add(groupIds.size() == 1);
+            qPos.add(sdf.format(minDate));
+            qPos.add(sdf.format(maxDate));
+            qPos.add(userId);
+            qPos.add(sdf.format(new Date()));
             qPos.add(nbNews);
 
             return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);

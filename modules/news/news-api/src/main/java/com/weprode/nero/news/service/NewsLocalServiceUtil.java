@@ -290,11 +290,12 @@ public class NewsLocalServiceUtil {
 
 	public static List<News> getNewsActivities(
 			com.liferay.portal.kernel.model.User user, long groupId,
-			java.util.Date minDate, java.util.Date maxDate, int nbNews)
+			java.util.Date minDate, java.util.Date maxDate, int nbNews,
+			boolean groupNewsOnly)
 		throws SystemException {
 
 		return getService().getNewsActivities(
-			user, groupId, minDate, maxDate, nbNews);
+			user, groupId, minDate, maxDate, nbNews, groupNewsOnly);
 	}
 
 	public static int getNewsCount(

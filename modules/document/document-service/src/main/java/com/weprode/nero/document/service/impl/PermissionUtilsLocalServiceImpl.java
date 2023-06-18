@@ -228,6 +228,8 @@ public class PermissionUtilsLocalServiceImpl
 		viewUpdatePermissions.add(ActionKeys.ACCESS);
 		if (isFolder) {
 			viewUpdatePermissions.add(PermissionConstants.ADD_OBJECT);
+			viewUpdatePermissions.add(ActionKeys.ADD_DOCUMENT);
+			viewUpdatePermissions.add(ActionKeys.ADD_FOLDER);
 		}
 
 		// Delete permissions
@@ -237,6 +239,8 @@ public class PermissionUtilsLocalServiceImpl
 		viewUpdateDeletePermissions.add(ActionKeys.UPDATE);
 		if (isFolder) {
 			viewUpdateDeletePermissions.add(PermissionConstants.ADD_OBJECT);
+			viewUpdateDeletePermissions.add(ActionKeys.ADD_DOCUMENT);
+			viewUpdateDeletePermissions.add(ActionKeys.ADD_FOLDER);
 		}
 		viewUpdateDeletePermissions.add(ActionKeys.DELETE);
 
@@ -247,6 +251,8 @@ public class PermissionUtilsLocalServiceImpl
 		allPermissions.add(ActionKeys.UPDATE);
 		if (isFolder) {
 			allPermissions.add(PermissionConstants.ADD_OBJECT);
+			allPermissions.add(ActionKeys.ADD_DOCUMENT);
+			allPermissions.add(ActionKeys.ADD_FOLDER);
 		}
 		allPermissions.add(ActionKeys.DELETE);
 		allPermissions.add(ActionKeys.PERMISSIONS);
