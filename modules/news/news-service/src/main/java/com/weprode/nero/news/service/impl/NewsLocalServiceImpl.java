@@ -1,5 +1,6 @@
 package com.weprode.nero.news.service.impl;
 
+import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
@@ -212,7 +213,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         return newsFinder.getNewsCount(user.getUserId(), groupIds, roleIds, groupNews, importantOnly, unreadOnly);
     }
 
-    public List<News> getNewsActivities(User user, long groupId, Date minDate, Date maxDate, int nbNews) throws SystemException {
+    public List<News> getNewsActivities(User user, long groupId, Date minDate, Date maxDate, int nbNews, boolean groupNewsOnly) throws SystemException {
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
 
@@ -231,7 +232,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             groupIds.add(groupId);
         }
 
-        return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews);
+        return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews, groupNewsOnly);
     }
 
 
@@ -564,7 +565,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             jsonNews.put(JSONConstants.ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.convertNewsFiles(newsId, userId));
             if (news.getAuthorId() == userId) {
                 jsonNews.put(JSONConstants.POPULATIONS, NewsPopulationLocalServiceUtil.convertNewsPopulations(newsId, userId));
-                jsonNews.put(JSONConstants.READ_INFOS, NewsReadLocalServiceUtil.getNewsReadStatus(newsId));
+                jsonNews.put(JSONConstants.READ_INFOS, NewsReadLocalServiceUtil.getNewsReadStatus(newsId, userId));
             }
         }
 
@@ -573,6 +574,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     private void createNewsThumbnail(long userId, News news, long fileId) {
         try {
+            if (fileId == 0) {
+                // No thumbnail provided
+                return;
+            }
             // Get original file
             FileEntry originalPicture = DLAppServiceUtil.getFileEntry(fileId);
 
@@ -651,18 +656,19 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             try {
                 Folder groupNewsFolder = FolderUtilsLocalServiceUtil.getGroupNewsFolder(groupId);
                 // Check subFolder newsId
-                List<Folder> folderList = DLAppServiceUtil.getFolders(groupId, groupNewsFolder.getFolderId());
                 Folder newsIdFolder = null;
-                for (Folder folder : folderList) {
-                    if (folder.getName().equals("" + newsId)) {
-                        newsIdFolder = folder;
-                        logger.info("Folder newsId " + newsId + "already exists -> this is an edit");
-                        // Delete existing attached files
-                        List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, folder.getFolderId());
-                        for (FileEntry fileEntry : fileList) {
-                            logger.info("Deleting existing attached file " + fileEntry.getTitle());
-                            DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
-                        }
+                try {
+                    newsIdFolder = DLAppServiceUtil.getFolder(groupId, groupNewsFolder.getFolderId(), newsId+"");
+                } catch (NoSuchFolderException e) {
+                    // This is a creation
+                }
+                if (newsIdFolder != null) {
+                    logger.info("Folder newsId " + newsId + "already exists -> this is an edit");
+                    // Delete existing attached files
+                    List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, newsIdFolder.getFolderId());
+                    for (FileEntry fileEntry : fileList) {
+                        logger.info("Deleting existing attached file " + fileEntry.getTitle());
+                        DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
                     }
                 }
 

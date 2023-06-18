@@ -69,7 +69,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             result.put(JSONConstants.HAS_DIARY_WIDGET, true);
             result.put(JSONConstants.HAS_HOMEWORK_WIDGET, isStudentOrParent && BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "cdt"));
             result.put(JSONConstants.HAS_EDT_WIDGET, isStudentOrParent || RoleUtilsLocalServiceUtil.isTeacher(user));
-            result.put(JSONConstants.HAS_STATISTIC_WIDGET, isDirectionMember);
+            result.put(JSONConstants.HAS_STATISTIC_WIDGET, isDirectionMember || RoleUtilsLocalServiceUtil.isENTAdmin(user));
 
             // If we are a parent, get our children list
             if (RoleUtilsLocalServiceUtil.isParent(user)) {
@@ -96,6 +96,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             userProperties.setLastDashboardAccessDate(new Date());
             UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
+            logger.info("Set last dashboard access date to " + new SimpleDateFormat(JSONConstants.FULL_FRENCH_FORMAT).format(new Date()));
 
             result.put(JSONConstants.SUCCESS, true);
 

@@ -363,7 +363,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -438,7 +438,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         List<Long> schoolIds = new ArrayList<>();
 
         // Do not add school filter for admins
-        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user) && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
             for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
                 if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user, school.getOrganizationId())) {
                     schoolIds.add(school.getOrganizationId());

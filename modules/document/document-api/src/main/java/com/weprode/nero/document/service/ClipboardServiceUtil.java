@@ -34,9 +34,8 @@ public class ClipboardServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.ClipboardServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static org.json.JSONObject copy(
-			java.lang.String folderIds, java.lang.String fileIds,
-			long targetFolderId, int mode)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		java.lang.String folderIds, java.lang.String fileIds,
+		long targetFolderId, int mode) {
 
 		return getService().copy(folderIds, fileIds, targetFolderId, mode);
 	}
@@ -51,9 +50,8 @@ public class ClipboardServiceUtil {
 	}
 
 	public static org.json.JSONObject move(
-			java.lang.String folderIds, java.lang.String fileIds,
-			long targetFolderId, int mode)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		java.lang.String folderIds, java.lang.String fileIds,
+		long targetFolderId, int mode) {
 
 		return getService().move(folderIds, fileIds, targetFolderId, mode);
 	}

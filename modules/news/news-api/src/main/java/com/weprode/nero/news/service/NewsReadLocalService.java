@@ -245,7 +245,7 @@ public interface NewsReadLocalService
 	public int getNewsReadsCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONArray getNewsReadStatus(long newsId)
+	public JSONArray getNewsReadStatus(long newsId, long userId)
 		throws PortalException, SystemException;
 
 	/**

@@ -437,7 +437,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (PrincipalException e) {
-			logger.error("User " + user.getUserId() + " does not have the permission to VIEW file " + fileId);
+			logger.error("User " + user.getUserId() + " does not have the permission to VIEW file " + fileId, e);
 			result.put(JSONConstants.ERROR, "PermissionException");
 			result.put(JSONConstants.SUCCESS, false);
 		} catch (FileExtensionException e) {

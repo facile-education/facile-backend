@@ -326,11 +326,29 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				populationName = orgName;
 			} else {
 				if (roleId == RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()) {
-					populationName = NeroRoleConstants.STUDENT_INCLUSIVE + ContactConstants.OF + orgName;
+					if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+						populationName = "Tous les élèves";
+					} else if (OrgDetailsLocalServiceUtil.isVolee(orgId)) {
+						populationName = "Elèves de la volée " + orgName;
+					} else {
+						populationName = NeroRoleConstants.STUDENT_INCLUSIVE + ContactConstants.OF + orgName;
+					}
 				} else if (roleId == RoleUtilsLocalServiceUtil.getParentRole().getRoleId()) {
-					populationName = NeroRoleConstants.PARENT_INCLUSIVE + ContactConstants.OF + orgName;
+					if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+						populationName = "Tous les responsables légaux";
+					} else if (OrgDetailsLocalServiceUtil.isVolee(orgId)) {
+						populationName = "Responsables légaux  de la volée " + orgName;
+					} else {
+						populationName = NeroRoleConstants.PARENT_INCLUSIVE + ContactConstants.OF + orgName;
+					}
 				} else if (roleId == RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId()) {
-					populationName = NeroRoleConstants.TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
+					if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+						populationName = "Tous les enseignants";
+					} else if (OrgDetailsLocalServiceUtil.isVolee(orgId)) {
+						populationName = "Enseignants de la volée " + orgName;
+					} else {
+						populationName = NeroRoleConstants.TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
+					}
 				} else if (roleId == RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId()) {
 					populationName = NeroRoleConstants.DIRECTION_INCLUSIVE + ContactConstants.OF + orgName;
 				} else if (roleId == RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId()) {

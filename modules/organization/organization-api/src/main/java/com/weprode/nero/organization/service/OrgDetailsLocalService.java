@@ -275,6 +275,9 @@ public interface OrgDetailsLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isSubject(long orgId);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isVolee(long orgId);
+
 	/**
 	 * Updates the org details in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

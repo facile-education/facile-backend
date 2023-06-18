@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -52,8 +51,7 @@ public interface ClipboardService extends BaseService {
 	 */
 	@JSONWebService(method = "GET")
 	public JSONObject copy(
-			String folderIds, String fileIds, long targetFolderId, int mode)
-		throws PrincipalException;
+		String folderIds, String fileIds, long targetFolderId, int mode);
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -64,7 +62,6 @@ public interface ClipboardService extends BaseService {
 
 	@JSONWebService(method = "GET")
 	public JSONObject move(
-			String folderIds, String fileIds, long targetFolderId, int mode)
-		throws PrincipalException;
+		String folderIds, String fileIds, long targetFolderId, int mode);
 
 }

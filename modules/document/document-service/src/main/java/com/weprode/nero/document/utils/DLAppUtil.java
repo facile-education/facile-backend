@@ -250,6 +250,7 @@ public class DLAppUtil {
 
             // Set default permissions
             ServiceContext serviceContext = new ServiceContext();
+            serviceContext.setScopeGroupId(groupId);
             serviceContext.setAddGroupPermissions(true);
 
             boolean finished = false;

@@ -346,6 +346,11 @@ public class OrgDetailsLocalServiceWrapper
 		return _orgDetailsLocalService.isSubject(orgId);
 	}
 
+	@Override
+	public boolean isVolee(long orgId) {
+		return _orgDetailsLocalService.isVolee(orgId);
+	}
+
 	/**
 	 * Updates the org details in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *

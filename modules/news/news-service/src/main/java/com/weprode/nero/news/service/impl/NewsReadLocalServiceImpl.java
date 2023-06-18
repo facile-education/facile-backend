@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.news.exception.NoSuchReadException;
 import com.weprode.nero.news.model.NewsPopulation;
@@ -130,7 +131,7 @@ public class NewsReadLocalServiceImpl extends NewsReadLocalServiceBaseImpl {
         return userIds;
     }
 
-    public JSONArray getNewsReadStatus(long newsId) throws SystemException, PortalException {
+    public JSONArray getNewsReadStatus(long newsId, long userId) throws SystemException, PortalException {
         JSONArray jsonReadStatus = new JSONArray();
 
         // Loop over populations
@@ -138,7 +139,6 @@ public class NewsReadLocalServiceImpl extends NewsReadLocalServiceBaseImpl {
         if (populations != null) {
             for (NewsPopulation population : populations) {
                 JSONObject jsonPopulation = new JSONObject();
-                jsonPopulation.put(JSONConstants.POPULATION_NAME, GroupUtilsLocalServiceUtil.getGroupName(population.getGroupId()));
 
                 // Loop over population members
                 JSONArray jsonMembers = new JSONArray();
@@ -146,12 +146,14 @@ public class NewsReadLocalServiceImpl extends NewsReadLocalServiceBaseImpl {
                 List<User> groupMembers;
                 if (group.isRegularSite()) {
                     groupMembers = UserLocalServiceUtil.getGroupUsers(group.getGroupId());
+                    jsonPopulation.put(JSONConstants.POPULATION_NAME, GroupUtilsLocalServiceUtil.getGroupName(population.getGroupId()));
                 } else {
                     List<Long> orgIds = new ArrayList<>();
                     orgIds.add(group.getClassPK());
                     List<Long> roleIds = new ArrayList<>();
                     roleIds.add(population.getRoleId());
                     groupMembers = UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+                    jsonPopulation.put(JSONConstants.POPULATION_NAME, ContactLocalServiceUtil.getPopulationName(group.getClassPK(), population.getRoleId(), userId));
                 }
 
                 for (User member : groupMembers) {

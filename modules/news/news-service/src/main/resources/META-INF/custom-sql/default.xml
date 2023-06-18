@@ -6,7 +6,7 @@
         	FROM News_News news
 			JOIN News_NewsPopulation pop ON news.newsId = pop.newsId
 			LEFT JOIN News_NewsRead newsread on news.newsId = newsread.newsId
-			WHERE news.publicationDate < ?
+			WHERE (news.publicationDate < ? OR news.authorId = ?)
 			AND ((pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$]) AND news.expirationDate > ?) OR news.authorId = ?)
 			[$OTHER$]
 			GROUP BY news.newsId
@@ -30,12 +30,9 @@
 	        SELECT DISTINCT news.*
         	FROM News_News news
 			JOIN News_NewsPopulation pop ON news.newsId = pop.newsId
-			WHERE news.publicationDate between ? AND ?
-			AND news.isSchoolNews = 0
-			AND (
-			    (pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$]) AND news.expirationDate > ?)
-			    OR (news.authorId = ? AND ? AND pop.groupId IN ([$GROUP_IDS$]))
-			)
+			WHERE (news.publicationDate between ? AND ? OR (news.authorId = ? AND news.modificationDate between ? AND ?))
+			AND (news.authorId = ? OR (pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$]) AND news.expirationDate > ?))
+			[$OTHER$]
 			GROUP BY news.newsId
 			ORDER BY news.publicationDate DESC
             LIMIT ?

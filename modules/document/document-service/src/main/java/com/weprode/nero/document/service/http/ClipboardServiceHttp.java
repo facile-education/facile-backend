@@ -53,9 +53,8 @@ import com.weprode.nero.document.service.ClipboardServiceUtil;
 public class ClipboardServiceHttp {
 
 	public static org.json.JSONObject copy(
-			HttpPrincipal httpPrincipal, String folderIds, String fileIds,
-			long targetFolderId, int mode)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, String folderIds, String fileIds,
+		long targetFolderId, int mode) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -70,14 +69,6 @@ public class ClipboardServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -94,9 +85,8 @@ public class ClipboardServiceHttp {
 	}
 
 	public static org.json.JSONObject move(
-			HttpPrincipal httpPrincipal, String folderIds, String fileIds,
-			long targetFolderId, int mode)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		HttpPrincipal httpPrincipal, String folderIds, String fileIds,
+		long targetFolderId, int mode) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -111,14 +101,6 @@ public class ClipboardServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}

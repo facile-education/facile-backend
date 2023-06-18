@@ -294,11 +294,11 @@ public class NewsReadLocalServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONArray getNewsReadStatus(long newsId)
+	public org.json.JSONArray getNewsReadStatus(long newsId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _newsReadLocalService.getNewsReadStatus(newsId);
+		return _newsReadLocalService.getNewsReadStatus(newsId, userId);
 	}
 
 	/**
