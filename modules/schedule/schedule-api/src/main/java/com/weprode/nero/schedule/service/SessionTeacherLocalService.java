@@ -79,6 +79,8 @@ public interface SessionTeacherLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public SessionTeacher addSessionTeacher(SessionTeacher sessionTeacher);
 
+	public boolean canSaveTeacherSubstitutes(User user);
+
 	/**
 	 * @throws PortalException
 	 */

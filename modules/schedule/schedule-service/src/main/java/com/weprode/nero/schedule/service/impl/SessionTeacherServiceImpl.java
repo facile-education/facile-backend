@@ -167,9 +167,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
-				!RoleUtilsLocalServiceUtil.isDoyen(user) &&
-				!RoleUtilsLocalServiceUtil.isSecretariat(user)) {
+		if (!SessionTeacherLocalServiceUtil.canSaveTeacherSubstitutes(user)) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.exception.NoSuchSessionTeacherException;
 import com.weprode.nero.schedule.model.SessionTeacher;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
@@ -28,6 +29,12 @@ public class SessionTeacherLocalServiceImpl
 
 	public static final int SUBSTITUTE = 1;
 	public static final int SUBSTITUTED = 2;
+
+	public boolean canSaveTeacherSubstitutes (User user) {
+		return RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
+				RoleUtilsLocalServiceUtil.isDoyen(user) ||
+				RoleUtilsLocalServiceUtil.isSecretariat(user);
+	}
 
 	public SessionTeacher createSessionTeacher(long sessionId, long teacherId) throws SystemException {
 		return createSessionTeacher(sessionId, teacherId, 0);

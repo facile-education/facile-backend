@@ -552,6 +552,7 @@ public class JSONConstants {
     public static final String SESSION_TIMEOUT_WARNING = "sessionTimeoutWarning";
     public static final String IS_SESSION_EXPIRED = "isSessionExpired";
     public static final String IS_SESSION_WARNING = "isSessionWarning";
+    public static final String CAN_SAVE_TEACHER_SUBSTITUTE = "canSaveTeacherSubstitute";
 
     // Success
     public static final String SUCCESS = "success";
