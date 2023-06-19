@@ -159,7 +159,6 @@ public class NotificationUtil {
             for (User parent : parents) {
                 recipientList.add(parent.getUserId());
             }
-            // TODO add conseiller social
 
             RenvoiPK pk = new RenvoiPK(schoollifeSessionId, studentId);
             Renvoi renvoi = RenvoiLocalServiceUtil.getRenvoi(pk);

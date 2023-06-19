@@ -237,7 +237,10 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             }
 
             result.put(JSONConstants.ACTIVITIES, jsonActivities);
-            result.put(JSONConstants.LAST_DASHBOARD_ACCESS_DATE, lastDashboardAccessDate == null ? "" : new SimpleDateFormat("yyyy-MM-dd HH:mm").format(lastDashboardAccessDate));
+            // Last dashboard access date is store in UTC, convert it with user's timezone
+            DateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            sdf.setTimeZone(user.getTimeZone());
+            result.put(JSONConstants.LAST_DASHBOARD_ACCESS_DATE, lastDashboardAccessDate == null ? "" : sdf.format(lastDashboardAccessDate));
             result.put(JSONConstants.NB_NEW_ACTIVITIES, nbNewActivities);
             result.put(JSONConstants.SUCCESS, true);
 

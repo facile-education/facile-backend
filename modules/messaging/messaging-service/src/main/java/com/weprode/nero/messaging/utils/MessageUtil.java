@@ -106,7 +106,7 @@ public class MessageUtil {
 
 				// Notify on mobile phone
 				boolean isMobileNotificationEnabled = Boolean.parseBoolean(
-						PropsUtil.get(NeroSystemProperties.MOBILE_NOTIFICATION_ENABLED));
+						PropsUtil.get(NeroSystemProperties.MOBILE_NOTIFICATIONS_ENABLED));
 				if (isMobileNotificationEnabled) {
 					ThreadMobileNotification notifThread = new ThreadMobileNotification(recipientId, sender.getFullName(), message.getMessageSubject(), messageContent,
 							PropsUtil.get(NeroSystemProperties.MESSAGING_URL), MobileNotification.MESSAGING_TYPE, message.getMessageId());

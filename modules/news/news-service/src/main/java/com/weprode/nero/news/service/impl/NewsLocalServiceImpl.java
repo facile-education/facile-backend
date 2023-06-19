@@ -550,15 +550,28 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             }
         }
 
-        // Group name is the first found in the news group list to which belongs the user
+        // Group name is the first found in the news group list to which belongs the user + nbOtherGroups
+        String groupName = "";
+        List<Long> newsGroupIds = new ArrayList<>();
+        int nbOtherGroups = 0;
         List<Long> userGroupIds = UserUtilsLocalServiceUtil.getUserGroupIds(userId);
         List<NewsPopulation> populations = NewsPopulationLocalServiceUtil.getNewsPopulations(newsId);
         for (NewsPopulation population : populations) {
-            if (userGroupIds.contains(population.getGroupId()) && (population.getRoleId() == 0 || RoleLocalServiceUtil.hasUserRole(userId, population.getRoleId()))) {
-                jsonNews.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(population.getGroupId()));
-                break;
+            if (userId == news.getAuthorId() || (userGroupIds.contains(population.getGroupId()) && (population.getRoleId() == 0 || RoleLocalServiceUtil.hasUserRole(userId, population.getRoleId())))) {
+                // Keep matching groups once
+                if (!newsGroupIds.contains(population.getGroupId())) {
+                    newsGroupIds.add(population.getGroupId());
+                } else {
+                    continue;
+                }
+                if (groupName.equals("")) {
+                    groupName = GroupUtilsLocalServiceUtil.getGroupName(population.getGroupId());
+                } else {
+                    nbOtherGroups++;
+                }
             }
         }
+        jsonNews.put(JSONConstants.GROUP_NAME, groupName + (nbOtherGroups > 0 ? " (+" + nbOtherGroups + ")" : ""));
 
         if (withDetails) {
             jsonNews.put(JSONConstants.THUMBNAIL_ID, news.getImageId());

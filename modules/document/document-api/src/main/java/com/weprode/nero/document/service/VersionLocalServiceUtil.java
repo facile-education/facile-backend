@@ -371,8 +371,8 @@ public class VersionLocalServiceUtil {
 		getService().removeVersionByFileEntryId(dlFileEntryId, versionNb);
 	}
 
-	public static boolean restoreVersion(long fileVersionId) {
-		return getService().restoreVersion(fileVersionId);
+	public static boolean restoreVersion(long userId, long fileVersionId) {
+		return getService().restoreVersion(userId, fileVersionId);
 	}
 
 	public static boolean saveVersionDescription(

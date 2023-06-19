@@ -88,7 +88,7 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
             MailMessage mailMessage = new MailMessage();
             mailMessage.setHTMLFormat(true);
 
-            mailMessage.setFrom(new InternetAddress(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY)));
+            mailMessage.setFrom(new InternetAddress(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_ADDRESS)));
             mailMessage.setTo(new InternetAddress(email));
 
             mailMessage.setSubject(subject);

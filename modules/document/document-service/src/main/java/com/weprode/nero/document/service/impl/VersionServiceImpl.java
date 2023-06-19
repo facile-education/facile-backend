@@ -109,7 +109,7 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 		}
 		try {
 			logger.info("User " + user.getFullName() + " restores version " + fileVersionId);
-			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.restoreVersion(fileVersionId));
+			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.restoreVersion(user.getUserId(), fileVersionId));
 		} catch (Exception e) {
 			logger.error("Error restoring version " + fileVersionId, e);
 			result.put(JSONConstants.SUCCESS, false);

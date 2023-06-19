@@ -53,7 +53,6 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         try {
             Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
             SchoollifeSlotLocalServiceUtil.addSlot(schoolId, startDate, day, startHour, endHour, teacherId, type, room, capacity);
-            // TODO: return created slot?
 
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

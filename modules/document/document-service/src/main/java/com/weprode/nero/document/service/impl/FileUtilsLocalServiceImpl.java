@@ -345,8 +345,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		return documentURL;
 	}
 
-	// TODO getDisplayUrl (cdtSession, fileName, typeOfView, readOnly) {} // (get url from cdt attached files (not handle by documents library but by file system)
-
 	public String getDownloadUrl (FileEntry file) {
 		return 	"/documents/"
 				+ file.getRepositoryId() + StringPool.SLASH
