@@ -50,6 +50,13 @@ public class SessionTeacherLocalServiceWrapper
 		return _sessionTeacherLocalService.addSessionTeacher(sessionTeacher);
 	}
 
+	@Override
+	public boolean canSaveTeacherSubstitutes(
+		com.liferay.portal.kernel.model.User user) {
+
+		return _sessionTeacherLocalService.canSaveTeacherSubstitutes(user);
+	}
+
 	/**
 	 * @throws PortalException
 	 */

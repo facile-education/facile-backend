@@ -63,6 +63,12 @@ public class SessionTeacherLocalServiceUtil {
 		return getService().addSessionTeacher(sessionTeacher);
 	}
 
+	public static boolean canSaveTeacherSubstitutes(
+		com.liferay.portal.kernel.model.User user) {
+
+		return getService().canSaveTeacherSubstitutes(user);
+	}
+
 	/**
 	 * @throws PortalException
 	 */
