@@ -425,8 +425,8 @@ public class VersionLocalServiceWrapper
 	}
 
 	@Override
-	public boolean restoreVersion(long fileVersionId) {
-		return _versionLocalService.restoreVersion(fileVersionId);
+	public boolean restoreVersion(long userId, long fileVersionId) {
+		return _versionLocalService.restoreVersion(userId, fileVersionId);
 	}
 
 	@Override

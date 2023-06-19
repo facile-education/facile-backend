@@ -533,7 +533,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         }
 
         ResourceBundle bundle = ResourceBundle.getBundle("content.Language", receiver.getLocale());
-        String noReplyAddress = PrefsPropsUtil.getString(NeroSystemProperties.MAIL_NO_REPLY);
+        String noReplyAddress = PrefsPropsUtil.getString(NeroSystemProperties.MAIL_NO_REPLY_ADDRESS);
         String forwardedMailSubject = bundle.getString("forward-subject") + HtmlParserUtil.extractText(subject);
         String forwardedMailContent = bundle.getString("forward-content");
 

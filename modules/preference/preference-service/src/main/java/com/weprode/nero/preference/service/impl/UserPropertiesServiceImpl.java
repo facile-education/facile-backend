@@ -293,7 +293,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
 
             msg += "<p style='" + defaultStyle + " margin-top: -27px; border-bottom: 2px solid #8b9ea8; border-radius: 0px 0px 5px 5px;'>Cordialement</p>";
 
-            long defaultSenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.CONFIRMATION_SENDER_ID));
+            long defaultSenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             List<Long> dest =  new ArrayList<>();
             dest.add(user.getUserId());
             String subject = "Activation de webdav";

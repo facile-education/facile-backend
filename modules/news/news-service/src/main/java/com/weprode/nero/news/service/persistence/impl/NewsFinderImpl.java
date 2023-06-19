@@ -132,7 +132,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             sql = StringUtil.replace(sql, "[$GROUP_IDS$]", buildIdList(groupIds));
             sql = StringUtil.replace(sql, "[$ROLE_IDS$]", buildIdList(roleIds));
             sql = StringUtil.replace(sql, "[$OTHER$]", other);
-            logger.info("News activity sql = " + sql);
+            logger.debug("News activity sql = " + sql);
 
             SQLQuery q = session.createSQLQuery(sql);
             q.addEntity("News_News", NewsImpl.class);

@@ -146,7 +146,7 @@ public class GVESynchronizationManager {
 
         try {
             // Loop over schools
-            String schoolsList = PropsUtil.get("gve.schools");
+            String schoolsList = PropsUtil.get(NeroSystemProperties.SYNCHRO_SCHOOLS);
             logger.info("Synchronization START for GVE school list = " + schoolsList);
             if (schoolsList != null && !schoolsList.equals("")) {
                 String[] schoolTab = schoolsList.split(",");
@@ -183,7 +183,7 @@ public class GVESynchronizationManager {
 
         initSchoolSynchronization();
 
-        String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
+        String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_BASE_DN_GROUPS);
         Organization school = synchronizeSchool(schoolId);
         processedSchoolIds.add(school.getOrganizationId());
 
@@ -247,7 +247,7 @@ public class GVESynchronizationManager {
     private Organization synchronizeSchool (String schoolId) {
 
         // Get school informations
-        String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS);
+        String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_BASE_DN_GROUPS);
         String[] schoolAttributes = {ATTRIBUTE_SCHOOL_DESCRIPTION};
         Organization school = null;
         try {
@@ -1105,7 +1105,7 @@ public class GVESynchronizationManager {
 
     private void createContactProperties(User user) {
         try {
-            String suffix = PropsUtil.get(NeroSystemProperties.DEFAUT_MAIL_SUFFIX);
+            String suffix = PropsUtil.get(NeroSystemProperties.MAIL_DEFAULT_SUFFIX);
 
             boolean isMailValid = !user.getEmailAddress().equals(user.getScreenName()+suffix);
             String mail = "";
@@ -1126,21 +1126,19 @@ public class GVESynchronizationManager {
     private void createServiceNotifications(User user) {
 
         try {
-            // Force notifications to enable
-            if (Boolean.parseBoolean(PropsUtil.get(NeroSystemProperties.NOTIFICATIONS_ENABLED))) {
-                NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
+            NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
 
-                userNotificationConfig.setNotifyCasier(true);
-                userNotificationConfig.setNotifyActu(true);
-                userNotificationConfig.setNotifyGrpDoc(true);
-                userNotificationConfig.setNotifyAgenda(true);
-                userNotificationConfig.setDigestPeriod(2);
-                userNotificationConfig.setUserId(user.getUserId());
+            userNotificationConfig.setNotifyCasier(true);
+            userNotificationConfig.setNotifyActu(true);
+            userNotificationConfig.setNotifyGrpDoc(true);
+            userNotificationConfig.setNotifyAgenda(true);
+            userNotificationConfig.setDigestPeriod(2);
+            userNotificationConfig.setUserId(user.getUserId());
 
-                userNotificationConfig.setActivate(true);
+            userNotificationConfig.setActivate(true);
 
-                NotifyConfigLocalServiceUtil.updateNotifyConfig(userNotificationConfig);
-            }
+            NotifyConfigLocalServiceUtil.updateNotifyConfig(userNotificationConfig);
+
         } catch(Exception e) {
             logger.error("Error while updating user notify config for user "+user.getUserId());
         }
@@ -1276,7 +1274,7 @@ public class GVESynchronizationManager {
 
         // Parse input directory
         // If multiple files for given schoolId, archive old ones and return the latest
-        File horairesDir = new File(PropsUtil.get(NeroSystemProperties.SCHEDULE_SYNCHRO_FOLDER));
+        File horairesDir = new File(PropsUtil.get(NeroSystemProperties.SYNCHRO_SCHEDULE_DROP_FOLDER));
         File[] filesTab = horairesDir.listFiles();
         if (filesTab != null && filesTab.length > 0) {
 
@@ -1339,7 +1337,7 @@ public class GVESynchronizationManager {
         logger.info("Archiving file " + sourceFile.getName());
 
         // Create archive directory if it does not exist
-        File archiveDir = new File(PropsUtil.get(NeroSystemProperties.SCHEDULE_SYNCHRO_FOLDER) + "archives/");
+        File archiveDir = new File(PropsUtil.get(NeroSystemProperties.SYNCHRO_SCHEDULE_DROP_FOLDER) + "archives/");
         if (!archiveDir.exists()) {
             archiveDir.mkdir();
         }
@@ -2264,9 +2262,9 @@ public class GVESynchronizationManager {
             return ctx;
         }
 
-        String baseProviderURL 	= PropsUtil.get(GVE_LDAP_BASE_PROVIDER_URL);
-        String principal 		= PropsUtil.get(GVE_LDAP_SECURITY_PRINCIPAL);
-        String credentials 		= PropsUtil.get(GVE_LDAP_SECURITY_CREDENTIALS);
+        String baseProviderURL 	= PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_BASE_PROVIDER_URL);
+        String principal 		= PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_SECURITY_PRINCIPAL);
+        String credentials 		= PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_SECURITY_CREDENTIALS);
         // logger.info("Get LDAPS context for baseProviderURL=" + baseProviderURL + " , principal = " + principal +", groupDn=" + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS));
         Properties environmentProperties = new Properties();
 
@@ -2499,7 +2497,7 @@ public class GVESynchronizationManager {
             roleIds.add(schoolAdminRole.getRoleId());
             List<User> directors = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             List<Long> recipientList = new ArrayList<>();
             for (User director : directors) {
                 if (!recipientList.contains(director.getUserId())) {
@@ -2559,11 +2557,6 @@ public class GVESynchronizationManager {
             logger.error("Erreur lors de l'envoi du rapport de synchronisation pour schoolId " + schoolId, e);
         }
     }
-
-    private static final String GVE_LDAP_BASE_PROVIDER_URL = "gve.ldap.base.provider.url";
-    private static final String GVE_LDAP_SECURITY_PRINCIPAL = "gve.ldap.security.principal";
-    private static final String GVE_LDAP_SECURITY_CREDENTIALS = "gve.ldap.security.credentials";
-    private static final String GVE_LDAP_BASE_DN_GROUPS = "gve.ldap.base.dn.groups";
 
     private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=eTATGEgroup)";
     private static final String ETAT_GE_PROPRIETAIRE = "eTATGEproprietaire";

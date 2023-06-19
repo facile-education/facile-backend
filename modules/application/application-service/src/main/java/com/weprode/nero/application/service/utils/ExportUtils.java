@@ -118,7 +118,7 @@ public class ExportUtils {
         try {
             InputStream is = new ByteArrayInputStream(file.getBytes(StandardCharsets.UTF_8));
             FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(currUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(userId).getFolderId(), "folderName", fileName, is, "html/text");
-            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             String subject = "Export " + typeExport;
             String content = "Bonjour,<br><br>Veuillez trouver ci-joint l'export " + typeExport + " pour votre etablissement.<br><br>Cordialement,<br>L'équipe technique";
             List<Long> recipientList = new ArrayList<>();

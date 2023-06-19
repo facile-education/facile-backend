@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Component(
@@ -190,6 +191,11 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         try {
             user.setAgreedToTermsOfUse(true);
             UserLocalServiceUtil.updateUser(user);
+
+            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
+            userProperties.setTermsOfUseAgreedDate(new Date());
+            UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
+
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Error accepting terms of use for user " + user.getUserId(), e);

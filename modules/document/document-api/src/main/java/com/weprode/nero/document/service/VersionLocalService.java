@@ -301,7 +301,7 @@ public interface VersionLocalService
 	public void removeVersionByFileEntryId(long dlFileEntryId, String versionNb)
 		throws PortalException, SystemException;
 
-	public boolean restoreVersion(long fileVersionId);
+	public boolean restoreVersion(long userId, long fileVersionId);
 
 	public boolean saveVersionDescription(
 		long fileVersionId, String description);

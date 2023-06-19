@@ -158,7 +158,7 @@ public class GVEParentSynchronizationManager {
             List<String> errorLines = new ArrayList<>();
 
             // Parse ftp folder for files uploaded
-            String synchroDirectoryStr = PropsUtil.get(NeroSystemProperties.PARENT_SYNCHRO_FOLDER);
+            String synchroDirectoryStr = PropsUtil.get(NeroSystemProperties.SYNCHRO_PARENT_DROP_FOLDER);
 
             // FileName parents_CO_UAI_YYYYMMDD_HHMM.csv
             File exportDirectory = new File(synchroDirectoryStr);
@@ -345,7 +345,7 @@ public class GVEParentSynchronizationManager {
 
             String fileName = "Rapport_synchronization_parents_" + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(new Date()) + ".csv";
             InputStream is = new ByteArrayInputStream(report);
-            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             User noReplyUser = UserLocalServiceUtil.getUser(noReplyUserId);
             FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(noReplyUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(noReplyUserId).getFolderId(), "folderName", fileName, is, "html/text");
             String subject = "Synchronization des parents";
@@ -742,7 +742,7 @@ public class GVEParentSynchronizationManager {
                     "N'h\u00e9sitez pas \u00e0 consulter le service d'aide accessible en haut \u00e0 droite de votre \u00e9cran sous le \" ? \" pour r\u00e9pondre \u00e0 vos \u00e9ventuelles questions.</br></br>" +
                     "Meilleurs messages,</br>L'\u00e9quipe projet";
 
-            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_OTHER);
 
             // Mark latest ent news as read so that it does not pop at first connection

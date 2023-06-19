@@ -157,7 +157,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             }
 
             // Notify members that they have been added to a new group
-            long noReplySenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            long noReplySenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             String subject = messages.getString("creation-du-groupe") + " " + createdGroup.getName();
             String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + createdGroup.getName()+".</br></br> L'&eacute;quipe technique";
             MessageLocalServiceUtil.sendMessage(noReplySenderId, notifiedMemberIds, subject, content);
@@ -326,7 +326,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             }
 
             // Notify members that they have been added to a new group
-            long noReplySenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_USER_ID));
+            long noReplySenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             String subject = messages.getString("ajouter-au-groupe") + " " + group.getName();
             String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + group.getName()+".</br></br> L'&eacute;quipe technique";
             MessageLocalServiceUtil.sendMessage(noReplySenderId, notifiedMemberIds, subject, content);

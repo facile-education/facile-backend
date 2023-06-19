@@ -236,7 +236,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
 
     public boolean isVoleeAuthorized(String volee) {
 
-        String authorizedVoleesStr = PropsUtil.get(NeroSystemProperties.GVE_VOLEES);
+        String authorizedVoleesStr = PropsUtil.get(NeroSystemProperties.SYNCHRO_VOLEES);
         String[] authorizedVoleesTab = authorizedVoleesStr.split(",");
         for (String authorizedVolee : authorizedVoleesTab) {
             if (volee.equals(authorizedVolee)) {

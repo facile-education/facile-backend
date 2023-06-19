@@ -56,8 +56,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
     // Custom 'action' dimension4 : serviceId
     private static final String MATOMO_SERVICE_DIMENSION = "dimension4";
 
-    // TODO Refactor to regroup code
-    // TODO Optimize requests on compare (do one request instead of several)
+
     public JSONObject fetchStatistics(User user, String compareOn, String period, Date startDate, Date endDate,
                                       List<Long> profileIds, List<Long> schoolIds, List<Long> serviceIds, boolean actions) throws PortalException, SystemException, IOException {
 
@@ -102,48 +101,52 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
         List<String> segments = new ArrayList<>();
         List<String> metadata = new ArrayList<>();
 
-        // TODO compareOn -> enum ?
-        if (compareOn.equals(MatomoConstants.PROFILE_COMPARE)) {
-            ArrayList<Long> personalProfileIds = new ArrayList<>();
+        switch (compareOn) {
+            case MatomoConstants.PROFILE_COMPARE:
+                ArrayList<Long> personalProfileIds = new ArrayList<>();
 
-            for (Long profileId : profileIds) {
-                if (UserProfile.STUDENT.getMatomoId() == profileId ||
-                        UserProfile.PARENT.getMatomoId() == profileId ||
-                        UserProfile.TEACHER.getMatomoId() == profileId) {
-                    logger.debug("Comparison over profileId " + profileId);
-                    metadata.add(getProfileMetadata(profileId));
-                    segments.add(getProfileSegment(profileId, schoolIds, serviceIds));
-                } else {
-                    logger.debug("Add profileId " + profileId + " to personal list");
-                    personalProfileIds.add(profileId);
+                for (Long profileId : profileIds) {
+                    if (UserProfile.STUDENT.getMatomoId() == profileId ||
+                            UserProfile.PARENT.getMatomoId() == profileId ||
+                            UserProfile.TEACHER.getMatomoId() == profileId) {
+                        logger.debug("Comparison over profileId " + profileId);
+                        metadata.add(getProfileMetadata(profileId));
+                        segments.add(getProfileSegment(profileId, schoolIds, serviceIds));
+                    } else {
+                        logger.debug("Add profileId " + profileId + " to personal list");
+                        personalProfileIds.add(profileId);
+                    }
                 }
-            }
 
-            if (!personalProfileIds.isEmpty()) {
-                logger.debug("Comparison over profile metadata " + NeroRoleConstants.PERSONAL_INCLUSIVE);
-                metadata.add(NeroRoleConstants.PERSONAL_INCLUSIVE.substring(0, NeroRoleConstants.PERSONAL_INCLUSIVE.length() - 1));
-                segments.add(getSegment(personalProfileIds, schoolIds, serviceIds));
-            }
-            // Add total segment
-            metadata.add("Total");
-            segments.add(getSegment(new ArrayList<>(), schoolIds, serviceIds));
+                if (!personalProfileIds.isEmpty()) {
+                    logger.debug("Comparison over profile metadata " + NeroRoleConstants.PERSONAL_INCLUSIVE);
+                    metadata.add(NeroRoleConstants.PERSONAL_INCLUSIVE.substring(0, NeroRoleConstants.PERSONAL_INCLUSIVE.length() - 1));
+                    segments.add(getSegment(personalProfileIds, schoolIds, serviceIds));
+                }
+                // Add total segment
+                metadata.add("Total");
+                segments.add(getSegment(new ArrayList<>(), schoolIds, serviceIds));
 
-        } else if (compareOn.equals(MatomoConstants.SCHOOL_COMPARE)) {
-            for (Long schoolId : schoolIds) {
-                logger.debug("Comparison over schoolId " + schoolId);
-                metadata.add(getSchoolMetadata(schoolId));
-                segments.add(getSchoolSegment(schoolId, profileIds, serviceIds));
-            }
-        } else if (compareOn.equals(MatomoConstants.SERVICE_COMPARE)) {
-            for (Long serviceId : serviceIds) {
-                logger.debug("Comparison over serviceId " + serviceId);
-                metadata.add(getServiceMetadata(serviceId));
-                segments.add(getServiceSegment(serviceId, schoolIds, profileIds));
-            }
-        } else {
-            logger.debug("No comparison");
-            metadata.add(getNoCompareMetadata(schoolIds, user));
-            segments.add(getSegment(profileIds, schoolIds, serviceIds));
+                break;
+            case MatomoConstants.SCHOOL_COMPARE:
+                for (Long schoolId : schoolIds) {
+                    logger.debug("Comparison over schoolId " + schoolId);
+                    metadata.add(getSchoolMetadata(schoolId));
+                    segments.add(getSchoolSegment(schoolId, profileIds, serviceIds));
+                }
+                break;
+            case MatomoConstants.SERVICE_COMPARE:
+                for (Long serviceId : serviceIds) {
+                    logger.debug("Comparison over serviceId " + serviceId);
+                    metadata.add(getServiceMetadata(serviceId));
+                    segments.add(getServiceSegment(serviceId, schoolIds, profileIds));
+                }
+                break;
+            default:
+                logger.debug("No comparison");
+                metadata.add(getNoCompareMetadata(schoolIds, user));
+                segments.add(getSegment(profileIds, schoolIds, serviceIds));
+                break;
         }
 
         // Loop over segments to build api urls

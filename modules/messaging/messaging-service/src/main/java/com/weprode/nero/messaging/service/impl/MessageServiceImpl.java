@@ -690,7 +690,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
 
             // 2. Specific list of destination people in portal-ext.properties
             try {
-                String[] notifyUsers = PrefsPropsUtil.getStringArray(NeroSystemProperties.ENT_INCIDENTS_USERS_NOTIFICATION, ",");
+                String[] notifyUsers = PrefsPropsUtil.getStringArray(NeroSystemProperties.SUPPORT_GLOBAL_RECIPIENTS, ",");
                 for (String notifyUser : notifyUsers) {
                     destFinal.add(Long.parseLong(notifyUser));
                 }
@@ -755,9 +755,9 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             MessageLocalServiceUtil.sendSupportMessage(user, destFinal, adminSubject, adminContentHtml, attachedFileIds, 0, 0);
 
             // Second message : from technical team to user
-            long defaultSender = PrefsPropsUtil.getLong(NeroSystemProperties.ENT_CONFIRMATION_SENDER_ID);
-            User admin = UserLocalServiceUtil.getUser(defaultSender);
-            MessageLocalServiceUtil.sendSupportMessage(admin, sender, ownerSubject, ownerContent, attachedFileIds, 0, 0);
+            long noReplyUserId = PrefsPropsUtil.getLong(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID);
+            User noReplyUser = UserLocalServiceUtil.getUser(noReplyUserId);
+            MessageLocalServiceUtil.sendSupportMessage(noReplyUser, sender, ownerSubject, ownerContent, attachedFileIds, 0, 0);
 
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

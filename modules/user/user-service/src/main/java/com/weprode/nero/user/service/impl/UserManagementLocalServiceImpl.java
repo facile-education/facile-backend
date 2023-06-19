@@ -67,7 +67,7 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
 
             String screenName = UserUtilsLocalServiceUtil.generateLogin(lastName, firstName);
             if (Validator.isNull(email)) {
-                email = screenName + PropsUtil.get(NeroSystemProperties.DEFAUT_MAIL_SUFFIX);
+                email = screenName + PropsUtil.get(NeroSystemProperties.MAIL_DEFAULT_SUFFIX);
             }
 
             boolean autoScreenName = Validator.isNull(screenName);
@@ -192,7 +192,7 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
      * Send login and password to the created user
      */
     private static void sendLoginPasswordToUser(String recipientEmail, String login, String password) {
-        String fromAdress = PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY);
+        String fromAdress = PropsUtil.get(NeroSystemProperties.MAIL_NO_REPLY_ADDRESS);
         String portalURL = PropsUtil.get(NeroSystemProperties.PORTAL_URL);
 
         String emailSubject = "Bienvenue dans l'ENT";

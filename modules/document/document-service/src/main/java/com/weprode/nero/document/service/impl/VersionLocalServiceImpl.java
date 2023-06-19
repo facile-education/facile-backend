@@ -17,18 +17,15 @@ package com.weprode.nero.document.service.impl;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.model.DLFileVersion;
 import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil;
 import com.liferay.document.library.kernel.service.persistence.DLFileEntryUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -37,7 +34,6 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.document.exception.NoSuchVersionException;
 import com.weprode.nero.document.model.EditionLock;
 import com.weprode.nero.document.model.Version;
@@ -46,7 +42,8 @@ import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.VersionLocalServiceUtil;
 import com.weprode.nero.document.service.base.VersionLocalServiceBaseImpl;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
@@ -140,33 +137,35 @@ public class VersionLocalServiceImpl extends VersionLocalServiceBaseImpl {
 		return false;
 	}
 
-	public boolean restoreVersion (long fileVersionId) {
+	public boolean restoreVersion (long userId, long fileVersionId) {
 
 		try {
 			// Restore version content and create a new major version
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getFileVersion(fileVersionId);
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
 
-			// TODO get user permission to process the action or not
-			ServiceContext serviceContext = new ServiceContext();
-			serviceContext.setAddGroupPermissions(true);
+			if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.UPDATE)) {
+				ServiceContext serviceContext = new ServiceContext();
+				serviceContext.setAddGroupPermissions(true);
 
-			DLAppServiceUtil.updateFileEntry(
-					dlFileVersion.getFileEntryId(),
-					dlFileVersion.getTitle(),
-					dlFileVersion.getMimeType(),
-					dlFileVersion.getTitle(),
-					StringPool.BLANK, // urlTitle
-					dlFileVersion.getDescription(),
-					StringPool.BLANK, // changeLog
-					DLVersionNumberIncrease.MAJOR,
-					dlFileVersion.getContentStream(false),
-					dlFileVersion.getSize(),
-					null,
-					null,
-					serviceContext
-			);
+				DLAppServiceUtil.updateFileEntry(
+						dlFileVersion.getFileEntryId(),
+						dlFileVersion.getTitle(),
+						dlFileVersion.getMimeType(),
+						dlFileVersion.getTitle(),
+						StringPool.BLANK, // urlTitle
+						dlFileVersion.getDescription(),
+						StringPool.BLANK, // changeLog
+						DLVersionNumberIncrease.MAJOR,
+						dlFileVersion.getContentStream(false),
+						dlFileVersion.getSize(),
+						null,
+						null,
+						serviceContext
+				);
 
-			logger.info("Version " + fileVersionId + "  restored as the new latest version");
+				logger.info("Version " + fileVersionId + "  restored as the new latest version");
+			}
 
 			return true;
 		} catch (Exception e) {
