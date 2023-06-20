@@ -22,7 +22,6 @@ import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SessionStudent;
-import com.weprode.nero.school.life.service.NotificationLocalServiceUtil;
 import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
 import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.school.life.service.base.SessionStudentServiceBaseImpl;
@@ -126,7 +125,6 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
             Date maxDate = df.parse(maxDateStr);
 
             // 1. SchoolLife sessions
-            // TODO return class HHC ?
             JSONArray jsonSessions = new JSONArray();
             if (studentId > 0) {
                 jsonSessions = SessionStudentLocalServiceUtil.getStudentSessions(studentId, minDate, maxDate);
@@ -210,20 +208,15 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
             if (session.getType() == SchoollifeConstants.TYPE_RETENUE) {
                 NotificationUtil.notifyRetenueRegistration(teacher.getUserId(), studentId, schoollifeSessionId, comment, notifyParents);
-                NotificationLocalServiceUtil.addStudentAndParentsNotification(studentId, schoollifeSessionId);
 
             } else if (session.getType() == SchoollifeConstants.TYPE_TRAVAUX) {
                 NotificationUtil.notifyTravauxRegistration(teacher.getUserId(), studentId, schoollifeSessionId, notifyParents);
-                NotificationLocalServiceUtil.addStudentAndParentsNotification(studentId, schoollifeSessionId);
 
             } else if (session.getType() == SchoollifeConstants.TYPE_ETUDE) {
                 NotificationUtil.notifyEtudeRegistration(teacher.getUserId(), studentId, schoollifeSessionId, notifyParents);
-                // TODO : clarify
-                // SchoollifeNotificationLocalServiceUtil.addStudentAndParentsNotification(studentId, schoollifeSessionId);
 
             } else if (session.getType() == SchoollifeConstants.TYPE_DEPANNAGE) {
                 NotificationUtil.notifyDepannageRegistration(teacher.getUserId(), studentId, schoollifeSessionId, notifyParents);
-                NotificationLocalServiceUtil.addStudentAndParentsNotification(studentId, schoollifeSessionId);
             }
             result.put(JSONConstants.SUCCESS, success);
 
@@ -279,8 +272,6 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                     if (registered) {
                         ++ nbRegistered;
                         NotificationUtil.notifyEtudeRegistration(user.getUserId(), student.getUserId(), schoollifeSessionId, notifyParents);
-                        // TODO : clarify
-                        // SchoollifeNotificationLocalServiceUtil.addStudentAndParentsNotification(student.getUserId(), schoollifeSessionId);
                     } else {
                         notRegisteredArray.put(student.getFullName());
                     }

@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.school.life.model.SchoollifeSlot;
 import com.weprode.nero.school.life.service.SchoollifeSlotLocalService;
 import com.weprode.nero.school.life.service.SchoollifeSlotLocalServiceUtil;
-import com.weprode.nero.school.life.service.persistence.NotificationPersistence;
 import com.weprode.nero.school.life.service.persistence.RenvoiFinder;
 import com.weprode.nero.school.life.service.persistence.RenvoiPersistence;
 import com.weprode.nero.school.life.service.persistence.SchoollifeSessionPersistence;
@@ -462,9 +461,6 @@ public abstract class SchoollifeSlotLocalServiceBaseImpl
 			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
-
-	@Reference
-	protected NotificationPersistence notificationPersistence;
 
 	@Reference
 	protected RenvoiPersistence renvoiPersistence;

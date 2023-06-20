@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.school.life.model.Renvoi;
 import com.weprode.nero.school.life.service.RenvoiLocalService;
 import com.weprode.nero.school.life.service.RenvoiLocalServiceUtil;
-import com.weprode.nero.school.life.service.persistence.NotificationPersistence;
 import com.weprode.nero.school.life.service.persistence.RenvoiFinder;
 import com.weprode.nero.school.life.service.persistence.RenvoiPK;
 import com.weprode.nero.school.life.service.persistence.RenvoiPersistence;
@@ -457,9 +456,6 @@ public abstract class RenvoiLocalServiceBaseImpl
 			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
-
-	@Reference
-	protected NotificationPersistence notificationPersistence;
 
 	protected RenvoiLocalService renvoiLocalService;
 
