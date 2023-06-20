@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.weprode.nero.school.life.model.Notification">
-		<field name="schoollifeSessionId" type="long" />
-		<field name="userId" type="long" />
-	</model>
 	<model name="com.weprode.nero.school.life.model.Renvoi">
 		<field name="schoollifeSessionId" type="long" />
 		<field name="studentId" type="long" />

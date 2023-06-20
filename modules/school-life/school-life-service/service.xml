@@ -102,12 +102,4 @@
 		</finder>
 	</entity>
 
-	<entity name="Notification" local-service="true" remote-service="false">
-		<column name="schoollifeSessionId" type="long" primary="true" />
-		<column name="userId" type="long" primary="true" />
-
-		<finder return-type="Collection" name="userId">
-			<finder-column name="userId"></finder-column>
-		</finder>
-	</entity>
 </service-builder>
