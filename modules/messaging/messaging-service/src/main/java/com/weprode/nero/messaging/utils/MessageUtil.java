@@ -108,8 +108,9 @@ public class MessageUtil {
 				boolean isMobileNotificationEnabled = Boolean.parseBoolean(
 						PropsUtil.get(NeroSystemProperties.MOBILE_NOTIFICATIONS_ENABLED));
 				if (isMobileNotificationEnabled) {
+					String messagingUrl = "/messagerie/"; // TODO put into translation bundle. Further menu management service will use it too
 					ThreadMobileNotification notifThread = new ThreadMobileNotification(recipientId, sender.getFullName(), message.getMessageSubject(), messageContent,
-							PropsUtil.get(NeroSystemProperties.MESSAGING_URL), MobileNotification.MESSAGING_TYPE, message.getMessageId());
+							messagingUrl, MobileNotification.MESSAGING_TYPE, message.getMessageId());
 					notifThread.start();
 				}
 

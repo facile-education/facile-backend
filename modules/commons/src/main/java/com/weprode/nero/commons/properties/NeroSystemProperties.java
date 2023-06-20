@@ -24,8 +24,6 @@ public class NeroSystemProperties {
 	public static final String MAIL_FORWARD_ADDCONTENT = "mail.forward.addcontent";
 	public static final String MAIL_DEFAULT_SUFFIX = "mail.default.suffix";
 
-	public static final String MESSAGING_URL = "portlet.url.messaging"; // TODO ??
-
 	// Mobile
 	public static final String MOBILE_NOTIFICATIONS_ENABLED = "mobile.notifications.enabled";
 	public static final String MOBILE_API_URL = "mobile.api.url";
