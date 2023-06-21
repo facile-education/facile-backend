@@ -70,6 +70,10 @@ public interface CourseService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSessionDetails(long sessionId);
 
+	@JSONWebService(method = "GET", value = "get-user-courses")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getUserCourses();
+
 	@JSONWebService(method = "POST", value = "save-private-notes")
 	public JSONObject savePrivateNotes(long sessionId, String notes);
 

@@ -19,7 +19,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.schedule.model.CourseDetails;
 import com.weprode.nero.schedule.service.base.CourseDetailsLocalServiceBaseImpl;
-import com.weprode.nero.schedule.utils.CDTColorUtil;
+import com.weprode.nero.schedule.utils.CourseColorUtil;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -41,7 +41,7 @@ public class CourseDetailsLocalServiceImpl extends CourseDetailsLocalServiceBase
 			if (courseDetails != null) {
 				if (courseDetails.getColor() == null || courseDetails.getColor().equals("")) {
 					int nbExistingGroupColors = courseDetailsPersistence.countAll();
-					String color = CDTColorUtil.getNewColor(nbExistingGroupColors);
+					String color = CourseColorUtil.getNewColor(nbExistingGroupColors);
 					courseDetails.setColor(color);
 					courseDetails = courseDetailsPersistence.update(courseDetails);
 				}
@@ -50,7 +50,7 @@ public class CourseDetailsLocalServiceImpl extends CourseDetailsLocalServiceBase
 		} catch (Exception e) {
 			// Nothing
 		}
-		return CDTColorUtil.getRandomColor();
+		return CourseColorUtil.getRandomColor();
 	}
 
 	public void setCourseSubject(long groupId, long subjectId) {

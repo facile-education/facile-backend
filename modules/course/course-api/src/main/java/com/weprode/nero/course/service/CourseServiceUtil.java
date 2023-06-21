@@ -57,6 +57,10 @@ public class CourseServiceUtil {
 		return getService().getSessionDetails(sessionId);
 	}
 
+	public static org.json.JSONObject getUserCourses() {
+		return getService().getUserCourses();
+	}
+
 	public static org.json.JSONObject savePrivateNotes(
 		long sessionId, java.lang.String notes) {
 

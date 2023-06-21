@@ -251,10 +251,10 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
         String color = "";
         try {
             if (OrgDetailsLocalServiceUtil.isClass(org.getOrganizationId())) {
-                color = "#D20113"; // CDTColorUtil.getNewColor(0);
+                color = "#D20113";
             } else if (OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId())
                     || OrgDetailsLocalServiceUtil.hasType(org.getOrganizationId(), OrgConstants.SCHOOL_LEVEL_TYPE)) {
-                color = "#3CB57D"; // CDTColorUtil.getNewColor(1);
+                color = "#3CB57D";
             }  else if (OrgDetailsLocalServiceUtil.isSubject(org.getOrganizationId())) {
                 color = "#7F00FF";
             } else {

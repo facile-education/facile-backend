@@ -69,11 +69,6 @@ public class CDTSessionServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getTeacherGroups() {
-		return _cdtSessionService.getTeacherGroups();
-	}
-
-	@Override
 	public org.json.JSONObject getUserSessions(
 		long userId, String minDateStr, String maxDateStr) {
 

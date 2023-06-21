@@ -289,6 +289,7 @@ public class JSONConstants {
     public static final String LAST_SESSION_ID = "lastSessionId";
     public static final String ALL_SLOTS = "allSlots";
     public static final String PRIVATE_NOTES = "privateNotes";
+    public static final String COURSES = "courses";
 
     // Homework
     public static final String HOMEWORK_ID = "homeworkId";

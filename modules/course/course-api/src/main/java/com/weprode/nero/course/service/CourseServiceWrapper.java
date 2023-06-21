@@ -59,6 +59,11 @@ public class CourseServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getUserCourses() {
+		return _courseService.getUserCourses();
+	}
+
+	@Override
 	public org.json.JSONObject savePrivateNotes(long sessionId, String notes) {
 		return _courseService.savePrivateNotes(sessionId, notes);
 	}

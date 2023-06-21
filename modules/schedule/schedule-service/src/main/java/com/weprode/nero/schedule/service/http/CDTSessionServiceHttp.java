@@ -118,44 +118,13 @@ public class CDTSessionServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject getTeacherGroups(
-		HttpPrincipal httpPrincipal) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				CDTSessionServiceUtil.class, "getTeacherGroups",
-				_getTeacherGroupsParameterTypes2);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static org.json.JSONObject getSessionDetails(
 		HttpPrincipal httpPrincipal, long sessionId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				CDTSessionServiceUtil.class, "getSessionDetails",
-				_getSessionDetailsParameterTypes3);
+				_getSessionDetailsParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, sessionId);
@@ -189,7 +158,7 @@ public class CDTSessionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CDTSessionServiceUtil.class, "createSession",
-				_createSessionParameterTypes4);
+				_createSessionParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, groupId, subject, room, startDate, endDate, slot,
@@ -222,7 +191,7 @@ public class CDTSessionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CDTSessionServiceUtil.class, "getCourseNextSessions",
-				_getCourseNextSessionsParameterTypes5);
+				_getCourseNextSessionsParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, sessionId);
@@ -255,16 +224,14 @@ public class CDTSessionServiceHttp {
 		new Class[] {long.class, String.class, String.class};
 	private static final Class<?>[] _getGroupSessionsParameterTypes1 =
 		new Class[] {long.class, String.class, String.class};
-	private static final Class<?>[] _getTeacherGroupsParameterTypes2 =
-		new Class[] {};
-	private static final Class<?>[] _getSessionDetailsParameterTypes3 =
+	private static final Class<?>[] _getSessionDetailsParameterTypes2 =
 		new Class[] {long.class};
-	private static final Class<?>[] _createSessionParameterTypes4 =
+	private static final Class<?>[] _createSessionParameterTypes3 =
 		new Class[] {
 			long.class, String.class, String.class, String.class, String.class,
 			int.class, String.class, boolean.class
 		};
-	private static final Class<?>[] _getCourseNextSessionsParameterTypes5 =
+	private static final Class<?>[] _getCourseNextSessionsParameterTypes4 =
 		new Class[] {long.class};
 
 }

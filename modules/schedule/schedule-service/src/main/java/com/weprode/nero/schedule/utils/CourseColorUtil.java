@@ -1,8 +1,8 @@
 package com.weprode.nero.schedule.utils;
 
-public class CDTColorUtil {
+public class CourseColorUtil {
 
-    private CDTColorUtil() {
+    private CourseColorUtil() {
         throw new IllegalStateException("Utility class");
     }
 

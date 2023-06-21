@@ -100,22 +100,6 @@ public class CDTSessionServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject getTeacherGroups()
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				CDTSessionServiceUtil.getTeacherGroups();
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
 	public static org.json.JSONObject getSessionDetails(long sessionId)
 		throws RemoteException {
 
