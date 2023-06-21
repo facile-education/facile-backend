@@ -252,7 +252,7 @@ public class DLAppJsonFactory {
                     formattedFolder.put(JSONConstants.NAME, folderGroup.getName(user.getLocale()));
                     formattedFolder.put(JSONConstants.NB_MEMBERS, UserLocalServiceUtil.getGroupUsersCount(folderGroup.getGroupId(), WorkflowConstants.STATUS_APPROVED));
                     CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(folderGroup.getGroupId());
-                    String color = communityInfos.getColor() != null && !communityInfos.getColor().isEmpty() ? communityInfos.getColor() : "#4353B3"; // (CDTColorUtil.getNewColor(2));
+                    String color = communityInfos.getColor() != null && !communityInfos.getColor().isEmpty() ? communityInfos.getColor() : "#4353B3";
                     formattedFolder.put(JSONConstants.COLOR, color);
                 }
                 formattedFolder.put(JSONConstants.IS_GROUP_ROOT_FOLDER, true); // those folder is considered as Group on front side (group root folder)

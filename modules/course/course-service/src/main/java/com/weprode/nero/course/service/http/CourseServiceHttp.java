@@ -52,6 +52,37 @@ import com.weprode.nero.course.service.CourseServiceUtil;
  */
 public class CourseServiceHttp {
 
+	public static org.json.JSONObject getUserCourses(
+		HttpPrincipal httpPrincipal) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				CourseServiceUtil.class, "getUserCourses",
+				_getUserCoursesParameterTypes0);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject getCourseContent(
 		HttpPrincipal httpPrincipal, long courseId, String minDateStr,
 		String maxDateStr) {
@@ -59,7 +90,7 @@ public class CourseServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "getCourseContent",
-				_getCourseContentParameterTypes0);
+				_getCourseContentParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, courseId, minDateStr, maxDateStr);
@@ -91,7 +122,7 @@ public class CourseServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "getSessionDetails",
-				_getSessionDetailsParameterTypes1);
+				_getSessionDetailsParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, sessionId);
@@ -123,7 +154,7 @@ public class CourseServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "getCourseStudents",
-				_getCourseStudentsParameterTypes2);
+				_getCourseStudentsParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, courseId);
@@ -155,7 +186,7 @@ public class CourseServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "savePrivateNotes",
-				_savePrivateNotesParameterTypes3);
+				_savePrivateNotesParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, sessionId, notes);
@@ -183,13 +214,15 @@ public class CourseServiceHttp {
 
 	private static Log _log = LogFactoryUtil.getLog(CourseServiceHttp.class);
 
-	private static final Class<?>[] _getCourseContentParameterTypes0 =
+	private static final Class<?>[] _getUserCoursesParameterTypes0 =
+		new Class[] {};
+	private static final Class<?>[] _getCourseContentParameterTypes1 =
 		new Class[] {long.class, String.class, String.class};
-	private static final Class<?>[] _getSessionDetailsParameterTypes1 =
+	private static final Class<?>[] _getSessionDetailsParameterTypes2 =
 		new Class[] {long.class};
-	private static final Class<?>[] _getCourseStudentsParameterTypes2 =
+	private static final Class<?>[] _getCourseStudentsParameterTypes3 =
 		new Class[] {long.class};
-	private static final Class<?>[] _savePrivateNotesParameterTypes3 =
+	private static final Class<?>[] _savePrivateNotesParameterTypes4 =
 		new Class[] {long.class, String.class};
 
 }

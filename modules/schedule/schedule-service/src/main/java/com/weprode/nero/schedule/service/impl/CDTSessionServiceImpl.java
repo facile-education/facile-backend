@@ -15,7 +15,6 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -35,8 +34,6 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.CDTSessionServiceBaseImpl;
-
-import com.weprode.nero.schedule.utils.FilterUtil;
 import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
 import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
@@ -154,27 +151,6 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			logger.error("Error when user " + currentUser.getFullName() + " fetches sessions for group " + groupId, e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
-		return result;
-	}
-
-	@JSONWebService(value = "get-teacher-groups", method = "GET")
-	public JSONObject getTeacherGroups() {
-		JSONObject result = new JSONObject();
-
-		User currentUser;
-		try {
-			currentUser = getGuestOrUser();
-			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-			}
-		} catch (Exception e) {
-			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-		}
-
-		JSONArray jsonGroups = FilterUtil.getGroupsForFilter(currentUser);
-		result.put(JSONConstants.GROUPS, jsonGroups);
-		result.put(JSONConstants.SUCCESS, true);
-
 		return result;
 	}
 

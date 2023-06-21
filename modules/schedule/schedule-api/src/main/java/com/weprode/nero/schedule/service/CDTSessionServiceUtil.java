@@ -67,10 +67,6 @@ public class CDTSessionServiceUtil {
 		return getService().getSessionDetails(sessionId);
 	}
 
-	public static org.json.JSONObject getTeacherGroups() {
-		return getService().getTeacherGroups();
-	}
-
 	public static org.json.JSONObject getUserSessions(
 		long userId, java.lang.String minDateStr, java.lang.String maxDateStr) {
 

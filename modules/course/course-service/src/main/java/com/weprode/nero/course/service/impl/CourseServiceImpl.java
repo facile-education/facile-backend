@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.AuthException;
@@ -33,6 +34,9 @@ import com.weprode.nero.course.model.SessionContent;
 import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.course.service.SessionContentLocalServiceUtil;
 import com.weprode.nero.course.service.base.CourseServiceBaseImpl;
+import com.weprode.nero.organization.constants.OrgConstants;
+import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
@@ -62,6 +66,35 @@ import java.util.List;
 public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 	private final Log logger = LogFactoryUtil.getLog(CourseServiceImpl.class);
+
+	@JSONWebService(value = "get-user-courses", method = "GET")
+	public JSONObject getUserCourses() {
+		JSONObject result = new JSONObject();
+
+		User currentUser;
+		try {
+			currentUser = getGuestOrUser();
+			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		JSONArray jsonCourses = new JSONArray();
+		List<Organization> userCourses = UserOrgsLocalServiceUtil.getUserCours(currentUser, false, OrgConstants.ALL_SCHOOLS_ID);
+		for (Organization userCours : userCourses) {
+			JSONObject jsonCourse = new JSONObject();
+			jsonCourse.put(JSONConstants.COURSE_ID, userCours.getGroupId());
+			jsonCourse.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
+			jsonCourses.put(jsonCourse);
+		}
+		result.put(JSONConstants.COURSES, jsonCourses);
+		result.put(JSONConstants.SUCCESS, true);
+
+		return result;
+	}
+
 
 	@JSONWebService(value = "get-course-content", method = "GET")
 	public JSONObject getCourseContent(long courseId, String minDateStr, String maxDateStr) {

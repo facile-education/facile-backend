@@ -75,10 +75,6 @@ public interface CDTSessionService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSessionDetails(long sessionId);
 
-	@JSONWebService(method = "GET", value = "get-teacher-groups")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getTeacherGroups();
-
 	@JSONWebService(method = "GET", value = "get-user-sessions")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getUserSessions(
