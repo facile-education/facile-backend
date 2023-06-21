@@ -134,14 +134,30 @@ public class CDTSessionServiceSoap {
 
 	public static org.json.JSONObject createSession(
 			long groupId, String subject, String room, String startDate,
-			String endDate, String teacherIds, boolean isRecurrent)
+			String endDate, int slot, String teacherIds, boolean isRecurrent)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				CDTSessionServiceUtil.createSession(
-					groupId, subject, room, startDate, endDate, teacherIds,
-					isRecurrent);
+					groupId, subject, room, startDate, endDate, slot,
+					teacherIds, isRecurrent);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getCourseNextSessions(long sessionId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				CDTSessionServiceUtil.getCourseNextSessions(sessionId);
 
 			return returnValue;
 		}

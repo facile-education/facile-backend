@@ -50,8 +50,25 @@ public class HomeworkLocalServiceWrapper
 	}
 
 	@Override
+	public void cancelDrop(long studentId, long homeworkId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_homeworkLocalService.cancelDrop(studentId, homeworkId);
+	}
+
+	@Override
 	public void correctFile(long homeworkId, long studentId, String comment) {
 		_homeworkLocalService.correctFile(homeworkId, studentId, comment);
+	}
+
+	@Override
+	public int countHomeworksToCorrect(long teacherId) {
+		return _homeworkLocalService.countHomeworksToCorrect(teacherId);
+	}
+
+	@Override
+	public int countUndoneHomeworks(long studentId) {
+		return _homeworkLocalService.countUndoneHomeworks(studentId);
 	}
 
 	/**
@@ -70,12 +87,13 @@ public class HomeworkLocalServiceWrapper
 	@Override
 	public com.weprode.nero.course.model.Homework createHomework(
 		com.liferay.portal.kernel.model.User teacher, long sourceSessionId,
-		long targetSessionId, long courseId, java.util.Date toDate,
-		int homeworkType, java.util.List<Long> studentIds) {
+		long targetSessionId, long courseId, java.util.Date targetDate,
+		int homeworkType, int estimatedTime, java.util.List<Long> studentIds,
+		java.util.Date publicationDate, boolean isDraft) {
 
 		return _homeworkLocalService.createHomework(
-			teacher, sourceSessionId, targetSessionId, courseId, toDate,
-			homeworkType, studentIds);
+			teacher, sourceSessionId, targetSessionId, courseId, targetDate,
+			homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
 	}
 
 	/**
@@ -129,11 +147,8 @@ public class HomeworkLocalServiceWrapper
 	 * Remove an homework and its associated objects
 	 */
 	@Override
-	public boolean deleteHomeworkAndDependencies(
-		com.weprode.nero.course.model.Homework homeworkToRemove) {
-
-		return _homeworkLocalService.deleteHomeworkAndDependencies(
-			homeworkToRemove);
+	public void deleteHomeworkAndDependencies(long homeworkId) {
+		_homeworkLocalService.deleteHomeworkAndDependencies(homeworkId);
 	}
 
 	/**
@@ -279,21 +294,12 @@ public class HomeworkLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.weprode.nero.course.model.Homework>
-		getCourseHomeworks(
-			com.liferay.portal.kernel.model.User user, long courseId,
-			java.util.Date minDate, java.util.Date maxDate) {
+		getCourseHomeworkActivity(
+			long userId, long courseId, java.util.Date minDate,
+			java.util.Date maxDate) {
 
-		return _homeworkLocalService.getCourseHomeworks(
-			user, courseId, minDate, maxDate);
-	}
-
-	@Override
-	public java.util.List<com.weprode.nero.course.model.Homework>
-		getFutureStudentHomeworks(
-			com.liferay.portal.kernel.model.User student, boolean undoneOnly) {
-
-		return _homeworkLocalService.getFutureStudentHomeworks(
-			student, undoneOnly);
+		return _homeworkLocalService.getCourseHomeworkActivity(
+			userId, courseId, minDate, maxDate);
 	}
 
 	/**
@@ -386,16 +392,6 @@ public class HomeworkLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.weprode.nero.course.model.Homework>
-		getPreviousStudentHomeworks(
-			com.liferay.portal.kernel.model.User student,
-			java.util.Date maxDate, boolean undoneOnly) {
-
-		return _homeworkLocalService.getPreviousStudentHomeworks(
-			student, maxDate, undoneOnly);
-	}
-
-	@Override
-	public java.util.List<com.weprode.nero.course.model.Homework>
 		getSessionGivenHomeworks(
 			com.liferay.portal.kernel.model.User user, long sessionId) {
 
@@ -413,11 +409,20 @@ public class HomeworkLocalServiceWrapper
 	@Override
 	public java.util.List<com.weprode.nero.course.model.Homework>
 		getStudentHomeworkActivity(
-			com.liferay.portal.kernel.model.User student,
-			java.util.Date minDate, java.util.Date maxDate) {
+			long studentId, java.util.Date minDate, java.util.Date maxDate) {
 
 		return _homeworkLocalService.getStudentHomeworkActivity(
-			student, minDate, maxDate);
+			studentId, minDate, maxDate);
+	}
+
+	@Override
+	public java.util.List<com.weprode.nero.course.model.Homework>
+		getStudentHomeworks(
+			long studentId, java.util.Date minDate, java.util.Date maxDate,
+			boolean undoneOnly) {
+
+		return _homeworkLocalService.getStudentHomeworks(
+			studentId, minDate, maxDate, undoneOnly);
 	}
 
 	@Override
@@ -438,13 +443,6 @@ public class HomeworkLocalServiceWrapper
 		return _homeworkLocalService.hasHomeworksToDoForSession(sessionId);
 	}
 
-	@Override
-	public boolean hasUserCustomHomework(
-		com.liferay.portal.kernel.model.User user, long homeworkId) {
-
-		return _homeworkLocalService.hasUserCustomHomework(user, homeworkId);
-	}
-
 	/**
 	 * Updates the homework in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
@@ -463,12 +461,14 @@ public class HomeworkLocalServiceWrapper
 	}
 
 	@Override
-	public com.weprode.nero.course.model.Homework updateHomeworkTargets(
-		long homeworkId, long targetSessionId, java.util.Date toDate,
-		java.util.List<Long> studentIds) {
+	public com.weprode.nero.course.model.Homework updateHomework(
+		long homeworkId, long targetSessionId, java.util.Date targetDate,
+		int estimatedTime, java.util.List<Long> studentIds,
+		java.util.Date publicationDate, boolean isDraft) {
 
-		return _homeworkLocalService.updateHomeworkTargets(
-			homeworkId, targetSessionId, toDate, studentIds);
+		return _homeworkLocalService.updateHomework(
+			homeworkId, targetSessionId, targetDate, estimatedTime, studentIds,
+			publicationDate, isDraft);
 	}
 
 	@Override

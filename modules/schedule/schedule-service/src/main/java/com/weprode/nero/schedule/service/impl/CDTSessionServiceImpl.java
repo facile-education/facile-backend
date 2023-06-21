@@ -213,7 +213,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "create-session", method = "POST")
-	public JSONObject createSession(long groupId, String subject, String room, String startDate, String endDate, String teacherIds, boolean isRecurrent) {
+	public JSONObject createSession(long groupId, String subject, String room, String startDate, String endDate, int slot, String teacherIds, boolean isRecurrent) {
 		logger.info("Creating manual session(s) for group " + groupId + ", subject=" + subject + " from " + startDate + " to " + endDate + ", teacherIds=" + teacherIds + ", isRecurrent is " + isRecurrent);
 		JSONObject result = new JSONObject();
 
@@ -260,10 +260,10 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			}
 
 			if (isRecurrent) {
-				CDTSessionLocalServiceUtil.createRecurrentSessions(groupId, subject, room, start, end, teacherIdList);
+				CDTSessionLocalServiceUtil.createRecurrentSessions(groupId, subject, room, start, end, slot, teacherIdList);
 			} else {
 				logger.info("Creating manual session");
-				CDTSessionLocalServiceUtil.createSession(groupId, subject, start, end, teacherIdList, room, fullCoursName, true);
+				CDTSessionLocalServiceUtil.createSession(groupId, subject, start, end, slot, teacherIdList, room, fullCoursName, true);
 			}
 
 		} catch (Exception e) {
@@ -274,4 +274,37 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 		return result;
 	}
+
+	@JSONWebService(value = "get-course-next-sessions", method = "GET")
+	public JSONObject getCourseNextSessions(long sessionId) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user) ||
+				!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		JSONArray jsonNextSessions = new JSONArray();
+		List<CDTSession> nextSessions = CDTSessionLocalServiceUtil.getNextSessions(user, sessionId);
+		for (CDTSession nextSession : nextSessions) {
+			jsonNextSessions.put(nextSession.convertToJSON(user));
+		}
+
+		result.put(JSONConstants.NEXT_SESSIONS, jsonNextSessions);
+		result.put(JSONConstants.SUCCESS, true);
+
+		return result;
+	}
+
+
 }

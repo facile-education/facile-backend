@@ -36,12 +36,13 @@ public class HomeworkSoap implements Serializable {
 		soapModel.setHomeworkId(model.getHomeworkId());
 		soapModel.setHomeworkType(model.getHomeworkType());
 		soapModel.setCourseId(model.getCourseId());
+		soapModel.setTeacherId(model.getTeacherId());
+		soapModel.setModificationDate(model.getModificationDate());
 		soapModel.setSourceSessionId(model.getSourceSessionId());
-		soapModel.setFromDate(model.getFromDate());
 		soapModel.setTargetSessionId(model.getTargetSessionId());
 		soapModel.setTargetDate(model.getTargetDate());
-		soapModel.setTeacherId(model.getTeacherId());
 		soapModel.setIsCustomStudentList(model.isIsCustomStudentList());
+		soapModel.setEstimatedTime(model.getEstimatedTime());
 		soapModel.setPublicationDate(model.getPublicationDate());
 		soapModel.setIsDraft(model.isIsDraft());
 
@@ -121,20 +122,28 @@ public class HomeworkSoap implements Serializable {
 		_courseId = courseId;
 	}
 
+	public long getTeacherId() {
+		return _teacherId;
+	}
+
+	public void setTeacherId(long teacherId) {
+		_teacherId = teacherId;
+	}
+
+	public Date getModificationDate() {
+		return _modificationDate;
+	}
+
+	public void setModificationDate(Date modificationDate) {
+		_modificationDate = modificationDate;
+	}
+
 	public long getSourceSessionId() {
 		return _sourceSessionId;
 	}
 
 	public void setSourceSessionId(long sourceSessionId) {
 		_sourceSessionId = sourceSessionId;
-	}
-
-	public Date getFromDate() {
-		return _fromDate;
-	}
-
-	public void setFromDate(Date fromDate) {
-		_fromDate = fromDate;
 	}
 
 	public long getTargetSessionId() {
@@ -153,14 +162,6 @@ public class HomeworkSoap implements Serializable {
 		_targetDate = targetDate;
 	}
 
-	public long getTeacherId() {
-		return _teacherId;
-	}
-
-	public void setTeacherId(long teacherId) {
-		_teacherId = teacherId;
-	}
-
 	public boolean getIsCustomStudentList() {
 		return _isCustomStudentList;
 	}
@@ -171,6 +172,14 @@ public class HomeworkSoap implements Serializable {
 
 	public void setIsCustomStudentList(boolean isCustomStudentList) {
 		_isCustomStudentList = isCustomStudentList;
+	}
+
+	public int getEstimatedTime() {
+		return _estimatedTime;
+	}
+
+	public void setEstimatedTime(int estimatedTime) {
+		_estimatedTime = estimatedTime;
 	}
 
 	public Date getPublicationDate() {
@@ -196,12 +205,13 @@ public class HomeworkSoap implements Serializable {
 	private long _homeworkId;
 	private int _homeworkType;
 	private long _courseId;
+	private long _teacherId;
+	private Date _modificationDate;
 	private long _sourceSessionId;
-	private Date _fromDate;
 	private long _targetSessionId;
 	private Date _targetDate;
-	private long _teacherId;
 	private boolean _isCustomStudentList;
+	private int _estimatedTime;
 	private Date _publicationDate;
 	private boolean _isDraft;
 

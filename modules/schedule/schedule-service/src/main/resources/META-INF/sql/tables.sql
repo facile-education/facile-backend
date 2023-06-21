@@ -2,12 +2,11 @@ create table Schedule_CDTSession (
 	sessionId LONG not null primary key,
 	start_ DATE null,
 	end_ DATE null,
-	weekId LONG,
+	slot INTEGER,
 	fullCoursName VARCHAR(75) null,
 	room VARCHAR(75) null,
 	subject VARCHAR(75) null,
 	groupId LONG,
-	courseItemId LONG,
 	isManual BOOLEAN
 );
 

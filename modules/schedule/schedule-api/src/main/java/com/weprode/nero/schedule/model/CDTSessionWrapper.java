@@ -45,12 +45,11 @@ public class CDTSessionWrapper
 		attributes.put("sessionId", getSessionId());
 		attributes.put("start", getStart());
 		attributes.put("end", getEnd());
-		attributes.put("weekId", getWeekId());
+		attributes.put("slot", getSlot());
 		attributes.put("fullCoursName", getFullCoursName());
 		attributes.put("room", getRoom());
 		attributes.put("subject", getSubject());
 		attributes.put("groupId", getGroupId());
-		attributes.put("courseItemId", getCourseItemId());
 		attributes.put("isManual", isIsManual());
 
 		return attributes;
@@ -76,10 +75,10 @@ public class CDTSessionWrapper
 			setEnd(end);
 		}
 
-		Long weekId = (Long)attributes.get("weekId");
+		Integer slot = (Integer)attributes.get("slot");
 
-		if (weekId != null) {
-			setWeekId(weekId);
+		if (slot != null) {
+			setSlot(slot);
 		}
 
 		String fullCoursName = (String)attributes.get("fullCoursName");
@@ -106,12 +105,6 @@ public class CDTSessionWrapper
 			setGroupId(groupId);
 		}
 
-		Long courseItemId = (Long)attributes.get("courseItemId");
-
-		if (courseItemId != null) {
-			setCourseItemId(courseItemId);
-		}
-
 		Boolean isManual = (Boolean)attributes.get("isManual");
 
 		if (isManual != null) {
@@ -129,16 +122,6 @@ public class CDTSessionWrapper
 		com.liferay.portal.kernel.model.User user) {
 
 		return model.convertToJSON(user);
-	}
-
-	/**
-	 * Returns the course item ID of this cdt session.
-	 *
-	 * @return the course item ID of this cdt session
-	 */
-	@Override
-	public long getCourseItemId() {
-		return model.getCourseItemId();
 	}
 
 	/**
@@ -181,13 +164,6 @@ public class CDTSessionWrapper
 		return model.getIsManual();
 	}
 
-	@Override
-	public java.util.List<CDTSession> getNextSessions(
-		com.liferay.portal.kernel.model.User user) {
-
-		return model.getNextSessions(user);
-	}
-
 	/**
 	 * Returns the primary key of this cdt session.
 	 *
@@ -219,6 +195,16 @@ public class CDTSessionWrapper
 	}
 
 	/**
+	 * Returns the slot of this cdt session.
+	 *
+	 * @return the slot of this cdt session
+	 */
+	@Override
+	public int getSlot() {
+		return model.getSlot();
+	}
+
+	/**
 	 * Returns the start of this cdt session.
 	 *
 	 * @return the start of this cdt session
@@ -238,21 +224,6 @@ public class CDTSessionWrapper
 		return model.getSubject();
 	}
 
-	@Override
-	public String getTeacherList() {
-		return model.getTeacherList();
-	}
-
-	/**
-	 * Returns the week ID of this cdt session.
-	 *
-	 * @return the week ID of this cdt session
-	 */
-	@Override
-	public long getWeekId() {
-		return model.getWeekId();
-	}
-
 	/**
 	 * Returns <code>true</code> if this cdt session is is manual.
 	 *
@@ -266,16 +237,6 @@ public class CDTSessionWrapper
 	@Override
 	public void persist() {
 		model.persist();
-	}
-
-	/**
-	 * Sets the course item ID of this cdt session.
-	 *
-	 * @param courseItemId the course item ID of this cdt session
-	 */
-	@Override
-	public void setCourseItemId(long courseItemId) {
-		model.setCourseItemId(courseItemId);
 	}
 
 	/**
@@ -349,6 +310,16 @@ public class CDTSessionWrapper
 	}
 
 	/**
+	 * Sets the slot of this cdt session.
+	 *
+	 * @param slot the slot of this cdt session
+	 */
+	@Override
+	public void setSlot(int slot) {
+		model.setSlot(slot);
+	}
+
+	/**
 	 * Sets the start of this cdt session.
 	 *
 	 * @param start the start of this cdt session
@@ -366,16 +337,6 @@ public class CDTSessionWrapper
 	@Override
 	public void setSubject(String subject) {
 		model.setSubject(subject);
-	}
-
-	/**
-	 * Sets the week ID of this cdt session.
-	 *
-	 * @param weekId the week ID of this cdt session
-	 */
-	@Override
-	public void setWeekId(long weekId) {
-		model.setWeekId(weekId);
 	}
 
 	@Override

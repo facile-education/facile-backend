@@ -51,6 +51,9 @@ public class StudentHomeworkLocalServiceImpl
 				StudentHomework studentHomework = studentHomeworkPersistence.create(counterLocalService.increment());
 				studentHomework.setStudentId(studentId);
 				studentHomework.setHomeworkId(homeworkId);
+				studentHomework.setIsDone(false);
+				studentHomework.setIsSent(false);
+				studentHomework.setIsCorrected(false);
 				studentHomeworkPersistence.update(studentHomework);
 				return studentHomework;
 			}

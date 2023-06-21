@@ -1,4 +1,3 @@
-create index IX_BD14000E on Schedule_CDTSession (courseItemId);
 create index IX_A4B1B939 on Schedule_CDTSession (groupId);
 
 create index IX_49043908 on Schedule_Homework (sourceSessionId);

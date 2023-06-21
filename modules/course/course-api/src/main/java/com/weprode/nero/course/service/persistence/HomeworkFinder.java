@@ -27,9 +27,18 @@ public interface HomeworkFinder {
 			getTeacherHomeworksToCorrect(long teacherId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public int countHomeworksToCorrect(long teacherId);
+
 	public java.util.List<com.weprode.nero.course.model.Homework>
-		getStudentHomeworksFromGroupIds(
-			java.util.List<Long> studentGroupIdList, java.util.Date minDate,
-			java.util.Date maxDate);
+		getStudentHomeworks(
+			long studentId, java.util.Date minDate, java.util.Date maxDate,
+			boolean undoneOnly);
+
+	public int countUndoneHomeworks(long studentId);
+
+	public java.util.List<com.weprode.nero.course.model.Homework>
+		getStudentHomeworkActivity(
+			long studentId, java.util.List<Long> groupIds,
+			java.util.Date minDate, java.util.Date maxDate);
 
 }

@@ -36,12 +36,11 @@ public class CDTSessionSoap implements Serializable {
 		soapModel.setSessionId(model.getSessionId());
 		soapModel.setStart(model.getStart());
 		soapModel.setEnd(model.getEnd());
-		soapModel.setWeekId(model.getWeekId());
+		soapModel.setSlot(model.getSlot());
 		soapModel.setFullCoursName(model.getFullCoursName());
 		soapModel.setRoom(model.getRoom());
 		soapModel.setSubject(model.getSubject());
 		soapModel.setGroupId(model.getGroupId());
-		soapModel.setCourseItemId(model.getCourseItemId());
 		soapModel.setIsManual(model.isIsManual());
 
 		return soapModel;
@@ -120,12 +119,12 @@ public class CDTSessionSoap implements Serializable {
 		_end = end;
 	}
 
-	public long getWeekId() {
-		return _weekId;
+	public int getSlot() {
+		return _slot;
 	}
 
-	public void setWeekId(long weekId) {
-		_weekId = weekId;
+	public void setSlot(int slot) {
+		_slot = slot;
 	}
 
 	public String getFullCoursName() {
@@ -160,14 +159,6 @@ public class CDTSessionSoap implements Serializable {
 		_groupId = groupId;
 	}
 
-	public long getCourseItemId() {
-		return _courseItemId;
-	}
-
-	public void setCourseItemId(long courseItemId) {
-		_courseItemId = courseItemId;
-	}
-
 	public boolean getIsManual() {
 		return _isManual;
 	}
@@ -183,12 +174,11 @@ public class CDTSessionSoap implements Serializable {
 	private long _sessionId;
 	private Date _start;
 	private Date _end;
-	private long _weekId;
+	private int _slot;
 	private String _fullCoursName;
 	private String _room;
 	private String _subject;
 	private long _groupId;
-	private long _courseItemId;
 	private boolean _isManual;
 
 }

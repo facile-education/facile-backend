@@ -50,26 +50,35 @@ public interface HomeworkService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.course.service.impl.HomeworkServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the homework remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link HomeworkServiceUtil} if injection and service tracking are not available.
 	 */
+	@JSONWebService(method = "GET", value = "cancel-drop")
+	public JSONObject cancelDrop(long homeworkId) throws SystemException;
+
 	@JSONWebService(method = "GET", value = "correct-file")
 	public JSONObject correctFile(
 			long homeworkId, long studentId, String comment)
 		throws SystemException;
 
+	@JSONWebService(method = "GET", value = "count-homeworks-to-correct")
+	public JSONObject countHomeworksToCorrect() throws SystemException;
+
+	@JSONWebService(method = "GET", value = "count-undone-homeworks")
+	public JSONObject countUndoneHomeworks(long studentId)
+		throws SystemException;
+
 	@JSONWebService(method = "POST", value = "create-homework")
 	public JSONObject createHomework(
 			long courseId, long sourceSessionId, long targetSessionId,
-			String targetDate, int homeworkType, String students, String blocks)
+			String targetDateStr, int homeworkType, int estimatedTime,
+			String students, String blocks, String publicationDateStr,
+			boolean isDraft)
 		throws SystemException;
+
+	@JSONWebService(method = "POST", value = "delete-homework")
+	public JSONObject deleteHomework(long homeworkId) throws SystemException;
 
 	@JSONWebService(method = "GET", value = "drop-homework-file")
 	public JSONObject dropHomeworkFile(long homeworkId, long fileEntryId)
 		throws SystemException;
-
-	@JSONWebService(method = "GET", value = "get-future-student-homeworks")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getFutureStudentHomeworks(
-			long studentId, boolean undoneOnly)
-		throws PortalException, SystemException;
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -78,10 +87,11 @@ public interface HomeworkService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "get-previous-student-homeworks")
+	@JSONWebService(method = "GET", value = "get-student-homeworks")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getPreviousStudentHomeworks(
-			long studentId, String maxDateStr, boolean undoneOnly)
+	public JSONObject getStudentHomeworks(
+			long studentId, String minDateStr, String maxDateStr,
+			boolean undoneOnly)
 		throws PortalException, SystemException;
 
 	@JSONWebService(method = "GET", value = "get-teacher-homeworks-to-correct")
@@ -93,8 +103,9 @@ public interface HomeworkService extends BaseService {
 
 	@JSONWebService(method = "POST", value = "update-homework")
 	public JSONObject updateHomework(
-			long homeworkId, long targetSessionId, String targetDate,
-			int homeworkType, String students, String blocks)
+			long homeworkId, long targetSessionId, String targetDateStr,
+			int estimatedTime, String students, String blocks,
+			String publicationDateStr, boolean isDraft)
 		throws SystemException;
 
 }

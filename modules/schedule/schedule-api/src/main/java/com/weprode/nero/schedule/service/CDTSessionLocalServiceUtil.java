@@ -89,20 +89,20 @@ public class CDTSessionLocalServiceUtil {
 
 	public static boolean createRecurrentSessions(
 		long groupId, String subject, String room, java.util.Date startDate,
-		java.util.Date endDate, List<Long> teacherIdList) {
+		java.util.Date endDate, int slot, List<Long> teacherIdList) {
 
 		return getService().createRecurrentSessions(
-			groupId, subject, room, startDate, endDate, teacherIdList);
+			groupId, subject, room, startDate, endDate, slot, teacherIdList);
 	}
 
 	public static CDTSession createSession(
 			long groupId, String subject, java.util.Date startDate,
-			java.util.Date endDate, List<Long> teacherIdList, String room,
-			String fullCoursName, boolean isManual)
+			java.util.Date endDate, int slot, List<Long> teacherIdList,
+			String room, String fullCoursName, boolean isManual)
 		throws SystemException {
 
 		return getService().createSession(
-			groupId, subject, startDate, endDate, teacherIdList, room,
+			groupId, subject, startDate, endDate, slot, teacherIdList, room,
 			fullCoursName, isManual);
 	}
 
@@ -306,6 +306,12 @@ public class CDTSessionLocalServiceUtil {
 			getIndexableActionableDynamicQuery() {
 
 		return getService().getIndexableActionableDynamicQuery();
+	}
+
+	public static List<CDTSession> getNextSessions(
+		com.liferay.portal.kernel.model.User user, long sessionId) {
+
+		return getService().getNextSessions(user, sessionId);
 	}
 
 	public static List<CDTSession> getNextStudentDaySessions(

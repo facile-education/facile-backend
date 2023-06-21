@@ -33,12 +33,13 @@ create table Course_Homework (
 	homeworkId LONG not null primary key,
 	homeworkType INTEGER,
 	courseId LONG,
+	teacherId LONG,
+	modificationDate DATE null,
 	sourceSessionId LONG,
-	fromDate DATE null,
 	targetSessionId LONG,
 	targetDate DATE null,
-	teacherId LONG,
 	isCustomStudentList BOOLEAN,
+	estimatedTime INTEGER,
 	publicationDate DATE null,
 	isDraft BOOLEAN
 );

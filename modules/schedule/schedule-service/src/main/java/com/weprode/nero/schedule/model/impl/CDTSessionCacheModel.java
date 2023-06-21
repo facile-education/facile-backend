@@ -63,7 +63,7 @@ public class CDTSessionCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{sessionId=");
 		sb.append(sessionId);
@@ -71,8 +71,8 @@ public class CDTSessionCacheModel
 		sb.append(start);
 		sb.append(", end=");
 		sb.append(end);
-		sb.append(", weekId=");
-		sb.append(weekId);
+		sb.append(", slot=");
+		sb.append(slot);
 		sb.append(", fullCoursName=");
 		sb.append(fullCoursName);
 		sb.append(", room=");
@@ -81,8 +81,6 @@ public class CDTSessionCacheModel
 		sb.append(subject);
 		sb.append(", groupId=");
 		sb.append(groupId);
-		sb.append(", courseItemId=");
-		sb.append(courseItemId);
 		sb.append(", isManual=");
 		sb.append(isManual);
 		sb.append("}");
@@ -110,7 +108,7 @@ public class CDTSessionCacheModel
 			cdtSessionImpl.setEnd(new Date(end));
 		}
 
-		cdtSessionImpl.setWeekId(weekId);
+		cdtSessionImpl.setSlot(slot);
 
 		if (fullCoursName == null) {
 			cdtSessionImpl.setFullCoursName("");
@@ -134,7 +132,6 @@ public class CDTSessionCacheModel
 		}
 
 		cdtSessionImpl.setGroupId(groupId);
-		cdtSessionImpl.setCourseItemId(courseItemId);
 		cdtSessionImpl.setIsManual(isManual);
 
 		cdtSessionImpl.resetOriginalValues();
@@ -148,14 +145,12 @@ public class CDTSessionCacheModel
 		start = objectInput.readLong();
 		end = objectInput.readLong();
 
-		weekId = objectInput.readLong();
+		slot = objectInput.readInt();
 		fullCoursName = objectInput.readUTF();
 		room = objectInput.readUTF();
 		subject = objectInput.readUTF();
 
 		groupId = objectInput.readLong();
-
-		courseItemId = objectInput.readLong();
 
 		isManual = objectInput.readBoolean();
 	}
@@ -166,7 +161,7 @@ public class CDTSessionCacheModel
 		objectOutput.writeLong(start);
 		objectOutput.writeLong(end);
 
-		objectOutput.writeLong(weekId);
+		objectOutput.writeInt(slot);
 
 		if (fullCoursName == null) {
 			objectOutput.writeUTF("");
@@ -191,20 +186,17 @@ public class CDTSessionCacheModel
 
 		objectOutput.writeLong(groupId);
 
-		objectOutput.writeLong(courseItemId);
-
 		objectOutput.writeBoolean(isManual);
 	}
 
 	public long sessionId;
 	public long start;
 	public long end;
-	public long weekId;
+	public int slot;
 	public String fullCoursName;
 	public String room;
 	public String subject;
 	public long groupId;
-	public long courseItemId;
 	public boolean isManual;
 
 }

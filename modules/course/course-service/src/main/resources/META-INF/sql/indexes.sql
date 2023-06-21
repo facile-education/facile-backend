@@ -10,6 +10,7 @@ create index IX_62EEFD17 on Course_CourseItem (homeworkId);
 create index IX_4066B264 on Course_Homework (courseId);
 create index IX_B8BB608C on Course_Homework (sourceSessionId);
 create index IX_41BFF156 on Course_Homework (targetSessionId);
+create index IX_35888DF3 on Course_Homework (teacherId);
 
 create index IX_27F25E1A on Course_ItemAttachedFile (courseItemId);
 

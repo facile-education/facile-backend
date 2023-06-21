@@ -15,12 +15,13 @@
 		<field name="homeworkId" type="long" />
 		<field name="homeworkType" type="int" />
 		<field name="courseId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="modificationDate" type="Date" />
 		<field name="sourceSessionId" type="long" />
-		<field name="fromDate" type="Date" />
 		<field name="targetSessionId" type="long" />
 		<field name="targetDate" type="Date" />
-		<field name="teacherId" type="long" />
 		<field name="isCustomStudentList" type="boolean" />
+		<field name="estimatedTime" type="int" />
 		<field name="publicationDate" type="Date" />
 		<field name="isDraft" type="boolean" />
 	</model>

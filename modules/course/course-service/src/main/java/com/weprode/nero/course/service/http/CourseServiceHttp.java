@@ -53,8 +53,8 @@ import com.weprode.nero.course.service.CourseServiceUtil;
 public class CourseServiceHttp {
 
 	public static org.json.JSONObject getCourseContent(
-		HttpPrincipal httpPrincipal, long courseId, String minDate,
-		String maxDate) {
+		HttpPrincipal httpPrincipal, long courseId, String minDateStr,
+		String maxDateStr) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -62,7 +62,7 @@ public class CourseServiceHttp {
 				_getCourseContentParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, courseId, minDate, maxDate);
+				methodKey, courseId, minDateStr, maxDateStr);
 
 			Object returnObj = null;
 
@@ -117,13 +117,45 @@ public class CourseServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getCourseStudents(
+		HttpPrincipal httpPrincipal, long courseId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				CourseServiceUtil.class, "getCourseStudents",
+				_getCourseStudentsParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, courseId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject savePrivateNotes(
 		HttpPrincipal httpPrincipal, long sessionId, String notes) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "savePrivateNotes",
-				_savePrivateNotesParameterTypes2);
+				_savePrivateNotesParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, sessionId, notes);
@@ -155,7 +187,9 @@ public class CourseServiceHttp {
 		new Class[] {long.class, String.class, String.class};
 	private static final Class<?>[] _getSessionDetailsParameterTypes1 =
 		new Class[] {long.class};
-	private static final Class<?>[] _savePrivateNotesParameterTypes2 =
+	private static final Class<?>[] _getCourseStudentsParameterTypes2 =
+		new Class[] {long.class};
+	private static final Class<?>[] _savePrivateNotesParameterTypes3 =
 		new Class[] {long.class, String.class};
 
 }

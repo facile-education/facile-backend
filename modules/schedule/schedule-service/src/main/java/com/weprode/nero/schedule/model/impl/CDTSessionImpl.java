@@ -38,8 +38,6 @@ import java.util.List;
  */
 public class CDTSessionImpl extends CDTSessionBaseImpl {
 
-    private static final int NB_NEXT_SESSIONS = 15;
-
     // Used for prev and next session or details panel
     public JSONObject convertToJSON(User user) {
         JSONObject jsonSession = new JSONObject();
@@ -64,51 +62,6 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.IS_CURRENT_USER_TEACHER, sessionTeachers.contains(user));
 
         return jsonSession;
-    }
-
-    // Fetch next sessions for same groupId in the next 50 days
-    public List<CDTSession> getNextSessions(User user) {
-        List<CDTSession> nextSessions = new ArrayList<>();
-
-        Calendar cal = Calendar.getInstance();
-
-        cal.setTime(this.getEnd());
-        cal.add(Calendar.MINUTE, 1);
-        Date startDate = cal.getTime();
-
-        cal.add(Calendar.DATE, 50);
-        Date endDate = cal.getTime();
-
-        List<CDTSession> sessions = CDTSessionLocalServiceUtil.getGroupSessions(this.getGroupId(), startDate, endDate, false);
-        boolean isTeacher = RoleUtilsLocalServiceUtil.isTeacher(user);
-
-        for (CDTSession nextSession : sessions) {
-            if (nextSession.getSessionId() != this.getSessionId() && (isTeacher && SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), nextSession.getSessionId()))) {
-                nextSessions.add(nextSession);
-            }
-        }
-
-        nextSessions.sort(Comparator.comparing(CDTSessionModel::getStart));
-
-        if (nextSessions.size() > NB_NEXT_SESSIONS) {
-            nextSessions = nextSessions.subList(0, NB_NEXT_SESSIONS);
-        }
-
-        return nextSessions;
-    }
-
-
-    public String getTeacherList() {
-
-        List<User> teachers = SessionTeacherLocalServiceUtil.getTeachers(this.getSessionId());
-        StringBuilder teachersStr = new StringBuilder();
-        for (User teacher : teachers) {
-            teachersStr.append(teacher.getFirstName().substring(0, 1)).append(". ").append(teacher.getLastName()).append(", ");
-        }
-        if (teachersStr.length() > 2) {
-            teachersStr = new StringBuilder(teachersStr.substring(0, teachersStr.length() - 2));
-        }
-        return teachersStr.toString();
     }
 
 }

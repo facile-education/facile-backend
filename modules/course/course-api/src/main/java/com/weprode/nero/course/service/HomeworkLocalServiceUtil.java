@@ -61,10 +61,24 @@ public class HomeworkLocalServiceUtil {
 		return getService().addHomework(homework);
 	}
 
+	public static void cancelDrop(long studentId, long homeworkId)
+		throws PortalException {
+
+		getService().cancelDrop(studentId, homeworkId);
+	}
+
 	public static void correctFile(
 		long homeworkId, long studentId, String comment) {
 
 		getService().correctFile(homeworkId, studentId, comment);
+	}
+
+	public static int countHomeworksToCorrect(long teacherId) {
+		return getService().countHomeworksToCorrect(teacherId);
+	}
+
+	public static int countUndoneHomeworks(long studentId) {
+		return getService().countUndoneHomeworks(studentId);
 	}
 
 	/**
@@ -79,12 +93,13 @@ public class HomeworkLocalServiceUtil {
 
 	public static Homework createHomework(
 		com.liferay.portal.kernel.model.User teacher, long sourceSessionId,
-		long targetSessionId, long courseId, java.util.Date toDate,
-		int homeworkType, List<Long> studentIds) {
+		long targetSessionId, long courseId, java.util.Date targetDate,
+		int homeworkType, int estimatedTime, List<Long> studentIds,
+		java.util.Date publicationDate, boolean isDraft) {
 
 		return getService().createHomework(
-			teacher, sourceSessionId, targetSessionId, courseId, toDate,
-			homeworkType, studentIds);
+			teacher, sourceSessionId, targetSessionId, courseId, targetDate,
+			homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
 	}
 
 	/**
@@ -131,10 +146,8 @@ public class HomeworkLocalServiceUtil {
 	/**
 	 * Remove an homework and its associated objects
 	 */
-	public static boolean deleteHomeworkAndDependencies(
-		Homework homeworkToRemove) {
-
-		return getService().deleteHomeworkAndDependencies(homeworkToRemove);
+	public static void deleteHomeworkAndDependencies(long homeworkId) {
+		getService().deleteHomeworkAndDependencies(homeworkId);
 	}
 
 	/**
@@ -253,18 +266,12 @@ public class HomeworkLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
-	public static List<Homework> getCourseHomeworks(
-		com.liferay.portal.kernel.model.User user, long courseId,
-		java.util.Date minDate, java.util.Date maxDate) {
+	public static List<Homework> getCourseHomeworkActivity(
+		long userId, long courseId, java.util.Date minDate,
+		java.util.Date maxDate) {
 
-		return getService().getCourseHomeworks(
-			user, courseId, minDate, maxDate);
-	}
-
-	public static List<Homework> getFutureStudentHomeworks(
-		com.liferay.portal.kernel.model.User student, boolean undoneOnly) {
-
-		return getService().getFutureStudentHomeworks(student, undoneOnly);
+		return getService().getCourseHomeworkActivity(
+			userId, courseId, minDate, maxDate);
 	}
 
 	/**
@@ -341,14 +348,6 @@ public class HomeworkLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
-	public static List<Homework> getPreviousStudentHomeworks(
-		com.liferay.portal.kernel.model.User student, java.util.Date maxDate,
-		boolean undoneOnly) {
-
-		return getService().getPreviousStudentHomeworks(
-			student, maxDate, undoneOnly);
-	}
-
 	public static List<Homework> getSessionGivenHomeworks(
 		com.liferay.portal.kernel.model.User user, long sessionId) {
 
@@ -362,11 +361,18 @@ public class HomeworkLocalServiceUtil {
 	}
 
 	public static List<Homework> getStudentHomeworkActivity(
-		com.liferay.portal.kernel.model.User student, java.util.Date minDate,
-		java.util.Date maxDate) {
+		long studentId, java.util.Date minDate, java.util.Date maxDate) {
 
 		return getService().getStudentHomeworkActivity(
-			student, minDate, maxDate);
+			studentId, minDate, maxDate);
+	}
+
+	public static List<Homework> getStudentHomeworks(
+		long studentId, java.util.Date minDate, java.util.Date maxDate,
+		boolean undoneOnly) {
+
+		return getService().getStudentHomeworks(
+			studentId, minDate, maxDate, undoneOnly);
 	}
 
 	public static List<Homework> getTeacherHomeworksToCorrect(
@@ -383,12 +389,6 @@ public class HomeworkLocalServiceUtil {
 		return getService().hasHomeworksToDoForSession(sessionId);
 	}
 
-	public static boolean hasUserCustomHomework(
-		com.liferay.portal.kernel.model.User user, long homeworkId) {
-
-		return getService().hasUserCustomHomework(user, homeworkId);
-	}
-
 	/**
 	 * Updates the homework in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
@@ -403,12 +403,14 @@ public class HomeworkLocalServiceUtil {
 		return getService().updateHomework(homework);
 	}
 
-	public static Homework updateHomeworkTargets(
-		long homeworkId, long targetSessionId, java.util.Date toDate,
-		List<Long> studentIds) {
+	public static Homework updateHomework(
+		long homeworkId, long targetSessionId, java.util.Date targetDate,
+		int estimatedTime, List<Long> studentIds,
+		java.util.Date publicationDate, boolean isDraft) {
 
-		return getService().updateHomeworkTargets(
-			homeworkId, targetSessionId, toDate, studentIds);
+		return getService().updateHomework(
+			homeworkId, targetSessionId, targetDate, estimatedTime, studentIds,
+			publicationDate, isDraft);
 	}
 
 	public static HomeworkLocalService getService() {

@@ -1734,7 +1734,7 @@ public class GVESynchronizationManager {
                             // Create CDT Session
                             try {
                                 CDTSession createdSession = CDTSessionLocalServiceUtil.createSession(coursOrg.getGroupId(), slotData.getSubject(),
-                                        sessionInfos.getStartSessionDate(), sessionInfos.getEndSessionDate(), teacherIdList, room, sessionInfos.getFullCoursName(), true);
+                                        sessionInfos.getStartSessionDate(), sessionInfos.getEndSessionDate(), getSlotNumber(slot), teacherIdList, room, sessionInfos.getFullCoursName(), true);
                                 logger.info("CREATED SESSION " + createdSession.getSessionId() + " for coursName = " + coursName + " and from " + fullFormat.format(sessionInfos.getStartSessionDate()) + " to " + fullFormat.format(sessionInfos.getEndSessionDate()));
                                 newSessionIds.add(createdSession.getSessionId());
                                 existingCoursSessions.add(createdSession);
@@ -1799,6 +1799,11 @@ public class GVESynchronizationManager {
 //				}
             }
         }
+    }
+
+    private static int getSlotNumber(String slot) {
+        // Slot is for example 205, 2 being the day number and 5 being the slot
+        return Integer.parseInt(slot.substring(1));
     }
 
     private String extractVolee (String coursName) {

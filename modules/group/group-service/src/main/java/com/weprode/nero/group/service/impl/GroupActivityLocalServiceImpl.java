@@ -139,9 +139,9 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
                 // Homeworks given
                 if (withSessions && RoleUtilsLocalServiceUtil.isStudent(user)) {
-                    List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworkActivity(user, minDate, maxDate);
+                    List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworkActivity(user.getUserId(), minDate, maxDate);
                     for (Homework givenHomework : givenHomeworks) {
-                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getFromDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
+                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
                         groupActivities.add(homeworkActivity);
                     }
                 }
@@ -246,10 +246,10 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 }
 
                 // Homeworks given
-                List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getCourseHomeworks(user, groupId, minDate, maxDate);
+                List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getCourseHomeworkActivity(user.getUserId(), groupId, minDate, maxDate);
                 for (Homework givenHomework : givenHomeworks) {
-                    if (givenHomework.getFromDate().after(minDate) && givenHomework.getFromDate().before(maxDate) && groupIds.contains(givenHomework.getCourseId())) {
-                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getFromDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
+                    if (givenHomework.getModificationDate().after(minDate) && givenHomework.getModificationDate().before(maxDate) && groupIds.contains(givenHomework.getCourseId())) {
+                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
                         groupActivities.add(homeworkActivity);
                     }
                 }
@@ -387,7 +387,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
             homeworkActivity.put(JSONConstants.HOMEWORK_ID, homework.getHomeworkId());
             User teacher = UserLocalServiceUtil.getUser(homework.getTeacherId());
-            homeworkActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getFromDate()));
+            homeworkActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getModificationDate()));
             homeworkActivity.put(JSONConstants.TARGET_DATE, df.format(homework.getTargetDate()));
             homeworkActivity.put(JSONConstants.GROUP_ID, homework.getCourseId());
             homeworkActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(homework.getCourseId()));

@@ -38,20 +38,22 @@ public class HomeworkTable extends BaseTable<HomeworkTable> {
 		"homeworkType", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Long> courseId = createColumn(
 		"courseId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<HomeworkTable, Long> teacherId = createColumn(
+		"teacherId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<HomeworkTable, Date> modificationDate = createColumn(
+		"modificationDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Long> sourceSessionId = createColumn(
 		"sourceSessionId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
-	public final Column<HomeworkTable, Date> fromDate = createColumn(
-		"fromDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Long> targetSessionId = createColumn(
 		"targetSessionId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Date> targetDate = createColumn(
 		"targetDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
-	public final Column<HomeworkTable, Long> teacherId = createColumn(
-		"teacherId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Boolean> isCustomStudentList =
 		createColumn(
 			"isCustomStudentList", Boolean.class, Types.BOOLEAN,
 			Column.FLAG_DEFAULT);
+	public final Column<HomeworkTable, Integer> estimatedTime = createColumn(
+		"estimatedTime", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Date> publicationDate = createColumn(
 		"publicationDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Boolean> isDraft = createColumn(

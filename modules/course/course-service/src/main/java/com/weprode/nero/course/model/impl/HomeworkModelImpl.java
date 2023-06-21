@@ -74,11 +74,12 @@ public class HomeworkModelImpl
 
 	public static final Object[][] TABLE_COLUMNS = {
 		{"homeworkId", Types.BIGINT}, {"homeworkType", Types.INTEGER},
-		{"courseId", Types.BIGINT}, {"sourceSessionId", Types.BIGINT},
-		{"fromDate", Types.TIMESTAMP}, {"targetSessionId", Types.BIGINT},
-		{"targetDate", Types.TIMESTAMP}, {"teacherId", Types.BIGINT},
-		{"isCustomStudentList", Types.BOOLEAN},
-		{"publicationDate", Types.TIMESTAMP}, {"isDraft", Types.BOOLEAN}
+		{"courseId", Types.BIGINT}, {"teacherId", Types.BIGINT},
+		{"modificationDate", Types.TIMESTAMP},
+		{"sourceSessionId", Types.BIGINT}, {"targetSessionId", Types.BIGINT},
+		{"targetDate", Types.TIMESTAMP}, {"isCustomStudentList", Types.BOOLEAN},
+		{"estimatedTime", Types.INTEGER}, {"publicationDate", Types.TIMESTAMP},
+		{"isDraft", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -88,18 +89,19 @@ public class HomeworkModelImpl
 		TABLE_COLUMNS_MAP.put("homeworkId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("homeworkType", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("courseId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("teacherId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("modificationDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("sourceSessionId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("fromDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("targetSessionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("targetDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("teacherId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("isCustomStudentList", Types.BOOLEAN);
+		TABLE_COLUMNS_MAP.put("estimatedTime", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("publicationDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("isDraft", Types.BOOLEAN);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Course_Homework (homeworkId LONG not null primary key,homeworkType INTEGER,courseId LONG,sourceSessionId LONG,fromDate DATE null,targetSessionId LONG,targetDate DATE null,teacherId LONG,isCustomStudentList BOOLEAN,publicationDate DATE null,isDraft BOOLEAN)";
+		"create table Course_Homework (homeworkId LONG not null primary key,homeworkType INTEGER,courseId LONG,teacherId LONG,modificationDate DATE null,sourceSessionId LONG,targetSessionId LONG,targetDate DATE null,isCustomStudentList BOOLEAN,estimatedTime INTEGER,publicationDate DATE null,isDraft BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP = "drop table Course_Homework";
 
@@ -172,12 +174,13 @@ public class HomeworkModelImpl
 		model.setHomeworkId(soapModel.getHomeworkId());
 		model.setHomeworkType(soapModel.getHomeworkType());
 		model.setCourseId(soapModel.getCourseId());
+		model.setTeacherId(soapModel.getTeacherId());
+		model.setModificationDate(soapModel.getModificationDate());
 		model.setSourceSessionId(soapModel.getSourceSessionId());
-		model.setFromDate(soapModel.getFromDate());
 		model.setTargetSessionId(soapModel.getTargetSessionId());
 		model.setTargetDate(soapModel.getTargetDate());
-		model.setTeacherId(soapModel.getTeacherId());
 		model.setIsCustomStudentList(soapModel.isIsCustomStudentList());
+		model.setEstimatedTime(soapModel.getEstimatedTime());
 		model.setPublicationDate(soapModel.getPublicationDate());
 		model.setIsDraft(soapModel.isIsDraft());
 
@@ -339,14 +342,19 @@ public class HomeworkModelImpl
 		attributeGetterFunctions.put("courseId", Homework::getCourseId);
 		attributeSetterBiConsumers.put(
 			"courseId", (BiConsumer<Homework, Long>)Homework::setCourseId);
+		attributeGetterFunctions.put("teacherId", Homework::getTeacherId);
+		attributeSetterBiConsumers.put(
+			"teacherId", (BiConsumer<Homework, Long>)Homework::setTeacherId);
+		attributeGetterFunctions.put(
+			"modificationDate", Homework::getModificationDate);
+		attributeSetterBiConsumers.put(
+			"modificationDate",
+			(BiConsumer<Homework, Date>)Homework::setModificationDate);
 		attributeGetterFunctions.put(
 			"sourceSessionId", Homework::getSourceSessionId);
 		attributeSetterBiConsumers.put(
 			"sourceSessionId",
 			(BiConsumer<Homework, Long>)Homework::setSourceSessionId);
-		attributeGetterFunctions.put("fromDate", Homework::getFromDate);
-		attributeSetterBiConsumers.put(
-			"fromDate", (BiConsumer<Homework, Date>)Homework::setFromDate);
 		attributeGetterFunctions.put(
 			"targetSessionId", Homework::getTargetSessionId);
 		attributeSetterBiConsumers.put(
@@ -355,14 +363,16 @@ public class HomeworkModelImpl
 		attributeGetterFunctions.put("targetDate", Homework::getTargetDate);
 		attributeSetterBiConsumers.put(
 			"targetDate", (BiConsumer<Homework, Date>)Homework::setTargetDate);
-		attributeGetterFunctions.put("teacherId", Homework::getTeacherId);
-		attributeSetterBiConsumers.put(
-			"teacherId", (BiConsumer<Homework, Long>)Homework::setTeacherId);
 		attributeGetterFunctions.put(
 			"isCustomStudentList", Homework::getIsCustomStudentList);
 		attributeSetterBiConsumers.put(
 			"isCustomStudentList",
 			(BiConsumer<Homework, Boolean>)Homework::setIsCustomStudentList);
+		attributeGetterFunctions.put(
+			"estimatedTime", Homework::getEstimatedTime);
+		attributeSetterBiConsumers.put(
+			"estimatedTime",
+			(BiConsumer<Homework, Integer>)Homework::setEstimatedTime);
 		attributeGetterFunctions.put(
 			"publicationDate", Homework::getPublicationDate);
 		attributeSetterBiConsumers.put(
@@ -435,6 +445,36 @@ public class HomeworkModelImpl
 
 	@JSON
 	@Override
+	public long getTeacherId() {
+		return _teacherId;
+	}
+
+	@Override
+	public void setTeacherId(long teacherId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_teacherId = teacherId;
+	}
+
+	@JSON
+	@Override
+	public Date getModificationDate() {
+		return _modificationDate;
+	}
+
+	@Override
+	public void setModificationDate(Date modificationDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_modificationDate = modificationDate;
+	}
+
+	@JSON
+	@Override
 	public long getSourceSessionId() {
 		return _sourceSessionId;
 	}
@@ -456,21 +496,6 @@ public class HomeworkModelImpl
 	public long getOriginalSourceSessionId() {
 		return GetterUtil.getLong(
 			this.<Long>getColumnOriginalValue("sourceSessionId"));
-	}
-
-	@JSON
-	@Override
-	public Date getFromDate() {
-		return _fromDate;
-	}
-
-	@Override
-	public void setFromDate(Date fromDate) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_fromDate = fromDate;
 	}
 
 	@JSON
@@ -515,21 +540,6 @@ public class HomeworkModelImpl
 
 	@JSON
 	@Override
-	public long getTeacherId() {
-		return _teacherId;
-	}
-
-	@Override
-	public void setTeacherId(long teacherId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_teacherId = teacherId;
-	}
-
-	@JSON
-	@Override
 	public boolean getIsCustomStudentList() {
 		return _isCustomStudentList;
 	}
@@ -547,6 +557,21 @@ public class HomeworkModelImpl
 		}
 
 		_isCustomStudentList = isCustomStudentList;
+	}
+
+	@JSON
+	@Override
+	public int getEstimatedTime() {
+		return _estimatedTime;
+	}
+
+	@Override
+	public void setEstimatedTime(int estimatedTime) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_estimatedTime = estimatedTime;
 	}
 
 	@JSON
@@ -644,12 +669,13 @@ public class HomeworkModelImpl
 		homeworkImpl.setHomeworkId(getHomeworkId());
 		homeworkImpl.setHomeworkType(getHomeworkType());
 		homeworkImpl.setCourseId(getCourseId());
+		homeworkImpl.setTeacherId(getTeacherId());
+		homeworkImpl.setModificationDate(getModificationDate());
 		homeworkImpl.setSourceSessionId(getSourceSessionId());
-		homeworkImpl.setFromDate(getFromDate());
 		homeworkImpl.setTargetSessionId(getTargetSessionId());
 		homeworkImpl.setTargetDate(getTargetDate());
-		homeworkImpl.setTeacherId(getTeacherId());
 		homeworkImpl.setIsCustomStudentList(isIsCustomStudentList());
+		homeworkImpl.setEstimatedTime(getEstimatedTime());
 		homeworkImpl.setPublicationDate(getPublicationDate());
 		homeworkImpl.setIsDraft(isIsDraft());
 
@@ -667,17 +693,20 @@ public class HomeworkModelImpl
 		homeworkImpl.setHomeworkType(
 			this.<Integer>getColumnOriginalValue("homeworkType"));
 		homeworkImpl.setCourseId(this.<Long>getColumnOriginalValue("courseId"));
+		homeworkImpl.setTeacherId(
+			this.<Long>getColumnOriginalValue("teacherId"));
+		homeworkImpl.setModificationDate(
+			this.<Date>getColumnOriginalValue("modificationDate"));
 		homeworkImpl.setSourceSessionId(
 			this.<Long>getColumnOriginalValue("sourceSessionId"));
-		homeworkImpl.setFromDate(this.<Date>getColumnOriginalValue("fromDate"));
 		homeworkImpl.setTargetSessionId(
 			this.<Long>getColumnOriginalValue("targetSessionId"));
 		homeworkImpl.setTargetDate(
 			this.<Date>getColumnOriginalValue("targetDate"));
-		homeworkImpl.setTeacherId(
-			this.<Long>getColumnOriginalValue("teacherId"));
 		homeworkImpl.setIsCustomStudentList(
 			this.<Boolean>getColumnOriginalValue("isCustomStudentList"));
+		homeworkImpl.setEstimatedTime(
+			this.<Integer>getColumnOriginalValue("estimatedTime"));
 		homeworkImpl.setPublicationDate(
 			this.<Date>getColumnOriginalValue("publicationDate"));
 		homeworkImpl.setIsDraft(
@@ -763,16 +792,18 @@ public class HomeworkModelImpl
 
 		homeworkCacheModel.courseId = getCourseId();
 
-		homeworkCacheModel.sourceSessionId = getSourceSessionId();
+		homeworkCacheModel.teacherId = getTeacherId();
 
-		Date fromDate = getFromDate();
+		Date modificationDate = getModificationDate();
 
-		if (fromDate != null) {
-			homeworkCacheModel.fromDate = fromDate.getTime();
+		if (modificationDate != null) {
+			homeworkCacheModel.modificationDate = modificationDate.getTime();
 		}
 		else {
-			homeworkCacheModel.fromDate = Long.MIN_VALUE;
+			homeworkCacheModel.modificationDate = Long.MIN_VALUE;
 		}
+
+		homeworkCacheModel.sourceSessionId = getSourceSessionId();
 
 		homeworkCacheModel.targetSessionId = getTargetSessionId();
 
@@ -785,9 +816,9 @@ public class HomeworkModelImpl
 			homeworkCacheModel.targetDate = Long.MIN_VALUE;
 		}
 
-		homeworkCacheModel.teacherId = getTeacherId();
-
 		homeworkCacheModel.isCustomStudentList = isIsCustomStudentList();
+
+		homeworkCacheModel.estimatedTime = getEstimatedTime();
 
 		Date publicationDate = getPublicationDate();
 
@@ -893,12 +924,13 @@ public class HomeworkModelImpl
 	private long _homeworkId;
 	private int _homeworkType;
 	private long _courseId;
+	private long _teacherId;
+	private Date _modificationDate;
 	private long _sourceSessionId;
-	private Date _fromDate;
 	private long _targetSessionId;
 	private Date _targetDate;
-	private long _teacherId;
 	private boolean _isCustomStudentList;
+	private int _estimatedTime;
 	private Date _publicationDate;
 	private boolean _isDraft;
 
@@ -932,12 +964,13 @@ public class HomeworkModelImpl
 		_columnOriginalValues.put("homeworkId", _homeworkId);
 		_columnOriginalValues.put("homeworkType", _homeworkType);
 		_columnOriginalValues.put("courseId", _courseId);
+		_columnOriginalValues.put("teacherId", _teacherId);
+		_columnOriginalValues.put("modificationDate", _modificationDate);
 		_columnOriginalValues.put("sourceSessionId", _sourceSessionId);
-		_columnOriginalValues.put("fromDate", _fromDate);
 		_columnOriginalValues.put("targetSessionId", _targetSessionId);
 		_columnOriginalValues.put("targetDate", _targetDate);
-		_columnOriginalValues.put("teacherId", _teacherId);
 		_columnOriginalValues.put("isCustomStudentList", _isCustomStudentList);
+		_columnOriginalValues.put("estimatedTime", _estimatedTime);
 		_columnOriginalValues.put("publicationDate", _publicationDate);
 		_columnOriginalValues.put("isDraft", _isDraft);
 	}
@@ -959,21 +992,23 @@ public class HomeworkModelImpl
 
 		columnBitmasks.put("courseId", 4L);
 
-		columnBitmasks.put("sourceSessionId", 8L);
+		columnBitmasks.put("teacherId", 8L);
 
-		columnBitmasks.put("fromDate", 16L);
+		columnBitmasks.put("modificationDate", 16L);
 
-		columnBitmasks.put("targetSessionId", 32L);
+		columnBitmasks.put("sourceSessionId", 32L);
 
-		columnBitmasks.put("targetDate", 64L);
+		columnBitmasks.put("targetSessionId", 64L);
 
-		columnBitmasks.put("teacherId", 128L);
+		columnBitmasks.put("targetDate", 128L);
 
 		columnBitmasks.put("isCustomStudentList", 256L);
 
-		columnBitmasks.put("publicationDate", 512L);
+		columnBitmasks.put("estimatedTime", 512L);
 
-		columnBitmasks.put("isDraft", 1024L);
+		columnBitmasks.put("publicationDate", 1024L);
+
+		columnBitmasks.put("isDraft", 2048L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

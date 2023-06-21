@@ -74,10 +74,10 @@ public class CDTSessionModelImpl
 
 	public static final Object[][] TABLE_COLUMNS = {
 		{"sessionId", Types.BIGINT}, {"start_", Types.TIMESTAMP},
-		{"end_", Types.TIMESTAMP}, {"weekId", Types.BIGINT},
+		{"end_", Types.TIMESTAMP}, {"slot", Types.INTEGER},
 		{"fullCoursName", Types.VARCHAR}, {"room", Types.VARCHAR},
 		{"subject", Types.VARCHAR}, {"groupId", Types.BIGINT},
-		{"courseItemId", Types.BIGINT}, {"isManual", Types.BOOLEAN}
+		{"isManual", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -87,17 +87,16 @@ public class CDTSessionModelImpl
 		TABLE_COLUMNS_MAP.put("sessionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("start_", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("end_", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("weekId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("slot", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("fullCoursName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("room", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("subject", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("courseItemId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("isManual", Types.BOOLEAN);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Schedule_CDTSession (sessionId LONG not null primary key,start_ DATE null,end_ DATE null,weekId LONG,fullCoursName VARCHAR(75) null,room VARCHAR(75) null,subject VARCHAR(75) null,groupId LONG,courseItemId LONG,isManual BOOLEAN)";
+		"create table Schedule_CDTSession (sessionId LONG not null primary key,start_ DATE null,end_ DATE null,slot INTEGER,fullCoursName VARCHAR(75) null,room VARCHAR(75) null,subject VARCHAR(75) null,groupId LONG,isManual BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Schedule_CDTSession";
@@ -118,20 +117,14 @@ public class CDTSessionModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long COURSEITEMID_COLUMN_BITMASK = 1L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
-	 */
-	@Deprecated
-	public static final long GROUPID_COLUMN_BITMASK = 2L;
+	public static final long GROUPID_COLUMN_BITMASK = 1L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long SESSIONID_COLUMN_BITMASK = 4L;
+	public static final long SESSIONID_COLUMN_BITMASK = 2L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -165,12 +158,11 @@ public class CDTSessionModelImpl
 		model.setSessionId(soapModel.getSessionId());
 		model.setStart(soapModel.getStart());
 		model.setEnd(soapModel.getEnd());
-		model.setWeekId(soapModel.getWeekId());
+		model.setSlot(soapModel.getSlot());
 		model.setFullCoursName(soapModel.getFullCoursName());
 		model.setRoom(soapModel.getRoom());
 		model.setSubject(soapModel.getSubject());
 		model.setGroupId(soapModel.getGroupId());
-		model.setCourseItemId(soapModel.getCourseItemId());
 		model.setIsManual(soapModel.isIsManual());
 
 		return model;
@@ -331,9 +323,9 @@ public class CDTSessionModelImpl
 		attributeGetterFunctions.put("end", CDTSession::getEnd);
 		attributeSetterBiConsumers.put(
 			"end", (BiConsumer<CDTSession, Date>)CDTSession::setEnd);
-		attributeGetterFunctions.put("weekId", CDTSession::getWeekId);
+		attributeGetterFunctions.put("slot", CDTSession::getSlot);
 		attributeSetterBiConsumers.put(
-			"weekId", (BiConsumer<CDTSession, Long>)CDTSession::setWeekId);
+			"slot", (BiConsumer<CDTSession, Integer>)CDTSession::setSlot);
 		attributeGetterFunctions.put(
 			"fullCoursName", CDTSession::getFullCoursName);
 		attributeSetterBiConsumers.put(
@@ -348,11 +340,6 @@ public class CDTSessionModelImpl
 		attributeGetterFunctions.put("groupId", CDTSession::getGroupId);
 		attributeSetterBiConsumers.put(
 			"groupId", (BiConsumer<CDTSession, Long>)CDTSession::setGroupId);
-		attributeGetterFunctions.put(
-			"courseItemId", CDTSession::getCourseItemId);
-		attributeSetterBiConsumers.put(
-			"courseItemId",
-			(BiConsumer<CDTSession, Long>)CDTSession::setCourseItemId);
 		attributeGetterFunctions.put("isManual", CDTSession::getIsManual);
 		attributeSetterBiConsumers.put(
 			"isManual",
@@ -411,17 +398,17 @@ public class CDTSessionModelImpl
 
 	@JSON
 	@Override
-	public long getWeekId() {
-		return _weekId;
+	public int getSlot() {
+		return _slot;
 	}
 
 	@Override
-	public void setWeekId(long weekId) {
+	public void setSlot(int slot) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_weekId = weekId;
+		_slot = slot;
 	}
 
 	@JSON
@@ -510,31 +497,6 @@ public class CDTSessionModelImpl
 
 	@JSON
 	@Override
-	public long getCourseItemId() {
-		return _courseItemId;
-	}
-
-	@Override
-	public void setCourseItemId(long courseItemId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_courseItemId = courseItemId;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public long getOriginalCourseItemId() {
-		return GetterUtil.getLong(
-			this.<Long>getColumnOriginalValue("courseItemId"));
-	}
-
-	@JSON
-	@Override
 	public boolean getIsManual() {
 		return _isManual;
 	}
@@ -613,12 +575,11 @@ public class CDTSessionModelImpl
 		cdtSessionImpl.setSessionId(getSessionId());
 		cdtSessionImpl.setStart(getStart());
 		cdtSessionImpl.setEnd(getEnd());
-		cdtSessionImpl.setWeekId(getWeekId());
+		cdtSessionImpl.setSlot(getSlot());
 		cdtSessionImpl.setFullCoursName(getFullCoursName());
 		cdtSessionImpl.setRoom(getRoom());
 		cdtSessionImpl.setSubject(getSubject());
 		cdtSessionImpl.setGroupId(getGroupId());
-		cdtSessionImpl.setCourseItemId(getCourseItemId());
 		cdtSessionImpl.setIsManual(isIsManual());
 
 		cdtSessionImpl.resetOriginalValues();
@@ -634,15 +595,13 @@ public class CDTSessionModelImpl
 			this.<Long>getColumnOriginalValue("sessionId"));
 		cdtSessionImpl.setStart(this.<Date>getColumnOriginalValue("start_"));
 		cdtSessionImpl.setEnd(this.<Date>getColumnOriginalValue("end_"));
-		cdtSessionImpl.setWeekId(this.<Long>getColumnOriginalValue("weekId"));
+		cdtSessionImpl.setSlot(this.<Integer>getColumnOriginalValue("slot"));
 		cdtSessionImpl.setFullCoursName(
 			this.<String>getColumnOriginalValue("fullCoursName"));
 		cdtSessionImpl.setRoom(this.<String>getColumnOriginalValue("room"));
 		cdtSessionImpl.setSubject(
 			this.<String>getColumnOriginalValue("subject"));
 		cdtSessionImpl.setGroupId(this.<Long>getColumnOriginalValue("groupId"));
-		cdtSessionImpl.setCourseItemId(
-			this.<Long>getColumnOriginalValue("courseItemId"));
 		cdtSessionImpl.setIsManual(
 			this.<Boolean>getColumnOriginalValue("isManual"));
 
@@ -740,7 +699,7 @@ public class CDTSessionModelImpl
 			cdtSessionCacheModel.end = Long.MIN_VALUE;
 		}
 
-		cdtSessionCacheModel.weekId = getWeekId();
+		cdtSessionCacheModel.slot = getSlot();
 
 		cdtSessionCacheModel.fullCoursName = getFullCoursName();
 
@@ -767,8 +726,6 @@ public class CDTSessionModelImpl
 		}
 
 		cdtSessionCacheModel.groupId = getGroupId();
-
-		cdtSessionCacheModel.courseItemId = getCourseItemId();
 
 		cdtSessionCacheModel.isManual = isIsManual();
 
@@ -865,12 +822,11 @@ public class CDTSessionModelImpl
 	private long _sessionId;
 	private Date _start;
 	private Date _end;
-	private long _weekId;
+	private int _slot;
 	private String _fullCoursName;
 	private String _room;
 	private String _subject;
 	private long _groupId;
-	private long _courseItemId;
 	private boolean _isManual;
 
 	public <T> T getColumnValue(String columnName) {
@@ -905,12 +861,11 @@ public class CDTSessionModelImpl
 		_columnOriginalValues.put("sessionId", _sessionId);
 		_columnOriginalValues.put("start_", _start);
 		_columnOriginalValues.put("end_", _end);
-		_columnOriginalValues.put("weekId", _weekId);
+		_columnOriginalValues.put("slot", _slot);
 		_columnOriginalValues.put("fullCoursName", _fullCoursName);
 		_columnOriginalValues.put("room", _room);
 		_columnOriginalValues.put("subject", _subject);
 		_columnOriginalValues.put("groupId", _groupId);
-		_columnOriginalValues.put("courseItemId", _courseItemId);
 		_columnOriginalValues.put("isManual", _isManual);
 	}
 
@@ -942,7 +897,7 @@ public class CDTSessionModelImpl
 
 		columnBitmasks.put("end_", 4L);
 
-		columnBitmasks.put("weekId", 8L);
+		columnBitmasks.put("slot", 8L);
 
 		columnBitmasks.put("fullCoursName", 16L);
 
@@ -952,9 +907,7 @@ public class CDTSessionModelImpl
 
 		columnBitmasks.put("groupId", 128L);
 
-		columnBitmasks.put("courseItemId", 256L);
-
-		columnBitmasks.put("isManual", 512L);
+		columnBitmasks.put("isManual", 256L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

@@ -53,7 +53,11 @@ public interface CourseService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-course-content")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getCourseContent(
-		long courseId, String minDate, String maxDate);
+		long courseId, String minDateStr, String maxDateStr);
+
+	@JSONWebService(method = "GET", value = "get-course-students")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getCourseStudents(long courseId);
 
 	/**
 	 * Returns the OSGi service identifier.

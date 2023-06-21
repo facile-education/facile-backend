@@ -76,6 +76,18 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
             groupIds.add(userOrg.getGroupId());
         }
 
+        // Add doyen classes
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            if (RoleUtilsLocalServiceUtil.isDoyen(user)) {
+                List<Organization> affectedClasses = UserOrgsLocalServiceUtil.getAffectedClasses(user, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
+                for (Organization affectedClass : affectedClasses) {
+                    groupIds.add(affectedClass.getGroupId());
+                }
+            }
+        } catch (Exception e) {
+            // Nothing
+        }
         return groupIds;
     }
 
