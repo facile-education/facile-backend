@@ -79,7 +79,14 @@ public interface HomeworkLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Homework addHomework(Homework homework);
 
+	public void cancelDrop(long studentId, long homeworkId)
+		throws PortalException;
+
 	public void correctFile(long homeworkId, long studentId, String comment);
+
+	public int countHomeworksToCorrect(long teacherId);
+
+	public int countUndoneHomeworks(long studentId);
 
 	/**
 	 * Creates a new homework with the primary key. Does not add the homework to the database.
@@ -92,7 +99,8 @@ public interface HomeworkLocalService
 
 	public Homework createHomework(
 		User teacher, long sourceSessionId, long targetSessionId, long courseId,
-		Date toDate, int homeworkType, List<Long> studentIds);
+		Date targetDate, int homeworkType, int estimatedTime,
+		List<Long> studentIds, Date publicationDate, boolean isDraft);
 
 	/**
 	 * @throws PortalException
@@ -130,7 +138,7 @@ public interface HomeworkLocalService
 	/**
 	 * Remove an homework and its associated objects
 	 */
-	public boolean deleteHomeworkAndDependencies(Homework homeworkToRemove);
+	public void deleteHomeworkAndDependencies(long homeworkId);
 
 	/**
 	 * @throws PortalException
@@ -224,12 +232,8 @@ public interface HomeworkLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Homework> getCourseHomeworks(
-		User user, long courseId, Date minDate, Date maxDate);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Homework> getFutureStudentHomeworks(
-		User student, boolean undoneOnly);
+	public List<Homework> getCourseHomeworkActivity(
+		long userId, long courseId, Date minDate, Date maxDate);
 
 	/**
 	 * Returns the homework with the primary key.
@@ -290,10 +294,6 @@ public interface HomeworkLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Homework> getPreviousStudentHomeworks(
-		User student, Date maxDate, boolean undoneOnly);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Homework> getSessionGivenHomeworks(User user, long sessionId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -301,7 +301,11 @@ public interface HomeworkLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Homework> getStudentHomeworkActivity(
-		User student, Date minDate, Date maxDate);
+		long studentId, Date minDate, Date maxDate);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Homework> getStudentHomeworks(
+		long studentId, Date minDate, Date maxDate, boolean undoneOnly);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Homework> getTeacherHomeworksToCorrect(User teacher);
@@ -311,9 +315,6 @@ public interface HomeworkLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasHomeworksToDoForSession(long sessionId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean hasUserCustomHomework(User user, long homeworkId);
 
 	/**
 	 * Updates the homework in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
@@ -328,8 +329,9 @@ public interface HomeworkLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Homework updateHomework(Homework homework);
 
-	public Homework updateHomeworkTargets(
-		long homeworkId, long targetSessionId, Date toDate,
-		List<Long> studentIds);
+	public Homework updateHomework(
+		long homeworkId, long targetSessionId, Date targetDate,
+		int estimatedTime, List<Long> studentIds, Date publicationDate,
+		boolean isDraft);
 
 }

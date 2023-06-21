@@ -5,12 +5,11 @@
 		<field name="sessionId" type="long" />
 		<field name="start" type="Date" />
 		<field name="end" type="Date" />
-		<field name="weekId" type="long" />
+		<field name="slot" type="int" />
 		<field name="fullCoursName" type="String" />
 		<field name="room" type="String" />
 		<field name="subject" type="String" />
 		<field name="groupId" type="long" />
-		<field name="courseItemId" type="long" />
 		<field name="isManual" type="boolean" />
 	</model>
 	<model name="com.weprode.nero.schedule.model.CourseDetails">

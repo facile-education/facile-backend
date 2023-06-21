@@ -64,32 +64,15 @@ import java.rmi.RemoteException;
 @Deprecated
 public class HomeworkServiceSoap {
 
-	public static org.json.JSONObject getFutureStudentHomeworks(
-			long studentId, boolean undoneOnly)
+	public static org.json.JSONObject getStudentHomeworks(
+			long studentId, String minDateStr, String maxDateStr,
+			boolean undoneOnly)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				HomeworkServiceUtil.getFutureStudentHomeworks(
-					studentId, undoneOnly);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static org.json.JSONObject getPreviousStudentHomeworks(
-			long studentId, String maxDateStr, boolean undoneOnly)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				HomeworkServiceUtil.getPreviousStudentHomeworks(
-					studentId, maxDateStr, undoneOnly);
+				HomeworkServiceUtil.getStudentHomeworks(
+					studentId, minDateStr, maxDateStr, undoneOnly);
 
 			return returnValue;
 		}
@@ -106,6 +89,38 @@ public class HomeworkServiceSoap {
 		try {
 			org.json.JSONObject returnValue =
 				HomeworkServiceUtil.getTeacherHomeworksToCorrect();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject countUndoneHomeworks(long studentId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				HomeworkServiceUtil.countUndoneHomeworks(studentId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject countHomeworksToCorrect()
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				HomeworkServiceUtil.countHomeworksToCorrect();
 
 			return returnValue;
 		}
@@ -135,14 +150,17 @@ public class HomeworkServiceSoap {
 
 	public static org.json.JSONObject createHomework(
 			long courseId, long sourceSessionId, long targetSessionId,
-			String targetDate, int homeworkType, String students, String blocks)
+			String targetDateStr, int homeworkType, int estimatedTime,
+			String students, String blocks, String publicationDateStr,
+			boolean isDraft)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				HomeworkServiceUtil.createHomework(
-					courseId, sourceSessionId, targetSessionId, targetDate,
-					homeworkType, students, blocks);
+					courseId, sourceSessionId, targetSessionId, targetDateStr,
+					homeworkType, estimatedTime, students, blocks,
+					publicationDateStr, isDraft);
 
 			return returnValue;
 		}
@@ -154,15 +172,32 @@ public class HomeworkServiceSoap {
 	}
 
 	public static org.json.JSONObject updateHomework(
-			long homeworkId, long targetSessionId, String targetDate,
-			int homeworkType, String students, String blocks)
+			long homeworkId, long targetSessionId, String targetDateStr,
+			int estimatedTime, String students, String blocks,
+			String publicationDateStr, boolean isDraft)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				HomeworkServiceUtil.updateHomework(
-					homeworkId, targetSessionId, targetDate, homeworkType,
-					students, blocks);
+					homeworkId, targetSessionId, targetDateStr, estimatedTime,
+					students, blocks, publicationDateStr, isDraft);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject deleteHomework(long homeworkId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				HomeworkServiceUtil.deleteHomework(homeworkId);
 
 			return returnValue;
 		}
@@ -180,6 +215,22 @@ public class HomeworkServiceSoap {
 		try {
 			org.json.JSONObject returnValue =
 				HomeworkServiceUtil.dropHomeworkFile(homeworkId, fileEntryId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject cancelDrop(long homeworkId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue = HomeworkServiceUtil.cancelDrop(
+				homeworkId);
 
 			return returnValue;
 		}

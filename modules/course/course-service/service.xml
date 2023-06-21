@@ -24,12 +24,13 @@
 		<column name="homeworkId" type="long" primary="true"/>
 		<column name="homeworkType" type="int"/>
 		<column name="courseId" type="long"/>
+		<column name="teacherId" type="long" />
+		<column name="modificationDate" type="Date" />
 		<column name="sourceSessionId" type="long" />
-		<column name="fromDate" type="Date" />
 		<column name="targetSessionId" type="long" />
 		<column name="targetDate" type="Date" />
-		<column name="teacherId" type="long" />
 		<column name="isCustomStudentList" type="boolean" />
+		<column name="estimatedTime" type="int"/>
 		<column name="publicationDate" type="Date"/>
 		<column name="isDraft" type="boolean" />
 

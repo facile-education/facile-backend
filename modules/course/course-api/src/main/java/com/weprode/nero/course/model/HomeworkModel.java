@@ -97,6 +97,34 @@ public interface HomeworkModel extends BaseModel<Homework> {
 	public void setCourseId(long courseId);
 
 	/**
+	 * Returns the teacher ID of this homework.
+	 *
+	 * @return the teacher ID of this homework
+	 */
+	public long getTeacherId();
+
+	/**
+	 * Sets the teacher ID of this homework.
+	 *
+	 * @param teacherId the teacher ID of this homework
+	 */
+	public void setTeacherId(long teacherId);
+
+	/**
+	 * Returns the modification date of this homework.
+	 *
+	 * @return the modification date of this homework
+	 */
+	public Date getModificationDate();
+
+	/**
+	 * Sets the modification date of this homework.
+	 *
+	 * @param modificationDate the modification date of this homework
+	 */
+	public void setModificationDate(Date modificationDate);
+
+	/**
 	 * Returns the source session ID of this homework.
 	 *
 	 * @return the source session ID of this homework
@@ -109,20 +137,6 @@ public interface HomeworkModel extends BaseModel<Homework> {
 	 * @param sourceSessionId the source session ID of this homework
 	 */
 	public void setSourceSessionId(long sourceSessionId);
-
-	/**
-	 * Returns the from date of this homework.
-	 *
-	 * @return the from date of this homework
-	 */
-	public Date getFromDate();
-
-	/**
-	 * Sets the from date of this homework.
-	 *
-	 * @param fromDate the from date of this homework
-	 */
-	public void setFromDate(Date fromDate);
 
 	/**
 	 * Returns the target session ID of this homework.
@@ -153,20 +167,6 @@ public interface HomeworkModel extends BaseModel<Homework> {
 	public void setTargetDate(Date targetDate);
 
 	/**
-	 * Returns the teacher ID of this homework.
-	 *
-	 * @return the teacher ID of this homework
-	 */
-	public long getTeacherId();
-
-	/**
-	 * Sets the teacher ID of this homework.
-	 *
-	 * @param teacherId the teacher ID of this homework
-	 */
-	public void setTeacherId(long teacherId);
-
-	/**
 	 * Returns the is custom student list of this homework.
 	 *
 	 * @return the is custom student list of this homework
@@ -186,6 +186,20 @@ public interface HomeworkModel extends BaseModel<Homework> {
 	 * @param isCustomStudentList the is custom student list of this homework
 	 */
 	public void setIsCustomStudentList(boolean isCustomStudentList);
+
+	/**
+	 * Returns the estimated time of this homework.
+	 *
+	 * @return the estimated time of this homework
+	 */
+	public int getEstimatedTime();
+
+	/**
+	 * Sets the estimated time of this homework.
+	 *
+	 * @param estimatedTime the estimated time of this homework
+	 */
+	public void setEstimatedTime(int estimatedTime);
 
 	/**
 	 * Returns the publication date of this homework.

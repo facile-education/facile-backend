@@ -19,15 +19,19 @@ import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.weprode.nero.course.CourseConstants;
@@ -43,11 +47,11 @@ import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -61,9 +65,8 @@ import java.util.List;
 public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 	private static final Log logger = LogFactoryUtil.getLog(HomeworkLocalServiceImpl.class);
-	private static final int NB_HOMEWORKS = 10;
 
-	public Homework createHomework(User teacher, long sourceSessionId, long targetSessionId, long courseId, Date toDate, int homeworkType, List<Long> studentIds) {
+	public Homework createHomework(User teacher, long sourceSessionId, long targetSessionId, long courseId, Date targetDate, int homeworkType, int estimatedTime, List<Long> studentIds, Date publicationDate, boolean isDraft) {
 		try {
 			logger.info("Creating homework by teacher " + teacher.getFullName() + ", targetSessionId=" + targetSessionId + ", type=" + homeworkType + " and " + studentIds.size() + " students");
 
@@ -77,12 +80,15 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				CDTSession targetSession = CDTSessionLocalServiceUtil.getCDTSession(targetSessionId);
 				homework.setTargetDate(targetSession.getStart());
 			} else {
-				homework.setTargetDate(toDate);
+				homework.setTargetDate(targetDate);
 			}
-			homework.setFromDate(new Date());
+			homework.setModificationDate(new Date());
 			homework.setCourseId(courseId);
 			homework.setTeacherId(teacher.getUserId());
 			homework.setHomeworkType(homeworkType);
+			homework.setEstimatedTime(estimatedTime);
+			homework.setPublicationDate(publicationDate);
+			homework.setIsDraft(isDraft);
 
 			// Students
 			if (!studentIds.isEmpty()) {
@@ -92,6 +98,20 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				}
 			} else {
 				homework.setIsCustomStudentList(false);
+				// Create StudentHomeworks for all class students
+				List<Long> organizationIds = new ArrayList<>();
+				Group courseGroup = GroupLocalServiceUtil.getGroup(courseId);
+				organizationIds.add(courseGroup.getClassPK());
+
+				Role studentRole = RoleUtilsLocalServiceUtil.getStudentRole();
+				List<Long> roleIds = new ArrayList<>();
+				roleIds.add(studentRole.getRoleId());
+				List<User> studentList = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null,
+						roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+				for (User student : studentList) {
+					StudentHomeworkLocalServiceUtil.getOrCreateStudentHomework(homework.getHomeworkId(), student.getUserId());
+				}
+
 			}
 
 			// Create deposit folder
@@ -124,14 +144,18 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 
 	// Used from progression service
-	public Homework updateHomeworkTargets(long homeworkId, long targetSessionId, Date toDate, List<Long> studentIds) {
+	public Homework updateHomework(long homeworkId, long targetSessionId, Date targetDate, int estimatedTime, List<Long> studentIds, Date publicationDate, boolean isDraft) {
 		logger.info("Updating homework " + homeworkId + ", targetSessionId=" + targetSessionId + " and " + studentIds.size() + " students");
 
 		try {
 			Homework homework = getHomework(homeworkId);
 
-			homework.setTargetDate(toDate);
+			homework.setModificationDate(new Date());
+			homework.setTargetDate(targetDate);
 			homework.setTargetSessionId(targetSessionId);
+			homework.setPublicationDate(publicationDate);
+			homework.setIsDraft(isDraft);
+			homework.setEstimatedTime(estimatedTime);
 
 			// They are 4 CASES:
 			// 1. group -> student list
@@ -180,53 +204,6 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		return null;
 	}
 
-	public List<Homework> getCourseHomeworks(User user, long courseId, Date minDate, Date maxDate) {
-		List<Homework> courseHomeworks = new ArrayList<>();
-
-		try {
-			List<Homework> homeworks = homeworkPersistence.findBycourseId(courseId);
-			// Current user is student or parent -> filter on homeworks he really has
-			if (homeworks != null && !homeworks.isEmpty()) {
-				for (Homework homework : homeworks) {
-					// Manage:
-					// - Custom homework broadcast
-					// - Date range
-					// - publication policy
-					if ((!homework.getIsCustomStudentList() || hasUserCustomHomework(user, homework.getHomeworkId())) &&
-							homework.getTargetDate().after(minDate) &&
-							homework.getTargetDate().before(maxDate) &&
-							(RoleUtilsLocalServiceUtil.isTeacher(user) || (!homework.getIsDraft() && homework.getPublicationDate().before(new Date())))) {
-						courseHomeworks.add(homework);
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.error("Error fetching homeworks given in courseId " + courseId, e);
-		}
-
-		return courseHomeworks;
-	}
-
-
-	public boolean hasUserCustomHomework(User user, long homeworkId) {
-		try {
-			if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-				return true;
-			} else if (RoleUtilsLocalServiceUtil.isStudent(user)) {
-				return StudentHomeworkLocalServiceUtil.hasStudentDoneHomework(user.getUserId(), homeworkId);
-			} else if (RoleUtilsLocalServiceUtil.isParent(user)) {
-				for (User child : UserRelationshipLocalServiceUtil.getChildren(user.getUserId())) {
-					if (StudentHomeworkLocalServiceUtil.hasStudentDoneHomework(child.getUserId(), homeworkId)) {
-						return true;
-					}
-				}
-			}
-		} catch (Exception e) {
-			// Nothing
-		}
-		return false;
-	}
-
 
 	public List<Homework> getSessionToDoHomeworks (User user, long sessionId) {
 		List<Homework> toDoHomeworks = new ArrayList<>();
@@ -235,19 +212,20 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			List<Homework> homeworks = homeworkPersistence.findBytargetSessionId(sessionId);
 			if (homeworks != null && !homeworks.isEmpty()) {
 				for (Homework homework : homeworks) {
-					// Manage:
-					// - Custom homework broadcast
-					// - publication policy
 					if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+						// Teachers see all homeworks
 						toDoHomeworks.add(homework);
 					} else if (RoleUtilsLocalServiceUtil.isStudent(user) &&
-						(!homework.getIsCustomStudentList() || hasUserCustomHomework(user, homework.getHomeworkId())) &&
-						(!homework.getIsDraft() && homework.getPublicationDate().before(new Date()))) {
+							StudentHomeworkLocalServiceUtil.hasStudentHomework(user.getUserId(), homework.getHomeworkId()) &&
+							!homework.getIsDraft() &&
+							homework.getPublicationDate().before(new Date())) {
+						// Students do not see drafts and unpublished homeworks
 						toDoHomeworks.add(homework);
 					} else if (RoleUtilsLocalServiceUtil.isParent(user)) {
 						for (User child : UserRelationshipLocalServiceUtil.getChildren(user.getUserId())) {
-							if ((!homework.getIsCustomStudentList() || hasUserCustomHomework(child, homework.getHomeworkId())) &&
-									(!homework.getIsDraft() && homework.getPublicationDate().before(new Date()))) {
+							if (StudentHomeworkLocalServiceUtil.hasStudentHomework(child.getUserId(), homework.getHomeworkId()) &&
+									!homework.getIsDraft() &&
+									homework.getPublicationDate().before(new Date())) {
 								toDoHomeworks.add(homework);
 							}
 						}
@@ -268,19 +246,20 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			List<Homework> homeworks = homeworkPersistence.findBysourceSessionId(sessionId);
 			if (homeworks != null && !homeworks.isEmpty()) {
 				for (Homework homework : homeworks) {
-					// Manage:
-					// - Custom homework broadcast
-					// - publication policy
 					if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+						// Teachers see all homeworks
 						givenHomeworks.add(homework);
 					} else if (RoleUtilsLocalServiceUtil.isStudent(user) &&
-							(!homework.getIsCustomStudentList() || hasUserCustomHomework(user, homework.getHomeworkId())) &&
-							(!homework.getIsDraft() && homework.getPublicationDate().before(new Date()))) {
+							StudentHomeworkLocalServiceUtil.hasStudentHomework(user.getUserId(), homework.getHomeworkId()) &&
+							!homework.getIsDraft() &&
+							homework.getPublicationDate().before(new Date())) {
+						// Students do not see drafts and unpublished homeworks
 						givenHomeworks.add(homework);
 					} else if (RoleUtilsLocalServiceUtil.isParent(user)) {
 						for (User child : UserRelationshipLocalServiceUtil.getChildren(user.getUserId())) {
-							if ((!homework.getIsCustomStudentList() || hasUserCustomHomework(child, homework.getHomeworkId())) &&
-									(!homework.getIsDraft() && homework.getPublicationDate().before(new Date()))) {
+							if (StudentHomeworkLocalServiceUtil.hasStudentHomework(child.getUserId(), homework.getHomeworkId()) &&
+									!homework.getIsDraft() &&
+									homework.getPublicationDate().before(new Date())) {
 								givenHomeworks.add(homework);
 							}
 						}
@@ -295,103 +274,43 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 	}
 
 
-	public List<Homework> getFutureStudentHomeworks(User student, boolean undoneOnly) {
-
-		List<Homework> homeworkList = new ArrayList<>();
-
-		// Get the groupId list for the student
-		List<Long> studentGroupIdList = UserUtilsLocalServiceUtil.getUserGroupIds(student.getUserId());
-
-		// If no group => return empty homework list
-		if (studentGroupIdList.isEmpty()) {
-			return homeworkList;
-		}
-
-		try {
-			// Set maxDate to far away in the future
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(new Date());
-			Date minDate = cal.getTime();
-			cal.add(Calendar.YEAR, 100);
-			Date maxDate = cal.getTime();
-
-			homeworkList.addAll(homeworkFinder.getStudentHomeworksFromGroupIds(studentGroupIdList, minDate, maxDate));
-		} catch (Exception e) {
-			logger.error("Error when running dynamic query to get all homeworks for student "+student.getUserId()+" at given date range", e);
-		}
-
-		// Skip the homeworks given to a student list and the current user does not belong to it
-		List<Homework> finalHomeworkList = new ArrayList<>();
-		for (Homework homework : homeworkList) {
-
-			// Filter undone only if needed
-			// Filter on publication policy
-			if ((!homework.getIsCustomStudentList() || hasUserCustomHomework(student, homework.getHomeworkId())) &&
-					(!undoneOnly || StudentHomeworkLocalServiceUtil.hasStudentDoneHomework(student.getUserId(), homework.getHomeworkId()) &&
-							!homework.getIsDraft() &&
-							homework.getPublicationDate().before(new Date()))) {
-				finalHomeworkList.add(homework);
-			}
-		}
-
-		return finalHomeworkList;
-	}
-
-	public List<Homework> getPreviousStudentHomeworks(User student, Date maxDate, boolean undoneOnly) {
+	// Used for dashboard homework widget and homework tab in sessionsAndHomework service
+	public List<Homework> getStudentHomeworks(long studentId, Date minDate, Date maxDate, boolean undoneOnly) {
 
 		List<Homework> studentHomeworkList = new ArrayList<>();
 
-		// Get the groupId list for the student
-		List<Long> studentGroupIdList = UserUtilsLocalServiceUtil.getUserGroupIds(student.getUserId());
-
-		// If no group => return empty homework list
-		if (studentGroupIdList.isEmpty()) {
-			return studentHomeworkList;
+		// Limit to school year
+		Date schoolYearStartDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate();
+		if (minDate.before(schoolYearStartDate)) {
+			minDate = schoolYearStartDate;
 		}
-
-		// Loop back in time until 10 elements are fetched
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(maxDate);
-		cal.add(Calendar.DATE, -10);
-		Date minDate = cal.getTime();
-		while (minDate.after(ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate()) && studentHomeworkList.size() < NB_HOMEWORKS) {
-
-			try {
-
-				List<Homework> homeworkList = homeworkFinder.getStudentHomeworksFromGroupIds(studentGroupIdList, minDate, maxDate);
-				// Skip the homeworks given to a student list and the current user does not belong to it
-				for (Homework homework : homeworkList) {
-
-					// Filter undone only if needed
-					// Filter on publication policy
-					if ((!homework.getIsCustomStudentList() || hasUserCustomHomework(student, homework.getHomeworkId())) &&
-							(!undoneOnly || StudentHomeworkLocalServiceUtil.hasStudentDoneHomework(student.getUserId(), homework.getHomeworkId()) &&
-									!homework.getIsDraft() &&
-									homework.getPublicationDate().before(new Date()))) {
-						studentHomeworkList.add(homework);
-					}
-				}
-
-				// Go back 10 days
-				cal.setTime(minDate);
-				cal.add(Calendar.DATE, -10);
-				minDate = cal.getTime();
-
-			} catch (Exception e) {
-				logger.error("Error when fetching homeworks back in time for student " + student.getUserId(), e);
-			}
+		try {
+			return homeworkFinder.getStudentHomeworks(studentId, minDate, maxDate, undoneOnly);
+		} catch (Exception e) {
+			logger.error("Error when fetching homeworks for student " + studentId, e);
 		}
 
 		// No sorting, we can return more than NB_HOMEWORKS homeworks, just the maxDate is important
 		return studentHomeworkList;
 	}
 
-	public List<Homework> getStudentHomeworkActivity(User student, Date minDate, Date maxDate) {
+	public int countUndoneHomeworks(long studentId) {
+
+		try {
+			return homeworkFinder.countUndoneHomeworks(studentId);
+		} catch (Exception e) {
+			logger.error("Error when counting undone homeworks for student " + studentId, e);
+		}
+		return 0;
+	}
+
+	// For dashboard activity widget
+	public List<Homework> getStudentHomeworkActivity(long studentId, Date minDate, Date maxDate) {
 
 		List<Homework> studentHomeworkList = new ArrayList<>();
 
 		// Get the groupId list for the student
-		List<Long> studentGroupIdList = UserUtilsLocalServiceUtil.getUserGroupIds(student.getUserId());
+		List<Long> studentGroupIdList = UserUtilsLocalServiceUtil.getUserGroupIds(studentId);
 
 		// If no group => return empty homework list
 		if (studentGroupIdList.isEmpty()) {
@@ -399,23 +318,34 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		}
 
 		try {
-
-			List<Homework> homeworkList = homeworkFinder.getStudentHomeworksFromGroupIds(studentGroupIdList, minDate, maxDate);
-			for (Homework homework : homeworkList) {
-
-				// Skip the homeworks given to a student list and the current user does not belong to it
-				// Filter on publication policy
-				if ((!homework.getIsCustomStudentList() || hasUserCustomHomework(student, homework.getHomeworkId())) &&
-						!homework.getIsDraft() &&
-						homework.getPublicationDate().before(new Date())) {
-					studentHomeworkList.add(homework);
-				}
-			}
+			return homeworkFinder.getStudentHomeworkActivity(studentId, studentGroupIdList, minDate, maxDate);
 		} catch (Exception e) {
-			logger.error("Error fetching homework activities for student " + student.getUserId(), e);
+			logger.error("Error fetching homework activities for student " + studentId, e);
 		}
 
 		return studentHomeworkList;
+	}
+
+	// For group activity
+	public List<Homework> getCourseHomeworkActivity(long userId, long courseId, Date minDate, Date maxDate) {
+		List<Homework> courseHomeworkList = new ArrayList<>();
+
+		try {
+			List<Homework> courseHomeworks = homeworkPersistence.findBycourseId(courseId);
+			if (courseHomeworks != null && !courseHomeworks.isEmpty()) {
+				for (Homework courseHomework : courseHomeworks) {
+					if (courseHomework.getModificationDate().after(minDate) &&
+						courseHomework.getModificationDate().before(maxDate) &&
+						(courseHomework.getTeacherId() == userId || (!courseHomework.getIsDraft() && courseHomework.getPublicationDate().before(new Date())))) {
+						courseHomeworkList.add(courseHomework);
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Error fetching homework activity for groupId " + courseId, e);
+		}
+
+		return courseHomeworkList;
 	}
 
 
@@ -428,6 +358,18 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		}
 		return new ArrayList<>();
 	}
+
+	public int countHomeworksToCorrect(long teacherId) {
+
+		try {
+			return homeworkFinder.countHomeworksToCorrect(teacherId);
+
+		} catch (Exception e) {
+			logger.error("Error when counting homeworks to correct for teacher " + teacherId, e);
+		}
+		return 0;
+	}
+
 
 	public Folder getHomeworkFolder(long homeworkId) throws PortalException, SystemException {
 
@@ -476,9 +418,25 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 	public void dropHomeworkFile(long studentId, long homeworkId, long fileEntryId) throws PortalException {
 
+		// Check if a file was previously dropped by the student -> delete it
+		StudentHomework studentHomework = StudentHomeworkLocalServiceUtil.getStudentHomework(homeworkId, studentId);
+		if (studentHomework != null && studentHomework.getIsSent()) {
+			FileUtilsLocalServiceUtil.deleteFile(studentId, studentHomework.getSentFileId());
+			logger.info("Old dropped file deleted");
+		}
+
 		Folder homeworkDropFolder = getHomeworkDropFolder(homeworkId);
 		FileEntry copiedFile = FileUtilsLocalServiceUtil.moveFileEntry(studentId, fileEntryId, homeworkDropFolder.getFolderId(), DocumentConstants.MODE_NORMAL);
 		StudentHomeworkLocalServiceUtil.setHomeworkSent(studentId, homeworkId, copiedFile.getFileEntryId());
+	}
+
+	public void cancelDrop(long studentId, long homeworkId) throws PortalException {
+
+		StudentHomework studentHomework = StudentHomeworkLocalServiceUtil.getStudentHomework(homeworkId, studentId);
+		if (studentHomework != null && studentHomework.getIsSent()) {
+			FileUtilsLocalServiceUtil.deleteFile(studentId, studentHomework.getSentFileId());
+			logger.info("Old dropped file deleted");
+		}
 	}
 
 	public boolean deleteSessionHomeworks(long sessionId) {
@@ -504,23 +462,25 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 	/**
 	 * Remove an homework and its associated objects
 	 */
-	public boolean deleteHomeworkAndDependencies(Homework homeworkToRemove) {
+	public void deleteHomeworkAndDependencies(long homeworkId) {
 		try {
 			// Remove student homework
-			StudentHomeworkLocalServiceUtil.removeHomework(homeworkToRemove.getHomeworkId());
+			StudentHomeworkLocalServiceUtil.removeHomework(homeworkId);
 
-			// remove the homework
-			deleteHomework(homeworkToRemove);
-			return true;
+			// Delete drop folder
+			Folder homeworkDropFolder = getHomeworkDropFolder(homeworkId);
+			DLAppServiceUtil.deleteFolder(homeworkDropFolder.getFolderId());
+
+			// Remove the homework itself
+			deleteHomework(homeworkId);
 
 		} catch (Exception e) {
-			logger.error("Error during homework removal : " + homeworkToRemove.getHomeworkId() , e);
+			logger.error("Error deleting homework " + homeworkId , e);
 		}
 
-		return false;
 	}
 
-
+	// Used by synchro to prevent homework deletion
 	public boolean hasHomeworksToDoForSession(long sessionId) {
 		try {
 			List<Homework> homeworks = homeworkPersistence.findBytargetSessionId(sessionId);
@@ -534,6 +494,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		return false;
 	}
 
+	// Used by synchro to prevent homework deletion
 	public boolean hasHomeworksGivenDuringSession(long sessionId) {
 		try {
 			List<Homework> homeworks = homeworkPersistence.findBysourceSessionId(sessionId);

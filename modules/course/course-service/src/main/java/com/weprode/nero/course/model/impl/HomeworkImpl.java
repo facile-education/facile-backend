@@ -51,7 +51,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         jsonHomework.put(JSONConstants.GROUP_ID, this.getCourseId());
         jsonHomework.put(JSONConstants.HOMEWORK_ID, this.getHomeworkId());
         jsonHomework.put(JSONConstants.TYPE, this.getHomeworkType());
-        jsonHomework.put(JSONConstants.FROM_DATE, sdf.format(this.getFromDate()));
+        jsonHomework.put(JSONConstants.MODIFICATION_DATE, sdf.format(this.getModificationDate()));
         jsonHomework.put(JSONConstants.SOURCE_SESSION_ID, this.getSourceSessionId());
         jsonHomework.put(JSONConstants.TO_DATE, sdf.format(this.getTargetDate()));
         jsonHomework.put(JSONConstants.TARGET_SESSION_ID, this.getTargetSessionId());

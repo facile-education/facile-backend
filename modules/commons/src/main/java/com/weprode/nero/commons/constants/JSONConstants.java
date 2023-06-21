@@ -307,6 +307,8 @@ public class JSONConstants {
     public static final String DONE_STUDENTS = "doneStudents";
     public static final String GROUP_STUDENTS = "groupStudents";
     public static final String SENT_FILE = "sentFile";
+    public static final String NB_UNDONE_HOMEWORKS = "nbUndoneHomeworks";
+    public static final String NB_HOMEWORKS_TO_CORRECT = "nbHomeworksToCorrect";
 
     // Progression
     public static final String COURSE_ID = "courseId";

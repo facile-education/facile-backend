@@ -99,12 +99,12 @@ public interface CDTSessionLocalService
 
 	public boolean createRecurrentSessions(
 		long groupId, String subject, String room, Date startDate, Date endDate,
-		List<Long> teacherIdList);
+		int slot, List<Long> teacherIdList);
 
 	public CDTSession createSession(
 			long groupId, String subject, Date startDate, Date endDate,
-			List<Long> teacherIdList, String room, String fullCoursName,
-			boolean isManual)
+			int slot, List<Long> teacherIdList, String room,
+			String fullCoursName, boolean isManual)
 		throws SystemException;
 
 	/**
@@ -264,6 +264,9 @@ public interface CDTSessionLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<CDTSession> getNextSessions(User user, long sessionId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<CDTSession> getNextStudentDaySessions(

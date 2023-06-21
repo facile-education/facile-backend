@@ -84,21 +84,22 @@ public class CDTSessionLocalServiceWrapper
 	@Override
 	public boolean createRecurrentSessions(
 		long groupId, String subject, String room, java.util.Date startDate,
-		java.util.Date endDate, java.util.List<Long> teacherIdList) {
+		java.util.Date endDate, int slot, java.util.List<Long> teacherIdList) {
 
 		return _cdtSessionLocalService.createRecurrentSessions(
-			groupId, subject, room, startDate, endDate, teacherIdList);
+			groupId, subject, room, startDate, endDate, slot, teacherIdList);
 	}
 
 	@Override
 	public com.weprode.nero.schedule.model.CDTSession createSession(
 			long groupId, String subject, java.util.Date startDate,
-			java.util.Date endDate, java.util.List<Long> teacherIdList,
-			String room, String fullCoursName, boolean isManual)
+			java.util.Date endDate, int slot,
+			java.util.List<Long> teacherIdList, String room,
+			String fullCoursName, boolean isManual)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _cdtSessionLocalService.createSession(
-			groupId, subject, startDate, endDate, teacherIdList, room,
+			groupId, subject, startDate, endDate, slot, teacherIdList, room,
 			fullCoursName, isManual);
 	}
 
@@ -341,6 +342,14 @@ public class CDTSessionLocalServiceWrapper
 		getIndexableActionableDynamicQuery() {
 
 		return _cdtSessionLocalService.getIndexableActionableDynamicQuery();
+	}
+
+	@Override
+	public java.util.List<com.weprode.nero.schedule.model.CDTSession>
+		getNextSessions(
+			com.liferay.portal.kernel.model.User user, long sessionId) {
+
+		return _cdtSessionLocalService.getNextSessions(user, sessionId);
 	}
 
 	@Override

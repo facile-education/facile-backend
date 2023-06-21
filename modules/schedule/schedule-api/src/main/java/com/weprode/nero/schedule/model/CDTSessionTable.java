@@ -38,8 +38,8 @@ public class CDTSessionTable extends BaseTable<CDTSessionTable> {
 		"start_", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, Date> end = createColumn(
 		"end_", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
-	public final Column<CDTSessionTable, Long> weekId = createColumn(
-		"weekId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<CDTSessionTable, Integer> slot = createColumn(
+		"slot", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, String> fullCoursName = createColumn(
 		"fullCoursName", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, String> room = createColumn(
@@ -48,8 +48,6 @@ public class CDTSessionTable extends BaseTable<CDTSessionTable> {
 		"subject", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, Long> groupId = createColumn(
 		"groupId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
-	public final Column<CDTSessionTable, Long> courseItemId = createColumn(
-		"courseItemId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<CDTSessionTable, Boolean> isManual = createColumn(
 		"isManual", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
 

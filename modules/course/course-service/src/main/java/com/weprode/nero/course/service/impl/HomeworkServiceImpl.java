@@ -55,48 +55,8 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 	private static final Log logger = LogFactoryUtil.getLog(HomeworkServiceImpl.class);
 
-	@JSONWebService(value = "get-future-student-homeworks", method = "GET")
-	public JSONObject getFutureStudentHomeworks(long studentId, boolean undoneOnly) throws SystemException, PortalException {
-		JSONObject result = new JSONObject();
-
-		User currentUser;
-		try {
-			currentUser = getGuestOrUser();
-			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-			}
-		} catch (Exception e) {
-			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-		}
-		if (!RoleUtilsLocalServiceUtil.isStudentOrParent(currentUser)) {
-			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
-		}
-		if (RoleUtilsLocalServiceUtil.isParent(currentUser) && !UserRelationshipLocalServiceUtil.isChild(currentUser.getUserId(), studentId)) {
-			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
-		}
-
-		JSONArray homeworks = new JSONArray();
-
-		User targetUser = currentUser;
-		if (RoleUtilsLocalServiceUtil.isParent(currentUser)) {
-			targetUser = UserLocalServiceUtil.getUser(studentId);
-		}
-
-		List<Homework> homeworkList = HomeworkLocalServiceUtil.getFutureStudentHomeworks(targetUser, undoneOnly);
-
-		// Convert to JSON
-		for (Homework homework : homeworkList) {
-			JSONObject homeworkJson = homework.convertToJSON(targetUser, true);
-			homeworks.put(homeworkJson);
-		}
-
-		result.put(JSONConstants.HOMEWORKS, homeworks);
-		result.put(JSONConstants.SUCCESS, true);
-		return result;
-	}
-
-	@JSONWebService(value = "get-previous-student-homeworks", method = "GET")
-	public JSONObject getPreviousStudentHomeworks(long studentId, String maxDateStr, boolean undoneOnly) throws SystemException, PortalException {
+	@JSONWebService(value = "get-student-homeworks", method = "GET")
+	public JSONObject getStudentHomeworks(long studentId, String minDateStr, String maxDateStr, boolean undoneOnly) throws SystemException, PortalException {
 		JSONObject result = new JSONObject();
 
 		User currentUser;
@@ -124,9 +84,10 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 		List<Homework> homeworkList = new ArrayList<>();
 		try {
-			logger.info("User " + currentUser + " fetches previous homeworks until " + maxDateStr + ((studentId != 0) ? " for student " + studentId : ""));
+			logger.info("User " + currentUser + " fetches homeworks from " + minDateStr + " to " + maxDateStr + ((studentId != 0) ? " for student " + studentId : ""));
+			Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDateStr);
 			Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDateStr);
-			homeworkList = HomeworkLocalServiceUtil.getPreviousStudentHomeworks(targetUser, maxDate, undoneOnly);
+			homeworkList = HomeworkLocalServiceUtil.getStudentHomeworks(targetUser.getUserId(), minDate, maxDate, undoneOnly);
 		} catch (Exception e) {
 			logger.error("Error fetching previous homeworks for student " + studentId);
 		}
@@ -172,6 +133,55 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		return result;
 	}
 
+	@JSONWebService(value = "count-undone-homeworks", method = "GET")
+	public JSONObject countUndoneHomeworks(long studentId) throws SystemException {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+		if (RoleUtilsLocalServiceUtil.isParent(user) && !UserRelationshipLocalServiceUtil.isChild(user.getUserId(), studentId)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		int nbUndoneHomeworks = HomeworkLocalServiceUtil.countUndoneHomeworks(studentId);
+		result.put(JSONConstants.NB_UNDONE_HOMEWORKS, nbUndoneHomeworks);
+		result.put(JSONConstants.SUCCESS, true);
+		return result;
+	}
+
+	@JSONWebService(value = "count-homeworks-to-correct", method = "GET")
+	public JSONObject countHomeworksToCorrect() throws SystemException {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		int nbHomeworksToCorrect = HomeworkLocalServiceUtil.countHomeworksToCorrect(user.getUserId());
+		result.put(JSONConstants.NB_HOMEWORKS_TO_CORRECT, nbHomeworksToCorrect);
+		result.put(JSONConstants.SUCCESS, true);
+		return result;
+	}
+
 	@JSONWebService(value = "set-homework-done", method = "GET")
 	public JSONObject setHomeworkDone(long homeworkId, boolean isDone) {
 		JSONObject result = new JSONObject();
@@ -195,7 +205,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "create-homework", method = "POST")
-	public JSONObject createHomework(long courseId, long sourceSessionId, long targetSessionId, String targetDate, int homeworkType, String students, String blocks) throws SystemException {
+	public JSONObject createHomework(long courseId, long sourceSessionId, long targetSessionId, String targetDateStr, int homeworkType, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws SystemException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -212,7 +222,8 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		}
 
 		try {
-			Date toDate = targetSessionId == 0 ? new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDate) : null;
+			Date targetDate = targetSessionId == 0 ? new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) : null;
+			Date publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
 			List<Long> studentIds = new ArrayList<>();
 			if (!students.equals("")) {
 				JSONArray jsonStudents = new JSONArray(students);
@@ -221,7 +232,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 					studentIds.add(jsonStudent.getLong(JSONConstants.USER_ID));
 				}
 			}
-			Homework homework = HomeworkLocalServiceUtil.createHomework(user, sourceSessionId, targetSessionId, courseId, toDate, homeworkType, studentIds);
+			Homework homework = HomeworkLocalServiceUtil.createHomework(user, sourceSessionId, targetSessionId, courseId, targetDate, homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
 
 			// Create blocks
 			JSONArray jsonBlocks = new JSONArray(students);
@@ -242,7 +253,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "update-homework", method = "POST")
-	public JSONObject updateHomework(long homeworkId, long targetSessionId, String targetDate, int homeworkType, String students, String blocks) throws SystemException {
+	public JSONObject updateHomework(long homeworkId, long targetSessionId, String targetDateStr, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws SystemException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -259,7 +270,8 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		}
 
 		try {
-			Date toDate = targetSessionId == 0 ? new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDate) : null;
+			Date targetDate = targetSessionId == 0 ? new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) : null;
+			Date publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
 			List<Long> studentIds = new ArrayList<>();
 			if (!students.equals("")) {
 				JSONArray jsonStudents = new JSONArray(students);
@@ -268,9 +280,12 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 					studentIds.add(jsonStudent.getLong(JSONConstants.USER_ID));
 				}
 			}
-			Homework homework = HomeworkLocalServiceUtil.updateHomeworkTargets(homeworkId, targetSessionId, toDate, studentIds);
+			Homework homework = HomeworkLocalServiceUtil.updateHomework(homeworkId, targetSessionId, targetDate, estimatedTime, studentIds, publicationDate, isDraft);
 
-			// Create blocks
+			// Delete existing blocks
+			ContentBlockLocalServiceUtil.deleteBlocksByItemId(homeworkId);
+
+			// Re-create blocks
 			JSONArray jsonBlocks = new JSONArray(students);
 			for (int i = 0 ; i < jsonBlocks.length() ; i++) {
 				JSONObject jsonBlock = jsonBlocks.getJSONObject(i);
@@ -287,6 +302,33 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		}
 		return result;
 	}
+
+	@JSONWebService(value = "delete-homework", method = "POST")
+	public JSONObject deleteHomework(long homeworkId) throws SystemException {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			HomeworkLocalServiceUtil.deleteHomeworkAndDependencies(homeworkId);
+			result.put(JSONConstants.SUCCESS, true);
+		} catch (Exception e) {
+			logger.error("Error creating homework");
+		}
+		return result;
+	}
+
 
 	@JSONWebService(value = "drop-homework-file", method = "GET")
 	public JSONObject dropHomeworkFile(long homeworkId, long fileEntryId) throws SystemException {
@@ -311,6 +353,34 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 		} catch (Exception e) {
 			logger.error("Error when student " + user.getUserId() + " drops file for homeworkId " + homeworkId);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
+	@JSONWebService(value = "cancel-drop", method = "GET")
+	public JSONObject cancelDrop(long homeworkId) throws SystemException {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isStudent(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			HomeworkLocalServiceUtil.cancelDrop(user.getUserId(), homeworkId);
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error when student " + user.getUserId() + " cancels his file drop for homeworkId " + homeworkId);
 			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;

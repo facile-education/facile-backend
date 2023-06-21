@@ -8,19 +8,15 @@
 		<column name="sessionId" type="long" primary="true" />
 		<column name="start" type="Date" />
 		<column name="end" type="Date" />
-		<column name="weekId" type="long" />
+		<column name="slot" type="int" />
 		<column name="fullCoursName" type="String" />
 		<column name="room" type="String" />
 		<column name="subject" type="String" />
 		<column name="groupId" type="long" />
-		<column name="courseItemId" type="long" />
 		<column name="isManual" type="boolean" />
 
 		<finder return-type="Collection" name="groupId">
 			<finder-column name="groupId" />
-		</finder>
-		<finder return-type="Collection" name="courseItemId">
-			<finder-column name="courseItemId" />
 		</finder>
 	</entity>
 

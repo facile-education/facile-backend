@@ -15,12 +15,15 @@
 package com.weprode.nero.course.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.AuthException;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
@@ -30,11 +33,11 @@ import com.weprode.nero.course.model.SessionContent;
 import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.course.service.SessionContentLocalServiceUtil;
 import com.weprode.nero.course.service.base.CourseServiceBaseImpl;
-
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,6 +45,7 @@ import org.osgi.service.component.annotations.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +64,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	private final Log logger = LogFactoryUtil.getLog(CourseServiceImpl.class);
 
 	@JSONWebService(value = "get-course-content", method = "GET")
-	public JSONObject getCourseContent(long courseId, String minDate, String maxDate) {
+	public JSONObject getCourseContent(long courseId, String minDateStr, String maxDateStr) {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -78,21 +82,37 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getGroupId()).contains(courseId)) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			logger.info("User " + user.getUserId() + " fetches full course content for course " + courseId + ", from " + minDateStr + " to " + maxDateStr);
 
 			DateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
-			logger.info("User " + user.getUserId() + " fetches full course content for course " + courseId + ", from " + sdf.format(minDate) + " to " + sdf.format(maxDate));
-			JSONArray itemArray = new JSONArray();
-			Date min = sdf.parse(minDate);
-			Date max = sdf.parse(maxDate);
-			List<SessionContent> items = SessionContentLocalServiceUtil.getCourseContents(user, courseId, min, max);
-			for (SessionContent item: items) {
-				itemArray.put(item.convertToJSON(user, false));
+			Date minDate = sdf.parse(minDateStr);
+			Date maxDate = sdf.parse(maxDateStr);
+
+			// Loop over sessions
+			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, minDate, maxDate, true);
+			for (CDTSession courseSession : courseSessions) {
+				JSONObject jsonSession = courseSession.convertToJSON(user);
+
+				// Session content
+				SessionContent sessionContent = SessionContentLocalServiceUtil.getSessionContent(courseSession.getSessionId());
+				jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, false));
+
+				// To perform homeworks
+				List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, courseSession.getSessionId());
+				JSONArray jsonToDoHomeworks = new JSONArray();
+				for (Homework toDoHomework : toDoHomeworks) {
+					jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, false));
+				}
+				jsonSession.put(JSONConstants.TO_DO_HOMEWORKS, jsonToDoHomeworks);
+
+				// Given homeworks
+				List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, courseSession.getSessionId());
+				JSONArray jsonGivenHomeworks = new JSONArray();
+				for (Homework givenHomework : givenHomeworks) {
+					jsonGivenHomeworks.put(givenHomework.convertToJSON(user, false));
+				}
+				jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, jsonGivenHomeworks);
 			}
-			List<Homework> homeworks = HomeworkLocalServiceUtil.getCourseHomeworks(user, courseId, min, max);
-			for (Homework homework : homeworks) {
-				itemArray.put(homework.convertToJSON(user, false));
-			}
-			result.put(JSONConstants.ITEMS, itemArray);
 
 		} catch (Exception e) {
 			logger.error("Could not get course content for course " + courseId + " for "+user.getFullName()+" (id="+user.getUserId()+")", e);
@@ -133,7 +153,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			try {
 				SessionContent sessionContent = SessionContentLocalServiceUtil.getSessionContent(sessionId);
 				if (RoleUtilsLocalServiceUtil.isTeacher(user) || (!sessionContent.getIsDraft() && sessionContent.getPublicationDate().before(new Date()))) {
-					jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, false));
+					jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, true));
 				}
 			} catch (Exception e) {
 				// No session content
@@ -143,7 +163,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, sessionId);
 			JSONArray jsonGivenHomeworks = new JSONArray();
 			for (Homework givenHomework : givenHomeworks) {
-				jsonGivenHomeworks.put(givenHomework.convertToJSON(user, false));
+				jsonGivenHomeworks.put(givenHomework.convertToJSON(user, true));
 			}
 			jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, jsonGivenHomeworks);
 
@@ -151,7 +171,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, sessionId);
 			JSONArray jsonToDoHomeworks = new JSONArray();
 			for (Homework toDoHomework : toDoHomeworks) {
-				jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, false));
+				jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, true));
 			}
 			jsonSession.put(JSONConstants.TO_DO_HOMEWORKS, jsonToDoHomeworks);
 
@@ -164,6 +184,48 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 		} catch (Exception e) {
 			logger.error("Could not get details for session " + sessionId + " for "+user.getFullName()+" (id="+user.getUserId()+")", e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+
+		return result;
+	}
+
+	@JSONWebService(value = "get-course-students", method = "GET")
+	public JSONObject getCourseStudents(long courseId) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				throw new AuthException();
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		result.put(JSONConstants.SUCCESS, true);
+		try {
+			if (!RoleUtilsLocalServiceUtil.isTeacher(user) || !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(courseId)) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
+			logger.info("Teacher " + user.getFullName() + " fetches students for course " + courseId + " (giving homework)");
+
+			List<Long> organizationIds = new ArrayList<>();
+			Group courseGroup = GroupLocalServiceUtil.getGroup(courseId);
+			organizationIds.add(courseGroup.getClassPK());
+			Role studentRole = RoleUtilsLocalServiceUtil.getStudentRole();
+			List<Long> roleIds = new ArrayList<>();
+			roleIds.add(studentRole.getRoleId());
+			List<User> studentList = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+			JSONArray jsonStudents = UserUtilsLocalServiceUtil.convertUsersToJson(studentList);
+
+			result.put(JSONConstants.STUDENTS, jsonStudents);
+
+		} catch (Exception e) {
+			logger.error("Could not get students for course " + courseId + " for "+user.getFullName()+" (id="+user.getUserId()+")", e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
 

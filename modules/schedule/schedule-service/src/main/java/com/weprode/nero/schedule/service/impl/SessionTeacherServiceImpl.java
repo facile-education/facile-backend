@@ -120,7 +120,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 
 			List<CDTSession> sessions = new ArrayList<>();
 			sessions.add(session);
-			sessions.addAll(session.getNextSessions(teacher));
+			sessions.addAll(CDTSessionLocalServiceUtil.getNextSessions(teacher, sessionId));
 			for (CDTSession nextSession : sessions) {
 				// Check that teacher is indeed affected to the session
 				if (SessionTeacherLocalServiceUtil.hasTeacherSession(sessionTeacher.getTeacherId(), nextSession.getSessionId())) {
@@ -223,7 +223,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 
 				List<CDTSession> sessions = new ArrayList<>();
 				sessions.add(session);
-				sessions.addAll(session.getNextSessions(teacherUser));
+				sessions.addAll(CDTSessionLocalServiceUtil.getNextSessions(teacherUser, sessionId));
 
 				Calendar sessionCal = Calendar.getInstance();
 				sessionCal.setTime(session.getStart());

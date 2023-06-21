@@ -37,6 +37,8 @@ import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
+import com.weprode.nero.schedule.model.CDTSessionModel;
+import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
@@ -50,6 +52,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -64,23 +67,19 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 
 	private static final Log logger = LogFactoryUtil.getLog(CDTSessionLocalServiceImpl.class);
 
-	public CDTSession createSession(long groupId, String subject, Date startDate, Date endDate,
+	public CDTSession createSession(long groupId, String subject, Date startDate, Date endDate, int slot,
 								 List<Long> teacherIdList, String room, String fullCoursName, boolean isManual) throws SystemException {
 		long sessionId = counterLocalService.increment();
 		CDTSession session = cdtSessionPersistence.create(sessionId);
-
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		int weekId = cal.get(Calendar.WEEK_OF_YEAR);
 
 		session.setGroupId(groupId);
 		session.setSubject(subject);
 		session.setStart(startDate);
 		session.setEnd(endDate);
+		session.setSlot(slot);
 		session.setRoom(room);
 		session.setFullCoursName(fullCoursName);
 		session.setIsManual(isManual);
-		session.setWeekId(weekId);
 		cdtSessionPersistence.update(session);
 
 		// Update the teacher list
@@ -89,26 +88,24 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 		return session;
 	}
 
-	public boolean createRecurrentSessions(long groupId, String subject, String room, Date startDate, Date endDate, List<Long> teacherIdList) {
+	public boolean createRecurrentSessions(long groupId, String subject, String room, Date startDate, Date endDate, int slot, List<Long> teacherIdList) {
 		logger.info("Start creating recurrent sessions");
 
 		// Loop from startDate to the school year end's date
 		try {
 			Group coursGroup = GroupLocalServiceUtil.getGroup(groupId);
 			String fullCoursName;
-			long schoolId = 0;
 			Date schoolYearEndDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
 			if (coursGroup.isOrganization()) {
 				Organization coursOrg = OrganizationLocalServiceUtil.getOrganization(coursGroup.getOrganizationId());
 				fullCoursName = OrgUtilsLocalServiceUtil.formatOrgName(coursOrg.getName(), false);
-				schoolId = coursOrg.getParentOrganizationId();
 			} else {
 				fullCoursName = coursGroup.getName();
 			}
 
 			while (startDate.before(schoolYearEndDate)) {
 				logger.info("About to create recurrent session from " + startDate + " to " + endDate);
-				createSession(groupId, subject, startDate, endDate, teacherIdList, room, fullCoursName, true);
+				createSession(groupId, subject, startDate, endDate, slot, teacherIdList, room, fullCoursName, true);
 
 				// Add 7 days to start and end dates
 				Calendar cal = Calendar.getInstance();
@@ -431,4 +428,43 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 		CDTSession session = cdtSessionPersistence.fetchByPrimaryKey(itemId);
 		return session != null;
 	}
+
+	// Fetch next sessions for same groupId in the next 50 days
+	public List<CDTSession> getNextSessions(User user, long sessionId) {
+
+		List<CDTSession> nextSessions = new ArrayList<>();
+
+		try {
+			CDTSession sourceSession = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(sourceSession.getEnd());
+			cal.add(Calendar.MINUTE, 1);
+			Date startDate = cal.getTime();
+
+			cal.add(Calendar.DATE, 50);
+			Date endDate = cal.getTime();
+
+			List<CDTSession> futureSessions = CDTSessionLocalServiceUtil.getGroupSessions(sourceSession.getGroupId(), startDate, endDate, false);
+			for (CDTSession nextSession : futureSessions) {
+				if (nextSession.getSessionId() != sessionId &&
+						RoleUtilsLocalServiceUtil.isTeacher(user) &&
+						SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), nextSession.getSessionId())) {
+					nextSessions.add(nextSession);
+				}
+			}
+
+			nextSessions.sort(Comparator.comparing(CDTSessionModel::getStart));
+
+			if (nextSessions.size() > NB_NEXT_SESSIONS) {
+				nextSessions = nextSessions.subList(0, NB_NEXT_SESSIONS);
+			}
+		} catch (Exception e) {
+			logger.error("Error fetching next sessions from session " + sessionId, e);
+		}
+		return nextSessions;
+	}
+
+	private static final int NB_NEXT_SESSIONS = 15;
+
 }

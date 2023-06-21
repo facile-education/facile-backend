@@ -163,7 +163,7 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
                         //filteredActivityList.add(activity);
                     }
                 } catch (Exception e) {
-                    logger.error("Error filtering activity " + activity.getActivityId());
+                    logger.error("Error fetching activity " + activity.getActivityId() + " : may be missing file ou folder");
                 }
             }
             return filteredActivityList;

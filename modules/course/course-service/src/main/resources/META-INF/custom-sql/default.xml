@@ -14,10 +14,54 @@
         <![CDATA[
             SELECT homework.*
             FROM Course_Homework homework
-            JOIN Schedule_SessionTeacher sessionTeacher
-            ON sessionTeacher.sessionId = homework.targetSessionId
-            WHERE sessionTeacher.teacherId = ?
-            AND homework.homeworkType = 1
+            JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
+            WHERE homework.teacherId = ?
+            AND homework.homeworkType >= 1
+            AND studentHomework.isDone = 1
+            AND studentHomework.isCorrected = 0
         ]]>
     </sql>
+    <sql id="countHomeworksToCorrect">
+        <![CDATA[
+	        SELECT count(DISTINCT studentHomework.studentHomeworkId) as count
+            FROM Course_Homework homework
+            JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
+            WHERE homework.teacherId = ?
+            AND homework.homeworkType >= 1
+            AND studentHomework.isDone = 1
+            AND studentHomework.isCorrected = 0
+        ]]>
+    </sql>
+    <sql id="getStudentHomeworks">
+        <![CDATA[
+            SELECT homework.*
+            FROM Course_Homework homework
+            JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
+            WHERE homework.targetDate > ? AND homework.targetDate < ?
+            AND homework.isDraft = 0
+            AND studentHomework.studentId = ?
+			[$OTHER$]
+        ]]>
+    </sql>
+    <sql id="countUndoneHomeworks">
+        <![CDATA[
+	        SELECT count(DISTINCT homework.homeworkId) as count
+            FROM Course_Homework homework
+            JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
+            WHERE studentHomework.studentId = ? AND studentHomework.isDone = 0
+            AND homework.isDraft = 0
+        ]]>
+    </sql>
+    <sql id="getStudentHomeworkActivity">
+        <![CDATA[
+            SELECT homework.*
+            FROM Course_Homework homework
+            JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
+            WHERE homework.modificationDate > ? AND homework.modificationDate < ?
+            AND homework.isDraft = 0
+            AND studentHomework.studentId = ?
+            AND homework.courseId IN ([$GROUP_IDS$])
+        ]]>
+    </sql>
+
 </custom-sql>

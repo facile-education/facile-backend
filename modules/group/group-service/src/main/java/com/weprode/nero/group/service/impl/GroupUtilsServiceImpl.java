@@ -334,8 +334,8 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
-        // Limited to user's groups and all groups for direction
-        if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+        // Limited to user's groups for students and parents, else authorized
+        if (RoleUtilsLocalServiceUtil.isStudentOrParent(user) && !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         logger.info("User " + user.getFullName() + " fetches activity of group " + groupId);

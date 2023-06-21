@@ -183,7 +183,7 @@ public class CDTSessionServiceHttp {
 
 	public static org.json.JSONObject createSession(
 		HttpPrincipal httpPrincipal, long groupId, String subject, String room,
-		String startDate, String endDate, String teacherIds,
+		String startDate, String endDate, int slot, String teacherIds,
 		boolean isRecurrent) {
 
 		try {
@@ -192,8 +192,40 @@ public class CDTSessionServiceHttp {
 				_createSessionParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, groupId, subject, room, startDate, endDate,
+				methodKey, groupId, subject, room, startDate, endDate, slot,
 				teacherIds, isRecurrent);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject getCourseNextSessions(
+		HttpPrincipal httpPrincipal, long sessionId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				CDTSessionServiceUtil.class, "getCourseNextSessions",
+				_getCourseNextSessionsParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, sessionId);
 
 			Object returnObj = null;
 
@@ -230,7 +262,9 @@ public class CDTSessionServiceHttp {
 	private static final Class<?>[] _createSessionParameterTypes4 =
 		new Class[] {
 			long.class, String.class, String.class, String.class, String.class,
-			String.class, boolean.class
+			int.class, String.class, boolean.class
 		};
+	private static final Class<?>[] _getCourseNextSessionsParameterTypes5 =
+		new Class[] {long.class};
 
 }

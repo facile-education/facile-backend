@@ -36,6 +36,12 @@ public class HomeworkServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.course.service.impl.HomeworkServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static org.json.JSONObject cancelDrop(long homeworkId)
+		throws SystemException {
+
+		return getService().cancelDrop(homeworkId);
+	}
+
 	public static org.json.JSONObject correctFile(
 			long homeworkId, long studentId, String comment)
 		throws SystemException {
@@ -43,14 +49,35 @@ public class HomeworkServiceUtil {
 		return getService().correctFile(homeworkId, studentId, comment);
 	}
 
+	public static org.json.JSONObject countHomeworksToCorrect()
+		throws SystemException {
+
+		return getService().countHomeworksToCorrect();
+	}
+
+	public static org.json.JSONObject countUndoneHomeworks(long studentId)
+		throws SystemException {
+
+		return getService().countUndoneHomeworks(studentId);
+	}
+
 	public static org.json.JSONObject createHomework(
 			long courseId, long sourceSessionId, long targetSessionId,
-			String targetDate, int homeworkType, String students, String blocks)
+			String targetDateStr, int homeworkType, int estimatedTime,
+			String students, String blocks, String publicationDateStr,
+			boolean isDraft)
 		throws SystemException {
 
 		return getService().createHomework(
-			courseId, sourceSessionId, targetSessionId, targetDate,
-			homeworkType, students, blocks);
+			courseId, sourceSessionId, targetSessionId, targetDateStr,
+			homeworkType, estimatedTime, students, blocks, publicationDateStr,
+			isDraft);
+	}
+
+	public static org.json.JSONObject deleteHomework(long homeworkId)
+		throws SystemException {
+
+		return getService().deleteHomework(homeworkId);
 	}
 
 	public static org.json.JSONObject dropHomeworkFile(
@@ -58,13 +85,6 @@ public class HomeworkServiceUtil {
 		throws SystemException {
 
 		return getService().dropHomeworkFile(homeworkId, fileEntryId);
-	}
-
-	public static org.json.JSONObject getFutureStudentHomeworks(
-			long studentId, boolean undoneOnly)
-		throws PortalException, SystemException {
-
-		return getService().getFutureStudentHomeworks(studentId, undoneOnly);
 	}
 
 	/**
@@ -76,12 +96,13 @@ public class HomeworkServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static org.json.JSONObject getPreviousStudentHomeworks(
-			long studentId, String maxDateStr, boolean undoneOnly)
+	public static org.json.JSONObject getStudentHomeworks(
+			long studentId, String minDateStr, String maxDateStr,
+			boolean undoneOnly)
 		throws PortalException, SystemException {
 
-		return getService().getPreviousStudentHomeworks(
-			studentId, maxDateStr, undoneOnly);
+		return getService().getStudentHomeworks(
+			studentId, minDateStr, maxDateStr, undoneOnly);
 	}
 
 	public static org.json.JSONObject getTeacherHomeworksToCorrect()
@@ -97,13 +118,14 @@ public class HomeworkServiceUtil {
 	}
 
 	public static org.json.JSONObject updateHomework(
-			long homeworkId, long targetSessionId, String targetDate,
-			int homeworkType, String students, String blocks)
+			long homeworkId, long targetSessionId, String targetDateStr,
+			int estimatedTime, String students, String blocks,
+			String publicationDateStr, boolean isDraft)
 		throws SystemException {
 
 		return getService().updateHomework(
-			homeworkId, targetSessionId, targetDate, homeworkType, students,
-			blocks);
+			homeworkId, targetSessionId, targetDateStr, estimatedTime, students,
+			blocks, publicationDateStr, isDraft);
 	}
 
 	public static HomeworkService getService() {

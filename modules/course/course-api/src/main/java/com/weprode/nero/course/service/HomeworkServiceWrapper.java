@@ -31,6 +31,13 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject cancelDrop(long homeworkId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _homeworkService.cancelDrop(homeworkId);
+	}
+
+	@Override
 	public org.json.JSONObject correctFile(
 			long homeworkId, long studentId, String comment)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -39,14 +46,38 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject countHomeworksToCorrect()
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _homeworkService.countHomeworksToCorrect();
+	}
+
+	@Override
+	public org.json.JSONObject countUndoneHomeworks(long studentId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _homeworkService.countUndoneHomeworks(studentId);
+	}
+
+	@Override
 	public org.json.JSONObject createHomework(
 			long courseId, long sourceSessionId, long targetSessionId,
-			String targetDate, int homeworkType, String students, String blocks)
+			String targetDateStr, int homeworkType, int estimatedTime,
+			String students, String blocks, String publicationDateStr,
+			boolean isDraft)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _homeworkService.createHomework(
-			courseId, sourceSessionId, targetSessionId, targetDate,
-			homeworkType, students, blocks);
+			courseId, sourceSessionId, targetSessionId, targetDateStr,
+			homeworkType, estimatedTime, students, blocks, publicationDateStr,
+			isDraft);
+	}
+
+	@Override
+	public org.json.JSONObject deleteHomework(long homeworkId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _homeworkService.deleteHomework(homeworkId);
 	}
 
 	@Override
@@ -55,16 +86,6 @@ public class HomeworkServiceWrapper
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _homeworkService.dropHomeworkFile(homeworkId, fileEntryId);
-	}
-
-	@Override
-	public org.json.JSONObject getFutureStudentHomeworks(
-			long studentId, boolean undoneOnly)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			   com.liferay.portal.kernel.exception.SystemException {
-
-		return _homeworkService.getFutureStudentHomeworks(
-			studentId, undoneOnly);
 	}
 
 	/**
@@ -78,13 +99,14 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getPreviousStudentHomeworks(
-			long studentId, String maxDateStr, boolean undoneOnly)
+	public org.json.JSONObject getStudentHomeworks(
+			long studentId, String minDateStr, String maxDateStr,
+			boolean undoneOnly)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _homeworkService.getPreviousStudentHomeworks(
-			studentId, maxDateStr, undoneOnly);
+		return _homeworkService.getStudentHomeworks(
+			studentId, minDateStr, maxDateStr, undoneOnly);
 	}
 
 	@Override
@@ -103,13 +125,14 @@ public class HomeworkServiceWrapper
 
 	@Override
 	public org.json.JSONObject updateHomework(
-			long homeworkId, long targetSessionId, String targetDate,
-			int homeworkType, String students, String blocks)
+			long homeworkId, long targetSessionId, String targetDateStr,
+			int estimatedTime, String students, String blocks,
+			String publicationDateStr, boolean isDraft)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _homeworkService.updateHomework(
-			homeworkId, targetSessionId, targetDate, homeworkType, students,
-			blocks);
+			homeworkId, targetSessionId, targetDateStr, estimatedTime, students,
+			blocks, publicationDateStr, isDraft);
 	}
 
 	@Override

@@ -62,7 +62,7 @@ public class HomeworkCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{homeworkId=");
 		sb.append(homeworkId);
@@ -70,18 +70,20 @@ public class HomeworkCacheModel
 		sb.append(homeworkType);
 		sb.append(", courseId=");
 		sb.append(courseId);
+		sb.append(", teacherId=");
+		sb.append(teacherId);
+		sb.append(", modificationDate=");
+		sb.append(modificationDate);
 		sb.append(", sourceSessionId=");
 		sb.append(sourceSessionId);
-		sb.append(", fromDate=");
-		sb.append(fromDate);
 		sb.append(", targetSessionId=");
 		sb.append(targetSessionId);
 		sb.append(", targetDate=");
 		sb.append(targetDate);
-		sb.append(", teacherId=");
-		sb.append(teacherId);
 		sb.append(", isCustomStudentList=");
 		sb.append(isCustomStudentList);
+		sb.append(", estimatedTime=");
+		sb.append(estimatedTime);
 		sb.append(", publicationDate=");
 		sb.append(publicationDate);
 		sb.append(", isDraft=");
@@ -98,15 +100,16 @@ public class HomeworkCacheModel
 		homeworkImpl.setHomeworkId(homeworkId);
 		homeworkImpl.setHomeworkType(homeworkType);
 		homeworkImpl.setCourseId(courseId);
-		homeworkImpl.setSourceSessionId(sourceSessionId);
+		homeworkImpl.setTeacherId(teacherId);
 
-		if (fromDate == Long.MIN_VALUE) {
-			homeworkImpl.setFromDate(null);
+		if (modificationDate == Long.MIN_VALUE) {
+			homeworkImpl.setModificationDate(null);
 		}
 		else {
-			homeworkImpl.setFromDate(new Date(fromDate));
+			homeworkImpl.setModificationDate(new Date(modificationDate));
 		}
 
+		homeworkImpl.setSourceSessionId(sourceSessionId);
 		homeworkImpl.setTargetSessionId(targetSessionId);
 
 		if (targetDate == Long.MIN_VALUE) {
@@ -116,8 +119,8 @@ public class HomeworkCacheModel
 			homeworkImpl.setTargetDate(new Date(targetDate));
 		}
 
-		homeworkImpl.setTeacherId(teacherId);
 		homeworkImpl.setIsCustomStudentList(isCustomStudentList);
+		homeworkImpl.setEstimatedTime(estimatedTime);
 
 		if (publicationDate == Long.MIN_VALUE) {
 			homeworkImpl.setPublicationDate(null);
@@ -141,15 +144,17 @@ public class HomeworkCacheModel
 
 		courseId = objectInput.readLong();
 
+		teacherId = objectInput.readLong();
+		modificationDate = objectInput.readLong();
+
 		sourceSessionId = objectInput.readLong();
-		fromDate = objectInput.readLong();
 
 		targetSessionId = objectInput.readLong();
 		targetDate = objectInput.readLong();
 
-		teacherId = objectInput.readLong();
-
 		isCustomStudentList = objectInput.readBoolean();
+
+		estimatedTime = objectInput.readInt();
 		publicationDate = objectInput.readLong();
 
 		isDraft = objectInput.readBoolean();
@@ -163,15 +168,17 @@ public class HomeworkCacheModel
 
 		objectOutput.writeLong(courseId);
 
+		objectOutput.writeLong(teacherId);
+		objectOutput.writeLong(modificationDate);
+
 		objectOutput.writeLong(sourceSessionId);
-		objectOutput.writeLong(fromDate);
 
 		objectOutput.writeLong(targetSessionId);
 		objectOutput.writeLong(targetDate);
 
-		objectOutput.writeLong(teacherId);
-
 		objectOutput.writeBoolean(isCustomStudentList);
+
+		objectOutput.writeInt(estimatedTime);
 		objectOutput.writeLong(publicationDate);
 
 		objectOutput.writeBoolean(isDraft);
@@ -180,12 +187,13 @@ public class HomeworkCacheModel
 	public long homeworkId;
 	public int homeworkType;
 	public long courseId;
+	public long teacherId;
+	public long modificationDate;
 	public long sourceSessionId;
-	public long fromDate;
 	public long targetSessionId;
 	public long targetDate;
-	public long teacherId;
 	public boolean isCustomStudentList;
+	public int estimatedTime;
 	public long publicationDate;
 	public boolean isDraft;
 

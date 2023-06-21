@@ -98,18 +98,18 @@ public interface CDTSessionModel extends BaseModel<CDTSession> {
 	public void setEnd(Date end);
 
 	/**
-	 * Returns the week ID of this cdt session.
+	 * Returns the slot of this cdt session.
 	 *
-	 * @return the week ID of this cdt session
+	 * @return the slot of this cdt session
 	 */
-	public long getWeekId();
+	public int getSlot();
 
 	/**
-	 * Sets the week ID of this cdt session.
+	 * Sets the slot of this cdt session.
 	 *
-	 * @param weekId the week ID of this cdt session
+	 * @param slot the slot of this cdt session
 	 */
-	public void setWeekId(long weekId);
+	public void setSlot(int slot);
 
 	/**
 	 * Returns the full cours name of this cdt session.
@@ -169,20 +169,6 @@ public interface CDTSessionModel extends BaseModel<CDTSession> {
 	 * @param groupId the group ID of this cdt session
 	 */
 	public void setGroupId(long groupId);
-
-	/**
-	 * Returns the course item ID of this cdt session.
-	 *
-	 * @return the course item ID of this cdt session
-	 */
-	public long getCourseItemId();
-
-	/**
-	 * Sets the course item ID of this cdt session.
-	 *
-	 * @param courseItemId the course item ID of this cdt session
-	 */
-	public void setCourseItemId(long courseItemId);
 
 	/**
 	 * Returns the is manual of this cdt session.

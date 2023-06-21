@@ -54,12 +54,13 @@ import java.rmi.RemoteException;
 public class CourseServiceSoap {
 
 	public static org.json.JSONObject getCourseContent(
-			long courseId, String minDate, String maxDate)
+			long courseId, String minDateStr, String maxDateStr)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				CourseServiceUtil.getCourseContent(courseId, minDate, maxDate);
+				CourseServiceUtil.getCourseContent(
+					courseId, minDateStr, maxDateStr);
 
 			return returnValue;
 		}
@@ -76,6 +77,22 @@ public class CourseServiceSoap {
 		try {
 			org.json.JSONObject returnValue =
 				CourseServiceUtil.getSessionDetails(sessionId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getCourseStudents(long courseId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				CourseServiceUtil.getCourseStudents(courseId);
 
 			return returnValue;
 		}

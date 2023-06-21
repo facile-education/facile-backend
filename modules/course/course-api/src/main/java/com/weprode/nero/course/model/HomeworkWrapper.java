@@ -45,12 +45,13 @@ public class HomeworkWrapper
 		attributes.put("homeworkId", getHomeworkId());
 		attributes.put("homeworkType", getHomeworkType());
 		attributes.put("courseId", getCourseId());
+		attributes.put("teacherId", getTeacherId());
+		attributes.put("modificationDate", getModificationDate());
 		attributes.put("sourceSessionId", getSourceSessionId());
-		attributes.put("fromDate", getFromDate());
 		attributes.put("targetSessionId", getTargetSessionId());
 		attributes.put("targetDate", getTargetDate());
-		attributes.put("teacherId", getTeacherId());
 		attributes.put("isCustomStudentList", isIsCustomStudentList());
+		attributes.put("estimatedTime", getEstimatedTime());
 		attributes.put("publicationDate", getPublicationDate());
 		attributes.put("isDraft", isIsDraft());
 
@@ -77,16 +78,22 @@ public class HomeworkWrapper
 			setCourseId(courseId);
 		}
 
+		Long teacherId = (Long)attributes.get("teacherId");
+
+		if (teacherId != null) {
+			setTeacherId(teacherId);
+		}
+
+		Date modificationDate = (Date)attributes.get("modificationDate");
+
+		if (modificationDate != null) {
+			setModificationDate(modificationDate);
+		}
+
 		Long sourceSessionId = (Long)attributes.get("sourceSessionId");
 
 		if (sourceSessionId != null) {
 			setSourceSessionId(sourceSessionId);
-		}
-
-		Date fromDate = (Date)attributes.get("fromDate");
-
-		if (fromDate != null) {
-			setFromDate(fromDate);
 		}
 
 		Long targetSessionId = (Long)attributes.get("targetSessionId");
@@ -101,17 +108,17 @@ public class HomeworkWrapper
 			setTargetDate(targetDate);
 		}
 
-		Long teacherId = (Long)attributes.get("teacherId");
-
-		if (teacherId != null) {
-			setTeacherId(teacherId);
-		}
-
 		Boolean isCustomStudentList = (Boolean)attributes.get(
 			"isCustomStudentList");
 
 		if (isCustomStudentList != null) {
 			setIsCustomStudentList(isCustomStudentList);
+		}
+
+		Integer estimatedTime = (Integer)attributes.get("estimatedTime");
+
+		if (estimatedTime != null) {
+			setEstimatedTime(estimatedTime);
 		}
 
 		Date publicationDate = (Date)attributes.get("publicationDate");
@@ -150,13 +157,13 @@ public class HomeworkWrapper
 	}
 
 	/**
-	 * Returns the from date of this homework.
+	 * Returns the estimated time of this homework.
 	 *
-	 * @return the from date of this homework
+	 * @return the estimated time of this homework
 	 */
 	@Override
-	public Date getFromDate() {
-		return model.getFromDate();
+	public int getEstimatedTime() {
+		return model.getEstimatedTime();
 	}
 
 	/**
@@ -197,6 +204,16 @@ public class HomeworkWrapper
 	@Override
 	public boolean getIsDraft() {
 		return model.getIsDraft();
+	}
+
+	/**
+	 * Returns the modification date of this homework.
+	 *
+	 * @return the modification date of this homework
+	 */
+	@Override
+	public Date getModificationDate() {
+		return model.getModificationDate();
 	}
 
 	/**
@@ -295,13 +312,13 @@ public class HomeworkWrapper
 	}
 
 	/**
-	 * Sets the from date of this homework.
+	 * Sets the estimated time of this homework.
 	 *
-	 * @param fromDate the from date of this homework
+	 * @param estimatedTime the estimated time of this homework
 	 */
 	@Override
-	public void setFromDate(Date fromDate) {
-		model.setFromDate(fromDate);
+	public void setEstimatedTime(int estimatedTime) {
+		model.setEstimatedTime(estimatedTime);
 	}
 
 	/**
@@ -342,6 +359,16 @@ public class HomeworkWrapper
 	@Override
 	public void setIsDraft(boolean isDraft) {
 		model.setIsDraft(isDraft);
+	}
+
+	/**
+	 * Sets the modification date of this homework.
+	 *
+	 * @param modificationDate the modification date of this homework
+	 */
+	@Override
+	public void setModificationDate(Date modificationDate) {
+		model.setModificationDate(modificationDate);
 	}
 
 	/**
