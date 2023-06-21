@@ -320,17 +320,19 @@ public class SessionStudentLocalServiceUtil {
 	}
 
 	public static org.json.JSONArray getStudentSessions(
-		long studentId, java.util.Date minDate, java.util.Date maxDate) {
+		com.liferay.portal.kernel.model.User user, long studentId,
+		java.util.Date minDate, java.util.Date maxDate) {
 
-		return getService().getStudentSessions(studentId, minDate, maxDate);
+		return getService().getStudentSessions(
+			user, studentId, minDate, maxDate);
 	}
 
 	public static org.json.JSONArray getStudentSessions(
-		long studentId, java.util.Date minDate, java.util.Date maxDate,
-		boolean withFired) {
+		com.liferay.portal.kernel.model.User user, long studentId,
+		java.util.Date minDate, java.util.Date maxDate, boolean withFired) {
 
 		return getService().getStudentSessions(
-			studentId, minDate, maxDate, withFired);
+			user, studentId, minDate, maxDate, withFired);
 	}
 
 	public static boolean markStudentPresent(

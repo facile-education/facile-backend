@@ -127,7 +127,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
             // 1. SchoolLife sessions
             JSONArray jsonSessions = new JSONArray();
             if (studentId > 0) {
-                jsonSessions = SessionStudentLocalServiceUtil.getStudentSessions(studentId, minDate, maxDate);
+                jsonSessions = SessionStudentLocalServiceUtil.getStudentSessions(user, studentId, minDate, maxDate);
             }
 
             // 2. CDT sessions

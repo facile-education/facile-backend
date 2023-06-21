@@ -172,7 +172,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             cal.add(Calendar.DATE, 1);
             Date maxDate = cal.getTime();
 
-            JSONArray jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(userId, minDate, maxDate);
+            JSONArray jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(user, userId, minDate, maxDate);
             for (int i = 0 ; i < jsonSchoollifeSessions.length() ; i++) {
                 JSONObject jsonSchoollifeSession = jsonSchoollifeSessions.getJSONObject(i);
                 // Build teacher list as string

@@ -10,12 +10,8 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
-import com.weprode.nero.school.life.model.SchoollifeSlot;
 import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
-import com.weprode.nero.school.life.service.SchoollifeSlotLocalServiceUtil;
-import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.school.life.service.base.SchoollifeSessionServiceBaseImpl;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,45 +60,7 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
             List<SchoollifeSession> sessions = SchoollifeSessionLocalServiceUtil.getWeekSessions(schoolId, type, currentDate);
 
             for (SchoollifeSession session : sessions) {
-                SchoollifeSlot slot = SchoollifeSlotLocalServiceUtil.getSchoollifeSlot(session.getSchoollifeSlotId());
-
-                JSONObject jsonSession = new JSONObject();
-                jsonSession.put(JSONConstants.SESSION_ID, session.getSchoollifeSessionId());
-                jsonSession.put(JSONConstants.START_DATE, df.format(session.getStartDate()));
-                jsonSession.put(JSONConstants.END_DATE, df.format(session.getEndDate()));
-                jsonSession.put(JSONConstants.ROOM, slot.getRoom());
-                jsonSession.put(JSONConstants.TYPE, session.getType());
-
-                User teacher = UserLocalServiceUtil.getUser(slot.getTeacherId());
-                JSONObject jsonTeacher = new JSONObject();
-                jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
-                jsonTeacher.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
-                jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());
-                jsonSession.put(JSONConstants.TEACHER, jsonTeacher);
-
-                int nbRegisteredStudents = SessionStudentLocalServiceUtil.getNbRegisteredStudents(session.getSchoollifeSessionId());
-                jsonSession.put(JSONConstants.CAPACITY, slot.getCapacity());
-                jsonSession.put(JSONConstants.NB_REGISTERED_STUDENTS, nbRegisteredStudents);
-
-                int nbInscriptionLeft = slot.getCapacity() - nbRegisteredStudents;
-
-                if (session.getType() == SchoollifeConstants.TYPE_DEPANNAGE) {
-                    jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 && user.getUserId() == teacher.getUserId());
-                } else if (session.getType() == SchoollifeConstants.TYPE_RENVOI) {
-                    jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 &&
-                            (user.getUserId() == teacher.getUserId() ||
-                            RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
-                            RoleUtilsLocalServiceUtil.isSecretariat(user) ||
-                            RoleUtilsLocalServiceUtil.isDoyen(user))
-                    );
-                }
-
-                jsonSession.put(JSONConstants.CAN_UPDATE_SLOT,
-                        RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
-                        RoleUtilsLocalServiceUtil.isSecretariat(user) ||
-                        RoleUtilsLocalServiceUtil.isDoyen(user)
-                );
-                jsonSessions.put(jsonSession);
+                jsonSessions.put(SchoollifeSessionLocalServiceUtil.formatSchoollifeSession(session, user));
             }
 
             result.put(JSONConstants.SESSIONS, jsonSessions);

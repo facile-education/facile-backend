@@ -107,7 +107,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			// 2. Schoollife sessions
 			JSONArray jsonSchoollifeSessions = new JSONArray();
 			if (RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
-				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(targetUser.getUserId(), minDate, maxDate);
+				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(currentUser, targetUser.getUserId(), minDate, maxDate);
 			} else if (RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
 				jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), minDate, maxDate);
 			}
