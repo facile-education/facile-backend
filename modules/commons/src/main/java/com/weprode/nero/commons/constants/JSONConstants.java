@@ -355,7 +355,6 @@ public class JSONConstants {
     public static final String SESSION_SUBJECT = "sessionSubject";
     public static final String SESSION_DATE = "sessionDate";
     public static final String TEACHER_NAME = "teacherName";
-    public static final String SCHOOLLIFE_SESSION_ID = "schoollifeSessionId";
     public static final String SOURCE_SCHOOLLIFE_SESSION_ID = "sourceSchoollifeSessionId";
     public static final String CANDIDATE_SESSIONS = "candidateSessions";
     public static final String PENDING_RENVOIS = "pendingRenvois";
@@ -553,6 +552,8 @@ public class JSONConstants {
     public static final String IS_SESSION_EXPIRED = "isSessionExpired";
     public static final String IS_SESSION_WARNING = "isSessionWarning";
     public static final String CAN_SAVE_TEACHER_SUBSTITUTE = "canSaveTeacherSubstitute";
+    public static final String CAN_REGISTER_STUDENT = "canRegisterStudent";
+    public static final String CAN_UPDATE_SLOT = "canUpdateSlot";
 
     // Success
     public static final String SUCCESS = "success";

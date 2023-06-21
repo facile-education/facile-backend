@@ -199,7 +199,7 @@ public class SessionStudentLocalServiceImpl extends SessionStudentLocalServiceBa
                         if (withFired || session.getType() != SchoollifeConstants.TYPE_RENVOI) {
                             if (!session.getStartDate().before(minDate) && session.getStartDate().before(maxDate)) {
                                 JSONObject schoollifeSessionJson = new JSONObject();
-                                schoollifeSessionJson.put(JSONConstants.SCHOOLLIFE_SESSION_ID, studentSession.getSchoollifeSessionId());
+                                schoollifeSessionJson.put(JSONConstants.SESSION_ID, studentSession.getSchoollifeSessionId());
                                 schoollifeSessionJson.put(JSONConstants.START_DATE, df.format(session.getStartDate()));
                                 schoollifeSessionJson.put(JSONConstants.END_DATE, df.format(session.getEndDate()));
                                 String sessionName = SchoollifeSessionLocalServiceUtil.getSessionName(studentSession.getSchoollifeSessionId());
