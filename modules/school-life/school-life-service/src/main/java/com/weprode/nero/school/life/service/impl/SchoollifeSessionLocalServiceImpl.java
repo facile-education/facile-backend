@@ -194,7 +194,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
 
                             // Convert schoollife session to JSON
                             JSONObject jsonSession = new JSONObject();
-                            jsonSession.put(JSONConstants.SCHOOLLIFE_SESSION_ID, slotSession.getSchoollifeSessionId());
+                            jsonSession.put(JSONConstants.SESSION_ID, slotSession.getSchoollifeSessionId());
                             jsonSession.put(JSONConstants.START_DATE, df.format(slotSession.getStartDate()));
                             jsonSession.put(JSONConstants.END_DATE, df.format(slotSession.getEndDate()));
                             jsonSession.put(JSONConstants.ROOM, teacherSlot.getRoom());

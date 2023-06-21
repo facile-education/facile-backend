@@ -71,7 +71,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 if (pendingRenvoi.getSourceSchoollifeSessionId() != 0 || SessionTeacherLocalServiceUtil.hasTeacherSession(teacher.getUserId(), pendingRenvoi.getSourceSessionId())) {
 
                     JSONObject jsonRenvoi = new JSONObject();
-                    jsonRenvoi.put(JSONConstants.SCHOOLLIFE_SESSION_ID, pendingRenvoi.getSchoollifeSessionId());
+                    jsonRenvoi.put(JSONConstants.SESSION_ID, pendingRenvoi.getSchoollifeSessionId());
                     if (pendingRenvoi.getSourceSessionId() != 0) {
                         jsonRenvoi.put(JSONConstants.SOURCE_SESSION_ID, pendingRenvoi.getSourceSessionId());
                         jsonRenvoi.put(JSONConstants.SOURCE_SCHOOLLIFE_SESSION_ID, 0);
