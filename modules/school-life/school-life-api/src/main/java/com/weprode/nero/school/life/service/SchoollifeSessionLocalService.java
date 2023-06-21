@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
@@ -39,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -213,6 +215,10 @@ public interface SchoollifeSessionLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public SchoollifeSession fetchSchoollifeSession(long schoollifeSessionId);
+
+	public JSONObject formatSchoollifeSession(
+			SchoollifeSession session, User user)
+		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

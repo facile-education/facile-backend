@@ -2,13 +2,18 @@ package com.weprode.nero.school.life.service.impl;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SchoollifeSlot;
 import com.weprode.nero.school.life.service.SchoollifeSessionLocalServiceUtil;
+import com.weprode.nero.school.life.service.SchoollifeSlotLocalServiceUtil;
 import com.weprode.nero.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.nero.school.life.service.base.SchoollifeSessionLocalServiceBaseImpl;
 import org.json.JSONArray;
@@ -212,6 +217,53 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
         }
 
         return jsonSessions;
+    }
+
+    public JSONObject formatSchoollifeSession(SchoollifeSession session, User user) throws PortalException {
+        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+
+        JSONObject jsonSession = new JSONObject();
+        SchoollifeSlot slot = SchoollifeSlotLocalServiceUtil.getSchoollifeSlot(session.getSchoollifeSlotId());
+
+        jsonSession.put(JSONConstants.SESSION_ID, session.getSchoollifeSessionId());
+        jsonSession.put(JSONConstants.START_DATE, df.format(session.getStartDate()));
+        jsonSession.put(JSONConstants.END_DATE, df.format(session.getEndDate()));
+        jsonSession.put(JSONConstants.ROOM, slot.getRoom());
+        jsonSession.put(JSONConstants.TYPE, session.getType());
+
+        JSONArray jsonTeachers = new JSONArray();
+        User teacher = UserLocalServiceUtil.getUser(slot.getTeacherId());
+        JSONObject jsonTeacher = new JSONObject();
+        jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
+        jsonTeacher.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
+        jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());
+        jsonTeachers.put(jsonTeacher);
+        jsonSession.put(JSONConstants.TEACHERS, jsonTeachers);
+
+        int nbRegisteredStudents = SessionStudentLocalServiceUtil.getNbRegisteredStudents(session.getSchoollifeSessionId());
+        jsonSession.put(JSONConstants.CAPACITY, slot.getCapacity());
+        jsonSession.put(JSONConstants.NB_REGISTERED_STUDENTS, nbRegisteredStudents);
+
+        int nbInscriptionLeft = slot.getCapacity() - nbRegisteredStudents;
+
+        if (session.getType() == SchoollifeConstants.TYPE_DEPANNAGE) {
+            jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 && user.getUserId() == teacher.getUserId());
+        } else if (session.getType() == SchoollifeConstants.TYPE_RENVOI) {
+            jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 &&
+                    (user.getUserId() == teacher.getUserId() ||
+                            RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
+                            RoleUtilsLocalServiceUtil.isSecretariat(user) ||
+                            RoleUtilsLocalServiceUtil.isDoyen(user))
+            );
+        }
+
+        jsonSession.put(JSONConstants.CAN_UPDATE_SLOT,
+                RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
+                        RoleUtilsLocalServiceUtil.isSecretariat(user) ||
+                        RoleUtilsLocalServiceUtil.isDoyen(user)
+        );
+
+        return jsonSession;
     }
 
 

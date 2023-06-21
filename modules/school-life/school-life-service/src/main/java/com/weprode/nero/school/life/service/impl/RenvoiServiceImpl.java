@@ -259,7 +259,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
             Date minDate = cal.getTime();
 
             // 1. SchoolLife sessions
-            JSONArray candidateSessionsJson = SessionStudentLocalServiceUtil.getStudentSessions(studentId, minDate, schoollifeSession.getEndDate(), false);
+            JSONArray candidateSessionsJson = SessionStudentLocalServiceUtil.getStudentSessions(user, studentId, minDate, schoollifeSession.getEndDate(), false);
 
             // 2. CDT sessions
             List<CDTSession> studentDaySessions = CDTSessionLocalServiceUtil.getStudentSessions(studentId, minDate, schoollifeSession.getEndDate());

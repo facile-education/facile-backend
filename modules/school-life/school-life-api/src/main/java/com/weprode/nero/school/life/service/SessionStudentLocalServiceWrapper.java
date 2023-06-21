@@ -358,19 +358,20 @@ public class SessionStudentLocalServiceWrapper
 
 	@Override
 	public org.json.JSONArray getStudentSessions(
-		long studentId, java.util.Date minDate, java.util.Date maxDate) {
+		com.liferay.portal.kernel.model.User user, long studentId,
+		java.util.Date minDate, java.util.Date maxDate) {
 
 		return _sessionStudentLocalService.getStudentSessions(
-			studentId, minDate, maxDate);
+			user, studentId, minDate, maxDate);
 	}
 
 	@Override
 	public org.json.JSONArray getStudentSessions(
-		long studentId, java.util.Date minDate, java.util.Date maxDate,
-		boolean withFired) {
+		com.liferay.portal.kernel.model.User user, long studentId,
+		java.util.Date minDate, java.util.Date maxDate, boolean withFired) {
 
 		return _sessionStudentLocalService.getStudentSessions(
-			studentId, minDate, maxDate, withFired);
+			user, studentId, minDate, maxDate, withFired);
 	}
 
 	@Override

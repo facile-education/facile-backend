@@ -237,6 +237,14 @@ public class SchoollifeSessionLocalServiceUtil {
 		return getService().fetchSchoollifeSession(schoollifeSessionId);
 	}
 
+	public static org.json.JSONObject formatSchoollifeSession(
+			SchoollifeSession session,
+			com.liferay.portal.kernel.model.User user)
+		throws PortalException {
+
+		return getService().formatSchoollifeSession(session, user);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 

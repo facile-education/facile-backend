@@ -266,6 +266,16 @@ public class SchoollifeSessionLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject formatSchoollifeSession(
+			com.weprode.nero.school.life.model.SchoollifeSession session,
+			com.liferay.portal.kernel.model.User user)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _schoollifeSessionLocalService.formatSchoollifeSession(
+			session, user);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
