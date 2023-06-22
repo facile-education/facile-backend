@@ -9,13 +9,9 @@ public class MenuEntry {
     public static final MenuEntry GROUPS = new MenuEntry(1, "icon-nav-espace-collab.svg", "groups", 1, "Groups");
     public static final MenuEntry DOCUMENTS = new MenuEntry(2, "icon-nav-documents.svg", "documents", 2, "Documents");
     public static final MenuEntry MESSAGING = new MenuEntry(3, "icon-nav-communication.svg", "messaging", 3, "Messaging");
-
     public static final MenuEntry CDT = new MenuEntry(4, StringPool.BLANK, "cdt", 0, "Course");
     public static final MenuEntry HORAIRES = new MenuEntry(5, StringPool.BLANK, "horaires", 1, "Horaires");
     public static final MenuEntry HHC = new MenuEntry(6, StringPool.BLANK, "horaires-hors-cadre", 2, "NotUsualSlotsManager");
-    public static final MenuEntry PROGRESSION = new MenuEntry(7, StringPool.BLANK, "progression", 3, "Progression");
-
-    public static final MenuEntry SCHOOL_LIFE = new MenuEntry("icon-nav-vie-scolaire.svg", "school-life", 4, Arrays.asList(CDT, HORAIRES, HHC, PROGRESSION));
 
     public static final MenuEntry UNIVERSALIS = new MenuEntry(8, StringPool.BLANK, "universalis", 0, "ExternalResource");
     public static final MenuEntry UNIVERSALIS_JUNIOR = new MenuEntry(9, StringPool.BLANK, "universalis-junior", 1, "ExternalResource");
@@ -75,7 +71,9 @@ public class MenuEntry {
         menu.add(GROUPS);
         menu.add(DOCUMENTS);
         menu.add(MESSAGING);
-        menu.add(SCHOOL_LIFE.clone());
+        menu.add(CDT);
+        menu.add(HORAIRES);
+        menu.add(HHC);
         menu.add(RESOURCES.clone());
         menu.add(ADMINISTRATION.clone());
 

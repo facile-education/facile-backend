@@ -199,6 +199,9 @@ public class JSONConstants {
     public static final String IS_LANDING_PAGE = "isLandingPage";
     public static final String POSITION = "position";
     public static final String COMPONENT = "component";
+    public static final String NOTIFICATIONS = "notifications";
+    public static final String MESSAGING = "messaging";
+    public static final String SCHOOLLIFE = "schoollife";
 
     // Document library
     public static final String FILE_NAME = "fileName";
