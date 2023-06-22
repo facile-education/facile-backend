@@ -15,8 +15,6 @@
 package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.schedule.model.CourseDetails;
 import com.weprode.nero.schedule.service.base.CourseDetailsLocalServiceBaseImpl;
 import com.weprode.nero.schedule.utils.CourseColorUtil;
@@ -31,26 +29,24 @@ import org.osgi.service.component.annotations.Component;
 )
 public class CourseDetailsLocalServiceImpl extends CourseDetailsLocalServiceBaseImpl {
 
-	private static final Log logger = LogFactoryUtil.getLog(CourseDetailsLocalServiceImpl.class);
-
 	public String getCourseColor(long groupId) {
 
-		CourseDetails courseDetails;
+		CourseDetails courseDetails = null;
 		try {
-			courseDetails = courseDetailsPersistence.findByPrimaryKey(groupId);
-			if (courseDetails != null) {
-				if (courseDetails.getColor() == null || courseDetails.getColor().equals("")) {
-					int nbExistingGroupColors = courseDetailsPersistence.countAll();
-					String color = CourseColorUtil.getNewColor(nbExistingGroupColors);
-					courseDetails.setColor(color);
-					courseDetails = courseDetailsPersistence.update(courseDetails);
-				}
-				return courseDetails.getColor();
-			}
+			courseDetails = courseDetailsPersistence.fetchByPrimaryKey(groupId);
+			return courseDetails.getColor();
 		} catch (Exception e) {
 			// Nothing
 		}
-		return CourseColorUtil.getRandomColor();
+		if (courseDetails == null) {
+			courseDetails = courseDetailsPersistence.create(groupId);
+			String color = CourseColorUtil.getRandomColor();
+			// int nbExistingGroupColors = courseDetailsPersistence.countAll();
+			// String color = CourseColorUtil.getNewColor(nbExistingGroupColors);
+			courseDetails.setColor(color);
+			courseDetails = courseDetailsPersistence.update(courseDetails);
+		}
+		return courseDetails.getColor();
 	}
 
 	public void setCourseSubject(long groupId, long subjectId) {
