@@ -62,10 +62,6 @@ public class ScheduleConfigurationLocalServiceUtil {
 		return getService().addScheduleConfiguration(scheduleConfiguration);
 	}
 
-	public static org.json.JSONObject convertAsJson() {
-		return getService().convertAsJson();
-	}
-
 	/**
 	 * @throws PortalException
 	 */
@@ -229,6 +225,10 @@ public class ScheduleConfigurationLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static org.json.JSONObject getCalendarConfiguration() {
+		return getService().getCalendarConfiguration();
+	}
+
 	public static List<Integer> getH1Weeks() {
 		return getService().getH1Weeks();
 	}
@@ -264,6 +264,10 @@ public class ScheduleConfigurationLocalServiceUtil {
 
 	public static java.util.Date getProjectStartDate() {
 		return getService().getProjectStartDate();
+	}
+
+	public static org.json.JSONObject getScheduleConfiguration() {
+		return getService().getScheduleConfiguration();
 	}
 
 	/**

@@ -53,11 +53,6 @@ public class ScheduleConfigurationLocalServiceWrapper
 			scheduleConfiguration);
 	}
 
-	@Override
-	public org.json.JSONObject convertAsJson() {
-		return _scheduleConfigurationLocalService.convertAsJson();
-	}
-
 	/**
 	 * @throws PortalException
 	 */
@@ -256,6 +251,11 @@ public class ScheduleConfigurationLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getCalendarConfiguration() {
+		return _scheduleConfigurationLocalService.getCalendarConfiguration();
+	}
+
+	@Override
 	public java.util.List<Integer> getH1Weeks() {
 		return _scheduleConfigurationLocalService.getH1Weeks();
 	}
@@ -298,6 +298,11 @@ public class ScheduleConfigurationLocalServiceWrapper
 	@Override
 	public java.util.Date getProjectStartDate() {
 		return _scheduleConfigurationLocalService.getProjectStartDate();
+	}
+
+	@Override
+	public org.json.JSONObject getScheduleConfiguration() {
+		return _scheduleConfigurationLocalService.getScheduleConfiguration();
 	}
 
 	/**

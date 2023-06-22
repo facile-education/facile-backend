@@ -34,12 +34,6 @@ public class ScheduleConfigurationServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getConfiguration(long schoolId, long childId) {
-		return _scheduleConfigurationService.getConfiguration(
-			schoolId, childId);
-	}
-
-	@Override
 	public org.json.JSONObject getGlobalConfiguration() {
 		return _scheduleConfigurationService.getGlobalConfiguration();
 	}
@@ -52,6 +46,11 @@ public class ScheduleConfigurationServiceWrapper
 	@Override
 	public String getOSGiServiceIdentifier() {
 		return _scheduleConfigurationService.getOSGiServiceIdentifier();
+	}
+
+	@Override
+	public org.json.JSONObject getScheduleConfiguration() {
+		return _scheduleConfigurationService.getScheduleConfiguration();
 	}
 
 	@Override

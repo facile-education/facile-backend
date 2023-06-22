@@ -6,6 +6,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.schedule.model.ScheduleConfiguration;
 import com.weprode.nero.schedule.service.base.ScheduleConfigurationLocalServiceBaseImpl;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -128,13 +129,37 @@ public class ScheduleConfigurationLocalServiceImpl
 		return weeksList;
 	}
 
-	public JSONObject convertAsJson() {
-
+	public JSONObject getCalendarConfiguration () {
 		JSONObject jsonConfig = new JSONObject();
 
 		try {
 			ScheduleConfiguration config = scheduleConfigurationPersistence.findAll().get(0);
 			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+
+			jsonConfig.put(JSONConstants.SCHOOL_YEAR_START_DATE, sdf.format(config.getSchoolYearStartDate()));
+			jsonConfig.put(JSONConstants.SCHOOL_YEAR_END_DATE, sdf.format(config.getSchoolYearEndDate()));
+
+			int[] schoolDay = {1, 2, 3, 4, 5}; // TODO: To make customizable
+			JSONArray jsonSchoolDay = new JSONArray(schoolDay);
+			jsonConfig.put(JSONConstants.SCHOOL_DAYS, jsonSchoolDay);
+
+			jsonConfig.put(JSONConstants.START_DAY_TIME, "07:55"); // TODO: To make customizable depending of user min P1 and max P12
+			jsonConfig.put(JSONConstants.END_DAY_TIME, "17:55");
+
+		} catch (Exception e) {
+			logger.error("Error fetching school year end date", e);
+		}
+
+		return jsonConfig;
+	}
+
+	public JSONObject getScheduleConfiguration() {
+		JSONObject jsonConfig = new JSONObject();
+
+		try {
+			ScheduleConfiguration config = scheduleConfigurationPersistence.findAll().get(0);
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			jsonConfig.put(JSONConstants.START_DATE_PROJECT, sdf.format(config.getProjectStartDate()));
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_START_DATE, sdf.format(config.getSchoolYearStartDate()));
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_SEMESTER_DATE, sdf.format(config.getSchoolYearSemesterDate()));
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_END_DATE, sdf.format(config.getSchoolYearEndDate()));

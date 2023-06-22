@@ -80,8 +80,6 @@ public interface ScheduleConfigurationLocalService
 	public ScheduleConfiguration addScheduleConfiguration(
 		ScheduleConfiguration scheduleConfiguration);
 
-	public JSONObject convertAsJson();
-
 	/**
 	 * @throws PortalException
 	 */
@@ -212,6 +210,9 @@ public interface ScheduleConfigurationLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getCalendarConfiguration();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Integer> getH1Weeks();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -237,6 +238,9 @@ public interface ScheduleConfigurationLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Date getProjectStartDate();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getScheduleConfiguration();
 
 	/**
 	 * Returns the schedule configuration with the primary key.
