@@ -50,10 +50,6 @@ public interface ScheduleConfigurationService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.schedule.service.impl.ScheduleConfigurationServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the schedule configuration remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link ScheduleConfigurationServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "get-configuration")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getConfiguration(long schoolId, long childId);
-
 	@JSONWebService(method = "GET", value = "get-global-configuration")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getGlobalConfiguration();
@@ -64,6 +60,10 @@ public interface ScheduleConfigurationService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
+
+	@JSONWebService(method = "GET", value = "get-schedule-configuration")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getScheduleConfiguration();
 
 	@JSONWebService(method = "POST", value = "save-global-configuration")
 	public JSONObject saveGlobalConfiguration(

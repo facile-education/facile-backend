@@ -52,16 +52,16 @@ import com.weprode.nero.schedule.service.ScheduleConfigurationServiceUtil;
  */
 public class ScheduleConfigurationServiceHttp {
 
-	public static org.json.JSONObject getConfiguration(
-		HttpPrincipal httpPrincipal, long schoolId, long childId) {
+	public static org.json.JSONObject getScheduleConfiguration(
+		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				ScheduleConfigurationServiceUtil.class, "getConfiguration",
-				_getConfigurationParameterTypes0);
+				ScheduleConfigurationServiceUtil.class,
+				"getScheduleConfiguration",
+				_getScheduleConfigurationParameterTypes0);
 
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, schoolId, childId);
+			MethodHandler methodHandler = new MethodHandler(methodKey);
 
 			Object returnObj = null;
 
@@ -155,8 +155,8 @@ public class ScheduleConfigurationServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(
 		ScheduleConfigurationServiceHttp.class);
 
-	private static final Class<?>[] _getConfigurationParameterTypes0 =
-		new Class[] {long.class, long.class};
+	private static final Class<?>[] _getScheduleConfigurationParameterTypes0 =
+		new Class[] {};
 	private static final Class<?>[] _getGlobalConfigurationParameterTypes1 =
 		new Class[] {};
 	private static final Class<?>[] _saveGlobalConfigurationParameterTypes2 =

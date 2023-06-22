@@ -33,12 +33,6 @@ public class ScheduleConfigurationServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.schedule.service.impl.ScheduleConfigurationServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static org.json.JSONObject getConfiguration(
-		long schoolId, long childId) {
-
-		return getService().getConfiguration(schoolId, childId);
-	}
-
 	public static org.json.JSONObject getGlobalConfiguration() {
 		return getService().getGlobalConfiguration();
 	}
@@ -50,6 +44,10 @@ public class ScheduleConfigurationServiceUtil {
 	 */
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static org.json.JSONObject getScheduleConfiguration() {
+		return getService().getScheduleConfiguration();
 	}
 
 	public static org.json.JSONObject saveGlobalConfiguration(

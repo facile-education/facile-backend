@@ -64,14 +64,12 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ScheduleConfigurationServiceSoap {
 
-	public static org.json.JSONObject getConfiguration(
-			long schoolId, long childId)
+	public static org.json.JSONObject getScheduleConfiguration()
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				ScheduleConfigurationServiceUtil.getConfiguration(
-					schoolId, childId);
+				ScheduleConfigurationServiceUtil.getScheduleConfiguration();
 
 			return returnValue;
 		}
