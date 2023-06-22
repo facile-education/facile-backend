@@ -185,6 +185,292 @@ public interface ActivityPersistence extends BasePersistence<Activity> {
 	public int countBygroupId(long groupId);
 
 	/**
+	 * Returns all the activities where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @return the matching activities
+	 */
+	public java.util.List<Activity> findByfileEntryId(long fileEntryId);
+
+	/**
+	 * Returns a range of all the activities where fileEntryId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @return the range of matching activities
+	 */
+	public java.util.List<Activity> findByfileEntryId(
+		long fileEntryId, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the activities where fileEntryId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching activities
+	 */
+	public java.util.List<Activity> findByfileEntryId(
+		long fileEntryId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Activity>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the activities where fileEntryId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching activities
+	 */
+	public java.util.List<Activity> findByfileEntryId(
+		long fileEntryId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Activity>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Returns the first activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching activity
+	 * @throws NoSuchActivityException if a matching activity could not be found
+	 */
+	public Activity findByfileEntryId_First(
+			long fileEntryId,
+			com.liferay.portal.kernel.util.OrderByComparator<Activity>
+				orderByComparator)
+		throws NoSuchActivityException;
+
+	/**
+	 * Returns the first activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching activity, or <code>null</code> if a matching activity could not be found
+	 */
+	public Activity fetchByfileEntryId_First(
+		long fileEntryId,
+		com.liferay.portal.kernel.util.OrderByComparator<Activity>
+			orderByComparator);
+
+	/**
+	 * Returns the last activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching activity
+	 * @throws NoSuchActivityException if a matching activity could not be found
+	 */
+	public Activity findByfileEntryId_Last(
+			long fileEntryId,
+			com.liferay.portal.kernel.util.OrderByComparator<Activity>
+				orderByComparator)
+		throws NoSuchActivityException;
+
+	/**
+	 * Returns the last activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching activity, or <code>null</code> if a matching activity could not be found
+	 */
+	public Activity fetchByfileEntryId_Last(
+		long fileEntryId,
+		com.liferay.portal.kernel.util.OrderByComparator<Activity>
+			orderByComparator);
+
+	/**
+	 * Returns the activities before and after the current activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param activityId the primary key of the current activity
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next activity
+	 * @throws NoSuchActivityException if a activity with the primary key could not be found
+	 */
+	public Activity[] findByfileEntryId_PrevAndNext(
+			long activityId, long fileEntryId,
+			com.liferay.portal.kernel.util.OrderByComparator<Activity>
+				orderByComparator)
+		throws NoSuchActivityException;
+
+	/**
+	 * Removes all the activities where fileEntryId = &#63; from the database.
+	 *
+	 * @param fileEntryId the file entry ID
+	 */
+	public void removeByfileEntryId(long fileEntryId);
+
+	/**
+	 * Returns the number of activities where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @return the number of matching activities
+	 */
+	public int countByfileEntryId(long fileEntryId);
+
+	/**
+	 * Returns all the activities where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @return the matching activities
+	 */
+	public java.util.List<Activity> findByfolderId(long folderId);
+
+	/**
+	 * Returns a range of all the activities where folderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param folderId the folder ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @return the range of matching activities
+	 */
+	public java.util.List<Activity> findByfolderId(
+		long folderId, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the activities where folderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param folderId the folder ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching activities
+	 */
+	public java.util.List<Activity> findByfolderId(
+		long folderId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Activity>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the activities where folderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param folderId the folder ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching activities
+	 */
+	public java.util.List<Activity> findByfolderId(
+		long folderId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Activity>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Returns the first activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching activity
+	 * @throws NoSuchActivityException if a matching activity could not be found
+	 */
+	public Activity findByfolderId_First(
+			long folderId,
+			com.liferay.portal.kernel.util.OrderByComparator<Activity>
+				orderByComparator)
+		throws NoSuchActivityException;
+
+	/**
+	 * Returns the first activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching activity, or <code>null</code> if a matching activity could not be found
+	 */
+	public Activity fetchByfolderId_First(
+		long folderId,
+		com.liferay.portal.kernel.util.OrderByComparator<Activity>
+			orderByComparator);
+
+	/**
+	 * Returns the last activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching activity
+	 * @throws NoSuchActivityException if a matching activity could not be found
+	 */
+	public Activity findByfolderId_Last(
+			long folderId,
+			com.liferay.portal.kernel.util.OrderByComparator<Activity>
+				orderByComparator)
+		throws NoSuchActivityException;
+
+	/**
+	 * Returns the last activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching activity, or <code>null</code> if a matching activity could not be found
+	 */
+	public Activity fetchByfolderId_Last(
+		long folderId,
+		com.liferay.portal.kernel.util.OrderByComparator<Activity>
+			orderByComparator);
+
+	/**
+	 * Returns the activities before and after the current activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param activityId the primary key of the current activity
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next activity
+	 * @throws NoSuchActivityException if a activity with the primary key could not be found
+	 */
+	public Activity[] findByfolderId_PrevAndNext(
+			long activityId, long folderId,
+			com.liferay.portal.kernel.util.OrderByComparator<Activity>
+				orderByComparator)
+		throws NoSuchActivityException;
+
+	/**
+	 * Removes all the activities where folderId = &#63; from the database.
+	 *
+	 * @param folderId the folder ID
+	 */
+	public void removeByfolderId(long folderId);
+
+	/**
+	 * Returns the number of activities where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @return the number of matching activities
+	 */
+	public int countByfolderId(long folderId);
+
+	/**
 	 * Caches the activity in the entity cache if it is enabled.
 	 *
 	 * @param activity the activity

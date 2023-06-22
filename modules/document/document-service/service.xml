@@ -82,6 +82,12 @@
 		<finder return-type="Collection" name="groupId">
 			<finder-column name="groupId" />
 		</finder>
+		<finder return-type="Collection" name="fileEntryId">
+			<finder-column name="fileEntryId" />
+		</finder>
+		<finder return-type="Collection" name="folderId">
+			<finder-column name="folderId" />
+		</finder>
 	</entity>
 
 	<entity name="WopiUtils" local-service="false" remote-service="true" />

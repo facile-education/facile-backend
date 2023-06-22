@@ -127,6 +127,10 @@ public interface ActivityLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public Activity deleteActivity(long activityId) throws PortalException;
 
+	public void deleteFileActivity(long fileEntryId);
+
+	public void deleteFolderActivity(long folderId);
+
 	public boolean deleteGroupActivity(long groupId);
 
 	/**

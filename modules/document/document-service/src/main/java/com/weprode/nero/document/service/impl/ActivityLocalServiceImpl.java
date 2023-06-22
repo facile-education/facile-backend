@@ -92,6 +92,22 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 		return false;
 	}
 
+	public void deleteFileActivity(long fileEntryId) {
+		try {
+			activityPersistence.removeByfileEntryId(fileEntryId);
+		} catch (Exception e) {
+			logger.error("Error deleting group activity for fileEntryId " + fileEntryId, e);
+		}
+	}
+
+	public void deleteFolderActivity(long folderId) {
+		try {
+			activityPersistence.removeByfolderId(folderId);
+		} catch (Exception e) {
+			logger.error("Error deleting group activity for folderId " + folderId, e);
+		}
+	}
+
 	public JSONObject convertActivityToJson(Activity activity) {
 		JSONObject jsonActivity = new JSONObject();
 

@@ -126,6 +126,16 @@ public class ActivityLocalServiceWrapper
 	}
 
 	@Override
+	public void deleteFileActivity(long fileEntryId) {
+		_activityLocalService.deleteFileActivity(fileEntryId);
+	}
+
+	@Override
+	public void deleteFolderActivity(long folderId) {
+		_activityLocalService.deleteFolderActivity(folderId);
+	}
+
+	@Override
 	public boolean deleteGroupActivity(long groupId) {
 		return _activityLocalService.deleteGroupActivity(groupId);
 	}
