@@ -504,8 +504,8 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			// Update parentFolder lastPostDate because it lost a subFolder (liferay doesn't handle that behaviour)
 			DLFolderLocalServiceUtil.updateLastPostDate(parentFolder.getFolderId(), new Date());
 
-			// Register activity
-			ActivityLocalServiceUtil.addActivity(0, folder.getFolderId(), userId, folder.getGroupId(), "", folder.getName(), ActivityConstants.TYPE_FOLDER_DELETION);
+			// Delete previous activity
+			ActivityLocalServiceUtil.deleteFolderActivity(folderId);
 		} else {
 			throw new NoSuchResourcePermissionException();
 		}

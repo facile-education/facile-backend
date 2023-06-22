@@ -123,6 +123,14 @@ public class ActivityLocalServiceUtil {
 		return getService().deleteActivity(activityId);
 	}
 
+	public static void deleteFileActivity(long fileEntryId) {
+		getService().deleteFileActivity(fileEntryId);
+	}
+
+	public static void deleteFolderActivity(long folderId) {
+		getService().deleteFolderActivity(folderId);
+	}
+
 	public static boolean deleteGroupActivity(long groupId) {
 		return getService().deleteGroupActivity(groupId);
 	}

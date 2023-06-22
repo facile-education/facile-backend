@@ -381,8 +381,8 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 			// Update parentFolder lastPostDate because it lost a file
 			DLFolderLocalServiceUtil.updateLastPostDate(parentFolder.getFolderId(), new Date());
 
-			// Register activity
-			ActivityLocalServiceUtil.addActivity(file.getFileEntryId(), file.getFolderId(), userId, file.getGroupId(), file.getTitle(), parentFolder.getName(), ActivityConstants.TYPE_FILE_DELETION);
+			// Delete previous activity
+			ActivityLocalServiceUtil.deleteFileActivity(file.getFileEntryId());
 		} else {
 			throw new NoSuchResourcePermissionException();
 		}

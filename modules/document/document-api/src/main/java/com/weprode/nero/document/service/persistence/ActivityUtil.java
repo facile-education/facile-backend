@@ -286,6 +286,342 @@ public class ActivityUtil {
 	}
 
 	/**
+	 * Returns all the activities where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @return the matching activities
+	 */
+	public static List<Activity> findByfileEntryId(long fileEntryId) {
+		return getPersistence().findByfileEntryId(fileEntryId);
+	}
+
+	/**
+	 * Returns a range of all the activities where fileEntryId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @return the range of matching activities
+	 */
+	public static List<Activity> findByfileEntryId(
+		long fileEntryId, int start, int end) {
+
+		return getPersistence().findByfileEntryId(fileEntryId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the activities where fileEntryId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching activities
+	 */
+	public static List<Activity> findByfileEntryId(
+		long fileEntryId, int start, int end,
+		OrderByComparator<Activity> orderByComparator) {
+
+		return getPersistence().findByfileEntryId(
+			fileEntryId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the activities where fileEntryId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching activities
+	 */
+	public static List<Activity> findByfileEntryId(
+		long fileEntryId, int start, int end,
+		OrderByComparator<Activity> orderByComparator, boolean useFinderCache) {
+
+		return getPersistence().findByfileEntryId(
+			fileEntryId, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching activity
+	 * @throws NoSuchActivityException if a matching activity could not be found
+	 */
+	public static Activity findByfileEntryId_First(
+			long fileEntryId, OrderByComparator<Activity> orderByComparator)
+		throws com.weprode.nero.document.exception.NoSuchActivityException {
+
+		return getPersistence().findByfileEntryId_First(
+			fileEntryId, orderByComparator);
+	}
+
+	/**
+	 * Returns the first activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching activity, or <code>null</code> if a matching activity could not be found
+	 */
+	public static Activity fetchByfileEntryId_First(
+		long fileEntryId, OrderByComparator<Activity> orderByComparator) {
+
+		return getPersistence().fetchByfileEntryId_First(
+			fileEntryId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching activity
+	 * @throws NoSuchActivityException if a matching activity could not be found
+	 */
+	public static Activity findByfileEntryId_Last(
+			long fileEntryId, OrderByComparator<Activity> orderByComparator)
+		throws com.weprode.nero.document.exception.NoSuchActivityException {
+
+		return getPersistence().findByfileEntryId_Last(
+			fileEntryId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching activity, or <code>null</code> if a matching activity could not be found
+	 */
+	public static Activity fetchByfileEntryId_Last(
+		long fileEntryId, OrderByComparator<Activity> orderByComparator) {
+
+		return getPersistence().fetchByfileEntryId_Last(
+			fileEntryId, orderByComparator);
+	}
+
+	/**
+	 * Returns the activities before and after the current activity in the ordered set where fileEntryId = &#63;.
+	 *
+	 * @param activityId the primary key of the current activity
+	 * @param fileEntryId the file entry ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next activity
+	 * @throws NoSuchActivityException if a activity with the primary key could not be found
+	 */
+	public static Activity[] findByfileEntryId_PrevAndNext(
+			long activityId, long fileEntryId,
+			OrderByComparator<Activity> orderByComparator)
+		throws com.weprode.nero.document.exception.NoSuchActivityException {
+
+		return getPersistence().findByfileEntryId_PrevAndNext(
+			activityId, fileEntryId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the activities where fileEntryId = &#63; from the database.
+	 *
+	 * @param fileEntryId the file entry ID
+	 */
+	public static void removeByfileEntryId(long fileEntryId) {
+		getPersistence().removeByfileEntryId(fileEntryId);
+	}
+
+	/**
+	 * Returns the number of activities where fileEntryId = &#63;.
+	 *
+	 * @param fileEntryId the file entry ID
+	 * @return the number of matching activities
+	 */
+	public static int countByfileEntryId(long fileEntryId) {
+		return getPersistence().countByfileEntryId(fileEntryId);
+	}
+
+	/**
+	 * Returns all the activities where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @return the matching activities
+	 */
+	public static List<Activity> findByfolderId(long folderId) {
+		return getPersistence().findByfolderId(folderId);
+	}
+
+	/**
+	 * Returns a range of all the activities where folderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param folderId the folder ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @return the range of matching activities
+	 */
+	public static List<Activity> findByfolderId(
+		long folderId, int start, int end) {
+
+		return getPersistence().findByfolderId(folderId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the activities where folderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param folderId the folder ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching activities
+	 */
+	public static List<Activity> findByfolderId(
+		long folderId, int start, int end,
+		OrderByComparator<Activity> orderByComparator) {
+
+		return getPersistence().findByfolderId(
+			folderId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the activities where folderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ActivityModelImpl</code>.
+	 * </p>
+	 *
+	 * @param folderId the folder ID
+	 * @param start the lower bound of the range of activities
+	 * @param end the upper bound of the range of activities (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching activities
+	 */
+	public static List<Activity> findByfolderId(
+		long folderId, int start, int end,
+		OrderByComparator<Activity> orderByComparator, boolean useFinderCache) {
+
+		return getPersistence().findByfolderId(
+			folderId, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching activity
+	 * @throws NoSuchActivityException if a matching activity could not be found
+	 */
+	public static Activity findByfolderId_First(
+			long folderId, OrderByComparator<Activity> orderByComparator)
+		throws com.weprode.nero.document.exception.NoSuchActivityException {
+
+		return getPersistence().findByfolderId_First(
+			folderId, orderByComparator);
+	}
+
+	/**
+	 * Returns the first activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching activity, or <code>null</code> if a matching activity could not be found
+	 */
+	public static Activity fetchByfolderId_First(
+		long folderId, OrderByComparator<Activity> orderByComparator) {
+
+		return getPersistence().fetchByfolderId_First(
+			folderId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching activity
+	 * @throws NoSuchActivityException if a matching activity could not be found
+	 */
+	public static Activity findByfolderId_Last(
+			long folderId, OrderByComparator<Activity> orderByComparator)
+		throws com.weprode.nero.document.exception.NoSuchActivityException {
+
+		return getPersistence().findByfolderId_Last(
+			folderId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching activity, or <code>null</code> if a matching activity could not be found
+	 */
+	public static Activity fetchByfolderId_Last(
+		long folderId, OrderByComparator<Activity> orderByComparator) {
+
+		return getPersistence().fetchByfolderId_Last(
+			folderId, orderByComparator);
+	}
+
+	/**
+	 * Returns the activities before and after the current activity in the ordered set where folderId = &#63;.
+	 *
+	 * @param activityId the primary key of the current activity
+	 * @param folderId the folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next activity
+	 * @throws NoSuchActivityException if a activity with the primary key could not be found
+	 */
+	public static Activity[] findByfolderId_PrevAndNext(
+			long activityId, long folderId,
+			OrderByComparator<Activity> orderByComparator)
+		throws com.weprode.nero.document.exception.NoSuchActivityException {
+
+		return getPersistence().findByfolderId_PrevAndNext(
+			activityId, folderId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the activities where folderId = &#63; from the database.
+	 *
+	 * @param folderId the folder ID
+	 */
+	public static void removeByfolderId(long folderId) {
+		getPersistence().removeByfolderId(folderId);
+	}
+
+	/**
+	 * Returns the number of activities where folderId = &#63;.
+	 *
+	 * @param folderId the folder ID
+	 * @return the number of matching activities
+	 */
+	public static int countByfolderId(long folderId) {
+		return getPersistence().countByfolderId(folderId);
+	}
+
+	/**
 	 * Caches the activity in the entity cache if it is enabled.
 	 *
 	 * @param activity the activity
