@@ -73,9 +73,8 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
             String sql = customSQL.get(getClass(), COUNT_HOMEWORKS_TO_CORRECT);
             SQLQuery q = session.createSQLQuery(sql);
             q.setCacheable(false);
-            q.addEntity("Course_Homework", HomeworkImpl.class);
-
             q.addScalar("count", Type.INTEGER);
+
             QueryPos qPos = QueryPos.getInstance(q);
             qPos.add(teacherId);
 
@@ -131,9 +130,8 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
             String sql = customSQL.get(getClass(), COUNT_UNDONE_HOMEWORKS);
             SQLQuery q = session.createSQLQuery(sql);
             q.setCacheable(false);
-            q.addEntity("Course_Homework", HomeworkImpl.class);
-
             q.addScalar("count", Type.INTEGER);
+
             QueryPos qPos = QueryPos.getInstance(q);
             qPos.add(studentId);
 

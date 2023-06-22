@@ -253,8 +253,8 @@ public class ContactCompletionLocalServiceImpl
 						}
 					}
 				}
-				JSONArray subjects = jsonSchool.getJSONArray(JSONConstants.SUBJECTS);
-				if (subjects != null) {
+				if (jsonSchool.has(JSONConstants.SUBJECTS)) {
+					JSONArray subjects = jsonSchool.getJSONArray(JSONConstants.SUBJECTS);
 					for (int i = 0; i < subjects.length(); i++) {
 						JSONObject subject = subjects.getJSONObject(i);
 						if (subject.has(JSONConstants.POPULATION_NAME) && stringMatches(subject.getString(JSONConstants.POPULATION_NAME), normalizedQuery)) {

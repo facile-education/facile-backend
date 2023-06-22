@@ -11,11 +11,16 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.menu.enums.MenuEntry;
 import com.weprode.nero.menu.service.SideMenuLocalServiceUtil;
 import com.weprode.nero.menu.service.SideMenuService;
 import com.weprode.nero.menu.service.base.SideMenuServiceBaseImpl;
+import com.weprode.nero.messaging.service.MessageFolderLocalServiceUtil;
+import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.school.life.service.RenvoiLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -50,6 +55,17 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
         }
 
         List<MenuEntry> userMenu = SideMenuLocalServiceUtil.getUserMenu(user);
+
+        // Notifications
+        JSONObject jsonNotifications = new JSONObject();
+        jsonNotifications.put(JSONConstants.MESSAGING, MessageLocalServiceUtil.countUnreadMessages(MessageFolderLocalServiceUtil.getUserInboxFolder(user.getUserId()).getFolderId()));
+        if (RoleUtilsLocalServiceUtil.isStudent(user)) {
+            jsonNotifications.put(JSONConstants.COURSES, HomeworkLocalServiceUtil.countUndoneHomeworks(user.getUserId()));
+        } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            jsonNotifications.put(JSONConstants.COURSES, HomeworkLocalServiceUtil.countHomeworksToCorrect(user.getUserId()));
+        }
+        jsonNotifications.put(JSONConstants.SCHOOLLIFE, RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId()).size());
+        result.put(JSONConstants.NOTIFICATIONS, jsonNotifications);
 
         result.put(JSONConstants.MENU, getMenuAsJSON(userMenu));
         boolean isMenuExpanded = false;
@@ -87,11 +103,10 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
         entry.put(JSONConstants.I18N_KEY, menuEntry.getKey());
         entry.put(JSONConstants.POSITION, menuEntry.getPosition());
         entry.put(JSONConstants.COMPONENT, menuEntry.getComponent());
-        // TODO Notifications
-        // entry.put(JSONConstants.NOTIFICATIONS);
         if (menuEntry.isLandingPage()) {
             entry.put(JSONConstants.IS_LANDING_PAGE, menuEntry.isLandingPage());
         }
+        // Recursive
         if (menuEntry.getEntries() != null) {
             entry.put(JSONConstants.MENU, getMenuAsJSON(menuEntry.getEntries()));
         }
