@@ -48,14 +48,6 @@ public class SessionStudentServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getSessions(
-		long studentId, long classId, String minDateStr, String maxDateStr) {
-
-		return _sessionStudentService.getSessions(
-			studentId, classId, minDateStr, maxDateStr);
-	}
-
-	@Override
 	public org.json.JSONObject markStudentsPresent(
 		long schoollifeSessionId, String studentsPresence) {
 

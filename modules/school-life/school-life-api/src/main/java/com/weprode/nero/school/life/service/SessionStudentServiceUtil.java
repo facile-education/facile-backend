@@ -49,14 +49,6 @@ public class SessionStudentServiceUtil {
 		return getService().getSessionMembers(schoollifeSessionId);
 	}
 
-	public static org.json.JSONObject getSessions(
-		long studentId, long classId, java.lang.String minDateStr,
-		java.lang.String maxDateStr) {
-
-		return getService().getSessions(
-			studentId, classId, minDateStr, maxDateStr);
-	}
-
 	public static org.json.JSONObject markStudentsPresent(
 		long schoollifeSessionId, java.lang.String studentsPresence) {
 
