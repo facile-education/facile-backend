@@ -281,6 +281,9 @@ public interface SessionContentLocalService
 	public Folder getSessionFolder(long sessionId)
 		throws PortalException, SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasSessionContent(long sessionId);
+
 	@Indexable(type = IndexableType.REINDEX)
 	public SessionContent updateSessionContent(
 			long teacherId, long sessionId, String title, JSONArray blocks,

@@ -1227,6 +1227,7 @@ public class GVESynchronizationManager {
             // Create associated group
             String orgName = school.getName() + " - " + getSessionName(sessionName);
             Organization coursOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(companyId, orgName, school.getOrganizationId(), OrgConstants.COURS_TYPE);
+            logger.info("toto2 " + sessionName);
 
             studentMap.put(sessionName, new ArrayList<>());
 
@@ -1734,7 +1735,7 @@ public class GVESynchronizationManager {
                             // Create CDT Session
                             try {
                                 CDTSession createdSession = CDTSessionLocalServiceUtil.createSession(coursOrg.getGroupId(), slotData.getSubject(),
-                                        sessionInfos.getStartSessionDate(), sessionInfos.getEndSessionDate(), getSlotNumber(slot), teacherIdList, room, sessionInfos.getFullCoursName(), true);
+                                        sessionInfos.getStartSessionDate(), sessionInfos.getEndSessionDate(), getSlotNumber(slot), teacherIdList, room, sessionInfos.getFullCoursName(), false);
                                 logger.info("CREATED SESSION " + createdSession.getSessionId() + " for coursName = " + coursName + " and from " + fullFormat.format(sessionInfos.getStartSessionDate()) + " to " + fullFormat.format(sessionInfos.getEndSessionDate()));
                                 newSessionIds.add(createdSession.getSessionId());
                                 existingCoursSessions.add(createdSession);
@@ -1760,7 +1761,7 @@ public class GVESynchronizationManager {
                         if (toDeleteSession.getIsManual()) {
                             logger.info("Session "+toDeleteSession.getSessionId()+" not deleted because manually created");
                         } else {
-                            if (SessionContentLocalServiceUtil.getSessionContent(toDeleteSession.getSessionId()) != null
+                            if (SessionContentLocalServiceUtil.hasSessionContent(toDeleteSession.getSessionId())
                                     && !HomeworkLocalServiceUtil.hasHomeworksGivenDuringSession(toDeleteSession.getSessionId())
                                     && !HomeworkLocalServiceUtil.hasHomeworksToDoForSession(toDeleteSession.getSessionId())) {
 
