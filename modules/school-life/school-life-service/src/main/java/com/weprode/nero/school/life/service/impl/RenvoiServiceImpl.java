@@ -9,6 +9,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
@@ -267,6 +268,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 JSONObject sessionJson = new JSONObject();
                 sessionJson.put(JSONConstants.SESSION_ID, studentDaySession.getSessionId());
                 sessionJson.put(JSONConstants.SUBJECT, studentDaySession.getSubject());
+                sessionJson.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(studentDaySession.getGroupId()));
                 sessionJson.put(JSONConstants.START_DATE, df.format(studentDaySession.getStart()));
                 sessionJson.put(JSONConstants.END_DATE, df.format(studentDaySession.getEnd()));
                 sessionJson.put(JSONConstants.ROOM, studentDaySession.getRoom());
