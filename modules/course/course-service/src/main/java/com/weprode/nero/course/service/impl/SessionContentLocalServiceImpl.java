@@ -203,4 +203,8 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 		return sessionFolder;
 	}
 
+	public boolean hasSessionContent(long sessionId) {
+		return sessionContentPersistence.fetchByPrimaryKey(sessionId) != null;
+	}
+
 }

@@ -352,6 +352,11 @@ public class SessionContentLocalServiceWrapper
 	}
 
 	@Override
+	public boolean hasSessionContent(long sessionId) {
+		return _sessionContentLocalService.hasSessionContent(sessionId);
+	}
+
+	@Override
 	public com.weprode.nero.course.model.SessionContent updateSessionContent(
 			long teacherId, long sessionId, String title,
 			org.json.JSONArray blocks, java.util.Date publicationDate,

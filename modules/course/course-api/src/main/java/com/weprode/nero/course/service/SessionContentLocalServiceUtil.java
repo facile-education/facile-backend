@@ -315,6 +315,10 @@ public class SessionContentLocalServiceUtil {
 		return getService().getSessionFolder(sessionId);
 	}
 
+	public static boolean hasSessionContent(long sessionId) {
+		return getService().hasSessionContent(sessionId);
+	}
+
 	public static SessionContent updateSessionContent(
 			long teacherId, long sessionId, String title,
 			org.json.JSONArray blocks, java.util.Date publicationDate,
