@@ -62,11 +62,6 @@ public interface SessionStudentService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSessionMembers(long schoollifeSessionId);
 
-	@JSONWebService(method = "GET", value = "get-sessions")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getSessions(
-		long studentId, long classId, String minDateStr, String maxDateStr);
-
 	@JSONWebService(method = "POST", value = "mark-students-present")
 	public JSONObject markStudentsPresent(
 		long schoollifeSessionId, String studentsPresence);

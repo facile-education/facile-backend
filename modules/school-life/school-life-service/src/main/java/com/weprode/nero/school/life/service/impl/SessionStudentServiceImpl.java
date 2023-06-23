@@ -5,20 +5,14 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
-import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
-import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SessionStudent;
@@ -32,9 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Component(
@@ -94,86 +86,6 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
 
         } catch (Exception e) {
             logger.error("Error fetching student members for schoollife session " + schoollifeSessionId, e);
-            result.put(JSONConstants.SUCCESS, false);
-        }
-
-        return result;
-    }
-
-    @JSONWebService(value = "get-sessions", method = "GET")
-    public JSONObject getSessions(long studentId, long classId, String minDateStr, String maxDateStr) {
-        JSONObject result = new JSONObject();
-        
-        if (studentId > 0) {
-            logger.info("Get sessions for student " + studentId + " between " + minDateStr + " and " + maxDateStr);
-        } else if (classId > 0) {
-            logger.info("Get sessions for class " + classId + " between " + minDateStr + " and " + maxDateStr);
-        }
-
-        User user;
-        try {
-            user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-            }
-        } catch (Exception e) {
-            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-        }
-        try {
-            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
-            Date minDate = df.parse(minDateStr);
-            Date maxDate = df.parse(maxDateStr);
-
-            // 1. SchoolLife sessions
-            JSONArray jsonSessions = new JSONArray();
-            if (studentId > 0) {
-                jsonSessions = SessionStudentLocalServiceUtil.getStudentSessions(user, studentId, minDate, maxDate);
-            }
-
-            // 2. CDT sessions
-            List<CDTSession> sessions = new ArrayList<>();
-            if (studentId > 0) {
-                sessions = CDTSessionLocalServiceUtil.getStudentSessions(studentId, minDate, maxDate);
-            } else if (classId > 0) {
-                Organization classOrg = OrganizationLocalServiceUtil.getOrganization(classId);
-                sessions = CDTSessionLocalServiceUtil.getGroupSessions(classOrg.getGroupId(), minDate, maxDate, true);
-            }
-
-            for (CDTSession cdtSession : sessions) {
-
-                JSONObject cdtSessionJson = new JSONObject();
-                cdtSessionJson.put(JSONConstants.CDT_SESSION_ID, cdtSession.getSessionId());
-                cdtSessionJson.put(JSONConstants.START_DATE, df.format(cdtSession.getStart()));
-                cdtSessionJson.put(JSONConstants.END_DATE, df.format(cdtSession.getEnd()));
-                cdtSessionJson.put(JSONConstants.ROOM, cdtSession.getRoom());
-                cdtSessionJson.put(JSONConstants.SUBJECT, cdtSession.getSubject());
-
-                // Teacher
-                // cdt sessions can have many teachers, unlike notUsualSessions
-                List<User> teacherList = SessionTeacherLocalServiceUtil.getTeachers(cdtSession.getSessionId());
-                JSONArray teacherArray = new JSONArray();
-
-                for (User teacher : teacherList) {
-                    JSONObject jsonTeacher = new JSONObject();
-                    jsonTeacher.put(JSONConstants.TEACHER_ID, teacher.getUserId());
-                    jsonTeacher.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
-                    jsonTeacher.put(JSONConstants.LAST_NAME, teacher.getLastName());
-
-                    teacherArray.put(jsonTeacher);
-                }
-                cdtSessionJson.put(JSONConstants.TEACHERS, teacherArray);
-
-                // Color
-                cdtSessionJson.put(JSONConstants.COLOR, CourseDetailsLocalServiceUtil.getCourseColor(cdtSession.getGroupId()));
-
-                jsonSessions.put(cdtSessionJson);
-            }
-
-            result.put(JSONConstants.SESSIONS, jsonSessions);
-            result.put(JSONConstants.SUCCESS, true);
-
-        } catch (Exception e) {
-            logger.error("Error fetching sessions for student " + studentId + ", class "+ classId, e);
             result.put(JSONConstants.SUCCESS, false);
         }
 

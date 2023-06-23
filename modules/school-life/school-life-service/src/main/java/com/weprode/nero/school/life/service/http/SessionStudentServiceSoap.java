@@ -82,24 +82,6 @@ public class SessionStudentServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject getSessions(
-			long studentId, long classId, String minDateStr, String maxDateStr)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				SessionStudentServiceUtil.getSessions(
-					studentId, classId, minDateStr, maxDateStr);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
 	public static org.json.JSONObject registerStudent(
 			long studentId, long schoollifeSessionId, String comment,
 			String replayTestSubject, boolean notifyParents)

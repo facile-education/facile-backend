@@ -84,39 +84,6 @@ public class SessionStudentServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject getSessions(
-		HttpPrincipal httpPrincipal, long studentId, long classId,
-		String minDateStr, String maxDateStr) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				SessionStudentServiceUtil.class, "getSessions",
-				_getSessionsParameterTypes1);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, studentId, classId, minDateStr, maxDateStr);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static org.json.JSONObject registerStudent(
 		HttpPrincipal httpPrincipal, long studentId, long schoollifeSessionId,
 		String comment, String replayTestSubject, boolean notifyParents) {
@@ -124,7 +91,7 @@ public class SessionStudentServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				SessionStudentServiceUtil.class, "registerStudent",
-				_registerStudentParameterTypes2);
+				_registerStudentParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, studentId, schoollifeSessionId, comment,
@@ -158,7 +125,7 @@ public class SessionStudentServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				SessionStudentServiceUtil.class, "registerClass",
-				_registerClassParameterTypes3);
+				_registerClassParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, classId, schoollifeSessionId, comment,
@@ -192,7 +159,7 @@ public class SessionStudentServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				SessionStudentServiceUtil.class, "unregisterStudent",
-				_unregisterStudentParameterTypes4);
+				_unregisterStudentParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, studentId, schoollifeSessionId, allSessions);
@@ -225,7 +192,7 @@ public class SessionStudentServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				SessionStudentServiceUtil.class, "markStudentsPresent",
-				_markStudentsPresentParameterTypes5);
+				_markStudentsPresentParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, schoollifeSessionId, studentsPresence);
@@ -256,20 +223,17 @@ public class SessionStudentServiceHttp {
 
 	private static final Class<?>[] _getSessionMembersParameterTypes0 =
 		new Class[] {long.class};
-	private static final Class<?>[] _getSessionsParameterTypes1 = new Class[] {
-		long.class, long.class, String.class, String.class
-	};
-	private static final Class<?>[] _registerStudentParameterTypes2 =
+	private static final Class<?>[] _registerStudentParameterTypes1 =
 		new Class[] {
 			long.class, long.class, String.class, String.class, boolean.class
 		};
-	private static final Class<?>[] _registerClassParameterTypes3 =
+	private static final Class<?>[] _registerClassParameterTypes2 =
 		new Class[] {
 			long.class, long.class, String.class, String.class, boolean.class
 		};
-	private static final Class<?>[] _unregisterStudentParameterTypes4 =
+	private static final Class<?>[] _unregisterStudentParameterTypes3 =
 		new Class[] {long.class, long.class, boolean.class};
-	private static final Class<?>[] _markStudentsPresentParameterTypes5 =
+	private static final Class<?>[] _markStudentsPresentParameterTypes4 =
 		new Class[] {long.class, String.class};
 
 }
