@@ -142,6 +142,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			if (groupId != 0 && !RoleUtilsLocalServiceUtil.isStudentOrParent(currentUser)) {
 				List<CDTSession> userSessions = CDTSessionLocalServiceUtil.getGroupSessions(groupId, minDate, maxDate, true);
 				result.put(JSONConstants.SESSIONS, CDTSessionLocalServiceUtil.convertSessions(userSessions, currentUser));
+				result.put(JSONConstants.SCHOOLLIFE_SESSIONS, new JSONArray());
 				result.put(JSONConstants.SUCCESS, true);
 			} else {
 				result.put(JSONConstants.SUCCESS, false);
