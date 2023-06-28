@@ -9,6 +9,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.school.life.constants.SchoollifeConstants;
 import com.weprode.nero.school.life.model.SchoollifeSession;
 import com.weprode.nero.school.life.model.SchoollifeSlot;
@@ -92,7 +93,10 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
             List<SchoollifeSession> sessions = schoollifeSessionPersistence.findByschoolId_type(schoolId, type);
             if (sessions != null) {
                 for (SchoollifeSession session : sessions) {
-                    if (weekNb == session.getWeekNb()) {
+                    // Filter on week number and limit to current school year
+                    if (weekNb == session.getWeekNb() &&
+                            session.getStartDate().after(ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate()) &&
+                            session.getStartDate().before(ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate())) {
                         weekSessions.add(session);
                     }
                 }

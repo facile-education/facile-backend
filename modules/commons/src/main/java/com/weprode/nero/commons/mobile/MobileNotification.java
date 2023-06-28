@@ -8,8 +8,10 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.commons.mobile.FCMNotification;
 import com.weprode.nero.preference.model.MobileDevice;
 import com.weprode.nero.preference.service.MobileDeviceLocalServiceUtil;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +53,13 @@ public class MobileNotification {
 					}
 
 					logger.info("Sending push notification to " + recipient.getFullName() + "(" + recipientId + "). DeviceId is " + device.getMobileDeviceId()+", redirect="+redirect);
-					// TODO App mobile
-//					JSONObject response = FCMNotification.pushFCMNotification(recipient.getCompanyId(), device.getManufaturerDeviceId(), notificationTitle, notificationSubtitle, message, redirect);
-//					String results = response.getString("results");
-//					if (results.contains("NotRegistered") || results.contains("InvalidRegistration")) {
-//						logger.info("Received '" + results + "' failure message so remove device " + device.getMobileDeviceId() + " for user id " + device.getUserId());
-//						MobileDeviceLocalServiceUtil.deleteMobileDevice(device.getMobileDeviceId());
-//					}
+
+					JSONObject response = FCMNotification.pushFCMNotification(device.getManufaturerDeviceId(), notificationTitle, notificationSubtitle, message, redirect);
+					String results = response.getString("results");
+					if (results.contains("NotRegistered") || results.contains("InvalidRegistration")) {
+						logger.info("Received '" + results + "' failure message so remove device " + device.getMobileDeviceId() + " for user id " + device.getUserId());
+						MobileDeviceLocalServiceUtil.deleteMobileDevice(device.getMobileDeviceId());
+					}
 				} catch (Exception e) {
 					logger.error("Cannot push android notification for user " + recipientId, e);
 				}
