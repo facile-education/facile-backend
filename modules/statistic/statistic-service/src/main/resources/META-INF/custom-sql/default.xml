@@ -83,20 +83,20 @@
     </sql>
     <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllHomeworks">
         <![CDATA[
-			SELECT ch.type_, COUNT(*)
-			FROM Schedule_homework ch
+			SELECT ch.homeworkType, COUNT(*)
+			FROM Course_homework ch
 			WHERE ch.targetDate BETWEEN ? AND ?
-			GROUP BY ch.type_
+			GROUP BY ch.homeworkType
 		]]>
     </sql>
     <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolHomeworks">
         <![CDATA[
-			SELECT ch.type_, COUNT(*)
-			FROM Schedule_Homework ch
+			SELECT ch.homeworkType, COUNT(*)
+			FROM Course_Homework ch
 			JOIN Users_Orgs uo ON ch.teacherId = uo.userId
 			WHERE ch.targetDate BETWEEN ? AND ?
 			AND uo.organizationId = ?
-			GROUP BY ch.type_
+			GROUP BY ch.homeworkType
 		]]>
     </sql>
     <!-- sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolCDTSessionContent">
