@@ -40,6 +40,7 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
+import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
@@ -86,6 +87,15 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		for (Organization userCours : userCourses) {
 			JSONObject jsonCourse = new JSONObject();
 			jsonCourse.put(JSONConstants.COURSE_ID, userCours.getGroupId());
+			jsonCourse.put(JSONConstants.SUBJECT, CourseDetailsLocalServiceUtil.getCourseSubject(userCours.getGroupId()));
+			// TODO teacher
+			// User teacher = UserLocalServiceUtil.getUser(this.getTeacherId());
+			JSONObject teacherJson = new JSONObject();
+			teacherJson.put(JSONConstants.FIRST_NAME, "Trevor");
+			teacherJson.put(JSONConstants.LAST_NAME, "ODO");
+			jsonCourse.put(JSONConstants.TEACHER, teacherJson);
+
+			jsonCourse.put(JSONConstants.COLOR, CourseDetailsLocalServiceUtil.getCourseColor(userCours.getGroupId()));
 			jsonCourse.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
 			jsonCourses.put(jsonCourse);
 		}

@@ -16,6 +16,7 @@ package com.weprode.nero.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.weprode.nero.schedule.model.CourseDetails;
+import com.weprode.nero.schedule.service.SubjectLocalServiceUtil;
 import com.weprode.nero.schedule.service.base.CourseDetailsLocalServiceBaseImpl;
 import com.weprode.nero.schedule.utils.CourseColorUtil;
 import org.osgi.service.component.annotations.Component;
@@ -65,11 +66,12 @@ public class CourseDetailsLocalServiceImpl extends CourseDetailsLocalServiceBase
 		try {
 			CourseDetails courseDetails = courseDetailsPersistence.findByPrimaryKey(groupId);
 			if (courseDetails != null) {
-				return courseDetails.getColor();
+				return SubjectLocalServiceUtil.getSubject(courseDetails.getSubjectId()).getName();
 			}
 		} catch (Exception e) {
 			// Nothing
 		}
+
 		return "Discipline";
 	}
 }
