@@ -37,7 +37,7 @@
             SELECT homework.*
             FROM Course_Homework homework
             JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
-            WHERE homework.targetDate > ? AND homework.targetDate < ?
+            WHERE homework.targetDate BETWEEN ? AND ?
             AND homework.isDraft = 0
             AND studentHomework.studentId = ?
 			[$OTHER$]
@@ -50,6 +50,7 @@
             JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
             WHERE studentHomework.studentId = ? AND studentHomework.isDone = 0
             AND homework.isDraft = 0
+            AND homework.targetDate BETWEEN ? AND ?
         ]]>
     </sql>
     <sql id="getStudentHomeworkActivity">

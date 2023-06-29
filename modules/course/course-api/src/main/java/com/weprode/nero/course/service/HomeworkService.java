@@ -62,15 +62,16 @@ public interface HomeworkService extends BaseService {
 	public JSONObject countHomeworksToCorrect() throws SystemException;
 
 	@JSONWebService(method = "GET", value = "count-undone-homeworks")
-	public JSONObject countUndoneHomeworks(long studentId)
+	public JSONObject countUndoneHomeworks(
+			long studentId, String minDateStr, String maxDateStr)
 		throws SystemException;
 
 	@JSONWebService(method = "POST", value = "create-homework")
 	public JSONObject createHomework(
-			long courseId, long sourceSessionId, long targetSessionId,
-			String targetDateStr, int homeworkType, int estimatedTime,
-			String students, String blocks, String publicationDateStr,
-			boolean isDraft)
+			long courseId, String title, long sourceSessionId,
+			long targetSessionId, String targetDateStr, int homeworkType,
+			int estimatedTime, String students, String blocks,
+			String publicationDateStr, boolean isDraft)
 		throws SystemException;
 
 	@JSONWebService(method = "POST", value = "delete-homework")
@@ -103,9 +104,9 @@ public interface HomeworkService extends BaseService {
 
 	@JSONWebService(method = "POST", value = "update-homework")
 	public JSONObject updateHomework(
-			long homeworkId, long targetSessionId, String targetDateStr,
-			int estimatedTime, String students, String blocks,
-			String publicationDateStr, boolean isDraft)
+			long homeworkId, String title, long targetSessionId,
+			String targetDateStr, int estimatedTime, String students,
+			String blocks, String publicationDateStr, boolean isDraft)
 		throws SystemException;
 
 }

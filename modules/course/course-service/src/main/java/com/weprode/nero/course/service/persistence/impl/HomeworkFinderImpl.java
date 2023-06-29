@@ -106,9 +106,8 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
             q.addEntity("Course_Homework", HomeworkImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            qPos.add(sdf.format(minDate));
-            qPos.add(sdf.format(maxDate));
+            qPos.add(minDate);
+            qPos.add(maxDate);
             qPos.add(studentId);
 
             return (List<Homework>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
@@ -120,8 +119,7 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
         return new ArrayList<>();
     }
 
-    public int countUndoneHomeworks (long studentId) {
-
+    public int countUndoneHomeworks (long studentId, Date minDate, Date maxDate) {
         Session session = null;
 
         try {
@@ -134,6 +132,8 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
             qPos.add(studentId);
+            qPos.add(minDate);
+            qPos.add(maxDate);
 
             return (Integer) q.uniqueResult();
         } catch (Exception e) {
@@ -141,6 +141,7 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
         } finally {
             closeSession(session);
         }
+
         return 0;
     }
 

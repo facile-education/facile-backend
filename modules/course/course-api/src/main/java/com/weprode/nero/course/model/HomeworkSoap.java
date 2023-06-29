@@ -37,6 +37,7 @@ public class HomeworkSoap implements Serializable {
 		soapModel.setHomeworkType(model.getHomeworkType());
 		soapModel.setCourseId(model.getCourseId());
 		soapModel.setTeacherId(model.getTeacherId());
+		soapModel.setTitle(model.getTitle());
 		soapModel.setModificationDate(model.getModificationDate());
 		soapModel.setSourceSessionId(model.getSourceSessionId());
 		soapModel.setTargetSessionId(model.getTargetSessionId());
@@ -130,6 +131,14 @@ public class HomeworkSoap implements Serializable {
 		_teacherId = teacherId;
 	}
 
+	public String getTitle() {
+		return _title;
+	}
+
+	public void setTitle(String title) {
+		_title = title;
+	}
+
 	public Date getModificationDate() {
 		return _modificationDate;
 	}
@@ -206,6 +215,7 @@ public class HomeworkSoap implements Serializable {
 	private int _homeworkType;
 	private long _courseId;
 	private long _teacherId;
+	private String _title;
 	private Date _modificationDate;
 	private long _sourceSessionId;
 	private long _targetSessionId;

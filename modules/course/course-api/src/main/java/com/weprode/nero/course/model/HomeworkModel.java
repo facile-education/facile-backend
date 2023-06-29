@@ -14,6 +14,7 @@
 
 package com.weprode.nero.course.model;
 
+import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
 
 import java.util.Date;
@@ -109,6 +110,21 @@ public interface HomeworkModel extends BaseModel<Homework> {
 	 * @param teacherId the teacher ID of this homework
 	 */
 	public void setTeacherId(long teacherId);
+
+	/**
+	 * Returns the title of this homework.
+	 *
+	 * @return the title of this homework
+	 */
+	@AutoEscape
+	public String getTitle();
+
+	/**
+	 * Sets the title of this homework.
+	 *
+	 * @param title the title of this homework
+	 */
+	public void setTitle(String title);
 
 	/**
 	 * Returns the modification date of this homework.

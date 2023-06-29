@@ -16,6 +16,7 @@
 		<field name="homeworkType" type="int" />
 		<field name="courseId" type="long" />
 		<field name="teacherId" type="long" />
+		<field name="title" type="String" />
 		<field name="modificationDate" type="Date" />
 		<field name="sourceSessionId" type="long" />
 		<field name="targetSessionId" type="long" />

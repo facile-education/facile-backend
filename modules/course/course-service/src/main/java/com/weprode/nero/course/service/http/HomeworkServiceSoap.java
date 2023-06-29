@@ -99,12 +99,14 @@ public class HomeworkServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject countUndoneHomeworks(long studentId)
+	public static org.json.JSONObject countUndoneHomeworks(
+			long studentId, String minDateStr, String maxDateStr)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				HomeworkServiceUtil.countUndoneHomeworks(studentId);
+				HomeworkServiceUtil.countUndoneHomeworks(
+					studentId, minDateStr, maxDateStr);
 
 			return returnValue;
 		}
@@ -149,18 +151,18 @@ public class HomeworkServiceSoap {
 	}
 
 	public static org.json.JSONObject createHomework(
-			long courseId, long sourceSessionId, long targetSessionId,
-			String targetDateStr, int homeworkType, int estimatedTime,
-			String students, String blocks, String publicationDateStr,
-			boolean isDraft)
+			long courseId, String title, long sourceSessionId,
+			long targetSessionId, String targetDateStr, int homeworkType,
+			int estimatedTime, String students, String blocks,
+			String publicationDateStr, boolean isDraft)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				HomeworkServiceUtil.createHomework(
-					courseId, sourceSessionId, targetSessionId, targetDateStr,
-					homeworkType, estimatedTime, students, blocks,
-					publicationDateStr, isDraft);
+					courseId, title, sourceSessionId, targetSessionId,
+					targetDateStr, homeworkType, estimatedTime, students,
+					blocks, publicationDateStr, isDraft);
 
 			return returnValue;
 		}
@@ -172,16 +174,17 @@ public class HomeworkServiceSoap {
 	}
 
 	public static org.json.JSONObject updateHomework(
-			long homeworkId, long targetSessionId, String targetDateStr,
-			int estimatedTime, String students, String blocks,
-			String publicationDateStr, boolean isDraft)
+			long homeworkId, String title, long targetSessionId,
+			String targetDateStr, int estimatedTime, String students,
+			String blocks, String publicationDateStr, boolean isDraft)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				HomeworkServiceUtil.updateHomework(
-					homeworkId, targetSessionId, targetDateStr, estimatedTime,
-					students, blocks, publicationDateStr, isDraft);
+					homeworkId, title, targetSessionId, targetDateStr,
+					estimatedTime, students, blocks, publicationDateStr,
+					isDraft);
 
 			return returnValue;
 		}

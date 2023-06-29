@@ -14,11 +14,13 @@
 
 package com.weprode.nero.course.model.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.course.model.ContentBlock;
 import com.weprode.nero.course.model.StudentHomework;
@@ -50,6 +52,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
         jsonHomework.put(JSONConstants.GROUP_ID, this.getCourseId());
         jsonHomework.put(JSONConstants.HOMEWORK_ID, this.getHomeworkId());
+        jsonHomework.put(JSONConstants.TITLE, this.getTitle());
         jsonHomework.put(JSONConstants.TYPE, this.getHomeworkType());
         jsonHomework.put(JSONConstants.MODIFICATION_DATE, sdf.format(this.getModificationDate()));
         jsonHomework.put(JSONConstants.SOURCE_SESSION_ID, this.getSourceSessionId());
@@ -83,19 +86,29 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         String coursName = "";
         try {
             long groupId = this.getCourseId();
-            if (this.getCourseId() == 0) {
+            if (this.getCourseId() != 0) {
                 // Use either source or target session to get the homework's groupId
                 groupId = CDTSessionLocalServiceUtil.getCDTSession(referenceSessionId).getGroupId();
             }
             Group group = GroupLocalServiceUtil.getGroup(groupId);
-            coursName = OrgUtilsLocalServiceUtil.formatOrgName(group.getName(), false);
+            coursName = OrgUtilsLocalServiceUtil.formatOrgName(group.getName(user.getLocale()), false);
+            jsonHomework.put(JSONConstants.COLOR, CourseDetailsLocalServiceUtil.getCourseColor(groupId));
         } catch (Exception e) {
             logger.error("Cannot fetch coursName for homeworkId = " + this.getHomeworkId(), e);
         }
         jsonHomework.put(JSONConstants.COURS, coursName);
         jsonHomework.put(JSONConstants.SUBJECT, CourseDetailsLocalServiceUtil.getCourseSubject(getCourseId()));
 
-        if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)){
+        if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+            try {
+                User teacher = UserLocalServiceUtil.getUser(this.getTeacherId());
+                JSONObject teacherJson = new JSONObject();
+                teacherJson.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
+                teacherJson.put(JSONConstants.LAST_NAME, teacher.getLastName());
+                jsonHomework.put(JSONConstants.TEACHER, teacherJson);
+            } catch (PortalException e) {
+                logger.error("Could not fetch homework teacher with id = " + this.getTeacherId(), e);
+            }
             jsonHomework.put(JSONConstants.IS_DONE, StudentHomeworkLocalServiceUtil.hasStudentDoneHomework(user.getUserId(), this.getHomeworkId()));
         }
         else {

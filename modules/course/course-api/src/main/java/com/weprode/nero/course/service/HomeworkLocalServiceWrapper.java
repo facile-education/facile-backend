@@ -71,6 +71,14 @@ public class HomeworkLocalServiceWrapper
 		return _homeworkLocalService.countUndoneHomeworks(studentId);
 	}
 
+	@Override
+	public int countUndoneHomeworks(
+		long studentId, java.util.Date minDate, java.util.Date maxDate) {
+
+		return _homeworkLocalService.countUndoneHomeworks(
+			studentId, minDate, maxDate);
+	}
+
 	/**
 	 * Creates a new homework with the primary key. Does not add the homework to the database.
 	 *
@@ -86,14 +94,16 @@ public class HomeworkLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.course.model.Homework createHomework(
-		com.liferay.portal.kernel.model.User teacher, long sourceSessionId,
-		long targetSessionId, long courseId, java.util.Date targetDate,
-		int homeworkType, int estimatedTime, java.util.List<Long> studentIds,
-		java.util.Date publicationDate, boolean isDraft) {
+		com.liferay.portal.kernel.model.User teacher, String title,
+		long sourceSessionId, long targetSessionId, long courseId,
+		java.util.Date targetDate, int homeworkType, int estimatedTime,
+		java.util.List<Long> studentIds, java.util.Date publicationDate,
+		boolean isDraft) {
 
 		return _homeworkLocalService.createHomework(
-			teacher, sourceSessionId, targetSessionId, courseId, targetDate,
-			homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
+			teacher, title, sourceSessionId, targetSessionId, courseId,
+			targetDate, homeworkType, estimatedTime, studentIds,
+			publicationDate, isDraft);
 	}
 
 	/**
@@ -462,13 +472,14 @@ public class HomeworkLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.course.model.Homework updateHomework(
-		long homeworkId, long targetSessionId, java.util.Date targetDate,
-		int estimatedTime, java.util.List<Long> studentIds,
-		java.util.Date publicationDate, boolean isDraft) {
+		long homeworkId, String title, long targetSessionId,
+		java.util.Date targetDate, int estimatedTime,
+		java.util.List<Long> studentIds, java.util.Date publicationDate,
+		boolean isDraft) {
 
 		return _homeworkLocalService.updateHomework(
-			homeworkId, targetSessionId, targetDate, estimatedTime, studentIds,
-			publicationDate, isDraft);
+			homeworkId, title, targetSessionId, targetDate, estimatedTime,
+			studentIds, publicationDate, isDraft);
 	}
 
 	@Override
