@@ -34,7 +34,8 @@ public interface HomeworkFinder {
 			long studentId, java.util.Date minDate, java.util.Date maxDate,
 			boolean undoneOnly);
 
-	public int countUndoneHomeworks(long studentId);
+	public int countUndoneHomeworks(
+		long studentId, java.util.Date minDate, java.util.Date maxDate);
 
 	public java.util.List<com.weprode.nero.course.model.Homework>
 		getStudentHomeworkActivity(

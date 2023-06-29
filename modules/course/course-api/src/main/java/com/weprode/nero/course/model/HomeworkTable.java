@@ -40,6 +40,8 @@ public class HomeworkTable extends BaseTable<HomeworkTable> {
 		"courseId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Long> teacherId = createColumn(
 		"teacherId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<HomeworkTable, String> title = createColumn(
+		"title", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Date> modificationDate = createColumn(
 		"modificationDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Long> sourceSessionId = createColumn(

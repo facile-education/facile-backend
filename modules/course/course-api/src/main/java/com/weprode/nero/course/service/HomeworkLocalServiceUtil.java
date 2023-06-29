@@ -81,6 +81,12 @@ public class HomeworkLocalServiceUtil {
 		return getService().countUndoneHomeworks(studentId);
 	}
 
+	public static int countUndoneHomeworks(
+		long studentId, java.util.Date minDate, java.util.Date maxDate) {
+
+		return getService().countUndoneHomeworks(studentId, minDate, maxDate);
+	}
+
 	/**
 	 * Creates a new homework with the primary key. Does not add the homework to the database.
 	 *
@@ -92,14 +98,16 @@ public class HomeworkLocalServiceUtil {
 	}
 
 	public static Homework createHomework(
-		com.liferay.portal.kernel.model.User teacher, long sourceSessionId,
-		long targetSessionId, long courseId, java.util.Date targetDate,
-		int homeworkType, int estimatedTime, List<Long> studentIds,
-		java.util.Date publicationDate, boolean isDraft) {
+		com.liferay.portal.kernel.model.User teacher, String title,
+		long sourceSessionId, long targetSessionId, long courseId,
+		java.util.Date targetDate, int homeworkType, int estimatedTime,
+		List<Long> studentIds, java.util.Date publicationDate,
+		boolean isDraft) {
 
 		return getService().createHomework(
-			teacher, sourceSessionId, targetSessionId, courseId, targetDate,
-			homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
+			teacher, title, sourceSessionId, targetSessionId, courseId,
+			targetDate, homeworkType, estimatedTime, studentIds,
+			publicationDate, isDraft);
 	}
 
 	/**
@@ -404,13 +412,13 @@ public class HomeworkLocalServiceUtil {
 	}
 
 	public static Homework updateHomework(
-		long homeworkId, long targetSessionId, java.util.Date targetDate,
-		int estimatedTime, List<Long> studentIds,
+		long homeworkId, String title, long targetSessionId,
+		java.util.Date targetDate, int estimatedTime, List<Long> studentIds,
 		java.util.Date publicationDate, boolean isDraft) {
 
 		return getService().updateHomework(
-			homeworkId, targetSessionId, targetDate, estimatedTime, studentIds,
-			publicationDate, isDraft);
+			homeworkId, title, targetSessionId, targetDate, estimatedTime,
+			studentIds, publicationDate, isDraft);
 	}
 
 	public static HomeworkLocalService getService() {

@@ -141,7 +141,8 @@ public class HomeworkServiceHttp {
 	}
 
 	public static org.json.JSONObject countUndoneHomeworks(
-			HttpPrincipal httpPrincipal, long studentId)
+			HttpPrincipal httpPrincipal, long studentId, String minDateStr,
+			String maxDateStr)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		try {
@@ -150,7 +151,7 @@ public class HomeworkServiceHttp {
 				_countUndoneHomeworksParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, studentId);
+				methodKey, studentId, minDateStr, maxDateStr);
 
 			Object returnObj = null;
 
@@ -252,9 +253,9 @@ public class HomeworkServiceHttp {
 	}
 
 	public static org.json.JSONObject createHomework(
-			HttpPrincipal httpPrincipal, long courseId, long sourceSessionId,
-			long targetSessionId, String targetDateStr, int homeworkType,
-			int estimatedTime, String students, String blocks,
+			HttpPrincipal httpPrincipal, long courseId, String title,
+			long sourceSessionId, long targetSessionId, String targetDateStr,
+			int homeworkType, int estimatedTime, String students, String blocks,
 			String publicationDateStr, boolean isDraft)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
@@ -264,7 +265,7 @@ public class HomeworkServiceHttp {
 				_createHomeworkParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, courseId, sourceSessionId, targetSessionId,
+				methodKey, courseId, title, sourceSessionId, targetSessionId,
 				targetDateStr, homeworkType, estimatedTime, students, blocks,
 				publicationDateStr, isDraft);
 
@@ -297,9 +298,10 @@ public class HomeworkServiceHttp {
 	}
 
 	public static org.json.JSONObject updateHomework(
-			HttpPrincipal httpPrincipal, long homeworkId, long targetSessionId,
-			String targetDateStr, int estimatedTime, String students,
-			String blocks, String publicationDateStr, boolean isDraft)
+			HttpPrincipal httpPrincipal, long homeworkId, String title,
+			long targetSessionId, String targetDateStr, int estimatedTime,
+			String students, String blocks, String publicationDateStr,
+			boolean isDraft)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		try {
@@ -308,7 +310,7 @@ public class HomeworkServiceHttp {
 				_updateHomeworkParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, homeworkId, targetSessionId, targetDateStr,
+				methodKey, homeworkId, title, targetSessionId, targetDateStr,
 				estimatedTime, students, blocks, publicationDateStr, isDraft);
 
 			Object returnObj = null;
@@ -507,20 +509,21 @@ public class HomeworkServiceHttp {
 	private static final Class<?>[]
 		_getTeacherHomeworksToCorrectParameterTypes1 = new Class[] {};
 	private static final Class<?>[] _countUndoneHomeworksParameterTypes2 =
-		new Class[] {long.class};
+		new Class[] {long.class, String.class, String.class};
 	private static final Class<?>[] _countHomeworksToCorrectParameterTypes3 =
 		new Class[] {};
 	private static final Class<?>[] _setHomeworkDoneParameterTypes4 =
 		new Class[] {long.class, boolean.class};
 	private static final Class<?>[] _createHomeworkParameterTypes5 =
 		new Class[] {
-			long.class, long.class, long.class, String.class, int.class,
-			int.class, String.class, String.class, String.class, boolean.class
+			long.class, String.class, long.class, long.class, String.class,
+			int.class, int.class, String.class, String.class, String.class,
+			boolean.class
 		};
 	private static final Class<?>[] _updateHomeworkParameterTypes6 =
 		new Class[] {
-			long.class, long.class, String.class, int.class, String.class,
-			String.class, String.class, boolean.class
+			long.class, String.class, long.class, String.class, int.class,
+			String.class, String.class, String.class, boolean.class
 		};
 	private static final Class<?>[] _deleteHomeworkParameterTypes7 =
 		new Class[] {long.class};

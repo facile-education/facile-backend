@@ -88,6 +88,8 @@ public interface HomeworkLocalService
 
 	public int countUndoneHomeworks(long studentId);
 
+	public int countUndoneHomeworks(long studentId, Date minDate, Date maxDate);
+
 	/**
 	 * Creates a new homework with the primary key. Does not add the homework to the database.
 	 *
@@ -98,8 +100,8 @@ public interface HomeworkLocalService
 	public Homework createHomework(long homeworkId);
 
 	public Homework createHomework(
-		User teacher, long sourceSessionId, long targetSessionId, long courseId,
-		Date targetDate, int homeworkType, int estimatedTime,
+		User teacher, String title, long sourceSessionId, long targetSessionId,
+		long courseId, Date targetDate, int homeworkType, int estimatedTime,
 		List<Long> studentIds, Date publicationDate, boolean isDraft);
 
 	/**
@@ -330,7 +332,7 @@ public interface HomeworkLocalService
 	public Homework updateHomework(Homework homework);
 
 	public Homework updateHomework(
-		long homeworkId, long targetSessionId, Date targetDate,
+		long homeworkId, String title, long targetSessionId, Date targetDate,
 		int estimatedTime, List<Long> studentIds, Date publicationDate,
 		boolean isDraft);
 

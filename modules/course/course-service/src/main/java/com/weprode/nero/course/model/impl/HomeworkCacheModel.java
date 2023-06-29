@@ -62,7 +62,7 @@ public class HomeworkCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{homeworkId=");
 		sb.append(homeworkId);
@@ -72,6 +72,8 @@ public class HomeworkCacheModel
 		sb.append(courseId);
 		sb.append(", teacherId=");
 		sb.append(teacherId);
+		sb.append(", title=");
+		sb.append(title);
 		sb.append(", modificationDate=");
 		sb.append(modificationDate);
 		sb.append(", sourceSessionId=");
@@ -101,6 +103,13 @@ public class HomeworkCacheModel
 		homeworkImpl.setHomeworkType(homeworkType);
 		homeworkImpl.setCourseId(courseId);
 		homeworkImpl.setTeacherId(teacherId);
+
+		if (title == null) {
+			homeworkImpl.setTitle("");
+		}
+		else {
+			homeworkImpl.setTitle(title);
+		}
 
 		if (modificationDate == Long.MIN_VALUE) {
 			homeworkImpl.setModificationDate(null);
@@ -145,6 +154,7 @@ public class HomeworkCacheModel
 		courseId = objectInput.readLong();
 
 		teacherId = objectInput.readLong();
+		title = objectInput.readUTF();
 		modificationDate = objectInput.readLong();
 
 		sourceSessionId = objectInput.readLong();
@@ -169,6 +179,14 @@ public class HomeworkCacheModel
 		objectOutput.writeLong(courseId);
 
 		objectOutput.writeLong(teacherId);
+
+		if (title == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(title);
+		}
+
 		objectOutput.writeLong(modificationDate);
 
 		objectOutput.writeLong(sourceSessionId);
@@ -188,6 +206,7 @@ public class HomeworkCacheModel
 	public int homeworkType;
 	public long courseId;
 	public long teacherId;
+	public String title;
 	public long modificationDate;
 	public long sourceSessionId;
 	public long targetSessionId;

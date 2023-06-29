@@ -53,22 +53,24 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject countUndoneHomeworks(long studentId)
+	public org.json.JSONObject countUndoneHomeworks(
+			long studentId, String minDateStr, String maxDateStr)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
-		return _homeworkService.countUndoneHomeworks(studentId);
+		return _homeworkService.countUndoneHomeworks(
+			studentId, minDateStr, maxDateStr);
 	}
 
 	@Override
 	public org.json.JSONObject createHomework(
-			long courseId, long sourceSessionId, long targetSessionId,
-			String targetDateStr, int homeworkType, int estimatedTime,
-			String students, String blocks, String publicationDateStr,
-			boolean isDraft)
+			long courseId, String title, long sourceSessionId,
+			long targetSessionId, String targetDateStr, int homeworkType,
+			int estimatedTime, String students, String blocks,
+			String publicationDateStr, boolean isDraft)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _homeworkService.createHomework(
-			courseId, sourceSessionId, targetSessionId, targetDateStr,
+			courseId, title, sourceSessionId, targetSessionId, targetDateStr,
 			homeworkType, estimatedTime, students, blocks, publicationDateStr,
 			isDraft);
 	}
@@ -125,14 +127,14 @@ public class HomeworkServiceWrapper
 
 	@Override
 	public org.json.JSONObject updateHomework(
-			long homeworkId, long targetSessionId, String targetDateStr,
-			int estimatedTime, String students, String blocks,
-			String publicationDateStr, boolean isDraft)
+			long homeworkId, String title, long targetSessionId,
+			String targetDateStr, int estimatedTime, String students,
+			String blocks, String publicationDateStr, boolean isDraft)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _homeworkService.updateHomework(
-			homeworkId, targetSessionId, targetDateStr, estimatedTime, students,
-			blocks, publicationDateStr, isDraft);
+			homeworkId, title, targetSessionId, targetDateStr, estimatedTime,
+			students, blocks, publicationDateStr, isDraft);
 	}
 
 	@Override

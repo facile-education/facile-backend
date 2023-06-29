@@ -55,21 +55,23 @@ public class HomeworkServiceUtil {
 		return getService().countHomeworksToCorrect();
 	}
 
-	public static org.json.JSONObject countUndoneHomeworks(long studentId)
+	public static org.json.JSONObject countUndoneHomeworks(
+			long studentId, String minDateStr, String maxDateStr)
 		throws SystemException {
 
-		return getService().countUndoneHomeworks(studentId);
+		return getService().countUndoneHomeworks(
+			studentId, minDateStr, maxDateStr);
 	}
 
 	public static org.json.JSONObject createHomework(
-			long courseId, long sourceSessionId, long targetSessionId,
-			String targetDateStr, int homeworkType, int estimatedTime,
-			String students, String blocks, String publicationDateStr,
-			boolean isDraft)
+			long courseId, String title, long sourceSessionId,
+			long targetSessionId, String targetDateStr, int homeworkType,
+			int estimatedTime, String students, String blocks,
+			String publicationDateStr, boolean isDraft)
 		throws SystemException {
 
 		return getService().createHomework(
-			courseId, sourceSessionId, targetSessionId, targetDateStr,
+			courseId, title, sourceSessionId, targetSessionId, targetDateStr,
 			homeworkType, estimatedTime, students, blocks, publicationDateStr,
 			isDraft);
 	}
@@ -118,14 +120,14 @@ public class HomeworkServiceUtil {
 	}
 
 	public static org.json.JSONObject updateHomework(
-			long homeworkId, long targetSessionId, String targetDateStr,
-			int estimatedTime, String students, String blocks,
-			String publicationDateStr, boolean isDraft)
+			long homeworkId, String title, long targetSessionId,
+			String targetDateStr, int estimatedTime, String students,
+			String blocks, String publicationDateStr, boolean isDraft)
 		throws SystemException {
 
 		return getService().updateHomework(
-			homeworkId, targetSessionId, targetDateStr, estimatedTime, students,
-			blocks, publicationDateStr, isDraft);
+			homeworkId, title, targetSessionId, targetDateStr, estimatedTime,
+			students, blocks, publicationDateStr, isDraft);
 	}
 
 	public static HomeworkService getService() {

@@ -46,6 +46,7 @@ public class HomeworkWrapper
 		attributes.put("homeworkType", getHomeworkType());
 		attributes.put("courseId", getCourseId());
 		attributes.put("teacherId", getTeacherId());
+		attributes.put("title", getTitle());
 		attributes.put("modificationDate", getModificationDate());
 		attributes.put("sourceSessionId", getSourceSessionId());
 		attributes.put("targetSessionId", getTargetSessionId());
@@ -82,6 +83,12 @@ public class HomeworkWrapper
 
 		if (teacherId != null) {
 			setTeacherId(teacherId);
+		}
+
+		String title = (String)attributes.get("title");
+
+		if (title != null) {
+			setTitle(title);
 		}
 
 		Date modificationDate = (Date)attributes.get("modificationDate");
@@ -277,6 +284,16 @@ public class HomeworkWrapper
 	}
 
 	/**
+	 * Returns the title of this homework.
+	 *
+	 * @return the title of this homework
+	 */
+	@Override
+	public String getTitle() {
+		return model.getTitle();
+	}
+
+	/**
 	 * Returns <code>true</code> if this homework is is custom student list.
 	 *
 	 * @return <code>true</code> if this homework is is custom student list; <code>false</code> otherwise
@@ -429,6 +446,16 @@ public class HomeworkWrapper
 	@Override
 	public void setTeacherId(long teacherId) {
 		model.setTeacherId(teacherId);
+	}
+
+	/**
+	 * Sets the title of this homework.
+	 *
+	 * @param title the title of this homework
+	 */
+	@Override
+	public void setTitle(String title) {
+		model.setTitle(title);
 	}
 
 	@Override

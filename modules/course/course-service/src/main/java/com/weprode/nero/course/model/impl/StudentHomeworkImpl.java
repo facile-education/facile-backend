@@ -42,9 +42,14 @@ public class StudentHomeworkImpl extends StudentHomeworkBaseImpl {
             jsonHomework.put(JSONConstants.LAST_NAME, student.getLastName());
             jsonHomework.put(JSONConstants.FIRST_NAME, student.getFirstName());
             jsonHomework.put(JSONConstants.FILE_ENTRY_ID, this.getSentFileId());
-            jsonHomework.put(JSONConstants.SENT_DATE, sdf.format(this.getSentDate()));
+            if (this.getSentDate() != null) {
+                jsonHomework.put(JSONConstants.SENT_DATE, sdf.format(this.getSentDate()));
+            }
             jsonHomework.put(JSONConstants.COMMENT, this.getComment());
-            jsonHomework.put(JSONConstants.CORRECTION_DATE, sdf.format(this.getCorrectionDate()));
+            if (this.getCorrectionDate() != null) {
+                jsonHomework.put(JSONConstants.CORRECTION_DATE, sdf.format(this.getCorrectionDate()));
+            }
+
         } catch (Exception e) {
             logger.error("Error formatting student homework", e);
         }

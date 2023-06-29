@@ -75,7 +75,7 @@ public class HomeworkModelImpl
 	public static final Object[][] TABLE_COLUMNS = {
 		{"homeworkId", Types.BIGINT}, {"homeworkType", Types.INTEGER},
 		{"courseId", Types.BIGINT}, {"teacherId", Types.BIGINT},
-		{"modificationDate", Types.TIMESTAMP},
+		{"title", Types.VARCHAR}, {"modificationDate", Types.TIMESTAMP},
 		{"sourceSessionId", Types.BIGINT}, {"targetSessionId", Types.BIGINT},
 		{"targetDate", Types.TIMESTAMP}, {"isCustomStudentList", Types.BOOLEAN},
 		{"estimatedTime", Types.INTEGER}, {"publicationDate", Types.TIMESTAMP},
@@ -90,6 +90,7 @@ public class HomeworkModelImpl
 		TABLE_COLUMNS_MAP.put("homeworkType", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("courseId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("teacherId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("modificationDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("sourceSessionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("targetSessionId", Types.BIGINT);
@@ -101,7 +102,7 @@ public class HomeworkModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Course_Homework (homeworkId LONG not null primary key,homeworkType INTEGER,courseId LONG,teacherId LONG,modificationDate DATE null,sourceSessionId LONG,targetSessionId LONG,targetDate DATE null,isCustomStudentList BOOLEAN,estimatedTime INTEGER,publicationDate DATE null,isDraft BOOLEAN)";
+		"create table Course_Homework (homeworkId LONG not null primary key,homeworkType INTEGER,courseId LONG,teacherId LONG,title VARCHAR(75) null,modificationDate DATE null,sourceSessionId LONG,targetSessionId LONG,targetDate DATE null,isCustomStudentList BOOLEAN,estimatedTime INTEGER,publicationDate DATE null,isDraft BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP = "drop table Course_Homework";
 
@@ -175,6 +176,7 @@ public class HomeworkModelImpl
 		model.setHomeworkType(soapModel.getHomeworkType());
 		model.setCourseId(soapModel.getCourseId());
 		model.setTeacherId(soapModel.getTeacherId());
+		model.setTitle(soapModel.getTitle());
 		model.setModificationDate(soapModel.getModificationDate());
 		model.setSourceSessionId(soapModel.getSourceSessionId());
 		model.setTargetSessionId(soapModel.getTargetSessionId());
@@ -345,6 +347,9 @@ public class HomeworkModelImpl
 		attributeGetterFunctions.put("teacherId", Homework::getTeacherId);
 		attributeSetterBiConsumers.put(
 			"teacherId", (BiConsumer<Homework, Long>)Homework::setTeacherId);
+		attributeGetterFunctions.put("title", Homework::getTitle);
+		attributeSetterBiConsumers.put(
+			"title", (BiConsumer<Homework, String>)Homework::setTitle);
 		attributeGetterFunctions.put(
 			"modificationDate", Homework::getModificationDate);
 		attributeSetterBiConsumers.put(
@@ -456,6 +461,26 @@ public class HomeworkModelImpl
 		}
 
 		_teacherId = teacherId;
+	}
+
+	@JSON
+	@Override
+	public String getTitle() {
+		if (_title == null) {
+			return "";
+		}
+		else {
+			return _title;
+		}
+	}
+
+	@Override
+	public void setTitle(String title) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_title = title;
 	}
 
 	@JSON
@@ -670,6 +695,7 @@ public class HomeworkModelImpl
 		homeworkImpl.setHomeworkType(getHomeworkType());
 		homeworkImpl.setCourseId(getCourseId());
 		homeworkImpl.setTeacherId(getTeacherId());
+		homeworkImpl.setTitle(getTitle());
 		homeworkImpl.setModificationDate(getModificationDate());
 		homeworkImpl.setSourceSessionId(getSourceSessionId());
 		homeworkImpl.setTargetSessionId(getTargetSessionId());
@@ -695,6 +721,7 @@ public class HomeworkModelImpl
 		homeworkImpl.setCourseId(this.<Long>getColumnOriginalValue("courseId"));
 		homeworkImpl.setTeacherId(
 			this.<Long>getColumnOriginalValue("teacherId"));
+		homeworkImpl.setTitle(this.<String>getColumnOriginalValue("title"));
 		homeworkImpl.setModificationDate(
 			this.<Date>getColumnOriginalValue("modificationDate"));
 		homeworkImpl.setSourceSessionId(
@@ -793,6 +820,14 @@ public class HomeworkModelImpl
 		homeworkCacheModel.courseId = getCourseId();
 
 		homeworkCacheModel.teacherId = getTeacherId();
+
+		homeworkCacheModel.title = getTitle();
+
+		String title = homeworkCacheModel.title;
+
+		if ((title != null) && (title.length() == 0)) {
+			homeworkCacheModel.title = null;
+		}
 
 		Date modificationDate = getModificationDate();
 
@@ -925,6 +960,7 @@ public class HomeworkModelImpl
 	private int _homeworkType;
 	private long _courseId;
 	private long _teacherId;
+	private String _title;
 	private Date _modificationDate;
 	private long _sourceSessionId;
 	private long _targetSessionId;
@@ -965,6 +1001,7 @@ public class HomeworkModelImpl
 		_columnOriginalValues.put("homeworkType", _homeworkType);
 		_columnOriginalValues.put("courseId", _courseId);
 		_columnOriginalValues.put("teacherId", _teacherId);
+		_columnOriginalValues.put("title", _title);
 		_columnOriginalValues.put("modificationDate", _modificationDate);
 		_columnOriginalValues.put("sourceSessionId", _sourceSessionId);
 		_columnOriginalValues.put("targetSessionId", _targetSessionId);
@@ -994,21 +1031,23 @@ public class HomeworkModelImpl
 
 		columnBitmasks.put("teacherId", 8L);
 
-		columnBitmasks.put("modificationDate", 16L);
+		columnBitmasks.put("title", 16L);
 
-		columnBitmasks.put("sourceSessionId", 32L);
+		columnBitmasks.put("modificationDate", 32L);
 
-		columnBitmasks.put("targetSessionId", 64L);
+		columnBitmasks.put("sourceSessionId", 64L);
 
-		columnBitmasks.put("targetDate", 128L);
+		columnBitmasks.put("targetSessionId", 128L);
 
-		columnBitmasks.put("isCustomStudentList", 256L);
+		columnBitmasks.put("targetDate", 256L);
 
-		columnBitmasks.put("estimatedTime", 512L);
+		columnBitmasks.put("isCustomStudentList", 512L);
 
-		columnBitmasks.put("publicationDate", 1024L);
+		columnBitmasks.put("estimatedTime", 1024L);
 
-		columnBitmasks.put("isDraft", 2048L);
+		columnBitmasks.put("publicationDate", 2048L);
+
+		columnBitmasks.put("isDraft", 4096L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

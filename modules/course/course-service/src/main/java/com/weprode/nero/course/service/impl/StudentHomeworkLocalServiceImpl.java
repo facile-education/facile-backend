@@ -195,7 +195,7 @@ public class StudentHomeworkLocalServiceImpl
 
 	public JSONObject getStudentSentFile(long studentId, long homeworkId) {
 		try {
-			StudentHomework studentHomework = getStudentHomework(homeworkId, studentId);
+			StudentHomework studentHomework = getStudentHomework(homeworkId, studentId) ;
 			return studentHomework.convertToJSON();
 		} catch (Exception e) {
 			logger.error("Error fetching sent file for studentId " + studentId + " and homeworkId " + homeworkId, e);

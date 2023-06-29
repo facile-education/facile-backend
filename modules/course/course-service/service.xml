@@ -25,6 +25,7 @@
 		<column name="homeworkType" type="int"/>
 		<column name="courseId" type="long"/>
 		<column name="teacherId" type="long" />
+		<column name="title" type="String"/>
 		<column name="modificationDate" type="Date" />
 		<column name="sourceSessionId" type="long" />
 		<column name="targetSessionId" type="long" />

@@ -34,6 +34,7 @@ create table Course_Homework (
 	homeworkType INTEGER,
 	courseId LONG,
 	teacherId LONG,
+	title VARCHAR(75) null,
 	modificationDate DATE null,
 	sourceSessionId LONG,
 	targetSessionId LONG,

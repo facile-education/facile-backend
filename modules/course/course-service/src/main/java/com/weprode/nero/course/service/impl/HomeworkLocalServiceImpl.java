@@ -66,7 +66,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 	private static final Log logger = LogFactoryUtil.getLog(HomeworkLocalServiceImpl.class);
 
-	public Homework createHomework(User teacher, long sourceSessionId, long targetSessionId, long courseId, Date targetDate, int homeworkType, int estimatedTime, List<Long> studentIds, Date publicationDate, boolean isDraft) {
+	public Homework createHomework(User teacher, String title, long sourceSessionId, long targetSessionId, long courseId, Date targetDate, int homeworkType, int estimatedTime, List<Long> studentIds, Date publicationDate, boolean isDraft) {
 		try {
 			logger.info("Creating homework by teacher " + teacher.getFullName() + ", targetSessionId=" + targetSessionId + ", type=" + homeworkType + " and " + studentIds.size() + " students");
 
@@ -74,6 +74,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 			homework.setSourceSessionId(sourceSessionId);
 			homework.setTargetSessionId(targetSessionId);
+			homework.setTitle(title);
 
 			// Target date is the targetSession date, else the toDate
 			if (targetSessionId != 0) {
@@ -144,12 +145,13 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 
 	// Used from progression service
-	public Homework updateHomework(long homeworkId, long targetSessionId, Date targetDate, int estimatedTime, List<Long> studentIds, Date publicationDate, boolean isDraft) {
+	public Homework updateHomework(long homeworkId, String title, long targetSessionId, Date targetDate, int estimatedTime, List<Long> studentIds, Date publicationDate, boolean isDraft) {
 		logger.info("Updating homework " + homeworkId + ", targetSessionId=" + targetSessionId + " and " + studentIds.size() + " students");
 
 		try {
 			Homework homework = getHomework(homeworkId);
 
+			homework.setTitle(title);
 			homework.setModificationDate(new Date());
 			homework.setTargetDate(targetDate);
 			homework.setTargetSessionId(targetSessionId);
@@ -295,12 +297,24 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 	}
 
 	public int countUndoneHomeworks(long studentId) {
-
 		try {
-			return homeworkFinder.countUndoneHomeworks(studentId);
+			Date minDate = new Date();
+			Date maxDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
+			return countUndoneHomeworks(studentId, minDate, maxDate);
 		} catch (Exception e) {
 			logger.error("Error when counting undone homeworks for student " + studentId, e);
 		}
+
+		return 0;
+	}
+
+	public int countUndoneHomeworks(long studentId, Date minDate, Date maxDate) {
+		try {
+			return homeworkFinder.countUndoneHomeworks(studentId, minDate, maxDate);
+		} catch (Exception e) {
+			logger.error("Error when counting undone homeworks for student " + studentId, e);
+		}
+
 		return 0;
 	}
 

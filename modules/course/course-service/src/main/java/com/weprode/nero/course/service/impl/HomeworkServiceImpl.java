@@ -84,7 +84,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 		List<Homework> homeworkList = new ArrayList<>();
 		try {
-			logger.info("User " + currentUser + " fetches homeworks from " + minDateStr + " to " + maxDateStr + ((studentId != 0) ? " for student " + studentId : ""));
+			logger.info("User " + currentUser.getUserId() + " fetches homeworks from " + minDateStr + " to " + maxDateStr + ((studentId != 0) ? " for student " + studentId : ""));
 			Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDateStr);
 			Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDateStr);
 			homeworkList = HomeworkLocalServiceUtil.getStudentHomeworks(targetUser.getUserId(), minDate, maxDate, undoneOnly);
@@ -134,7 +134,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "count-undone-homeworks", method = "GET")
-	public JSONObject countUndoneHomeworks(long studentId) throws SystemException {
+	public JSONObject countUndoneHomeworks(long studentId, String minDateStr, String maxDateStr) throws SystemException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -153,7 +153,18 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
-		int nbUndoneHomeworks = HomeworkLocalServiceUtil.countUndoneHomeworks(studentId);
+		int nbUndoneHomeworks = 0;
+		if (minDateStr.isBlank() || maxDateStr.isBlank()) {
+			nbUndoneHomeworks = HomeworkLocalServiceUtil.countUndoneHomeworks(studentId);
+		} else {
+			try {
+				Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDateStr);
+				Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDateStr);
+				nbUndoneHomeworks = HomeworkLocalServiceUtil.countUndoneHomeworks(studentId, minDate, maxDate);
+			} catch (Exception e) {
+				logger.error("Error fetching previous homeworks for student " + studentId);
+			}
+		}
 		result.put(JSONConstants.NB_UNDONE_HOMEWORKS, nbUndoneHomeworks);
 		result.put(JSONConstants.SUCCESS, true);
 		return result;
@@ -205,7 +216,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "create-homework", method = "POST")
-	public JSONObject createHomework(long courseId, long sourceSessionId, long targetSessionId, String targetDateStr, int homeworkType, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws SystemException {
+	public JSONObject createHomework(long courseId, String title, long sourceSessionId, long targetSessionId, String targetDateStr, int homeworkType, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws SystemException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -232,7 +243,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 					studentIds.add(jsonStudent.getLong(JSONConstants.USER_ID));
 				}
 			}
-			Homework homework = HomeworkLocalServiceUtil.createHomework(user, sourceSessionId, targetSessionId, courseId, targetDate, homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
+			Homework homework = HomeworkLocalServiceUtil.createHomework(user, title, sourceSessionId, targetSessionId, courseId, targetDate, homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
 
 			// Create blocks
 			JSONArray jsonBlocks = new JSONArray(students);
@@ -253,7 +264,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "update-homework", method = "POST")
-	public JSONObject updateHomework(long homeworkId, long targetSessionId, String targetDateStr, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws SystemException {
+	public JSONObject updateHomework(long homeworkId, String title, long targetSessionId, String targetDateStr, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws SystemException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -280,7 +291,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 					studentIds.add(jsonStudent.getLong(JSONConstants.USER_ID));
 				}
 			}
-			Homework homework = HomeworkLocalServiceUtil.updateHomework(homeworkId, targetSessionId, targetDate, estimatedTime, studentIds, publicationDate, isDraft);
+			Homework homework = HomeworkLocalServiceUtil.updateHomework(homeworkId, title, targetSessionId, targetDate, estimatedTime, studentIds, publicationDate, isDraft);
 
 			// Delete existing blocks
 			ContentBlockLocalServiceUtil.deleteBlocksByItemId(homeworkId);
