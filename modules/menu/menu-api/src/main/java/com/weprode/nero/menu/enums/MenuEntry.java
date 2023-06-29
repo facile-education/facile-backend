@@ -5,13 +5,13 @@ import com.liferay.petra.string.StringPool;
 import java.util.*;
 
 public class MenuEntry {
-    public static final MenuEntry DASHBOARD = new MenuEntry(0, "icon-nav-tableau-de-bord.svg", "dashboard", true, 0, "Dashboard");
-    public static final MenuEntry GROUPS = new MenuEntry(1, "icon-nav-espace-collab.svg", "groups", 1, "Groups");
-    public static final MenuEntry CDT = new MenuEntry(4, StringPool.BLANK, "cdt", 2, "Course");
-    public static final MenuEntry HORAIRES = new MenuEntry(5, StringPool.BLANK, "horaires", 3, "Horaires");
-    public static final MenuEntry HHC = new MenuEntry(6, StringPool.BLANK, "horaires-hors-cadre", 4, "NotUsualSlotsManager");
-    public static final MenuEntry DOCUMENTS = new MenuEntry(2, "icon-nav-documents.svg", "documents", 5, "Documents");
-    public static final MenuEntry MESSAGING = new MenuEntry(3, "icon-nav-communication.svg", "messaging", 6, "Messaging");
+    public static final MenuEntry DASHBOARD = new MenuEntry(0, "icon-home", "dashboard", true, 0, "Dashboard");
+    public static final MenuEntry GROUPS = new MenuEntry(1, "icon-collab-workspace", "groups", 1, "Groups");
+    public static final MenuEntry CDT = new MenuEntry(4, "icon-school-life", "cdt", 2, "Course");
+    public static final MenuEntry HORAIRES = new MenuEntry(5, "icon-calendar", "horaires", 3, "Horaires");
+    public static final MenuEntry HHC = new MenuEntry(6, "icon-clock", "horaires-hors-cadre", 4, "NotUsualSlotsManager");
+    public static final MenuEntry DOCUMENTS = new MenuEntry(2, "icon-folder", "documents", 5, "Documents");
+    public static final MenuEntry MESSAGING = new MenuEntry(3, "icon-langues", "messaging", 6, "Messaging");
 
     public static final MenuEntry UNIVERSALIS = new MenuEntry(8, StringPool.BLANK, "universalis", 0, "ExternalResource");
     public static final MenuEntry UNIVERSALIS_JUNIOR = new MenuEntry(9, StringPool.BLANK, "universalis-junior", 1, "ExternalResource");
@@ -20,7 +20,7 @@ public class MenuEntry {
     public static final MenuEntry H5P = new MenuEntry(12, StringPool.BLANK, "h5p", 4, "ExternalResource");
     public static final MenuEntry GRR = new MenuEntry(13, StringPool.BLANK, "grr", 5, "ExternalResource");
 
-    public static final MenuEntry RESOURCES = new MenuEntry("icon-nav-ressources.svg", "resources", 7, Arrays.asList(UNIVERSALIS, UNIVERSALIS_JUNIOR, CORTEX, DISCIPLINES_CO, H5P, GRR));
+    public static final MenuEntry RESOURCES = new MenuEntry("icon-resource", "resources", 7, Arrays.asList(UNIVERSALIS, UNIVERSALIS_JUNIOR, CORTEX, DISCIPLINES_CO, H5P, GRR));
 
     public static final MenuEntry USER_ADMIN = new MenuEntry(14, StringPool.BLANK, "user-admin", 0, "UserManagement");
     public static final MenuEntry APPLICATION_ADMIN = new MenuEntry(15, StringPool.BLANK, "application-admin", 1, "ApplicationManager");
@@ -29,7 +29,7 @@ public class MenuEntry {
     public static final MenuEntry STATISTICS = new MenuEntry(18, StringPool.BLANK, "statistics", 4, "Statistics");
     public static final MenuEntry MAINTENANCE = new MenuEntry(19, StringPool.BLANK, "maintenance", 5, "Maintenance");
 
-    public static final MenuEntry ADMINISTRATION = new MenuEntry("icon-nav-admin.svg", "administration", 8, Arrays.asList(USER_ADMIN, APPLICATION_ADMIN, HORAIRES_ADMIN, ACCESS_ADMIN, STATISTICS, MAINTENANCE));
+    public static final MenuEntry ADMINISTRATION = new MenuEntry("icon-admin", "administration", 8, Arrays.asList(USER_ADMIN, APPLICATION_ADMIN, HORAIRES_ADMIN, ACCESS_ADMIN, STATISTICS, MAINTENANCE));
 
     final long id;
     final int position;
