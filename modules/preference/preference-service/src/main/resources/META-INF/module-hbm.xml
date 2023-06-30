@@ -2,33 +2,8 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.preference.model.MobileDevice" />
-	<import class="com.weprode.nero.preference.model.MobileNotification" />
 	<import class="com.weprode.nero.preference.model.NotifyConfig" />
-	<import class="com.weprode.nero.preference.model.UserMobileToken" />
 	<import class="com.weprode.nero.preference.model.UserProperties" />
-	<class name="com.weprode.nero.preference.model.impl.MobileDeviceImpl" table="Preference_MobileDevice">
-		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="mobileDeviceId" type="long">
-			<generator class="assigned" />
-		</id>
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="manufaturerDeviceId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="deviceModel" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="manufacturer" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="operatingSystem" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="operatingSystemVersion" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="browserUA" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-	</class>
-	<class name="com.weprode.nero.preference.model.impl.MobileNotificationImpl" table="Preference_MobileNotification">
-		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="mobileNotificationId" type="long">
-			<generator class="assigned" />
-		</id>
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="etabId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="enable" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="token" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="device" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-	</class>
 	<class name="com.weprode.nero.preference.model.impl.NotifyConfigImpl" table="Preference_NotifyConfig">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="notifyConfigId" type="long">
 			<generator class="assigned" />
@@ -41,13 +16,6 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="notifyAgenda" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="notifySync" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="digestPeriod" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
-	</class>
-	<class name="com.weprode.nero.preference.model.impl.UserMobileTokenImpl" table="Preference_UserMobileToken">
-		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userMobileTokenId" type="long">
-			<generator class="assigned" />
-		</id>
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="mobileToken" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.weprode.nero.preference.model.impl.UserPropertiesImpl" table="Preference_UserProperties">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="long">

@@ -189,6 +189,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         }
 
         try {
+            logger.info("User " + user.getUserId() + (isEnabled ? " activates" : " deactivates") + " WebDAV");
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             userProperties.setWebdavActivated(isEnabled);
             UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
@@ -233,6 +234,7 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         }
 
         try {
+            logger.info("User " + user.getUserId() + " updates " + (isWebdav ? "WEBDAV" : "") + " password");
             if (!password.isEmpty() && password.equals(confirmPassword)) {
                 if (isWebdav) {
                     result = updateUserPassword(user, password, true);

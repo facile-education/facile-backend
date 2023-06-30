@@ -1,28 +1,6 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.weprode.nero.preference.model.MobileDevice">
-		<field name="mobileDeviceId" type="long" />
-		<field name="manufaturerDeviceId" type="String">
-			<hint name="max-length">255</hint>
-		</field>
-		<field name="userId" type="long" />
-		<field name="deviceModel" type="String" />
-		<field name="manufacturer" type="String" />
-		<field name="operatingSystem" type="String" />
-		<field name="operatingSystemVersion" type="String" />
-		<field name="browserUA" type="String">
-			<hint name="max-length">500</hint>
-		</field>
-	</model>
-	<model name="com.weprode.nero.preference.model.MobileNotification">
-		<field name="mobileNotificationId" type="long" />
-		<field name="userId" type="long" />
-		<field name="etabId" type="long" />
-		<field name="enable" type="boolean" />
-		<field name="token" type="String" />
-		<field name="device" type="String" />
-	</model>
 	<model name="com.weprode.nero.preference.model.NotifyConfig">
 		<field name="notifyConfigId" type="long" />
 		<field name="userId" type="long" />
@@ -33,11 +11,6 @@
 		<field name="notifyAgenda" type="boolean" />
 		<field name="notifySync" type="boolean" />
 		<field name="digestPeriod" type="int" />
-	</model>
-	<model name="com.weprode.nero.preference.model.UserMobileToken">
-		<field name="userMobileTokenId" type="long" />
-		<field name="userId" type="long" />
-		<field name="mobileToken" type="String" />
 	</model>
 	<model name="com.weprode.nero.preference.model.UserProperties">
 		<field name="userId" type="long" />

@@ -42,10 +42,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.preference.model.NotifyConfig;
 import com.weprode.nero.preference.service.NotifyConfigLocalService;
 import com.weprode.nero.preference.service.NotifyConfigLocalServiceUtil;
-import com.weprode.nero.preference.service.persistence.MobileDevicePersistence;
-import com.weprode.nero.preference.service.persistence.MobileNotificationPersistence;
 import com.weprode.nero.preference.service.persistence.NotifyConfigPersistence;
-import com.weprode.nero.preference.service.persistence.UserMobileTokenPersistence;
 import com.weprode.nero.preference.service.persistence.UserPropertiesPersistence;
 
 import java.io.Serializable;
@@ -462,19 +459,10 @@ public abstract class NotifyConfigLocalServiceBaseImpl
 		}
 	}
 
-	@Reference
-	protected MobileDevicePersistence mobileDevicePersistence;
-
-	@Reference
-	protected MobileNotificationPersistence mobileNotificationPersistence;
-
 	protected NotifyConfigLocalService notifyConfigLocalService;
 
 	@Reference
 	protected NotifyConfigPersistence notifyConfigPersistence;
-
-	@Reference
-	protected UserMobileTokenPersistence userMobileTokenPersistence;
 
 	@Reference
 	protected UserPropertiesPersistence userPropertiesPersistence;

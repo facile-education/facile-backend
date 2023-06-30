@@ -561,6 +561,9 @@ public class JSONConstants {
     public static final String CAN_REGISTER_STUDENT = "canRegisterStudent";
     public static final String CAN_UPDATE_SLOT = "canUpdateSlot";
 
+    // Mobile
+    public static final String REFRESH_TOKEN = "refreshToken";
+
     // Success
     public static final String SUCCESS = "success";
 

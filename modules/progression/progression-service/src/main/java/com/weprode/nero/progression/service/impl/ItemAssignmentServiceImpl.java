@@ -155,7 +155,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
 
                 if (homeworkId == 0) {
                     // This is creation
-                    Homework homework = HomeworkLocalServiceUtil.createHomework(user, sourceSessionId, targetSessionId, groupId, toDate, type, 30, studentIds, new Date(), false);
+                    Homework homework = HomeworkLocalServiceUtil.createHomework(user, "title", sourceSessionId, targetSessionId, groupId, toDate, type, 30, studentIds, new Date(), false);
 
                     logger.info("Teacher " + user.getFullName() + " assigns homework item " + itemId + " to session " + sourceSessionId + ". Created homeworkId is " + homework.getHomeworkId());
                     ItemAssignment assignment = ItemAssignmentLocalServiceUtil.assignHomework(itemId, sourceSessionId, homework.getHomeworkId());
@@ -167,7 +167,7 @@ public class ItemAssignmentServiceImpl extends ItemAssignmentServiceBaseImpl {
                 } else {
                     // This is update
                     logger.info("Teacher " + user.getFullName() + " updates assignment for homework item " + itemId + " to session " + sourceSessionId);
-                    HomeworkLocalServiceUtil.updateHomework(homeworkId, targetSessionId, toDate, 30, studentIds, new Date(), false);
+                    HomeworkLocalServiceUtil.updateHomework(homeworkId, "title", targetSessionId, toDate, 30, studentIds, new Date(), false);
                     ItemAssignmentPK pk = new ItemAssignmentPK(itemId, sourceSessionId);
                     ItemAssignment assignment = ItemAssignmentLocalServiceUtil.getItemAssignment(pk);
                     jsonAssignments.put(assignment.convertToJSON(user.getUserId()));
