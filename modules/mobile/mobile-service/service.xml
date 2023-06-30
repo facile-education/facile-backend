@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.nero.mobile">
+	<namespace>Mobile</namespace>
+
+	<entity name="MobileDevice" local-service="true" remote-service="true">
+
+		<column name="mobileDeviceId" type="long" primary="true" />
+		<column name="userId" type="long"/>
+		<column name="manufacturerDeviceId" type="String"/>
+		<column name="deviceModel" type="String"/>
+		<column name="manufacturer" type="String"/>
+		<column name="operatingSystem" type="String"/>
+		<column name="operatingSystemVersion" type="String"/>
+		<column name="browserUA" type="String"/>
+
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+		<finder return-type="MobileDevice" name="manufacturerDeviceId">
+			<finder-column name="manufacturerDeviceId" />
+		</finder>
+	</entity>
+
+	<entity name="UserMobileToken" local-service="true" remote-service="true">
+
+		<column name="userMobileTokenId" type="long" primary="true" />
+		<column name="userId" type="long"/>
+		<column name="mobileToken" type="String"/>
+
+		<finder return-type="UserMobileToken" name="userMobileTokenId">
+			<finder-column name="userMobileTokenId" />
+		</finder>
+
+		<finder return-type="UserMobileToken" name="userId_mobileToken">
+			<finder-column name="userId" />
+			<finder-column name="mobileToken" />
+		</finder>
+
+	</entity>
+
+</service-builder>

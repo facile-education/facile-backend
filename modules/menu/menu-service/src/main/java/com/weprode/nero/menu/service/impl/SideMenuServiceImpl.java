@@ -54,33 +54,37 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        List<MenuEntry> userMenu = SideMenuLocalServiceUtil.getUserMenu(user);
-
-        // Notifications
-        JSONObject jsonNotifications = new JSONObject();
-        jsonNotifications.put(JSONConstants.MESSAGING, MessageLocalServiceUtil.countUnreadMessages(MessageFolderLocalServiceUtil.getUserInboxFolder(user.getUserId()).getFolderId()));
-        if (RoleUtilsLocalServiceUtil.isStudent(user)) {
-            jsonNotifications.put(JSONConstants.COURSES, HomeworkLocalServiceUtil.countUndoneHomeworks(user.getUserId()));
-        } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            jsonNotifications.put(JSONConstants.COURSES, HomeworkLocalServiceUtil.countHomeworksToCorrect(user.getUserId()));
-        }
-        jsonNotifications.put(JSONConstants.SCHOOLLIFE, RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId()).size());
-        result.put(JSONConstants.NOTIFICATIONS, jsonNotifications);
-
-        result.put(JSONConstants.MENU, getMenuAsJSON(userMenu));
-        boolean isMenuExpanded = false;
         try {
-            isMenuExpanded = !UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getHideMenu();
-        } catch (PortalException e) {
-            logger.error(e);
+            List<MenuEntry> userMenu = SideMenuLocalServiceUtil.getUserMenu(user);
+
+            // Notifications
+            JSONObject jsonNotifications = new JSONObject();
+            jsonNotifications.put(JSONConstants.MESSAGING, MessageLocalServiceUtil.countUnreadMessages(MessageFolderLocalServiceUtil.getUserInboxFolder(user.getUserId()).getFolderId()));
+            if (RoleUtilsLocalServiceUtil.isStudent(user)) {
+                jsonNotifications.put(JSONConstants.COURSES, HomeworkLocalServiceUtil.countUndoneHomeworks(user.getUserId()));
+            } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+                jsonNotifications.put(JSONConstants.COURSES, HomeworkLocalServiceUtil.countHomeworksToCorrect(user.getUserId()));
+            }
+            jsonNotifications.put(JSONConstants.SCHOOLLIFE, RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId()).size());
+            result.put(JSONConstants.NOTIFICATIONS, jsonNotifications);
+
+            result.put(JSONConstants.MENU, getMenuAsJSON(userMenu));
+            boolean isMenuExpanded = false;
+            try {
+                isMenuExpanded = !UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getHideMenu();
+            } catch (PortalException e) {
+                logger.error(e);
+            }
+            result.put(JSONConstants.EXPANDED, isMenuExpanded);
+
+            // Timeouts
+            result.put(JSONConstants.SESSION_TIMEOUT, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT) * 60000);
+            result.put(JSONConstants.SESSION_TIMEOUT_WARNING, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT_WARNING) * 60000);
+
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error building menu", e);
         }
-        result.put(JSONConstants.EXPANDED, isMenuExpanded);
-
-        // Timeouts
-        result.put(JSONConstants.SESSION_TIMEOUT, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT) * 60000);
-        result.put(JSONConstants.SESSION_TIMEOUT_WARNING, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT_WARNING) * 60000);
-
-        result.put(JSONConstants.SUCCESS, true);
 
         return result;
     }

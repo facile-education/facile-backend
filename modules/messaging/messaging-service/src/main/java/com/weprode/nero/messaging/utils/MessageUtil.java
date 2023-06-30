@@ -18,9 +18,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
@@ -32,6 +30,8 @@ import com.weprode.nero.messaging.service.MessageContentLocalServiceUtil;
 import com.weprode.nero.messaging.service.MessageFolderLocalServiceUtil;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.messaging.service.MessageRecipientsLocalServiceUtil;
+import com.weprode.nero.mobile.constants.MobileConstants;
+import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -105,14 +105,8 @@ public class MessageUtil {
 				addAttachFiles(recipientId, message.getMessageId(), attachFileIds);
 
 				// Notify on mobile phone
-				boolean isMobileNotificationEnabled = Boolean.parseBoolean(
-						PropsUtil.get(NeroSystemProperties.MOBILE_NOTIFICATIONS_ENABLED));
-				if (isMobileNotificationEnabled) {
-					String messagingUrl = "/messagerie/"; // TODO put into translation bundle. Further menu management service will use it too
-					ThreadMobileNotification notifThread = new ThreadMobileNotification(recipientId, sender.getFullName(), message.getMessageSubject(), messageContent,
-							messagingUrl, MobileNotification.MESSAGING_TYPE, message.getMessageId());
-					notifThread.start();
-				}
+				MobileDeviceLocalServiceUtil.pushNotificationToUser(recipientId, sender.getFullName(), message.getMessageSubject(), messageContent,
+						MobileConstants.MESSAGING_TYPE, message.getMessageId());
 
 				// Manage mail forwards
 				MessageLocalServiceUtil.performMailForwards(recipient, messageSubject, messageContent, sender.getFullName(), attachmentFileList);
@@ -417,6 +411,5 @@ public class MessageUtil {
 	}
 
 	private static final String DEFAULT_SUBJECT = "(Pas d'objet)";
-
 	private static final String DEFAULT_CONTENT = "Ce message est vide";
 }
