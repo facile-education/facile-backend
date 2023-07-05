@@ -12,6 +12,9 @@ import com.weprode.nero.mobile.constants.MobileConstants;
 import com.weprode.nero.mobile.model.MobileDevice;
 import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Safelist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +69,12 @@ public class MobileNotification {
 
 					logger.info("Sending push notification to " + recipient.getFullName() + "(" + recipientId + "). DeviceId is " + device.getMobileDeviceId()+", redirect="+redirect);
 
-					JSONObject response = FCMNotification.pushFCMNotification(device.getManufacturerDeviceId(), notificationTitle, notificationSubtitle, message, redirect);
-					String results = response.getString("results");
+					String escapedTitle = formatHtml(notificationTitle, 70);
+					String escapedSubTitle = formatHtml(notificationSubtitle, 70);
+					String escapedMessage = formatHtml(message, 200);
+
+					JSONObject response = FCMNotification.pushFCMNotification(device.getManufacturerDeviceId(), escapedTitle, escapedSubTitle, escapedMessage, redirect);
+					String results = response.getJSONArray("results").toString();
 					if (results.contains("NotRegistered") || results.contains("InvalidRegistration")) {
 						logger.info("Received '" + results + "' failure message so remove device " + device.getMobileDeviceId() + " for user id " + device.getUserId());
 						MobileDeviceLocalServiceUtil.deleteMobileDevice(device.getMobileDeviceId());
@@ -78,7 +85,7 @@ public class MobileNotification {
 			}
 		}
 	}
-		
+
 	public static void sendMobileNotificationGroup(List<Long> groupIds, long senderId, String title, String subtitle, String message, String service, long paramId)
 			throws PortalException, SystemException {
 
@@ -109,4 +116,20 @@ public class MobileNotification {
 			}
 		}
 	}
+
+	private static String formatHtml(String source, int maxSize) {
+		Document jsoupDoc = Jsoup.parse(source);
+		Document.OutputSettings outputSettings = new Document.OutputSettings();
+		outputSettings.prettyPrint(false);
+		jsoupDoc.outputSettings(outputSettings);
+		jsoupDoc.select("br").before("\\n");
+		jsoupDoc.select("p").before("\\n");
+		String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
+		String formattedString = Jsoup.clean(str, "", Safelist.none(), outputSettings).replaceAll("&nbsp;", "");
+		if (formattedString.length() > maxSize) {
+			formattedString = formattedString.substring(0, maxSize) + "...";
+		}
+		return formattedString;
+	}
+
 }

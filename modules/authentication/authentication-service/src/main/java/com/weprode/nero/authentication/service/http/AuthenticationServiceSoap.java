@@ -70,12 +70,12 @@ public class AuthenticationServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject getSessionValidity()
+	public static org.json.JSONObject log(String stringToLog)
 		throws RemoteException {
 
 		try {
-			org.json.JSONObject returnValue =
-				AuthenticationServiceUtil.getSessionValidity();
+			org.json.JSONObject returnValue = AuthenticationServiceUtil.log(
+				stringToLog);
 
 			return returnValue;
 		}

@@ -43,11 +43,11 @@ public class FCMNotification {
         JSONObject message = new JSONObject();
         message.put("to", deviceIdKey.trim());
         JSONObject notification = new JSONObject();
-        notification.put("title", sanitizeContent(title, 70));
+        notification.put("title", title);
         if (!subtitle.isEmpty()) {
-            notification.put("subtitle", sanitizeContent(subtitle, 70));
+            notification.put("subtitle", subtitle);
         }
-        notification.put("body", sanitizeContent(body, 200));
+        notification.put("body", body);
         message.put("notification", notification);
         JSONObject data = new JSONObject();
         data.put("service", redirectUrl);
