@@ -258,7 +258,9 @@ public class GVESynchronizationManager {
                 // Do not normalize because it breaks escaped characters
                 // schoolName = Normalizer.normalize(schoolName, Normalizer.Form.NFD);
                 // schoolName = schoolName.replace("[^\\p{ASCII}]", "");
-                schoolName = schoolName.replace("Cycle d'orientation", "CO");
+                // Active Directory
+                //schoolName = schoolName.replace("Cycle d'orientation", "CO");
+                schoolName = schoolName.replace("Collège", "CO");
                 logger.info("Formatted SchoolName is -"+ schoolName + "-");
 
                 // Create school and school-level orgs
@@ -881,7 +883,9 @@ public class GVESynchronizationManager {
         if (cnUserMap.containsKey(fullCn)) {
             return cnUserMap.get(fullCn);
         } else {
-            String[] attributeIds = {ATTRIBUTE_USER_SN, ATTRIBUTE_USER_GIVEN_NAME, ATTRIBUTE_USER_MAIL, ATTRIBUTE_USER_EMPLOYEE_ID};
+            // Active Directory
+            //String[] attributeIds = {ATTRIBUTE_USER_SN, ATTRIBUTE_USER_GIVEN_NAME, ATTRIBUTE_USER_MAIL, ATTRIBUTE_USER_EMPLOYEE_ID};
+            String[] attributeIds = {ATTRIBUTE_USER_SN, ATTRIBUTE_USER_GIVEN_NAME, ATTRIBUTE_USER_MAIL, ATTRIBUTE_USER_DESCRIPTION};
 
             try {
                 // Get specified LDAP attributes
@@ -890,7 +894,7 @@ public class GVESynchronizationManager {
                 String givenName    = LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_GIVEN_NAME);
                 String sn   		= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_SN);
                 String mail   		= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_MAIL);
-                String uid			= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_EMPLOYEE_ID);
+                String uid			= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_DESCRIPTION);
                 String shortCn = extractCn(fullCn);
 
                 // First fetch by screenname
@@ -1211,6 +1215,7 @@ public class GVESynchronizationManager {
             // Check that the cours name is well-formatted
             if (getSessionName(sessionName).length() < 5) {
                 logger.error("===REPORT=== Cours incorrect dans EEL : " + getSessionName(sessionName));
+                reportData.addSmogCours(sessionName);
                 reportData.setDirectoryError(true);
                 return;
             }
@@ -1220,6 +1225,7 @@ public class GVESynchronizationManager {
             // Check that the volee belongs to the authorized list
             if (!OrgUtilsLocalServiceUtil.isVoleeAuthorized(volee) && !OrgUtilsLocalServiceUtil.isVoleeAuthorized(volee2)) {
                 logger.error("===REPORT=== Cours incorrect dans EEL : " + getSessionName(sessionName));
+                reportData.addSmogCours(sessionName);
                 reportData.setDirectoryError(true);
                 return;
             }
@@ -1227,7 +1233,7 @@ public class GVESynchronizationManager {
             // Create associated group
             String orgName = school.getName() + " - " + getSessionName(sessionName);
             Organization coursOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(companyId, orgName, school.getOrganizationId(), OrgConstants.COURS_TYPE);
-            logger.info("toto2 " + sessionName);
+            // logger.info(sessionName);
 
             studentMap.put(sessionName, new ArrayList<>());
 
@@ -2271,7 +2277,7 @@ public class GVESynchronizationManager {
         String baseProviderURL 	= PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_BASE_PROVIDER_URL);
         String principal 		= PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_SECURITY_PRINCIPAL);
         String credentials 		= PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_SECURITY_CREDENTIALS);
-        // logger.info("Get LDAPS context for baseProviderURL=" + baseProviderURL + " , principal = " + principal +", groupDn=" + PropsUtil.get(GVE_LDAP_BASE_DN_GROUPS));
+
         Properties environmentProperties = new Properties();
 
         // Get truststore containing certification chain
@@ -2298,7 +2304,8 @@ public class GVESynchronizationManager {
         environmentProperties.put(Context.SECURITY_PRINCIPAL, principal);
         environmentProperties.put(Context.SECURITY_CREDENTIALS, credentials);
         environmentProperties.put("java.naming.ldap.factory.socket", sslsocketfactory.getClass().getName());
-        environmentProperties.put("java.naming.ldap.version", "3");
+        // Active Directory
+        //environmentProperties.put("java.naming.ldap.version", "3");
 
         try {
             ctx = new InitialLdapContext(environmentProperties, null);
@@ -2564,8 +2571,14 @@ public class GVESynchronizationManager {
         }
     }
 
-    private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=eTATGEgroup)";
-    private static final String ETAT_GE_PROPRIETAIRE = "eTATGEproprietaire";
+    // Active Directory
+    //private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=eTATGEgroup)";
+    //private static final String ETAT_GE_PROPRIETAIRE = "eTATGEproprietaire";
+
+    // For Openldap
+    private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=ETATGEgroupOfNames)";
+    private static final String ETAT_GE_PROPRIETAIRE = "ETATGEproprietaire";
+
     private static final String MEMBER = "member";
 
     private static final String ATTRIBUTE_SCHOOL_DESCRIPTION = "description";
@@ -2573,7 +2586,9 @@ public class GVESynchronizationManager {
     private static final String ATTRIBUTE_USER_SN = "sn";
     private static final String ATTRIBUTE_USER_GIVEN_NAME = "givenName";
     private static final String ATTRIBUTE_USER_MAIL = "mail";
-    private static final String ATTRIBUTE_USER_EMPLOYEE_ID = "employeeId";
+    private static final String ATTRIBUTE_USER_DESCRIPTION = "description";
+    // Active Directory
+    // private static final String ATTRIBUTE_USER_EMPLOYEE_ID = "employeeId";
 
     private static final String CSV_SEPARATOR = ",";
 
