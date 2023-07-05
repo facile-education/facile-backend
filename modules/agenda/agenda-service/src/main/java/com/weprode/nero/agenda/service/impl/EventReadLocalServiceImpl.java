@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.agenda.exception.NoSuchEventReadException;
+import com.weprode.nero.agenda.model.Event;
 import com.weprode.nero.agenda.model.EventPopulation;
 import com.weprode.nero.agenda.model.EventRead;
 import com.weprode.nero.agenda.service.EventLocalServiceUtil;
@@ -75,9 +76,12 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
 
     public boolean markEventAsUnReadForAll(long eventId) {
         try {
+            Event event = EventLocalServiceUtil.getEvent(eventId);
             List<EventRead> eventReadList = eventReadPersistence.findByeventId(eventId);
             for (EventRead er : eventReadList) {
-                EventReadLocalServiceUtil.deleteEventRead(er);
+                if (er.getUserId() != event.getAuthorId()) {
+                    EventReadLocalServiceUtil.deleteEventRead(er);
+                }
             }
             
             logger.info("Mark event " + eventId + " as unRead for all");

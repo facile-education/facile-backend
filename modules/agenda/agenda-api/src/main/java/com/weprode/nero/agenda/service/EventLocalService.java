@@ -283,7 +283,8 @@ public interface EventLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Event modifyEvent(
 			long eventId, String title, String description, String location,
-			Date startDate, Date endDate, JSONArray populations)
+			Date startDate, Date endDate, JSONArray populations,
+			boolean markAsUnread)
 		throws SystemException;
 
 	/**

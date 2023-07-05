@@ -350,12 +350,12 @@ public class EventLocalServiceWrapper
 	public com.weprode.nero.agenda.model.Event modifyEvent(
 			long eventId, String title, String description, String location,
 			java.util.Date startDate, java.util.Date endDate,
-			org.json.JSONArray populations)
+			org.json.JSONArray populations, boolean markAsUnread)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _eventLocalService.modifyEvent(
 			eventId, title, description, location, startDate, endDate,
-			populations);
+			populations, markAsUnread);
 	}
 
 	/**
