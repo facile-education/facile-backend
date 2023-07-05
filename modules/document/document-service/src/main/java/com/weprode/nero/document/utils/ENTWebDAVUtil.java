@@ -97,8 +97,9 @@ public class ENTWebDAVUtil {
                 }
             }
 
-            String portalUrl = PropsUtil.get(NeroSystemProperties.PORTAL_URL);
-            return portalUrl + "/api/secure/webdav" + group.getFriendlyURL() + "/document_library" + sb;
+            return PropsUtil.get(NeroSystemProperties.PORTAL_URL)
+                    + PropsUtil.get(NeroSystemProperties.LIFERAY_CONTEXT)
+                    + "/api/secure/webdav" + group.getFriendlyURL() + "/document_library" + sb;
         } catch (Exception e) {
             logger.error(e);
         }

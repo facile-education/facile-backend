@@ -8,6 +8,7 @@ public class NeroSystemProperties {
 
 	// General
 	public static final String PORTAL_URL = "absolute.url";
+	public static final String LIFERAY_CONTEXT = "liferay.context";
 	public static final String ROOT_ORGANIZATION_NAME = "orgRoot.name";
 	public static final String TERMS_OF_USE_FILE = "chart.file.path";
 

@@ -318,22 +318,26 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 				String wopiParam = file.getFileEntryId() + "+" + versionName + "+" + readOnly;
 				String hostUrl = PropsUtil.get(NeroSystemProperties.PORTAL_URL);
-				documentURL = "/browser/dist/cool.html?WOPISrc=" + URLCodec.encodeURL(hostUrl) + "c%2Fcommon%2Fwopi%2Ffiles%2F" + URLCodec.encodeURL(wopiParam)
+				documentURL = "/browser/dist/cool.html?WOPISrc="
+						+ URLCodec.encodeURL(hostUrl)
+						+ PropsUtil.get(NeroSystemProperties.LIFERAY_CONTEXT)
+						+ "/c%2Fcommon%2Fwopi%2Ffiles%2F"
+						+ URLCodec.encodeURL(wopiParam)
 						+ "&access_token=" + token;
 
 				break;
 			default:
 				Date d = new Date();
-				String mainPath = ""; // TODO
 
 				documentURL =
-						mainPath + "/documents/"
-								+ file.getRepositoryId() + StringPool.SLASH
-								+ file.getFolderId() + StringPool.SLASH
-								+ file.getTitle() + StringPool.SLASH
-								+ file.getUuid() + StringPool.QUESTION
-								+ "version=" + file.getVersion() + StringPool.AMPERSAND
-								+ "t=" + d.getTime();
+						PropsUtil.get(NeroSystemProperties.LIFERAY_CONTEXT)
+						+ "/documents/"
+						+ file.getRepositoryId() + StringPool.SLASH
+						+ file.getFolderId() + StringPool.SLASH
+						+ file.getTitle() + StringPool.SLASH
+						+ file.getUuid() + StringPool.QUESTION
+						+ "version=" + file.getVersion() + StringPool.AMPERSAND
+						+ "t=" + d.getTime();
 
 				// Add parameter in URL in case of video/audio conversion is needed
 				if (typeOfView.equals("Video") && !file.getExtension().equals("mp4")) {
@@ -346,7 +350,8 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 	}
 
 	public String getDownloadUrl (FileEntry file) {
-		return 	"/documents/"
+		return 	PropsUtil.get(NeroSystemProperties.LIFERAY_CONTEXT)
+				+ "/documents/"
 				+ file.getRepositoryId() + StringPool.SLASH
 				+ file.getFolderId() + StringPool.SLASH
 				+ file.getTitle() + StringPool.SLASH
