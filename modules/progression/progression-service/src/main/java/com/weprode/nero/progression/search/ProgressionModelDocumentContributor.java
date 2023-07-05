@@ -41,7 +41,7 @@ public class ProgressionModelDocumentContributor
             document.addNumber(Field.USER_ID, progression.getTeacherId());
             document.addText(Field.USER_NAME, author.getFullName());
 
-            logger.info("Added progression fields to document " + document);
+            logger.debug("Added progression fields to document " + document);
         } catch (PortalException e) {
             logger.warn("Unable to index progression " + progression.getProgressionId(), e);
         }

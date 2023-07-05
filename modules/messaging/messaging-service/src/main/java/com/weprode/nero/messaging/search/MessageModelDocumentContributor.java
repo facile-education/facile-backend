@@ -63,7 +63,7 @@ public class MessageModelDocumentContributor
             String[] attachmentNames = fileNames.toArray(String[]::new);
             document.addText(Field.ASSET_TAG_NAMES, attachmentNames);
 
-            logger.info("Added message fields to document " + document);
+            logger.debug("Added message fields to document " + document);
         } catch (PortalException e) {
             logger.warn("Unable to index message " + message.getMessageId(), e);
         }
