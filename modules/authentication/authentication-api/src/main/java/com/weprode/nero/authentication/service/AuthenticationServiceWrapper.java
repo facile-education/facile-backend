@@ -48,8 +48,8 @@ public class AuthenticationServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getSessionValidity() {
-		return _authenticationService.getSessionValidity();
+	public org.json.JSONObject log(String stringToLog) {
+		return _authenticationService.log(stringToLog);
 	}
 
 	@Override

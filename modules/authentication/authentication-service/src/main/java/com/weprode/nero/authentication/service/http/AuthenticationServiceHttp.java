@@ -84,15 +84,15 @@ public class AuthenticationServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject getSessionValidity(
-		HttpPrincipal httpPrincipal) {
+	public static org.json.JSONObject log(
+		HttpPrincipal httpPrincipal, String stringToLog) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				AuthenticationServiceUtil.class, "getSessionValidity",
-				_getSessionValidityParameterTypes1);
+				AuthenticationServiceUtil.class, "log", _logParameterTypes1);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey);
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, stringToLog);
 
 			Object returnObj = null;
 
@@ -120,7 +120,8 @@ public class AuthenticationServiceHttp {
 
 	private static final Class<?>[] _checkCredentialsParameterTypes0 =
 		new Class[] {String.class, String.class};
-	private static final Class<?>[] _getSessionValidityParameterTypes1 =
-		new Class[] {};
+	private static final Class<?>[] _logParameterTypes1 = new Class[] {
+		String.class
+	};
 
 }

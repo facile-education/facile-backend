@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
-import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
 import org.json.JSONObject;
@@ -50,7 +49,7 @@ public interface AuthenticationService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.authentication.service.impl.AuthenticationServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the authentication remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link AuthenticationServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "check-credentials")
+	@JSONWebService(method = "POST", value = "check-credentials")
 	public JSONObject checkCredentials(String login, String password);
 
 	/**
@@ -60,8 +59,7 @@ public interface AuthenticationService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "get-session-validity")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getSessionValidity();
+	@JSONWebService(method = "GET", value = "log")
+	public JSONObject log(String stringToLog);
 
 }

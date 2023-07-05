@@ -12,7 +12,6 @@ import com.liferay.portal.kernel.security.auto.login.AutoLoginException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
@@ -23,8 +22,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Component(immediate = true)
 public class MobileApplicationAutoLogin implements AutoLogin {
@@ -34,7 +31,6 @@ public class MobileApplicationAutoLogin implements AutoLogin {
     public String[] login (
             HttpServletRequest request, HttpServletResponse response) throws AutoLoginException{
 
-        logger.info("Mobile AutoLogin !");
         HttpSession session = request.getSession();
         String[] credentials = null;
 
@@ -43,7 +39,7 @@ public class MobileApplicationAutoLogin implements AutoLogin {
             boolean mobileApp = ParamUtil.getBoolean(request, "mobile_app", false);
             String mobileToken = ParamUtil.getString(request, "mobile_token", "");
             String service = ParamUtil.getString(request, "service", "");
-            logger.error("MobileApplicationAutoLogin : userId="+userId+", mobileToken="+mobileToken + ", mobile_app=" + mobileApp + ", service="+service);
+            logger.info("MobileApplicationAutoLogin : userId="+userId+", mobileToken="+mobileToken + ", mobile_app=" + mobileApp + ", service="+service);
 
             if (!mobileToken.isEmpty() && userId > 0) {
                 if (UserMobileTokenLocalServiceUtil.hasUserMobileToken(userId, mobileToken)) {
@@ -55,10 +51,14 @@ public class MobileApplicationAutoLogin implements AutoLogin {
                     credentials[1] = user.getPassword();
                     credentials[2] = Boolean.TRUE.toString();
 
-                    setCookies(request, response, user.getUserId(), PortalUtil.getCompany(request),
-                            String.valueOf(user.getUserId()), user.getPassword());
+                    //setCookies(request, response, user.getUserId(), PortalUtil.getCompany(request),
+                    //        String.valueOf(user.getUserId()), user.getPassword());
                     logger.info("User  " + user.getFullName() + "(" + user.getUserId() + ") authenticated on mobile application.");
 
+//                    String redirect = "/tableau-de-bord";
+//                    request.setAttribute(AutoLogin.AUTO_LOGIN_REDIRECT, redirect);
+
+                    return credentials;
                 } else {
                     logger.error("Unknown token " + mobileToken + " for userId " + userId + " when logging on mobile application.");
                     Object noSuchUserException = session.getAttribute(WebKeys.CAS_NO_SUCH_USER_EXCEPTION);
@@ -80,13 +80,14 @@ public class MobileApplicationAutoLogin implements AutoLogin {
             }
 
             // Redirect
-            String redirect = "/login?mobile_app=" + mobileApp + "&mobile_token=" + mobileToken;
-            if (!service.isEmpty()) {
-                redirect += "&service=" + URLEncoder.encode(service, StandardCharsets.UTF_8);
-            }
-            response.sendRedirect(redirect);
+//            String redirect = "/login"; //?mobile_app=" + mobileApp + "&mobile_token=" + mobileToken;
+//            if (!service.isEmpty()) {
+//                redirect += "&service=" + URLEncoder.encode(service, StandardCharsets.UTF_8);
+//            }
+//            logger.info("Redirecting to " + redirect);
+//            response.sendRedirect(redirect);
 
-            return credentials;
+//            return credentials;
 
         }
         catch (NoSuchUserException nsue) {

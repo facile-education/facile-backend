@@ -138,7 +138,7 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "delete-user-device", method = "GET")
+	@JSONWebService(value = "delete-user-device", method = "DEL")
 	public JSONObject deleteUserDevice(String deviceId) {
 		JSONObject result = new JSONObject();
 

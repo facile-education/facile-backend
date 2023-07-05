@@ -20,21 +20,13 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.model.UserTracker;
 import com.liferay.portal.kernel.service.PasswordTrackerLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.servlet.PortalSessionContext;
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.authentication.service.base.AuthenticationServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
-
-import javax.servlet.http.HttpSession;
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Brian Wing Shun Chan
@@ -51,10 +43,11 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 	private final Log logger = LogFactoryUtil.getLog(AuthenticationServiceImpl.class);
 
 	// This is a public webservice
-	@JSONWebService(value = "check-credentials", method = "GET")
+	@JSONWebService(value = "check-credentials", method = "POST")
 	public JSONObject checkCredentials(String login, String password) {
 		JSONObject result = new JSONObject();
 
+		logger.info("checkCredentials for login " + login);
 		result.put(JSONConstants.IS_VALID, false);
 		try {
 			boolean isValid = false;
@@ -71,6 +64,8 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 				try {
 					isValid = PasswordTrackerLocalServiceUtil.isSameAsCurrentPassword(user.getUserId(), password);
 					isActive = user.isActive();
+					result.put(JSONConstants.USER_ID, user.getUserId());
+					logger.info("checkCredentials OK for " + user.getScreenName());
 				} catch (Exception e) {
 					logger.info("Error when comparing password with current one", e);
 				}
@@ -85,40 +80,11 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "get-session-validity", method = "GET")
-	public JSONObject getSessionValidity() {
-
+	@JSONWebService(value = "log", method = "GET")
+	public JSONObject log(String stringToLog) {
 		JSONObject result = new JSONObject();
-		result.put(JSONConstants.SUCCESS, false);
-		result.put(JSONConstants.IS_SESSION_EXPIRED, false);
-		result.put(JSONConstants.IS_SESSION_WARNING, false);
 
-		try {
-			User user = getGuestOrUser();
-			Class<?> liveUsers = PortalClassLoaderUtil.getClassLoader().loadClass("com.liferay.portal.liveusers.LiveUsers");
-			Method getSessionUsers = liveUsers.getDeclaredMethod("getSessionUsers", long.class);
-			Object map = getSessionUsers.invoke(null, user.getCompanyId());
-			Map<String, UserTracker> sessionUsers = (ConcurrentHashMap<String, UserTracker>)map;
-
-			for (Map.Entry<String, UserTracker> sessionUser : sessionUsers.entrySet()) {
-				UserTracker userTracker = sessionUser.getValue();
-				if (userTracker.getUserId() == user.getUserId()) {
-					HttpSession session = PortalSessionContext.get(userTracker.getSessionId());
-					long nbSeconds = System.currentTimeMillis() - session.getLastAccessedTime();
-					logger.info("Nb milli-seconds = " + nbSeconds);
-					if (nbSeconds > session.getMaxInactiveInterval() * 1000L) {
-						result.put(JSONConstants.IS_SESSION_EXPIRED, false);
-						result.put(JSONConstants.IS_SESSION_WARNING, true);
-						result.put(JSONConstants.SUCCESS, true);
-						return result;
-					}
-				}
-			}
-
-		} catch (Exception e) {
-			logger.error("Error checking user session validity", e);
-		}
-
+		logger.info("LOG " + stringToLog);
 		return result;
 	}
 

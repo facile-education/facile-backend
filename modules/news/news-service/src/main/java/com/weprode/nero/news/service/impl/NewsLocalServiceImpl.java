@@ -6,6 +6,7 @@ import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -21,6 +22,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -37,6 +39,8 @@ import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
+import com.weprode.nero.mobile.constants.MobileConstants;
+import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.model.NewsPopulation;
 import com.weprode.nero.news.service.NewsAttachedFileLocalServiceUtil;
@@ -51,6 +55,7 @@ import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.NewsAdminLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -105,6 +110,11 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             // Mark the news as read for the author
             NewsReadLocalServiceUtil.setNewsRead(authorId, news.getNewsId());
 
+            // Mobile push for school news only
+            if (isSchoolNews) {
+                manageMobilePush(title, content, populations);
+            }
+
             return news;
         } catch (Exception e) {
             logger.error("Error creating news", e);
@@ -139,6 +149,11 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             updateNewsThumbnail(news.getAuthorId(), news, imageId);
 
             manageAttachedFiles(news.getNewsId(), populations, attachFileIds, false);
+
+            // Mobile push for school news only
+            if (news.getIsSchoolNews()) {
+                manageMobilePush(title, content, populations);
+            }
 
             return news;
         } catch (Exception e) {
@@ -626,8 +641,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
     }
 
     private void deleteNewsThumbnail(News news) throws PortalException {
-        // Get thumbnail file
-        DLAppServiceUtil.deleteFileEntry(news.getImageId());
+
+        if (news.getImageId() != 0) {
+            DLAppServiceUtil.deleteFileEntry(news.getImageId());
+        }
 
         // Set news imageId to 0
         news.setImageId(0);
@@ -740,6 +757,38 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             }
         }
 
+    }
+
+    private void manageMobilePush(String title, String content, JSONArray populations) {
+
+        // Title is the news title
+        // No subtitle
+        // Body is the news content
+        try {
+            for (int idx = 0; idx < populations.length(); idx++) {
+                JSONObject population = populations.getJSONObject(idx);
+                // Get all population members
+                Group group = GroupLocalServiceUtil.getGroup(population.getLong(JSONConstants.GROUP_ID));
+                List<User> groupMembers;
+                if (group.isRegularSite()) {
+                    groupMembers = UserLocalServiceUtil.getGroupUsers(group.getGroupId());
+                } else {
+                    List<Long> orgIds = new ArrayList<>();
+                    orgIds.add(group.getClassPK());
+                    List<Long> roleIds = new ArrayList<>();
+                    roleIds.add(population.getLong(JSONConstants.ROLE_ID));
+                    groupMembers = UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+                }
+
+                for (User member : groupMembers) {
+
+                    MobileDeviceLocalServiceUtil.pushNotificationToUser(member.getUserId(), title, "", content,
+                            MobileConstants.ANNOUNCEMENT_TYPE, 0);
+                }
+            }
+        } catch (Exception e) {
+            logger.info("Error pushing mobile notification for created announcement", e);
+        }
     }
 
     // Used when deleting a group

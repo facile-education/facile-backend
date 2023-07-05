@@ -70,6 +70,9 @@ public class ShibbolethAutoLogin implements AutoLogin {
     private User loginFromSession(long companyId, HttpSession session) throws PortalException {
 
         User user = null;
+        if (session == null) {
+            return null;
+        }
         String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_EA);
 
         try {

@@ -49,7 +49,7 @@ public interface MobileDeviceService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.mobile.service.impl.MobileDeviceServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the mobile device remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link MobileDeviceServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "delete-user-device")
+	@JSONWebService(method = "DEL", value = "delete-user-device")
 	public JSONObject deleteUserDevice(String deviceId);
 
 	/**
