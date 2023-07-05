@@ -64,7 +64,7 @@ public class EventModelDocumentContributor
             document.addNumber(Field.GROUP_ID, groupIds.stream().mapToLong(l -> l).toArray());
             document.addText("populationIds", populationIds);
 
-            logger.info("Added event fields to document " + document);
+            logger.debug("Added event fields to document " + document);
         } catch (PortalException e) {
             logger.warn("Unable to index event " + event.getEventId(), e);
         }

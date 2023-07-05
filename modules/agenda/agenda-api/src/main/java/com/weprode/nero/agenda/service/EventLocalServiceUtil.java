@@ -319,12 +319,12 @@ public class EventLocalServiceUtil {
 	public static Event modifyEvent(
 			long eventId, String title, String description, String location,
 			java.util.Date startDate, java.util.Date endDate,
-			org.json.JSONArray populations)
+			org.json.JSONArray populations, boolean markAsUnread)
 		throws SystemException {
 
 		return getService().modifyEvent(
 			eventId, title, description, location, startDate, endDate,
-			populations);
+			populations, markAsUnread);
 	}
 
 	/**

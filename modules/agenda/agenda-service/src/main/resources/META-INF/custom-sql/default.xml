@@ -5,7 +5,6 @@
             SELECT event.*
             FROM Agenda_Event event
             JOIN Agenda_EventPopulation pop on event.eventId = pop.eventId
-            LEFT JOIN Agenda_EventRead read_ on event.eventId = read_.eventId
             WHERE event.endDate >= ?
             AND ((pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$])) OR event.authorId = ?)
             [$OTHER$]
@@ -19,8 +18,7 @@
             SELECT count(DISTINCT event.eventId)
             FROM Agenda_Event event
             JOIN Agenda_EventPopulation pop on event.eventId = pop.eventId
-            LEFT JOIN Agenda_EventRead read_ on event.eventId = read_.eventId
-            WHERE event.startDate >= ?
+            WHERE event.endDate >= ?
             AND ((pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$])) OR event.authorId = ?)
             [$OTHER$]
         ]]>

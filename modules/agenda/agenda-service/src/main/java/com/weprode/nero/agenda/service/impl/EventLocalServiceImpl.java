@@ -1,13 +1,16 @@
 package com.weprode.nero.agenda.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -18,7 +21,10 @@ import com.weprode.nero.agenda.service.EventPopulationLocalServiceUtil;
 import com.weprode.nero.agenda.service.EventReadLocalServiceUtil;
 import com.weprode.nero.agenda.service.base.EventLocalServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.mobile.constants.MobileConstants;
+import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -73,11 +79,14 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         // Mark the event as read for the author
         EventReadLocalServiceUtil.markEventAsRead(authorId, event.getEventId());
 
+        // Mobile push
+        manageMobilePush(title, location, description, populations);
+
         return event;
     }
 
     @Indexable(type = IndexableType.REINDEX)
-    public Event modifyEvent(long eventId, String title, String description, String location, Date startDate, Date endDate, JSONArray populations) throws SystemException {
+    public Event modifyEvent(long eventId, String title, String description, String location, Date startDate, Date endDate, JSONArray populations, boolean markAsUnread) throws SystemException {
         // If mandatory fields are not set, return null
         if (title.equals("") || startDate == null || endDate == null || populations.length() == 0) {
             logger.info("Agenda event could not be modified because missing mandatory field");
@@ -102,6 +111,11 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         for (int idx = 0 ; idx < populations.length() ; idx++) {
             JSONObject population = populations.getJSONObject(idx);
             EventPopulationLocalServiceUtil.addPopulation(eventId, population.getLong(JSONConstants.GROUP_ID), population.getLong(JSONConstants.ROLE_ID));
+        }
+
+        // Mobile push
+        if (markAsUnread) {
+            manageMobilePush(title, location, description, populations);
         }
 
         return event;
@@ -185,4 +199,34 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
 
         return jsonEvent;
     }
+
+    private void manageMobilePush(String title, String location, String content, JSONArray populations) {
+
+        try {
+            for (int idx = 0; idx < populations.length(); idx++) {
+                JSONObject population = populations.getJSONObject(idx);
+                // Get all population members
+                Group group = GroupLocalServiceUtil.getGroup(population.getLong(JSONConstants.GROUP_ID));
+                List<User> groupMembers;
+                if (group.isRegularSite()) {
+                    groupMembers = UserLocalServiceUtil.getGroupUsers(group.getGroupId());
+                } else {
+                    List<Long> orgIds = new ArrayList<>();
+                    orgIds.add(group.getClassPK());
+                    List<Long> roleIds = new ArrayList<>();
+                    roleIds.add(population.getLong(JSONConstants.ROLE_ID));
+                    groupMembers = UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+                }
+
+                for (User member : groupMembers) {
+
+                    MobileDeviceLocalServiceUtil.pushNotificationToUser(member.getUserId(), title, location, content,
+                            MobileConstants.EVENT_TYPE, 0);
+                }
+            }
+        } catch (Exception e) {
+            logger.info("Error pushing mobile notification for created announcement", e);
+        }
+    }
+
 }

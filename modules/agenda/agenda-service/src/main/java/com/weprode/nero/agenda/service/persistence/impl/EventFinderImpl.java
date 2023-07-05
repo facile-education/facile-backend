@@ -44,7 +44,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
 
             String other = "";
             if (unreadOnly) {
-                other = " AND read_.userId IS NULL";
+                other = " AND event.eventId NOT IN (SELECT read_.eventId FROM Agenda_EventRead read_ WHERE userId = " + userId + ")";
             }
             sql = StringUtil.replace(sql, "[$OTHER$]", other);
 
@@ -81,7 +81,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
 
             String other = "";
             if (unreadOnly) {
-                other = " AND read_.userId IS NULL";
+                other = " AND event.eventId NOT IN (SELECT read_.eventId FROM Agenda_EventRead read_ WHERE userId = " + userId + ")";
             }
             sql = StringUtil.replace(sql, "[$OTHER$]", other);
             SQLQuery q = session.createSQLQuery(sql);

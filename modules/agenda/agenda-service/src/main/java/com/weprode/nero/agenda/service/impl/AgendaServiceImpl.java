@@ -161,7 +161,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             Date start = df.parse(startDate);
             Date end = df.parse(endDate);
             JSONArray jsonPopulations = new JSONArray(populations);
-            Event modifiedEvent = EventLocalServiceUtil.modifyEvent(eventId, title, description, location, start, end, jsonPopulations);
+            Event modifiedEvent = EventLocalServiceUtil.modifyEvent(eventId, title, description, location, start, end, jsonPopulations, markAsUnreadForAll);
             if (modifiedEvent != null) {
                 if (markAsUnreadForAll) {
                     EventReadLocalServiceUtil.markEventAsUnReadForAll(eventId);
