@@ -320,7 +320,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 				String hostUrl = PropsUtil.get(NeroSystemProperties.PORTAL_URL);
 				documentURL = "/browser/dist/cool.html?WOPISrc="
 						+ URLCodec.encodeURL(hostUrl)
-						+ PropsUtil.get(NeroSystemProperties.LIFERAY_CONTEXT)
+						+ PortalUtil.getPathContext()
 						+ "/c%2Fcommon%2Fwopi%2Ffiles%2F"
 						+ URLCodec.encodeURL(wopiParam)
 						+ "&access_token=" + token;
@@ -330,7 +330,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 				Date d = new Date();
 
 				documentURL =
-						PropsUtil.get(NeroSystemProperties.LIFERAY_CONTEXT)
+						PortalUtil.getPathContext()
 						+ "/documents/"
 						+ file.getRepositoryId() + StringPool.SLASH
 						+ file.getFolderId() + StringPool.SLASH
@@ -350,7 +350,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 	}
 
 	public String getDownloadUrl (FileEntry file) {
-		return 	PropsUtil.get(NeroSystemProperties.LIFERAY_CONTEXT)
+		return 	PortalUtil.getPathContext()
 				+ "/documents/"
 				+ file.getRepositoryId() + StringPool.SLASH
 				+ file.getFolderId() + StringPool.SLASH
