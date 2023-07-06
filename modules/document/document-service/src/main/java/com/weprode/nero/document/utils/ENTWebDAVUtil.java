@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
@@ -98,7 +99,7 @@ public class ENTWebDAVUtil {
             }
 
             return PropsUtil.get(NeroSystemProperties.PORTAL_URL)
-                    + PropsUtil.get(NeroSystemProperties.LIFERAY_CONTEXT)
+                    + PortalUtil.getPathContext()
                     + "/api/secure/webdav" + group.getFriendlyURL() + "/document_library" + sb;
         } catch (Exception e) {
             logger.error(e);
