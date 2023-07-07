@@ -59,7 +59,4 @@ public interface AuthenticationService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "log")
-	public JSONObject log(String stringToLog);
-
 }
