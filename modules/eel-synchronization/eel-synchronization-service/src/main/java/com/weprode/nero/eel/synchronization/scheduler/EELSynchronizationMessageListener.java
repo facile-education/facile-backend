@@ -8,6 +8,8 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.scheduler.*;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.service.SynchronizationLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.*;
@@ -32,18 +34,22 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
     @Override
     protected void doReceive(Message message) {
         new Thread(() -> {
-            logger.info("Scheduled GVE synchronization starting ...");
             try {
-                SynchronizationLocalServiceUtil.runGVESynchronization();
-                logger.info("END GVE synchronization.");
+                if (PropsUtil.get(NeroSystemProperties.SYNCHRO_ENABLED).equals("true")) {
+                    logger.info("Scheduled GVE synchronization starting ...");
+                    SynchronizationLocalServiceUtil.runGVESynchronization();
+                    logger.info("END GVE synchronization.");
+                }
             } catch (Exception e) {
                 logger.error("Error running GVE synchronization", e);
             }
 
-            logger.info("Scheduled GVE parent synchronization starting ...");
             try {
-                SynchronizationLocalServiceUtil.runGVEParentSynchronization();
-                logger.info("END GVE parent synchronization.");
+                if (PropsUtil.get(NeroSystemProperties.SYNCHRO_PARENT_ENABLED).equals("true")) {
+                    logger.info("Scheduled GVE parent synchronization starting ...");
+                    SynchronizationLocalServiceUtil.runGVEParentSynchronization();
+                    logger.info("END GVE parent synchronization.");
+                }
             } catch (Exception e) {
                 logger.error("Error running GVE parent synchronization", e);
             }
