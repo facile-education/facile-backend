@@ -35,6 +35,8 @@ public class NeroSystemProperties {
 	public static final String SUPPORT_DIRECTION_MEMBERS_ENABLE = "support.direction.members.enable";
 
 	// Synchronizations
+	public static final String SYNCHRO_ENABLED = "synchro.enabled";
+	public static final String SYNCHRO_PARENT_ENABLED = "synchro.parent.enabled";
 	public static final String SYNCHRO_PARENT_DROP_FOLDER = "synchro.parent.drop.folder";
 	public static final String SYNCHRO_SCHEDULE_DROP_FOLDER = "synchro.schedule.drop.folder";
 	public static final String SYNCHRO_SCHOOLS = "synchro.schools";
