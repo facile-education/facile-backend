@@ -250,11 +250,32 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
 
         int nbInscriptionLeft = slot.getCapacity() - nbRegisteredStudents;
 
-        if (session.getType() == SchoollifeConstants.TYPE_DEPANNAGE) {
-            jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 && user.getUserId() == teacher.getUserId());
-        } else if (session.getType() == SchoollifeConstants.TYPE_RENVOI) {
+        if (session.getType() == SchoollifeConstants.TYPE_RENVOI) {
             jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 &&
                     (user.getUserId() == teacher.getUserId() ||
+                            RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
+                            RoleUtilsLocalServiceUtil.isSecretariat(user) ||
+                            RoleUtilsLocalServiceUtil.isDoyen(user))
+            );
+        } else if (session.getType() == SchoollifeConstants.TYPE_RETENUE) {
+            jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 &&
+                    (RoleUtilsLocalServiceUtil.isTeacher(user) ||
+                            RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
+                            RoleUtilsLocalServiceUtil.isSecretariat(user) ||
+                            RoleUtilsLocalServiceUtil.isDoyen(user))
+            );
+        } else if (session.getType() == SchoollifeConstants.TYPE_TRAVAUX) {
+            jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 &&
+                    (RoleUtilsLocalServiceUtil.isTeacher(user) ||
+                            RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
+                            RoleUtilsLocalServiceUtil.isSecretariat(user) ||
+                            RoleUtilsLocalServiceUtil.isDoyen(user))
+            );
+        } else if (session.getType() == SchoollifeConstants.TYPE_DEPANNAGE) {
+            jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 && user.getUserId() == teacher.getUserId());
+        } else if (session.getType() == SchoollifeConstants.TYPE_ETUDE) {
+            jsonSession.put(JSONConstants.CAN_REGISTER_STUDENT, nbInscriptionLeft > 0 &&
+                    (RoleUtilsLocalServiceUtil.isTeacher(user) ||
                             RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
                             RoleUtilsLocalServiceUtil.isSecretariat(user) ||
                             RoleUtilsLocalServiceUtil.isDoyen(user))
@@ -262,9 +283,9 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
         }
 
         jsonSession.put(JSONConstants.CAN_UPDATE_SLOT,
-                RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
-                        RoleUtilsLocalServiceUtil.isSecretariat(user) ||
-                        RoleUtilsLocalServiceUtil.isDoyen(user)
+            RoleUtilsLocalServiceUtil.isDirectionMember(user) ||
+                    RoleUtilsLocalServiceUtil.isSecretariat(user) ||
+                    RoleUtilsLocalServiceUtil.isDoyen(user)
         );
 
         return jsonSession;
