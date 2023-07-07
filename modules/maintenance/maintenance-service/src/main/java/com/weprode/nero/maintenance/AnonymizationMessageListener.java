@@ -1,4 +1,4 @@
-package com.weprode.nero.eel.synchronization.scheduler;
+package com.weprode.nero.maintenance;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -6,22 +6,30 @@ import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
-import com.liferay.portal.kernel.scheduler.*;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
+import com.liferay.portal.kernel.scheduler.SchedulerEntryImpl;
+import com.liferay.portal.kernel.scheduler.SchedulerException;
+import com.liferay.portal.kernel.scheduler.StorageType;
+import com.liferay.portal.kernel.scheduler.StorageTypeAware;
+import com.liferay.portal.kernel.scheduler.Trigger;
+import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.weprode.nero.eel.synchronization.service.SynchronizationLocalServiceUtil;
-import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
-import org.osgi.service.component.annotations.*;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 import java.util.Date;
 import java.util.Map;
 
 @Component(
-        immediate = true, property = {"cron.expression=0 0 5 * * ?"},
-        service = EELSynchronizationMessageListener.class
+        immediate = true, property = {"cron.expression=0 34 8 * * ?"},
+        service = AnonymizationMessageListener.class
 )
-public class EELSynchronizationMessageListener extends BaseMessageListener {
+public class AnonymizationMessageListener extends BaseMessageListener {
 
-    private static final Log logger = LogFactoryUtil.getLog(EELSynchronizationMessageListener.class);
+    private static final Log logger = LogFactoryUtil.getLog(AnonymizationMessageListener.class);
 
     private static final String DEFAULT_CRON_EXPRESSION = "0 0 0 * * ?";
     private volatile boolean initialized;
@@ -32,27 +40,13 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
     @Override
     protected void doReceive(Message message) {
         new Thread(() -> {
-            logger.info("Scheduled GVE synchronization starting ...");
             try {
-                SynchronizationLocalServiceUtil.runGVESynchronization();
-                logger.info("END GVE synchronization.");
+                // Uncomment to use
+                // logger.info("Scheduled anonymization starting ...");
+                // AnonymizationUtil.anonymize();
+                //logger.info("END anonymization.");
             } catch (Exception e) {
-                logger.error("Error running GVE synchronization", e);
-            }
-
-            logger.info("Scheduled GVE parent synchronization starting ...");
-            try {
-                SynchronizationLocalServiceUtil.runGVEParentSynchronization();
-                logger.info("END GVE parent synchronization.");
-            } catch (Exception e) {
-                logger.error("Error running GVE parent synchronization", e);
-            }
-
-            logger.info("Scheduled user purge starting ...");
-            try {
-                UserUtilsLocalServiceUtil.purgeExpiredUsers();
-            } catch (Exception e) {
-                logger.error("Error running user purge", e);
+                logger.error("Error running anonymization", e);
             }
         }).start();
     }
@@ -94,7 +88,7 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
     protected void activate(Map<String,Object> properties) {
         // Extract the cron expression from the properties
         String cronExpression = GetterUtil.getString(properties.get("cron.expression"), DEFAULT_CRON_EXPRESSION);
-        logger.info("EEL cronExpression: " + cronExpression);
+        logger.info("Anonymization cronExpression: " + cronExpression);
 
         // Create a new trigger definition for the job.
         String listenerClass = getClass().getName();

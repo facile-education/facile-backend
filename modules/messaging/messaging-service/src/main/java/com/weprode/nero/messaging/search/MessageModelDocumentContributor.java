@@ -40,8 +40,10 @@ public class MessageModelDocumentContributor
             document.addText(Field.TITLE, message.getMessageSubject());
             document.addNumber(Field.COMPANY_ID, message.getCompanyId());
             User owner = MessageFolderLocalServiceUtil.getFolderUser(message.getFolderId());
-            document.addNumber(Field.GROUP_ID, owner.getGroupId());
-            document.addNumber(Field.SCOPE_GROUP_ID, owner.getGroupId());
+            if (owner != null) {
+                document.addNumber(Field.GROUP_ID, owner.getGroupId());
+                document.addNumber(Field.SCOPE_GROUP_ID, owner.getGroupId());
+            }
 
             Role userRole = RoleLocalServiceUtil.getRole(message.getCompanyId(), RoleConstants.USER);
             document.addText(Field.ROLE_ID, new String[]{String.valueOf(userRole.getRoleId())});

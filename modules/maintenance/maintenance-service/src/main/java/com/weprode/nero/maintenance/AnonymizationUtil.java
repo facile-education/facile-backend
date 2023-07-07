@@ -10,6 +10,10 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.messaging.model.Message;
 import com.weprode.nero.messaging.model.MessageContent;
@@ -17,6 +21,7 @@ import com.weprode.nero.messaging.service.MessageContentLocalServiceUtil;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.service.NewsLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.UserContactLocalServiceUtil;
 
@@ -35,6 +40,12 @@ public class AnonymizationUtil {
     // Lorem ipsum blog entries, messages
     public static void anonymize() {
 
+        // Do as administrator, to get rid of permission issues
+        List<User> adminUsers = UserLocalServiceUtil.getRoleUsers(RoleUtilsLocalServiceUtil.getAdministratorRole().getRoleId());
+        PrincipalThreadLocal.setName(adminUsers.get(0).getUserId());
+        PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(adminUsers.get(0));
+        PermissionThreadLocal.setPermissionChecker(permissionChecker);
+
         anonymizeUsers();
         anonymizeNews();
         anonymizeMessages();
@@ -46,6 +57,7 @@ public class AnonymizationUtil {
 
     private static void anonymizeUsers () {
         try {
+            int nbUsers = 0;
             List<User> allUsers = UserLocalServiceUtil.getUsers(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
             for (User user : allUsers) {
                 logger.info("Processing user " + user.getFullName() + " (id " + user.getUserId() + ")");
@@ -104,6 +116,10 @@ public class AnonymizationUtil {
                 } catch (Exception e) {
                     logger.error("Error processing user " + user.getUserId(), e);
                 }
+                nbUsers++;
+                if (nbUsers % 100 == 0) {
+                    logger.info("Processed " + nbUsers + " / " + allUsers.size() + " users");
+                }
             }
             logger.info("userNameMap has " + userNameMap.size() + " elements");
         } catch (Exception e) {
@@ -114,12 +130,14 @@ public class AnonymizationUtil {
 
     private static void anonymizeNews () {
         try {
+            logger.info("Start anonymizing news ...");
             List<News> newsList = NewsLocalServiceUtil.getNewses(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
             for (News news : newsList) {
                 news.setContent(anonymizeContent(news.getContent()));
                 news.setTitle(anonymizeContent(news.getTitle()));
                 NewsLocalServiceUtil.updateNews(news);
             }
+            logger.info("End anonymizing news");
         } catch (Exception e) {
             logger.error("Error anonymizing blog entries", e);
         }
@@ -127,14 +145,25 @@ public class AnonymizationUtil {
 
     private static void anonymizeMessages () {
         try {
+            logger.info("Start anonymizing messages ...");
+            int nbMessages = 0;
             List<Message> messages = MessageLocalServiceUtil.getMessages(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
             for (Message message : messages) {
-                message.setMessageSubject(anonymizeContent(message.getMessageSubject()));
-                MessageLocalServiceUtil.updateMessage(message);
-                MessageContent messageContent = MessageContentLocalServiceUtil.getMessageContent(message.getMessageId());
-                messageContent.setMessageContent(anonymizeContent(messageContent.getMessageContent()));
-                MessageContentLocalServiceUtil.updateMessageContent(messageContent);
+                try {
+                    message.setMessageSubject(anonymizeContent(message.getMessageSubject()));
+                    MessageLocalServiceUtil.updateMessage(message);
+                    MessageContent messageContent = MessageContentLocalServiceUtil.getMessageContent(message.getMessageId());
+                    messageContent.setMessageContent(anonymizeContent(messageContent.getMessageContent()));
+                    MessageContentLocalServiceUtil.updateMessageContent(messageContent);
+                } catch (Exception e) {
+                    logger.error("Error anonymizing message " + message.getMessageId(), e);
+                }
+                nbMessages++;
+                if (nbMessages % 100 == 0) {
+                    logger.info("Processed " + nbMessages + " / " + messages.size() + " messages");
+                }
             }
+            logger.info("End anonymizing messages");
         } catch (Exception e) {
             logger.error("Error anonymizing messages", e);
         }
@@ -142,11 +171,17 @@ public class AnonymizationUtil {
 
     private static void anonymizeDlFileEntries () {
         try {
+            logger.info("Start anonymizing file entries ...");
             List<DLFileEntry> dlFileEntries = DLFileEntryLocalServiceUtil.getDLFileEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
             int nbFileEntries = 0;
             for (DLFileEntry dlFileEntry : dlFileEntries) {
-                dlFileEntry.setUserName(userNameMap.getOrDefault(dlFileEntry.getUserName(), "Marc Assin"));
-                nbFileEntries++;
+                try {
+                    dlFileEntry.setUserName(userNameMap.getOrDefault(dlFileEntry.getUserName(), "Marc Assin"));
+                    DLFileEntryLocalServiceUtil.updateDLFileEntry(dlFileEntry);
+                    nbFileEntries++;
+                } catch (Exception e) {
+                    logger.error("Error anonymizing file entry " + dlFileEntry.getFileEntryId(), e);
+                }
                 if (nbFileEntries % 100 == 0) {
                     logger.info("Processed " + nbFileEntries + " / " + dlFileEntries.size() + " file entries");
                 }
@@ -158,6 +193,7 @@ public class AnonymizationUtil {
 
     private static void anonymizeDlFileVersions () {
         try {
+            logger.info("Start anonymizing file versions ...");
             List<DLFileVersion> dlFileVersions = DLFileVersionLocalServiceUtil.getDLFileVersions(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
             int nbFileVersions = 0;
             for (DLFileVersion dlFileVersion : dlFileVersions) {
@@ -168,6 +204,7 @@ public class AnonymizationUtil {
                     dlFileVersion.setUserName("Marc Assin");
                     dlFileVersion.setStatusByUserName("Marc Assin");
                 }
+                DLFileVersionLocalServiceUtil.updateDLFileVersion(dlFileVersion);
                 nbFileVersions++;
                 if (nbFileVersions % 100 == 0) {
                     logger.info("Processed " + nbFileVersions + " / " + dlFileVersions.size() + " file versions");
@@ -180,11 +217,12 @@ public class AnonymizationUtil {
 
     private static void anonymizeDlFolders () {
         try {
-            // DLFolders
+            logger.info("Start anonymizing folders ...");
             List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getDLFolders(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
             int nbFolders = 0;
             for (DLFolder dlFolder : dlFolders) {
                 dlFolder.setUserName(userNameMap.getOrDefault(dlFolder.getUserName(), "Marc Assin"));
+                DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
                 nbFolders++;
                 if (nbFolders % 100 == 0) {
                     logger.info("Processed " + nbFolders + " / " + dlFolders.size() + " folders");
