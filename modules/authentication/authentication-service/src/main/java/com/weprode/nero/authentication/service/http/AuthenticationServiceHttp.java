@@ -84,44 +84,10 @@ public class AuthenticationServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject log(
-		HttpPrincipal httpPrincipal, String stringToLog) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				AuthenticationServiceUtil.class, "log", _logParameterTypes1);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, stringToLog);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(
 		AuthenticationServiceHttp.class);
 
 	private static final Class<?>[] _checkCredentialsParameterTypes0 =
 		new Class[] {String.class, String.class};
-	private static final Class<?>[] _logParameterTypes1 = new Class[] {
-		String.class
-	};
 
 }

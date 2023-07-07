@@ -48,10 +48,6 @@ public class AuthenticationServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static org.json.JSONObject log(java.lang.String stringToLog) {
-		return getService().log(stringToLog);
-	}
-
 	public static AuthenticationService getService() {
 		return _service;
 	}

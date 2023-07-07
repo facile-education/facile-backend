@@ -48,11 +48,6 @@ public class AuthenticationServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject log(String stringToLog) {
-		return _authenticationService.log(stringToLog);
-	}
-
-	@Override
 	public AuthenticationService getWrappedService() {
 		return _authenticationService;
 	}
