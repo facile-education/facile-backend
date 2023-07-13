@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -53,7 +52,7 @@ public interface SessionContentService extends BaseService {
 	 */
 	@JSONWebService(method = "POST", value = "add-session-content")
 	public JSONObject addSessionContent(
-		long sessionId, String title, JSONArray blocks, String publicationDate,
+		long sessionId, String title, String blocks, String publicationDate,
 		boolean isDraft);
 
 	@JSONWebService(method = "DELETE", value = "delete-session-content")
@@ -76,7 +75,7 @@ public interface SessionContentService extends BaseService {
 
 	@JSONWebService(method = "POST", value = "update-session-content")
 	public JSONObject updateSessionContent(
-		long sessionId, String title, JSONArray blocks, String publicationDate,
+		long sessionId, String title, String blocks, String publicationDate,
 		boolean isDraft);
 
 }

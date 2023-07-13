@@ -55,7 +55,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 	// Called when creating the whole session content, with all blocks
 	@JSONWebService(value = "add-session-content", method = "POST")
-	public JSONObject addSessionContent(long sessionId, String title, JSONArray blocks, String publicationDate, boolean isDraft) {
+	public JSONObject addSessionContent(long sessionId, String title, String blocks, String publicationDate, boolean isDraft) {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -84,10 +84,10 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 			for (int i = 0 ; i < jsonBlocks.length() ; i++) {
 				JSONObject jsonBlock = jsonBlocks.getJSONObject(i);
 				ContentBlockLocalServiceUtil.addBlock(user.getUserId(), sessionId,
-						jsonBlock.getInt(JSONConstants.BLOCK_TYPE),
-						jsonBlock.getString(JSONConstants.BLOCK_NAME),
-						jsonBlock.getString(JSONConstants.BLOCK_VALUE),
-						jsonBlock.getLong(JSONConstants.FILE_ENTRY_ID));
+						jsonBlock.getInt(JSONConstants.CONTENT_TYPE),
+						jsonBlock.getString(JSONConstants.CONTENT_NAME),
+						JSONConstants.getStringValue(jsonBlock, JSONConstants.CONTENT_VALUE, ""),
+						JSONConstants.getLongValue(jsonBlock, JSONConstants.FILE_ID, 0));
 			}
 
 			result.put(JSONConstants.ITEM, courseItem.convertToJSON(user, true));
@@ -104,7 +104,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 	// Update the whole session content, when the previous content is published
 	@JSONWebService(value = "update-session-content", method = "POST")
-	public JSONObject updateSessionContent(long sessionId, String title, JSONArray blocks, String publicationDate, boolean isDraft) {
+	public JSONObject updateSessionContent(long sessionId, String title, String blocks, String publicationDate, boolean isDraft) {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -126,7 +126,8 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 			}
 
 			Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
-			SessionContent updatedItem = SessionContentLocalServiceUtil.updateSessionContent(user.getUserId(), sessionId, title, blocks, publication, isDraft);
+			JSONArray jsonBlocks = new JSONArray(blocks);
+			SessionContent updatedItem = SessionContentLocalServiceUtil.updateSessionContent(user.getUserId(), sessionId, title, jsonBlocks, publication, isDraft);
 			result.put(JSONConstants.SESSION_CONTENT, updatedItem.convertToJSON(user, true));
 			logger.info("User " + user.getFullName() + " (id="+user.getUserId()+") has updated course session " + sessionId);
 			result.put(JSONConstants.SUCCESS, true);
@@ -193,6 +194,13 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 		try {
 			if (!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
+			SessionContent content = SessionContentLocalServiceUtil.fetchSessionContent(sessionId);
+			if (content != null) {
+				result.put(JSONConstants.TITLE, content.getTitle());
+				result.put(JSONConstants.IS_DRAFT, content.getIsDraft());
+				result.put(JSONConstants.PUBLICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(content.getPublicationDate()));
 			}
 
 			JSONArray jsonContents = new JSONArray();

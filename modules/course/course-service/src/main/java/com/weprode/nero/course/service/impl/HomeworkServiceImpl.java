@@ -14,6 +14,7 @@
 
 package com.weprode.nero.course.service.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -31,6 +32,7 @@ import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.course.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.course.service.base.HomeworkServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -233,7 +235,9 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		}
 
 		try {
-			Date targetDate = targetSessionId == 0 ? new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) : null;
+			Date targetDate = targetSessionId == 0 ?
+					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) :
+					CDTSessionLocalServiceUtil.getCDTSession(targetSessionId).getStart();
 			Date publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
 			List<Long> studentIds = new ArrayList<>();
 			if (!students.equals("")) {
@@ -246,19 +250,19 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			Homework homework = HomeworkLocalServiceUtil.createHomework(user, title, sourceSessionId, targetSessionId, courseId, targetDate, homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
 
 			// Create blocks
-			JSONArray jsonBlocks = new JSONArray(students);
+			JSONArray jsonBlocks = new JSONArray(blocks);
 			for (int i = 0 ; i < jsonBlocks.length() ; i++) {
 				JSONObject jsonBlock = jsonBlocks.getJSONObject(i);
 				ContentBlockLocalServiceUtil.addBlock(user.getUserId(), homework.getHomeworkId(),
-						jsonBlock.getInt(JSONConstants.BLOCK_TYPE),
-						jsonBlock.getString(JSONConstants.BLOCK_NAME),
-						jsonBlock.getString(JSONConstants.BLOCK_VALUE),
-						jsonBlock.getLong(JSONConstants.FILE_ENTRY_ID));
+						jsonBlock.getInt(JSONConstants.CONTENT_TYPE),
+						jsonBlock.getString(JSONConstants.CONTENT_NAME),
+						JSONConstants.getStringValue(jsonBlock, JSONConstants.CONTENT_VALUE, StringPool.BLANK),
+						JSONConstants.getLongValue(jsonBlock,JSONConstants.FILE_ID,0));
 			}
 
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
-			logger.error("Error creating homework");
+			logger.error("Error creating homework", e);
 		}
 		return result;
 	}
@@ -281,7 +285,9 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		}
 
 		try {
-			Date targetDate = targetSessionId == 0 ? new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) : null;
+			Date targetDate = targetSessionId == 0 ?
+					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) :
+					CDTSessionLocalServiceUtil.getCDTSession(targetSessionId).getStart();
 			Date publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
 			List<Long> studentIds = new ArrayList<>();
 			if (!students.equals("")) {
@@ -297,19 +303,19 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			ContentBlockLocalServiceUtil.deleteBlocksByItemId(homeworkId);
 
 			// Re-create blocks
-			JSONArray jsonBlocks = new JSONArray(students);
+			JSONArray jsonBlocks = new JSONArray(blocks);
 			for (int i = 0 ; i < jsonBlocks.length() ; i++) {
 				JSONObject jsonBlock = jsonBlocks.getJSONObject(i);
 				ContentBlockLocalServiceUtil.addBlock(user.getUserId(), homework.getHomeworkId(),
-						jsonBlock.getInt(JSONConstants.BLOCK_TYPE),
-						jsonBlock.getString(JSONConstants.BLOCK_NAME),
-						jsonBlock.getString(JSONConstants.BLOCK_VALUE),
-						jsonBlock.getLong(JSONConstants.FILE_ENTRY_ID));
+						jsonBlock.getInt(JSONConstants.CONTENT_TYPE),
+						jsonBlock.getString(JSONConstants.CONTENT_NAME),
+						JSONConstants.getStringValue(jsonBlock, JSONConstants.CONTENT_VALUE, StringPool.BLANK),
+						JSONConstants.getLongValue(jsonBlock,JSONConstants.FILE_ID,0));
 			}
 
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
-			logger.error("Error creating homework");
+			logger.error("Error creating homework", e);
 		}
 		return result;
 	}
@@ -335,7 +341,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			HomeworkLocalServiceUtil.deleteHomeworkAndDependencies(homeworkId);
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
-			logger.error("Error creating homework");
+			logger.error("Error creating homework", e);
 		}
 		return result;
 	}

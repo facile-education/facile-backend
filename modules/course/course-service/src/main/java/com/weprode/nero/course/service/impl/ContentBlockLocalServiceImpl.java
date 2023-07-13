@@ -60,7 +60,7 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		block.setBlockType(blockType);
 		block.setModificationDate(new Date());
 		block.setBlockName(blockName);
-		if (fileEntryId != 0 && blockType != CourseConstants.TYPE_RECORD) {
+		if (fileEntryId != 0) {
 			Folder parentFolder;
 			if (CourseLocalServiceUtil.isSessionItem(itemId)) {
 				parentFolder = SessionContentLocalServiceUtil.getSessionFolder(itemId);
@@ -80,9 +80,6 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 					block.setBlockValue(blockValue);
 				}
 				break;
-			case CourseConstants.TYPE_RECORD:
-				block.setBlockValue(CourseConstants.DEFAULT_RECORD_NAME);
-				break;
 			case CourseConstants.TYPE_LINK:
 				block.setBlockValue(blockValue);
 				break;
@@ -93,9 +90,6 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 				} else {
 					throw new UnauthorizedUrlException("Url " + blockValue + " is not whiteListed for an embed content");
 				}
-				break;
-			case CourseConstants.TYPE_FILE:
-				block.setBlockValue(CourseConstants.DEFAULT_FILE_NAME);
 				break;
 			default:
 				break;
