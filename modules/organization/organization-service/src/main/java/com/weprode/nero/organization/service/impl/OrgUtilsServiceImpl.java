@@ -147,6 +147,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
             if (org.getParentOrganizationId() == schoolId) {
                 JSONObject jsonOrg = new JSONObject();
                 jsonOrg.put(JSONConstants.ORG_ID, org.getOrganizationId());
+                jsonOrg.put(JSONConstants.GROUP_ID, org.getGroupId());
                 jsonOrg.put(JSONConstants.ORG_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
                 jsonOrgs.put(jsonOrg);
             }
