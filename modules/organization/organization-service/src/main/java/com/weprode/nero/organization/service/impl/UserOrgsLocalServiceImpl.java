@@ -154,10 +154,14 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
 
             for (Organization school : userSchools) {
                 List<Organization> linkedSchools = OrgCiteScolaireLocalServiceUtil.getSchoolComplexSchools(school);
-                for (Organization linkedSchool : linkedSchools) {
-                    if (!schoolsWithSchoolarComplex.contains(linkedSchool)) {
-                        schoolsWithSchoolarComplex.add(linkedSchool);
+                if (linkedSchools != null && !linkedSchools.isEmpty()) {
+                    for (Organization linkedSchool : linkedSchools) {
+                        if (!schoolsWithSchoolarComplex.contains(linkedSchool)) {
+                            schoolsWithSchoolarComplex.add(linkedSchool);
+                        }
                     }
+                } else {
+                    return userSchools;
                 }
             }
         }
