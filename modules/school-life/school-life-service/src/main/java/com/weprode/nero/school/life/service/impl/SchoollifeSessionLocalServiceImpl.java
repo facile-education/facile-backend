@@ -210,6 +210,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
                             jsonSession.put(JSONConstants.TITLE, getSessionName(slotSession.getSchoollifeSessionId()));
                             jsonSession.put(JSONConstants.SUBJECT, getSessionName(slotSession.getSchoollifeSessionId()));
                             jsonSession.put(JSONConstants.COLOR, getColorFromSchoollifeType(slotSession.getType()));
+                            jsonSession.put(JSONConstants.TYPE, slotSession.getType());
 
                             jsonSessions.put(jsonSession);
                         }

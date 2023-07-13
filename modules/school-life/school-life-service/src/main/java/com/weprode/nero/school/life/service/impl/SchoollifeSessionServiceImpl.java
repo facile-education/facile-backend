@@ -47,7 +47,8 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
-        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
