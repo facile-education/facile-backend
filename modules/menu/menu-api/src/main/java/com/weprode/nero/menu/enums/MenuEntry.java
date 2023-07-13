@@ -10,8 +10,8 @@ public class MenuEntry {
     public static final MenuEntry CDT = new MenuEntry(4, "icon-school-life", "cdt", 2, "Course");
     public static final MenuEntry HORAIRES = new MenuEntry(5, "icon-calendar", "horaires", 3, "Horaires");
     public static final MenuEntry HHC = new MenuEntry(6, "icon-clock", "horaires-hors-cadre", 4, "NotUsualSlotsManager");
-    public static final MenuEntry DOCUMENTS = new MenuEntry(2, "icon-folder", "documents", 5, "Documents");
-    public static final MenuEntry MESSAGING = new MenuEntry(3, "icon-langues", "messaging", 6, "Messaging");
+    public static final MenuEntry DOCUMENTS = new MenuEntry(2, "icon-folder", "documents", 5, "Documents", ":folderId(\\d+)?");
+    public static final MenuEntry MESSAGING = new MenuEntry(3, "icon-langues", "messaging", 6, "Messaging", ":messageId(\\\\d+)?");
 
     public static final MenuEntry UNIVERSALIS = new MenuEntry(8, StringPool.BLANK, "universalis", 0, "ExternalResource");
     public static final MenuEntry UNIVERSALIS_JUNIOR = new MenuEntry(9, StringPool.BLANK, "universalis-junior", 1, "ExternalResource");
@@ -37,6 +37,7 @@ public class MenuEntry {
     final String key;
     boolean isLandingPage = false;
     List<MenuEntry> entries;
+    String param;
     String component;
 
     MenuEntry(long id, String icon, String key, int position, String component) {
@@ -45,6 +46,15 @@ public class MenuEntry {
         this.icon = icon;
         this.key = key;
         this.component = component;
+    }
+
+    MenuEntry(long id, String icon, String key, int position, String component, String param) {
+        this.id = id;
+        this.position = position;
+        this.icon = icon;
+        this.key = key;
+        this.component = component;
+        this.param = param;
     }
 
     MenuEntry(long id, String icon, String key, boolean isLandingPage, int position, String component) {
@@ -98,6 +108,10 @@ public class MenuEntry {
 
     public boolean isLandingPage() {
         return isLandingPage;
+    }
+
+    public String getParam() {
+        return param;
     }
 
     public List<MenuEntry> getEntries() {

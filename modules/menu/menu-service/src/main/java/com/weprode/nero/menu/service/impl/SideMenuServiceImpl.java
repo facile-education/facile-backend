@@ -106,6 +106,7 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
         entry.put(JSONConstants.ICON, menuEntry.getIcon());
         entry.put(JSONConstants.I18N_KEY, menuEntry.getKey());
         entry.put(JSONConstants.POSITION, menuEntry.getPosition());
+        entry.put(JSONConstants.PARAM, menuEntry.getParam());
         entry.put(JSONConstants.COMPONENT, menuEntry.getComponent());
         if (menuEntry.isLandingPage()) {
             entry.put(JSONConstants.IS_LANDING_PAGE, menuEntry.isLandingPage());
