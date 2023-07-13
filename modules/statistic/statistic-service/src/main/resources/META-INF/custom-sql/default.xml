@@ -84,7 +84,7 @@
     <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllHomeworks">
         <![CDATA[
 			SELECT ch.homeworkType, COUNT(*)
-			FROM Course_homework ch
+			FROM Course_Homework ch
 			WHERE ch.targetDate BETWEEN ? AND ?
 			GROUP BY ch.homeworkType
 		]]>

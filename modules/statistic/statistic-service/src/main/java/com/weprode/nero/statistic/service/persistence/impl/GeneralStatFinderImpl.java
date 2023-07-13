@@ -74,7 +74,6 @@ public class GeneralStatFinderImpl extends GeneralStatFinderBaseImpl
             SQLQuery query = session.createSQLQuery(sql);
             QueryPos qPos = QueryPos.getInstance(query);
 
-            qPos = QueryPos.getInstance(query);
             qPos.add(CalendarUtil.getTimestamp(startDate));
             qPos.add(CalendarUtil.getTimestamp(endDate));
             if (schoolId != 0) {
@@ -104,7 +103,6 @@ public class GeneralStatFinderImpl extends GeneralStatFinderBaseImpl
             SQLQuery query = session.createSQLQuery(sql);
             QueryPos qPos = QueryPos.getInstance(query);
 
-            qPos = QueryPos.getInstance(query);
             qPos.add(CalendarUtil.getTimestamp(startDate));
             qPos.add(CalendarUtil.getTimestamp(endDate));
             if (schoolId != 0) {
@@ -217,7 +215,7 @@ public class GeneralStatFinderImpl extends GeneralStatFinderBaseImpl
 
             if (results != null && !results.isEmpty()) {
                 for (Object[] result : results) {
-                    int type = ((BigInteger) result[0]).intValue();
+                    int type = (int) result[0];
                     int count = ((BigInteger) result[1]).intValue();
 
                     resultMap.put(type, count);
