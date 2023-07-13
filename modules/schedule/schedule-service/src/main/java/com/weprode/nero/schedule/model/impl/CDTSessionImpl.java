@@ -17,20 +17,12 @@ package com.weprode.nero.schedule.model.impl;
 import com.liferay.portal.kernel.model.User;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
-import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.model.CDTSession;
-import com.weprode.nero.schedule.model.CDTSessionModel;
-import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,7 +49,7 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.CAN_SAVE_TEACHER_SUBSTITUTE, SessionTeacherLocalServiceUtil.canSaveTeacherSubstitutes(user));
 
         // Teachers
-        List<User> sessionTeachers = SessionTeacherLocalServiceUtil.getTeachers(this.getSessionId());
+        List<User> sessionTeachers = SessionTeacherLocalServiceUtil.getTeachers(this.getSessionId(), false);
         jsonSession.put(JSONConstants.TEACHERS, UserUtilsLocalServiceUtil.convertUsersToJson(sessionTeachers));
         jsonSession.put(JSONConstants.IS_CURRENT_USER_TEACHER, sessionTeachers.contains(user));
 
