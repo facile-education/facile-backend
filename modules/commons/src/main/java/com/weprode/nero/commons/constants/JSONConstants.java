@@ -202,6 +202,7 @@ public class JSONConstants {
     public static final String NOTIFICATIONS = "notifications";
     public static final String MESSAGING = "messaging";
     public static final String SCHOOLLIFE = "schoollife";
+    public static final String PARAM = "param";
 
     // Document library
     public static final String FILE_NAME = "fileName";
