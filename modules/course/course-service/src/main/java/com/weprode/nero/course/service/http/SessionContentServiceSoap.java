@@ -65,8 +65,8 @@ import java.rmi.RemoteException;
 public class SessionContentServiceSoap {
 
 	public static org.json.JSONObject addSessionContent(
-			long sessionId, String title, org.json.JSONArray blocks,
-			String publicationDate, boolean isDraft)
+			long sessionId, String title, String blocks, String publicationDate,
+			boolean isDraft)
 		throws RemoteException {
 
 		try {
@@ -84,8 +84,8 @@ public class SessionContentServiceSoap {
 	}
 
 	public static org.json.JSONObject updateSessionContent(
-			long sessionId, String title, org.json.JSONArray blocks,
-			String publicationDate, boolean isDraft)
+			long sessionId, String title, String blocks, String publicationDate,
+			boolean isDraft)
 		throws RemoteException {
 
 		try {

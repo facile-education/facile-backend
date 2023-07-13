@@ -34,7 +34,7 @@ public class SessionContentServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.course.service.impl.SessionContentServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static org.json.JSONObject addSessionContent(
-		long sessionId, java.lang.String title, org.json.JSONArray blocks,
+		long sessionId, java.lang.String title, java.lang.String blocks,
 		java.lang.String publicationDate, boolean isDraft) {
 
 		return getService().addSessionContent(
@@ -63,7 +63,7 @@ public class SessionContentServiceUtil {
 	}
 
 	public static org.json.JSONObject updateSessionContent(
-		long sessionId, java.lang.String title, org.json.JSONArray blocks,
+		long sessionId, java.lang.String title, java.lang.String blocks,
 		java.lang.String publicationDate, boolean isDraft) {
 
 		return getService().updateSessionContent(

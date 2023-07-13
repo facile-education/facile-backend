@@ -54,7 +54,7 @@ public class SessionContentServiceHttp {
 
 	public static org.json.JSONObject addSessionContent(
 		HttpPrincipal httpPrincipal, long sessionId, String title,
-		org.json.JSONArray blocks, String publicationDate, boolean isDraft) {
+		String blocks, String publicationDate, boolean isDraft) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -87,7 +87,7 @@ public class SessionContentServiceHttp {
 
 	public static org.json.JSONObject updateSessionContent(
 		HttpPrincipal httpPrincipal, long sessionId, String title,
-		org.json.JSONArray blocks, String publicationDate, boolean isDraft) {
+		String blocks, String publicationDate, boolean isDraft) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -219,13 +219,11 @@ public class SessionContentServiceHttp {
 
 	private static final Class<?>[] _addSessionContentParameterTypes0 =
 		new Class[] {
-			long.class, String.class, org.json.JSONArray.class, String.class,
-			boolean.class
+			long.class, String.class, String.class, String.class, boolean.class
 		};
 	private static final Class<?>[] _updateSessionContentParameterTypes1 =
 		new Class[] {
-			long.class, String.class, org.json.JSONArray.class, String.class,
-			boolean.class
+			long.class, String.class, String.class, String.class, boolean.class
 		};
 	private static final Class<?>[] _deleteSessionContentParameterTypes2 =
 		new Class[] {long.class};

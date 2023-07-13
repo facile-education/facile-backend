@@ -18,6 +18,7 @@ import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.progression.constants.ProgressionConstants;
@@ -38,14 +39,14 @@ public class ItemContentImpl extends ItemContentBaseImpl {
         SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
         jsonItem.put(JSONConstants.ITEM_ID, this.getProgressionItemId());
-        jsonItem.put(JSONConstants.BLOCK_ID, this.getContentId());
+        jsonItem.put(JSONConstants.CONTENT_ID, this.getContentId());
         jsonItem.put(JSONConstants.MODIFIED_DATE, df.format(this.getModifiedDate()));
-        jsonItem.put(JSONConstants.BLOCK_NAME, this.getContentName());
-        jsonItem.put(JSONConstants.BLOCK_TYPE, this.getContentType());
+        jsonItem.put(JSONConstants.CONTENT_NAME, this.getContentName());
+        jsonItem.put(JSONConstants.CONTENT_TYPE, this.getContentType());
         jsonItem.put(JSONConstants.FILE_ENTRY_ID, String.valueOf(this.getFileEntryId())); // Ids are managed as String in front
         if (this.getFileEntryId() != 0) {
             if (this.getContentType() == ProgressionConstants.TYPE_RECORD) {
-                jsonItem.put(JSONConstants.LINK, "/c/document_library/get_file?fileEntryId=" + this.getFileEntryId());
+                jsonItem.put(JSONConstants.LINK, PortalUtil.getPathContext() + "/c/document_library/get_file?fileEntryId=" + this.getFileEntryId());
             }
             try {
                 FileEntry file = DLAppServiceUtil.getFileEntry(this.getFileEntryId());
@@ -57,7 +58,7 @@ public class ItemContentImpl extends ItemContentBaseImpl {
         jsonItem.put(JSONConstants.ORDER, this.getOrder());
 
         if (isContentIncluded) {
-            jsonItem.put(JSONConstants.BLOCK_VALUE, this.getContentValue());
+            jsonItem.put(JSONConstants.CONTENT_VALUE, this.getContentValue());
         }
 
         return jsonItem;

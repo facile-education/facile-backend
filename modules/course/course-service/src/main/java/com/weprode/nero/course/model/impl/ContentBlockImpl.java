@@ -18,6 +18,7 @@ import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.course.CourseConstants;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
@@ -38,14 +39,14 @@ public class ContentBlockImpl extends ContentBlockBaseImpl {
 
         SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
-        jsonBlock.put(JSONConstants.BLOCK_ID, this.getBlockId());
+        jsonBlock.put(JSONConstants.CONTENT_ID, this.getBlockId());
         jsonBlock.put(JSONConstants.MODIFIED_DATE, df.format(this.getModificationDate()));
-        jsonBlock.put(JSONConstants.BLOCK_NAME, this.getBlockName());
-        jsonBlock.put(JSONConstants.BLOCK_TYPE, this.getBlockType());
-        jsonBlock.put(JSONConstants.FILE_ENTRY_ID, String.valueOf(this.getFileEntryId())); // Ids are managed as String in front
+        jsonBlock.put(JSONConstants.CONTENT_NAME, this.getBlockName());
+        jsonBlock.put(JSONConstants.CONTENT_TYPE, this.getBlockType());
+        jsonBlock.put(JSONConstants.FILE_ID, String.valueOf(this.getFileEntryId())); // Ids are managed as String in front
         if (this.getFileEntryId() != 0) {
             if (this.getBlockType() == CourseConstants.TYPE_RECORD) {
-                jsonBlock.put(JSONConstants.LINK, "/c/document_library/get_file?fileEntryId=" + this.getFileEntryId());
+                jsonBlock.put(JSONConstants.LINK, PortalUtil.getPathContext() + "/c/document_library/get_file?fileEntryId=" + this.getFileEntryId());
             }
             try {
                 FileEntry file = DLAppServiceUtil.getFileEntry(this.getFileEntryId());
@@ -55,7 +56,7 @@ public class ContentBlockImpl extends ContentBlockBaseImpl {
             }
         }
         jsonBlock.put(JSONConstants.ORDER, this.getOrder());
-        jsonBlock.put(JSONConstants.BLOCK_VALUE, this.getBlockValue());
+        jsonBlock.put(JSONConstants.CONTENT_VALUE, this.getBlockValue());
         return jsonBlock;
     }
 }

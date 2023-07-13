@@ -332,12 +332,12 @@ public class JSONConstants {
     public static final String CONTENTS = "contents";
     public static final String BLOCK = "block";
     public static final String BLOCKS = "blocks";
-    public static final String BLOCK_ID = "blockId";
-    public static final String BLOCK_NAME = "blockName";
-    public static final String BLOCK_TYPE = "blockType";
+    public static final String CONTENT_ID = "contentId";
+    public static final String CONTENT_NAME = "contentName";
+    public static final String CONTENT_TYPE = "contentType";
     public static final String LINK = "link";
     public static final String DOWNLOAD_URL = "downloadUrl";
-    public static final String BLOCK_VALUE = "blockValue";
+    public static final String CONTENT_VALUE = "contentValue";
     public static final String ATTACHED_FILE_ID = "attachedFileId";
     public static final String CORRECTION_DATE = "correctionDate";
     public static final String IS_AUDIO_RECORDING = "isAudioRecording";

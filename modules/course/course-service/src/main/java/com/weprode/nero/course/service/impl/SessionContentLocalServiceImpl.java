@@ -77,7 +77,7 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 	@Indexable(type = IndexableType.REINDEX)
 	public SessionContent addSessionContent(long sessionId, long teacherId, String title, Date publicationDate, boolean isDraft) throws SystemException {
 
-		SessionContent sessionContent = sessionContentPersistence.create(counterLocalService.increment());
+		SessionContent sessionContent = sessionContentPersistence.create(sessionId);
 		sessionContent.setCompanyId(PortalUtil.getDefaultCompanyId());
 		sessionContent.setTeacherId(teacherId);
 		sessionContent.setModificationDate(new Date());
@@ -119,20 +119,20 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 		if (blocks != null) {
 			for (int i = 0 ; i < blocks.length() ; i++) {
 				JSONObject jsonBlock = blocks.getJSONObject(i);
-				if (!jsonBlock.has(JSONConstants.BLOCK_ID)) {
-					// This is a block creation
-					ContentBlockLocalServiceUtil.addBlock(teacherId, sessionId,
-							jsonBlock.getInt(JSONConstants.BLOCK_TYPE),
-							jsonBlock.getString(JSONConstants.BLOCK_NAME),
-							jsonBlock.getString(JSONConstants.BLOCK_VALUE),
-							jsonBlock.getLong(JSONConstants.FILE_ENTRY_ID));
-				} else {
-					// This is a block update
-					ContentBlockLocalServiceUtil.updateBlock(jsonBlock.getLong(JSONConstants.BLOCK_ID),
-							jsonBlock.getString(JSONConstants.BLOCK_NAME),
-							jsonBlock.getString(JSONConstants.BLOCK_VALUE),
-							jsonBlock.getInt(JSONConstants.ORDER));
-				}
+//				if (!jsonBlock.has(JSONConstants.CONTENT_ID)) {
+				// This is a block creation
+				ContentBlockLocalServiceUtil.addBlock(teacherId, sessionId,
+						jsonBlock.getInt(JSONConstants.CONTENT_TYPE),
+						jsonBlock.getString(JSONConstants.CONTENT_NAME),
+						JSONConstants.getStringValue(jsonBlock, JSONConstants.CONTENT_VALUE, ""),
+						JSONConstants.getLongValue(jsonBlock, JSONConstants.FILE_ID, 0));
+//				} else {
+//					// This is a block update
+//					ContentBlockLocalServiceUtil.updateBlock(jsonBlock.getLong(JSONConstants.CONTENT_ID),
+//							jsonBlock.getString(JSONConstants.CONTENT_NAME),
+//							JSONConstants.getStringValue(jsonBlock, JSONConstants.CONTENT_VALUE, ""),
+//							JSONConstants.getIntValue(jsonBlock, JSONConstants.ORDER, 0));
+//				}
 			}
 		}
 
