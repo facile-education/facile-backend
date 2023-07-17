@@ -729,7 +729,7 @@ public class NotificationUtil {
                     recipientList.add(parent.getUserId());
                 }
                 String parentContent = "Ch\u00e8re Madame, cher Monsieur,"
-                        + ", </br></br>Votre enfant " + student.getFullName() + " est inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
+                        + " </br></br>Votre enfant " + student.getFullName() + " est inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
                         + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
@@ -754,7 +754,7 @@ public class NotificationUtil {
 
             if (!recipientList.isEmpty()) {
 
-                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>L'\u00e9l\u00e8ve" + student.getFullName() + " est inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
+                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>L'\u00e9l\u00e8ve " + student.getFullName() + " est inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
                         + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
 
