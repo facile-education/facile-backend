@@ -1,6 +1,7 @@
 package com.weprode.nero.document.utils;
 
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
+import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 
@@ -82,6 +83,9 @@ public class UploadUtil {
                 logger.error("Error : user " + user.getFullName() + " does not have permission to upload file " + fileName + " into folder " + folderId);
                 result.put(JSONConstants.ERROR, "PermissionException");
             }
+        } catch (FileExtensionException e) {
+            result.put(JSONConstants.ERROR, JSONConstants.FILE_EXTENSION_EXCEPTION);
+            logger.error("Error in uploading files", e);
         } catch (Exception e) {
             result.put(JSONConstants.ERROR, "Error in uploading files");
             logger.error("Error in uploading files", e);
