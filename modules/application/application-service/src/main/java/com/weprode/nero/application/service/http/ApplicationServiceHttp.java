@@ -349,6 +349,38 @@ public class ApplicationServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getResourceUrls(
+		HttpPrincipal httpPrincipal, long menuEntryId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				ApplicationServiceUtil.class, "getResourceUrls",
+				_getResourceUrlsParameterTypes9);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, menuEntryId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		ApplicationServiceHttp.class);
 
@@ -380,6 +412,8 @@ public class ApplicationServiceHttp {
 	private static final Class<?>[] _getAllApplicationsParameterTypes7 =
 		new Class[] {};
 	private static final Class<?>[] _getStatApplicationsParameterTypes8 =
+		new Class[] {long.class};
+	private static final Class<?>[] _getResourceUrlsParameterTypes9 =
 		new Class[] {long.class};
 
 }

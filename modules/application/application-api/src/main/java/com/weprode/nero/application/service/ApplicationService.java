@@ -85,6 +85,10 @@ public interface ApplicationService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getPortlets();
 
+	@JSONWebService(method = "GET", value = "get-resource-urls")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getResourceUrls(long menuEntryId);
+
 	@JSONWebService(method = "GET", value = "get-school-applications")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSchoolApplications(long schoolId);

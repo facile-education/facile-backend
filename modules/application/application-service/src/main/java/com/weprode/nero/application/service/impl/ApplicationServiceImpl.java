@@ -5,6 +5,7 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -18,6 +19,8 @@ import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.menu.enums.MenuEntry;
 import com.weprode.nero.menu.service.SideMenuLocalServiceUtil;
+import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -362,6 +365,58 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
             logger.error(e);
             result.put(JSONConstants.SUCCESS, false);
         }
+        return result;
+    }
+
+    @JSONWebService(value = "get-resource-urls", method = "GET")
+    public JSONObject getResourceUrls(long menuEntryId) {
+        JSONObject result = new JSONObject();
+
+        logger.info("User get resource urls.");
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        Application currentApp = null;
+
+        List<Application> userApplications = ApplicationLocalServiceUtil.getUserApplications(user);
+        for (Application application : userApplications) {
+            if (menuEntryId == application.getMenuEntryId()) {
+                currentApp = application;
+                break;
+            }
+        }
+
+        if (currentApp == null) {
+            result.put(JSONConstants.SUCCESS, false);
+            return result;
+        }
+
+        if (currentApp.getHasGlobalUrl()) {
+            result.put(JSONConstants.URL, currentApp.getGlobalUrl());
+        } else {
+            List<Organization> schools = UserOrgsLocalServiceUtil.getUserSchools(user);
+            JSONArray array = new JSONArray();
+            for (Organization school : schools) {
+                String url = ApplicationLocalServiceUtil.getApplicationURLByKey(school.getOrganizationId(), currentApp.getApplicationKey());
+
+                JSONObject schoolUrl = new JSONObject();
+                schoolUrl.put(JSONConstants.SCHOOL_ID, school.getOrganizationId());
+                schoolUrl.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true));
+                schoolUrl.put(JSONConstants.URL, url);
+                array.put(schoolUrl);
+            }
+            result.put(JSONConstants.URL, array);
+        }
+        result.put(JSONConstants.SUCCESS, true);
+
         return result;
     }
 
