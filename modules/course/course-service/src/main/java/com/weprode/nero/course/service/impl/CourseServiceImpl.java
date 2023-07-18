@@ -122,6 +122,34 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		return result;
 	}
 
+	@JSONWebService(value = "get-course", method = "GET")
+	public JSONObject getCourse(long sessionId) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				throw new AuthException();
+			}
+			if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+
+		try {
+			CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
+			result.put(JSONConstants.SESSION, cdtSession.convertToJSON(user));
+			result.put(JSONConstants.SUCCESS, true);
+		} catch (Exception e) {
+			logger.error(e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+
+		return result;
+	}
 
 	@JSONWebService(value = "get-course-content", method = "GET")
 	public JSONObject getCourseContent(long courseId, String minDateStr, String maxDateStr) {

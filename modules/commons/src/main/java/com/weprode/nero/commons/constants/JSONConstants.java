@@ -265,6 +265,7 @@ public class JSONConstants {
 
     // Session
     public static final String SESSION_ID = "sessionId";
+    public static final String SESSION = "session";
     public static final String SESSIONS = "sessions";
     public static final String SCHOOLLIFE_SESSIONS = "schoollifeSessions";
     public static final String SESSION_DETAILS = "sessionDetails";

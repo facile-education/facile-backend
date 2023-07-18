@@ -50,6 +50,10 @@ public interface CourseService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.course.service.impl.CourseServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the course remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link CourseServiceUtil} if injection and service tracking are not available.
 	 */
+	@JSONWebService(method = "GET", value = "get-course")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getCourse(long sessionId);
+
 	@JSONWebService(method = "GET", value = "get-course-content")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getCourseContent(
