@@ -14,6 +14,7 @@
 
 package com.weprode.nero.course.service.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -88,12 +89,28 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			JSONObject jsonCourse = new JSONObject();
 			jsonCourse.put(JSONConstants.COURSE_ID, userCours.getGroupId());
 			jsonCourse.put(JSONConstants.SUBJECT, CourseDetailsLocalServiceUtil.getCourseSubject(userCours.getGroupId()));
-			// TODO teacher
-			// User teacher = UserLocalServiceUtil.getUser(this.getTeacherId());
-			JSONObject teacherJson = new JSONObject();
-			teacherJson.put(JSONConstants.FIRST_NAME, "Trevor");
-			teacherJson.put(JSONConstants.LAST_NAME, "ODO");
-			jsonCourse.put(JSONConstants.TEACHER, teacherJson);
+
+			try {
+				JSONArray teachers = new JSONArray();
+
+				List<Long> orgIds = new ArrayList<>();
+				orgIds.add(userCours.getOrganizationId());
+
+				List<Long> roleIds = new ArrayList<>();
+				roleIds.add(RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId());
+
+				for (User teacher : UserSearchLocalServiceUtil.searchUsers(StringPool.BLANK, orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+					JSONObject teacherJson = new JSONObject();
+					teacherJson.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
+					teacherJson.put(JSONConstants.LAST_NAME, teacher.getLastName());
+					teachers.put(teacherJson);
+				}
+
+				jsonCourse.put(JSONConstants.TEACHERS, teachers);
+
+			} catch (Exception e) {
+				logger.error(e);
+			}
 
 			jsonCourse.put(JSONConstants.COLOR, CourseDetailsLocalServiceUtil.getCourseColor(userCours.getGroupId()));
 			jsonCourse.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
