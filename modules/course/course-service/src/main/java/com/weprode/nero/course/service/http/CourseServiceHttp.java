@@ -83,6 +83,38 @@ public class CourseServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getCourse(
+		HttpPrincipal httpPrincipal, long sessionId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				CourseServiceUtil.class, "getCourse",
+				_getCourseParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, sessionId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject getCourseContent(
 		HttpPrincipal httpPrincipal, long courseId, String minDateStr,
 		String maxDateStr) {
@@ -90,7 +122,7 @@ public class CourseServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "getCourseContent",
-				_getCourseContentParameterTypes1);
+				_getCourseContentParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, courseId, minDateStr, maxDateStr);
@@ -122,7 +154,7 @@ public class CourseServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "getSessionDetails",
-				_getSessionDetailsParameterTypes2);
+				_getSessionDetailsParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, sessionId);
@@ -154,7 +186,7 @@ public class CourseServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "getCourseStudents",
-				_getCourseStudentsParameterTypes3);
+				_getCourseStudentsParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, courseId);
@@ -186,7 +218,7 @@ public class CourseServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "savePrivateNotes",
-				_savePrivateNotesParameterTypes4);
+				_savePrivateNotesParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, sessionId, notes);
@@ -216,13 +248,16 @@ public class CourseServiceHttp {
 
 	private static final Class<?>[] _getUserCoursesParameterTypes0 =
 		new Class[] {};
-	private static final Class<?>[] _getCourseContentParameterTypes1 =
+	private static final Class<?>[] _getCourseParameterTypes1 = new Class[] {
+		long.class
+	};
+	private static final Class<?>[] _getCourseContentParameterTypes2 =
 		new Class[] {long.class, String.class, String.class};
-	private static final Class<?>[] _getSessionDetailsParameterTypes2 =
+	private static final Class<?>[] _getSessionDetailsParameterTypes3 =
 		new Class[] {long.class};
-	private static final Class<?>[] _getCourseStudentsParameterTypes3 =
+	private static final Class<?>[] _getCourseStudentsParameterTypes4 =
 		new Class[] {long.class};
-	private static final Class<?>[] _savePrivateNotesParameterTypes4 =
+	private static final Class<?>[] _savePrivateNotesParameterTypes5 =
 		new Class[] {long.class, String.class};
 
 }

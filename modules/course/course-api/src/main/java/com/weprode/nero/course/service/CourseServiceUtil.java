@@ -33,6 +33,10 @@ public class CourseServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.course.service.impl.CourseServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static org.json.JSONObject getCourse(long sessionId) {
+		return getService().getCourse(sessionId);
+	}
+
 	public static org.json.JSONObject getCourseContent(
 		long courseId, java.lang.String minDateStr,
 		java.lang.String maxDateStr) {
