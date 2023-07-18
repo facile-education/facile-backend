@@ -85,6 +85,10 @@ public class ApplicationServiceUtil {
 		return getService().getPortlets();
 	}
 
+	public static org.json.JSONObject getResourceUrls(long menuEntryId) {
+		return getService().getResourceUrls(menuEntryId);
+	}
+
 	public static org.json.JSONObject getSchoolApplications(long schoolId) {
 		return getService().getSchoolApplications(schoolId);
 	}

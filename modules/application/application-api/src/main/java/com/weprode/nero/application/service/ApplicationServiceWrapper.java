@@ -87,6 +87,11 @@ public class ApplicationServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getResourceUrls(long menuEntryId) {
+		return _applicationService.getResourceUrls(menuEntryId);
+	}
+
+	@Override
 	public org.json.JSONObject getSchoolApplications(long schoolId) {
 		return _applicationService.getSchoolApplications(schoolId);
 	}

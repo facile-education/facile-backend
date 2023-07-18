@@ -225,6 +225,22 @@ public class ApplicationServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject getResourceUrls(long menuEntryId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				ApplicationServiceUtil.getResourceUrls(menuEntryId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		ApplicationServiceSoap.class);
 
