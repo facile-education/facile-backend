@@ -251,19 +251,32 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, sessionId);
 			JSONArray jsonGivenHomeworks = new JSONArray();
 			for (Homework givenHomework : givenHomeworks) {
-				jsonGivenHomeworks.put(givenHomework.convertToJSON(user, true));
+				if (givenHomework.getTargetSessionId() != sessionId) {
+					jsonGivenHomeworks.put(givenHomework.convertToJSON(user, true));
+				}
 			}
 			jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, jsonGivenHomeworks);
 
-			// 3. To do homeworks
+			// 3. Session homeworks
+			JSONArray jsonSessionHomeworks = new JSONArray();
+			for (Homework sessionHomework : givenHomeworks) {
+				if (sessionHomework.getTargetSessionId() == sessionId) {
+					jsonSessionHomeworks.put(sessionHomework.convertToJSON(user, true));
+				}
+			}
+			jsonSession.put(JSONConstants.SESSION_HOMEWORKS, jsonSessionHomeworks);
+
+			// 4. To do homeworks
 			List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, sessionId);
 			JSONArray jsonToDoHomeworks = new JSONArray();
 			for (Homework toDoHomework : toDoHomeworks) {
-				jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, true));
+				if (toDoHomework.getSourceSessionId() != sessionId) {
+					jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, true));
+				}
 			}
 			jsonSession.put(JSONConstants.TO_DO_HOMEWORKS, jsonToDoHomeworks);
 
-			// 4. Private notes
+			// 5. Private notes
 			if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
 				jsonSession.put(JSONConstants.PRIVATE_NOTES, SessionTeacherLocalServiceUtil.getPrivateNotes(user.getUserId(), sessionId));
 			}
