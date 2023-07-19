@@ -290,6 +290,7 @@ public class JSONConstants {
     public static final String END_DATE_SCHOOL = "endDateSchool";
     public static final String SCHOOL_DAYS = "schoolDays";
     public static final String GIVEN_HOMEWORKS = "givenHomeworks";
+    public static final String SESSION_HOMEWORKS = "sessionHomeworks";
     public static final String TO_DO_HOMEWORKS = "toDoHomeworks";
     public static final String LAST_SESSION_ID = "lastSessionId";
     public static final String ALL_SLOTS = "allSlots";
