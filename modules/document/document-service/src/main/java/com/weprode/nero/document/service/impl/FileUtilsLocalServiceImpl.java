@@ -25,7 +25,6 @@ import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.NoSuchResourcePermissionException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -41,14 +40,27 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.*;
 import com.liferay.portal.kernel.util.Base64;
+import com.liferay.portal.kernel.util.HtmlParserUtil;
+import com.liferay.portal.kernel.util.ObjectValuePair;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.URLCodec;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
-import com.weprode.nero.document.constants.*;
+import com.weprode.nero.document.constants.DocumentConstants;
+import com.weprode.nero.document.constants.GeogebraConstants;
+import com.weprode.nero.document.constants.LoolConstants;
+import com.weprode.nero.document.constants.MindMapConstants;
+import com.weprode.nero.document.constants.PermissionConstants;
+import com.weprode.nero.document.constants.ScratchConstants;
 import com.weprode.nero.document.model.Version;
-import com.weprode.nero.document.service.*;
+import com.weprode.nero.document.service.ActivityLocalServiceUtil;
+import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.LoolTokenLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.VersionLocalServiceUtil;
 import com.weprode.nero.document.service.base.FileUtilsLocalServiceBaseImpl;
-
 import com.weprode.nero.document.utils.DLAppUtil;
 import com.weprode.nero.document.utils.ENTDocumentConversionUtil;
 import com.weprode.nero.document.utils.FileNameUtil;
@@ -61,10 +73,17 @@ import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
 import org.osgi.service.component.annotations.Component;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Component(
 	property = "model.class.name=com.weprode.nero.document.model.FileUtils",
@@ -181,10 +200,9 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 					} else if (mode == DocumentConstants.MODE_RENAME) {
 						count++;
 						suffix = " (" + count + ")";
-						System.out.println("Rename " + originFile.getFileEntryId() + " to " + fileTitle + suffix + "." + originFile.getExtension());
 						originFile = DLAppServiceUtil.updateFileEntry(
 								originFile.getFileEntryId(),
-								originFile.getFileName(),
+								fileTitle + suffix + "." + originFile.getExtension(),
 								originFile.getMimeType(),
 								fileTitle + suffix + "." + originFile.getExtension(),
 								StringPool.BLANK, // urlTitle
@@ -197,7 +215,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 								null,
 								serviceContext
 						);
-						System.out.println("File renamed title = " + originFile.getTitle() + " rename fileName = " + originFile.getFileName());
 					} else if (mode == DocumentConstants.MODE_REPLACE) {
 						boolean hasFound = false;
 
@@ -243,7 +260,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 				try {
 					renamedFile = DLAppServiceUtil.updateFileEntry(
 							originFile.getFileEntryId(),
-							originFile.getFileName(),
+							newNamewithoutExtension + suffix + "." + originFile.getExtension(),
 							originFile.getMimeType(),
 							newNamewithoutExtension + suffix + "." + originFile.getExtension(),
 							StringPool.BLANK, // urlTitle
