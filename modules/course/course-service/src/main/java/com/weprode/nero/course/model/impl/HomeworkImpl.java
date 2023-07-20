@@ -60,7 +60,9 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         jsonHomework.put(JSONConstants.TARGET_SESSION_ID, this.getTargetSessionId());
         jsonHomework.put(JSONConstants.IS_DRAFT, this.getIsDraft());
         jsonHomework.put(JSONConstants.PUBLICATION_DATE, this.getPublicationDate());
-        jsonHomework.put(JSONConstants.ESTIMATED_TIME, this.getEstimatedTime());
+        if (this.getEstimatedTime() > 0) {
+            jsonHomework.put(JSONConstants.ESTIMATED_TIME, this.getEstimatedTime());
+        }
 
         // Is it sent ?
         if (RoleUtilsLocalServiceUtil.isStudent(user)) {
