@@ -59,18 +59,30 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
 
     public List<MessagingThread> getThreads (long userId, long folderId, Date maxDate, int nbThreads, boolean unReadOnly) {
         List<MessagingThread> threadList = new ArrayList<>();
+        List<Long> addedThreadIds = new ArrayList<>();
+        boolean didSomething = true;
 
         // Fetch threads one by one
-        while (threadList.size() < nbThreads) {
+        while (threadList.size() < nbThreads && didSomething) {
+            didSomething = false;
             MessagingThread thread = getMostRecentThread(userId, folderId, maxDate, unReadOnly);
+
             if (thread == null) {	// No more threads available
                 break;
             }
-            threadList.add(thread);
+
+            if (!addedThreadIds.contains(thread.getThreadId())) {
+                didSomething = true;
+                addedThreadIds.add(thread.getThreadId());
+                threadList.add(thread);
+            }
 
             // Main message is the first message displayed
             Message threadMainMessage = MessagingUtil.getLastMessageFromList(thread.getDisplayableMessages(unReadOnly, folderId));
-            maxDate = threadMainMessage.getSendDate();	// Get next thread after the date of the main-message thread
+            if (maxDate.toInstant().isAfter(threadMainMessage.getSendDate().toInstant())) {
+                didSomething = true;
+                maxDate = threadMainMessage.getSendDate();	// Get next thread after the date of the main-message thread
+            }
         }
 
         return threadList;
