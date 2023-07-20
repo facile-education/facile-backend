@@ -381,7 +381,7 @@ public class GVESynchronizationManager {
 
                             if (user != null) {
 
-                                if (member.contains("OU=ELEVES")) {
+                                if (member.contains("OU=ELEVES") || member.contains("ou=ELEVES")) {
 
                                     addStudentRole(user);
                                     registerStudentToSchool(user, school);
@@ -389,7 +389,7 @@ public class GVESynchronizationManager {
                                     setSynchroDate(user);
                                     newStudentIds.add(user.getUserId());
 
-                                } else if (member.contains("OU=ENSEIGNANTS")) {
+                                } else if (member.contains("OU=ENSEIGNANTS") || member.contains("ou=ENSEIGNANTS")) {
 
                                     addTeacherRole(user);
                                     registerTeacherToSchool(user, school);
