@@ -182,6 +182,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			// Loop over sessions
 			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, null, null, true);
 			// TODO: Not return content in draft state for others than teachers
+			JSONArray jsonSessions = new JSONArray();
 			for (CDTSession courseSession : courseSessions) {
 				JSONObject jsonSession = courseSession.convertToJSON(user);
 
@@ -204,7 +205,11 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 					jsonGivenHomeworks.put(givenHomework.convertToJSON(user, false));
 				}
 				jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, jsonGivenHomeworks);
+
+				jsonSessions.put(jsonSession);
 			}
+
+			result.put(JSONConstants.SESSIONS, jsonSessions);
 
 		} catch (Exception e) {
 			logger.error("Could not get course content for course " + courseId + " for "+user.getFullName()+" (id="+user.getUserId()+")", e);
