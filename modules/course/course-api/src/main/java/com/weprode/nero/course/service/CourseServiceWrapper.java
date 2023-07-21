@@ -36,11 +36,8 @@ public class CourseServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getCourseContent(
-		long courseId, String minDateStr, String maxDateStr) {
-
-		return _courseService.getCourseContent(
-			courseId, minDateStr, maxDateStr);
+	public org.json.JSONObject getCourseContent(long courseId) {
+		return _courseService.getCourseContent(courseId);
 	}
 
 	@Override

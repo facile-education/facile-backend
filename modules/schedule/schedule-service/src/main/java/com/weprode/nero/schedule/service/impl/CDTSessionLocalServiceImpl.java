@@ -297,7 +297,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 				logger.info("> Group is a community");
 				List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
 				for (CDTSession groupSession : groupSessions) {
-					if (groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
+					if (minDate != null && maxDate!= null && groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
 						sessions.add(groupSession);
 					}
 				}
@@ -309,7 +309,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 					logger.info("> Group is a cours");
 					List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
 					for (CDTSession groupSession : groupSessions) {
-						if (groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
+						if (minDate != null && maxDate!= null && groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
 							sessions.add(groupSession);
 						}
 					}

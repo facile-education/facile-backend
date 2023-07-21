@@ -159,7 +159,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "get-course-content", method = "GET")
-	public JSONObject getCourseContent(long courseId, String minDateStr, String maxDateStr) {
+	public JSONObject getCourseContent(long courseId) {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -177,14 +177,11 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getGroupId()).contains(courseId)) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getUserId() + " fetches full course content for course " + courseId + ", from " + minDateStr + " to " + maxDateStr);
-
-			DateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
-			Date minDate = sdf.parse(minDateStr);
-			Date maxDate = sdf.parse(maxDateStr);
+			logger.info("User " + user.getUserId() + " fetches full course content for course " + courseId);
 
 			// Loop over sessions
-			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, minDate, maxDate, true);
+			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, null, null, true);
+			// TODO: Not return content in draft state for others than teachers
 			for (CDTSession courseSession : courseSessions) {
 				JSONObject jsonSession = courseSession.convertToJSON(user);
 

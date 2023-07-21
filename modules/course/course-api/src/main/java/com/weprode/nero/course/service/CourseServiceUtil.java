@@ -37,11 +37,8 @@ public class CourseServiceUtil {
 		return getService().getCourse(sessionId);
 	}
 
-	public static org.json.JSONObject getCourseContent(
-		long courseId, java.lang.String minDateStr,
-		java.lang.String maxDateStr) {
-
-		return getService().getCourseContent(courseId, minDateStr, maxDateStr);
+	public static org.json.JSONObject getCourseContent(long courseId) {
+		return getService().getCourseContent(courseId);
 	}
 
 	public static org.json.JSONObject getCourseStudents(long courseId) {
