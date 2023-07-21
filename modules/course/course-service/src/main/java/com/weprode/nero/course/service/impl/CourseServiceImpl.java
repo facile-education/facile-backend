@@ -43,6 +43,7 @@ import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
+import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
@@ -70,21 +71,27 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	private final Log logger = LogFactoryUtil.getLog(CourseServiceImpl.class);
 
 	@JSONWebService(value = "get-user-courses", method = "GET")
-	public JSONObject getUserCourses() {
+	public JSONObject getUserCourses(long userId) {
 		JSONObject result = new JSONObject();
 
 		User currentUser;
+		User userToFetchCourses;
 		try {
 			currentUser = getGuestOrUser();
 			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			if (userId != currentUser.getUserId() && !UserRelationshipLocalServiceUtil.isChild(currentUser.getUserId(), userId)) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
+			userToFetchCourses = UserLocalServiceUtil.getUser(userId);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
 		JSONArray jsonCourses = new JSONArray();
-		List<Organization> userCourses = UserOrgsLocalServiceUtil.getUserCours(currentUser, false, OrgConstants.ALL_SCHOOLS_ID);
+		List<Organization> userCourses = UserOrgsLocalServiceUtil.getUserCours(userToFetchCourses, false, OrgConstants.ALL_SCHOOLS_ID);
 		for (Organization userCours : userCourses) {
 			JSONObject jsonCourse = new JSONObject();
 			jsonCourse.put(JSONConstants.COURSE_ID, userCours.getGroupId());

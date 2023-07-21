@@ -53,10 +53,12 @@ import java.rmi.RemoteException;
 @Deprecated
 public class CourseServiceSoap {
 
-	public static org.json.JSONObject getUserCourses() throws RemoteException {
+	public static org.json.JSONObject getUserCourses(long userId)
+		throws RemoteException {
+
 		try {
-			org.json.JSONObject returnValue =
-				CourseServiceUtil.getUserCourses();
+			org.json.JSONObject returnValue = CourseServiceUtil.getUserCourses(
+				userId);
 
 			return returnValue;
 		}
