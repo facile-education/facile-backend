@@ -53,14 +53,14 @@ import com.weprode.nero.course.service.CourseServiceUtil;
 public class CourseServiceHttp {
 
 	public static org.json.JSONObject getUserCourses(
-		HttpPrincipal httpPrincipal) {
+		HttpPrincipal httpPrincipal, long userId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				CourseServiceUtil.class, "getUserCourses",
 				_getUserCoursesParameterTypes0);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey);
+			MethodHandler methodHandler = new MethodHandler(methodKey, userId);
 
 			Object returnObj = null;
 
@@ -247,7 +247,7 @@ public class CourseServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(CourseServiceHttp.class);
 
 	private static final Class<?>[] _getUserCoursesParameterTypes0 =
-		new Class[] {};
+		new Class[] {long.class};
 	private static final Class<?>[] _getCourseParameterTypes1 = new Class[] {
 		long.class
 	};

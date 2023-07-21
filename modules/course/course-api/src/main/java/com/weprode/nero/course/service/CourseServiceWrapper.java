@@ -64,8 +64,8 @@ public class CourseServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getUserCourses() {
-		return _courseService.getUserCourses();
+	public org.json.JSONObject getUserCourses(long userId) {
+		return _courseService.getUserCourses(userId);
 	}
 
 	@Override
