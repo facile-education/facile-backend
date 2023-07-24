@@ -204,7 +204,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 				if (sessionContent != null  || toDoHomeworks.size() > 0 || givenHomeworks.size() > 0) {
 					if (sessionContent != null) {
-						jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, false));
+						jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, true));
 					}
 
 					JSONArray jsonToDoHomeworks = new JSONArray();
