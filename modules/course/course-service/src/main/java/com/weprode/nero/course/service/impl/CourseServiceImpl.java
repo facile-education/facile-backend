@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.exception.NoSuchSessionContentException;
 import com.weprode.nero.course.model.Homework;
 import com.weprode.nero.course.model.SessionContent;
 import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
@@ -42,6 +43,7 @@ import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
+import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
@@ -174,39 +176,53 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 		result.put(JSONConstants.SUCCESS, true);
 		try {
-			if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getGroupId()).contains(courseId)) {
+			if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(courseId)) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			logger.info("User " + user.getUserId() + " fetches full course content for course " + courseId);
 
 			// Loop over sessions
-			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, null, null, true);
+			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate(), ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate(), true);
+			System.out.println("courseSessions.size() = " + courseSessions.size());
 			// TODO: Not return content in draft state for others than teachers
 			JSONArray jsonSessions = new JSONArray();
 			for (CDTSession courseSession : courseSessions) {
 				JSONObject jsonSession = courseSession.convertToJSON(user);
 
 				// Session content
-				SessionContent sessionContent = SessionContentLocalServiceUtil.getSessionContent(courseSession.getSessionId());
-				jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, false));
+				SessionContent sessionContent;
+				try {
+					sessionContent = SessionContentLocalServiceUtil.getSessionContent(courseSession.getSessionId());
+				} catch (NoSuchSessionContentException e) {
+					sessionContent = null;
+				}
 
 				// To perform homeworks
 				List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, courseSession.getSessionId());
-				JSONArray jsonToDoHomeworks = new JSONArray();
-				for (Homework toDoHomework : toDoHomeworks) {
-					jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, false));
-				}
-				jsonSession.put(JSONConstants.TO_DO_HOMEWORKS, jsonToDoHomeworks);
-
 				// Given homeworks
 				List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, courseSession.getSessionId());
-				JSONArray jsonGivenHomeworks = new JSONArray();
-				for (Homework givenHomework : givenHomeworks) {
-					jsonGivenHomeworks.put(givenHomework.convertToJSON(user, false));
-				}
-				jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, jsonGivenHomeworks);
 
-				jsonSessions.put(jsonSession);
+				if (sessionContent != null  || toDoHomeworks.size() > 0 || givenHomeworks.size() > 0) {
+					if (sessionContent != null) {
+						jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, false));
+					}
+
+					JSONArray jsonToDoHomeworks = new JSONArray();
+					for (Homework toDoHomework : toDoHomeworks) {
+						jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, false));
+					}
+					jsonSession.put(JSONConstants.TO_DO_HOMEWORKS, jsonToDoHomeworks);
+
+
+					JSONArray jsonGivenHomeworks = new JSONArray();
+					for (Homework givenHomework : givenHomeworks) {
+						jsonGivenHomeworks.put(givenHomework.convertToJSON(user, false));
+					}
+					jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, jsonGivenHomeworks);
+					System.out.println("jsonSession = " + jsonSession);
+
+					jsonSessions.put(jsonSession);
+				}
 			}
 
 			result.put(JSONConstants.SESSIONS, jsonSessions);
