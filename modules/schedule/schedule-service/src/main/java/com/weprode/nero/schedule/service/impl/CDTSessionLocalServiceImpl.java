@@ -286,8 +286,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 	}
 
 	public List<CDTSession> getGroupSessions(long groupId, Date minDate, Date maxDate, boolean includeSubClasses) {
-		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		logger.info("Fetching sessions for groupId " + groupId + " from " + sdf.format(minDate) + " to " + sdf.format(maxDate) + " with subclasses " + includeSubClasses);
+		logger.info("Fetching sessions for groupId " + groupId + " with subclasses " + includeSubClasses);
 
 		List<CDTSession> sessions = new ArrayList<>();
 		try {
