@@ -183,7 +183,6 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 			// Loop over sessions
 			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate(), ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate(), true);
-			System.out.println("courseSessions.size() = " + courseSessions.size());
 			// TODO: Not return content in draft state for others than teachers
 			JSONArray jsonSessions = new JSONArray();
 			for (CDTSession courseSession : courseSessions) {
@@ -207,19 +206,31 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 						jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, true));
 					}
 
-					JSONArray jsonToDoHomeworks = new JSONArray();
-					for (Homework toDoHomework : toDoHomeworks) {
-						jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, false));
-					}
-					jsonSession.put(JSONConstants.TO_DO_HOMEWORKS, jsonToDoHomeworks);
-
-
 					JSONArray jsonGivenHomeworks = new JSONArray();
 					for (Homework givenHomework : givenHomeworks) {
-						jsonGivenHomeworks.put(givenHomework.convertToJSON(user, false));
+						if (givenHomework.getTargetSessionId() != courseSession.getSessionId()) {
+							jsonGivenHomeworks.put(givenHomework.convertToJSON(user, true));
+						}
 					}
 					jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, jsonGivenHomeworks);
-					System.out.println("jsonSession = " + jsonSession);
+
+
+					JSONArray jsonSessionHomeworks = new JSONArray();
+					for (Homework sessionHomework : givenHomeworks) {
+						if (sessionHomework.getTargetSessionId() == courseSession.getSessionId()) {
+							jsonSessionHomeworks.put(sessionHomework.convertToJSON(user, true));
+						}
+					}
+					jsonSession.put(JSONConstants.SESSION_HOMEWORKS, jsonSessionHomeworks);
+
+
+					JSONArray jsonToDoHomeworks = new JSONArray();
+					for (Homework toDoHomework : toDoHomeworks) {
+						if (toDoHomework.getSourceSessionId() != courseSession.getSessionId()) {
+							jsonToDoHomeworks.put(toDoHomework.convertToJSON(user, true));
+						}
+					}
+					jsonSession.put(JSONConstants.TO_DO_HOMEWORKS, jsonToDoHomeworks);
 
 					jsonSessions.put(jsonSession);
 				}
