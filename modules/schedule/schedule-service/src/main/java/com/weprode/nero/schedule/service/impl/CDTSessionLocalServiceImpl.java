@@ -286,7 +286,8 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 	}
 
 	public List<CDTSession> getGroupSessions(long groupId, Date minDate, Date maxDate, boolean includeSubClasses) {
-		logger.info("Fetching sessions for groupId " + groupId + " with subclasses " + includeSubClasses);
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		logger.info("Fetching sessions for groupId " + groupId + " from " + sdf.format(minDate) + " to " + sdf.format(maxDate) + " with subclasses " + includeSubClasses);
 
 		List<CDTSession> sessions = new ArrayList<>();
 		try {
@@ -296,7 +297,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 				logger.info("> Group is a community");
 				List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
 				for (CDTSession groupSession : groupSessions) {
-					if (minDate != null && maxDate!= null && groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
+					if (groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
 						sessions.add(groupSession);
 					}
 				}
@@ -308,7 +309,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 					logger.info("> Group is a cours");
 					List<CDTSession> groupSessions = cdtSessionPersistence.findBygroupId(groupId);
 					for (CDTSession groupSession : groupSessions) {
-						if (minDate != null && maxDate!= null && groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
+						if (groupSession.getStart().after(minDate) && groupSession.getStart().before(maxDate)) {
 							sessions.add(groupSession);
 						}
 					}
