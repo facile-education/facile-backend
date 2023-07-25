@@ -192,6 +192,9 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 				SessionContent sessionContent;
 				try {
 					sessionContent = SessionContentLocalServiceUtil.getSessionContent(courseSession.getSessionId());
+					if (!RoleUtilsLocalServiceUtil.isTeacher(user) && (sessionContent.getIsDraft() || sessionContent.getPublicationDate().after(new Date()))) {
+						sessionContent = null;
+					}
 				} catch (NoSuchSessionContentException e) {
 					sessionContent = null;
 				}
