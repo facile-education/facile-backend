@@ -41,9 +41,8 @@ public class CustomAuthVerifier implements AuthVerifier {
                 authVerifierResult.setPasswordBasedAuthentication(true);
                 authVerifierResult.setUserId(userId);
                 authVerifierResult.setPassword(credentials[1]);
-            } else {
-                authVerifierResult.setState(AuthVerifierResult.State.INVALID_CREDENTIALS);
             }
+
             return authVerifierResult;
         } catch (Exception e) {
             logger.error("Exception in AuthVerifier");
