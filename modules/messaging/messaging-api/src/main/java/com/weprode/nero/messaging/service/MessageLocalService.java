@@ -303,7 +303,8 @@ public interface MessageLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public MessagingThread getMostRecentThread(
-		long userId, long folderId, Date fromDate, boolean unReadOnly);
+		List<Long> addedThreadIds, long folderId, Date fromDate,
+		boolean unReadOnly);
 
 	/**
 	 * Returns the OSGi service identifier.

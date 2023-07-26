@@ -363,11 +363,11 @@ public class MessageLocalServiceUtil {
 
 	public static com.weprode.nero.messaging.model.MessagingThread
 		getMostRecentThread(
-			long userId, long folderId, java.util.Date fromDate,
+			List<Long> addedThreadIds, long folderId, java.util.Date fromDate,
 			boolean unReadOnly) {
 
 		return getService().getMostRecentThread(
-			userId, folderId, fromDate, unReadOnly);
+			addedThreadIds, folderId, fromDate, unReadOnly);
 	}
 
 	/**

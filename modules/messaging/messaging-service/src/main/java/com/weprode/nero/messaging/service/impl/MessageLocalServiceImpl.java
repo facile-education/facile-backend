@@ -60,27 +60,21 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
     public List<MessagingThread> getThreads (long userId, long folderId, Date maxDate, int nbThreads, boolean unReadOnly) {
         List<MessagingThread> threadList = new ArrayList<>();
         List<Long> addedThreadIds = new ArrayList<>();
-        boolean didSomething = true;
 
         // Fetch threads one by one
-        while (threadList.size() < nbThreads && didSomething) {
-            didSomething = false;
-            MessagingThread thread = getMostRecentThread(userId, folderId, maxDate, unReadOnly);
+        while (threadList.size() < nbThreads) {
+            MessagingThread thread = getMostRecentThread(addedThreadIds, folderId, maxDate, unReadOnly);
 
             if (thread == null) {	// No more threads available
                 break;
             }
 
-            if (!addedThreadIds.contains(thread.getThreadId())) {
-                didSomething = true;
-                addedThreadIds.add(thread.getThreadId());
-                threadList.add(thread);
-            }
+            addedThreadIds.add(thread.getThreadId());
+            threadList.add(thread);
 
             // Main message is the first message displayed
             Message threadMainMessage = MessagingUtil.getLastMessageFromList(thread.getDisplayableMessages(unReadOnly, folderId));
             if (maxDate.toInstant().isAfter(threadMainMessage.getSendDate().toInstant())) {
-                didSomething = true;
                 maxDate = threadMainMessage.getSendDate();	// Get next thread after the date of the main-message thread
             }
         }
@@ -88,7 +82,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         return threadList;
     }
 
-    public MessagingThread getMostRecentThread (long userId, long folderId, Date fromDate, boolean unReadOnly) {
+    public MessagingThread getMostRecentThread (List<Long> addedThreadIds, long folderId, Date fromDate, boolean unReadOnly) {
         // Get messages from newest to oldest by pack of 60, and compute if the wanted message is inside
         int start = 0;
         int nbMessagesToFetchAtTime = 60;
@@ -113,7 +107,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
             // Loop over messages
             for (Message message : messagePool) {
                 // Must be before the given Date and be New if the unreadOnly boolean is set to true
-                if (message.getSendDate().before(fromDate) && (!unReadOnly || message.getIsNew())) {
+                if (!addedThreadIds.contains(message.getThreadId()) && message.getSendDate().before(fromDate) && (!unReadOnly || message.getIsNew())) {
                     lastMessage = message;
                     break;
                 }
