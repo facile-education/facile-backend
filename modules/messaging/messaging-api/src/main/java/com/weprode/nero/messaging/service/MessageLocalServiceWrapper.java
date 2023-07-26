@@ -416,11 +416,11 @@ public class MessageLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.messaging.model.MessagingThread getMostRecentThread(
-		long userId, long folderId, java.util.Date fromDate,
-		boolean unReadOnly) {
+		java.util.List<Long> addedThreadIds, long folderId,
+		java.util.Date fromDate, boolean unReadOnly) {
 
 		return _messageLocalService.getMostRecentThread(
-			userId, folderId, fromDate, unReadOnly);
+			addedThreadIds, folderId, fromDate, unReadOnly);
 	}
 
 	/**
