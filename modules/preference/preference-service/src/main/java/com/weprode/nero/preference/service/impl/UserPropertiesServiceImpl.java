@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
@@ -87,14 +88,16 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         }
 
         try {
+            long portraitId = UserLocalServiceUtil.getDefaultUser(PortalUtil.getDefaultCompanyId()).getPortraitId();
             if (picture.length() == 0) {	// Add condition to avoid nullPointerException
-                UserLocalServiceUtil.updatePortrait(user.getUserId(), new byte[0]);
+                UserServiceUtil.deletePortrait(user.getUserId());
             } else {
-                UserLocalServiceUtil.updatePortrait(user.getUserId(), Files.readAllBytes(picture.toPath()));
+                user = UserServiceUtil.updatePortrait(user.getUserId(), Files.readAllBytes(picture.toPath()));
+                portraitId = user.getPortraitId();
             }
 
             result.put(JSONConstants.IMAGE_URL, UserConstants.getPortraitURL(PortalUtil.getPathImage(), user.isMale(),
-                    user.getPortraitId(), user.getUserUuid()));
+                    portraitId, user.getUserUuid()));
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);
