@@ -92,6 +92,10 @@ public class NewsAttachedFileLocalServiceUtil {
 		return getService().createPersistedModel(primaryKeyObj);
 	}
 
+	public static void deleteAttachedFile(NewsAttachedFile newsAttachedFile) {
+		getService().deleteAttachedFile(newsAttachedFile);
+	}
+
 	public static void deleteByNewsId(long newsId) throws SystemException {
 		getService().deleteByNewsId(newsId);
 	}

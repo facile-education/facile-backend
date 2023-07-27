@@ -375,6 +375,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             }
         } catch (Exception e) {
             logger.error("Error converting group activity", e);
+            return null;
         }
 
         return jsonActivity;
@@ -410,7 +411,9 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         try {
             sessionActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(activityDate));
             User lastEditor = SessionTeacherLocalServiceUtil.getLastEditor(session.getSessionId(), activityDate);
-            sessionActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
+            if (lastEditor != null) {
+                sessionActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
+            }
             sessionActivity.put(JSONConstants.GROUP_ID, session.getGroupId());
             sessionActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(session.getGroupId()));
             sessionActivity.put(JSONConstants.TARGET_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(session.getStart()));

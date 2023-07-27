@@ -3,6 +3,7 @@ package com.weprode.nero.news.service.impl;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -91,6 +92,27 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
         }
     }
 
+    public void deleteAttachedFile(NewsAttachedFile newsAttachedFile) {
+        logger.info("Deleting newsAttachFileId " + newsAttachedFile.getNewsFileId() + " for newsId " + newsAttachedFile.getNewsId());
+
+        try {
+            // Delete fileEntry
+            long folderId = DLAppServiceUtil.getFileEntry(newsAttachedFile.getFileId()).getFolderId();
+            DLAppServiceUtil.deleteFileEntry(newsAttachedFile.getFileId());
+
+            // Check if parent folder is empty, if it is then delete folder
+            List<FileEntry> remainingFileEntries = DLAppServiceUtil.getFileEntries(newsAttachedFile.getGroupId(), folderId);
+            if (remainingFileEntries.isEmpty()) {
+                DLAppServiceUtil.deleteFolder(folderId);
+            }
+
+            // Delete newsAttachedFile
+            newsAttachedFilePersistence.remove(newsAttachedFile);
+        } catch (PortalException e) {
+            logger.error("Could not remove attachedFileId " + newsAttachedFile.getNewsFileId(), e);
+        }
+    }
+
     public void deleteByNewsId(long newsId) throws SystemException {
         logger.info("Deleting attached files for news " + newsId);
 
@@ -112,7 +134,7 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
                 // Check subFolder newsId
                 List<Folder> folderList = DLAppServiceUtil.getFolders(groupId, groupNewsFolder.getFolderId());
                 for (Folder folder : folderList) {
-                    if (folder.getName().equals("" + newsId)) {
+                    if (folder.getName().equals(String.valueOf(newsId))) {
                         logger.info("About to delete folder news for groupId " + groupId + " and newsId " + newsId);
                         // Delete existing attached files
                         List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, folder.getFolderId());

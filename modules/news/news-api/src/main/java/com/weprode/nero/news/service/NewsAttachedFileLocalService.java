@@ -97,6 +97,8 @@ public interface NewsAttachedFileLocalService
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	public void deleteAttachedFile(NewsAttachedFile newsAttachedFile);
+
 	public void deleteByNewsId(long newsId) throws SystemException;
 
 	/**

@@ -248,7 +248,7 @@ public class SessionTeacherLocalServiceImpl
 	// Used for session activity
 	public User getLastEditor(long sessionId, Date modifiedDate) throws SystemException, PortalException {
 		for (SessionTeacher sessionTeacher : SessionTeacherLocalServiceUtil.getSessionTeachers(sessionId)) {
-			if (sessionTeacher.getModificationDate().equals(modifiedDate)) {
+			if (sessionTeacher.getModificationDate() != null && sessionTeacher.getModificationDate().equals(modifiedDate)) {
 				return UserLocalServiceUtil.getUser(sessionTeacher.getTeacherId());
 			}
 		}
