@@ -60,6 +60,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             QueryPos qPos = QueryPos.getInstance(q);
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            qPos.add(userId);
             qPos.add(sdf.format(maxDate));
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
@@ -102,6 +103,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(sdf.format(new Date()));
             qPos.add(userId);

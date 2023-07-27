@@ -42,6 +42,7 @@ import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.nero.mobile.constants.MobileConstants;
 import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import com.weprode.nero.news.model.News;
+import com.weprode.nero.news.model.NewsAttachedFile;
 import com.weprode.nero.news.model.NewsPopulation;
 import com.weprode.nero.news.service.NewsAttachedFileLocalServiceUtil;
 import com.weprode.nero.news.service.NewsLocalServiceUtil;
@@ -466,6 +467,13 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId(), NeroRoleConstants.CAISSIER_COMPTABLE_INCLUSIVE, userId));
             rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId(), NeroRoleConstants.BIBLIOTHECAIRE_INCLUSIVE, userId));
             rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId(), NeroRoleConstants.SECRETAIRE_INCLUSIVE, userId));
+
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId(), NeroRoleConstants.DIRECTION_INCLUSIVE, userId));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId(), NeroRoleConstants.CONSEILLER_ORIENTATION_INCLUSIVE, userId));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId(), NeroRoleConstants.CONSEILLER_SOCIAL, userId));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId(), NeroRoleConstants.DOYEN_INCLUSIVE, userId));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId(), NeroRoleConstants.INFIRMIERE_INCLUSIVE, userId));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId(), NeroRoleConstants.PSYCHOLOGUE_INCLUSIVE, userId));
         } catch (Exception e) {
             logger.error("Error building news populations for school", e);
         }
@@ -665,9 +673,24 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     private void manageAttachedFiles(long newsId, JSONArray populations, List<Long> attachFileIds, boolean isCreation) throws SystemException {
 
+        if (attachFileIds.isEmpty()) {
+            if (!isCreation) {
+                // Delete previous attached files
+                NewsAttachedFileLocalServiceUtil.deleteByNewsId(newsId);
+            }
+
+            return;
+        }
+
         if (!isCreation) {
-            // Delete previous attached files
-            NewsAttachedFileLocalServiceUtil.deleteByNewsId(newsId);
+            // Clean up previous attachFiles but keep existing one needed for copy
+            List<NewsAttachedFile> oldAttachFiles = NewsAttachedFileLocalServiceUtil.getNewsAttachedFiles(newsId);
+
+            for (NewsAttachedFile oldAttachedFile : oldAttachFiles) {
+                if (!attachFileIds.contains(oldAttachedFile.getFileId())) {
+                    NewsAttachedFileLocalServiceUtil.deleteAttachedFile(oldAttachedFile);
+                }
+            }
         }
 
         // Build a map to group populations by groupId
@@ -691,15 +714,6 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                     newsIdFolder = DLAppServiceUtil.getFolder(groupId, groupNewsFolder.getFolderId(), newsId+"");
                 } catch (NoSuchFolderException e) {
                     // This is a creation
-                }
-                if (newsIdFolder != null) {
-                    logger.info("Folder newsId " + newsId + "already exists -> this is an edit");
-                    // Delete existing attached files
-                    List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, newsIdFolder.getFolderId());
-                    for (FileEntry fileEntry : fileList) {
-                        logger.info("Deleting existing attached file " + fileEntry.getTitle());
-                        DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
-                    }
                 }
 
                 // Create newsId folder if it does not exist
@@ -735,6 +749,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
                 // Add attached files
                 for (Long attachedFileId : attachFileIds) {
+                    if (DLAppServiceUtil.getFileEntry(attachedFileId).getFolderId() == newsIdFolder.getFolderId()) {
+                        continue;
+                    }
+
                     logger.info("Adding fileEntryId " + attachedFileId + " to folder " + newsIdFolder.getFolderId());
                     FileEntry copiedFileEntry = FileUtilsLocalServiceUtil.copyFileEntry(newsIdFolder.getUserId(), attachedFileId, newsIdFolder.getFolderId(), true);
 
@@ -756,7 +774,6 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 logger.error("Error adding attached files for newsId " + newsId + " and groupId " + entry.getKey(), e);
             }
         }
-
     }
 
     private void manageMobilePush(String title, String content, JSONArray populations) {

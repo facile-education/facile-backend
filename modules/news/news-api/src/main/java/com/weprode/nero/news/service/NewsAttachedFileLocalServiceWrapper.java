@@ -87,6 +87,13 @@ public class NewsAttachedFileLocalServiceWrapper
 	}
 
 	@Override
+	public void deleteAttachedFile(
+		com.weprode.nero.news.model.NewsAttachedFile newsAttachedFile) {
+
+		_newsAttachedFileLocalService.deleteAttachedFile(newsAttachedFile);
+	}
+
+	@Override
 	public void deleteByNewsId(long newsId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
