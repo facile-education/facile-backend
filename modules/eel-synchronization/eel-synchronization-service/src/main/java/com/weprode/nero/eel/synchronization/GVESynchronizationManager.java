@@ -193,8 +193,9 @@ public class GVESynchronizationManager {
         synchronizeClasses(school, classesDn);
         synchronizeVolees(school, classesDn);
 
-        String subjectsDn = "OU=DISCIPLINES,OU=ENSEIGNANTS," + schoolDn;
-        synchronizeTeacherSubjects(school, subjectsDn);
+        // Commented out because subjects are not accented, we use the ones from the schedule file
+//        String subjectsDn = "OU=DISCIPLINES,OU=ENSEIGNANTS," + schoolDn;
+//        synchronizeTeacherSubjects(school, subjectsDn);
 
         String sessionsDn = "OU=COURS," + schoolDn;
         synchronizeSessions(school, sessionsDn);
@@ -267,9 +268,6 @@ public class GVESynchronizationManager {
                 try {
                     school = OrgUtilsLocalServiceUtil.getOrCreateSchool(companyId, schoolName);
                     logger.info("Found school " + school.getOrganizationId());
-                    OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(school.getOrganizationId());
-                    OrgUtilsLocalServiceUtil.getSchoolPATsOrganization(school.getOrganizationId());
-                    OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(school.getOrganizationId());
                 } catch (Exception e) {
                     logger.error("Error when creating school with name "+schoolName, e);
                 }
@@ -562,12 +560,6 @@ public class GVESynchronizationManager {
         // Add teacher to the school
         addUserToOrgMap(teacher, school.getOrganizationId());
 
-        // Add teacher to the school-level org
-        Organization schoolLevelTeacherOrg = OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(school.getOrganizationId());
-        Organization schoolLevelPersonalOrg = OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(school.getOrganizationId());
-        addUserToOrgMap(teacher, schoolLevelTeacherOrg.getOrganizationId());
-        addUserToOrgMap(teacher, schoolLevelPersonalOrg.getOrganizationId());
-
     }
 
     private void registerPersonalToSchool(User personal, Organization school, boolean isPAT) {
@@ -584,14 +576,6 @@ public class GVESynchronizationManager {
         // Add teacher to the school
         addUserToOrgMap(personal, school.getOrganizationId());
 
-        // Add personal to the school-level org
-        Organization schoolLevelPersonalOrg = OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(school.getOrganizationId());
-        addUserToOrgMap(personal, schoolLevelPersonalOrg.getOrganizationId());
-
-        if (isPAT) {
-            Organization schoolLevelPATOrg = OrgUtilsLocalServiceUtil.getSchoolPATsOrganization(school.getOrganizationId());
-            addUserToOrgMap(personal, schoolLevelPATOrg.getOrganizationId());
-        }
     }
 
     private void synchronizeUserOrgs() {
@@ -719,7 +703,7 @@ public class GVESynchronizationManager {
                 logger.info("SubjectDn = "+ subjectDn);
 
                 // Now manage subject groups
-                String subjectOrgName = OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true) + OrgConstants.ORG_SUFFIX_TEACHERS +
+                String subjectOrgName = OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true) + OrgConstants.SUBJECT_ORG_TEACHERS +
                         (subjectName.startsWith("A") || subjectName.startsWith("E") || subjectName.startsWith("H") || subjectName.startsWith("I") ? " d'" : " de ") + subjectName;
                 Organization subjectOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(school.getCompanyId(), subjectOrgName, school.getOrganizationId(), OrgConstants.SUBJECT_TYPE);
 
@@ -1591,7 +1575,7 @@ public class GVESynchronizationManager {
         // For obsolete cours orgs deletion
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.COURS_TYPE);
-        List<Organization> existingCoursOrgs = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, null, false);
+        List<Organization> existingCoursOrgs = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, false);
         logger.info("There are " + existingCoursOrgs.size() + " existing cours organizations");
         List<Long> newCoursOrgIds = new ArrayList<>();
 
@@ -1641,8 +1625,19 @@ public class GVESynchronizationManager {
                     String room = slotData.getRoom();
 
                     // Map course and subject
-                    Subject subject = SubjectLocalServiceUtil.getOrCreateSubject(slotData.getSubject());
+                    logger.info("Get or create subject " + slotData.getSubject());
+                    String subjectName = slotData.getSubject();
+                    Subject subject = SubjectLocalServiceUtil.getOrCreateSubject(subjectName);
+                    logger.info("subjectId is " + subject.getSubjectId());
                     CourseDetailsLocalServiceUtil.setCourseSubject(coursOrg.getGroupId(), subject.getSubjectId());
+
+                    String subjectOrgName = OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true) + OrgConstants.SUBJECT_ORG_TEACHERS +
+                            (subjectName.startsWith("A") || subjectName.startsWith("E") || subjectName.startsWith("H") || subjectName.startsWith("I") ? " d'" : " de ") + subjectName;
+                    Organization subjectOrg = null;
+                    try {
+                        subjectOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(school.getCompanyId(), subjectOrgName, school.getOrganizationId(), OrgConstants.SUBJECT_TYPE);
+                    } catch (Exception e) {
+                    }
 
                     // Convert slot to startTime/endTime
                     List<SessionInfos> sessionInfosList = getSessionInfos(slot, slotData);
@@ -1660,12 +1655,13 @@ public class GVESynchronizationManager {
                         try {
                             User teacher = UserLocalServiceUtil.getUser(teacherId);
                             addUserToOrgMap(teacher, school.getOrganizationId());
-                            Organization schoolPersonalsOrg = OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(school.getOrganizationId());
-                            addUserToOrgMap(teacher, schoolPersonalsOrg.getOrganizationId());
-                            Organization schoolTeachersOrg = OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(school.getOrganizationId());
-                            addUserToOrgMap(teacher, schoolTeachersOrg.getOrganizationId());
                             addUserToOrgMap(teacher, coursOrg.getOrganizationId());
                             logger.info("Adding teacher " + teacherId + " to cours " + coursOrg.getName());
+                            if (subjectOrg != null) {
+                                addUserToOrgMap(teacher, subjectOrg.getOrganizationId());
+                                TeacherSubjectLocalServiceUtil.addTeacherSubjectInSchool(teacher.getUserId(), subject.getSubjectId(), school.getOrganizationId());
+                                logger.info("Adding teacher " + teacherId + " to subject org " + subjectOrg.getName());
+                            }
 
                             for (long parentClassOrgId : slotData.getParentClassOrgIds()) {
                                 addUserToOrgMap(teacher, parentClassOrgId);

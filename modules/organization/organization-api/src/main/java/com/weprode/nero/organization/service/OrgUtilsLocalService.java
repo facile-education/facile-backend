@@ -88,17 +88,7 @@ public interface OrgUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> getSchoolOrganizations(
-		long schoolId, List<Integer> types, List<Integer> roles,
-		Boolean withArchives);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Organization getSchoolPATsOrganization(long schoolId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Organization getSchoolPersonalsOrganization(long schoolId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Organization getSchoolTeachersOrganization(long schoolId);
+		long schoolId, List<Integer> types, Boolean withArchives);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isVoleeAuthorized(String volee);

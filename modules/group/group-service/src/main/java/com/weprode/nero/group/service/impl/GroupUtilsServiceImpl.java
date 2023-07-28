@@ -187,26 +187,24 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             List<Organization> organizations = new ArrayList<>();
             if (allClasses && (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isPat(user) || RoleUtilsLocalServiceUtil.isEmps(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
                 types.add(OrgConstants.CLASS_TYPE);
-                types.add(OrgConstants.SCHOOL_LEVEL_TYPE);
                 types.add(OrgConstants.SUBJECT_TYPE);
-                organizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, null, false);
+                organizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, false);
                 // Adding school org
                 organizations.add(OrganizationLocalServiceUtil.getOrganization(schoolId));
             } else if (allCours && (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isPat(user) || RoleUtilsLocalServiceUtil.isEmps(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
                 types.add(OrgConstants.COURS_TYPE);
-                organizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, null, false);
+                organizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, false);
             } else if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) || (!allCommunities)) {
                 // My institutional
                 types.add(OrgConstants.COURS_TYPE);
                 types.add(OrgConstants.SCHOOL_TYPE);
-                types.add(OrgConstants.SCHOOL_LEVEL_TYPE);
                 if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
                     types.add(OrgConstants.SUBJECT_TYPE);
                 }
                 if (!RoleUtilsLocalServiceUtil.isParent(user)) {
                     types.add(OrgConstants.CLASS_TYPE);
                 }
-                organizations = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, null, false, OrgConstants.ALL_SCHOOLS_ID);
+                organizations = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, false, OrgConstants.ALL_SCHOOLS_ID);
             }
 
             // Doyens, psy and conseillers sociaux see their classes
@@ -215,7 +213,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             for (Organization org : organizations) {
                 if (filter.equals("") || containsIgnoreCase(org.getName(),filter)) {
                     OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(org.getOrganizationId());
-                    boolean withSchoolName = orgDetails.getType() == OrgConstants.SCHOOL_TYPE || orgDetails.getType() == OrgConstants.SCHOOL_LEVEL_TYPE;
+                    boolean withSchoolName = orgDetails.getType() == OrgConstants.SCHOOL_TYPE;
                     String formattedName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), withSchoolName);
 
                     JSONObject jsonGroup = new JSONObject();

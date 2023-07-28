@@ -267,8 +267,11 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
             List<Application> userApplications = ApplicationLocalServiceUtil.getUserApplications(user);
 
             for (Application userApplication : userApplications) {
-                JSONObject jsonApplication = ApplicationLocalServiceUtil.convertToJSON(userApplication, false);
-                jsonApplications.put(jsonApplication);
+                // Hide content creation apps (geogebra, etc)
+                if (!userApplication.getCategoryName().equals("Création de contenu")) {
+                    JSONObject jsonApplication = ApplicationLocalServiceUtil.convertToJSON(userApplication, false);
+                    jsonApplications.put(jsonApplication);
+                }
             }
 
             result.put(JSONConstants.SERVICES, jsonApplications);

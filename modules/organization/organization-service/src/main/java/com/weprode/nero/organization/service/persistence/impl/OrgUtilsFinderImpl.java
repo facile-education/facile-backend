@@ -1,21 +1,22 @@
 package com.weprode.nero.organization.service.persistence.impl;
 
 import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
-import com.liferay.portal.kernel.dao.orm.*;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
+import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
-import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.model.OrgUtils;
 import com.weprode.nero.organization.service.persistence.OrgUtilsFinder;
-import java.util.Collections;
-
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component(service = OrgUtilsFinder.class)
@@ -47,16 +48,13 @@ public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
     /**
      * Return the list of user's organizations
      */
-    public List<Organization> findUserOrganizations(long userId, List<Integer> types, List<Integer> roles,
-                                                    Boolean withArchives, long schoolId, int begin, int end) {
+    public List<Organization> findUserOrganizations(long userId, List<Integer> types, Boolean withArchives, long schoolId, int begin, int end) {
         Session session = null;
 
         try {
             session = basePersistence.openSession();
 
             StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.append(formatIntegerListToSQL(roles, "od.role_"));
 
             sqlBuilder.append(formatIntegerListToSQL(types, "od.type_"));
 
@@ -84,8 +82,7 @@ public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
             return (List<Organization>) QueryUtil.list(q, getDialect(), begin, end, false);
 
         } catch (Exception e) {
-            logger.error("Error when getting user's organizations : userId=" + userId +
-                    ", types=" + types.toString() + ", roles=" + roles.toString(), e);
+            logger.error("Error when getting user's organizations : userId=" + userId + ", types=" + types.toString(), e);
         } finally {
             basePersistence.closeSession(session);
         }
@@ -96,7 +93,7 @@ public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
     /**
      * Return the list of user's organizations
      */
-    public List<Organization> findSchoolOrganizations(long schoolId, List<Integer> types, List<Integer> roles,
+    public List<Organization> findSchoolOrganizations(long schoolId, List<Integer> types,
                                                      Boolean withArchives, int begin, int end) {
         Session session = null;
 
@@ -104,8 +101,6 @@ public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
             session = basePersistence.openSession();
 
             StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.append(formatIntegerListToSQL(roles, "od.role_"));
 
             sqlBuilder.append(formatIntegerListToSQL(types, "od.type_"));
 
@@ -128,7 +123,7 @@ public class OrgUtilsFinderImpl extends OrgUtilsFinderBaseImpl
 
             return (List<Organization>) QueryUtil.list(q, getDialect(), begin, end, false);
         } catch (Exception e) {
-            logger.error("Error when getting school's organizations : schoolId="+schoolId+", types="+types.toString()+", roles="+roles.toString(), e);
+            logger.error("Error when getting school's organizations : schoolId="+schoolId+", types="+types.toString(), e);
         } finally {
             basePersistence.closeSession(session);
         }

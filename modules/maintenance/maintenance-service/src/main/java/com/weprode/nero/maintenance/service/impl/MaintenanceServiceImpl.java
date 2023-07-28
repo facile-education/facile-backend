@@ -26,6 +26,7 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.eel.synchronization.service.SynchronizationLocalServiceUtil;
 import com.weprode.nero.maintenance.AnonymizationUtil;
 import com.weprode.nero.maintenance.FsManagement;
+import com.weprode.nero.maintenance.PermissionUtil;
 import com.weprode.nero.maintenance.service.base.MaintenanceServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONObject;
@@ -189,6 +190,35 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 
 		} catch (Exception e) {
 			logger.error("Error running file system exploration", e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
+	@JSONWebService(value = "add-permissions", method = "POST")
+	public JSONObject addPermissions() {
+
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			PermissionUtil.addPermissions();
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error adding permissions", e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;

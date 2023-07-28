@@ -152,8 +152,8 @@ public class CDTSessionServiceHttp {
 
 	public static org.json.JSONObject createSession(
 		HttpPrincipal httpPrincipal, long groupId, String subject, String room,
-		String startDate, String endDate, int slot, String teacherIds,
-		boolean isRecurrent) {
+		int dayNumber, int slot, String startHour, String endHour,
+		String teacherIds, boolean isRecurrent) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -161,8 +161,8 @@ public class CDTSessionServiceHttp {
 				_createSessionParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, groupId, subject, room, startDate, endDate, slot,
-				teacherIds, isRecurrent);
+				methodKey, groupId, subject, room, dayNumber, slot, startHour,
+				endHour, teacherIds, isRecurrent);
 
 			Object returnObj = null;
 
@@ -228,8 +228,8 @@ public class CDTSessionServiceHttp {
 		new Class[] {long.class};
 	private static final Class<?>[] _createSessionParameterTypes3 =
 		new Class[] {
-			long.class, String.class, String.class, String.class, String.class,
-			int.class, String.class, boolean.class
+			long.class, String.class, String.class, int.class, int.class,
+			String.class, String.class, String.class, boolean.class
 		};
 	private static final Class<?>[] _getCourseNextSessionsParameterTypes4 =
 		new Class[] {long.class};

@@ -104,29 +104,10 @@ public class OrgUtilsLocalServiceUtil {
 
 	public static List<com.liferay.portal.kernel.model.Organization>
 		getSchoolOrganizations(
-			long schoolId, List<Integer> types, List<Integer> roles,
-			Boolean withArchives) {
+			long schoolId, List<Integer> types, Boolean withArchives) {
 
 		return getService().getSchoolOrganizations(
-			schoolId, types, roles, withArchives);
-	}
-
-	public static com.liferay.portal.kernel.model.Organization
-		getSchoolPATsOrganization(long schoolId) {
-
-		return getService().getSchoolPATsOrganization(schoolId);
-	}
-
-	public static com.liferay.portal.kernel.model.Organization
-		getSchoolPersonalsOrganization(long schoolId) {
-
-		return getService().getSchoolPersonalsOrganization(schoolId);
-	}
-
-	public static com.liferay.portal.kernel.model.Organization
-		getSchoolTeachersOrganization(long schoolId) {
-
-		return getService().getSchoolTeachersOrganization(schoolId);
+			schoolId, types, withArchives);
 	}
 
 	public static boolean isVoleeAuthorized(String volee) {

@@ -104,11 +104,8 @@ public class UserManagementLocalServiceWrapper
 	}
 
 	@Override
-	public void synchronizeSchoolLevelOrganizations(
-		long userId, long schoolId) {
-
-		_userManagementLocalService.synchronizeSchoolLevelOrganizations(
-			userId, schoolId);
+	public void synchronizeUserSchool(long userId, long schoolId) {
+		_userManagementLocalService.synchronizeUserSchool(userId, schoolId);
 	}
 
 	@Override

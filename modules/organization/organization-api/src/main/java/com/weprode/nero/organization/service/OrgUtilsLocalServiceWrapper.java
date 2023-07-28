@@ -111,31 +111,10 @@ public class OrgUtilsLocalServiceWrapper
 	public java.util.List<com.liferay.portal.kernel.model.Organization>
 		getSchoolOrganizations(
 			long schoolId, java.util.List<Integer> types,
-			java.util.List<Integer> roles, Boolean withArchives) {
+			Boolean withArchives) {
 
 		return _orgUtilsLocalService.getSchoolOrganizations(
-			schoolId, types, roles, withArchives);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.Organization
-		getSchoolPATsOrganization(long schoolId) {
-
-		return _orgUtilsLocalService.getSchoolPATsOrganization(schoolId);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.Organization
-		getSchoolPersonalsOrganization(long schoolId) {
-
-		return _orgUtilsLocalService.getSchoolPersonalsOrganization(schoolId);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.Organization
-		getSchoolTeachersOrganization(long schoolId) {
-
-		return _orgUtilsLocalService.getSchoolTeachersOrganization(schoolId);
+			schoolId, types, withArchives);
 	}
 
 	@Override

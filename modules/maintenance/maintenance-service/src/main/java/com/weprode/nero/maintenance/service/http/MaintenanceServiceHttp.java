@@ -207,6 +207,37 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject addPermissions(
+		HttpPrincipal httpPrincipal) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				MaintenanceServiceUtil.class, "addPermissions",
+				_addPermissionsParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		MaintenanceServiceHttp.class);
 
@@ -219,6 +250,8 @@ public class MaintenanceServiceHttp {
 	private static final Class<?>[] _startFsAnalysisV2ParameterTypes3 =
 		new Class[] {};
 	private static final Class<?>[] _runAnonymisationParameterTypes4 =
+		new Class[] {};
+	private static final Class<?>[] _addPermissionsParameterTypes5 =
 		new Class[] {};
 
 }

@@ -156,12 +156,11 @@ public class UserOrgsLocalServiceWrapper
 	@Override
 	public java.util.List<com.liferay.portal.kernel.model.Organization>
 		getUserOrganizations(
-			long userId, java.util.List<Integer> types,
-			java.util.List<Integer> roles, Boolean withArchives,
+			long userId, java.util.List<Integer> types, Boolean withArchives,
 			long schoolId) {
 
 		return _userOrgsLocalService.getUserOrganizations(
-			userId, types, roles, withArchives, schoolId);
+			userId, types, withArchives, schoolId);
 	}
 
 	@Override

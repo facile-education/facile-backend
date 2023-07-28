@@ -36,10 +36,6 @@ public class OrgDetailsTable extends BaseTable<OrgDetailsTable> {
 		"schoolId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<OrgDetailsTable, String> orgName = createColumn(
 		"orgName", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<OrgDetailsTable, String> eduLevel = createColumn(
-		"eduLevel", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<OrgDetailsTable, Integer> role = createColumn(
-		"role_", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
 	public final Column<OrgDetailsTable, Integer> type = createColumn(
 		"type_", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
 	public final Column<OrgDetailsTable, Boolean> isArchive = createColumn(

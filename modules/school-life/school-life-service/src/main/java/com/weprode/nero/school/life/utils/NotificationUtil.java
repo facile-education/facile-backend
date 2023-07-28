@@ -784,11 +784,11 @@ public class NotificationUtil {
 
             String content = "";
             if (allSessions) {
-                content = "Cher.e" + student.getFullName() + ", </br></br>Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + slotName + " en salle " + slot.getRoom()
+                content = "Cher.e " + student.getFullName() + ", </br></br>Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + slotName + " en salle " + slot.getRoom()
                         + " du " + df.format(session.getStartDate()) + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
             } else {
-                content = "Cher.e" + student.getFullName() + ", </br></br>Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + "</br></br>"
+                content = "Cher.e " + student.getFullName() + ", </br></br>Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + "</br></br>"
                         + "Meilleurs messages,</br>" + teacher.getFullName();
             }
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);

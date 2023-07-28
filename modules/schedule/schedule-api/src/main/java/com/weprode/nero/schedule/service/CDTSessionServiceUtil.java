@@ -35,12 +35,13 @@ public class CDTSessionServiceUtil {
 	 */
 	public static org.json.JSONObject createSession(
 		long groupId, java.lang.String subject, java.lang.String room,
-		java.lang.String startDate, java.lang.String endDate, int slot,
-		java.lang.String teacherIds, boolean isRecurrent) {
+		int dayNumber, int slot, java.lang.String startHour,
+		java.lang.String endHour, java.lang.String teacherIds,
+		boolean isRecurrent) {
 
 		return getService().createSession(
-			groupId, subject, room, startDate, endDate, slot, teacherIds,
-			isRecurrent);
+			groupId, subject, room, dayNumber, slot, startHour, endHour,
+			teacherIds, isRecurrent);
 	}
 
 	public static org.json.JSONObject getCourseNextSessions(long sessionId) {

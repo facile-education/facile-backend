@@ -173,7 +173,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				// All school's classes
 				List<Integer> types = new ArrayList<>();
 				types.add(OrgConstants.CLASS_TYPE);
-				schoolClasses = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, null, false);
+				schoolClasses = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, false);
 			}
 		}
 		return schoolClasses;
@@ -194,7 +194,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		if (RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
 			List<Integer> types = new ArrayList<>();
 			types.add(OrgConstants.SUBJECT_TYPE);
-			return OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, null, false);
+			return OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, false);
 		} else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
 			return UserOrgsLocalServiceUtil.getUserSubjectOrganizations(user, school.getOrganizationId(), false);
 		} else {

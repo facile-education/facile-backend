@@ -272,20 +272,20 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 // Teachers can write news to theirs cours, classes and subjects only
                 if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
                     types.add(OrgConstants.COURS_TYPE);
-                    List<Organization> schoolCours = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, null, false, userSchool.getOrganizationId());
+                    List<Organization> schoolCours = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, false, userSchool.getOrganizationId());
                     if (!schoolCours.isEmpty()) {
                         jsonSchool.put(JSONConstants.COURS, getOrgTypePopulations(schoolCours, user.getUserId()));
                     }
 
                     types.add(OrgConstants.CLASS_TYPE);
-                    List<Organization> schoolClasses = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, null, false, userSchool.getOrganizationId());
+                    List<Organization> schoolClasses = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, false, userSchool.getOrganizationId());
                     if (!schoolClasses.isEmpty()) {
                         jsonSchool.put(JSONConstants.CLASSES, getOrgTypePopulations(schoolClasses, user.getUserId()));
                     }
 
                     types = new ArrayList<>();
                     types.add(OrgConstants.SUBJECT_TYPE);
-                    List<Organization> schoolSubjects = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, null, false, userSchool.getOrganizationId());
+                    List<Organization> schoolSubjects = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, false, userSchool.getOrganizationId());
                     if (!schoolSubjects.isEmpty()) {
                         jsonSchool.put(JSONConstants.SUBJECTS, getOrgTypePopulations(schoolSubjects, user.getUserId()));
                     }
@@ -301,7 +301,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 //                        RoleUtilsLocalServiceUtil.isInfirmiere(user) ||
 //                        RoleUtilsLocalServiceUtil.isBibliothecaire(user)) {
 //                    types.add(OrgConstants.CLASS_TYPE);
-//                    schoolClasses.addAll(OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, null, false));
+//                    schoolClasses.addAll(OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false));
 //                }
                 // Main teachers
                 if (RoleUtilsLocalServiceUtil.isMainTeacher(user)) {
@@ -365,7 +365,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                     // Volées
                     List<Integer> types = new ArrayList<>();
                     types.add(OrgConstants.VOLEE_TYPE);
-                    List<Organization> schoolVolees = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, null, false);
+                    List<Organization> schoolVolees = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false);
                     if (!schoolVolees.isEmpty()) {
                         jsonSchool.put(JSONConstants.VOLEES, getOrgTypePopulations(schoolVolees, user.getUserId()));
                     }
@@ -373,7 +373,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                     // Classes
                     types = new ArrayList<>();
                     types.add(OrgConstants.CLASS_TYPE);
-                    List<Organization> schoolClasses = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, null, false);
+                    List<Organization> schoolClasses = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false);
                     if (!schoolClasses.isEmpty()) {
                         jsonSchool.put(JSONConstants.CLASSES, getOrgTypePopulations(schoolClasses, user.getUserId()));
                     }
@@ -381,7 +381,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                     // Subjects
                     types = new ArrayList<>();
                     types.add(OrgConstants.SUBJECT_TYPE);
-                    List<Organization> schoolSubjects = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, null, false);
+                    List<Organization> schoolSubjects = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false);
                     if (!schoolSubjects.isEmpty()) {
                         jsonSchool.put(JSONConstants.SUBJECTS, getOrgTypePopulations(schoolSubjects, user.getUserId()));
                     }
@@ -774,6 +774,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 logger.error("Error adding attached files for newsId " + newsId + " and groupId " + entry.getKey(), e);
             }
         }
+
     }
 
     private void manageMobilePush(String title, String content, JSONArray populations) {

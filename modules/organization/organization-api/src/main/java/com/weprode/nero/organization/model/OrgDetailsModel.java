@@ -97,35 +97,6 @@ public interface OrgDetailsModel extends BaseModel<OrgDetails> {
 	public void setOrgName(String orgName);
 
 	/**
-	 * Returns the edu level of this org details.
-	 *
-	 * @return the edu level of this org details
-	 */
-	@AutoEscape
-	public String getEduLevel();
-
-	/**
-	 * Sets the edu level of this org details.
-	 *
-	 * @param eduLevel the edu level of this org details
-	 */
-	public void setEduLevel(String eduLevel);
-
-	/**
-	 * Returns the role of this org details.
-	 *
-	 * @return the role of this org details
-	 */
-	public int getRole();
-
-	/**
-	 * Sets the role of this org details.
-	 *
-	 * @param role the role of this org details
-	 */
-	public void setRole(int role);
-
-	/**
 	 * Returns the type of this org details.
 	 *
 	 * @return the type of this org details

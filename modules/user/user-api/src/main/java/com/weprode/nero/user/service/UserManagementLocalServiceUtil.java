@@ -98,10 +98,8 @@ public class UserManagementLocalServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static void synchronizeSchoolLevelOrganizations(
-		long userId, long schoolId) {
-
-		getService().synchronizeSchoolLevelOrganizations(userId, schoolId);
+	public static void synchronizeUserSchool(long userId, long schoolId) {
+		getService().synchronizeUserSchool(userId, schoolId);
 	}
 
 	public static UserManagementLocalService getService() {

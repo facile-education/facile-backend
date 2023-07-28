@@ -34,7 +34,6 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.organization.exception.NoSuchOrgDetailsException;
 import com.weprode.nero.organization.model.OrgDetails;
@@ -50,7 +49,6 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,292 +92,6 @@ public class OrgDetailsPersistenceImpl
 	private FinderPath _finderPathWithPaginationFindAll;
 	private FinderPath _finderPathWithoutPaginationFindAll;
 	private FinderPath _finderPathCountAll;
-	private FinderPath _finderPathFetchByschoolId_type_role;
-	private FinderPath _finderPathCountByschoolId_type_role;
-
-	/**
-	 * Returns the org details where schoolId = &#63; and type = &#63; and role = &#63; and isArchive = &#63; or throws a <code>NoSuchOrgDetailsException</code> if it could not be found.
-	 *
-	 * @param schoolId the school ID
-	 * @param type the type
-	 * @param role the role
-	 * @param isArchive the is archive
-	 * @return the matching org details
-	 * @throws NoSuchOrgDetailsException if a matching org details could not be found
-	 */
-	@Override
-	public OrgDetails findByschoolId_type_role(
-			long schoolId, int type, int role, boolean isArchive)
-		throws NoSuchOrgDetailsException {
-
-		OrgDetails orgDetails = fetchByschoolId_type_role(
-			schoolId, type, role, isArchive);
-
-		if (orgDetails == null) {
-			StringBundler sb = new StringBundler(10);
-
-			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-			sb.append("schoolId=");
-			sb.append(schoolId);
-
-			sb.append(", type=");
-			sb.append(type);
-
-			sb.append(", role=");
-			sb.append(role);
-
-			sb.append(", isArchive=");
-			sb.append(isArchive);
-
-			sb.append("}");
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(sb.toString());
-			}
-
-			throw new NoSuchOrgDetailsException(sb.toString());
-		}
-
-		return orgDetails;
-	}
-
-	/**
-	 * Returns the org details where schoolId = &#63; and type = &#63; and role = &#63; and isArchive = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param schoolId the school ID
-	 * @param type the type
-	 * @param role the role
-	 * @param isArchive the is archive
-	 * @return the matching org details, or <code>null</code> if a matching org details could not be found
-	 */
-	@Override
-	public OrgDetails fetchByschoolId_type_role(
-		long schoolId, int type, int role, boolean isArchive) {
-
-		return fetchByschoolId_type_role(schoolId, type, role, isArchive, true);
-	}
-
-	/**
-	 * Returns the org details where schoolId = &#63; and type = &#63; and role = &#63; and isArchive = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param schoolId the school ID
-	 * @param type the type
-	 * @param role the role
-	 * @param isArchive the is archive
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching org details, or <code>null</code> if a matching org details could not be found
-	 */
-	@Override
-	public OrgDetails fetchByschoolId_type_role(
-		long schoolId, int type, int role, boolean isArchive,
-		boolean useFinderCache) {
-
-		Object[] finderArgs = null;
-
-		if (useFinderCache) {
-			finderArgs = new Object[] {schoolId, type, role, isArchive};
-		}
-
-		Object result = null;
-
-		if (useFinderCache) {
-			result = finderCache.getResult(
-				_finderPathFetchByschoolId_type_role, finderArgs);
-		}
-
-		if (result instanceof OrgDetails) {
-			OrgDetails orgDetails = (OrgDetails)result;
-
-			if ((schoolId != orgDetails.getSchoolId()) ||
-				(type != orgDetails.getType()) ||
-				(role != orgDetails.getRole()) ||
-				(isArchive != orgDetails.isIsArchive())) {
-
-				result = null;
-			}
-		}
-
-		if (result == null) {
-			StringBundler sb = new StringBundler(6);
-
-			sb.append(_SQL_SELECT_ORGDETAILS_WHERE);
-
-			sb.append(_FINDER_COLUMN_SCHOOLID_TYPE_ROLE_SCHOOLID_2);
-
-			sb.append(_FINDER_COLUMN_SCHOOLID_TYPE_ROLE_TYPE_2);
-
-			sb.append(_FINDER_COLUMN_SCHOOLID_TYPE_ROLE_ROLE_2);
-
-			sb.append(_FINDER_COLUMN_SCHOOLID_TYPE_ROLE_ISARCHIVE_2);
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(schoolId);
-
-				queryPos.add(type);
-
-				queryPos.add(role);
-
-				queryPos.add(isArchive);
-
-				List<OrgDetails> list = query.list();
-
-				if (list.isEmpty()) {
-					if (useFinderCache) {
-						finderCache.putResult(
-							_finderPathFetchByschoolId_type_role, finderArgs,
-							list);
-					}
-				}
-				else {
-					if (list.size() > 1) {
-						Collections.sort(list, Collections.reverseOrder());
-
-						if (_log.isWarnEnabled()) {
-							if (!useFinderCache) {
-								finderArgs = new Object[] {
-									schoolId, type, role, isArchive
-								};
-							}
-
-							_log.warn(
-								"OrgDetailsPersistenceImpl.fetchByschoolId_type_role(long, int, int, boolean, boolean) with parameters (" +
-									StringUtil.merge(finderArgs) +
-										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
-						}
-					}
-
-					OrgDetails orgDetails = list.get(0);
-
-					result = orgDetails;
-
-					cacheResult(orgDetails);
-				}
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		if (result instanceof List<?>) {
-			return null;
-		}
-		else {
-			return (OrgDetails)result;
-		}
-	}
-
-	/**
-	 * Removes the org details where schoolId = &#63; and type = &#63; and role = &#63; and isArchive = &#63; from the database.
-	 *
-	 * @param schoolId the school ID
-	 * @param type the type
-	 * @param role the role
-	 * @param isArchive the is archive
-	 * @return the org details that was removed
-	 */
-	@Override
-	public OrgDetails removeByschoolId_type_role(
-			long schoolId, int type, int role, boolean isArchive)
-		throws NoSuchOrgDetailsException {
-
-		OrgDetails orgDetails = findByschoolId_type_role(
-			schoolId, type, role, isArchive);
-
-		return remove(orgDetails);
-	}
-
-	/**
-	 * Returns the number of org detailses where schoolId = &#63; and type = &#63; and role = &#63; and isArchive = &#63;.
-	 *
-	 * @param schoolId the school ID
-	 * @param type the type
-	 * @param role the role
-	 * @param isArchive the is archive
-	 * @return the number of matching org detailses
-	 */
-	@Override
-	public int countByschoolId_type_role(
-		long schoolId, int type, int role, boolean isArchive) {
-
-		FinderPath finderPath = _finderPathCountByschoolId_type_role;
-
-		Object[] finderArgs = new Object[] {schoolId, type, role, isArchive};
-
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
-
-		if (count == null) {
-			StringBundler sb = new StringBundler(5);
-
-			sb.append(_SQL_COUNT_ORGDETAILS_WHERE);
-
-			sb.append(_FINDER_COLUMN_SCHOOLID_TYPE_ROLE_SCHOOLID_2);
-
-			sb.append(_FINDER_COLUMN_SCHOOLID_TYPE_ROLE_TYPE_2);
-
-			sb.append(_FINDER_COLUMN_SCHOOLID_TYPE_ROLE_ROLE_2);
-
-			sb.append(_FINDER_COLUMN_SCHOOLID_TYPE_ROLE_ISARCHIVE_2);
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(schoolId);
-
-				queryPos.add(type);
-
-				queryPos.add(role);
-
-				queryPos.add(isArchive);
-
-				count = (Long)query.uniqueResult();
-
-				finderCache.putResult(finderPath, finderArgs, count);
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		return count.intValue();
-	}
-
-	private static final String _FINDER_COLUMN_SCHOOLID_TYPE_ROLE_SCHOOLID_2 =
-		"orgDetails.schoolId = ? AND ";
-
-	private static final String _FINDER_COLUMN_SCHOOLID_TYPE_ROLE_TYPE_2 =
-		"orgDetails.type = ? AND ";
-
-	private static final String _FINDER_COLUMN_SCHOOLID_TYPE_ROLE_ROLE_2 =
-		"orgDetails.role = ? AND ";
-
-	private static final String _FINDER_COLUMN_SCHOOLID_TYPE_ROLE_ISARCHIVE_2 =
-		"orgDetails.isArchive = ?";
-
 	private FinderPath _finderPathWithPaginationFindByschoolId_archive;
 	private FinderPath _finderPathWithoutPaginationFindByschoolId_archive;
 	private FinderPath _finderPathCountByschoolId_archive;
@@ -1411,7 +1123,6 @@ public class OrgDetailsPersistenceImpl
 	public OrgDetailsPersistenceImpl() {
 		Map<String, String> dbColumnNames = new HashMap<String, String>();
 
-		dbColumnNames.put("role", "role_");
 		dbColumnNames.put("type", "type_");
 
 		setDBColumnNames(dbColumnNames);
@@ -1433,14 +1144,6 @@ public class OrgDetailsPersistenceImpl
 	public void cacheResult(OrgDetails orgDetails) {
 		entityCache.putResult(
 			OrgDetailsImpl.class, orgDetails.getPrimaryKey(), orgDetails);
-
-		finderCache.putResult(
-			_finderPathFetchByschoolId_type_role,
-			new Object[] {
-				orgDetails.getSchoolId(), orgDetails.getType(),
-				orgDetails.getRole(), orgDetails.isIsArchive()
-			},
-			orgDetails);
 	}
 
 	private int _valueObjectFinderCacheListThreshold;
@@ -1508,20 +1211,6 @@ public class OrgDetailsPersistenceImpl
 		for (Serializable primaryKey : primaryKeys) {
 			entityCache.removeResult(OrgDetailsImpl.class, primaryKey);
 		}
-	}
-
-	protected void cacheUniqueFindersCache(
-		OrgDetailsModelImpl orgDetailsModelImpl) {
-
-		Object[] args = new Object[] {
-			orgDetailsModelImpl.getSchoolId(), orgDetailsModelImpl.getType(),
-			orgDetailsModelImpl.getRole(), orgDetailsModelImpl.isIsArchive()
-		};
-
-		finderCache.putResult(
-			_finderPathCountByschoolId_type_role, args, Long.valueOf(1));
-		finderCache.putResult(
-			_finderPathFetchByschoolId_type_role, args, orgDetailsModelImpl);
 	}
 
 	/**
@@ -1667,8 +1356,6 @@ public class OrgDetailsPersistenceImpl
 
 		entityCache.putResult(
 			OrgDetailsImpl.class, orgDetailsModelImpl, false, true);
-
-		cacheUniqueFindersCache(orgDetailsModelImpl);
 
 		if (isNew) {
 			orgDetails.setNew(false);
@@ -1953,23 +1640,6 @@ public class OrgDetailsPersistenceImpl
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0], new String[0], false);
 
-		_finderPathFetchByschoolId_type_role = new FinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByschoolId_type_role",
-			new String[] {
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), Boolean.class.getName()
-			},
-			new String[] {"schoolId", "type_", "role_", "isArchive"}, true);
-
-		_finderPathCountByschoolId_type_role = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"countByschoolId_type_role",
-			new String[] {
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), Boolean.class.getName()
-			},
-			new String[] {"schoolId", "type_", "role_", "isArchive"}, false);
-
 		_finderPathWithPaginationFindByschoolId_archive = new FinderPath(
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByschoolId_archive",
 			new String[] {
@@ -2089,7 +1759,7 @@ public class OrgDetailsPersistenceImpl
 		OrgDetailsPersistenceImpl.class);
 
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(
-		new String[] {"role", "type"});
+		new String[] {"type"});
 
 	@Override
 	protected FinderCache getFinderCache() {

@@ -129,6 +129,20 @@ public class MaintenanceServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject addPermissions() throws RemoteException {
+		try {
+			org.json.JSONObject returnValue =
+				MaintenanceServiceUtil.addPermissions();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		MaintenanceServiceSoap.class);
 

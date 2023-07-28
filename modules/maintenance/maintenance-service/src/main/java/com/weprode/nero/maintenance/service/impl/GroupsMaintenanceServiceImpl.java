@@ -103,16 +103,13 @@ public class GroupsMaintenanceServiceImpl
 				for (Organization school : schools) {
 					logger.info("SCHOOL "	+ OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true));
 
-					List<Integer> roles = new ArrayList<>();
-					roles.add(OrgConstants.NO_ROLE);
-
 					List<Integer> types = new ArrayList<>();
 					types.add(OrgConstants.NO_TYPE);
 					types.add(OrgConstants.CLASS_TYPE);
 					types.add(OrgConstants.COURS_TYPE);
 					// Do not include subject orgs nor volees nor school-level nor school orgs because they are not migrated
 
-					List<Organization> classes = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, roles, false);
+					List<Organization> classes = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, false);
 
 					// Loop over classes
 					for (Organization org : classes) {

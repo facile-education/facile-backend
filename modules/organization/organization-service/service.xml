@@ -32,24 +32,10 @@
 		<column name="schoolId" type="long" />
 		<column name="orgName" type="String" />
 
-		<!-- Examples: seconde, 1ère, Terminale, 09, 10, 11, etc. -->
-		<column name="eduLevel" type="String" />
-
-		<!-- Role : 1=student, 2=parent, 3=teacher, 4=pers -->
-		<!--  This value has only sense for school-level organizations -->
-		<column name="role" type="int" />
-
 		<!-- Type : 1=class, 2=group, 3=school-level, 4=school, 5=ENT, 6=subject, 7=volee, 8=cours -->
 		<column name="type" type="int" />
 
 		<column name="isArchive" type="boolean" />
-
-		<finder return-type="OrgDetails" name="schoolId_type_role">
-			<finder-column name="schoolId" />
-			<finder-column name="type" />
-			<finder-column name="role" />
-			<finder-column name="isArchive" />
-		</finder>
 
 		<finder return-type="Collection" name="schoolId_archive">
 			<finder-column name="schoolId" />

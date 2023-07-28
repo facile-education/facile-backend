@@ -143,7 +143,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
             }
             Organization school = OrganizationLocalServiceUtil.getOrganization(schoolId);
             logger.info("Adding user to school " + school.getName());
-            UserManagementLocalServiceUtil.synchronizeSchoolLevelOrganizations(modifiedUser.getUserId(), school.getOrganizationId());
+            UserManagementLocalServiceUtil.synchronizeUserSchool(modifiedUser.getUserId(), school.getOrganizationId());
 
             JSONObject jsonUser = convertUser(modifiedUser);
 

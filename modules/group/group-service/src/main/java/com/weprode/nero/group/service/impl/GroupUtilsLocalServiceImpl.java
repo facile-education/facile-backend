@@ -11,7 +11,6 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
@@ -19,7 +18,6 @@ import com.weprode.nero.group.service.GroupMembershipLocalServiceUtil;
 import com.weprode.nero.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.nero.group.service.base.GroupUtilsLocalServiceBaseImpl;
 import com.weprode.nero.news.service.NewsPopulationLocalServiceUtil;
-import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
@@ -94,23 +92,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
 
                 long orgId = group.getOrganizationId();
                 logger.info("Deleting organizationId "+orgId);
-
-                // Organization details
-                try {
-                    OrgDetailsLocalServiceUtil.deleteOrgDetails(orgId);
-                } catch (Exception e) {
-                    logger.debug(e);
-                }
-
-                // Remove organization members
-                long[] userIds = UserLocalServiceUtil.getOrganizationUserIds(orgId);
-                if (userIds != null && userIds.length > 0) {
-                    logger.info("Removing "+userIds.length+" members from organizationId "+orgId+"...");
-                    UserLocalServiceUtil.unsetOrganizationUsers(orgId, userIds);
-                }
-
-                // Organization itself and the group itself
-                logger.info("Deleting organization and group ...");
+                // In OrganizationLocalServiceOverride, we manage org members and orgDetails
                 OrganizationLocalServiceUtil.deleteOrganization(orgId);
 
             } else {
@@ -122,7 +104,6 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
         } catch (Exception e) {
             logger.error("Error in deleting organization and/or groupId "+group.getGroupId(), e);
         }
-
 
         long end = System.currentTimeMillis();
         logger.info("Cleanup done for groupId "+groupId+" in "+(end - start)+" ms");

@@ -117,14 +117,15 @@ public class CDTSessionServiceSoap {
 	}
 
 	public static org.json.JSONObject createSession(
-			long groupId, String subject, String room, String startDate,
-			String endDate, int slot, String teacherIds, boolean isRecurrent)
+			long groupId, String subject, String room, int dayNumber, int slot,
+			String startHour, String endHour, String teacherIds,
+			boolean isRecurrent)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				CDTSessionServiceUtil.createSession(
-					groupId, subject, room, startDate, endDate, slot,
+					groupId, subject, room, dayNumber, slot, startHour, endHour,
 					teacherIds, isRecurrent);
 
 			return returnValue;

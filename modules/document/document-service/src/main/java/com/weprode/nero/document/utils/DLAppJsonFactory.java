@@ -244,7 +244,7 @@ public class DLAppJsonFactory {
             if (folder.getParentFolderId() == 0) { // The group root folder have a specific name that is the name of the group and not the folder.name field.
                 if (folderGroup.isOrganization()) {	// Org groups
                     Organization org = OrganizationLocalServiceUtil.getOrganization(folderGroup.getOrganizationId());
-                    boolean withSchoolName = OrgDetailsLocalServiceUtil.hasType(folderGroup.getOrganizationId(), OrgConstants.SCHOOL_TYPE) || OrgDetailsLocalServiceUtil.hasType(folderGroup.getOrganizationId(), OrgConstants.SCHOOL_LEVEL_TYPE);
+                    boolean withSchoolName = OrgDetailsLocalServiceUtil.hasType(folderGroup.getOrganizationId(), OrgConstants.SCHOOL_TYPE);
                     formattedFolder.put(JSONConstants.NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), withSchoolName));
                     formattedFolder.put(JSONConstants.NB_MEMBERS, UserOrgsLocalServiceUtil.countOrgMembers(org.getOrganizationId()));
                     formattedFolder.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(user, org));

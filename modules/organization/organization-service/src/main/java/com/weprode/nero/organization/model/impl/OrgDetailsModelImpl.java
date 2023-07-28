@@ -69,8 +69,7 @@ public class OrgDetailsModelImpl
 
 	public static final Object[][] TABLE_COLUMNS = {
 		{"orgId", Types.BIGINT}, {"schoolId", Types.BIGINT},
-		{"orgName", Types.VARCHAR}, {"eduLevel", Types.VARCHAR},
-		{"role_", Types.INTEGER}, {"type_", Types.INTEGER},
+		{"orgName", Types.VARCHAR}, {"type_", Types.INTEGER},
 		{"isArchive", Types.BOOLEAN}
 	};
 
@@ -81,14 +80,12 @@ public class OrgDetailsModelImpl
 		TABLE_COLUMNS_MAP.put("orgId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("schoolId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("orgName", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("eduLevel", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("role_", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("type_", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("isArchive", Types.BOOLEAN);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Organization_OrgDetails (orgId LONG not null primary key,schoolId LONG,orgName VARCHAR(75) null,eduLevel VARCHAR(75) null,role_ INTEGER,type_ INTEGER,isArchive BOOLEAN)";
+		"create table Organization_OrgDetails (orgId LONG not null primary key,schoolId LONG,orgName VARCHAR(75) null,type_ INTEGER,isArchive BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Organization_OrgDetails";
@@ -114,26 +111,20 @@ public class OrgDetailsModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long ROLE_COLUMN_BITMASK = 2L;
+	public static final long SCHOOLID_COLUMN_BITMASK = 2L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long SCHOOLID_COLUMN_BITMASK = 4L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
-	 */
-	@Deprecated
-	public static final long TYPE_COLUMN_BITMASK = 8L;
+	public static final long TYPE_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long ORGID_COLUMN_BITMASK = 16L;
+	public static final long ORGID_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -281,13 +272,6 @@ public class OrgDetailsModelImpl
 		attributeGetterFunctions.put("orgName", OrgDetails::getOrgName);
 		attributeSetterBiConsumers.put(
 			"orgName", (BiConsumer<OrgDetails, String>)OrgDetails::setOrgName);
-		attributeGetterFunctions.put("eduLevel", OrgDetails::getEduLevel);
-		attributeSetterBiConsumers.put(
-			"eduLevel",
-			(BiConsumer<OrgDetails, String>)OrgDetails::setEduLevel);
-		attributeGetterFunctions.put("role", OrgDetails::getRole);
-		attributeSetterBiConsumers.put(
-			"role", (BiConsumer<OrgDetails, Integer>)OrgDetails::setRole);
 		attributeGetterFunctions.put("type", OrgDetails::getType);
 		attributeSetterBiConsumers.put(
 			"type", (BiConsumer<OrgDetails, Integer>)OrgDetails::setType);
@@ -357,49 +341,6 @@ public class OrgDetailsModelImpl
 		}
 
 		_orgName = orgName;
-	}
-
-	@Override
-	public String getEduLevel() {
-		if (_eduLevel == null) {
-			return "";
-		}
-		else {
-			return _eduLevel;
-		}
-	}
-
-	@Override
-	public void setEduLevel(String eduLevel) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_eduLevel = eduLevel;
-	}
-
-	@Override
-	public int getRole() {
-		return _role;
-	}
-
-	@Override
-	public void setRole(int role) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_role = role;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public int getOriginalRole() {
-		return GetterUtil.getInteger(
-			this.<Integer>getColumnOriginalValue("role_"));
 	}
 
 	@Override
@@ -514,8 +455,6 @@ public class OrgDetailsModelImpl
 		orgDetailsImpl.setOrgId(getOrgId());
 		orgDetailsImpl.setSchoolId(getSchoolId());
 		orgDetailsImpl.setOrgName(getOrgName());
-		orgDetailsImpl.setEduLevel(getEduLevel());
-		orgDetailsImpl.setRole(getRole());
 		orgDetailsImpl.setType(getType());
 		orgDetailsImpl.setIsArchive(isIsArchive());
 
@@ -533,9 +472,6 @@ public class OrgDetailsModelImpl
 			this.<Long>getColumnOriginalValue("schoolId"));
 		orgDetailsImpl.setOrgName(
 			this.<String>getColumnOriginalValue("orgName"));
-		orgDetailsImpl.setEduLevel(
-			this.<String>getColumnOriginalValue("eduLevel"));
-		orgDetailsImpl.setRole(this.<Integer>getColumnOriginalValue("role_"));
 		orgDetailsImpl.setType(this.<Integer>getColumnOriginalValue("type_"));
 		orgDetailsImpl.setIsArchive(
 			this.<Boolean>getColumnOriginalValue("isArchive"));
@@ -625,16 +561,6 @@ public class OrgDetailsModelImpl
 		if ((orgName != null) && (orgName.length() == 0)) {
 			orgDetailsCacheModel.orgName = null;
 		}
-
-		orgDetailsCacheModel.eduLevel = getEduLevel();
-
-		String eduLevel = orgDetailsCacheModel.eduLevel;
-
-		if ((eduLevel != null) && (eduLevel.length() == 0)) {
-			orgDetailsCacheModel.eduLevel = null;
-		}
-
-		orgDetailsCacheModel.role = getRole();
 
 		orgDetailsCacheModel.type = getType();
 
@@ -733,8 +659,6 @@ public class OrgDetailsModelImpl
 	private long _orgId;
 	private long _schoolId;
 	private String _orgName;
-	private String _eduLevel;
-	private int _role;
 	private int _type;
 	private boolean _isArchive;
 
@@ -770,8 +694,6 @@ public class OrgDetailsModelImpl
 		_columnOriginalValues.put("orgId", _orgId);
 		_columnOriginalValues.put("schoolId", _schoolId);
 		_columnOriginalValues.put("orgName", _orgName);
-		_columnOriginalValues.put("eduLevel", _eduLevel);
-		_columnOriginalValues.put("role_", _role);
 		_columnOriginalValues.put("type_", _type);
 		_columnOriginalValues.put("isArchive", _isArchive);
 	}
@@ -781,7 +703,6 @@ public class OrgDetailsModelImpl
 	static {
 		Map<String, String> attributeNames = new HashMap<>();
 
-		attributeNames.put("role_", "role");
 		attributeNames.put("type_", "type");
 
 		_attributeNames = Collections.unmodifiableMap(attributeNames);
@@ -804,13 +725,9 @@ public class OrgDetailsModelImpl
 
 		columnBitmasks.put("orgName", 4L);
 
-		columnBitmasks.put("eduLevel", 8L);
+		columnBitmasks.put("type_", 8L);
 
-		columnBitmasks.put("role_", 16L);
-
-		columnBitmasks.put("type_", 32L);
-
-		columnBitmasks.put("isArchive", 64L);
+		columnBitmasks.put("isArchive", 16L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

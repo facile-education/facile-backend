@@ -30,6 +30,11 @@ public class MaintenanceServiceWrapper
 		_maintenanceService = maintenanceService;
 	}
 
+	@Override
+	public org.json.JSONObject addPermissions() {
+		return _maintenanceService.addPermissions();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

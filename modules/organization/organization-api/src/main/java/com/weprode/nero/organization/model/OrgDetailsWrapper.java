@@ -44,8 +44,6 @@ public class OrgDetailsWrapper
 		attributes.put("orgId", getOrgId());
 		attributes.put("schoolId", getSchoolId());
 		attributes.put("orgName", getOrgName());
-		attributes.put("eduLevel", getEduLevel());
-		attributes.put("role", getRole());
 		attributes.put("type", getType());
 		attributes.put("isArchive", isIsArchive());
 
@@ -72,18 +70,6 @@ public class OrgDetailsWrapper
 			setOrgName(orgName);
 		}
 
-		String eduLevel = (String)attributes.get("eduLevel");
-
-		if (eduLevel != null) {
-			setEduLevel(eduLevel);
-		}
-
-		Integer role = (Integer)attributes.get("role");
-
-		if (role != null) {
-			setRole(role);
-		}
-
 		Integer type = (Integer)attributes.get("type");
 
 		if (type != null) {
@@ -100,16 +86,6 @@ public class OrgDetailsWrapper
 	@Override
 	public OrgDetails cloneWithOriginalValues() {
 		return wrap(model.cloneWithOriginalValues());
-	}
-
-	/**
-	 * Returns the edu level of this org details.
-	 *
-	 * @return the edu level of this org details
-	 */
-	@Override
-	public String getEduLevel() {
-		return model.getEduLevel();
 	}
 
 	/**
@@ -153,16 +129,6 @@ public class OrgDetailsWrapper
 	}
 
 	/**
-	 * Returns the role of this org details.
-	 *
-	 * @return the role of this org details
-	 */
-	@Override
-	public int getRole() {
-		return model.getRole();
-	}
-
-	/**
 	 * Returns the school ID of this org details.
 	 *
 	 * @return the school ID of this org details
@@ -195,16 +161,6 @@ public class OrgDetailsWrapper
 	@Override
 	public void persist() {
 		model.persist();
-	}
-
-	/**
-	 * Sets the edu level of this org details.
-	 *
-	 * @param eduLevel the edu level of this org details
-	 */
-	@Override
-	public void setEduLevel(String eduLevel) {
-		model.setEduLevel(eduLevel);
 	}
 
 	/**
@@ -245,16 +201,6 @@ public class OrgDetailsWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
-	}
-
-	/**
-	 * Sets the role of this org details.
-	 *
-	 * @param role the role of this org details
-	 */
-	@Override
-	public void setRole(int role) {
-		model.setRole(role);
 	}
 
 	/**
