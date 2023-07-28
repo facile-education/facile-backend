@@ -236,6 +236,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
+		logger.info("Teacher " + user.getFullName() + " creates a homework for course " + courseId + ", from session " + sourceSessionId + " to session " + targetSessionId + (isDraft?" (Draft)":""));
 		Date targetDate;
 		Date publicationDate;
 		try {

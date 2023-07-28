@@ -20,8 +20,7 @@ import org.osgi.service.component.annotations.Component;
 public class OrgDetailsLocalServiceImpl extends OrgDetailsLocalServiceBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(OrgDetailsLocalServiceImpl.class);
 
-    public OrgDetails createOrgDetails(long orgId, long schoolId, String orgName, String eduLevel, int role,
-                                       int type, boolean isArchive) {
+    public OrgDetails createOrgDetails(long orgId, long schoolId, String orgName, int type) {
         OrgDetails orgDetails = null;
 
         try {
@@ -30,10 +29,8 @@ public class OrgDetailsLocalServiceImpl extends OrgDetailsLocalServiceBaseImpl {
                 orgDetails = orgDetailsPersistence.create(orgId);
                 orgDetails.setSchoolId(schoolId);
                 orgDetails.setOrgName(orgName);
-                orgDetails.setEduLevel(eduLevel);
-                orgDetails.setRole(role);
                 orgDetails.setType(type);
-                orgDetails.setIsArchive(isArchive);
+                orgDetails.setIsArchive(false);
                 orgDetails = orgDetailsPersistence.update(orgDetails);
             }
         } catch (Exception e) {

@@ -71,11 +71,9 @@ public class OrgDetailsLocalServiceUtil {
 	}
 
 	public static OrgDetails createOrgDetails(
-		long orgId, long schoolId, String orgName, String eduLevel, int role,
-		int type, boolean isArchive) {
+		long orgId, long schoolId, String orgName, int type) {
 
-		return getService().createOrgDetails(
-			orgId, schoolId, orgName, eduLevel, role, type, isArchive);
+		return getService().createOrgDetails(orgId, schoolId, orgName, type);
 	}
 
 	/**

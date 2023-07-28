@@ -57,7 +57,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         }
 
         UserProperties userProperties;
-        String portraitUrl;
+        String portraitUrl = "";
 
         try {
             userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());

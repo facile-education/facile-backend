@@ -13,8 +13,6 @@ create table Organization_OrgDetails (
 	orgId LONG not null primary key,
 	schoolId LONG,
 	orgName VARCHAR(75) null,
-	eduLevel VARCHAR(75) null,
-	role_ INTEGER,
 	type_ INTEGER,
 	isArchive BOOLEAN
 );

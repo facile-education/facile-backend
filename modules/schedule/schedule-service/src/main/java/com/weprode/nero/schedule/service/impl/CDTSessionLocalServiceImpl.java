@@ -315,10 +315,11 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 					}
 				} else if (OrgDetailsLocalServiceUtil.isClass(org.getOrganizationId())) {
 					logger.info("> Group is a class");
-					// If group is a class, get the sessions of the class's cours
+					// If group is a class, get the sessions of the class's cours + the class itself (manual sessions)
 					List<Long> coursOrgIds = ClassCoursMappingLocalServiceUtil.getClassCours(org.getOrganizationId());
 					logger.info("> that has " + coursOrgIds.size() + " cours");
 					List<Long> coursGroupIds = new ArrayList<>();
+					coursGroupIds.add(groupId);
 					for (Long coursOrgId : coursOrgIds) {
 						Organization coursOrg = OrganizationLocalServiceUtil.getOrganization(coursOrgId);
 						coursGroupIds.add(coursOrg.getGroupId());

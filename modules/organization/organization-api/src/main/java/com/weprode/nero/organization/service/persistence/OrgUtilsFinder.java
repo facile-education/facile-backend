@@ -25,15 +25,13 @@ public interface OrgUtilsFinder {
 
 	public java.util.List<com.liferay.portal.kernel.model.Organization>
 		findUserOrganizations(
-			long userId, java.util.List<Integer> types,
-			java.util.List<Integer> roles, Boolean withArchives, long schoolId,
-			int begin, int end);
+			long userId, java.util.List<Integer> types, Boolean withArchives,
+			long schoolId, int begin, int end);
 
 	public java.util.List<com.liferay.portal.kernel.model.Organization>
 		findSchoolOrganizations(
-			long schoolId, java.util.List<Integer> types,
-			java.util.List<Integer> roles, Boolean withArchives, int begin,
-			int end);
+			long schoolId, java.util.List<Integer> types, Boolean withArchives,
+			int begin, int end);
 
 	public java.util.List<com.liferay.portal.kernel.model.Organization>
 		findOrganizationByType(int type, int begin, int end);

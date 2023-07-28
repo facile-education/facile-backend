@@ -86,8 +86,7 @@ public interface OrgDetailsLocalService
 	public OrgDetails createOrgDetails(long orgId);
 
 	public OrgDetails createOrgDetails(
-		long orgId, long schoolId, String orgName, String eduLevel, int role,
-		int type, boolean isArchive);
+		long orgId, long schoolId, String orgName, int type);
 
 	/**
 	 * @throws PortalException

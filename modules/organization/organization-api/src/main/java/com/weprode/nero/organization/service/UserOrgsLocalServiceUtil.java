@@ -141,11 +141,11 @@ public class UserOrgsLocalServiceUtil {
 
 	public static List<com.liferay.portal.kernel.model.Organization>
 		getUserOrganizations(
-			long userId, List<Integer> types, List<Integer> roles,
-			Boolean withArchives, long schoolId) {
+			long userId, List<Integer> types, Boolean withArchives,
+			long schoolId) {
 
 		return getService().getUserOrganizations(
-			userId, types, roles, withArchives, schoolId);
+			userId, types, withArchives, schoolId);
 	}
 
 	public static List<com.liferay.portal.kernel.model.Organization>

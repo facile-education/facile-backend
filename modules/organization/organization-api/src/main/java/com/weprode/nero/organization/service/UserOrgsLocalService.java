@@ -109,8 +109,7 @@ public interface UserOrgsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> getUserOrganizations(
-		long userId, List<Integer> types, List<Integer> roles,
-		Boolean withArchives, long schoolId);
+		long userId, List<Integer> types, Boolean withArchives, long schoolId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> getUserSchools(User user);

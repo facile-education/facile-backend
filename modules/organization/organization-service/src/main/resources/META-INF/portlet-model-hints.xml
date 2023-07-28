@@ -14,8 +14,6 @@
 		<field name="orgId" type="long" />
 		<field name="schoolId" type="long" />
 		<field name="orgName" type="String" />
-		<field name="eduLevel" type="String" />
-		<field name="role" type="int" />
 		<field name="type" type="int" />
 		<field name="isArchive" type="boolean" />
 	</model>

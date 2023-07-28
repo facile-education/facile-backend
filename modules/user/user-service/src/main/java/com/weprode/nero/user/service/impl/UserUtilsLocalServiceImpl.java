@@ -71,7 +71,7 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         types.add(OrgConstants.VOLEE_TYPE);
         types.add(OrgConstants.SUBJECT_TYPE);
 
-        List<Organization> userOrgs = UserOrgsLocalServiceUtil.getUserOrganizations(userId, types,null, false, OrgConstants.ALL_SCHOOLS_ID);
+        List<Organization> userOrgs = UserOrgsLocalServiceUtil.getUserOrganizations(userId, types, false, OrgConstants.ALL_SCHOOLS_ID);
         for (Organization userOrg : userOrgs) {
             groupIds.add(userOrg.getGroupId());
         }

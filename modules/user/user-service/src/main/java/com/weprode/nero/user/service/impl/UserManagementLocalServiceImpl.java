@@ -12,12 +12,15 @@ import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.*;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.PwdGenerator;
+import com.liferay.portal.kernel.util.Validator;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
-import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserManagementLocalServiceBaseImpl;
@@ -129,7 +132,7 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
 
             if (schoolId > 0) {
                 Organization school = OrganizationLocalServiceUtil.getOrganization(schoolId);
-                synchronizeSchoolLevelOrganizations(createdUser.getUserId(), school.getOrganizationId());
+                synchronizeUserSchool(createdUser.getUserId(), school.getOrganizationId());
             }
         } catch (Exception e) {
             logger.error("Could not finalize creation for new userId=" + createdUser.getUserId(), e);
@@ -139,7 +142,7 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
         return createdUser;
     }
 
-    public void synchronizeSchoolLevelOrganizations (long userId, long schoolId) {
+    public void synchronizeUserSchool (long userId, long schoolId) {
 
         try {
             // Add user to root organization
@@ -158,30 +161,6 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             UserProperties userProp = UserPropertiesLocalServiceUtil.getUserProperties(userId);
             userProp.setEtabId(schoolId);
             UserPropertiesLocalServiceUtil.updateUserProperties(userProp);
-
-            // School teachers
-            if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                Organization teacherSchoolLevelOrg = OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(schoolId);
-                if (!UserLocalServiceUtil.hasOrganizationUser(teacherSchoolLevelOrg.getOrganizationId(), userId) ) {
-                    UserLocalServiceUtil.addOrganizationUsers(teacherSchoolLevelOrg.getOrganizationId(), new long[]{userId});
-                }
-            }
-
-            // School personals
-            if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
-                Organization personalSchoolLevelOrg = OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(schoolId);
-                if (!UserLocalServiceUtil.hasOrganizationUser(personalSchoolLevelOrg.getOrganizationId(), userId) ) {
-                    UserLocalServiceUtil.addOrganizationUsers(personalSchoolLevelOrg.getOrganizationId(), new long[]{userId});
-                }
-            }
-
-            // School PATs
-            if (RoleUtilsLocalServiceUtil.isPat(user)) {
-                Organization patSchoolLevelOrg = OrgUtilsLocalServiceUtil.getSchoolPATsOrganization(schoolId);
-                if (!UserLocalServiceUtil.hasOrganizationUser(patSchoolLevelOrg.getOrganizationId(), userId) ) {
-                    UserLocalServiceUtil.addOrganizationUsers(patSchoolLevelOrg.getOrganizationId(), new long[]{userId});
-                }
-            }
 
         } catch (Exception e) {
             logger.error("Error when synchronizing school-level organizations for userId " + userId, e);

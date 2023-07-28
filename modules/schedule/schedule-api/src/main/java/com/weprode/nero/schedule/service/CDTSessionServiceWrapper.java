@@ -32,12 +32,13 @@ public class CDTSessionServiceWrapper
 
 	@Override
 	public org.json.JSONObject createSession(
-		long groupId, String subject, String room, String startDate,
-		String endDate, int slot, String teacherIds, boolean isRecurrent) {
+		long groupId, String subject, String room, int dayNumber, int slot,
+		String startHour, String endHour, String teacherIds,
+		boolean isRecurrent) {
 
 		return _cdtSessionService.createSession(
-			groupId, subject, room, startDate, endDate, slot, teacherIds,
-			isRecurrent);
+			groupId, subject, room, dayNumber, slot, startHour, endHour,
+			teacherIds, isRecurrent);
 	}
 
 	@Override

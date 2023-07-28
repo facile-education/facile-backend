@@ -139,8 +139,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
         if (includeCours) {
             types.add(OrgConstants.COURS_TYPE);
         }
-        List<Organization> schoolOrganizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId,
-                types, null, false);
+        List<Organization> schoolOrganizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, false);
 
         // Loop over classes
         for (Organization org : schoolOrganizations) {
@@ -201,7 +200,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
 
         // Get volees from user schools
         for (Organization school : userSchools) {
-            List<Organization> schoolVolees = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, null, false);
+            List<Organization> schoolVolees = OrgUtilsLocalServiceUtil.getSchoolOrganizations(school.getOrganizationId(), types, false);
 
             for (Organization volee: schoolVolees) {
                 String name = OrgUtilsLocalServiceUtil.formatOrgName(volee.getName(), false);

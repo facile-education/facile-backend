@@ -42,8 +42,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -190,8 +192,8 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "create-session", method = "POST")
-	public JSONObject createSession(long groupId, String subject, String room, String startDate, String endDate, int slot, String teacherIds, boolean isRecurrent) {
-		logger.info("Creating manual session(s) for group " + groupId + ", subject=" + subject + " from " + startDate + " to " + endDate + ", teacherIds=" + teacherIds + ", isRecurrent is " + isRecurrent);
+	public JSONObject createSession(long groupId, String subject, String room, int dayNumber, int slot, String startHour, String endHour, String teacherIds, boolean isRecurrent) {
+		logger.info("Creating manual session(s) for group " + groupId + ", subject=" + subject + ", day= " + dayNumber + ", startHour=" + startHour +", endHour=" + endHour + ", teacherIds=" + teacherIds + ", isRecurrent is " + isRecurrent);
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -219,8 +221,19 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 				fullCoursName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);
 			}
 
-			Date start = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDate);
-			Date end = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDate);
+			// Set start date at current week's day number
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.set(Calendar.DAY_OF_WEEK, dayNumber - 1);
+			// Set hour and minutes
+			String[] startHourTab = startHour.split(":");
+			cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startHourTab[0]));
+			cal.set(Calendar.MINUTE, Integer.parseInt(startHourTab[1]));
+			Date startDate = cal.getTime();
+			String[] endHourTab = endHour.split(":");
+			cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endHourTab[0]));
+			cal.set(Calendar.MINUTE, Integer.parseInt(endHourTab[1]));
+			Date endDate = cal.getTime();
 
 			List<Long> teacherIdList = new ArrayList<>();
 			JSONArray jsonTeachers = new JSONArray(teacherIds);
@@ -237,10 +250,11 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			}
 
 			if (isRecurrent) {
-				CDTSessionLocalServiceUtil.createRecurrentSessions(groupId, subject, room, start, end, slot, teacherIdList);
+				CDTSessionLocalServiceUtil.createRecurrentSessions(groupId, subject, room, startDate, endDate, slot, teacherIdList);
 			} else {
-				logger.info("Creating manual session");
-				CDTSessionLocalServiceUtil.createSession(groupId, subject, start, end, slot, teacherIdList, room, fullCoursName, true);
+				DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				logger.info("Creating manual session for group " + groupId + ", subject=" + subject + ", startDate= " + sdf.format(startDate) + ", endDate=" + sdf.format(endDate) + ", slot=" + slot + ", teacherIds=" + teacherIds + ", isRecurrent is " + isRecurrent);
+				CDTSessionLocalServiceUtil.createSession(groupId, subject, startDate, endDate, slot, teacherIdList, room, fullCoursName, true);
 			}
 
 		} catch (Exception e) {

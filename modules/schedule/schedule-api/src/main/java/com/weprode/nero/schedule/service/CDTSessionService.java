@@ -52,8 +52,9 @@ public interface CDTSessionService extends BaseService {
 	 */
 	@JSONWebService(method = "POST", value = "create-session")
 	public JSONObject createSession(
-		long groupId, String subject, String room, String startDate,
-		String endDate, int slot, String teacherIds, boolean isRecurrent);
+		long groupId, String subject, String room, int dayNumber, int slot,
+		String startHour, String endHour, String teacherIds,
+		boolean isRecurrent);
 
 	@JSONWebService(method = "GET", value = "get-course-next-sessions")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

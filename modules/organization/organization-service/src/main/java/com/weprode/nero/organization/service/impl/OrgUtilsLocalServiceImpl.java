@@ -43,19 +43,16 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
     }
 
     public List<Organization> getSchoolClasses(long schoolId, Boolean withArchives) {
-        List<Integer> roles = new ArrayList<>();
-        roles.add(OrgConstants.NO_ROLE);
 
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.CLASS_TYPE);
 
-        return orgUtilsFinder.findSchoolOrganizations(schoolId, types, roles, withArchives,
+        return orgUtilsFinder.findSchoolOrganizations(schoolId, types, withArchives,
                 QueryUtil.ALL_POS, QueryUtil.ALL_POS);
     }
 
-    public List<Organization> getSchoolOrganizations(long schoolId, List<Integer> types, List<Integer> roles,
-                                                     Boolean withArchives) {
-        return orgUtilsFinder.findSchoolOrganizations(schoolId, types, roles, withArchives,
+    public List<Organization> getSchoolOrganizations(long schoolId, List<Integer> types, Boolean withArchives) {
+        return orgUtilsFinder.findSchoolOrganizations(schoolId, types, withArchives,
                 QueryUtil.ALL_POS, QueryUtil.ALL_POS);
     }
 
@@ -103,60 +100,9 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
 
         // Now create OrganizationDetails
         OrgDetailsLocalServiceUtil.createOrgDetails(schoolOrg.getOrganizationId(), schoolOrg.getOrganizationId(),
-                schoolOrg.getName(), "", OrgConstants.NO_ROLE, OrgConstants.SCHOOL_TYPE, false);
+                schoolOrg.getName(), OrgConstants.SCHOOL_TYPE);
 
         return schoolOrg;
-    }
-
-    public Organization getSchoolTeachersOrganization(long schoolId) {
-        return getOrCreateSchoolLevelOrganization(schoolId, OrgConstants.TEACHER_ROLE);
-    }
-
-    public Organization getSchoolPersonalsOrganization(long schoolId) {
-        return getOrCreateSchoolLevelOrganization(schoolId, OrgConstants.PERSONAL_ROLE);
-    }
-
-    public Organization getSchoolPATsOrganization(long schoolId) {
-        return getOrCreateSchoolLevelOrganization(schoolId, OrgConstants.PAT_ROLE);
-    }
-
-    private Organization getOrCreateSchoolLevelOrganization(long schoolId, int role) {
-
-        Organization org = null;
-        Organization schoolOrg;
-        try {
-            schoolOrg = OrganizationLocalServiceUtil.getOrganization(schoolId);
-            String schoolLevelOrgName = schoolOrg.getName() + getOrgSuffixByRole(role);
-
-            try {
-                org = OrganizationLocalServiceUtil.getOrganization(schoolOrg.getCompanyId(), schoolLevelOrgName);
-            } catch (NoSuchOrganizationException e) {
-                long defaultUserId = UserLocalServiceUtil.getDefaultUserId(schoolOrg.getCompanyId());
-                org = OrganizationLocalServiceUtil.addOrganization(
-                        defaultUserId, schoolId, schoolLevelOrgName, OrganizationConstants.TYPE_ORGANIZATION,
-                        RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
-                        StringPool.BLANK, true, new ServiceContext());
-            }
-
-            // Create OrganizationDetails
-            OrgDetailsLocalServiceUtil.createOrgDetails(org.getOrganizationId(), schoolId, org.getName(), "", role, OrgConstants.SCHOOL_LEVEL_TYPE, false);
-
-        } catch (Exception e) {
-            logger.error("Error getting school-level organization with schoolId "+schoolId + "and role "+role, e);
-        }
-        return org;
-    }
-
-    private String getOrgSuffixByRole (int role) {
-        if (role == OrgConstants.TEACHER_ROLE) {
-            return OrgConstants.ORG_SUFFIX_TEACHERS;
-        } else if (role == OrgConstants.PERSONAL_ROLE) {
-            return OrgConstants.ORG_SUFFIX_PERSONNELS;
-        } else if (role == OrgConstants.PAT_ROLE) {
-            return OrgConstants.ORG_SUFFIX_PATS;
-        }
-
-        return "";
     }
 
     public Organization getOrCreateOrganization(long companyId, String orgName, long schoolId, int type) throws PortalException, SystemException {
@@ -187,7 +133,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
                 OrgDetailsLocalServiceUtil.updateOrgDetails(orgDetails);
             }
         } catch (NoSuchOrgDetailsException e) {
-            OrgDetailsLocalServiceUtil.createOrgDetails(org.getOrganizationId(), schoolId, orgName, "", OrgConstants.NO_ROLE, type, false);
+            OrgDetailsLocalServiceUtil.createOrgDetails(org.getOrganizationId(), schoolId, orgName, type);
         }
 
         return org;
@@ -252,8 +198,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
         try {
             if (OrgDetailsLocalServiceUtil.isClass(org.getOrganizationId())) {
                 color = "#D20113";
-            } else if (OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId())
-                    || OrgDetailsLocalServiceUtil.hasType(org.getOrganizationId(), OrgConstants.SCHOOL_LEVEL_TYPE)) {
+            } else if (OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId())) {
                 color = "#3CB57D";
             }  else if (OrgDetailsLocalServiceUtil.isSubject(org.getOrganizationId())) {
                 color = "#7F00FF";

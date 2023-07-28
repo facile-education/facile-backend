@@ -61,7 +61,7 @@ public class OrgDetailsCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(11);
 
 		sb.append("{orgId=");
 		sb.append(orgId);
@@ -69,10 +69,6 @@ public class OrgDetailsCacheModel
 		sb.append(schoolId);
 		sb.append(", orgName=");
 		sb.append(orgName);
-		sb.append(", eduLevel=");
-		sb.append(eduLevel);
-		sb.append(", role=");
-		sb.append(role);
 		sb.append(", type=");
 		sb.append(type);
 		sb.append(", isArchive=");
@@ -96,14 +92,6 @@ public class OrgDetailsCacheModel
 			orgDetailsImpl.setOrgName(orgName);
 		}
 
-		if (eduLevel == null) {
-			orgDetailsImpl.setEduLevel("");
-		}
-		else {
-			orgDetailsImpl.setEduLevel(eduLevel);
-		}
-
-		orgDetailsImpl.setRole(role);
 		orgDetailsImpl.setType(type);
 		orgDetailsImpl.setIsArchive(isArchive);
 
@@ -118,9 +106,6 @@ public class OrgDetailsCacheModel
 
 		schoolId = objectInput.readLong();
 		orgName = objectInput.readUTF();
-		eduLevel = objectInput.readUTF();
-
-		role = objectInput.readInt();
 
 		type = objectInput.readInt();
 
@@ -140,15 +125,6 @@ public class OrgDetailsCacheModel
 			objectOutput.writeUTF(orgName);
 		}
 
-		if (eduLevel == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(eduLevel);
-		}
-
-		objectOutput.writeInt(role);
-
 		objectOutput.writeInt(type);
 
 		objectOutput.writeBoolean(isArchive);
@@ -157,8 +133,6 @@ public class OrgDetailsCacheModel
 	public long orgId;
 	public long schoolId;
 	public String orgName;
-	public String eduLevel;
-	public int role;
 	public int type;
 	public boolean isArchive;
 

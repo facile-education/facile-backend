@@ -83,7 +83,8 @@ public class SearchResults {
         result.put(JSONConstants.CONTENT, highlightedContent.isBlank() ? doc.getString(Field.CONTENT) : highlightedContent);
         result.put(JSONConstants.DATE, doc.getDate(Field.DISPLAY_DATE));
         result.put(JSONConstants.AUTHOR, doc.getString(Field.USER_NAME));
-        result.put(JSONConstants.SCORE, hit.getScore());
+        // Round score to units
+        result.put(JSONConstants.SCORE, Math.round(hit.getScore()));
 
         // Message
         if (doc.getString(Field.ENTRY_CLASS_NAME).equals(Message.class.getName())) {

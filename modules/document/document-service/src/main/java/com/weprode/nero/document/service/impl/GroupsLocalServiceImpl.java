@@ -16,12 +16,8 @@ package com.weprode.nero.document.service.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -35,14 +31,13 @@ import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.base.GroupsLocalServiceBaseImpl;
-
 import com.weprode.nero.document.utils.DLAppJsonFactory;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
-import com.weprode.nero.organization.model.OrgDetails;
-import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -68,7 +63,6 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 
 		// Volees are not displayed in Collaborative
 		// Classes, groups, cours, subject and school have their names unchanged
-		// School-level orgs have their name prefixed by the school
 		List<Integer> types = new ArrayList<>();
 		// Parents see only the school group
 		// Other profiles see other groups except volees
@@ -76,13 +70,12 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 			types.add(OrgConstants.SCHOOL_TYPE);
 		} else {
 			types.add(OrgConstants.SCHOOL_TYPE);
-			types.add(OrgConstants.SCHOOL_LEVEL_TYPE);
 			types.add(OrgConstants.CLASS_TYPE);
 			types.add(OrgConstants.COURS_TYPE);
 			types.add(OrgConstants.SUBJECT_TYPE);
 		}
 
-		List<Organization> organizations = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, null, false, OrgConstants.ALL_SCHOOLS_ID);
+		List<Organization> organizations = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, false, OrgConstants.ALL_SCHOOLS_ID);
 
 		// Doyens, psys and conseillers sociaux see their classes
 		organizations.addAll(UserOrgsLocalServiceUtil.getRoleAffectedClasses(user));
@@ -90,10 +83,6 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 		for (Organization userOrg : organizations) {
 			Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(userOrg.getGroupId());
 			JSONObject jsonFolder = DLAppJsonFactory.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
-			OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(userOrg.getOrganizationId());
-			if (orgDetails.getType() == OrgConstants.SCHOOL_LEVEL_TYPE) {
-				jsonFolder.put("name", userOrg.getName());
-			}
 			userGroupsArray.put(jsonFolder);
 		}
 

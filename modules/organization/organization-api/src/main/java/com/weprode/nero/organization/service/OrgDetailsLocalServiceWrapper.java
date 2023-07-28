@@ -64,11 +64,10 @@ public class OrgDetailsLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.organization.model.OrgDetails createOrgDetails(
-		long orgId, long schoolId, String orgName, String eduLevel, int role,
-		int type, boolean isArchive) {
+		long orgId, long schoolId, String orgName, int type) {
 
 		return _orgDetailsLocalService.createOrgDetails(
-			orgId, schoolId, orgName, eduLevel, role, type, isArchive);
+			orgId, schoolId, orgName, type);
 	}
 
 	/**

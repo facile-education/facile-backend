@@ -46,8 +46,6 @@ public class OrganizationLocalServiceOverride extends OrganizationLocalServiceWr
 
 	private void deleteOrganizationData (long organizationId) throws PortalException {
 
-		logger.debug("Clean up community infos for organizationId " + organizationId);
-
 		logger.info("Deleting organizationId "+ organizationId);
 
 		boolean isSchool = OrgDetailsLocalServiceUtil.isSchool(organizationId);

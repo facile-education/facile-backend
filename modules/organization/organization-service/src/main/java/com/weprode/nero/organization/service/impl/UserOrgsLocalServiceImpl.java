@@ -67,26 +67,23 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
     }
 
     public List<Organization> getUserClassesAndCours(User user, boolean withArchive, long schoolId) {
-        List<Integer> roles = new ArrayList<>();
 
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.CLASS_TYPE);
         types.add(OrgConstants.COURS_TYPE);
 
-        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, roles, withArchive, schoolId);
+        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, withArchive, schoolId);
     }
 
     /**
      * Returns all classes and groups the user is member of, for a given school
      */
     public List<Organization> getUserCours(User user, boolean withArchive, long schoolId) {
-        List<Integer> roles = new ArrayList<>();
-        roles.add(OrgConstants.NO_ROLE);
 
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.COURS_TYPE);
 
-        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, roles, withArchive, schoolId);
+        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, withArchive, schoolId);
     }
 
     public List<Organization> getUserClasses(User user, boolean withArchive) {
@@ -97,33 +94,27 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
      * Returns all classes and groups the user is member of
      */
     public List<Organization> getUserClasses(User user, boolean withArchive, long schoolId) {
-        List<Integer> roles = new ArrayList<>();
-        roles.add(OrgConstants.NO_ROLE);
 
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.CLASS_TYPE);
 
-        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, roles, withArchive, schoolId);
+        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, withArchive, schoolId);
     }
 
     public List<Organization> getUserVolees(User user, boolean withArchive, long schoolId) {
-        List<Integer> roles = new ArrayList<>();
-        roles.add(OrgConstants.NO_ROLE);
 
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.VOLEE_TYPE);
 
-        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, roles, withArchive, schoolId);
+        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, withArchive, schoolId);
     }
 
     public List<Organization> getUserSchools(User user) {
-        List<Integer> roles = new ArrayList<>();
 
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.SCHOOL_TYPE);
 
-        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, roles, false,
-                OrgConstants.ALL_SCHOOLS_ID);
+        return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, false, OrgConstants.ALL_SCHOOLS_ID);
     }
 
     /**
@@ -176,8 +167,6 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
      * Returns all subject organizations the user is member of
      */
     public List<Organization> getUserSubjectOrganizations(User user, long schoolId, boolean withArchive) {
-        List<Integer> roles = new ArrayList<>();
-        roles.add(OrgConstants.NO_ROLE);
 
         List<Integer> types = new ArrayList<>();
         types.add(OrgConstants.SUBJECT_TYPE);
@@ -185,9 +174,9 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
         // Personals see all of these
         // Teachers see only the ones they belong to
         if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
-            return OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, roles, false);
+            return OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, false);
         } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, roles, withArchive, schoolId);
+            return UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, withArchive, schoolId);
         }
 
         return new ArrayList<>();
@@ -292,9 +281,8 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
         return false;
     }
 
-    public List<Organization> getUserOrganizations(long userId, List<Integer> types, List<Integer> roles,
-                                                   Boolean withArchives, long schoolId) {
-        return orgUtilsFinder.findUserOrganizations(userId, types, roles, withArchives,
+    public List<Organization> getUserOrganizations(long userId, List<Integer> types, Boolean withArchives, long schoolId) {
+        return orgUtilsFinder.findUserOrganizations(userId, types, withArchives,
                 schoolId, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
     }
 

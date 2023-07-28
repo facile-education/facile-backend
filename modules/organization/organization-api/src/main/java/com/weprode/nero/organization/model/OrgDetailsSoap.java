@@ -35,8 +35,6 @@ public class OrgDetailsSoap implements Serializable {
 		soapModel.setOrgId(model.getOrgId());
 		soapModel.setSchoolId(model.getSchoolId());
 		soapModel.setOrgName(model.getOrgName());
-		soapModel.setEduLevel(model.getEduLevel());
-		soapModel.setRole(model.getRole());
 		soapModel.setType(model.getType());
 		soapModel.setIsArchive(model.isIsArchive());
 
@@ -116,22 +114,6 @@ public class OrgDetailsSoap implements Serializable {
 		_orgName = orgName;
 	}
 
-	public String getEduLevel() {
-		return _eduLevel;
-	}
-
-	public void setEduLevel(String eduLevel) {
-		_eduLevel = eduLevel;
-	}
-
-	public int getRole() {
-		return _role;
-	}
-
-	public void setRole(int role) {
-		_role = role;
-	}
-
 	public int getType() {
 		return _type;
 	}
@@ -155,8 +137,6 @@ public class OrgDetailsSoap implements Serializable {
 	private long _orgId;
 	private long _schoolId;
 	private String _orgName;
-	private String _eduLevel;
-	private int _role;
 	private int _type;
 	private boolean _isArchive;
 

@@ -3,19 +3,15 @@ package com.weprode.nero.user.service.impl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.model.OrgDetails;
 import com.weprode.nero.organization.service.ClassCoursMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
-import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.model.Affectation;
 import com.weprode.nero.user.service.AffectationLocalServiceUtil;
-import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.nero.user.service.base.AffectationLocalServiceBaseImpl;
 import org.osgi.service.component.annotations.Component;
@@ -110,11 +106,6 @@ public class AffectationLocalServiceImpl extends AffectationLocalServiceBaseImpl
                     if (!OrganizationLocalServiceUtil.hasUserOrganization(affectedUserId, orgIdToAffect)) {
                         UserLocalServiceUtil.addOrganizationUsers(orgIdToAffect, new long[]{affectedUserId});
                     }
-
-                    // If this is a school, add the user to the school-level orgs
-                    if (orgDetails.getType() == OrgConstants.SCHOOL_TYPE) {
-                        UserManagementLocalServiceUtil.synchronizeSchoolLevelOrganizations(affectedUserId, orgIdToAffect);
-                    }
                 }
                 logger.info("User " + adminUserId + " has affected user " + userId + " to org " + orgIdToAffect);
             }
@@ -131,25 +122,10 @@ public class AffectationLocalServiceImpl extends AffectationLocalServiceBaseImpl
         List<Long> orgIds = new ArrayList<>();
 
         try {
-            User user = UserLocalServiceUtil.getUser(userId);
             List<Affectation> userAffectations = AffectationLocalServiceUtil.getUserAffectations(userId, 0);
 
             for (Affectation userAffectation : userAffectations) {
                 orgIds.add(userAffectation.getOrgId());
-                // If this is a school, add the school-level orgs
-                OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(userAffectation.getOrgId());
-                if (orgDetails.getType() == OrgConstants.SCHOOL_TYPE) {
-                    if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                        orgIds.add(OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(userAffectation.getOrgId()).getOrganizationId());
-                    }
-                    if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
-                        orgIds.add(OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(userAffectation.getOrgId()).getOrganizationId());
-                    }
-                    if (RoleUtilsLocalServiceUtil.isPat(user)) {
-                        orgIds.add(OrgUtilsLocalServiceUtil.getSchoolPATsOrganization(userAffectation.getOrgId()).getOrganizationId());
-                    }
-                }
-
             }
         } catch (Exception e) {
             logger.error("Error fetching affected for user " + userId, e);
@@ -185,34 +161,6 @@ public class AffectationLocalServiceImpl extends AffectationLocalServiceBaseImpl
                     for (User parent : UserRelationshipLocalServiceUtil.getParents(user.getUserId())) {
                         logger.info("Affected user is a student, removing affectation for parentId = " + parent.getUserId());
                         UserLocalServiceUtil.unsetOrganizationUsers(orgIdToUnaffect, new long[]{parent.getUserId()});
-                    }
-                }
-
-                // If this is a school, remove user from the school-level organizations
-                OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(orgIdToUnaffect);
-                if (orgDetails.getType() == OrgConstants.SCHOOL_TYPE) {
-                    // School teachers
-                    if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-                        Organization teacherSchoolLevelOrg = OrgUtilsLocalServiceUtil.getSchoolTeachersOrganization(orgIdToUnaffect);
-                        if (!UserLocalServiceUtil.hasOrganizationUser(teacherSchoolLevelOrg.getOrganizationId(), user.getUserId()) ) {
-                            UserLocalServiceUtil.addOrganizationUsers(teacherSchoolLevelOrg.getOrganizationId(), new long[]{user.getUserId()});
-                        }
-                    }
-
-                    // School personals
-                    if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
-                        Organization personalSchoolLevelOrg = OrgUtilsLocalServiceUtil.getSchoolPersonalsOrganization(orgIdToUnaffect);
-                        if (!UserLocalServiceUtil.hasOrganizationUser(personalSchoolLevelOrg.getOrganizationId(), user.getUserId()) ) {
-                            UserLocalServiceUtil.addOrganizationUsers(personalSchoolLevelOrg.getOrganizationId(), new long[]{user.getUserId()});
-                        }
-                    }
-
-                    // School PATs
-                    if (RoleUtilsLocalServiceUtil.isPat(user)) {
-                        Organization patSchoolLevelOrg = OrgUtilsLocalServiceUtil.getSchoolPATsOrganization(orgIdToUnaffect);
-                        if (!UserLocalServiceUtil.hasOrganizationUser(patSchoolLevelOrg.getOrganizationId(), user.getUserId()) ) {
-                            UserLocalServiceUtil.addOrganizationUsers(patSchoolLevelOrg.getOrganizationId(), new long[]{user.getUserId()});
-                        }
                     }
                 }
                 logger.info("Removed manual affectation for user " + userId + " from org " + orgIdToUnaffect);

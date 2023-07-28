@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.kernel.util.*;
 
 import java.util.Date;
 
@@ -79,6 +78,6 @@ public interface UserManagementLocalService extends BaseLocalService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	public void synchronizeSchoolLevelOrganizations(long userId, long schoolId);
+	public void synchronizeUserSchool(long userId, long schoolId);
 
 }
