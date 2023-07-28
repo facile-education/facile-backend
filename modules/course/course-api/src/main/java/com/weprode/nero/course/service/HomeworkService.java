@@ -72,7 +72,7 @@ public interface HomeworkService extends BaseService {
 			long targetSessionId, String targetDateStr, int homeworkType,
 			int estimatedTime, String students, String blocks,
 			String publicationDateStr, boolean isDraft)
-		throws SystemException;
+		throws PortalException;
 
 	@JSONWebService(method = "POST", value = "delete-homework")
 	public JSONObject deleteHomework(long homeworkId) throws SystemException;
@@ -107,6 +107,6 @@ public interface HomeworkService extends BaseService {
 			long homeworkId, String title, long targetSessionId,
 			String targetDateStr, int estimatedTime, String students,
 			String blocks, String publicationDateStr, boolean isDraft)
-		throws SystemException;
+		throws PortalException;
 
 }

@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.exception.UnauthorizedUrlException;
 import com.weprode.nero.course.model.Homework;
 import com.weprode.nero.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
@@ -38,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -218,7 +220,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "create-homework", method = "POST")
-	public JSONObject createHomework(long courseId, String title, long sourceSessionId, long targetSessionId, String targetDateStr, int homeworkType, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws SystemException {
+	public JSONObject createHomework(long courseId, String title, long sourceSessionId, long targetSessionId, String targetDateStr, int homeworkType, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws PortalException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -234,11 +236,17 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
+		Date targetDate;
+		Date publicationDate;
 		try {
-			Date targetDate = targetSessionId == 0 ?
+			targetDate = targetSessionId == 0 ?
 					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) :
 					CDTSessionLocalServiceUtil.getCDTSession(targetSessionId).getStart();
-			Date publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
+			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
+		} catch (Exception e) {
+			result.put(JSONConstants.SUCCESS, false);
+			return result;
+		}
 			List<Long> studentIds = new ArrayList<>();
 			if (!students.equals("")) {
 				JSONArray jsonStudents = new JSONArray(students);
@@ -249,6 +257,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			}
 			Homework homework = HomeworkLocalServiceUtil.createHomework(user, title, sourceSessionId, targetSessionId, courseId, targetDate, homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
 
+			try {
 			// Create blocks
 			JSONArray jsonBlocks = new JSONArray(blocks);
 			for (int i = 0 ; i < jsonBlocks.length() ; i++) {
@@ -261,14 +270,15 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			}
 
 			result.put(JSONConstants.SUCCESS, true);
-		} catch (Exception e) {
+		} catch (UnauthorizedUrlException | IOException e) {
 			logger.error("Error creating homework", e);
+			throw new PortalException(); // To cancel the previous content creation
 		}
 		return result;
 	}
 
 	@JSONWebService(value = "update-homework", method = "POST")
-	public JSONObject updateHomework(long homeworkId, String title, long targetSessionId, String targetDateStr, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws SystemException {
+	public JSONObject updateHomework(long homeworkId, String title, long targetSessionId, String targetDateStr, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws PortalException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -284,11 +294,19 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
+
+		Date targetDate;
+		Date publicationDate;
 		try {
-			Date targetDate = targetSessionId == 0 ?
+			targetDate = targetSessionId == 0 ?
 					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) :
 					CDTSessionLocalServiceUtil.getCDTSession(targetSessionId).getStart();
-			Date publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
+			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
+		} catch (Exception e) {
+			result.put(JSONConstants.SUCCESS, false);
+			return result;
+		}
+
 			List<Long> studentIds = new ArrayList<>();
 			if (!students.equals("")) {
 				JSONArray jsonStudents = new JSONArray(students);
@@ -302,6 +320,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			// Delete existing blocks
 			ContentBlockLocalServiceUtil.deleteBlocksByItemId(homeworkId);
 
+			try {
 			// Re-create blocks
 			JSONArray jsonBlocks = new JSONArray(blocks);
 			for (int i = 0 ; i < jsonBlocks.length() ; i++) {
@@ -314,8 +333,9 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			}
 
 			result.put(JSONConstants.SUCCESS, true);
-		} catch (Exception e) {
+		} catch (UnauthorizedUrlException | IOException e) {
 			logger.error("Error creating homework", e);
+			throw new PortalException(); // To cancel the previous content creation
 		}
 		return result;
 	}

@@ -53,8 +53,9 @@ import com.weprode.nero.course.service.SessionContentServiceUtil;
 public class SessionContentServiceHttp {
 
 	public static org.json.JSONObject addSessionContent(
-		HttpPrincipal httpPrincipal, long sessionId, String title,
-		String blocks, String publicationDate, boolean isDraft) {
+			HttpPrincipal httpPrincipal, long sessionId, String title,
+			String blocks, String publicationDate, boolean isDraft)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -70,6 +71,13 @@ public class SessionContentServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -86,8 +94,9 @@ public class SessionContentServiceHttp {
 	}
 
 	public static org.json.JSONObject updateSessionContent(
-		HttpPrincipal httpPrincipal, long sessionId, String title,
-		String blocks, String publicationDate, boolean isDraft) {
+			HttpPrincipal httpPrincipal, long sessionId, String title,
+			String blocks, String publicationDate, boolean isDraft)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -103,6 +112,13 @@ public class SessionContentServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}

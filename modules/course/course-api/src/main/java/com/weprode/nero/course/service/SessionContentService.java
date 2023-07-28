@@ -52,8 +52,9 @@ public interface SessionContentService extends BaseService {
 	 */
 	@JSONWebService(method = "POST", value = "add-session-content")
 	public JSONObject addSessionContent(
-		long sessionId, String title, String blocks, String publicationDate,
-		boolean isDraft);
+			long sessionId, String title, String blocks, String publicationDate,
+			boolean isDraft)
+		throws PortalException;
 
 	@JSONWebService(method = "DELETE", value = "delete-session-content")
 	public JSONObject deleteSessionContent(long sessionId);
@@ -75,7 +76,8 @@ public interface SessionContentService extends BaseService {
 
 	@JSONWebService(method = "POST", value = "update-session-content")
 	public JSONObject updateSessionContent(
-		long sessionId, String title, String blocks, String publicationDate,
-		boolean isDraft);
+			long sessionId, String title, String blocks, String publicationDate,
+			boolean isDraft)
+		throws PortalException;
 
 }
