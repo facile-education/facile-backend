@@ -92,7 +92,7 @@ public class SessionContentModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Course_SessionContent (sessionId LONG not null primary key,companyId LONG,teacherId LONG,title VARCHAR(75) null,modificationDate DATE null,publicationDate DATE null,isDraft BOOLEAN)";
+		"create table Course_SessionContent (sessionId LONG not null primary key,companyId LONG,teacherId LONG,title VARCHAR(255) null,modificationDate DATE null,publicationDate DATE null,isDraft BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Course_SessionContent";

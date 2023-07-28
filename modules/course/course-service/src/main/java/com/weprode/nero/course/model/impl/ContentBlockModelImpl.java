@@ -94,7 +94,7 @@ public class ContentBlockModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Course_ContentBlock (blockId LONG not null primary key,courseItemId LONG,modificationDate DATE null,blockName VARCHAR(75) null,blockValue VARCHAR(75) null,fileEntryId LONG,blockType INTEGER,order_ INTEGER)";
+		"create table Course_ContentBlock (blockId LONG not null primary key,courseItemId LONG,modificationDate DATE null,blockName VARCHAR(255) null,blockValue STRING null,fileEntryId LONG,blockType INTEGER,order_ INTEGER)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Course_ContentBlock";

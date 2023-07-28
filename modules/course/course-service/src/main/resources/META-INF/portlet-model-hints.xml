@@ -5,8 +5,12 @@
 		<field name="blockId" type="long" />
 		<field name="courseItemId" type="long" />
 		<field name="modificationDate" type="Date" />
-		<field name="blockName" type="String" />
-		<field name="blockValue" type="String" />
+		<field name="blockName" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="blockValue" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
 		<field name="fileEntryId" type="long" />
 		<field name="blockType" type="int" />
 		<field name="order" type="int" />
@@ -16,7 +20,9 @@
 		<field name="homeworkType" type="int" />
 		<field name="courseId" type="long" />
 		<field name="teacherId" type="long" />
-		<field name="title" type="String" />
+		<field name="title" type="String">
+			<hint name="max-length">255</hint>
+		</field>
 		<field name="modificationDate" type="Date" />
 		<field name="sourceSessionId" type="long" />
 		<field name="targetSessionId" type="long" />
@@ -30,7 +36,9 @@
 		<field name="sessionId" type="long" />
 		<field name="companyId" type="long" />
 		<field name="teacherId" type="long" />
-		<field name="title" type="String" />
+		<field name="title" type="String">
+			<hint name="max-length">255</hint>
+		</field>
 		<field name="modificationDate" type="Date" />
 		<field name="publicationDate" type="Date" />
 		<field name="isDraft" type="boolean" />
@@ -44,7 +52,10 @@
 		<field name="sentDate" type="Date" />
 		<field name="sentFileId" type="long" />
 		<field name="isCorrected" type="boolean" />
-		<field name="comment" type="String" />
+		<field name="comment" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
 		<field name="correctionDate" type="Date" />
 	</model>
 </model-hints>
+

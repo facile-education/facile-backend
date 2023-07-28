@@ -102,7 +102,7 @@ public class HomeworkModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Course_Homework (homeworkId LONG not null primary key,homeworkType INTEGER,courseId LONG,teacherId LONG,title VARCHAR(75) null,modificationDate DATE null,sourceSessionId LONG,targetSessionId LONG,targetDate DATE null,isCustomStudentList BOOLEAN,estimatedTime INTEGER,publicationDate DATE null,isDraft BOOLEAN)";
+		"create table Course_Homework (homeworkId LONG not null primary key,homeworkType INTEGER,courseId LONG,teacherId LONG,title VARCHAR(255) null,modificationDate DATE null,sourceSessionId LONG,targetSessionId LONG,targetDate DATE null,isCustomStudentList BOOLEAN,estimatedTime INTEGER,publicationDate DATE null,isDraft BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP = "drop table Course_Homework";
 
