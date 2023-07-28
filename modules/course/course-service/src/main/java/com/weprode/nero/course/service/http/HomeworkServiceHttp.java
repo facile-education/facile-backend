@@ -257,7 +257,7 @@ public class HomeworkServiceHttp {
 			long sourceSessionId, long targetSessionId, String targetDateStr,
 			int homeworkType, int estimatedTime, String students, String blocks,
 			String publicationDateStr, boolean isDraft)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -276,9 +276,9 @@ public class HomeworkServiceHttp {
 			}
 			catch (Exception exception) {
 				if (exception instanceof
-						com.liferay.portal.kernel.exception.SystemException) {
+						com.liferay.portal.kernel.exception.PortalException) {
 
-					throw (com.liferay.portal.kernel.exception.SystemException)
+					throw (com.liferay.portal.kernel.exception.PortalException)
 						exception;
 				}
 
@@ -302,7 +302,7 @@ public class HomeworkServiceHttp {
 			long targetSessionId, String targetDateStr, int estimatedTime,
 			String students, String blocks, String publicationDateStr,
 			boolean isDraft)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -320,9 +320,9 @@ public class HomeworkServiceHttp {
 			}
 			catch (Exception exception) {
 				if (exception instanceof
-						com.liferay.portal.kernel.exception.SystemException) {
+						com.liferay.portal.kernel.exception.PortalException) {
 
-					throw (com.liferay.portal.kernel.exception.SystemException)
+					throw (com.liferay.portal.kernel.exception.PortalException)
 						exception;
 				}
 

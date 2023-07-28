@@ -15,6 +15,7 @@
 package com.weprode.nero.course.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.exception.UnauthorizedUrlException;
 import com.weprode.nero.course.model.ContentBlock;
 import com.weprode.nero.course.model.SessionContent;
 import com.weprode.nero.course.service.ContentBlockLocalServiceUtil;
@@ -35,6 +37,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +59,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 	// Called when creating the whole session content, with all blocks
 	@JSONWebService(value = "add-session-content", method = "POST")
-	public JSONObject addSessionContent(long sessionId, String title, String blocks, String publicationDate, boolean isDraft) {
+	public JSONObject addSessionContent(long sessionId, String title, String blocks, String publicationDate, boolean isDraft) throws PortalException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -71,17 +75,26 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
-		try {
 			if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
-			Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
-			SessionContent courseItem = SessionContentLocalServiceUtil.addSessionContent(sessionId, user.getUserId(), title, publication, isDraft);
 
+		Date publication;
+		try {
+			publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
+		} catch (ParseException e) {
+			result.put(JSONConstants.SUCCESS, false);
+			return result;
+		}
+
+		SessionContent courseItem = SessionContentLocalServiceUtil.addSessionContent(sessionId, user.getUserId(), title, publication, isDraft);
+
+
+		try {
 			// Add contents
 			JSONArray jsonBlocks = new JSONArray(blocks);
-			for (int i = 0 ; i < jsonBlocks.length() ; i++) {
+			for (int i = 0; i < jsonBlocks.length(); i++) {
 				JSONObject jsonBlock = jsonBlocks.getJSONObject(i);
 				ContentBlockLocalServiceUtil.addBlock(user.getUserId(), sessionId,
 						jsonBlock.getInt(JSONConstants.CONTENT_TYPE),
@@ -91,20 +104,21 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 			}
 
 			result.put(JSONConstants.ITEM, courseItem.convertToJSON(user, true));
-			logger.info("User "+user.getFullName()+" (id="+user.getUserId()+") has created content for session " + courseItem.getSessionId());
+			logger.info("User " + user.getFullName() + " (id=" + user.getUserId() + ") has created content for session " + courseItem.getSessionId());
 			result.put(JSONConstants.SUCCESS, true);
-
-		} catch (Exception e) {
-			logger.error("Could not add course item for "+user.getFullName()+" (id="+user.getUserId()+") " + "and sessionId = " + sessionId, e);
-			result.put(JSONConstants.SUCCESS, false);
+		} catch (UnauthorizedUrlException | IOException e) {
+			logger.error("Error creating session", e);
+			throw new PortalException(); // To cancel the previous content creation
 		}
 
-		return result;
+		throw new PortalException();
+
+//		return result;
 	}
 
 	// Update the whole session content, when the previous content is published
 	@JSONWebService(value = "update-session-content", method = "POST")
-	public JSONObject updateSessionContent(long sessionId, String title, String blocks, String publicationDate, boolean isDraft) {
+	public JSONObject updateSessionContent(long sessionId, String title, String blocks, String publicationDate, boolean isDraft) throws PortalException {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -120,22 +134,28 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
-		try {
-			if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
-			}
+		if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
 
-			Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
-			JSONArray jsonBlocks = new JSONArray(blocks);
+		Date publication;
+		try {
+			publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
+		} catch (ParseException e) {
+			result.put(JSONConstants.SUCCESS, false);
+			return result;
+		}
+		JSONArray jsonBlocks = new JSONArray(blocks);
+		try {
 			SessionContent updatedItem = SessionContentLocalServiceUtil.updateSessionContent(user.getUserId(), sessionId, title, jsonBlocks, publication, isDraft);
 			result.put(JSONConstants.SESSION_CONTENT, updatedItem.convertToJSON(user, true));
-			logger.info("User " + user.getFullName() + " (id="+user.getUserId()+") has updated course session " + sessionId);
+			logger.info("User " + user.getFullName() + " (id=" + user.getUserId() + ") has updated course session " + sessionId);
 			result.put(JSONConstants.SUCCESS, true);
-
-		} catch (Exception e) {
-			logger.error("Could not update course session " + sessionId + " for "+user.getFullName()+" (id="+user.getUserId()+")", e);
-			result.put(JSONConstants.SUCCESS, false);
+		} catch (UnauthorizedUrlException | IOException e) {
+			logger.error("Error updating session", e);
+			throw new PortalException(); // To cancel the previous content creation
 		}
+
 
 		return result;
 	}

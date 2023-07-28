@@ -34,8 +34,9 @@ public class SessionContentServiceWrapper
 
 	@Override
 	public org.json.JSONObject addSessionContent(
-		long sessionId, String title, String blocks, String publicationDate,
-		boolean isDraft) {
+			long sessionId, String title, String blocks, String publicationDate,
+			boolean isDraft)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _sessionContentService.addSessionContent(
 			sessionId, title, blocks, publicationDate, isDraft);
@@ -68,8 +69,9 @@ public class SessionContentServiceWrapper
 
 	@Override
 	public org.json.JSONObject updateSessionContent(
-		long sessionId, String title, String blocks, String publicationDate,
-		boolean isDraft) {
+			long sessionId, String title, String blocks, String publicationDate,
+			boolean isDraft)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _sessionContentService.updateSessionContent(
 			sessionId, title, blocks, publicationDate, isDraft);

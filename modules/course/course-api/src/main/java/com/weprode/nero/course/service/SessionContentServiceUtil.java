@@ -14,6 +14,8 @@
 
 package com.weprode.nero.course.service;
 
+import com.liferay.portal.kernel.exception.PortalException;
+
 /**
  * Provides the remote service utility for SessionContent. This utility wraps
  * <code>com.weprode.nero.course.service.impl.SessionContentServiceImpl</code> and is an
@@ -34,8 +36,9 @@ public class SessionContentServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.course.service.impl.SessionContentServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static org.json.JSONObject addSessionContent(
-		long sessionId, java.lang.String title, java.lang.String blocks,
-		java.lang.String publicationDate, boolean isDraft) {
+			long sessionId, String title, String blocks, String publicationDate,
+			boolean isDraft)
+		throws PortalException {
 
 		return getService().addSessionContent(
 			sessionId, title, blocks, publicationDate, isDraft);
@@ -50,7 +53,7 @@ public class SessionContentServiceUtil {
 	 *
 	 * @return the OSGi service identifier
 	 */
-	public static java.lang.String getOSGiServiceIdentifier() {
+	public static String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
@@ -63,8 +66,9 @@ public class SessionContentServiceUtil {
 	}
 
 	public static org.json.JSONObject updateSessionContent(
-		long sessionId, java.lang.String title, java.lang.String blocks,
-		java.lang.String publicationDate, boolean isDraft) {
+			long sessionId, String title, String blocks, String publicationDate,
+			boolean isDraft)
+		throws PortalException {
 
 		return getService().updateSessionContent(
 			sessionId, title, blocks, publicationDate, isDraft);

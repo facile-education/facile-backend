@@ -67,7 +67,7 @@ public class HomeworkServiceWrapper
 			long targetSessionId, String targetDateStr, int homeworkType,
 			int estimatedTime, String students, String blocks,
 			String publicationDateStr, boolean isDraft)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _homeworkService.createHomework(
 			courseId, title, sourceSessionId, targetSessionId, targetDateStr,
@@ -130,7 +130,7 @@ public class HomeworkServiceWrapper
 			long homeworkId, String title, long targetSessionId,
 			String targetDateStr, int estimatedTime, String students,
 			String blocks, String publicationDateStr, boolean isDraft)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _homeworkService.updateHomework(
 			homeworkId, title, targetSessionId, targetDateStr, estimatedTime,

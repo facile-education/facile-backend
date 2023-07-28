@@ -68,7 +68,7 @@ public class HomeworkServiceUtil {
 			long targetSessionId, String targetDateStr, int homeworkType,
 			int estimatedTime, String students, String blocks,
 			String publicationDateStr, boolean isDraft)
-		throws SystemException {
+		throws PortalException {
 
 		return getService().createHomework(
 			courseId, title, sourceSessionId, targetSessionId, targetDateStr,
@@ -123,7 +123,7 @@ public class HomeworkServiceUtil {
 			long homeworkId, String title, long targetSessionId,
 			String targetDateStr, int estimatedTime, String students,
 			String blocks, String publicationDateStr, boolean isDraft)
-		throws SystemException {
+		throws PortalException {
 
 		return getService().updateHomework(
 			homeworkId, title, targetSessionId, targetDateStr, estimatedTime,
