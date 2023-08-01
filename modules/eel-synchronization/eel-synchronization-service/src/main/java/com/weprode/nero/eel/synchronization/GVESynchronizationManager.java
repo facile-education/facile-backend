@@ -1625,10 +1625,8 @@ public class GVESynchronizationManager {
                     String room = slotData.getRoom();
 
                     // Map course and subject
-                    logger.info("Get or create subject " + slotData.getSubject());
                     String subjectName = slotData.getSubject();
                     Subject subject = SubjectLocalServiceUtil.getOrCreateSubject(subjectName);
-                    logger.info("subjectId is " + subject.getSubjectId());
                     CourseDetailsLocalServiceUtil.setCourseSubject(coursOrg.getGroupId(), subject.getSubjectId());
 
                     String subjectOrgName = OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true) + OrgConstants.SUBJECT_ORG_TEACHERS +
