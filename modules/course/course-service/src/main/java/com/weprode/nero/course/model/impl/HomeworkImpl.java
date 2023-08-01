@@ -59,7 +59,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         jsonHomework.put(JSONConstants.TO_DATE, sdf.format(this.getTargetDate()));
         jsonHomework.put(JSONConstants.TARGET_SESSION_ID, this.getTargetSessionId());
         jsonHomework.put(JSONConstants.IS_DRAFT, this.getIsDraft());
-        jsonHomework.put(JSONConstants.PUBLICATION_DATE, this.getPublicationDate());
+        jsonHomework.put(JSONConstants.PUBLICATION_DATE, sdf.format(this.getPublicationDate()));
         if (this.getEstimatedTime() > 0) {
             jsonHomework.put(JSONConstants.ESTIMATED_TIME, this.getEstimatedTime());
         }

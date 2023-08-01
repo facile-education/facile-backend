@@ -45,6 +45,7 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
         jsonSession.put(JSONConstants.ROOM, this.getRoom());
         jsonSession.put(JSONConstants.IS_MANUAL, this.getIsManual());
         jsonSession.put(JSONConstants.COLOR, CourseDetailsLocalServiceUtil.getCourseColor(this.getGroupId()));
+        jsonSession.put(JSONConstants.SLOT_NUMBER, this.getSlot());
 
         jsonSession.put(JSONConstants.CAN_SAVE_TEACHER_SUBSTITUTE, SessionTeacherLocalServiceUtil.canSaveTeacherSubstitutes(user));
 

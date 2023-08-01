@@ -31,6 +31,7 @@ import com.weprode.nero.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.nero.course.service.SessionContentLocalServiceUtil;
 import com.weprode.nero.course.service.base.SessionContentServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import org.json.JSONArray;
@@ -75,10 +76,11 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
-			if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
-			}
-
+		if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
+			logger.error("User " + user.getFullName() + " tries to create content for session " + sessionId +" but does not own this session");
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+		logger.info("User " + user.getFullName() + " (id=" + user.getUserId() + ") creates content for session " + sessionId);
 
 		Date publication;
 		try {
@@ -89,7 +91,6 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 		}
 
 		SessionContent courseItem = SessionContentLocalServiceUtil.addSessionContent(sessionId, user.getUserId(), title, publication, isDraft);
-
 
 		try {
 			// Add contents
@@ -104,16 +105,13 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 			}
 
 			result.put(JSONConstants.ITEM, courseItem.convertToJSON(user, true));
-			logger.info("User " + user.getFullName() + " (id=" + user.getUserId() + ") has created content for session " + courseItem.getSessionId());
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (UnauthorizedUrlException | IOException e) {
-			logger.error("Error creating session", e);
+			logger.error("Error creating session content", e);
 			throw new PortalException(); // To cancel the previous content creation
 		}
 
-		throw new PortalException();
-
-//		return result;
+		return result;
 	}
 
 	// Update the whole session content, when the previous content is published
@@ -184,6 +182,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 			}
 
 			SessionContentLocalServiceUtil.deleteSessionContent(sessionId);
+			ContentBlockLocalServiceUtil.deleteBlocksByItemId(sessionId);
 			logger.info("User "+user.getFullName()+" (id="+user.getUserId()+") has deleted content for session " + sessionId);
 			result.put(JSONConstants.SUCCESS, true);
 
@@ -218,6 +217,8 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 			SessionContent content = SessionContentLocalServiceUtil.fetchSessionContent(sessionId);
 			if (content != null) {
+				CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
+				result.put(JSONConstants.SLOT_NUMBER, session.getSlot());
 				result.put(JSONConstants.TITLE, content.getTitle());
 				result.put(JSONConstants.IS_DRAFT, content.getIsDraft());
 				result.put(JSONConstants.PUBLICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(content.getPublicationDate()));
