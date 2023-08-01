@@ -10,7 +10,7 @@
 			AND ((pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$]) AND news.expirationDate > ?) OR news.authorId = ?)
 			[$OTHER$]
 			GROUP BY news.newsId
-			ORDER BY news.publicationDate DESC
+			ORDER BY news.publicationDate DESC, news.modificationDate DESC
             LIMIT ?
         ]]>
     </sql>
