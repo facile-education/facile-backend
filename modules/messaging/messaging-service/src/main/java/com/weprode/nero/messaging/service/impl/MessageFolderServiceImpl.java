@@ -15,7 +15,6 @@ import com.weprode.nero.messaging.model.MessageFolder;
 import com.weprode.nero.messaging.service.MessageFolderLocalServiceUtil;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.messaging.service.base.MessageFolderServiceBaseImpl;
-import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -154,12 +153,12 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
-        if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
-        }
 
         try {
             MessageFolder folder = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
+            if (user.getUserId() != folder.getUserId()) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
             folder.setFolderName(newLabel);
             folder = MessageFolderLocalServiceUtil.updateMessageFolder(folder);
             result.put(JSONConstants.RENAMED_FOLDER, convertFolder(folder));
