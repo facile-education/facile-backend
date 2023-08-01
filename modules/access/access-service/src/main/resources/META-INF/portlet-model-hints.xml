@@ -7,7 +7,9 @@
 		<field name="categoryId" type="long" />
 		<field name="title" type="String" />
 		<field name="type" type="int" />
-		<field name="externalUrl" type="String" />
+		<field name="externalUrl" type="String">
+			<hint name="max-length">2000</hint>
+		</field>
 		<field name="folderId" type="long" />
 		<field name="fileId" type="long" />
 		<field name="thumbnailId" type="long" />
