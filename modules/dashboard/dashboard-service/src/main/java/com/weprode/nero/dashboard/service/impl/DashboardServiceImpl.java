@@ -226,14 +226,21 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             Date maximumDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(maxDate);
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDashboardGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults,
                     withNews, withDocs, withMemberships, withSchoollife, withSessions);
+            boolean isAuthorOfAllNewActivity = true;
             for (GroupActivity groupActivity : groupActivities) {
                 if (lastDashboardAccessDate == null || groupActivity.getActivityDate().after(lastDashboardAccessDate)) {
                     nbNewActivities++;
+                    if (GroupActivityLocalServiceUtil.getAuthorId(groupActivity) != user.getUserId()) {
+                        isAuthorOfAllNewActivity = false;
+                    }
                 }
                 JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);
                 if (jsonActivity != null) {
                     jsonActivities.put(jsonActivity);
                 }
+            }
+            if (isAuthorOfAllNewActivity) {
+                nbNewActivities = 0;    // Don't display notifications if we are the author of all news activities
             }
 
             result.put(JSONConstants.ACTIVITIES, jsonActivities);

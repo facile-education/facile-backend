@@ -41,6 +41,12 @@ public class GroupActivityLocalServiceUtil {
 		return getService().convertGroupActivity(userId, groupActivity);
 	}
 
+	public static Long getAuthorId(
+		com.weprode.nero.group.model.GroupActivity groupActivity) {
+
+		return getService().getAuthorId(groupActivity);
+	}
+
 	public static List<com.weprode.nero.group.model.GroupActivity>
 		getDashboardGroupsActivities(
 			long userId, List<Long> groupIds, java.util.Date maxDate,

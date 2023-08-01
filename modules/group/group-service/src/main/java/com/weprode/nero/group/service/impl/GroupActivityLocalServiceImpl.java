@@ -381,6 +381,21 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         return jsonActivity;
     }
 
+    public Long getAuthorId (GroupActivity groupActivity) {
+        try {
+            if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_NEWS) {
+                News news = NewsLocalServiceUtil.getNews(groupActivity.getActivityId());
+                return news.getAuthorId();
+                // TODO handle other activity author
+            } else {
+                return 0L;
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            return 0L;
+        }
+    }
+
     private JSONObject convertHomeworkActivity (Homework homework) {
         JSONObject homeworkActivity = new JSONObject();
 

@@ -42,6 +42,13 @@ public class GroupActivityLocalServiceWrapper
 	}
 
 	@Override
+	public Long getAuthorId(
+		com.weprode.nero.group.model.GroupActivity groupActivity) {
+
+		return _groupActivityLocalService.getAuthorId(groupActivity);
+	}
+
+	@Override
 	public java.util.List<com.weprode.nero.group.model.GroupActivity>
 		getDashboardGroupsActivities(
 			long userId, java.util.List<Long> groupIds, java.util.Date maxDate,
