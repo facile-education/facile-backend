@@ -56,6 +56,9 @@ public interface GroupActivityLocalService extends BaseLocalService {
 		long userId, GroupActivity groupActivity);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Long getAuthorId(GroupActivity groupActivity);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<GroupActivity> getDashboardGroupsActivities(
 		long userId, List<Long> groupIds, Date maxDate, int nbResults,
 		boolean withNews, boolean withDocs, boolean withMemberships,
