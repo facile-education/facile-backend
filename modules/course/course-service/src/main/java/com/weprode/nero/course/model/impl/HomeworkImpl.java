@@ -21,11 +21,13 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.HtmlParserUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.course.model.ContentBlock;
 import com.weprode.nero.course.model.StudentHomework;
 import com.weprode.nero.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.nero.course.service.StudentHomeworkLocalServiceUtil;
+import com.weprode.nero.course.CourseConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
@@ -165,10 +167,17 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         if (includeBlocks) {
             List<ContentBlock> blocks = ContentBlockLocalServiceUtil.getContentsByItemId(getHomeworkId());
             JSONArray jsonBlocks = new JSONArray();
+
+            String shortContent = null; // TODO to externalise of 'includeBlocks' content
             for (ContentBlock block : blocks) {
+                if (block.getBlockType() == CourseConstants.TYPE_TEXT && shortContent == null) {
+                    String text = HtmlParserUtil.extractText(block.getBlockValue());
+                    shortContent = text.substring(0, Math.min(200, text.length()));
+                }
                 jsonBlocks.put(block.convertToJSON());
             }
             jsonHomework.put(JSONConstants.BLOCKS, jsonBlocks);
+            jsonHomework.put(JSONConstants.SHORT_CONTENT, shortContent);
         }
 
         return jsonHomework;
