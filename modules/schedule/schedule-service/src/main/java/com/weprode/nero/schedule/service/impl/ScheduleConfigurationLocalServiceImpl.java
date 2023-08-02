@@ -143,8 +143,8 @@ public class ScheduleConfigurationLocalServiceImpl
 			JSONArray jsonSchoolDay = new JSONArray(schoolDay);
 			jsonConfig.put(JSONConstants.SCHOOL_DAYS, jsonSchoolDay);
 
-			jsonConfig.put(JSONConstants.START_DAY_TIME, "07:55"); // TODO: To make customizable depending of user min P1 and max P12
-			jsonConfig.put(JSONConstants.END_DAY_TIME, "17:55");
+			jsonConfig.put(JSONConstants.START_DAY_TIME, "07:00"); // TODO: To make customizable depending of user min P1 and max P12
+			jsonConfig.put(JSONConstants.END_DAY_TIME, "18:00");
 
 		} catch (Exception e) {
 			logger.error("Error fetching school year end date", e);
