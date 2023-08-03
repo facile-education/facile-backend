@@ -110,11 +110,11 @@ public class MessageServiceWrapper
 	@Override
 	public org.json.JSONObject saveDraft(
 		String recipients, String subject, String content, String attachedFiles,
-		long draftMessageId, boolean isSupport) {
+		long draftMessageId, long threadId, boolean isSupport) {
 
 		return _messageService.saveDraft(
 			recipients, subject, content, attachedFiles, draftMessageId,
-			isSupport);
+			threadId, isSupport);
 	}
 
 	@Override

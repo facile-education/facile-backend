@@ -25,18 +25,8 @@
 
 	<entity name="UserMobileToken" local-service="true" remote-service="true">
 
-		<column name="userMobileTokenId" type="long" primary="true" />
-		<column name="userId" type="long"/>
+		<column name="userId" type="long" primary="true"/>
 		<column name="mobileToken" type="String"/>
-
-		<finder return-type="UserMobileToken" name="userMobileTokenId">
-			<finder-column name="userMobileTokenId" />
-		</finder>
-
-		<finder return-type="UserMobileToken" name="userId_mobileToken">
-			<finder-column name="userId" />
-			<finder-column name="mobileToken" />
-		</finder>
 
 	</entity>
 

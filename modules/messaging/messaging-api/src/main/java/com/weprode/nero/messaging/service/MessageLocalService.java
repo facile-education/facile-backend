@@ -343,7 +343,8 @@ public interface MessageLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public JSONObject saveDraft(
 		long senderId, long draftMessageId, String subject, String content,
-		List<Long> recipientIds, List<Long> attachFileIds, boolean isSupport);
+		List<Long> recipientIds, List<Long> attachFileIds, long threadId,
+		boolean isSupport);
 
 	public boolean sendAutoReply(
 		long receiverId, User initialSender, long originMessageId);

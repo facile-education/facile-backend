@@ -31,11 +31,8 @@ public class UserMobileTokenTable extends BaseTable<UserMobileTokenTable> {
 	public static final UserMobileTokenTable INSTANCE =
 		new UserMobileTokenTable();
 
-	public final Column<UserMobileTokenTable, Long> userMobileTokenId =
-		createColumn(
-			"userMobileTokenId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<UserMobileTokenTable, Long> userId = createColumn(
-		"userId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+		"userId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<UserMobileTokenTable, String> mobileToken =
 		createColumn(
 			"mobileToken", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);

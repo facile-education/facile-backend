@@ -113,11 +113,11 @@ public class MessageServiceUtil {
 	public static org.json.JSONObject saveDraft(
 		java.lang.String recipients, java.lang.String subject,
 		java.lang.String content, java.lang.String attachedFiles,
-		long draftMessageId, boolean isSupport) {
+		long draftMessageId, long threadId, boolean isSupport) {
 
 		return getService().saveDraft(
 			recipients, subject, content, attachedFiles, draftMessageId,
-			isSupport);
+			threadId, isSupport);
 	}
 
 	public static org.json.JSONObject sendAssistanceMessage(

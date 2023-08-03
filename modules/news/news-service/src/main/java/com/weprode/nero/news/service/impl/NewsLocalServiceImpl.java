@@ -560,7 +560,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         if (news.getImageId() != 0) {
             try {
                 FileEntry thumbnailFileEntry = DLAppServiceUtil.getFileEntry(news.getImageId());
-                jsonNews.put(JSONConstants.THUMBNAIL_URL, FileUtilsLocalServiceUtil.getDisplayUrl(thumbnailFileEntry, 0, "", user.getUserId(), true));
+                jsonNews.put(JSONConstants.THUMBNAIL_URL, FileUtilsLocalServiceUtil.getDisplayUrl(thumbnailFileEntry, 0, user.getUserId(), true));
             } catch (Exception e) {
                 logger.error("Cannot retrieve thumbnail for news " + news.getNewsId() + ", thumbnail fileId = " + news.getImageId(), e);
             }

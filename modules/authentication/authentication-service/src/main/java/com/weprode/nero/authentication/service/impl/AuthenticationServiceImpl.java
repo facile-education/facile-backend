@@ -65,7 +65,6 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 					isValid = PasswordTrackerLocalServiceUtil.isSameAsCurrentPassword(user.getUserId(), password);
 					isActive = user.isActive();
 					result.put(JSONConstants.USER_ID, user.getUserId());
-					logger.info("checkCredentials OK for " + user.getScreenName());
 				} catch (Exception e) {
 					logger.info("Error when comparing password with current one", e);
 				}

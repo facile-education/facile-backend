@@ -50,7 +50,7 @@ public class ContentBlockImpl extends ContentBlockBaseImpl {
             }
             try {
                 FileEntry file = DLAppServiceUtil.getFileEntry(this.getFileEntryId());
-                jsonBlock.put(JSONConstants.DOWNLOAD_URL, FileUtilsLocalServiceUtil.getDisplayUrl(file, file.getLatestFileVersion().getFileVersionId(), "", 0,false)); // Display URL with typeOfView = "" is download url
+                jsonBlock.put(JSONConstants.DOWNLOAD_URL, FileUtilsLocalServiceUtil.getDisplayUrl(file, file.getLatestFileVersion().getFileVersionId(), 0,true)); // Display URL with typeOfView = "" is download url
             } catch (Exception e) {
                 logger.error(e);
             }

@@ -216,13 +216,14 @@ public class MessageServiceSoap {
 
 	public static org.json.JSONObject saveDraft(
 			String recipients, String subject, String content,
-			String attachedFiles, long draftMessageId, boolean isSupport)
+			String attachedFiles, long draftMessageId, long threadId,
+			boolean isSupport)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue = MessageServiceUtil.saveDraft(
 				recipients, subject, content, attachedFiles, draftMessageId,
-				isSupport);
+				threadId, isSupport);
 
 			return returnValue;
 		}

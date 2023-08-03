@@ -167,7 +167,8 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 		try {
 			JSONObject paramMap = new JSONObject(params);
 
-			long fileVersionId = JSONConstants.getLongValue(paramMap, JSONConstants.FILE_VERSION_ID, -1);
+			// Param is called 'fileEntryId' but it is a fileVersionId
+			long fileVersionId = JSONConstants.getLongValue(paramMap, JSONConstants.FILE_ENTRY_ID, -1);
 			String fileName = paramMap.getString(JSONConstants.FILE_NAME);
 			String content = paramMap.getString(JSONConstants.CONTENT);
 
@@ -184,7 +185,7 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 					DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 					fileEntry = DLAppServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
 				} catch (Exception e) {
-					logger.info("Was not able to convert fileEntryId '" + fileVersionId + "' to long : might be a file creation");
+					logger.info("Was not able to convert fileVersionId '" + fileVersionId + "' to long : might be a file creation");
 				}
 			}
 

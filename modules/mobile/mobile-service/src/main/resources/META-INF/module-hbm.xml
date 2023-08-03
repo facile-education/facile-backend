@@ -17,10 +17,9 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="browserUA" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.weprode.nero.mobile.model.impl.UserMobileTokenImpl" table="Mobile_UserMobileToken">
-		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userMobileTokenId" type="long">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="long">
 			<generator class="assigned" />
 		</id>
-		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="mobileToken" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 </hibernate-mapping>

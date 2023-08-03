@@ -491,11 +491,11 @@ public class MessageLocalServiceWrapper
 	public org.json.JSONObject saveDraft(
 		long senderId, long draftMessageId, String subject, String content,
 		java.util.List<Long> recipientIds, java.util.List<Long> attachFileIds,
-		boolean isSupport) {
+		long threadId, boolean isSupport) {
 
 		return _messageLocalService.saveDraft(
 			senderId, draftMessageId, subject, content, recipientIds,
-			attachFileIds, isSupport);
+			attachFileIds, threadId, isSupport);
 	}
 
 	@Override

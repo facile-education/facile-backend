@@ -22,16 +22,12 @@ import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.kernel.util.*;
-
-import com.weprode.nero.document.constants.*;
-
-import java.io.*;
-import java.io.File;
-
-import java.util.*;
-
+import com.liferay.portal.kernel.util.ObjectValuePair;
 import org.osgi.annotation.versioning.ProviderType;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Provides the local service interface for FileUtils. Methods of this
@@ -56,17 +52,17 @@ public interface FileUtilsLocalService extends BaseLocalService {
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.document.service.impl.FileUtilsLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the file utils local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link FileUtilsLocalServiceUtil} if injection and service tracking are not available.
 	 */
 	public File convertAudioToMP3(String fileName, File audioFile)
-		throws java.io.IOException, SystemException;
+		throws IOException, SystemException;
 
 	public FileEntry copyFileEntry(
 			long userId, long fileId, long destFolderId,
 			boolean copyFileContent)
-		throws java.io.IOException, PortalException, SystemException;
+		throws IOException, PortalException, SystemException;
 
 	public FileEntry copyFileEntry(
 			long userId, long fileId, long destFolderId,
 			boolean copyFileContent, int mode)
-		throws java.io.IOException, PortalException, SystemException;
+		throws IOException, PortalException, SystemException;
 
 	public FileEntry createGeogebraFile(User user, long folderId, String name)
 		throws PortalException, SystemException;
@@ -79,7 +75,7 @@ public interface FileUtilsLocalService extends BaseLocalService {
 		throws Exception;
 
 	public FileEntry createMindMapFile(User user, long folderId, String name)
-		throws java.io.IOException, PortalException, SystemException;
+		throws IOException, PortalException, SystemException;
 
 	public FileEntry createScratchFile(User user, long folderId, String name)
 		throws PortalException, SystemException;
@@ -89,8 +85,7 @@ public interface FileUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getDisplayUrl(
-			FileEntry file, long versionId, String typeOfView, long userId,
-			boolean readOnly)
+			FileEntry file, long versionId, long userId, boolean readOnly)
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -100,10 +95,9 @@ public interface FileUtilsLocalService extends BaseLocalService {
 	 * Get file as Object Value Pair
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public com.liferay.portal.kernel.util.ObjectValuePair
-		<String, java.io.InputStream> getFileAsOVPStream(
-				long companyId, long fileId, String fileName)
-			throws java.io.IOException, PortalException, SystemException;
+	public ObjectValuePair<String, InputStream> getFileAsOVPStream(
+			long companyId, long fileId, String fileName)
+		throws IOException, PortalException, SystemException;
 
 	/**
 	 * Returns the OSGi service identifier.

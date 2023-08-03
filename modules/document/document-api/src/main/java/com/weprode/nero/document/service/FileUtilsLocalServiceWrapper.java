@@ -130,12 +130,12 @@ public class FileUtilsLocalServiceWrapper
 	@Override
 	public String getDisplayUrl(
 			com.liferay.portal.kernel.repository.model.FileEntry file,
-			long versionId, String typeOfView, long userId, boolean readOnly)
+			long versionId, long userId, boolean readOnly)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _fileUtilsLocalService.getDisplayUrl(
-			file, versionId, typeOfView, userId, readOnly);
+			file, versionId, userId, readOnly);
 	}
 
 	@Override

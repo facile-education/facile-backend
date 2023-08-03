@@ -82,7 +82,7 @@ public class UserMobileTokenServiceImpl extends UserMobileTokenServiceBaseImpl {
 		logger.info("refreshUserMobileToken for userId=" + user.getUserId() + " and token " + token);
 		String refreshToken = UserMobileTokenLocalServiceUtil.refreshMobileToken(user.getUserId(), token);
 		result.put(JSONConstants.REFRESH_TOKEN, refreshToken);
-		result.put(JSONConstants.SUCCESS, true);
+		result.put(JSONConstants.SUCCESS, !refreshToken.equals(""));
 		return result;
 	}
 

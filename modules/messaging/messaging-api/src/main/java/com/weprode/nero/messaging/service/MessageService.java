@@ -113,7 +113,7 @@ public interface MessageService extends BaseService {
 	@JSONWebService(method = "POST", value = "save-draft")
 	public JSONObject saveDraft(
 		String recipients, String subject, String content, String attachedFiles,
-		long draftMessageId, boolean isSupport);
+		long draftMessageId, long threadId, boolean isSupport);
 
 	@JSONWebService(method = "POST", value = "send-assistance-message")
 	public JSONObject sendAssistanceMessage(

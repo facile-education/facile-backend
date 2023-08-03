@@ -32,7 +32,6 @@ public class UserMobileTokenSoap implements Serializable {
 	public static UserMobileTokenSoap toSoapModel(UserMobileToken model) {
 		UserMobileTokenSoap soapModel = new UserMobileTokenSoap();
 
-		soapModel.setUserMobileTokenId(model.getUserMobileTokenId());
 		soapModel.setUserId(model.getUserId());
 		soapModel.setMobileToken(model.getMobileToken());
 
@@ -87,19 +86,11 @@ public class UserMobileTokenSoap implements Serializable {
 	}
 
 	public long getPrimaryKey() {
-		return _userMobileTokenId;
+		return _userId;
 	}
 
 	public void setPrimaryKey(long pk) {
-		setUserMobileTokenId(pk);
-	}
-
-	public long getUserMobileTokenId() {
-		return _userMobileTokenId;
-	}
-
-	public void setUserMobileTokenId(long userMobileTokenId) {
-		_userMobileTokenId = userMobileTokenId;
+		setUserId(pk);
 	}
 
 	public long getUserId() {
@@ -118,7 +109,6 @@ public class UserMobileTokenSoap implements Serializable {
 		_mobileToken = mobileToken;
 	}
 
-	private long _userMobileTokenId;
 	private long _userId;
 	private String _mobileToken;
 

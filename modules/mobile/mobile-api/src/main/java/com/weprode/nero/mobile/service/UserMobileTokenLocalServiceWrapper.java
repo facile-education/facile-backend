@@ -71,15 +71,14 @@ public class UserMobileTokenLocalServiceWrapper
 	/**
 	 * Creates a new user mobile token with the primary key. Does not add the user mobile token to the database.
 	 *
-	 * @param userMobileTokenId the primary key for the new user mobile token
+	 * @param userId the primary key for the new user mobile token
 	 * @return the new user mobile token
 	 */
 	@Override
 	public com.weprode.nero.mobile.model.UserMobileToken createUserMobileToken(
-		long userMobileTokenId) {
+		long userId) {
 
-		return _userMobileTokenLocalService.createUserMobileToken(
-			userMobileTokenId);
+		return _userMobileTokenLocalService.createUserMobileToken(userId);
 	}
 
 	/**
@@ -101,17 +100,16 @@ public class UserMobileTokenLocalServiceWrapper
 	 * <strong>Important:</strong> Inspect UserMobileTokenLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token that was removed
 	 * @throws PortalException if a user mobile token with the primary key could not be found
 	 */
 	@Override
 	public com.weprode.nero.mobile.model.UserMobileToken deleteUserMobileToken(
-			long userMobileTokenId)
+			long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _userMobileTokenLocalService.deleteUserMobileToken(
-			userMobileTokenId);
+		return _userMobileTokenLocalService.deleteUserMobileToken(userId);
 	}
 
 	/**
@@ -237,10 +235,9 @@ public class UserMobileTokenLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.mobile.model.UserMobileToken fetchUserMobileToken(
-		long userMobileTokenId) {
+		long userId) {
 
-		return _userMobileTokenLocalService.fetchUserMobileToken(
-			userMobileTokenId);
+		return _userMobileTokenLocalService.fetchUserMobileToken(userId);
 	}
 
 	@Override
@@ -282,17 +279,16 @@ public class UserMobileTokenLocalServiceWrapper
 	/**
 	 * Returns the user mobile token with the primary key.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token
 	 * @throws PortalException if a user mobile token with the primary key could not be found
 	 */
 	@Override
 	public com.weprode.nero.mobile.model.UserMobileToken getUserMobileToken(
-			long userMobileTokenId)
+			long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _userMobileTokenLocalService.getUserMobileToken(
-			userMobileTokenId);
+		return _userMobileTokenLocalService.getUserMobileToken(userId);
 	}
 
 	/**

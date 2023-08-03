@@ -264,7 +264,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		if (access.getThumbnailId() != 0) {
 			try {
 				FileEntry thumbnailFileEntry = DLAppServiceUtil.getFileEntry(access.getThumbnailId());
-				jsonAccess.put(AccessConstants.THUMBNAIL_URL, FileUtilsLocalServiceUtil.getDisplayUrl(thumbnailFileEntry, 0, "", 0, true)); // assume we don't need userId to get image url
+				jsonAccess.put(AccessConstants.THUMBNAIL_URL, FileUtilsLocalServiceUtil.getDisplayUrl(thumbnailFileEntry, 0, 0, true)); // assume we don't need userId to get image url
 			} catch (Exception e) {
 				logger.error("Cannot retrieve thumbnail for access " + access.getAccessId() + ", thumbnail fileId = " + access.getThumbnailId(), e);
 			}

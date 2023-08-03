@@ -121,143 +121,6 @@ public class UserMobileTokenUtil {
 	}
 
 	/**
-	 * Returns the user mobile token where userMobileTokenId = &#63; or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @return the matching user mobile token
-	 * @throws NoSuchUserMobileTokenException if a matching user mobile token could not be found
-	 */
-	public static UserMobileToken findByuserMobileTokenId(
-			long userMobileTokenId)
-		throws com.weprode.nero.mobile.exception.
-			NoSuchUserMobileTokenException {
-
-		return getPersistence().findByuserMobileTokenId(userMobileTokenId);
-	}
-
-	/**
-	 * Returns the user mobile token where userMobileTokenId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
-	 */
-	public static UserMobileToken fetchByuserMobileTokenId(
-		long userMobileTokenId) {
-
-		return getPersistence().fetchByuserMobileTokenId(userMobileTokenId);
-	}
-
-	/**
-	 * Returns the user mobile token where userMobileTokenId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
-	 */
-	public static UserMobileToken fetchByuserMobileTokenId(
-		long userMobileTokenId, boolean useFinderCache) {
-
-		return getPersistence().fetchByuserMobileTokenId(
-			userMobileTokenId, useFinderCache);
-	}
-
-	/**
-	 * Removes the user mobile token where userMobileTokenId = &#63; from the database.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @return the user mobile token that was removed
-	 */
-	public static UserMobileToken removeByuserMobileTokenId(
-			long userMobileTokenId)
-		throws com.weprode.nero.mobile.exception.
-			NoSuchUserMobileTokenException {
-
-		return getPersistence().removeByuserMobileTokenId(userMobileTokenId);
-	}
-
-	/**
-	 * Returns the number of user mobile tokens where userMobileTokenId = &#63;.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @return the number of matching user mobile tokens
-	 */
-	public static int countByuserMobileTokenId(long userMobileTokenId) {
-		return getPersistence().countByuserMobileTokenId(userMobileTokenId);
-	}
-
-	/**
-	 * Returns the user mobile token where userId = &#63; and mobileToken = &#63; or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @return the matching user mobile token
-	 * @throws NoSuchUserMobileTokenException if a matching user mobile token could not be found
-	 */
-	public static UserMobileToken findByuserId_mobileToken(
-			long userId, String mobileToken)
-		throws com.weprode.nero.mobile.exception.
-			NoSuchUserMobileTokenException {
-
-		return getPersistence().findByuserId_mobileToken(userId, mobileToken);
-	}
-
-	/**
-	 * Returns the user mobile token where userId = &#63; and mobileToken = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
-	 */
-	public static UserMobileToken fetchByuserId_mobileToken(
-		long userId, String mobileToken) {
-
-		return getPersistence().fetchByuserId_mobileToken(userId, mobileToken);
-	}
-
-	/**
-	 * Returns the user mobile token where userId = &#63; and mobileToken = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
-	 */
-	public static UserMobileToken fetchByuserId_mobileToken(
-		long userId, String mobileToken, boolean useFinderCache) {
-
-		return getPersistence().fetchByuserId_mobileToken(
-			userId, mobileToken, useFinderCache);
-	}
-
-	/**
-	 * Removes the user mobile token where userId = &#63; and mobileToken = &#63; from the database.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @return the user mobile token that was removed
-	 */
-	public static UserMobileToken removeByuserId_mobileToken(
-			long userId, String mobileToken)
-		throws com.weprode.nero.mobile.exception.
-			NoSuchUserMobileTokenException {
-
-		return getPersistence().removeByuserId_mobileToken(userId, mobileToken);
-	}
-
-	/**
-	 * Returns the number of user mobile tokens where userId = &#63; and mobileToken = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @return the number of matching user mobile tokens
-	 */
-	public static int countByuserId_mobileToken(
-		long userId, String mobileToken) {
-
-		return getPersistence().countByuserId_mobileToken(userId, mobileToken);
-	}
-
-	/**
 	 * Caches the user mobile token in the entity cache if it is enabled.
 	 *
 	 * @param userMobileToken the user mobile token
@@ -278,25 +141,25 @@ public class UserMobileTokenUtil {
 	/**
 	 * Creates a new user mobile token with the primary key. Does not add the user mobile token to the database.
 	 *
-	 * @param userMobileTokenId the primary key for the new user mobile token
+	 * @param userId the primary key for the new user mobile token
 	 * @return the new user mobile token
 	 */
-	public static UserMobileToken create(long userMobileTokenId) {
-		return getPersistence().create(userMobileTokenId);
+	public static UserMobileToken create(long userId) {
+		return getPersistence().create(userId);
 	}
 
 	/**
 	 * Removes the user mobile token with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token that was removed
 	 * @throws NoSuchUserMobileTokenException if a user mobile token with the primary key could not be found
 	 */
-	public static UserMobileToken remove(long userMobileTokenId)
+	public static UserMobileToken remove(long userId)
 		throws com.weprode.nero.mobile.exception.
 			NoSuchUserMobileTokenException {
 
-		return getPersistence().remove(userMobileTokenId);
+		return getPersistence().remove(userId);
 	}
 
 	public static UserMobileToken updateImpl(UserMobileToken userMobileToken) {
@@ -306,25 +169,25 @@ public class UserMobileTokenUtil {
 	/**
 	 * Returns the user mobile token with the primary key or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token
 	 * @throws NoSuchUserMobileTokenException if a user mobile token with the primary key could not be found
 	 */
-	public static UserMobileToken findByPrimaryKey(long userMobileTokenId)
+	public static UserMobileToken findByPrimaryKey(long userId)
 		throws com.weprode.nero.mobile.exception.
 			NoSuchUserMobileTokenException {
 
-		return getPersistence().findByPrimaryKey(userMobileTokenId);
+		return getPersistence().findByPrimaryKey(userId);
 	}
 
 	/**
 	 * Returns the user mobile token with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token, or <code>null</code> if a user mobile token with the primary key could not be found
 	 */
-	public static UserMobileToken fetchByPrimaryKey(long userMobileTokenId) {
-		return getPersistence().fetchByPrimaryKey(userMobileTokenId);
+	public static UserMobileToken fetchByPrimaryKey(long userId) {
+		return getPersistence().fetchByPrimaryKey(userId);
 	}
 
 	/**

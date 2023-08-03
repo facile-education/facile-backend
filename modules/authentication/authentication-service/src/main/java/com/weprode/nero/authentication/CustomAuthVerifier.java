@@ -36,19 +36,17 @@ public class CustomAuthVerifier implements AuthVerifier {
             if (credentials != null) {
                 long userId = Long.parseLong(credentials[0]);
                 User user = UserLocalServiceUtil.getUser(userId);
-                logger.info("USER connected is " + user.getFullName());
+                logger.info("Connected user is " + user.getFullName());
                 authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
                 authVerifierResult.setPasswordBasedAuthentication(true);
                 authVerifierResult.setUserId(userId);
                 authVerifierResult.setPassword(credentials[1]);
             } else {
-                logger.info("User is not connected through Shibboleth -> test mobile app");
                 credentials = new MobileApplicationAutoLogin().login(accessControlContext.getRequest(), accessControlContext.getResponse());
                 if (credentials != null) {
-                    logger.info("User seems to be authenticated on mobile app");
                     long userId = Long.parseLong(credentials[0]);
                     User user = UserLocalServiceUtil.getUser(userId);
-                    logger.info("USER connected on mobile app is " + user.getFullName());
+                    logger.info("Connected user on mobile app is " + user.getFullName());
                     authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
                     authVerifierResult.setPasswordBasedAuthentication(true);
                     authVerifierResult.setUserId(userId);

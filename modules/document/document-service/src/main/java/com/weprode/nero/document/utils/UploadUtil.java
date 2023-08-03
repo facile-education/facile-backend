@@ -71,7 +71,6 @@ public class UploadUtil {
                     String documentURL = FileUtilsLocalServiceUtil.getDisplayUrl(
                             uploadedFile,
                             uploadedFile.getLatestFileVersion().getFileVersionId(),
-                            SupportedExtensions.getTypeOfView(uploadedFile.getExtension()),
                             user.getUserId(),
                             true
                     );

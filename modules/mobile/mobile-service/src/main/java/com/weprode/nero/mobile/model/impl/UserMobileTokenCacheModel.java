@@ -47,7 +47,7 @@ public class UserMobileTokenCacheModel
 		UserMobileTokenCacheModel userMobileTokenCacheModel =
 			(UserMobileTokenCacheModel)object;
 
-		if (userMobileTokenId == userMobileTokenCacheModel.userMobileTokenId) {
+		if (userId == userMobileTokenCacheModel.userId) {
 			return true;
 		}
 
@@ -56,16 +56,14 @@ public class UserMobileTokenCacheModel
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, userMobileTokenId);
+		return HashUtil.hash(0, userId);
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(5);
 
-		sb.append("{userMobileTokenId=");
-		sb.append(userMobileTokenId);
-		sb.append(", userId=");
+		sb.append("{userId=");
 		sb.append(userId);
 		sb.append(", mobileToken=");
 		sb.append(mobileToken);
@@ -78,7 +76,6 @@ public class UserMobileTokenCacheModel
 	public UserMobileToken toEntityModel() {
 		UserMobileTokenImpl userMobileTokenImpl = new UserMobileTokenImpl();
 
-		userMobileTokenImpl.setUserMobileTokenId(userMobileTokenId);
 		userMobileTokenImpl.setUserId(userId);
 
 		if (mobileToken == null) {
@@ -95,16 +92,12 @@ public class UserMobileTokenCacheModel
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
-		userMobileTokenId = objectInput.readLong();
-
 		userId = objectInput.readLong();
 		mobileToken = objectInput.readUTF();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
-		objectOutput.writeLong(userMobileTokenId);
-
 		objectOutput.writeLong(userId);
 
 		if (mobileToken == null) {
@@ -115,7 +108,6 @@ public class UserMobileTokenCacheModel
 		}
 	}
 
-	public long userMobileTokenId;
 	public long userId;
 	public String mobileToken;
 

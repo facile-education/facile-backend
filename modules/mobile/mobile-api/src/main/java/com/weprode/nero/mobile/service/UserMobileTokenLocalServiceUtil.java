@@ -79,13 +79,11 @@ public class UserMobileTokenLocalServiceUtil {
 	/**
 	 * Creates a new user mobile token with the primary key. Does not add the user mobile token to the database.
 	 *
-	 * @param userMobileTokenId the primary key for the new user mobile token
+	 * @param userId the primary key for the new user mobile token
 	 * @return the new user mobile token
 	 */
-	public static UserMobileToken createUserMobileToken(
-		long userMobileTokenId) {
-
-		return getService().createUserMobileToken(userMobileTokenId);
+	public static UserMobileToken createUserMobileToken(long userId) {
+		return getService().createUserMobileToken(userId);
 	}
 
 	/**
@@ -105,14 +103,14 @@ public class UserMobileTokenLocalServiceUtil {
 	 * <strong>Important:</strong> Inspect UserMobileTokenLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token that was removed
 	 * @throws PortalException if a user mobile token with the primary key could not be found
 	 */
-	public static UserMobileToken deleteUserMobileToken(long userMobileTokenId)
+	public static UserMobileToken deleteUserMobileToken(long userId)
 		throws PortalException {
 
-		return getService().deleteUserMobileToken(userMobileTokenId);
+		return getService().deleteUserMobileToken(userId);
 	}
 
 	/**
@@ -216,8 +214,8 @@ public class UserMobileTokenLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static UserMobileToken fetchUserMobileToken(long userMobileTokenId) {
-		return getService().fetchUserMobileToken(userMobileTokenId);
+	public static UserMobileToken fetchUserMobileToken(long userId) {
+		return getService().fetchUserMobileToken(userId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
@@ -254,14 +252,14 @@ public class UserMobileTokenLocalServiceUtil {
 	/**
 	 * Returns the user mobile token with the primary key.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token
 	 * @throws PortalException if a user mobile token with the primary key could not be found
 	 */
-	public static UserMobileToken getUserMobileToken(long userMobileTokenId)
+	public static UserMobileToken getUserMobileToken(long userId)
 		throws PortalException {
 
-		return getService().getUserMobileToken(userMobileTokenId);
+		return getService().getUserMobileToken(userId);
 	}
 
 	/**

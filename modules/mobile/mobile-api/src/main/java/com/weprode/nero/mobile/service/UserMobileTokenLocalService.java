@@ -86,11 +86,11 @@ public interface UserMobileTokenLocalService
 	/**
 	 * Creates a new user mobile token with the primary key. Does not add the user mobile token to the database.
 	 *
-	 * @param userMobileTokenId the primary key for the new user mobile token
+	 * @param userId the primary key for the new user mobile token
 	 * @return the new user mobile token
 	 */
 	@Transactional(enabled = false)
-	public UserMobileToken createUserMobileToken(long userMobileTokenId);
+	public UserMobileToken createUserMobileToken(long userId);
 
 	/**
 	 * @throws PortalException
@@ -106,12 +106,12 @@ public interface UserMobileTokenLocalService
 	 * <strong>Important:</strong> Inspect UserMobileTokenLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token that was removed
 	 * @throws PortalException if a user mobile token with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public UserMobileToken deleteUserMobileToken(long userMobileTokenId)
+	public UserMobileToken deleteUserMobileToken(long userId)
 		throws PortalException;
 
 	/**
@@ -201,7 +201,7 @@ public interface UserMobileTokenLocalService
 		DynamicQuery dynamicQuery, Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public UserMobileToken fetchUserMobileToken(long userMobileTokenId);
+	public UserMobileToken fetchUserMobileToken(long userId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -227,12 +227,12 @@ public interface UserMobileTokenLocalService
 	/**
 	 * Returns the user mobile token with the primary key.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token
 	 * @throws PortalException if a user mobile token with the primary key could not be found
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public UserMobileToken getUserMobileToken(long userMobileTokenId)
+	public UserMobileToken getUserMobileToken(long userId)
 		throws PortalException;
 
 	/**
