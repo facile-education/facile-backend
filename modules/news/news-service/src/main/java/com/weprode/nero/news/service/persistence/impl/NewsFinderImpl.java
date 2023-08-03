@@ -30,6 +30,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
     private CustomSQL customSQL;
 
     public static final String GET_NEWS_ACTIVITIES = NewsFinder.class.getName() + ".getNewsActivities";
+    public static final String GET_GROUP_ACTIVITIES = NewsFinder.class.getName() + ".getGroupActivities";
     public static final String GET_NEWS = NewsFinder.class.getName() + ".getNews";
     public static final String GET_NEWS_COUNT = NewsFinder.class.getName() + ".getNewsCount";
 
@@ -149,6 +150,39 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             qPos.add(sdf.format(maxDate));
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
+            qPos.add(nbNews);
+
+            return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+        } catch (Exception e) {
+            logger.error("Error while fetching news", e);
+        } finally {
+            closeSession(session);
+        }
+
+        return Collections.emptyList();
+    }
+
+    public List<News> getGroupActivities(long userId, long groupId, List<Long> roleIds, Date minDate, Date maxDate, int nbNews) {
+        Session session = null;
+
+        try {
+            session = openSession();
+
+            String sql = customSQL.get(getClass(), GET_GROUP_ACTIVITIES);
+            sql = StringUtil.replace(sql, "[$ROLE_IDS$]", buildIdList(roleIds));
+            logger.debug("News activity sql = " + sql);
+
+            SQLQuery q = session.createSQLQuery(sql);
+            q.addEntity("News_News", NewsImpl.class);
+
+            QueryPos qPos = QueryPos.getInstance(q);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            qPos.add(sdf.format(minDate));
+            qPos.add(sdf.format(maxDate));
+            qPos.add(groupId);
+            qPos.add(userId);
             qPos.add(nbNews);
 
             return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);

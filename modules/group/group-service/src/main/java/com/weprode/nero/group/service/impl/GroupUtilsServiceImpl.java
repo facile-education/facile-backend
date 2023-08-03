@@ -160,6 +160,9 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 if (filter.equals("") || containsIgnoreCase(group.getName(), filter)) {
                     JSONObject jsonGroup = new JSONObject();
                     CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(group.getGroupId());
+                    if (communityInfos.getStatus() == WorkflowConstants.STATUS_EXPIRED) {
+                        continue;
+                    }
                     jsonGroup.put(JSONConstants.GROUP_ID, group.getGroupId());
                     jsonGroup.put(JSONConstants.GROUP_NAME, group.getName(user.getLocale()));
                     jsonGroup.put(JSONConstants.DESCRIPTION, group.getDescription(user.getLocale()));
@@ -207,8 +210,10 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 organizations = UserOrgsLocalServiceUtil.getUserOrganizations(user.getUserId(), types, false, OrgConstants.ALL_SCHOOLS_ID);
             }
 
-            // Doyens, psy and conseillers sociaux see their classes
-            organizations.addAll(UserOrgsLocalServiceUtil.getRoleAffectedClasses(user));
+            if (!allClasses && !allCours && !allCommunities) {
+                // Doyens, psy and conseillers sociaux see their classes
+                organizations.addAll(UserOrgsLocalServiceUtil.getRoleAffectedClasses(user));
+            }
 
             for (Organization org : organizations) {
                 if (filter.equals("") || containsIgnoreCase(org.getName(),filter)) {

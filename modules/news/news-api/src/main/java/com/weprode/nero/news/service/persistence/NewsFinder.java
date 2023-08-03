@@ -38,4 +38,8 @@ public interface NewsFinder {
 		java.util.List<Long> roleIds, java.util.Date minDate,
 		java.util.Date maxDate, int nbNews, boolean groupNewsOnly);
 
+	public java.util.List<com.weprode.nero.news.model.News> getGroupActivities(
+		long userId, long groupId, java.util.List<Long> roleIds,
+		java.util.Date minDate, java.util.Date maxDate, int nbNews);
+
 }

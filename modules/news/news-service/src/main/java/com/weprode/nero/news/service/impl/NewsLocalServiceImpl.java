@@ -244,11 +244,11 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         List<Long> groupIds = new ArrayList<>();
         if (groupId == 0) {
             groupIds.addAll(UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()));
+            return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews, groupNewsOnly);
         } else {
             groupIds.add(groupId);
+            return newsFinder.getGroupActivities(user.getUserId(), groupId, roleIds, minDate, maxDate, nbNews);
         }
-
-        return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews, groupNewsOnly);
     }
 
 
