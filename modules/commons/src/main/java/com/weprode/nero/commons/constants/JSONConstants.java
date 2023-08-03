@@ -305,6 +305,7 @@ public class JSONConstants {
     public static final String TO_DATE = "toDate";
     public static final String SOURCE_SESSION_ID = "sourceSessionId";
     public static final String TARGET_SESSION_ID = "targetSessionId";
+    public static final String TARGET_SLOT_NUMBER = "targetSlotNumber";
     public static final String IS_SENT = "isSent";
     public static final String SENT_DATE = "sentDate";
     public static final String SENT_FILE_ID = "sentFileId";
