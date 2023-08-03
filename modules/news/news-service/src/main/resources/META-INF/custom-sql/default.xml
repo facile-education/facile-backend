@@ -43,7 +43,7 @@
 	        SELECT DISTINCT news.*
         	FROM News_News news
 			JOIN News_NewsPopulation pop ON news.newsId = pop.newsId
-			WHERE news.publicationDate between ? AND ?
+			WHERE ( news.publicationDate >= ? AND news.publicationDate < ? )
 			AND pop.groupId = ? AND (news.authorId = ? OR pop.roleId IN ([$ROLE_IDS$]))
 			GROUP BY news.newsId
 			ORDER BY news.publicationDate DESC
