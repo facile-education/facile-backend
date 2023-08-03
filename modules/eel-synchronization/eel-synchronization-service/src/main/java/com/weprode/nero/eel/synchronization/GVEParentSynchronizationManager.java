@@ -736,7 +736,7 @@ public class GVEParentSynchronizationManager {
 
             String subject = "Bienvenue dans votre environnement digital \u00e9ducatif";
             String content = "Ch\u00e8re Madame, cher Monsieur,</br></br>" +
-                    "La plateforme Pentila N\u00e9ro assure le prolongement num\u00e9rique de l'\u00e9tablissement scolaire de votre.vos enfant.s.</br>" +
+                    "La plateforme FACILE assure le prolongement num\u00e9rique de l'\u00e9tablissement scolaire de votre.vos enfant.s.</br>" +
                     "Il vous propose un espace priv\u00e9 et s\u00e9curis\u00e9 o\u00f9 vous pourrez suivre la vie de l'\u00e9tablissement et de la classe de votre.vos enfant.s.</br>" +
                     "Il repr\u00e9sente surtout votre moyen de communication privil\u00e9gi\u00e9 avec l'\u00e9cole,  les enseignant.e.s et le personnel encadrant.</br>" +
                     "N'h\u00e9sitez pas \u00e0 consulter le service d'aide accessible en haut \u00e0 droite de votre \u00e9cran sous le \" ? \" pour r\u00e9pondre \u00e0 vos \u00e9ventuelles questions.</br></br>" +

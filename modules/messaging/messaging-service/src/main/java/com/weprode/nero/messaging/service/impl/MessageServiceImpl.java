@@ -478,7 +478,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
     }
 
     @JSONWebService(value = "save-draft", method = "POST")
-    public JSONObject saveDraft(String recipients, String subject, String content, String attachedFiles, long draftMessageId, boolean isSupport) {
+    public JSONObject saveDraft(String recipients, String subject, String content, String attachedFiles, long draftMessageId, long threadId, boolean isSupport) {
         JSONObject result = new JSONObject();
 
         User user;
@@ -504,7 +504,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             JSONArray jsonRecipients = new JSONArray(recipients);
             List<Long> recipientList = ContactLocalServiceUtil.getRecipients(jsonRecipients, user);
 
-            MessageLocalServiceUtil.saveDraft(user.getUserId(), draftMessageId, subject, content, recipientList, attachFileIds, isSupport);
+            MessageLocalServiceUtil.saveDraft(user.getUserId(), draftMessageId, subject, content, recipientList, attachFileIds, threadId, isSupport);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Error when user " + user.getUserId() + " is saving draft", e);

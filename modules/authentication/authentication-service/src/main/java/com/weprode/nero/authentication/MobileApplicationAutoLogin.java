@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.security.auto.login.AutoLoginException;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
@@ -22,6 +23,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.net.URL;
 
 @Component(immediate = true)
 public class MobileApplicationAutoLogin implements AutoLogin {
@@ -32,31 +34,48 @@ public class MobileApplicationAutoLogin implements AutoLogin {
             HttpServletRequest request, HttpServletResponse response) throws AutoLoginException{
 
         HttpSession session = request.getSession();
-        String[] credentials = null;
+        String[] credentials;
 
         try {
-            long userId = ParamUtil.getLong(request, "user_id", 0);
-            boolean mobileApp = ParamUtil.getBoolean(request, "mobile_app", false);
-            String mobileToken = ParamUtil.getString(request, "mobile_token", "");
+            String referer = request.getHeader("Referer");
+            if (referer == null || !referer.contains("mobile_token")) {
+                return null;
+            }
+            logger.info("referer = " + referer);
+
+            String mobileToken = "";
+            long userId = 0;
+
+            URL url = new URL(referer);
+            String query = url.getQuery();
+            String[] queryTab = query.split("&");
+            for (String param : queryTab) {
+                String[] paramTab = param.split("=");
+                String paramName = paramTab[0];
+                String paramValue = paramTab[1];
+                if (paramName.equals("mobile_token")) {
+                    mobileToken = paramValue;
+                }
+                if (paramName.equals("user_id")) {
+                    userId = Long.parseLong(paramValue);
+                }
+            }
+
             String service = ParamUtil.getString(request, "service", "");
-            logger.info("MobileApplicationAutoLogin : userId="+userId+", mobileToken="+mobileToken + ", mobile_app=" + mobileApp + ", service="+service);
+            logger.info("MobileApplicationAutoLogin : userId="+userId+", mobileToken="+mobileToken + ", service="+service);
 
             if (!mobileToken.isEmpty() && userId > 0) {
                 if (UserMobileTokenLocalServiceUtil.hasUserMobileToken(userId, mobileToken)) {
                     User user = UserLocalServiceUtil.getUserById(userId);
-                    logger.info("Logged user " + user.getFullName() + " with mobile token !");
 
                     credentials = new String[3];
                     credentials[0] = String.valueOf(user.getUserId());
                     credentials[1] = user.getPassword();
                     credentials[2] = Boolean.TRUE.toString();
 
-                    //setCookies(request, response, user.getUserId(), PortalUtil.getCompany(request),
-                    //        String.valueOf(user.getUserId()), user.getPassword());
+                    setCookies(request, response, user.getUserId(), PortalUtil.getCompany(request),
+                            String.valueOf(user.getUserId()), user.getPassword());
                     logger.info("User  " + user.getFullName() + "(" + user.getUserId() + ") authenticated on mobile application.");
-
-//                    String redirect = "/tableau-de-bord";
-//                    request.setAttribute(AutoLogin.AUTO_LOGIN_REDIRECT, redirect);
 
                     return credentials;
                 } else {
@@ -64,7 +83,7 @@ public class MobileApplicationAutoLogin implements AutoLogin {
                     Object noSuchUserException = session.getAttribute(WebKeys.CAS_NO_SUCH_USER_EXCEPTION);
 
                     if (noSuchUserException == null) {
-                        return credentials;
+                        return null;
                     }
 
                     session.removeAttribute(WebKeys.CAS_NO_SUCH_USER_EXCEPTION);
@@ -73,21 +92,11 @@ public class MobileApplicationAutoLogin implements AutoLogin {
                     String redirect = "/login";
                     request.setAttribute(AutoLogin.AUTO_LOGIN_REDIRECT, redirect);
 
-                    return credentials;
+                    return null;
                 }
             } else {
-                return credentials;
+                return null;
             }
-
-            // Redirect
-//            String redirect = "/login"; //?mobile_app=" + mobileApp + "&mobile_token=" + mobileToken;
-//            if (!service.isEmpty()) {
-//                redirect += "&service=" + URLEncoder.encode(service, StandardCharsets.UTF_8);
-//            }
-//            logger.info("Redirecting to " + redirect);
-//            response.sendRedirect(redirect);
-
-//            return credentials;
 
         }
         catch (NoSuchUserException nsue) {
@@ -96,7 +105,7 @@ public class MobileApplicationAutoLogin implements AutoLogin {
             throw new AutoLoginException(nsue);
         }
         catch (Exception e) {
-            logger.error(e, e);
+            logger.error("Error in MobileApplicationAutoLogin", e);
             throw new AutoLoginException(e);
         }
     }
@@ -105,8 +114,7 @@ public class MobileApplicationAutoLogin implements AutoLogin {
     public void setCookies (HttpServletRequest request, HttpServletResponse response, long userId,
                                    Company company, String login, String password) throws Exception {
         // Set cookies
-        logger.info("LoginUtil : set cookies, userId = " + userId + ", companyId = " + company.getCompanyId() + ", login = " +login +
-                ", password = " + password);
+        //logger.info("LoginUtil : set cookies, userId = " + userId + ", companyId = " + company.getCompanyId() + ", login = " +login + ", password = " + password);
         HttpSession session = request.getSession();
 
         String domain = CookieKeys.getDomain(request);

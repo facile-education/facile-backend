@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
-import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
@@ -32,8 +31,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.ProxyUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.mobile.exception.NoSuchUserMobileTokenException;
 import com.weprode.nero.mobile.model.UserMobileToken;
@@ -47,12 +44,9 @@ import com.weprode.nero.mobile.service.persistence.impl.constants.MobilePersiste
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -94,495 +88,6 @@ public class UserMobileTokenPersistenceImpl
 	private FinderPath _finderPathWithPaginationFindAll;
 	private FinderPath _finderPathWithoutPaginationFindAll;
 	private FinderPath _finderPathCountAll;
-	private FinderPath _finderPathFetchByuserMobileTokenId;
-	private FinderPath _finderPathCountByuserMobileTokenId;
-
-	/**
-	 * Returns the user mobile token where userMobileTokenId = &#63; or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @return the matching user mobile token
-	 * @throws NoSuchUserMobileTokenException if a matching user mobile token could not be found
-	 */
-	@Override
-	public UserMobileToken findByuserMobileTokenId(long userMobileTokenId)
-		throws NoSuchUserMobileTokenException {
-
-		UserMobileToken userMobileToken = fetchByuserMobileTokenId(
-			userMobileTokenId);
-
-		if (userMobileToken == null) {
-			StringBundler sb = new StringBundler(4);
-
-			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-			sb.append("userMobileTokenId=");
-			sb.append(userMobileTokenId);
-
-			sb.append("}");
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(sb.toString());
-			}
-
-			throw new NoSuchUserMobileTokenException(sb.toString());
-		}
-
-		return userMobileToken;
-	}
-
-	/**
-	 * Returns the user mobile token where userMobileTokenId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
-	 */
-	@Override
-	public UserMobileToken fetchByuserMobileTokenId(long userMobileTokenId) {
-		return fetchByuserMobileTokenId(userMobileTokenId, true);
-	}
-
-	/**
-	 * Returns the user mobile token where userMobileTokenId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
-	 */
-	@Override
-	public UserMobileToken fetchByuserMobileTokenId(
-		long userMobileTokenId, boolean useFinderCache) {
-
-		Object[] finderArgs = null;
-
-		if (useFinderCache) {
-			finderArgs = new Object[] {userMobileTokenId};
-		}
-
-		Object result = null;
-
-		if (useFinderCache) {
-			result = finderCache.getResult(
-				_finderPathFetchByuserMobileTokenId, finderArgs);
-		}
-
-		if (result instanceof UserMobileToken) {
-			UserMobileToken userMobileToken = (UserMobileToken)result;
-
-			if (userMobileTokenId != userMobileToken.getUserMobileTokenId()) {
-				result = null;
-			}
-		}
-
-		if (result == null) {
-			StringBundler sb = new StringBundler(3);
-
-			sb.append(_SQL_SELECT_USERMOBILETOKEN_WHERE);
-
-			sb.append(_FINDER_COLUMN_USERMOBILETOKENID_USERMOBILETOKENID_2);
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(userMobileTokenId);
-
-				List<UserMobileToken> list = query.list();
-
-				if (list.isEmpty()) {
-					if (useFinderCache) {
-						finderCache.putResult(
-							_finderPathFetchByuserMobileTokenId, finderArgs,
-							list);
-					}
-				}
-				else {
-					if (list.size() > 1) {
-						Collections.sort(list, Collections.reverseOrder());
-
-						if (_log.isWarnEnabled()) {
-							if (!useFinderCache) {
-								finderArgs = new Object[] {userMobileTokenId};
-							}
-
-							_log.warn(
-								"UserMobileTokenPersistenceImpl.fetchByuserMobileTokenId(long, boolean) with parameters (" +
-									StringUtil.merge(finderArgs) +
-										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
-						}
-					}
-
-					UserMobileToken userMobileToken = list.get(0);
-
-					result = userMobileToken;
-
-					cacheResult(userMobileToken);
-				}
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		if (result instanceof List<?>) {
-			return null;
-		}
-		else {
-			return (UserMobileToken)result;
-		}
-	}
-
-	/**
-	 * Removes the user mobile token where userMobileTokenId = &#63; from the database.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @return the user mobile token that was removed
-	 */
-	@Override
-	public UserMobileToken removeByuserMobileTokenId(long userMobileTokenId)
-		throws NoSuchUserMobileTokenException {
-
-		UserMobileToken userMobileToken = findByuserMobileTokenId(
-			userMobileTokenId);
-
-		return remove(userMobileToken);
-	}
-
-	/**
-	 * Returns the number of user mobile tokens where userMobileTokenId = &#63;.
-	 *
-	 * @param userMobileTokenId the user mobile token ID
-	 * @return the number of matching user mobile tokens
-	 */
-	@Override
-	public int countByuserMobileTokenId(long userMobileTokenId) {
-		FinderPath finderPath = _finderPathCountByuserMobileTokenId;
-
-		Object[] finderArgs = new Object[] {userMobileTokenId};
-
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
-
-		if (count == null) {
-			StringBundler sb = new StringBundler(2);
-
-			sb.append(_SQL_COUNT_USERMOBILETOKEN_WHERE);
-
-			sb.append(_FINDER_COLUMN_USERMOBILETOKENID_USERMOBILETOKENID_2);
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(userMobileTokenId);
-
-				count = (Long)query.uniqueResult();
-
-				finderCache.putResult(finderPath, finderArgs, count);
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		return count.intValue();
-	}
-
-	private static final String
-		_FINDER_COLUMN_USERMOBILETOKENID_USERMOBILETOKENID_2 =
-			"userMobileToken.userMobileTokenId = ?";
-
-	private FinderPath _finderPathFetchByuserId_mobileToken;
-	private FinderPath _finderPathCountByuserId_mobileToken;
-
-	/**
-	 * Returns the user mobile token where userId = &#63; and mobileToken = &#63; or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @return the matching user mobile token
-	 * @throws NoSuchUserMobileTokenException if a matching user mobile token could not be found
-	 */
-	@Override
-	public UserMobileToken findByuserId_mobileToken(
-			long userId, String mobileToken)
-		throws NoSuchUserMobileTokenException {
-
-		UserMobileToken userMobileToken = fetchByuserId_mobileToken(
-			userId, mobileToken);
-
-		if (userMobileToken == null) {
-			StringBundler sb = new StringBundler(6);
-
-			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-			sb.append("userId=");
-			sb.append(userId);
-
-			sb.append(", mobileToken=");
-			sb.append(mobileToken);
-
-			sb.append("}");
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(sb.toString());
-			}
-
-			throw new NoSuchUserMobileTokenException(sb.toString());
-		}
-
-		return userMobileToken;
-	}
-
-	/**
-	 * Returns the user mobile token where userId = &#63; and mobileToken = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
-	 */
-	@Override
-	public UserMobileToken fetchByuserId_mobileToken(
-		long userId, String mobileToken) {
-
-		return fetchByuserId_mobileToken(userId, mobileToken, true);
-	}
-
-	/**
-	 * Returns the user mobile token where userId = &#63; and mobileToken = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
-	 */
-	@Override
-	public UserMobileToken fetchByuserId_mobileToken(
-		long userId, String mobileToken, boolean useFinderCache) {
-
-		mobileToken = Objects.toString(mobileToken, "");
-
-		Object[] finderArgs = null;
-
-		if (useFinderCache) {
-			finderArgs = new Object[] {userId, mobileToken};
-		}
-
-		Object result = null;
-
-		if (useFinderCache) {
-			result = finderCache.getResult(
-				_finderPathFetchByuserId_mobileToken, finderArgs);
-		}
-
-		if (result instanceof UserMobileToken) {
-			UserMobileToken userMobileToken = (UserMobileToken)result;
-
-			if ((userId != userMobileToken.getUserId()) ||
-				!Objects.equals(
-					mobileToken, userMobileToken.getMobileToken())) {
-
-				result = null;
-			}
-		}
-
-		if (result == null) {
-			StringBundler sb = new StringBundler(4);
-
-			sb.append(_SQL_SELECT_USERMOBILETOKEN_WHERE);
-
-			sb.append(_FINDER_COLUMN_USERID_MOBILETOKEN_USERID_2);
-
-			boolean bindMobileToken = false;
-
-			if (mobileToken.isEmpty()) {
-				sb.append(_FINDER_COLUMN_USERID_MOBILETOKEN_MOBILETOKEN_3);
-			}
-			else {
-				bindMobileToken = true;
-
-				sb.append(_FINDER_COLUMN_USERID_MOBILETOKEN_MOBILETOKEN_2);
-			}
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(userId);
-
-				if (bindMobileToken) {
-					queryPos.add(mobileToken);
-				}
-
-				List<UserMobileToken> list = query.list();
-
-				if (list.isEmpty()) {
-					if (useFinderCache) {
-						finderCache.putResult(
-							_finderPathFetchByuserId_mobileToken, finderArgs,
-							list);
-					}
-				}
-				else {
-					if (list.size() > 1) {
-						Collections.sort(list, Collections.reverseOrder());
-
-						if (_log.isWarnEnabled()) {
-							if (!useFinderCache) {
-								finderArgs = new Object[] {userId, mobileToken};
-							}
-
-							_log.warn(
-								"UserMobileTokenPersistenceImpl.fetchByuserId_mobileToken(long, String, boolean) with parameters (" +
-									StringUtil.merge(finderArgs) +
-										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
-						}
-					}
-
-					UserMobileToken userMobileToken = list.get(0);
-
-					result = userMobileToken;
-
-					cacheResult(userMobileToken);
-				}
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		if (result instanceof List<?>) {
-			return null;
-		}
-		else {
-			return (UserMobileToken)result;
-		}
-	}
-
-	/**
-	 * Removes the user mobile token where userId = &#63; and mobileToken = &#63; from the database.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @return the user mobile token that was removed
-	 */
-	@Override
-	public UserMobileToken removeByuserId_mobileToken(
-			long userId, String mobileToken)
-		throws NoSuchUserMobileTokenException {
-
-		UserMobileToken userMobileToken = findByuserId_mobileToken(
-			userId, mobileToken);
-
-		return remove(userMobileToken);
-	}
-
-	/**
-	 * Returns the number of user mobile tokens where userId = &#63; and mobileToken = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @param mobileToken the mobile token
-	 * @return the number of matching user mobile tokens
-	 */
-	@Override
-	public int countByuserId_mobileToken(long userId, String mobileToken) {
-		mobileToken = Objects.toString(mobileToken, "");
-
-		FinderPath finderPath = _finderPathCountByuserId_mobileToken;
-
-		Object[] finderArgs = new Object[] {userId, mobileToken};
-
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
-
-		if (count == null) {
-			StringBundler sb = new StringBundler(3);
-
-			sb.append(_SQL_COUNT_USERMOBILETOKEN_WHERE);
-
-			sb.append(_FINDER_COLUMN_USERID_MOBILETOKEN_USERID_2);
-
-			boolean bindMobileToken = false;
-
-			if (mobileToken.isEmpty()) {
-				sb.append(_FINDER_COLUMN_USERID_MOBILETOKEN_MOBILETOKEN_3);
-			}
-			else {
-				bindMobileToken = true;
-
-				sb.append(_FINDER_COLUMN_USERID_MOBILETOKEN_MOBILETOKEN_2);
-			}
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(userId);
-
-				if (bindMobileToken) {
-					queryPos.add(mobileToken);
-				}
-
-				count = (Long)query.uniqueResult();
-
-				finderCache.putResult(finderPath, finderArgs, count);
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		return count.intValue();
-	}
-
-	private static final String _FINDER_COLUMN_USERID_MOBILETOKEN_USERID_2 =
-		"userMobileToken.userId = ? AND ";
-
-	private static final String
-		_FINDER_COLUMN_USERID_MOBILETOKEN_MOBILETOKEN_2 =
-			"userMobileToken.mobileToken = ?";
-
-	private static final String
-		_FINDER_COLUMN_USERID_MOBILETOKEN_MOBILETOKEN_3 =
-			"(userMobileToken.mobileToken IS NULL OR userMobileToken.mobileToken = '')";
 
 	public UserMobileTokenPersistenceImpl() {
 		setModelClass(UserMobileToken.class);
@@ -602,18 +107,6 @@ public class UserMobileTokenPersistenceImpl
 	public void cacheResult(UserMobileToken userMobileToken) {
 		entityCache.putResult(
 			UserMobileTokenImpl.class, userMobileToken.getPrimaryKey(),
-			userMobileToken);
-
-		finderCache.putResult(
-			_finderPathFetchByuserMobileTokenId,
-			new Object[] {userMobileToken.getUserMobileTokenId()},
-			userMobileToken);
-
-		finderCache.putResult(
-			_finderPathFetchByuserId_mobileToken,
-			new Object[] {
-				userMobileToken.getUserId(), userMobileToken.getMobileToken()
-			},
 			userMobileToken);
 	}
 
@@ -687,43 +180,18 @@ public class UserMobileTokenPersistenceImpl
 		}
 	}
 
-	protected void cacheUniqueFindersCache(
-		UserMobileTokenModelImpl userMobileTokenModelImpl) {
-
-		Object[] args = new Object[] {
-			userMobileTokenModelImpl.getUserMobileTokenId()
-		};
-
-		finderCache.putResult(
-			_finderPathCountByuserMobileTokenId, args, Long.valueOf(1));
-		finderCache.putResult(
-			_finderPathFetchByuserMobileTokenId, args,
-			userMobileTokenModelImpl);
-
-		args = new Object[] {
-			userMobileTokenModelImpl.getUserId(),
-			userMobileTokenModelImpl.getMobileToken()
-		};
-
-		finderCache.putResult(
-			_finderPathCountByuserId_mobileToken, args, Long.valueOf(1));
-		finderCache.putResult(
-			_finderPathFetchByuserId_mobileToken, args,
-			userMobileTokenModelImpl);
-	}
-
 	/**
 	 * Creates a new user mobile token with the primary key. Does not add the user mobile token to the database.
 	 *
-	 * @param userMobileTokenId the primary key for the new user mobile token
+	 * @param userId the primary key for the new user mobile token
 	 * @return the new user mobile token
 	 */
 	@Override
-	public UserMobileToken create(long userMobileTokenId) {
+	public UserMobileToken create(long userId) {
 		UserMobileToken userMobileToken = new UserMobileTokenImpl();
 
 		userMobileToken.setNew(true);
-		userMobileToken.setPrimaryKey(userMobileTokenId);
+		userMobileToken.setPrimaryKey(userId);
 
 		return userMobileToken;
 	}
@@ -731,15 +199,15 @@ public class UserMobileTokenPersistenceImpl
 	/**
 	 * Removes the user mobile token with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token that was removed
 	 * @throws NoSuchUserMobileTokenException if a user mobile token with the primary key could not be found
 	 */
 	@Override
-	public UserMobileToken remove(long userMobileTokenId)
+	public UserMobileToken remove(long userId)
 		throws NoSuchUserMobileTokenException {
 
-		return remove((Serializable)userMobileTokenId);
+		return remove((Serializable)userId);
 	}
 
 	/**
@@ -818,26 +286,6 @@ public class UserMobileTokenPersistenceImpl
 	public UserMobileToken updateImpl(UserMobileToken userMobileToken) {
 		boolean isNew = userMobileToken.isNew();
 
-		if (!(userMobileToken instanceof UserMobileTokenModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(userMobileToken.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(
-					userMobileToken);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in userMobileToken proxy " +
-						invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom UserMobileToken implementation " +
-					userMobileToken.getClass());
-		}
-
-		UserMobileTokenModelImpl userMobileTokenModelImpl =
-			(UserMobileTokenModelImpl)userMobileToken;
-
 		Session session = null;
 
 		try {
@@ -859,9 +307,7 @@ public class UserMobileTokenPersistenceImpl
 		}
 
 		entityCache.putResult(
-			UserMobileTokenImpl.class, userMobileTokenModelImpl, false, true);
-
-		cacheUniqueFindersCache(userMobileTokenModelImpl);
+			UserMobileTokenImpl.class, userMobileToken, false, true);
 
 		if (isNew) {
 			userMobileToken.setNew(false);
@@ -900,26 +346,26 @@ public class UserMobileTokenPersistenceImpl
 	/**
 	 * Returns the user mobile token with the primary key or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token
 	 * @throws NoSuchUserMobileTokenException if a user mobile token with the primary key could not be found
 	 */
 	@Override
-	public UserMobileToken findByPrimaryKey(long userMobileTokenId)
+	public UserMobileToken findByPrimaryKey(long userId)
 		throws NoSuchUserMobileTokenException {
 
-		return findByPrimaryKey((Serializable)userMobileTokenId);
+		return findByPrimaryKey((Serializable)userId);
 	}
 
 	/**
 	 * Returns the user mobile token with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token, or <code>null</code> if a user mobile token with the primary key could not be found
 	 */
 	@Override
-	public UserMobileToken fetchByPrimaryKey(long userMobileTokenId) {
-		return fetchByPrimaryKey((Serializable)userMobileTokenId);
+	public UserMobileToken fetchByPrimaryKey(long userId) {
+		return fetchByPrimaryKey((Serializable)userId);
 	}
 
 	/**
@@ -1110,7 +556,7 @@ public class UserMobileTokenPersistenceImpl
 
 	@Override
 	protected String getPKDBName() {
-		return "userMobileTokenId";
+		return "userId";
 	}
 
 	@Override
@@ -1142,27 +588,6 @@ public class UserMobileTokenPersistenceImpl
 		_finderPathCountAll = new FinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0], new String[0], false);
-
-		_finderPathFetchByuserMobileTokenId = new FinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByuserMobileTokenId",
-			new String[] {Long.class.getName()},
-			new String[] {"userMobileTokenId"}, true);
-
-		_finderPathCountByuserMobileTokenId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"countByuserMobileTokenId", new String[] {Long.class.getName()},
-			new String[] {"userMobileTokenId"}, false);
-
-		_finderPathFetchByuserId_mobileToken = new FinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByuserId_mobileToken",
-			new String[] {Long.class.getName(), String.class.getName()},
-			new String[] {"userId", "mobileToken"}, true);
-
-		_finderPathCountByuserId_mobileToken = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"countByuserId_mobileToken",
-			new String[] {Long.class.getName(), String.class.getName()},
-			new String[] {"userId", "mobileToken"}, false);
 
 		_setUserMobileTokenUtilPersistence(this);
 	}
@@ -1225,22 +650,13 @@ public class UserMobileTokenPersistenceImpl
 	private static final String _SQL_SELECT_USERMOBILETOKEN =
 		"SELECT userMobileToken FROM UserMobileToken userMobileToken";
 
-	private static final String _SQL_SELECT_USERMOBILETOKEN_WHERE =
-		"SELECT userMobileToken FROM UserMobileToken userMobileToken WHERE ";
-
 	private static final String _SQL_COUNT_USERMOBILETOKEN =
 		"SELECT COUNT(userMobileToken) FROM UserMobileToken userMobileToken";
-
-	private static final String _SQL_COUNT_USERMOBILETOKEN_WHERE =
-		"SELECT COUNT(userMobileToken) FROM UserMobileToken userMobileToken WHERE ";
 
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userMobileToken.";
 
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY =
 		"No UserMobileToken exists with the primary key ";
-
-	private static final String _NO_SUCH_ENTITY_WITH_KEY =
-		"No UserMobileToken exists with the key {";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		UserMobileTokenPersistenceImpl.class);

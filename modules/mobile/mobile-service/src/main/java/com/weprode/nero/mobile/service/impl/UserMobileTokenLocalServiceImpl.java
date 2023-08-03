@@ -33,9 +33,15 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 
 	public String addMobileToken(long userId) throws SystemException {
 
-		UserMobileToken userMobileToken = userMobileTokenPersistence.create(counterLocalService.increment());
-
-		userMobileToken.setUserId(userId);
+		UserMobileToken userMobileToken = null;
+		try {
+			userMobileToken = userMobileTokenPersistence.findByPrimaryKey(userId);
+		} catch (Exception e) {
+			// Nothing
+		}
+		if (userMobileToken == null) {
+			userMobileToken = userMobileTokenPersistence.create(userId);
+		}
 		String newToken = UUID.randomUUID().toString();
 		userMobileToken.setMobileToken(newToken);
 		userMobileTokenPersistence.update(userMobileToken);
@@ -43,8 +49,14 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 	}
 
 	public String refreshMobileToken(long userId, String mobileToken) throws SystemException {
-		UserMobileToken userMobileToken = userMobileTokenPersistence.fetchByuserId_mobileToken(userId, mobileToken);
-		if (userMobileToken != null) {
+
+		UserMobileToken userMobileToken = null;
+		try {
+			userMobileToken = userMobileTokenPersistence.findByPrimaryKey(userId);
+		} catch (Exception e) {
+			// Nothing
+		}
+		if (userMobileToken != null && userMobileToken.getMobileToken().equals(mobileToken)) {
 			String newToken = UUID.randomUUID().toString();
 			userMobileToken.setMobileToken(newToken);
 			userMobileTokenPersistence.update(userMobileToken);
@@ -54,7 +66,13 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 	}
 
 	public boolean hasUserMobileToken(long userId, String mobileToken) throws SystemException {
-		return userMobileTokenPersistence.fetchByuserId_mobileToken(userId, mobileToken) != null;
+		UserMobileToken userMobileToken = null;
+		try {
+			userMobileToken = userMobileTokenPersistence.findByPrimaryKey(userId);
+		} catch (Exception e) {
+			// Nothing
+		}
+		return userMobileToken != null && userMobileToken.getMobileToken().equals(mobileToken);
 	}
 
 }

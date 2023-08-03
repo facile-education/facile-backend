@@ -294,7 +294,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
     }
 
     @Indexable(type = IndexableType.REINDEX)
-    public JSONObject saveDraft(long senderId, long draftMessageId, String subject, String content, List<Long> recipientIds, List<Long> attachFileIds, boolean isSupport) {
+    public JSONObject saveDraft(long senderId, long draftMessageId, String subject, String content, List<Long> recipientIds, List<Long> attachFileIds, long threadId, boolean isSupport) {
         JSONObject result = new JSONObject();
 
         result.put(JSONConstants.SUCCESS, false);
@@ -332,7 +332,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
                 // New message
                 MessageFolder draftFolder = MessageFolderLocalServiceUtil.getUserDraftFolder(senderId);
 
-                message = MessageLocalServiceUtil.addMessage(draftFolder.getFolderId(), senderId, new Date(), 0, subject, content, false, isSupport ? MessagingConstants.TYPE_SUPPORT : MessagingConstants.TYPE_MANUAL, 0);
+                message = MessageLocalServiceUtil.addMessage(draftFolder.getFolderId(), senderId, new Date(), threadId, subject, content, false, isSupport ? MessagingConstants.TYPE_SUPPORT : MessagingConstants.TYPE_MANUAL, 0);
             }
 
             // Handle recipients

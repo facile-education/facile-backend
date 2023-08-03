@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -76,30 +75,28 @@ public class UserMobileTokenModelImpl
 	public static final String TABLE_NAME = "Mobile_UserMobileToken";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"userMobileTokenId", Types.BIGINT}, {"userId", Types.BIGINT},
-		{"mobileToken", Types.VARCHAR}
+		{"userId", Types.BIGINT}, {"mobileToken", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
 		new HashMap<String, Integer>();
 
 	static {
-		TABLE_COLUMNS_MAP.put("userMobileTokenId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("mobileToken", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Mobile_UserMobileToken (userMobileTokenId LONG not null primary key,userId LONG,mobileToken VARCHAR(75) null)";
+		"create table Mobile_UserMobileToken (userId LONG not null primary key,mobileToken VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Mobile_UserMobileToken";
 
 	public static final String ORDER_BY_JPQL =
-		" ORDER BY userMobileToken.userMobileTokenId ASC";
+		" ORDER BY userMobileToken.userId ASC";
 
 	public static final String ORDER_BY_SQL =
-		" ORDER BY Mobile_UserMobileToken.userMobileTokenId ASC";
+		" ORDER BY Mobile_UserMobileToken.userId ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -108,22 +105,11 @@ public class UserMobileTokenModelImpl
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long MOBILETOKEN_COLUMN_BITMASK = 1L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
-	 */
-	@Deprecated
-	public static final long USERID_COLUMN_BITMASK = 2L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
-	 */
-	@Deprecated
-	public static final long USERMOBILETOKENID_COLUMN_BITMASK = 4L;
+	public static final long USERID_COLUMN_BITMASK = 1L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -154,7 +140,6 @@ public class UserMobileTokenModelImpl
 
 		UserMobileToken model = new UserMobileTokenImpl();
 
-		model.setUserMobileTokenId(soapModel.getUserMobileTokenId());
 		model.setUserId(soapModel.getUserId());
 		model.setMobileToken(soapModel.getMobileToken());
 
@@ -191,17 +176,17 @@ public class UserMobileTokenModelImpl
 
 	@Override
 	public long getPrimaryKey() {
-		return _userMobileTokenId;
+		return _userId;
 	}
 
 	@Override
 	public void setPrimaryKey(long primaryKey) {
-		setUserMobileTokenId(primaryKey);
+		setUserId(primaryKey);
 	}
 
 	@Override
 	public Serializable getPrimaryKeyObj() {
-		return _userMobileTokenId;
+		return _userId;
 	}
 
 	@Override
@@ -311,12 +296,6 @@ public class UserMobileTokenModelImpl
 		Map<String, BiConsumer<UserMobileToken, ?>> attributeSetterBiConsumers =
 			new LinkedHashMap<String, BiConsumer<UserMobileToken, ?>>();
 
-		attributeGetterFunctions.put(
-			"userMobileTokenId", UserMobileToken::getUserMobileTokenId);
-		attributeSetterBiConsumers.put(
-			"userMobileTokenId",
-			(BiConsumer<UserMobileToken, Long>)
-				UserMobileToken::setUserMobileTokenId);
 		attributeGetterFunctions.put("userId", UserMobileToken::getUserId);
 		attributeSetterBiConsumers.put(
 			"userId",
@@ -332,31 +311,6 @@ public class UserMobileTokenModelImpl
 			attributeGetterFunctions);
 		_attributeSetterBiConsumers = Collections.unmodifiableMap(
 			(Map)attributeSetterBiConsumers);
-	}
-
-	@JSON
-	@Override
-	public long getUserMobileTokenId() {
-		return _userMobileTokenId;
-	}
-
-	@Override
-	public void setUserMobileTokenId(long userMobileTokenId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_userMobileTokenId = userMobileTokenId;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public long getOriginalUserMobileTokenId() {
-		return GetterUtil.getLong(
-			this.<Long>getColumnOriginalValue("userMobileTokenId"));
 	}
 
 	@JSON
@@ -390,15 +344,6 @@ public class UserMobileTokenModelImpl
 	public void setUserUuid(String userUuid) {
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public long getOriginalUserId() {
-		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("userId"));
-	}
-
 	@JSON
 	@Override
 	public String getMobileToken() {
@@ -417,15 +362,6 @@ public class UserMobileTokenModelImpl
 		}
 
 		_mobileToken = mobileToken;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public String getOriginalMobileToken() {
-		return getColumnOriginalValue("mobileToken");
 	}
 
 	public long getColumnBitmask() {
@@ -484,7 +420,6 @@ public class UserMobileTokenModelImpl
 	public Object clone() {
 		UserMobileTokenImpl userMobileTokenImpl = new UserMobileTokenImpl();
 
-		userMobileTokenImpl.setUserMobileTokenId(getUserMobileTokenId());
 		userMobileTokenImpl.setUserId(getUserId());
 		userMobileTokenImpl.setMobileToken(getMobileToken());
 
@@ -497,8 +432,6 @@ public class UserMobileTokenModelImpl
 	public UserMobileToken cloneWithOriginalValues() {
 		UserMobileTokenImpl userMobileTokenImpl = new UserMobileTokenImpl();
 
-		userMobileTokenImpl.setUserMobileTokenId(
-			this.<Long>getColumnOriginalValue("userMobileTokenId"));
 		userMobileTokenImpl.setUserId(
 			this.<Long>getColumnOriginalValue("userId"));
 		userMobileTokenImpl.setMobileToken(
@@ -578,8 +511,6 @@ public class UserMobileTokenModelImpl
 	public CacheModel<UserMobileToken> toCacheModel() {
 		UserMobileTokenCacheModel userMobileTokenCacheModel =
 			new UserMobileTokenCacheModel();
-
-		userMobileTokenCacheModel.userMobileTokenId = getUserMobileTokenId();
 
 		userMobileTokenCacheModel.userId = getUserId();
 
@@ -681,7 +612,6 @@ public class UserMobileTokenModelImpl
 
 	}
 
-	private long _userMobileTokenId;
 	private long _userId;
 	private String _mobileToken;
 
@@ -712,7 +642,6 @@ public class UserMobileTokenModelImpl
 	private void _setColumnOriginalValues() {
 		_columnOriginalValues = new HashMap<String, Object>();
 
-		_columnOriginalValues.put("userMobileTokenId", _userMobileTokenId);
 		_columnOriginalValues.put("userId", _userId);
 		_columnOriginalValues.put("mobileToken", _mobileToken);
 	}
@@ -728,11 +657,9 @@ public class UserMobileTokenModelImpl
 	static {
 		Map<String, Long> columnBitmasks = new HashMap<>();
 
-		columnBitmasks.put("userMobileTokenId", 1L);
+		columnBitmasks.put("userId", 1L);
 
-		columnBitmasks.put("userId", 2L);
-
-		columnBitmasks.put("mobileToken", 4L);
+		columnBitmasks.put("mobileToken", 2L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

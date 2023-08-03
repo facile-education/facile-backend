@@ -19,7 +19,6 @@ create table Mobile_MobileNotification (
 );
 
 create table Mobile_UserMobileToken (
-	userMobileTokenId LONG not null primary key,
-	userId LONG,
+	userId LONG not null primary key,
 	mobileToken VARCHAR(75) null
 );

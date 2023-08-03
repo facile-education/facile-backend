@@ -41,9 +41,12 @@ import java.util.TimeZone;
         property={"path=/common/wopi/files"},
         service= StrutsAction.class
 )
-public class WopiInfoAction implements StrutsAction {
+// Class used to process 2 actions coming from COOL using Wopi protocol
+// First get infos on the file
+// Then GET file content or SAVE file content
+public class WopiAction implements StrutsAction {
 
-    final Log logger = LogFactoryUtil.getLog(WopiInfoAction.class);
+    final Log logger = LogFactoryUtil.getLog(WopiAction.class);
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -51,7 +54,7 @@ public class WopiInfoAction implements StrutsAction {
         // Return code must be 401 if access_token is unknown on ENT side
         String accessToken = ParamUtil.getString(request, "access_token");
 
-        LoolToken loolToken = null;
+        LoolToken loolToken;
         try {
             loolToken = LoolTokenLocalServiceUtil.getLoolToken(accessToken);
         } catch (Exception e) {
@@ -96,89 +99,67 @@ public class WopiInfoAction implements StrutsAction {
         fileInfo.put("UserInfo", user.getScreenName());
         fileInfo.put("UserFriendlyName", user.getFullName());
 
-        // This parameter can have different forms
-        // fileEntryId+version+isReadOnly
-        // news+blogsEntryInfosId+fileName for news documents
+        // Wopi parameter is like fileEntryId+version+isReadOnly
+        String[] paramTab = wopiParam.split("\\+");
+        if (paramTab.length > 2) {
+            try {
+                long fileEntryId = Long.parseLong(paramTab[0]);
+                String version = paramTab[1];
+                boolean isReadOnly = true;
+                if (paramTab[2] != null && !paramTab[2].equals("")) {
+                    isReadOnly = Boolean.parseBoolean(paramTab[2]);
+                }
+                fileInfo.put("UserCanWrite", !isReadOnly);
+                fileInfo.put("SupportsUpdate", !isReadOnly);
+                DLFileVersion lastVersion;
+                try{
+                    DLFileEntryUtil.clearCache(DLFileEntryLocalServiceUtil.getDLFileEntry(fileEntryId));
+                    lastVersion = DLFileVersionLocalServiceUtil.getLatestFileVersion(fileEntryId, false);
+                } catch (Exception e){
+                    logger.error( "Error on retrieve last dlFileVersion of file: " + fileEntryId, e);
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    return null;
+                }
 
-        if (wopiParam.startsWith("news")) {
+                if (version.isEmpty()) {
+                    version = lastVersion.getVersion();
+                }
 
-            // wopiParam value example is news+123456+fleches.odp
-            String[] newsParamTab = wopiParam.split("\\+");
-            if (newsParamTab.length > 2) {
-                //Long blogEntryInfosId = Long.parseLong(newsParamTab[1]);
-                String fileName = newsParamTab[2];
-                fileInfo.put("BaseFileName", fileName);
-                fileInfo.put("Version", "");
-                fileInfo.put("UserCanWrite", false);
-                fileInfo.put("SupportsUpdate", false);
-            }
-
-        } else {
-
-            // Documents or messaging
-            // wopiParam value example is 123456+1.0+true
-            String[] otherParamTab = wopiParam.split("\\+");
-            if (otherParamTab.length > 2) {
+                DLFileEntry fileEntry;
                 try {
-                    long fileEntryId = Long.parseLong(otherParamTab[0]);
-                    String version = otherParamTab[1];
-                    boolean isReadOnly = true;
-                    if (otherParamTab[2] != null && !otherParamTab[2].equals("")) {
-                        isReadOnly = Boolean.parseBoolean(otherParamTab[2]);
-                    }
-                    fileInfo.put("UserCanWrite", !isReadOnly);
-                    fileInfo.put("SupportsUpdate", !isReadOnly);
+                    fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(fileEntryId);
+                    fileInfo.put("BaseFileName", fileEntry.getTitle());
+                    fileInfo.put("OwnerId", fileEntry.getUserName());
+                    fileInfo.put("Size", fileEntry.getSize());
 
-                    DLFileVersion lastVersion;
-                    try{
-                        DLFileEntryUtil.clearCache(DLFileEntryLocalServiceUtil.getDLFileEntry(fileEntryId));
-                        lastVersion = DLFileVersionLocalServiceUtil.getLatestFileVersion(fileEntryId, false);
-                    } catch (Exception e){
-                        logger.error( "Error on retrieve last dlFileVersion of file: " + fileEntryId, e);
-                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        return null;
-                    }
+                    // Modified date must be UTC and formatted in "2009-06-15T13:45:30.0000000Z"
+                    SimpleDateFormat wopiFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 
-                    if(version.isEmpty()){
-                        version = lastVersion.getVersion();
-                    }
+                    // To UTC TimeZone
+                    TimeZone utcTz = TimeZone.getTimeZone("UTC");
+                    wopiFormat.setTimeZone(utcTz);
 
-                    DLFileEntry fileEntry;
-                    try {
-                        fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(fileEntryId);
-                        fileInfo.put("BaseFileName", fileEntry.getTitle());
-                        fileInfo.put("OwnerId", fileEntry.getUserName());
-                        fileInfo.put("Size", fileEntry.getSize());
+                    Date date = fileEntry.getModifiedDate();
 
-                        // Modified date must be UTC and formatted in "2009-06-15T13:45:30.0000000Z"
-                        SimpleDateFormat wopiFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    calendar.setTimeZone(utcTz);
 
-                        // To UTC TimeZone
-                        TimeZone utcTz = TimeZone.getTimeZone("UTC");
-                        wopiFormat.setTimeZone(utcTz);
-
-                        Date date = fileEntry.getModifiedDate();
-
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(date);
-                        calendar.setTimeZone(utcTz);
-
-                        fileInfo.put("LastModifiedTime", wopiFormat.format(calendar.getTime()));
-
-                    } catch (Exception e){
-                        logger.error( "Error on retrieve dlFileEntry : " + fileEntryId, e);
-                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        return null;
-                    }
-                    InputStream is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), version);
-
-                    fileInfo.put("SHA256", getHash256(is));
-                    fileInfo.put("Version", version);
+                    fileInfo.put("LastModifiedTime", wopiFormat.format(calendar.getTime()));
 
                 } catch (Exception e){
-                    logger.error( "Error on parsing wopi parameter ");
+                    logger.error( "Error on retrieve dlFileEntry : " + fileEntryId, e);
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    return null;
                 }
+                InputStream is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), version);
+
+                fileInfo.put("SHA256", getHash256(is));
+                fileInfo.put("Version", version);
+
+            } catch (Exception e) {
+                logger.error( "Error on parsing wopi parameter ");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
 
         }

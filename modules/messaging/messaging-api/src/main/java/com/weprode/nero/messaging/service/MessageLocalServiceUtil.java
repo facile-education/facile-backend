@@ -423,11 +423,12 @@ public class MessageLocalServiceUtil {
 
 	public static org.json.JSONObject saveDraft(
 		long senderId, long draftMessageId, String subject, String content,
-		List<Long> recipientIds, List<Long> attachFileIds, boolean isSupport) {
+		List<Long> recipientIds, List<Long> attachFileIds, long threadId,
+		boolean isSupport) {
 
 		return getService().saveDraft(
 			senderId, draftMessageId, subject, content, recipientIds,
-			attachFileIds, isSupport);
+			attachFileIds, threadId, isSupport);
 	}
 
 	public static boolean sendAutoReply(

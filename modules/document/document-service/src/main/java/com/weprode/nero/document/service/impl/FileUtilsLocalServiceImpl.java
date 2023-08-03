@@ -64,6 +64,7 @@ import com.weprode.nero.document.service.base.FileUtilsLocalServiceBaseImpl;
 import com.weprode.nero.document.utils.DLAppUtil;
 import com.weprode.nero.document.utils.ENTDocumentConversionUtil;
 import com.weprode.nero.document.utils.FileNameUtil;
+import com.weprode.nero.document.utils.SupportedExtensions;
 import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.jsoup.Jsoup;
@@ -295,10 +296,13 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		}
 	}
 
-	public String getDisplayUrl (FileEntry file, long versionId, String typeOfView, long userId, boolean readOnly) throws SystemException, PortalException {
+	public String getDisplayUrl (FileEntry file, long versionId, long userId, boolean readOnly) throws SystemException, PortalException {
 		String documentURL;
 		boolean isCreation = false;
 		boolean isWritable = !readOnly && versionId == file.getLatestFileVersion().getFileVersionId();   // read only if there is not the latest version
+
+		// Detect type of document
+		String typeOfView = SupportedExtensions.getTypeOfView(file.getExtension());
 
 		switch (typeOfView) {
 			case "Geogebra":

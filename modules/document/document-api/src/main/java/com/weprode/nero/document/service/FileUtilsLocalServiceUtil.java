@@ -118,11 +118,10 @@ public class FileUtilsLocalServiceUtil {
 
 	public static String getDisplayUrl(
 			com.liferay.portal.kernel.repository.model.FileEntry file,
-			long versionId, String typeOfView, long userId, boolean readOnly)
+			long versionId, long userId, boolean readOnly)
 		throws PortalException, SystemException {
 
-		return getService().getDisplayUrl(
-			file, versionId, typeOfView, userId, readOnly);
+		return getService().getDisplayUrl(file, versionId, userId, readOnly);
 	}
 
 	public static String getDownloadUrl(

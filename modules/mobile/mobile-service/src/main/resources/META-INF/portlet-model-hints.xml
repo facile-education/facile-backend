@@ -12,7 +12,6 @@
 		<field name="browserUA" type="String" />
 	</model>
 	<model name="com.weprode.nero.mobile.model.UserMobileToken">
-		<field name="userMobileTokenId" type="long" />
 		<field name="userId" type="long" />
 		<field name="mobileToken" type="String" />
 	</model>

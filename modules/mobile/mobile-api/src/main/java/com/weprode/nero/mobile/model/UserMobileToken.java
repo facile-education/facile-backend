@@ -38,12 +38,12 @@ public interface UserMobileToken extends PersistedModel, UserMobileTokenModel {
 	 *
 	 * Never modify this interface directly. Add methods to <code>com.weprode.nero.mobile.model.impl.UserMobileTokenImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public static final Accessor<UserMobileToken, Long>
-		USER_MOBILE_TOKEN_ID_ACCESSOR = new Accessor<UserMobileToken, Long>() {
+	public static final Accessor<UserMobileToken, Long> USER_ID_ACCESSOR =
+		new Accessor<UserMobileToken, Long>() {
 
 			@Override
 			public Long get(UserMobileToken userMobileToken) {
-				return userMobileToken.getUserMobileTokenId();
+				return userMobileToken.getUserId();
 			}
 
 			@Override

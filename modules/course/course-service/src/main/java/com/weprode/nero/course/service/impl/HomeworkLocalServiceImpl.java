@@ -96,6 +96,9 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				homework.setIsCustomStudentList(true);
 				for (long studentId : studentIds) {
 					StudentHomeworkLocalServiceUtil.getOrCreateStudentHomework(homework.getHomeworkId(), studentId);
+					// Push mobile - Commented
+					//MobileDeviceLocalServiceUtil.pushNotificationToUser(studentId, teacher.getFullName(), NEW_HOMEWORK, homework.getTitle(),
+					//		MobileConstants.HOMEWORK_TYPE, homework.getHomeworkId());
 				}
 			} else {
 				homework.setIsCustomStudentList(false);
@@ -111,6 +114,9 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 						roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 				for (User student : studentList) {
 					StudentHomeworkLocalServiceUtil.getOrCreateStudentHomework(homework.getHomeworkId(), student.getUserId());
+					// Push mobile - Commented
+					// MobileDeviceLocalServiceUtil.pushNotificationToUser(student.getUserId(), teacher.getFullName(), NEW_HOMEWORK, homework.getTitle(),
+					//		MobileConstants.HOMEWORK_TYPE, homework.getHomeworkId());
 				}
 
 			}

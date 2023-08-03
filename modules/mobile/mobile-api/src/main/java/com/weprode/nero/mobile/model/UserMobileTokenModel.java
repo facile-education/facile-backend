@@ -54,20 +54,6 @@ public interface UserMobileTokenModel extends BaseModel<UserMobileToken> {
 	public void setPrimaryKey(long primaryKey);
 
 	/**
-	 * Returns the user mobile token ID of this user mobile token.
-	 *
-	 * @return the user mobile token ID of this user mobile token
-	 */
-	public long getUserMobileTokenId();
-
-	/**
-	 * Sets the user mobile token ID of this user mobile token.
-	 *
-	 * @param userMobileTokenId the user mobile token ID of this user mobile token
-	 */
-	public void setUserMobileTokenId(long userMobileTokenId);
-
-	/**
 	 * Returns the user ID of this user mobile token.
 	 *
 	 * @return the user ID of this user mobile token

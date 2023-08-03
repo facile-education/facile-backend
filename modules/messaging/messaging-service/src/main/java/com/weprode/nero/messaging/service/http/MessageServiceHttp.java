@@ -317,7 +317,7 @@ public class MessageServiceHttp {
 	public static org.json.JSONObject saveDraft(
 		HttpPrincipal httpPrincipal, String recipients, String subject,
 		String content, String attachedFiles, long draftMessageId,
-		boolean isSupport) {
+		long threadId, boolean isSupport) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -326,7 +326,7 @@ public class MessageServiceHttp {
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, recipients, subject, content, attachedFiles,
-				draftMessageId, isSupport);
+				draftMessageId, threadId, isSupport);
 
 			Object returnObj = null;
 
@@ -503,7 +503,7 @@ public class MessageServiceHttp {
 	};
 	private static final Class<?>[] _saveDraftParameterTypes8 = new Class[] {
 		String.class, String.class, String.class, String.class, long.class,
-		boolean.class
+		long.class, boolean.class
 	};
 	private static final Class<?>[] _moveMessagesParameterTypes9 = new Class[] {
 		long.class, String.class

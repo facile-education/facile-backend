@@ -11,7 +11,7 @@ public class MenuEntry {
     public static final MenuEntry HORAIRES = new MenuEntry(5, "icon-calendar", "horaires", 3, "Horaires");
     public static final MenuEntry HHC = new MenuEntry(6, "icon-clock", "horaires-hors-cadre", 4, "NotUsualSlotsManager");
     public static final MenuEntry DOCUMENTS = new MenuEntry(2, "icon-folder", "documents", 5, "Documents", ":folderId(\\d+)?");
-    public static final MenuEntry MESSAGING = new MenuEntry(3, "icon-langues", "messaging", 6, "Messaging", ":messageId(\\\\d+)?");
+    public static final MenuEntry MESSAGING = new MenuEntry(3, "icon-langues", "messaging", 6, "Messaging", ":messageId(\\d+)?");
 
     public static final MenuEntry UNIVERSALIS = new MenuEntry(8, StringPool.BLANK, "universalis", 0, "ExternalResource");
     public static final MenuEntry UNIVERSALIS_JUNIOR = new MenuEntry(9, StringPool.BLANK, "universalis-junior", 1, "ExternalResource");

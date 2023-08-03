@@ -47,10 +47,10 @@ public class MobileNotification {
 			String redirect = "";
 			switch (service) {
 				case MobileConstants.MESSAGING_TYPE:
-					redirect += "%2F" + MESSAGING_PATH + "%3FmessageId%3D" + paramId;
+					redirect += "%2F" + MESSAGING_PATH + "%2F" + paramId;
 					break;
 				case MobileConstants.HOMEWORK_TYPE:
-					redirect += "%2F" + HOMEWORK_PATH + "%3FhomeworkId%3D" + paramId;
+					redirect += "%2F" + HOMEWORK_PATH + "%2F" + paramId;
 					break;
 				default:
 					redirect += "%2F" + DASHBOARD_PATH;

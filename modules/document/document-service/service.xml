@@ -90,6 +90,4 @@
 		</finder>
 	</entity>
 
-	<entity name="WopiUtils" local-service="false" remote-service="true" />
-
 </service-builder>

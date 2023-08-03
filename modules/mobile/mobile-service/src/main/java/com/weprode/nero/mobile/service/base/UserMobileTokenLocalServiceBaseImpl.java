@@ -99,13 +99,13 @@ public abstract class UserMobileTokenLocalServiceBaseImpl
 	/**
 	 * Creates a new user mobile token with the primary key. Does not add the user mobile token to the database.
 	 *
-	 * @param userMobileTokenId the primary key for the new user mobile token
+	 * @param userId the primary key for the new user mobile token
 	 * @return the new user mobile token
 	 */
 	@Override
 	@Transactional(enabled = false)
-	public UserMobileToken createUserMobileToken(long userMobileTokenId) {
-		return userMobileTokenPersistence.create(userMobileTokenId);
+	public UserMobileToken createUserMobileToken(long userId) {
+		return userMobileTokenPersistence.create(userId);
 	}
 
 	/**
@@ -115,16 +115,16 @@ public abstract class UserMobileTokenLocalServiceBaseImpl
 	 * <strong>Important:</strong> Inspect UserMobileTokenLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token that was removed
 	 * @throws PortalException if a user mobile token with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public UserMobileToken deleteUserMobileToken(long userMobileTokenId)
+	public UserMobileToken deleteUserMobileToken(long userId)
 		throws PortalException {
 
-		return userMobileTokenPersistence.remove(userMobileTokenId);
+		return userMobileTokenPersistence.remove(userId);
 	}
 
 	/**
@@ -245,22 +245,22 @@ public abstract class UserMobileTokenLocalServiceBaseImpl
 	}
 
 	@Override
-	public UserMobileToken fetchUserMobileToken(long userMobileTokenId) {
-		return userMobileTokenPersistence.fetchByPrimaryKey(userMobileTokenId);
+	public UserMobileToken fetchUserMobileToken(long userId) {
+		return userMobileTokenPersistence.fetchByPrimaryKey(userId);
 	}
 
 	/**
 	 * Returns the user mobile token with the primary key.
 	 *
-	 * @param userMobileTokenId the primary key of the user mobile token
+	 * @param userId the primary key of the user mobile token
 	 * @return the user mobile token
 	 * @throws PortalException if a user mobile token with the primary key could not be found
 	 */
 	@Override
-	public UserMobileToken getUserMobileToken(long userMobileTokenId)
+	public UserMobileToken getUserMobileToken(long userId)
 		throws PortalException {
 
-		return userMobileTokenPersistence.findByPrimaryKey(userMobileTokenId);
+		return userMobileTokenPersistence.findByPrimaryKey(userId);
 	}
 
 	@Override
@@ -272,7 +272,7 @@ public abstract class UserMobileTokenLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(UserMobileToken.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("userMobileTokenId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 
 		return actionableDynamicQuery;
 	}
@@ -289,8 +289,7 @@ public abstract class UserMobileTokenLocalServiceBaseImpl
 		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
 		indexableActionableDynamicQuery.setModelClass(UserMobileToken.class);
 
-		indexableActionableDynamicQuery.setPrimaryKeyPropertyName(
-			"userMobileTokenId");
+		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 
 		return indexableActionableDynamicQuery;
 	}
@@ -302,7 +301,7 @@ public abstract class UserMobileTokenLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(UserMobileToken.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("userMobileTokenId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 	}
 
 	/**

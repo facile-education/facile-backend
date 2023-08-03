@@ -41,7 +41,6 @@ public class UserMobileTokenWrapper
 	public Map<String, Object> getModelAttributes() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
-		attributes.put("userMobileTokenId", getUserMobileTokenId());
 		attributes.put("userId", getUserId());
 		attributes.put("mobileToken", getMobileToken());
 
@@ -50,12 +49,6 @@ public class UserMobileTokenWrapper
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long userMobileTokenId = (Long)attributes.get("userMobileTokenId");
-
-		if (userMobileTokenId != null) {
-			setUserMobileTokenId(userMobileTokenId);
-		}
-
 		Long userId = (Long)attributes.get("userId");
 
 		if (userId != null) {
@@ -105,16 +98,6 @@ public class UserMobileTokenWrapper
 	}
 
 	/**
-	 * Returns the user mobile token ID of this user mobile token.
-	 *
-	 * @return the user mobile token ID of this user mobile token
-	 */
-	@Override
-	public long getUserMobileTokenId() {
-		return model.getUserMobileTokenId();
-	}
-
-	/**
 	 * Returns the user uuid of this user mobile token.
 	 *
 	 * @return the user uuid of this user mobile token
@@ -157,16 +140,6 @@ public class UserMobileTokenWrapper
 	@Override
 	public void setUserId(long userId) {
 		model.setUserId(userId);
-	}
-
-	/**
-	 * Sets the user mobile token ID of this user mobile token.
-	 *
-	 * @param userMobileTokenId the user mobile token ID of this user mobile token
-	 */
-	@Override
-	public void setUserMobileTokenId(long userMobileTokenId) {
-		model.setUserMobileTokenId(userMobileTokenId);
 	}
 
 	/**
