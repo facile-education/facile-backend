@@ -70,7 +70,16 @@ public interface AccessService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getUserAccesses();
 
-	@JSONWebService(method = "POST", value = "save-school-accesses")
-	public JSONObject saveSchoolAccesses(long schoolId, String accesses);
+	@JSONWebService(method = "DELETE", value = "remove-school-access")
+	public JSONObject removeSchoolAccess(long schoolId, long accessId);
+
+	@JSONWebService(method = "DELETE", value = "remove-school-category")
+	public JSONObject removeSchoolCategory(long schoolId, long categoryId);
+
+	@JSONWebService(method = "POST", value = "save-school-access")
+	public JSONObject saveSchoolAccess(long schoolId, String access);
+
+	@JSONWebService(method = "POST", value = "save-school-category")
+	public JSONObject saveSchoolCategory(long schoolId, String category);
 
 }

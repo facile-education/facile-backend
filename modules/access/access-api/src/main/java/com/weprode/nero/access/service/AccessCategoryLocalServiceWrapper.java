@@ -336,6 +336,13 @@ public class AccessCategoryLocalServiceWrapper
 		_accessCategoryLocalService.removeBySchoolId(schoolId);
 	}
 
+	@Override
+	public void removeCategory(long categoryId, long schoolId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_accessCategoryLocalService.removeCategory(categoryId, schoolId);
+	}
+
 	/**
 	 * Updates the access category in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
@@ -351,6 +358,14 @@ public class AccessCategoryLocalServiceWrapper
 		com.weprode.nero.access.model.AccessCategory accessCategory) {
 
 		return _accessCategoryLocalService.updateAccessCategory(accessCategory);
+	}
+
+	@Override
+	public com.weprode.nero.access.model.AccessCategory updateCategory(
+			long categoryId, String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _accessCategoryLocalService.updateCategory(categoryId, name);
 	}
 
 	@Override

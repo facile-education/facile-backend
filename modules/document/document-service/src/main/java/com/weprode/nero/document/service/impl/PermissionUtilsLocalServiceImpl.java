@@ -159,7 +159,7 @@ public class PermissionUtilsLocalServiceImpl
 	public void setUpdatePermissionForRolesOnResource(Object resource, List<Role> roleList) throws PortalException, SystemException {
 
 		int scope = ResourceConstants.SCOPE_INDIVIDUAL;
-		String[] actionsIds = {ActionKeys.VIEW, ActionKeys.UPDATE, ActionKeys.ADD_DOCUMENT};
+		String[] actionsIds = {ActionKeys.VIEW, ActionKeys.UPDATE, ActionKeys.ADD_DOCUMENT, PermissionConstants.ADD_OBJECT, ActionKeys.ADD_SUBFOLDER};
 		Map<Long, String[]> roleIdActionIds = new HashMap<>();
 		for (Role role : roleList) {
 			roleIdActionIds.put(role.getRoleId(), actionsIds);

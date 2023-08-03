@@ -57,10 +57,28 @@ public class AccessServiceUtil {
 		return getService().getUserAccesses();
 	}
 
-	public static org.json.JSONObject saveSchoolAccesses(
-		long schoolId, java.lang.String accesses) {
+	public static org.json.JSONObject removeSchoolAccess(
+		long schoolId, long accessId) {
 
-		return getService().saveSchoolAccesses(schoolId, accesses);
+		return getService().removeSchoolAccess(schoolId, accessId);
+	}
+
+	public static org.json.JSONObject removeSchoolCategory(
+		long schoolId, long categoryId) {
+
+		return getService().removeSchoolCategory(schoolId, categoryId);
+	}
+
+	public static org.json.JSONObject saveSchoolAccess(
+		long schoolId, java.lang.String access) {
+
+		return getService().saveSchoolAccess(schoolId, access);
+	}
+
+	public static org.json.JSONObject saveSchoolCategory(
+		long schoolId, java.lang.String category) {
+
+		return getService().saveSchoolCategory(schoolId, category);
 	}
 
 	public static AccessService getService() {

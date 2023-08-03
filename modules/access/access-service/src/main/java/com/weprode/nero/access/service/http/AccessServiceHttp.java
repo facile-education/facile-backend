@@ -84,16 +84,112 @@ public class AccessServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject saveSchoolAccesses(
-		HttpPrincipal httpPrincipal, long schoolId, String accesses) {
+	public static org.json.JSONObject saveSchoolCategory(
+		HttpPrincipal httpPrincipal, long schoolId, String category) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				AccessServiceUtil.class, "saveSchoolAccesses",
-				_saveSchoolAccessesParameterTypes1);
+				AccessServiceUtil.class, "saveSchoolCategory",
+				_saveSchoolCategoryParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, schoolId, accesses);
+				methodKey, schoolId, category);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject saveSchoolAccess(
+		HttpPrincipal httpPrincipal, long schoolId, String access) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				AccessServiceUtil.class, "saveSchoolAccess",
+				_saveSchoolAccessParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, schoolId, access);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject removeSchoolAccess(
+		HttpPrincipal httpPrincipal, long schoolId, long accessId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				AccessServiceUtil.class, "removeSchoolAccess",
+				_removeSchoolAccessParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, schoolId, accessId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject removeSchoolCategory(
+		HttpPrincipal httpPrincipal, long schoolId, long categoryId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				AccessServiceUtil.class, "removeSchoolCategory",
+				_removeSchoolCategoryParameterTypes4);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, schoolId, categoryId);
 
 			Object returnObj = null;
 
@@ -122,7 +218,7 @@ public class AccessServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				AccessServiceUtil.class, "getUserAccesses",
-				_getUserAccessesParameterTypes2);
+				_getUserAccessesParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -153,7 +249,7 @@ public class AccessServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				AccessServiceUtil.class, "getRoleAccesses",
-				_getRoleAccessesParameterTypes3);
+				_getRoleAccessesParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, schoolId, roleId);
@@ -183,11 +279,17 @@ public class AccessServiceHttp {
 
 	private static final Class<?>[] _getSchoolAccessesParameterTypes0 =
 		new Class[] {long.class};
-	private static final Class<?>[] _saveSchoolAccessesParameterTypes1 =
+	private static final Class<?>[] _saveSchoolCategoryParameterTypes1 =
 		new Class[] {long.class, String.class};
-	private static final Class<?>[] _getUserAccessesParameterTypes2 =
+	private static final Class<?>[] _saveSchoolAccessParameterTypes2 =
+		new Class[] {long.class, String.class};
+	private static final Class<?>[] _removeSchoolAccessParameterTypes3 =
+		new Class[] {long.class, long.class};
+	private static final Class<?>[] _removeSchoolCategoryParameterTypes4 =
+		new Class[] {long.class, long.class};
+	private static final Class<?>[] _getUserAccessesParameterTypes5 =
 		new Class[] {};
-	private static final Class<?>[] _getRoleAccessesParameterTypes3 =
+	private static final Class<?>[] _getRoleAccessesParameterTypes6 =
 		new Class[] {long.class, long.class};
 
 }

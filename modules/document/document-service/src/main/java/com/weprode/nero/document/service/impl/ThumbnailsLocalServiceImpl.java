@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
@@ -52,11 +53,11 @@ public class ThumbnailsLocalServiceImpl extends ThumbnailsLocalServiceBaseImpl {
 		// Copy (or move if original file belong to user tempFolder) file to thumbnail folder
 		FileEntry thumbnail;
 		if (DocumentUtilsLocalServiceUtil.belongToTmpFolder(originalPicture, userId)) {
-			System.out.println("move fileEntry " + sourceFileId + "from temp folder to thumbnails folder, mode rename");
-			thumbnail = FileUtilsLocalServiceUtil.moveFileEntry(
-					userId,
+			logger.info("Move fileEntry " + sourceFileId + "from temp folder to thumbnails folder, mode rename");
+			thumbnail = DLAppServiceUtil.moveFileEntry(
 					sourceFileId,
-					thumbnailFolder.getFolderId()
+					thumbnailFolder.getFolderId(),
+					new ServiceContext()
 			);
 		} else {
 			thumbnail = FileUtilsLocalServiceUtil.copyFileEntry(

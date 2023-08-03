@@ -80,13 +80,64 @@ public class AccessServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject saveSchoolAccesses(
-			long schoolId, String accesses)
+	public static org.json.JSONObject saveSchoolCategory(
+			long schoolId, String category)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				AccessServiceUtil.saveSchoolAccesses(schoolId, accesses);
+				AccessServiceUtil.saveSchoolCategory(schoolId, category);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject saveSchoolAccess(
+			long schoolId, String access)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				AccessServiceUtil.saveSchoolAccess(schoolId, access);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject removeSchoolAccess(
+			long schoolId, long accessId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				AccessServiceUtil.removeSchoolAccess(schoolId, accessId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject removeSchoolCategory(
+			long schoolId, long categoryId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				AccessServiceUtil.removeSchoolCategory(schoolId, categoryId);
 
 			return returnValue;
 		}

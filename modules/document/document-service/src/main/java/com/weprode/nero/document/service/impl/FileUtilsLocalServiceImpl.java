@@ -266,7 +266,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 							StringPool.BLANK, // urlTitle
 							originFile.getDescription(),
 							StringPool.BLANK, // changeLog
-							DLVersionNumberIncrease.MINOR,
+							DLVersionNumberIncrease.NONE,
 							originFile.getContentStream(),
 							originFile.getSize(),
 							null,

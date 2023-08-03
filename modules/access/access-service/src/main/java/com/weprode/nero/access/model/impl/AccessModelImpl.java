@@ -97,7 +97,7 @@ public class AccessModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Access_Access (uuid_ VARCHAR(75) null,accessId LONG not null primary key,categoryId LONG,title VARCHAR(75) null,type_ INTEGER,externalUrl VARCHAR(75) null,folderId LONG,fileId LONG,thumbnailId LONG,position INTEGER)";
+		"create table Access_Access (uuid_ VARCHAR(75) null,accessId LONG not null primary key,categoryId LONG,title VARCHAR(75) null,type_ INTEGER,externalUrl VARCHAR(2000) null,folderId LONG,fileId LONG,thumbnailId LONG,position INTEGER)";
 
 	public static final String TABLE_SQL_DROP = "drop table Access_Access";
 

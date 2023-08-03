@@ -267,6 +267,9 @@ public interface AccessCategoryLocalService
 
 	public void removeBySchoolId(long schoolId);
 
+	public void removeCategory(long categoryId, long schoolId)
+		throws PortalException;
+
 	/**
 	 * Updates the access category in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
@@ -279,5 +282,8 @@ public interface AccessCategoryLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public AccessCategory updateAccessCategory(AccessCategory accessCategory);
+
+	public AccessCategory updateCategory(long categoryId, String name)
+		throws PortalException;
 
 }
