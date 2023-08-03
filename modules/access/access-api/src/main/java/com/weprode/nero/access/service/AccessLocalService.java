@@ -82,7 +82,8 @@ public interface AccessLocalService
 
 	public Access addAccess(
 		long userId, long categoryId, String title, int type, String url,
-		long folderId, long fileId, long thumbnailId, int position);
+		long folderId, long fileId, long thumbnailId, int position,
+		JSONArray jsonProfiles);
 
 	public JSONObject convertToJson(Access access);
 
@@ -272,9 +273,9 @@ public interface AccessLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray getUserAccesses(User user);
 
-	public void removeByCategoryId(long categoryId);
+	public void removeAccess(Access access);
 
-	public void saveSchoolAccesses(User user, long schoolId, String accesses);
+	public void removeByCategoryId(long categoryId);
 
 	/**
 	 * Updates the access in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
@@ -288,5 +289,7 @@ public interface AccessLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public Access updateAccess(Access access);
+
+	public Access updateAccess(JSONObject jsonAccess) throws PortalException;
 
 }

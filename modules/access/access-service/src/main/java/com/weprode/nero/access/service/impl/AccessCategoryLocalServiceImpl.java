@@ -15,10 +15,13 @@
 package com.weprode.nero.access.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.weprode.nero.access.AccessConstants;
+import com.weprode.nero.access.model.Access;
 import com.weprode.nero.access.model.AccessCategory;
+import com.weprode.nero.access.service.AccessCategoryLocalServiceUtil;
 import com.weprode.nero.access.service.AccessLocalServiceUtil;
 import com.weprode.nero.access.service.base.AccessCategoryLocalServiceBaseImpl;
 import org.json.JSONObject;
@@ -46,6 +49,13 @@ public class AccessCategoryLocalServiceImpl extends AccessCategoryLocalServiceBa
 		return accessCategoryPersistence.update(category);
 	}
 
+	public AccessCategory updateCategory(long categoryId, String name) throws PortalException {
+		AccessCategory category = AccessCategoryLocalServiceUtil.getAccessCategory(categoryId);
+		category.setCategoryName(name);
+
+		return AccessCategoryLocalServiceUtil.updateAccessCategory(category);
+	}
+
 	public List<AccessCategory> getSchoolCategories(long schoolId) {
 		return accessCategoryPersistence.findByschoolId(schoolId);
 	}
@@ -56,6 +66,21 @@ public class AccessCategoryLocalServiceImpl extends AccessCategoryLocalServiceBa
 		jsonCategory.put(AccessConstants.CATEGORY_NAME, category.getCategoryName());
 		jsonCategory.put(AccessConstants.POSITION, category.getPosition());
 		return jsonCategory;
+	}
+
+	public void removeCategory(long categoryId, long schoolId) throws PortalException {
+		AccessCategory accessCategory = AccessCategoryLocalServiceUtil.getAccessCategory(categoryId);
+		int oldPosition = accessCategory.getPosition();
+		AccessLocalServiceUtil.removeByCategoryId(categoryId);
+		AccessCategoryLocalServiceUtil.deleteAccessCategory(categoryId);
+
+		for (AccessCategory category : getSchoolCategories(schoolId)) {
+			if (category.getPosition() > oldPosition) {
+				// Access has been move to another folder -> so move up all the following folders
+				category.setPosition(category.getPosition() - 1);
+				AccessCategoryLocalServiceUtil.updateAccessCategory(accessCategory);
+			}
+		}
 	}
 
 	public void removeBySchoolId(long schoolId) {

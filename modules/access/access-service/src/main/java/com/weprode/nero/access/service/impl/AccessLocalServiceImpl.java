@@ -16,6 +16,7 @@ package com.weprode.nero.access.service.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
@@ -85,43 +86,80 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		return schoolAccesses;
 	}
 
-	public void saveSchoolAccesses (User user, long schoolId, String accesses) {
+	public void removeAccess(Access access) {
+		updatePositionsOnRemove(access);
+		AccessLocalServiceUtil.deleteAccess(access);
+	}
 
-		// Delete existing categories / accesses / profiles
-		AccessCategoryLocalServiceUtil.removeBySchoolId(schoolId);
-		JSONArray schoolAccesses = new JSONArray(accesses);
-		// Loop over categories
-		for (int catIdx = 0 ; catIdx < schoolAccesses.length() ; catIdx++) {
-			JSONObject jsonCategory = schoolAccesses.getJSONObject(catIdx);
-			// Create category
-			AccessCategory category = AccessCategoryLocalServiceUtil.addCategory(schoolId, jsonCategory.getString(AccessConstants.CATEGORY_NAME), jsonCategory.getInt(AccessConstants.POSITION));
+	private void updatePositionsOnRemove(Access access) {
+		List<Access> accesses = accessPersistence.findBycategoryId(access.getCategoryId());
 
-			// Loop over accesses
-			JSONArray jsonAccesses = jsonCategory.getJSONArray(AccessConstants.ACCESSES);
-			for (int accessIdx = 0 ; accessIdx < jsonAccesses.length() ; accessIdx++) {
-				JSONObject jsonAccess = jsonAccesses.getJSONObject(accessIdx);
-				// Create access
-				Access access = AccessLocalServiceUtil.addAccess(
-						user.getUserId(),
-						category.getCategoryId(),
-						jsonAccess.getString(AccessConstants.TITLE),
-						jsonAccess.getInt(AccessConstants.TYPE),
-						jsonAccess.getString(AccessConstants.URL),
-						jsonAccess.getLong(AccessConstants.FOLDER_ID),
-						jsonAccess.getLong(AccessConstants.FILE_ID),
-						jsonAccess.getLong(AccessConstants.THUMBNAIL_ID),
-						jsonAccess.getInt(AccessConstants.POSITION)
-				);
-				// Create profiles
-				JSONArray jsonProfiles = jsonAccess.getJSONArray(AccessConstants.PROFILES);
-				for (int profileIdx = 0 ; profileIdx < jsonProfiles.length() ; profileIdx++) {
-					JSONObject jsonProfile = jsonProfiles.getJSONObject(profileIdx);
-					long roleId = jsonProfile.getLong(JSONConstants.ROLE_ID);
-					AccessProfileLocalServiceUtil.addAccessProfile(access.getAccessId(), roleId);
-				}
+		for (Access categoryAccess : accesses) {
+			if (access.getAccessId() == categoryAccess.getAccessId()) continue;
+
+			if (categoryAccess.getPosition() > access.getPosition()) {
+				// Access has been move to another folder -> so move up all the following folders
+				categoryAccess.setPosition(categoryAccess.getPosition() - 1);
+				AccessLocalServiceUtil.updateAccess(categoryAccess);
 			}
 		}
-		logger.info("Saved accesses for schoolId " + schoolId);
+	}
+
+	public Access updateAccess(JSONObject jsonAccess) throws PortalException {
+		// Get access and update it
+		Access access = AccessLocalServiceUtil.getAccess(jsonAccess.getLong(AccessConstants.ACCESS_ID));
+
+		int newPosition = jsonAccess.getInt(AccessConstants.POSITION);
+		long categoryId = jsonAccess.getLong(AccessConstants.CATEGORY_ID);
+
+		// If moved to another category then update previous category positions
+		if (access.getCategoryId() != categoryId) {
+			updatePositionsOnRemove(access);
+			access.setCategoryId(categoryId);
+		}
+
+		// Access has been moved up or down in
+		if (access.getPosition() != newPosition) {
+
+			for (Access categoryAccess : accessPersistence.findBycategoryId(categoryId)) {
+				if (access.getAccessId() == categoryAccess.getAccessId()) continue;
+
+				if (categoryAccess.getPosition() >= newPosition && categoryAccess.getPosition() < access.getPosition()) {
+					// Access has been move up so move down the following access until old position
+					categoryAccess.setPosition(categoryAccess.getPosition() + 1);
+					AccessLocalServiceUtil.updateAccess(categoryAccess);
+				} else if (categoryAccess.getPosition() <= newPosition && categoryAccess.getPosition() > access.getPosition()) {
+					// Access has been move down so move up the previous access until old position
+					categoryAccess.setPosition(categoryAccess.getPosition() - 1);
+					AccessLocalServiceUtil.updateAccess(categoryAccess);
+				}
+			}
+
+			access.setPosition(newPosition);
+		}
+
+		access.setTitle(jsonAccess.getString(AccessConstants.TITLE));
+		access.setType(jsonAccess.getInt(AccessConstants.TYPE));
+		access.setExternalUrl(jsonAccess.getString(AccessConstants.URL));
+		access.setFolderId(jsonAccess.getLong(AccessConstants.FOLDER_ID));
+		access.setFileId(jsonAccess.getLong(AccessConstants.FILE_ID));
+		access.setThumbnailId(jsonAccess.getLong(AccessConstants.THUMBNAIL_ID));
+
+		// Re-create profiles
+		AccessProfileLocalServiceUtil.removeByAccessId(access.getAccessId());
+
+		JSONArray jsonProfiles = jsonAccess.getJSONArray(AccessConstants.PROFILES);
+		for (int profileIdx = 0 ; profileIdx < jsonProfiles.length() ; profileIdx++) {
+			JSONObject jsonProfile = jsonProfiles.getJSONObject(profileIdx);
+			long roleId = jsonProfile.getLong(JSONConstants.ROLE_ID);
+			AccessProfileLocalServiceUtil.addAccessProfile(access.getAccessId(), roleId);
+		}
+
+		access = AccessLocalServiceUtil.updateAccess(access);
+
+		logger.info("Updated access with id " + access.getAccessId());
+
+		return access;
 	}
 
 	public JSONArray getUserAccesses (User user) {
@@ -237,7 +275,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		return jsonAccess;
 	}
 
-	public Access addAccess(long userId, long categoryId, String title, int type, String url, long folderId, long fileId, long thumbnailId, int position) {
+	public Access addAccess(long userId, long categoryId, String title, int type, String url, long folderId, long fileId, long thumbnailId, int position, JSONArray jsonProfiles) {
 		Access access = accessPersistence.create(counterLocalService.increment());
 		access.setCategoryId(categoryId);
 		access.setTitle(title);
@@ -258,6 +296,13 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		} else {
 			access.setThumbnailId(thumbnailId);	// Negative numbers (including 0) are used for front default images
 		}
+
+		for (int profileIdx = 0 ; profileIdx < jsonProfiles.length() ; profileIdx++) {
+			JSONObject jsonProfile = jsonProfiles.getJSONObject(profileIdx);
+			long roleId = jsonProfile.getLong(JSONConstants.ROLE_ID);
+			AccessProfileLocalServiceUtil.addAccessProfile(access.getAccessId(), roleId);
+		}
+
 		return accessPersistence.update(access);
 	}
 

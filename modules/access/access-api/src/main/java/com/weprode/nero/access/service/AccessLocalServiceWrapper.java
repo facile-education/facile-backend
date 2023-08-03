@@ -50,11 +50,12 @@ public class AccessLocalServiceWrapper
 	@Override
 	public com.weprode.nero.access.model.Access addAccess(
 		long userId, long categoryId, String title, int type, String url,
-		long folderId, long fileId, long thumbnailId, int position) {
+		long folderId, long fileId, long thumbnailId, int position,
+		org.json.JSONArray jsonProfiles) {
 
 		return _accessLocalService.addAccess(
 			userId, categoryId, title, type, url, folderId, fileId, thumbnailId,
-			position);
+			position, jsonProfiles);
 	}
 
 	@Override
@@ -333,16 +334,13 @@ public class AccessLocalServiceWrapper
 	}
 
 	@Override
-	public void removeByCategoryId(long categoryId) {
-		_accessLocalService.removeByCategoryId(categoryId);
+	public void removeAccess(com.weprode.nero.access.model.Access access) {
+		_accessLocalService.removeAccess(access);
 	}
 
 	@Override
-	public void saveSchoolAccesses(
-		com.liferay.portal.kernel.model.User user, long schoolId,
-		String accesses) {
-
-		_accessLocalService.saveSchoolAccesses(user, schoolId, accesses);
+	public void removeByCategoryId(long categoryId) {
+		_accessLocalService.removeByCategoryId(categoryId);
 	}
 
 	/**
@@ -360,6 +358,14 @@ public class AccessLocalServiceWrapper
 		com.weprode.nero.access.model.Access access) {
 
 		return _accessLocalService.updateAccess(access);
+	}
+
+	@Override
+	public com.weprode.nero.access.model.Access updateAccess(
+			org.json.JSONObject jsonAccess)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _accessLocalService.updateAccess(jsonAccess);
 	}
 
 	@Override

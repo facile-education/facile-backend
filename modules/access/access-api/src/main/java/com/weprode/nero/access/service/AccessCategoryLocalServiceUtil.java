@@ -300,6 +300,12 @@ public class AccessCategoryLocalServiceUtil {
 		getService().removeBySchoolId(schoolId);
 	}
 
+	public static void removeCategory(long categoryId, long schoolId)
+		throws PortalException {
+
+		getService().removeCategory(categoryId, schoolId);
+	}
+
 	/**
 	 * Updates the access category in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
@@ -314,6 +320,12 @@ public class AccessCategoryLocalServiceUtil {
 		AccessCategory accessCategory) {
 
 		return getService().updateAccessCategory(accessCategory);
+	}
+
+	public static AccessCategory updateCategory(long categoryId, String name)
+		throws PortalException {
+
+		return getService().updateCategory(categoryId, name);
 	}
 
 	public static AccessCategoryLocalService getService() {

@@ -4,7 +4,7 @@ create table Access_Access (
 	categoryId LONG,
 	title VARCHAR(75) null,
 	type_ INTEGER,
-	externalUrl VARCHAR(75) null,
+	externalUrl VARCHAR(2000) null,
 	folderId LONG,
 	fileId LONG,
 	thumbnailId LONG,

@@ -56,10 +56,29 @@ public class AccessServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject saveSchoolAccesses(
-		long schoolId, String accesses) {
+	public org.json.JSONObject removeSchoolAccess(
+		long schoolId, long accessId) {
 
-		return _accessService.saveSchoolAccesses(schoolId, accesses);
+		return _accessService.removeSchoolAccess(schoolId, accessId);
+	}
+
+	@Override
+	public org.json.JSONObject removeSchoolCategory(
+		long schoolId, long categoryId) {
+
+		return _accessService.removeSchoolCategory(schoolId, categoryId);
+	}
+
+	@Override
+	public org.json.JSONObject saveSchoolAccess(long schoolId, String access) {
+		return _accessService.saveSchoolAccess(schoolId, access);
+	}
+
+	@Override
+	public org.json.JSONObject saveSchoolCategory(
+		long schoolId, String category) {
+
+		return _accessService.saveSchoolCategory(schoolId, category);
 	}
 
 	@Override

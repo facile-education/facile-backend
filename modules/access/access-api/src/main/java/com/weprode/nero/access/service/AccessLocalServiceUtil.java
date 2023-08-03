@@ -62,11 +62,12 @@ public class AccessLocalServiceUtil {
 
 	public static Access addAccess(
 		long userId, long categoryId, String title, int type, String url,
-		long folderId, long fileId, long thumbnailId, int position) {
+		long folderId, long fileId, long thumbnailId, int position,
+		org.json.JSONArray jsonProfiles) {
 
 		return getService().addAccess(
 			userId, categoryId, title, type, url, folderId, fileId, thumbnailId,
-			position);
+			position, jsonProfiles);
 	}
 
 	public static org.json.JSONObject convertToJson(Access access) {
@@ -303,15 +304,12 @@ public class AccessLocalServiceUtil {
 		return getService().getUserAccesses(user);
 	}
 
-	public static void removeByCategoryId(long categoryId) {
-		getService().removeByCategoryId(categoryId);
+	public static void removeAccess(Access access) {
+		getService().removeAccess(access);
 	}
 
-	public static void saveSchoolAccesses(
-		com.liferay.portal.kernel.model.User user, long schoolId,
-		String accesses) {
-
-		getService().saveSchoolAccesses(user, schoolId, accesses);
+	public static void removeByCategoryId(long categoryId) {
+		getService().removeByCategoryId(categoryId);
 	}
 
 	/**
@@ -326,6 +324,12 @@ public class AccessLocalServiceUtil {
 	 */
 	public static Access updateAccess(Access access) {
 		return getService().updateAccess(access);
+	}
+
+	public static Access updateAccess(org.json.JSONObject jsonAccess)
+		throws PortalException {
+
+		return getService().updateAccess(jsonAccess);
 	}
 
 	public static AccessLocalService getService() {

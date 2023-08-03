@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.access.AccessConstants;
+import com.weprode.nero.access.service.AccessCategoryLocalServiceUtil;
 import com.weprode.nero.access.service.AccessLocalServiceUtil;
 import com.weprode.nero.access.service.base.AccessServiceBaseImpl;
 import com.weprode.nero.commons.JSONProxy;
@@ -75,9 +77,8 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "save-school-accesses", method = "POST")
-	public JSONObject saveSchoolAccesses(long schoolId, String accesses) {
-
+	@JSONWebService(value = "save-school-category", method = "POST")
+	public JSONObject saveSchoolCategory(long schoolId, String category) {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -97,13 +98,129 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		}
 
 		try {
-			logger.info("User " + user.getUserId() + " saves accesses for school " + schoolId);
-			AccessLocalServiceUtil.saveSchoolAccesses(user, schoolId, accesses);
+			logger.info("User " + user.getUserId() + " save category for school " + schoolId);
+			JSONObject jsonCategory = new JSONObject(category);
+			if (jsonCategory.has(AccessConstants.CATEGORY_ID)) {
+				AccessCategoryLocalServiceUtil.updateCategory(jsonCategory.getLong(AccessConstants.CATEGORY_ID), jsonCategory.getString(AccessConstants.CATEGORY_NAME));
+			} else {
+				AccessCategoryLocalServiceUtil.addCategory(
+						schoolId,
+						jsonCategory.getString(AccessConstants.CATEGORY_NAME),
+						jsonCategory.getInt(AccessConstants.POSITION));
+			}
 			result.put(JSONConstants.SUCCESS, true);	// Only set to TRUE in case of success
 
 		} catch (Exception e) {
 			logger.error("Error saving school accesses for schoolId " + schoolId, e);
 		}
+		return result;
+	}
+
+	@JSONWebService(value = "save-school-access", method = "POST")
+	public JSONObject saveSchoolAccess(long schoolId, String access) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			logger.info("User " + user.getUserId() + " save access for school " + schoolId);
+			JSONObject jsonAccess = new JSONObject(access);
+			if (jsonAccess.has(AccessConstants.ACCESS_ID)) {
+				AccessLocalServiceUtil.updateAccess(jsonAccess);
+			} else {
+				AccessLocalServiceUtil.addAccess(
+					user.getUserId(),
+					jsonAccess.getLong(AccessConstants.CATEGORY_ID),
+					jsonAccess.getString(AccessConstants.TITLE),
+					jsonAccess.getInt(AccessConstants.TYPE),
+					jsonAccess.getString(AccessConstants.URL),
+					jsonAccess.getLong(AccessConstants.FOLDER_ID),
+					jsonAccess.getLong(AccessConstants.FILE_ID),
+					jsonAccess.getLong(AccessConstants.THUMBNAIL_ID),
+					jsonAccess.getInt(AccessConstants.POSITION),
+					jsonAccess.getJSONArray(AccessConstants.PROFILES)
+				);
+			}
+			result.put(JSONConstants.SUCCESS, true);	// Only set to TRUE in case of success
+
+		} catch (Exception e) {
+			logger.error("Error saving school access for schoolId " + schoolId, e);
+		}
+
+		return result;
+	}
+
+	@JSONWebService(value = "remove-school-access", method = "DELETE")
+	public JSONObject removeSchoolAccess(long schoolId, long accessId) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			AccessLocalServiceUtil.removeAccess(AccessLocalServiceUtil.getAccess(accessId));
+			result.put(JSONConstants.SUCCESS, true);
+		} catch (Exception e) {
+			logger.error("Error while removing accessId " + accessId, e);
+		}
+
+		return result;
+	}
+
+	@JSONWebService(value = "remove-school-category", method = "DELETE")
+	public JSONObject removeSchoolCategory(long schoolId, long categoryId) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			AccessCategoryLocalServiceUtil.removeCategory(categoryId, schoolId);
+			result.put(JSONConstants.SUCCESS, true);
+		} catch (Exception e) {
+			logger.error("Error while removing access categoryId " + categoryId, e);
+		}
+
 		return result;
 	}
 
