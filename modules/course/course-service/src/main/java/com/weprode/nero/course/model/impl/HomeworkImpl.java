@@ -30,6 +30,8 @@ import com.weprode.nero.course.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.course.CourseConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.schedule.exception.NoSuchCDTSessionException;
+import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
@@ -59,7 +61,13 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         jsonHomework.put(JSONConstants.MODIFICATION_DATE, sdf.format(this.getModificationDate()));
         jsonHomework.put(JSONConstants.SOURCE_SESSION_ID, this.getSourceSessionId());
         jsonHomework.put(JSONConstants.TO_DATE, sdf.format(this.getTargetDate()));
-        jsonHomework.put(JSONConstants.TARGET_SESSION_ID, this.getTargetSessionId());
+        try {
+            CDTSession targetSession = CDTSessionLocalServiceUtil.getCDTSession(this.getTargetSessionId());
+            jsonHomework.put(JSONConstants.TARGET_SESSION_ID, this.getTargetSessionId());
+            jsonHomework.put(JSONConstants.TARGET_SLOT_NUMBER, targetSession.getSlot());
+        } catch (Exception e) {
+            logger.error("Error retrieving session with Id " + this.getTargetSessionId(), e);
+        }
         jsonHomework.put(JSONConstants.IS_DRAFT, this.getIsDraft());
         jsonHomework.put(JSONConstants.PUBLICATION_DATE, sdf.format(this.getPublicationDate()));
         if (this.getEstimatedTime() > 0) {
