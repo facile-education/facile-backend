@@ -111,20 +111,22 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 
 		int newPosition = jsonAccess.getInt(AccessConstants.POSITION);
 		long categoryId = jsonAccess.getLong(AccessConstants.CATEGORY_ID);
+		boolean hasCategoryChanged = (access.getCategoryId() != categoryId);
 
 		// If moved to another category then update previous category positions
-		if (access.getCategoryId() != categoryId) {
+		if (hasCategoryChanged) {
 			updatePositionsOnRemove(access);
 			access.setCategoryId(categoryId);
 		}
 
 		// Access has been moved up or down in
-		if (access.getPosition() != newPosition) {
+		if (access.getPosition() != newPosition || hasCategoryChanged) {
 
 			for (Access categoryAccess : accessPersistence.findBycategoryId(categoryId)) {
 				if (access.getAccessId() == categoryAccess.getAccessId()) continue;
 
-				if (categoryAccess.getPosition() >= newPosition && categoryAccess.getPosition() < access.getPosition()) {
+				if (categoryAccess.getPosition() >= newPosition && categoryAccess.getPosition() < access.getPosition()
+						|| (hasCategoryChanged && categoryAccess.getPosition() >= newPosition)) {
 					// Access has been move up so move down the following access until old position
 					categoryAccess.setPosition(categoryAccess.getPosition() + 1);
 					AccessLocalServiceUtil.updateAccess(categoryAccess);
