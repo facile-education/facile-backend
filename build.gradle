@@ -1,1 +1,10 @@
-// Check GETTING_STARTED.markdown for information regarding usage.
+plugins {
+  id "org.sonarqube" version "3.5.0.2730"
+}
+
+sonar {
+  properties {
+    property "sonar.projectKey", "nero_facile_AYnVxxvewEVi6QW91p2c"
+    property "sonar.qualitygate.wait", true 
+  }
+}
