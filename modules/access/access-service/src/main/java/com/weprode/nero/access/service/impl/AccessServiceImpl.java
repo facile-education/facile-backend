@@ -140,7 +140,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			logger.info("User " + user.getUserId() + " save access for school " + schoolId);
 			JSONObject jsonAccess = new JSONObject(access);
 			if (jsonAccess.has(AccessConstants.ACCESS_ID)) {
-				AccessLocalServiceUtil.updateAccess(jsonAccess);
+				AccessLocalServiceUtil.updateAccess(user.getUserId(), jsonAccess);
 			} else {
 				AccessLocalServiceUtil.addAccess(
 					user.getUserId(),

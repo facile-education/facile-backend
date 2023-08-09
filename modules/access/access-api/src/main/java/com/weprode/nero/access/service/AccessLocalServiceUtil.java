@@ -326,10 +326,11 @@ public class AccessLocalServiceUtil {
 		return getService().updateAccess(access);
 	}
 
-	public static Access updateAccess(org.json.JSONObject jsonAccess)
+	public static Access updateAccess(
+			long userId, org.json.JSONObject jsonAccess)
 		throws PortalException {
 
-		return getService().updateAccess(jsonAccess);
+		return getService().updateAccess(userId, jsonAccess);
 	}
 
 	public static AccessLocalService getService() {

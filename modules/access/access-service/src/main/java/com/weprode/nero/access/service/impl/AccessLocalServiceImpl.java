@@ -105,7 +105,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		}
 	}
 
-	public Access updateAccess(JSONObject jsonAccess) throws PortalException {
+	public Access updateAccess(long userId, JSONObject jsonAccess) throws PortalException {
 		// Get access and update it
 		Access access = AccessLocalServiceUtil.getAccess(jsonAccess.getLong(AccessConstants.ACCESS_ID));
 
@@ -145,7 +145,21 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		access.setExternalUrl(jsonAccess.getString(AccessConstants.URL));
 		access.setFolderId(jsonAccess.getLong(AccessConstants.FOLDER_ID));
 		access.setFileId(jsonAccess.getLong(AccessConstants.FILE_ID));
-		access.setThumbnailId(jsonAccess.getLong(AccessConstants.THUMBNAIL_ID));
+
+		long thumbnailId = jsonAccess.getLong(AccessConstants.THUMBNAIL_ID);
+
+		// Copy thumbnail file to thumbnail folder
+		if (access.getThumbnailId() != thumbnailId && thumbnailId > 0) {
+			try {
+				FileEntry thumbnail = ThumbnailsLocalServiceUtil.createThumbnailFile(userId, thumbnailId, String.valueOf(access.getAccessId()));
+				access.setThumbnailId(thumbnail.getFileEntryId());
+			} catch (Exception e) {
+				access.setThumbnailId(0L);
+				logger.error("Cannot create thumbnail file from fileId " + thumbnailId + " for access id " + access.getAccessId(), e);
+			}
+		} else if (thumbnailId <= 0){
+			access.setThumbnailId(thumbnailId);	// Negative numbers (including 0) are used for front default images
+		}
 
 		// Re-create profiles
 		AccessProfileLocalServiceUtil.removeByAccessId(access.getAccessId());
