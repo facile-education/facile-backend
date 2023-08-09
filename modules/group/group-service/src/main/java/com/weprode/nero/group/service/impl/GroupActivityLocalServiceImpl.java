@@ -78,7 +78,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
                 // Group news
                 if (withNews) {
-                    long groupId = groupIds.size() == 1 ? groupIds.get(0) : 0;
+                    long groupId = 0;
                     List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, groupId, minDate, maxDate, nbResults, true);
                     for (News news : groupNews) {
                         GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
