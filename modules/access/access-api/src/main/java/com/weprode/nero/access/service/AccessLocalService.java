@@ -290,6 +290,7 @@ public interface AccessLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Access updateAccess(Access access);
 
-	public Access updateAccess(JSONObject jsonAccess) throws PortalException;
+	public Access updateAccess(long userId, JSONObject jsonAccess)
+		throws PortalException;
 
 }

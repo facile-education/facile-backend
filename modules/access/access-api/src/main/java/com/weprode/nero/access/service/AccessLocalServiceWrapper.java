@@ -362,10 +362,10 @@ public class AccessLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.access.model.Access updateAccess(
-			org.json.JSONObject jsonAccess)
+			long userId, org.json.JSONObject jsonAccess)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _accessLocalService.updateAccess(jsonAccess);
+		return _accessLocalService.updateAccess(userId, jsonAccess);
 	}
 
 	@Override
