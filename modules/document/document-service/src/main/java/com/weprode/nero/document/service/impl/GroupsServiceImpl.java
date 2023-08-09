@@ -14,22 +14,21 @@
 
 package com.weprode.nero.document.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
-
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.nero.commons.JSONProxy;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.document.constants.PermissionConstants;
@@ -39,8 +38,9 @@ import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.GroupsLocalServiceUtil;
 import com.weprode.nero.document.service.VersionLocalServiceUtil;
 import com.weprode.nero.document.service.base.GroupsServiceBaseImpl;
-
 import com.weprode.nero.document.utils.DLAppJsonFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.List;
@@ -80,6 +80,14 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 			user = getGuestOrUser();
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
+			if (!nodePath.equals(COLLABORATIVE)) {
+				Folder folder = DLAppServiceUtil.getFolder(parseLong(nodePath));
+				Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+				if (group.isUserGroup()) {
+					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+				}
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
@@ -122,6 +130,14 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 			user = getGuestOrUser();
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
+			if (!nodePath.equals(COLLABORATIVE)) {
+				Folder folder = DLAppServiceUtil.getFolder(parseLong(nodePath));
+				Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+				if (group.isUserGroup()) {
+					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+				}
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);

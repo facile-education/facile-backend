@@ -18,27 +18,24 @@ import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.persistence.DLFileVersionUtil;
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.nero.commons.JSONProxy;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.base.FolderUtilsServiceBaseImpl;
-
 import com.weprode.nero.document.utils.DLAppJsonFactory;
 import com.weprode.nero.document.utils.DocumentUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.List;
@@ -64,6 +61,10 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			user = getGuestOrUser();
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
+			if (DLAppServiceUtil.getFolder(folderId).getUserId() != user.getUserId()) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
@@ -188,6 +189,10 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+
+			if (DLAppServiceUtil.getFolder(folderId).getUserId() != user.getUserId()) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -202,6 +207,10 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			user = getGuestOrUser();
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
+			if (DLAppServiceUtil.getFolder(folderId).getUserId() != user.getUserId()) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
