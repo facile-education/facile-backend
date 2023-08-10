@@ -224,7 +224,8 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			// Set start date at current week's day number
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(new Date());
-			cal.set(Calendar.DAY_OF_WEEK, dayNumber - 1);
+			cal.set(Calendar.DAY_OF_WEEK, dayNumber + 1);
+
 			// Set hour and minutes
 			String[] startHourTab = startHour.split(":");
 			cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startHourTab[0]));
