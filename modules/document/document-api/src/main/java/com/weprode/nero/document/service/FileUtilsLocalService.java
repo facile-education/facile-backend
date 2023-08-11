@@ -23,11 +23,12 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ObjectValuePair;
-import org.osgi.annotation.versioning.ProviderType;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Provides the local service interface for FileUtils. Methods of this

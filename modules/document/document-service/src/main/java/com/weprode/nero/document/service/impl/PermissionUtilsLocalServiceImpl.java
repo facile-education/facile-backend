@@ -414,6 +414,7 @@ public class PermissionUtilsLocalServiceImpl
 		}
 		if (permissionObject.getBoolean(PermissionConstants.ADD_OBJECT)) {
 			folderPermissionList.add(PermissionConstants.ADD_OBJECT);
+			folderPermissionList.add(ActionKeys.ADD_DOCUMENT);
 		}
 		if (permissionObject.getBoolean(ActionKeys.DELETE)) {
 			folderPermissionList.add(ActionKeys.DELETE);

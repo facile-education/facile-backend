@@ -14,7 +14,6 @@ public class DocumentConstants {
     public static final int NB_RENAMED_VERSIONS = 500;
 
     public static final String SENDING_BOX_FOLDER_NAME = "._SENDING_BOX_";
-    public static final String DROP_BOX_FOLDER_NAME = "._CASIER_";
     public static final String IM_BOX_FOLDER_NAME = "._IM_BOX_";
     public static final String SCHOOL_BAG_FOLDER_NAME = "Mon cartable";
     public static final String GROUP_FOLDER_NAME = "Atelier du groupe";
