@@ -26,6 +26,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -118,7 +120,8 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
     
     public JSONArray getEventReadStatus(long eventId, long userId) throws SystemException, PortalException {
         JSONArray jsonReadStatus = new JSONArray();
-        
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+
         // Loop over populations
         List<EventPopulation> populations = EventPopulationLocalServiceUtil.getEventPopulations(eventId);
         if (populations != null) {
@@ -149,7 +152,7 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
                     try {
                         EventRead eventRead = eventReadPersistence.fetchByPrimaryKey(new EventReadPK(eventId, member.getUserId()));
                         jsonMember.put(JSONConstants.HAS_READ, true);
-                        jsonMember.put(JSONConstants.READ_DATE, eventRead.getReadDate());
+                        jsonMember.put(JSONConstants.READ_DATE, sdf.format(eventRead.getReadDate()));
                     } catch (Exception e) {
                         jsonMember.put(JSONConstants.HAS_READ, false);
                     }
