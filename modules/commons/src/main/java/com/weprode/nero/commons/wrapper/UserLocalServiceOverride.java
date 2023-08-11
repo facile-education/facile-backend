@@ -435,7 +435,7 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			User user = UserLocalServiceUtil.getUser(userId);
 			List<DLFolder> dlFolderList = DLFolderLocalServiceUtil.getFolders(user.getGroupId(), 0, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 			for (DLFolder dlFolder : dlFolderList) {
-				if (dlFolder.getName().equals(DocumentConstants.DROP_BOX_FOLDER_NAME) || dlFolder.getName().equals(DocumentConstants.SCHOOL_BAG_FOLDER_NAME)) {
+				if (dlFolder.getName().equals(DocumentConstants.SCHOOL_BAG_FOLDER_NAME)) {
 					logger.info("Deleting folder "+dlFolder.getName());
 					DLFolderLocalServiceUtil.deleteFolder(dlFolder.getFolderId());
 				}
