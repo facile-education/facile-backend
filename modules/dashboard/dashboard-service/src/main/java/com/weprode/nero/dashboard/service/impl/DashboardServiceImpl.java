@@ -175,9 +175,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             JSONArray jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(user, userId, minDate, maxDate);
             for (int i = 0 ; i < jsonSchoollifeSessions.length() ; i++) {
                 JSONObject jsonSchoollifeSession = jsonSchoollifeSessions.getJSONObject(i);
-                // Build teacher list as string
-                String teachersStr = jsonSchoollifeSession.getJSONObject(JSONConstants.TEACHER).getString(JSONConstants.FIRST_NAME).charAt(0) + ". " + jsonSchoollifeSession.getJSONObject(JSONConstants.TEACHER).getString(JSONConstants.LAST_NAME);
-                jsonSchoollifeSession.put(JSONConstants.TEACHERS, teachersStr);
+                jsonSchoollifeSession.put(JSONConstants.TEACHERS, jsonSchoollifeSession.getJSONArray(JSONConstants.TEACHERS));
                 try {
                     Calendar sessionCal = Calendar.getInstance(Locale.FRANCE);
                     sessionCal.setTime(new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(jsonSchoollifeSession.getString("startDate")));
