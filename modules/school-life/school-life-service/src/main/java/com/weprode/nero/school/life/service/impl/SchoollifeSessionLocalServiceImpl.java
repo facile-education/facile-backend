@@ -235,6 +235,9 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
         jsonSession.put(JSONConstants.END_DATE, df.format(session.getEndDate()));
         jsonSession.put(JSONConstants.ROOM, slot.getRoom());
         jsonSession.put(JSONConstants.TYPE, session.getType());
+        jsonSession.put(JSONConstants.SUBJECT, SchoollifeSessionLocalServiceUtil.getSessionName(session.getSchoollifeSessionId()));
+        jsonSession.put(JSONConstants.TITLE, SchoollifeSessionLocalServiceUtil.getSessionName(session.getSchoollifeSessionId()));
+        jsonSession.put(JSONConstants.COLOR, SchoollifeSessionLocalServiceUtil.getColorFromSchoollifeType(session.getType()));
 
         JSONArray jsonTeachers = new JSONArray();
         User teacher = UserLocalServiceUtil.getUser(slot.getTeacherId());
