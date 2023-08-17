@@ -180,6 +180,11 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.model.Role getPersonalRole() {
+		return _roleUtilsLocalService.getPersonalRole();
+	}
+
+	@Override
 	public com.liferay.portal.kernel.model.Role getPsychologueRole() {
 		return _roleUtilsLocalService.getPsychologueRole();
 	}

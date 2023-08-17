@@ -59,6 +59,10 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 		return getRole(NeroRoleConstants.NATIONAL_3);
 	}
 
+	public Role getPersonalRole() {
+		return getRole(NeroRoleConstants.PERSONAL);
+	}
+
 	public Role getSchoolLifeRole() {
 		return getRole(NeroRoleConstants.NATIONAL_5);
 	}

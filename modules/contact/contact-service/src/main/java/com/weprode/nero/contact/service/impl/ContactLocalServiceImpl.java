@@ -325,7 +325,12 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 			if (OrgDetailsLocalServiceUtil.isSubject(orgId)) {
 				populationName = orgName;
 			} else {
-				if (roleId == RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()) {
+				if (roleId == 0) {
+					// Whole school
+					populationName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), true);
+				} else if (roleId == RoleUtilsLocalServiceUtil.getPersonalRole().getRoleId()) {
+					populationName = "Tous les personnels";
+				} else if (roleId == RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()) {
 					if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
 						populationName = "Tous les élèves";
 					} else if (OrgDetailsLocalServiceUtil.isVolee(orgId)) {
@@ -349,12 +354,18 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					} else {
 						populationName = NeroRoleConstants.TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
 					}
+				} else if (roleId == RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId()) {
+					if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+						populationName = "Tous les maîtres de classe";
+					} else if (OrgDetailsLocalServiceUtil.isVolee(orgId)) {
+						populationName = "Maîtres de classe de la volée " + orgName;
+					} else {
+						populationName = NeroRoleConstants.MAIN_TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
+					}
 				} else if (roleId == RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId()) {
 					populationName = NeroRoleConstants.DIRECTION_INCLUSIVE + ContactConstants.OF + orgName;
 				} else if (roleId == RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId()) {
 					populationName = NeroRoleConstants.DOYEN_INCLUSIVE + ContactConstants.OF + orgName;
-				} else if (roleId == RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId()) {
-					populationName = NeroRoleConstants.MAIN_TEACHER_INCLUSIVE + ContactConstants.OF + orgName;
 				} else if (roleId == RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId()) {
 					populationName = NeroRoleConstants.CONSEILLER_ORIENTATION_INCLUSIVE + ContactConstants.OF + orgName;
 				} else if (roleId == RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId()) {

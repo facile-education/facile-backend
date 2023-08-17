@@ -22,10 +22,9 @@ import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+import org.osgi.annotation.versioning.ProviderType;
 
 import java.util.List;
-
-import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Provides the local service interface for RoleUtils. Methods of this
@@ -135,6 +134,9 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getParentRole();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Role getPersonalRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getPsychologueRole();

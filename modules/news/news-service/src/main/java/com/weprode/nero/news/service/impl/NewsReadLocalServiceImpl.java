@@ -151,7 +151,10 @@ public class NewsReadLocalServiceImpl extends NewsReadLocalServiceBaseImpl {
                     List<Long> orgIds = new ArrayList<>();
                     orgIds.add(group.getClassPK());
                     List<Long> roleIds = new ArrayList<>();
-                    roleIds.add(population.getRoleId());
+                    // Role Id 0 means everyone
+                    if (population.getRoleId() != 0) {
+                        roleIds.add(population.getRoleId());
+                    }
                     groupMembers = UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
                     jsonPopulation.put(JSONConstants.POPULATION_NAME, ContactLocalServiceUtil.getPopulationName(group.getClassPK(), population.getRoleId(), userId));
                 }
