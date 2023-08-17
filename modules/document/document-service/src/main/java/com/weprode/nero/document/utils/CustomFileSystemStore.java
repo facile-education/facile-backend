@@ -109,13 +109,16 @@ public class CustomFileSystemStore implements Store {
             String versionLabel)
             throws NoSuchFileException {
 
+        // System.out.println("getFileAsStream with repositoryId=" + repositoryId + ", fileName=" + fileName + ", versionLabel=" + versionLabel);
         if (Validator.isNull(versionLabel)) {
             versionLabel = getHeadVersionLabel(
                     companyId, repositoryId, fileName);
+            // System.out.println("versionLabel=" + versionLabel);
         }
 
         File fileNameVersionFile = getFileNameVersionFile(
                 companyId, repositoryId, fileName, versionLabel);
+        // System.out.println("fileNameVersionFile=" + fileNameVersionFile.getAbsolutePath());
 
         try {
             return new FileInputStream(fileNameVersionFile);
@@ -172,9 +175,12 @@ public class CustomFileSystemStore implements Store {
     public String[] getFileVersions(
             long companyId, long repositoryId, String fileName) {
 
+        // System.out.println("getFileVersions for repositoryId " + repositoryId + " and fileName=" + fileName);
         File fileNameDir = getFileNameDir(companyId, repositoryId, fileName);
+        // System.out.println("getFileVersions : fileNameDir=" + fileNameDir.getAbsolutePath());
 
         if (!fileNameDir.exists()) {
+            // System.out.println("getFileVersions : Return empty array");
             return StringPool.EMPTY_ARRAY;
         }
 
@@ -182,6 +188,14 @@ public class CustomFileSystemStore implements Store {
 
         Arrays.sort(versions, DLUtil::compareVersions);
 
+        for (int i = 0 ; i < versions.length ; i++) {
+            int x = versions[i].lastIndexOf(CharPool.UNDERLINE);
+            if (x > -1) {
+                int y = versions[i].lastIndexOf(CharPool.PERIOD);
+                versions[i] = versions[i].substring(x + 1, y);
+                // System.out.println("getFileVersions : Return version = " + versions[i]);
+            }
+        }
         return versions;
     }
 
@@ -244,9 +258,9 @@ public class CustomFileSystemStore implements Store {
 
         String ext = StringPool.PERIOD + FileUtil.getExtension(fileName);
 
-        if (ext.equals(StringPool.PERIOD)) {
-            ext += _HOOK_EXTENSION;
-        }
+//        if (ext.equals(StringPool.PERIOD)) {
+//            ext += _HOOK_EXTENSION;
+//        }
 
         StringBundler sb = new StringBundler();
 
@@ -267,6 +281,8 @@ public class CustomFileSystemStore implements Store {
         pathSB.append(StringPool.SLASH);
         pathSB.append(fileNameFragment);
         pathSB.append(ext);
+
+        // System.out.println("getFileNameDir returns " + pathSB.toString());
 
         return new File(pathSB.toString());
     }
@@ -327,10 +343,18 @@ public class CustomFileSystemStore implements Store {
             StringBundler sb = new StringBundler();
 
             String fileNameFragment = removeExtension(fileName);
+            // System.out.println(" > fileNameFragment=" + fileNameFragment);
 
             buildPath(sb, fileNameFragment);
+            // System.out.println(" > sb=" + sb.toString());
+            // System.out.println(" > version=" + version);
 
             File repositoryDir = getRepositoryDir(companyId, repositoryId);
+            // System.out.println(" > repositoryDir=" + repositoryDir.getAbsolutePath());
+            // System.out.println(" > ext=" + ext);
+
+            String res = repositoryDir + StringPool.SLASH + sb.toString() + StringPool.SLASH + fileNameFragment + ext + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext;
+            // System.out.println("getFileNameVersionFile1 returns " + res);
 
             return new File(repositoryDir + StringPool.SLASH + sb.toString() + StringPool.SLASH + fileNameFragment + ext + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext);
         }
@@ -339,6 +363,8 @@ public class CustomFileSystemStore implements Store {
 
             String fileNameFragment = removeExtension(fileName.substring(pos + 1));
 
+            String res = fileNameDir + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext;
+            // System.out.println("getFileNameVersionFile2 returns " + res);
             return new File(fileNameDir + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext);
         }
     }
@@ -362,6 +388,7 @@ public class CustomFileSystemStore implements Store {
             }
         }
 
+        // System.out.println("getHeadVersionLabel returns " + headVersionLabel);
         return headVersionLabel;
     }
 
@@ -389,6 +416,7 @@ public class CustomFileSystemStore implements Store {
             repositoryDir.mkdirs();
         }
 
+        // System.out.println("getRepositoryDir returns " + repositoryDir.getAbsolutePath());
         return repositoryDir;
     }
 
