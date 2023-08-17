@@ -7,6 +7,7 @@ import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailService;
+import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.mail.kernel.template.MailTemplate;
 import com.liferay.mail.kernel.template.MailTemplateContext;
 import com.liferay.mail.kernel.template.MailTemplateContextBuilder;
@@ -20,13 +21,11 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.exception.UserEmailAddressException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.Ticket;
 import com.liferay.portal.kernel.model.TicketConstants;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceWrapper;
 import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
@@ -34,7 +33,6 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceWrapper;
 import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -224,14 +222,16 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 					bodyTemplate.renderAsString(
 							toUser.getLocale(), mailTemplateContext),
 					true);
+			logger.info("About to send email from " + fromAddress + " to " + toAddress + " (" + toUser.getFullName() + ")");
+			MailServiceUtil.sendEmail(mailMessage);
 
-			Company company = CompanyLocalServiceUtil.getCompany(toUser.getCompanyId());
+//			Company company = CompanyLocalServiceUtil.getCompany(toUser.getCompanyId());
+//
+//			mailMessage.setMessageId(
+//					PortalUtil.getMailId(
+//							company.getMx(), "user", System.currentTimeMillis()));
 
-			mailMessage.setMessageId(
-					PortalUtil.getMailId(
-							company.getMx(), "user", System.currentTimeMillis()));
-
-			mailService.sendEmail(mailMessage);
+//			mailService.sendEmail(mailMessage);
 		}
 		catch (IOException ioException) {
 			throw new SystemException(ioException);

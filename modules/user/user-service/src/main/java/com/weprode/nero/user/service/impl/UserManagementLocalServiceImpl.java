@@ -21,6 +21,7 @@ import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserManagementLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserManagementLocalServiceBaseImpl;
@@ -126,9 +127,11 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             userProperties.setManualAccount(true);
             UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
 
-            long[] roleIds = new long[1];
-            roleIds[0] = roleId;
-            RoleLocalServiceUtil.addUserRoles(createdUser.getUserId(), roleIds);
+            RoleLocalServiceUtil.addUserRole(createdUser.getUserId(), roleId);
+            // Add personal role if needed
+            if (RoleUtilsLocalServiceUtil.getAgentsRoleIds().contains(roleId)) {
+                RoleLocalServiceUtil.addUserRole(createdUser.getUserId(), RoleUtilsLocalServiceUtil.getPersonalRole().getRoleId());
+            }
 
             if (schoolId > 0) {
                 Organization school = OrganizationLocalServiceUtil.getOrganization(schoolId);

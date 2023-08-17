@@ -36,7 +36,7 @@ public class CustomAuthVerifier implements AuthVerifier {
             if (credentials != null) {
                 long userId = Long.parseLong(credentials[0]);
                 User user = UserLocalServiceUtil.getUser(userId);
-                logger.info("Connected user is " + user.getFullName());
+                logger.debug("Connected user is " + user.getFullName());
                 authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
                 authVerifierResult.setPasswordBasedAuthentication(true);
                 authVerifierResult.setUserId(userId);
@@ -46,7 +46,7 @@ public class CustomAuthVerifier implements AuthVerifier {
                 if (credentials != null) {
                     long userId = Long.parseLong(credentials[0]);
                     User user = UserLocalServiceUtil.getUser(userId);
-                    logger.info("Connected user on mobile app is " + user.getFullName());
+                    logger.debug("Connected user on mobile app is " + user.getFullName());
                     authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
                     authVerifierResult.setPasswordBasedAuthentication(true);
                     authVerifierResult.setUserId(userId);

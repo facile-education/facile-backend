@@ -26,7 +26,7 @@ public class LoginPostAction implements LifecycleAction {
         try {
             User identifiedUser = PortalUtil.getUser(lifecycleEvent.getRequest());
 
-            logger.info("Adding login stat for user " + identifiedUser.getFullName());
+            logger.info("================ User " + identifiedUser.getFullName() + " (" + identifiedUser.getUserId() + ") logs in =======================");
             UserLoginLocalServiceUtil.addUserLogin(identifiedUser, false);
         } catch (PortalException e) {
             logger.error("Could not add login stat for logged user", e);

@@ -52,7 +52,7 @@ public class ShibbolethAutoLogin implements AutoLogin {
             }
 
             if (user != null) {
-                logger.info("User authenticated: " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
+                logger.debug("User authenticated: " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
                 String[] credentials = new String[3];
                 credentials[0] = String.valueOf(user.getUserId());
                 credentials[1] = user.getPassword();

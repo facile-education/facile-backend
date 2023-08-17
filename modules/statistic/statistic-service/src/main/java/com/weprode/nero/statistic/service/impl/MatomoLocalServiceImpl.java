@@ -60,7 +60,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
     public JSONObject fetchStatistics(User user, String compareOn, String period, Date startDate, Date endDate,
                                       List<Long> profileIds, List<Long> schoolIds, List<Long> serviceIds, boolean actions) throws PortalException, SystemException, IOException {
 
-        logger.info("About to fetch statistics from " + startDate + " to " + endDate + ", compare on " + compareOn
+        logger.debug("About to fetch statistics from " + startDate + " to " + endDate + ", compare on " + compareOn
                 + " with profileIds = " + profileIds + ", schoolIds = " + schoolIds + " and serviceIds = " + serviceIds);
         Map<String, String> args = new HashMap<>();
         String url = PropsUtil.get(NeroSystemProperties.MATOMO_API_URL);
