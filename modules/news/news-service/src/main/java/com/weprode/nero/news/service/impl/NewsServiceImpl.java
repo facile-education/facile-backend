@@ -143,7 +143,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         }
         try {
             Date maxDate = new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).parse(maxDateString);
-            logger.info("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + " school news before " + maxDate);
+            logger.info("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + "school news before " + maxDate);
             List<News> newsList = NewsLocalServiceUtil.getNews(user,0, maxDate, nbNews,false, importantOnly, unreadOnly);
 
             JSONArray jsonNewsArray = new JSONArray();

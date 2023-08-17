@@ -141,7 +141,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         for (Role role : roles) {
             roleIds.add(role.getRoleId());
         }
-        // For communities and one role school level orgs (Enseignants, Personnels...)
+        // For communities and schools
         roleIds.add((long) 0);
 
         return eventFinder.getUserEvents(user.getUserId(), startIndex, nbEvents, groupIds, roleIds, unreadOnly);
@@ -214,7 +214,9 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
                     List<Long> orgIds = new ArrayList<>();
                     orgIds.add(group.getClassPK());
                     List<Long> roleIds = new ArrayList<>();
-                    roleIds.add(population.getLong(JSONConstants.ROLE_ID));
+                    if (population.getLong(JSONConstants.ROLE_ID) != 0) {
+                        roleIds.add(population.getLong(JSONConstants.ROLE_ID));
+                    }
                     groupMembers = UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
                 }
 

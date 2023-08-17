@@ -167,6 +167,10 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().getParentRole();
 	}
 
+	public static com.liferay.portal.kernel.model.Role getPersonalRole() {
+		return getService().getPersonalRole();
+	}
+
 	public static com.liferay.portal.kernel.model.Role getPsychologueRole() {
 		return getService().getPsychologueRole();
 	}

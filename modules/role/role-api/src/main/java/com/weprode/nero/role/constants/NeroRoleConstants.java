@@ -52,7 +52,8 @@ public class NeroRoleConstants {
 	public static final String NATIONAL_COL = "National_col"; // Personnel de la collectivité territoriale
 
 	// Custom national
-	
+	public static final String PERSONAL = "Personnel";
+
 	public static final String DIRECTION_INCLUSIVE = "Directeurs\u00B7trices";
 	public static final String DOYEN = "Doyen";
 	public static final String DOYEN_INCLUSIVE = "Doyens\u00B7ennes";

@@ -819,6 +819,7 @@ public class GVESynchronizationManager {
         try {
             String[] attributeIds = {ATTRIBUTE_CLASS_MEMBER};
             Attributes attrs = getContext().getAttributes(roleDn, attributeIds);
+            Role personalRole = RoleUtilsLocalServiceUtil.getPersonalRole();
 
             if (attrs.get(ATTRIBUTE_CLASS_MEMBER) != null) {
                 for (int i = 0 ; i < attrs.get(ATTRIBUTE_CLASS_MEMBER).size(); i++) {
@@ -831,6 +832,11 @@ public class GVESynchronizationManager {
                                 RoleLocalServiceUtil.addUserRoles(user.getUserId(), new long[]{role.getRoleId()});
                             }
                             logger.info("Added role " + roleName + " to member : "+user.getFullName());
+
+                            // Personal role
+                            if (!RoleLocalServiceUtil.hasUserRole(user.getUserId(), personalRole.getRoleId())) {
+                                RoleLocalServiceUtil.addUserRoles(user.getUserId(), new long[]{personalRole.getRoleId()});
+                            }
 
                             // For school admin role -> add UserGroupRole
                             if (role.getRoleId() == RoleUtilsLocalServiceUtil.getSchoolAdminRole().getRoleId()) {
