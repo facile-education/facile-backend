@@ -153,8 +153,8 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 	public FileEntry moveFileEntry(long userId, long fileId, long destFolderId, int mode) throws SystemException, PortalException {
 		final User user = UserLocalServiceUtil.getUser(userId);
-		logger.info("User " + user.getFullName() + " moves file " + fileId + " to destination folder " + destFolderId + " in mode " + mode);
 		FileEntry originFile = DLAppServiceUtil.getFileEntry(fileId);
+		logger.info("User " + user.getFullName() + " moves file " + fileId + " from folder " + originFile.getFolderId() + " to destination folder " + destFolderId + " in mode " + mode);
 		Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
 		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.DELETE)

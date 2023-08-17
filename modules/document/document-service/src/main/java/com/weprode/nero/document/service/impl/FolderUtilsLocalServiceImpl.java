@@ -354,8 +354,8 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 	}
 
 	public Folder moveFolder(long userId, Folder folder, long targetFolderId, int mode) throws PortalException, SystemException {
-		logger.info("User " + userId + " moves folder " + folder.getName() + " to destination folder " + targetFolderId + " in mode " + mode);
 
+		logger.info("User " + userId + " moves folder " + folder.getName() + " from folder " + folder.getParentFolderId() + " to destination folder " + targetFolderId + " in mode " + mode);
 		ServiceContext serviceContext = new ServiceContext();
 		serviceContext.setScopeGroupId(folder.getGroupId());
 		final Folder destFolder = DLAppServiceUtil.getFolder(targetFolderId);
