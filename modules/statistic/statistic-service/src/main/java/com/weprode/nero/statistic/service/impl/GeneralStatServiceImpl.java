@@ -390,7 +390,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, "", MatomoConstants.PERIOD_DAY, startDate, endDate,
                     profileIds, schoolIds, serviceIds, false);
 
-            logger.info("matomo data=" + data);
+            logger.debug("matomo data=" + data);
             JSONArray datasets = data.getJSONArray(JSONConstants.DATASETS);
             JSONArray dayData = datasets.getJSONObject(0).getJSONArray(JSONConstants.DATA);
             int nbConnexions = 0;

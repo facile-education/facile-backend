@@ -96,7 +96,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             userProperties.setLastDashboardAccessDate(new Date());
             UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
-            logger.info("Set last dashboard access date to " + new SimpleDateFormat(JSONConstants.FULL_FRENCH_FORMAT).format(new Date()));
+            logger.debug("Set last dashboard access date to " + new SimpleDateFormat(JSONConstants.FULL_FRENCH_FORMAT).format(new Date()));
 
             result.put(JSONConstants.SUCCESS, true);
 
