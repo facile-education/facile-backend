@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.contact.constants.ContactConstants;
@@ -322,8 +323,8 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
             for (Group userGroup : userGroups) {
                 JSONObject jsonCommunity = new JSONObject();
-                jsonCommunity.put(JSONConstants.GROUP_NAME, userGroup.getName());
-                jsonCommunity.put(JSONConstants.POPULATION_NAME, userGroup.getName());
+                jsonCommunity.put(JSONConstants.GROUP_NAME, userGroup.getName(LocaleUtil.getDefault()));
+                jsonCommunity.put(JSONConstants.POPULATION_NAME, userGroup.getName(LocaleUtil.getDefault()));
                 jsonCommunity.put(JSONConstants.GROUP_ID, userGroup.getGroupId());
                 jsonCommunity.put(JSONConstants.ROLE_ID, 0);
                 jsonCommunity.put(JSONConstants.IS_COMMUNITY, true);

@@ -125,14 +125,50 @@ public class UserManagementServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject updatePassword(
-			long userId, String password, boolean resetPassword)
+	public static org.json.JSONObject updatePasswordByManager(
+			long userId, String password)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				UserManagementServiceUtil.updatePassword(
-					userId, password, resetPassword);
+				UserManagementServiceUtil.updatePasswordByManager(
+					userId, password);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject updatePasswordAfterReinitByManager(
+			String password, String confirmPassword)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				UserManagementServiceUtil.updatePasswordAfterReinitByManager(
+					password, confirmPassword);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject updateForgottenPassword(
+			String password, String confirmPassword, String ticketKey)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				UserManagementServiceUtil.updateForgottenPassword(
+					password, confirmPassword, ticketKey);
 
 			return returnValue;
 		}

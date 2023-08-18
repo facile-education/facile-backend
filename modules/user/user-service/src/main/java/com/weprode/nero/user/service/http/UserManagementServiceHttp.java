@@ -183,17 +183,82 @@ public class UserManagementServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject updatePassword(
-		HttpPrincipal httpPrincipal, long userId, String password,
-		boolean resetPassword) {
+	public static org.json.JSONObject updatePasswordByManager(
+		HttpPrincipal httpPrincipal, long userId, String password) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				UserManagementServiceUtil.class, "updatePassword",
-				_updatePasswordParameterTypes5);
+				UserManagementServiceUtil.class, "updatePasswordByManager",
+				_updatePasswordByManagerParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, userId, password, resetPassword);
+				methodKey, userId, password);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject updatePasswordAfterReinitByManager(
+		HttpPrincipal httpPrincipal, String password, String confirmPassword) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				UserManagementServiceUtil.class,
+				"updatePasswordAfterReinitByManager",
+				_updatePasswordAfterReinitByManagerParameterTypes6);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, password, confirmPassword);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject updateForgottenPassword(
+		HttpPrincipal httpPrincipal, String password, String confirmPassword,
+		String ticketKey) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				UserManagementServiceUtil.class, "updateForgottenPassword",
+				_updateForgottenPasswordParameterTypes7);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, password, confirmPassword, ticketKey);
 
 			Object returnObj = null;
 
@@ -232,7 +297,13 @@ public class UserManagementServiceHttp {
 		new Class[] {long.class};
 	private static final Class<?>[] _getManualUsersParameterTypes3 =
 		new Class[] {long.class, String.class, int.class, int.class};
-	private static final Class<?>[] _updatePasswordParameterTypes5 =
-		new Class[] {long.class, String.class, boolean.class};
+	private static final Class<?>[] _updatePasswordByManagerParameterTypes5 =
+		new Class[] {long.class, String.class};
+	private static final Class<?>[]
+		_updatePasswordAfterReinitByManagerParameterTypes6 = new Class[] {
+			String.class, String.class
+		};
+	private static final Class<?>[] _updateForgottenPasswordParameterTypes7 =
+		new Class[] {String.class, String.class, String.class};
 
 }

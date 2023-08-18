@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.model.Activity;
 import com.weprode.nero.document.service.base.ActivityLocalServiceBaseImpl;
@@ -50,7 +51,7 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 				activity.setModificationDate(new Date());
 				activity = activityPersistence.update(activity);
 			} else {
-				logger.debug("Operation done in personal space ("+group.getName()+") => not recorded");
+				logger.debug("Operation done in personal space ("+group.getName(LocaleUtil.getDefault())+") => not recorded");
 			}
 
 		} catch (Exception e) {

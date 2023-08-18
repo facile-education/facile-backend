@@ -10,6 +10,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.weprode.nero.commons.JSONProxy;
@@ -108,7 +109,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     for (Group group : personalGroups) {
                         JSONObject groupObject = new JSONObject();
                         groupObject.put(JSONConstants.GROUP_ID, group.getGroupId());
-                        groupObject.put(JSONConstants.GROUP_NAME, group.getName());
+                        groupObject.put(JSONConstants.GROUP_NAME, group.getName(LocaleUtil.getDefault()));
                         groupObject.put(JSONConstants.IS_PERSONAL_GROUP, true);
                         groupsArray.put(groupObject);
                     }
@@ -157,7 +158,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             }
 
             for (Group group : communities) {
-                if (filter.equals("") || containsIgnoreCase(group.getName(), filter)) {
+                if (filter.equals("") || containsIgnoreCase(group.getName(LocaleUtil.getDefault()), filter)) {
                     JSONObject jsonGroup = new JSONObject();
                     CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(group.getGroupId());
                     if (communityInfos.getStatus() == WorkflowConstants.STATUS_EXPIRED) {

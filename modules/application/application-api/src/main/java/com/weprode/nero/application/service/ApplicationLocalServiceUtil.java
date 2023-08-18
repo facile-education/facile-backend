@@ -258,12 +258,6 @@ public class ApplicationLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
-	public static List<com.liferay.portal.kernel.model.UserGroup>
-		getAllApplicationGroups(long companyId) {
-
-		return getService().getAllApplicationGroups(companyId);
-	}
-
 	public static List<Application> getAllApplications()
 		throws SystemException {
 
@@ -346,12 +340,6 @@ public class ApplicationLocalServiceUtil {
 		throws PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
-	}
-
-	public static org.json.JSONObject getPortlets(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().getPortlets(user);
 	}
 
 	public static List<Application> getSchoolApplications(long schoolId) {

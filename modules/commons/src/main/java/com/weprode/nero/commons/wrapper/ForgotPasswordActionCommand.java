@@ -9,7 +9,6 @@ import com.liferay.portal.kernel.exception.UserActiveException;
 import com.liferay.portal.kernel.exception.UserEmailAddressException;
 import com.liferay.portal.kernel.exception.UserLockoutException;
 import com.liferay.portal.kernel.exception.UserReminderQueryException;
-import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -80,11 +79,6 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
             _sendPassword(actionRequest, actionResponse);
         }
         catch (Exception exception) {
-            if (_log.isDebugEnabled()) {
-                _log.debug(
-                        "Unable to send password: " + exception.getMessage(),
-                        exception);
-            }
 
             if (exception instanceof CaptchaException ||
                     exception instanceof UserEmailAddressException ||
@@ -151,6 +145,7 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
             if (Validator.isNull(login)) {
                 login = ParamUtil.getString(actionRequest, "login");
             }
+            logger.info("Received forgotten password change for screenName " + login);
 
             if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
                 user = _userLocalService.getUserByEmailAddress(
@@ -168,8 +163,7 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
             }
 
             if (!user.isActive()) {
-                throw new UserActiveException(
-                        "Inactive user " + user.getUuid());
+                throw new UserActiveException("Inactive user " + user.getUuid());
             }
 
             _userLocalService.checkLockout(user);
@@ -177,37 +171,23 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
             return user;
         }
         catch (Exception exception) {
-            if (_log.isDebugEnabled()) {
-                _log.debug(
-                        "Unable to get user: " + exception.getMessage(), exception);
-            }
-
             if (!PropsValues.LOGIN_SECURE_FORGOT_PASSWORD) {
                 throw exception;
             }
         }
 
-        ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-                WebKeys.THEME_DISPLAY);
-
-        User defaultUser = _userLocalService.getDefaultUser(
-                themeDisplay.getCompanyId());
-
-        Set<String> reminderQueryQuestions =
-                defaultUser.getReminderQueryQuestions();
+        ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+        User defaultUser = _userLocalService.getDefaultUser(themeDisplay.getCompanyId());
+        Set<String> reminderQueryQuestions =defaultUser.getReminderQueryQuestions();
 
         if (!reminderQueryQuestions.isEmpty()) {
             Iterator<String> iterator = reminderQueryQuestions.iterator();
-
             defaultUser.setReminderQueryQuestion(iterator.next());
         }
         else {
-            defaultUser.setReminderQueryQuestion(
-                    "what-is-your-library-card-number");
+            defaultUser.setReminderQueryQuestion("what-is-your-library-card-number");
         }
-
-        defaultUser.setReminderQueryAnswer(
-                defaultUser.getReminderQueryQuestion());
+        defaultUser.setReminderQueryAnswer(defaultUser.getReminderQueryQuestion());
 
         return defaultUser;
     }
@@ -217,15 +197,11 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
             throws Exception {
 
         User user = _getUser(actionRequest);
-        ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-                WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
         Company company = themeDisplay.getCompany();
 
-        PortletPreferences portletPreferences = actionRequest.getPreferences();
-
-        String languageId = _language.getLanguageId(actionRequest);
-        logger.info("Sending password to user " + user.getFullName() + " (id " + user.getUserId() + ")");
+        logger.info("Sending password recovery link by email to user " + user.getFullName() + " (id " + user.getUserId() + ")");
 
         String fromName = "Equipe technique";
         String fromAddress = "no-reply@eduge.ch";
@@ -240,16 +216,12 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
                 company.getCompanyId(), toAddress, fromName, fromAddress, subject,
                 body, serviceContext);
 
-        SessionMessages.add(
-                _portal.getHttpServletRequest(actionRequest), "forgotPasswordSent");
+        SessionMessages.add(_portal.getHttpServletRequest(actionRequest), "forgotPasswordSent");
 
         sendRedirect(actionRequest, actionResponse, null);
     }
 
     private static final Log _log = LogFactoryUtil.getLog(ForgotPasswordActionCommand.class);
-
-    @Reference
-    private Language _language;
 
     @Reference
     private Portal _portal;

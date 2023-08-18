@@ -70,6 +70,22 @@ public class AuthenticationServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject authLog(String str)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue = AuthenticationServiceUtil.authLog(
+				str);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		AuthenticationServiceSoap.class);
 

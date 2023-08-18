@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
@@ -215,7 +216,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			String fullCoursName;
 			Organization org = null;
 			if (isCommunity) {
-				fullCoursName = group.getName();
+				fullCoursName = group.getName(LocaleUtil.getDefault());
 			} else {
 				org = OrganizationLocalServiceUtil.getOrganization(group.getOrganizationId());
 				fullCoursName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);

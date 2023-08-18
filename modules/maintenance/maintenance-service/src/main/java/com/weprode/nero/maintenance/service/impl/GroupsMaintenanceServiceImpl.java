@@ -18,6 +18,7 @@ import com.liferay.portal.aop.AopService;
 
 
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
@@ -127,7 +128,7 @@ public class GroupsMaintenanceServiceImpl
 
 								// Suffix group's name and friendlyUrl
 								Group orgGroup = org.getGroup();
-								orgGroup.setName(orgGroup.getName() + " " + archiveSuffix);
+								orgGroup.setName(orgGroup.getName(LocaleUtil.getDefault()) + " " + archiveSuffix);
 								orgGroup.setFriendlyURL(orgGroup.getFriendlyURL() + "-" + archiveSuffix);
 								GroupLocalServiceUtil.updateGroup(orgGroup);
 

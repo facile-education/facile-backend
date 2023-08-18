@@ -81,10 +81,6 @@ public interface ApplicationService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "get-portlets")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getPortlets();
-
 	@JSONWebService(method = "GET", value = "get-resource-urls")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getResourceUrls(long menuEntryId);

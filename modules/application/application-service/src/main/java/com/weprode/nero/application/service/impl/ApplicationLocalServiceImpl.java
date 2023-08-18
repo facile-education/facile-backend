@@ -1,25 +1,19 @@
 package com.weprode.nero.application.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
-import com.liferay.portal.kernel.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.OrderByComparator;
 import com.weprode.nero.application.constants.AppManagerConstants;
+import com.weprode.nero.application.model.Application;
 import com.weprode.nero.application.model.Broadcast;
 import com.weprode.nero.application.model.BroadcastRule;
-import com.weprode.nero.application.model.Application;
 import com.weprode.nero.application.service.AuthorizedSchoolLocalServiceUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.application.service.BroadcastRuleLocalServiceUtil;
@@ -28,6 +22,8 @@ import com.weprode.nero.application.service.base.ApplicationLocalServiceBaseImpl
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -161,28 +157,6 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
         BroadcastLocalServiceUtil.deleteBroadcastForSchool(applicationId, schoolId);
         AuthorizedSchoolLocalServiceUtil.deleteByApplicationIdSchoolId(applicationId, schoolId);
         BroadcastRuleLocalServiceUtil.deleteSchoolRules(applicationId, schoolId);
-    }
-
-    public JSONObject getPortlets(User user) {
-        JSONObject result = new JSONObject();
-
-        try {
-            List<UserGroup> allUserGroups = getAllApplicationGroups(user.getCompanyId());
-            JSONArray jsonPortlets = new JSONArray();
-            for (UserGroup userGroup : allUserGroups) {
-                final JSONObject jsonPortlet = new JSONObject();
-                jsonPortlet.put(JSONConstants.PORTLET_ID, userGroup.getUserGroupId());
-                jsonPortlet.put(JSONConstants.NAME, userGroup.getName().substring(12));
-                jsonPortlets.put(jsonPortlet);
-            }
-            result.put(JSONConstants.PORTLETS, jsonPortlets);
-            result.put(JSONConstants.SUCCESS, true);
-        } catch (Exception e) {
-            logger.error("Error fetching portlets", e);
-            result.put(JSONConstants.SUCCESS, false);
-        }
-
-        return result;
     }
 
     public List<Application> getSchoolApplications(long schoolId) {
@@ -346,19 +320,6 @@ public class ApplicationLocalServiceImpl extends ApplicationLocalServiceBaseImpl
         }
 
         return applicationList;
-    }
-
-    public List<UserGroup> getAllApplicationGroups(long companyId) {
-
-        List<UserGroup> userGroupApp = new ArrayList<>();
-        try {
-            userGroupApp = UserGroupLocalServiceUtil.search(companyId,
-                    "application-%", null, QueryUtil.ALL_POS,
-                    QueryUtil.ALL_POS, (OrderByComparator<UserGroup>) null);
-        } catch (Exception e) {
-            logger.error("Error fetching all UserGroup applications");
-        }
-        return userGroupApp;
     }
 
 }

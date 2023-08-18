@@ -52,35 +52,6 @@ import com.weprode.nero.application.service.ApplicationServiceUtil;
  */
 public class ApplicationServiceHttp {
 
-	public static org.json.JSONObject getPortlets(HttpPrincipal httpPrincipal) {
-		try {
-			MethodKey methodKey = new MethodKey(
-				ApplicationServiceUtil.class, "getPortlets",
-				_getPortletsParameterTypes0);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static org.json.JSONObject addApplication(
 		HttpPrincipal httpPrincipal, String applicationName,
 		String applicationKey, String category, long menuEntryId, String image,
@@ -91,7 +62,7 @@ public class ApplicationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "addApplication",
-				_addApplicationParameterTypes1);
+				_addApplicationParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, applicationName, applicationKey, category,
@@ -130,7 +101,7 @@ public class ApplicationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "editApplication",
-				_editApplicationParameterTypes2);
+				_editApplicationParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, applicationId, applicationName, applicationKey,
@@ -165,7 +136,7 @@ public class ApplicationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "removeApplication",
-				_removeApplicationParameterTypes3);
+				_removeApplicationParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, applicationId);
@@ -197,7 +168,7 @@ public class ApplicationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "getSchoolApplications",
-				_getSchoolApplicationsParameterTypes4);
+				_getSchoolApplicationsParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, schoolId);
@@ -229,7 +200,7 @@ public class ApplicationServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				ApplicationServiceUtil.class, "export", _exportParameterTypes5);
+				ApplicationServiceUtil.class, "export", _exportParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, applicationId, schoolId, roleName);
@@ -261,7 +232,7 @@ public class ApplicationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "getUserApplications",
-				_getUserApplicationsParameterTypes6);
+				_getUserApplicationsParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -292,7 +263,7 @@ public class ApplicationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "getAllApplications",
-				_getAllApplicationsParameterTypes7);
+				_getAllApplicationsParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -323,7 +294,7 @@ public class ApplicationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "getStatApplications",
-				_getStatApplicationsParameterTypes8);
+				_getStatApplicationsParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, schoolId);
@@ -355,7 +326,7 @@ public class ApplicationServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				ApplicationServiceUtil.class, "getResourceUrls",
-				_getResourceUrlsParameterTypes9);
+				_getResourceUrlsParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, menuEntryId);
@@ -384,36 +355,34 @@ public class ApplicationServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(
 		ApplicationServiceHttp.class);
 
-	private static final Class<?>[] _getPortletsParameterTypes0 =
-		new Class[] {};
-	private static final Class<?>[] _addApplicationParameterTypes1 =
+	private static final Class<?>[] _addApplicationParameterTypes0 =
 		new Class[] {
 			String.class, String.class, String.class, long.class, String.class,
 			boolean.class, String.class, boolean.class, boolean.class,
 			boolean.class, boolean.class, boolean.class, String.class,
 			String.class
 		};
-	private static final Class<?>[] _editApplicationParameterTypes2 =
+	private static final Class<?>[] _editApplicationParameterTypes1 =
 		new Class[] {
 			long.class, String.class, String.class, String.class, long.class,
 			String.class, boolean.class, String.class, boolean.class,
 			boolean.class, boolean.class, boolean.class, boolean.class,
 			String.class, String.class
 		};
-	private static final Class<?>[] _removeApplicationParameterTypes3 =
+	private static final Class<?>[] _removeApplicationParameterTypes2 =
 		new Class[] {long.class};
-	private static final Class<?>[] _getSchoolApplicationsParameterTypes4 =
+	private static final Class<?>[] _getSchoolApplicationsParameterTypes3 =
 		new Class[] {long.class};
-	private static final Class<?>[] _exportParameterTypes5 = new Class[] {
+	private static final Class<?>[] _exportParameterTypes4 = new Class[] {
 		long.class, long.class, String.class
 	};
-	private static final Class<?>[] _getUserApplicationsParameterTypes6 =
+	private static final Class<?>[] _getUserApplicationsParameterTypes5 =
 		new Class[] {};
-	private static final Class<?>[] _getAllApplicationsParameterTypes7 =
+	private static final Class<?>[] _getAllApplicationsParameterTypes6 =
 		new Class[] {};
-	private static final Class<?>[] _getStatApplicationsParameterTypes8 =
+	private static final Class<?>[] _getStatApplicationsParameterTypes7 =
 		new Class[] {long.class};
-	private static final Class<?>[] _getResourceUrlsParameterTypes9 =
+	private static final Class<?>[] _getResourceUrlsParameterTypes8 =
 		new Class[] {long.class};
 
 }

@@ -285,13 +285,6 @@ public class ApplicationLocalServiceWrapper
 	}
 
 	@Override
-	public java.util.List<com.liferay.portal.kernel.model.UserGroup>
-		getAllApplicationGroups(long companyId) {
-
-		return _applicationLocalService.getAllApplicationGroups(companyId);
-	}
-
-	@Override
 	public java.util.List<com.weprode.nero.application.model.Application>
 			getAllApplications()
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -389,13 +382,6 @@ public class ApplicationLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _applicationLocalService.getPersistedModel(primaryKeyObj);
-	}
-
-	@Override
-	public org.json.JSONObject getPortlets(
-		com.liferay.portal.kernel.model.User user) {
-
-		return _applicationLocalService.getPortlets(user);
 	}
 
 	@Override

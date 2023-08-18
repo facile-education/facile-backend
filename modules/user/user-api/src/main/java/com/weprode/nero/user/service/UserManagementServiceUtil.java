@@ -68,10 +68,25 @@ public class UserManagementServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static org.json.JSONObject updatePassword(
-		long userId, java.lang.String password, boolean resetPassword) {
+	public static org.json.JSONObject updateForgottenPassword(
+		java.lang.String password, java.lang.String confirmPassword,
+		java.lang.String ticketKey) {
 
-		return getService().updatePassword(userId, password, resetPassword);
+		return getService().updateForgottenPassword(
+			password, confirmPassword, ticketKey);
+	}
+
+	public static org.json.JSONObject updatePasswordAfterReinitByManager(
+		java.lang.String password, java.lang.String confirmPassword) {
+
+		return getService().updatePasswordAfterReinitByManager(
+			password, confirmPassword);
+	}
+
+	public static org.json.JSONObject updatePasswordByManager(
+		long userId, java.lang.String password) {
+
+		return getService().updatePasswordByManager(userId, password);
 	}
 
 	public static UserManagementService getService() {

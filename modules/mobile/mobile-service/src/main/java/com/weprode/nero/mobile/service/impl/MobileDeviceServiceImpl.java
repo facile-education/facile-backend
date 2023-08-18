@@ -69,10 +69,12 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		MobileDevice mobileDevice = MobileDeviceLocalServiceUtil.getMobileDeviceByManufacturerDeviceId(deviceId);
 
 		if (mobileDevice != null) {
+			logger.info("Mobile device already exists : this is an app reload");
 			// Update device
 			if (mobileDevice.getUserId() != userId) {
 				mobileDevice.setUserId(userId);
 				MobileDeviceLocalServiceUtil.updateMobileDevice(mobileDevice);
+				logger.info("Same device was used by different user : replacing with userId " + userId);
 				result.put("success", true);
 			}
 		} else {
@@ -113,6 +115,7 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		}
 
 		if (mobileDevice != null) {
+			logger.info("Mobile device already exists : this is an app reload, update device props");
 			// Update device
 			if (mobileDevice.getUserId() != userId ||
 					!mobileDevice.getOperatingSystemVersion().equals(osVersion) ||

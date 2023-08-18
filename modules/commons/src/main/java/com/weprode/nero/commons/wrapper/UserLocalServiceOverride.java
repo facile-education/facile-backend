@@ -119,6 +119,7 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			ServiceContext serviceContext)
 			throws PortalException {
 
+		logger.info("Send password to email " + emailAddress);
 		emailAddress = StringUtil.toLowerCase(StringUtil.trim(emailAddress));
 
 		if (Validator.isNull(emailAddress)) {
@@ -131,12 +132,9 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 
 		Date expirationDate = null;
 
-		if ((passwordPolicy != null) &&
-				(passwordPolicy.getResetTicketMaxAge() > 0)) {
-
+		if ((passwordPolicy != null) &&	(passwordPolicy.getResetTicketMaxAge() > 0)) {
 			expirationDate = new Date(
-					System.currentTimeMillis() +
-							(passwordPolicy.getResetTicketMaxAge() * 1000));
+					System.currentTimeMillis() + (passwordPolicy.getResetTicketMaxAge() * 1000));
 		}
 
 		Ticket ticket = TicketLocalServiceUtil.addDistinctTicket(
@@ -145,9 +143,10 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 				serviceContext);
 
 		String passwordResetURL = StringBundler.concat(
-				serviceContext.getPortalURL(), serviceContext.getPathMain(),
-				"/portal/update_password?p_l_id=", serviceContext.getPlid(),
+				serviceContext.getPortalURL(), "/password-change?p_l_id=", serviceContext.getPlid(),
 				"&ticketKey=", ticket.getKey());
+
+		logger.info("Sending password recovery url " + passwordResetURL);
 
 		sendPasswordNotification(
 				user, companyId, null, passwordResetURL, fromName, fromAddress,
@@ -222,51 +221,15 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 					bodyTemplate.renderAsString(
 							toUser.getLocale(), mailTemplateContext),
 					true);
-			logger.info("About to send email from " + fromAddress + " to " + toAddress + " (" + toUser.getFullName() + ")");
+
 			MailServiceUtil.sendEmail(mailMessage);
 
-//			Company company = CompanyLocalServiceUtil.getCompany(toUser.getCompanyId());
-//
-//			mailMessage.setMessageId(
-//					PortalUtil.getMailId(
-//							company.getMx(), "user", System.currentTimeMillis()));
-
-//			mailService.sendEmail(mailMessage);
 		}
 		catch (IOException ioException) {
 			throw new SystemException(ioException);
 		}
 	}
 
-//	@Override
-//	public User addUserWithWorkflow(
-//			long creatorUserId, long companyId, boolean autoPassword,
-//			String password1, String password2, boolean autoScreenName,
-//			String screenName, String emailAddress, Locale locale,
-//			String firstName, String middleName, String lastName,
-//			long prefixId, long suffixId, boolean male,
-//			int birthdayMonth, int birthdayDay, int birthdayYear,
-//			String jobTitle, long[] groupIds, long[] organizationIds,
-//			long[] roleIds, long[] userGroupIds, boolean sendEmail,
-//			ServiceContext serviceContext)
-//			throws PortalException {
-//
-//		if (organizationIds == null) {
-//			long cadycoOrgId = OrganizationLocalServiceUtil.getOrganization(companyId, "Cadyco").getOrganizationId();
-//
-//			_log.info("Add new user " + emailAddress + " to main organization (id=" + cadycoOrgId + ")");
-//			organizationIds = new long[] { cadycoOrgId };
-//		}
-//
-//		return super.addUserWithWorkflow(creatorUserId, companyId, autoPassword,
-//				password1, password2, autoScreenName,
-//				screenName, emailAddress, facebookId,
-//				openId, locale, firstName, middleName,
-//				lastName, prefixId, suffixId, male,
-//				birthdayMonth, birthdayDay, birthdayYear,
-//				jobTitle, groupIds, organizationIds, roleIds, userGroupIds, sendEmail,
-//				serviceContext);
-//	}
 
 	@Override
 	public User deleteUser(long userId) throws PortalException {

@@ -39,34 +39,6 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(ApplicationServiceImpl.class);
 
-    @JSONWebService(value = "get-portlets", method = "GET")
-    public JSONObject getPortlets() {
-        JSONObject result = new JSONObject();
-
-        User user;
-        try {
-            user = getGuestOrUser();
-
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
-                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-            }
-            if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
-            }
-        } catch (Exception e) {
-            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-        }
-
-        try {
-            return ApplicationLocalServiceUtil.getPortlets(user);
-        } catch (Exception e) {
-            logger.error("Error fetching schools", e);
-            result.put(JSONConstants.SUCCESS, false);
-        }
-        
-        return result;
-    }
-
     @JSONWebService(value = "add-application", method = "POST")
     public JSONObject addApplication(String applicationName, String applicationKey, String category, long menuEntryId, String image, boolean hasCustomUrl, String globalUrl,
                                  boolean exportUser, boolean exportStudent, boolean exportParent, boolean exportTeacher, boolean exportOther,

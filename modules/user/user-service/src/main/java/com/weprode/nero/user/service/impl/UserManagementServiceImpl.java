@@ -5,9 +5,11 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.Ticket;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -271,8 +273,8 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return jsonUser;
     }
 
-    @JSONWebService(value = "update-password", method = "GET")
-    public JSONObject updatePassword(long userId, String password, boolean resetPassword) {
+    @JSONWebService(value = "update-password-by-manager", method = "GET")
+    public JSONObject updatePasswordByManager(long userId, String password) {
         JSONObject result = new JSONObject();
 
         User user;
@@ -295,7 +297,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
             // Update in DB
             // Ask password change at next user's connexion
             User targetUser = UserLocalServiceUtil.getUser(userId);
-            String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(targetUser, password, password, resetPassword);
+            String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(targetUser, password, password, true);
             if (errorMessage.equals("")) {
                 result.put(JSONConstants.SUCCESS, true);
             } else {
@@ -310,5 +312,81 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
 
         return result;
     }
+
+    @JSONWebService(value = "update-password-after-reinit-by-manager", method = "GET")
+    public JSONObject updatePasswordAfterReinitByManager(String password, String confirmPassword) {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        try {
+            if (!password.isEmpty() && password.equals(confirmPassword)) {
+                String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(user, password, password, false);
+                if (errorMessage.equals("")) {
+                    result.put(JSONConstants.SUCCESS, true);
+                } else {
+                    result.put(JSONConstants.SUCCESS, false);
+                    result.put(JSONConstants.ERROR, errorMessage);
+                }
+            } else {
+                result.put(JSONConstants.SUCCESS, false);
+            }
+
+        } catch (Exception e) {
+            logger.error("Error while fetching schools for manual user creation", e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+
+        return result;
+    }
+
+    // This webservice is public because called by a non-authenticated user
+    @JSONWebService(value = "update-forgotten-password", method = "POST")
+    public JSONObject updateForgottenPassword(String password, String confirmPassword, String ticketKey) {
+        JSONObject result = new JSONObject();
+
+        try {
+            logger.info("Password update for ticketKey " + ticketKey);
+            if (!password.isEmpty() && password.equals(confirmPassword)) {
+                // Check ticket
+                Ticket ticket = null;
+                try {
+                    ticket = TicketLocalServiceUtil.getTicket(ticketKey);
+                } catch (Exception e) {
+                    logger.error("Ticket " + ticketKey + " does not exist -> error");
+                }
+                if (ticket == null) {
+                    result.put(JSONConstants.SUCCESS, false);
+                } else {
+                    User user = UserLocalServiceUtil.getUser(ticket.getClassPK());
+                    String errorMessage = UserUtilsLocalServiceUtil.updateUserPassword(user, password, password, false);
+                    if (errorMessage.equals("")) {
+                        // Delete ticket so that it cannot be used again
+                        TicketLocalServiceUtil.deleteTicket(ticket);
+                        result.put(JSONConstants.SUCCESS, true);
+                    } else {
+                        result.put(JSONConstants.SUCCESS, false);
+                        result.put(JSONConstants.ERROR, errorMessage);
+                    }
+                }
+            } else {
+                result.put(JSONConstants.SUCCESS, false);
+            }
+        } catch (Exception e) {
+            logger.error("Could not update password for ticketKey " + ticketKey, e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+
+        return result;
+    }
+
 
 }

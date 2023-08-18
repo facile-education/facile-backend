@@ -33,6 +33,10 @@ public class AuthenticationServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.authentication.service.impl.AuthenticationServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static org.json.JSONObject authLog(java.lang.String str) {
+		return getService().authLog(str);
+	}
+
 	public static org.json.JSONObject checkCredentials(
 		java.lang.String login, java.lang.String password) {
 

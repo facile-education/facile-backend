@@ -79,4 +79,14 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 		return result;
 	}
 
+	@JSONWebService(value = "auth-log", method = "GET")
+	public JSONObject authLog(String str) {
+		JSONObject result = new JSONObject();
+
+		logger.info("authLog : " + str);
+		result.put("success", true);
+
+		return result;
+	}
+
 }
