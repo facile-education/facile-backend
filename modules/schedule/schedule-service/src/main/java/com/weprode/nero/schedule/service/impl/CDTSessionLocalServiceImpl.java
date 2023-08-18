@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.group.model.GroupMembership;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
@@ -100,7 +101,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 				Organization coursOrg = OrganizationLocalServiceUtil.getOrganization(coursGroup.getOrganizationId());
 				fullCoursName = OrgUtilsLocalServiceUtil.formatOrgName(coursOrg.getName(), false);
 			} else {
-				fullCoursName = coursGroup.getName();
+				fullCoursName = coursGroup.getName(LocaleUtil.getDefault());
 			}
 
 			while (startDate.before(schoolYearEndDate)) {

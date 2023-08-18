@@ -210,39 +210,6 @@ public class UserPropertiesServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject updatePassword(
-		HttpPrincipal httpPrincipal, String password, String confirmPassword,
-		boolean isWebdav) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				UserPropertiesServiceUtil.class, "updatePassword",
-				_updatePasswordParameterTypes5);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, password, confirmPassword, isWebdav);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(
 		UserPropertiesServiceHttp.class);
 
@@ -256,7 +223,5 @@ public class UserPropertiesServiceHttp {
 		new Class[] {int.class};
 	private static final Class<?>[] _updateWebdavStateParameterTypes4 =
 		new Class[] {boolean.class};
-	private static final Class<?>[] _updatePasswordParameterTypes5 =
-		new Class[] {String.class, String.class, boolean.class};
 
 }

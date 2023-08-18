@@ -39,6 +39,7 @@ public class JSONConstants {
     public static final String IS_ALLOWED = "isAllowed";
     public static final String CONTENT = "content";
     public static final String CONFIGURATION = "configuration";
+    public static final String TICKET_KEY = "ticketKey";
 
     // Applications
     public static final String SERVICE = "service";

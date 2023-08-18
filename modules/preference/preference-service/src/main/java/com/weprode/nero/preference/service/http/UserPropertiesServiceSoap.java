@@ -128,24 +128,6 @@ public class UserPropertiesServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject updatePassword(
-			String password, String confirmPassword, boolean isWebdav)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				UserPropertiesServiceUtil.updatePassword(
-					password, confirmPassword, isWebdav);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(
 		UserPropertiesServiceSoap.class);
 

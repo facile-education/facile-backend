@@ -43,14 +43,6 @@ public class UserPropertiesServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject updatePassword(
-		String password, String confirmPassword, boolean isWebdav) {
-
-		return _userPropertiesService.updatePassword(
-			password, confirmPassword, isWebdav);
-	}
-
-	@Override
 	public org.json.JSONObject updateReportFrequency(int frequency) {
 		return _userPropertiesService.updateReportFrequency(frequency);
 	}

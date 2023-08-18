@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.course.model.Homework;
 import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
@@ -59,7 +60,7 @@ public class ItemAssignmentImpl extends ItemAssignmentBaseImpl {
 
             Group group = GroupLocalServiceUtil.getGroup(cdtSession.getGroupId());
             if (group.isRegularSite()) {
-                jsonAssignment.put(JSONConstants.GROUP_NAME, group.getName());
+                jsonAssignment.put(JSONConstants.GROUP_NAME, group.getName(LocaleUtil.getDefault()));
             } else {
                 Organization org = OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
                 String groupName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);

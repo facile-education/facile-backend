@@ -64,20 +64,6 @@ import java.rmi.RemoteException;
 @Deprecated
 public class ApplicationServiceSoap {
 
-	public static org.json.JSONObject getPortlets() throws RemoteException {
-		try {
-			org.json.JSONObject returnValue =
-				ApplicationServiceUtil.getPortlets();
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
 	public static org.json.JSONObject addApplication(
 			String applicationName, String applicationKey, String category,
 			long menuEntryId, String image, boolean hasCustomUrl,

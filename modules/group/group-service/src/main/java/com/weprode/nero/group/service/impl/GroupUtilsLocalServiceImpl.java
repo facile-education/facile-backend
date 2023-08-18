@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.ActivityLocalServiceUtil;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
@@ -77,7 +78,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
             logger.error("Group id "+groupId+ " does not exist !");
             return;
         }
-        logger.info("Cleaning up group "+group.getName());
+        logger.info("Cleaning up group "+group.getName(LocaleUtil.getDefault()));
 
         deleteNews(groupId);
         deleteDLFiles(groupId);

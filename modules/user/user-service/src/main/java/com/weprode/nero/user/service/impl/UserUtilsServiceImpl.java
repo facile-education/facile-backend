@@ -5,8 +5,11 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.Ticket;
+import com.liferay.portal.kernel.model.TicketConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserConstants;
+import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
@@ -126,6 +129,13 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
         // Password change
         result.put(JSONConstants.PASSWORD_CHANGE, user.getPasswordReset());
+        if (user.getPasswordReset()) {
+            // Get a ticket if any, needed for security
+            List<Ticket> tickets = TicketLocalServiceUtil.getTickets(User.class.getName(), user.getUserId(), TicketConstants.TYPE_PASSWORD);
+            if (tickets != null && !tickets.isEmpty()) {
+                result.put(JSONConstants.TICKET_KEY, tickets.get(0).getKey());
+            }
+        }
 
         result.put(JSONConstants.SUCCESS, true);
 

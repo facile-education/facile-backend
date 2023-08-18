@@ -81,10 +81,6 @@ public class ApplicationServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static org.json.JSONObject getPortlets() {
-		return getService().getPortlets();
-	}
-
 	public static org.json.JSONObject getResourceUrls(long menuEntryId) {
 		return getService().getResourceUrls(menuEntryId);
 	}

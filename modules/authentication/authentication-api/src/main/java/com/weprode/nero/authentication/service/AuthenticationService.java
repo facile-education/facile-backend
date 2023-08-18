@@ -49,6 +49,9 @@ public interface AuthenticationService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.authentication.service.impl.AuthenticationServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the authentication remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link AuthenticationServiceUtil} if injection and service tracking are not available.
 	 */
+	@JSONWebService(method = "GET", value = "auth-log")
+	public JSONObject authLog(String str);
+
 	@JSONWebService(method = "POST", value = "check-credentials")
 	public JSONObject checkCredentials(String login, String password);
 

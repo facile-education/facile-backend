@@ -59,10 +59,6 @@ public interface UserPropertiesService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "POST", value = "update-password")
-	public JSONObject updatePassword(
-		String password, String confirmPassword, boolean isWebdav);
-
 	@JSONWebService(method = "POST", value = "update-report-frequency")
 	public JSONObject updateReportFrequency(int frequency);
 

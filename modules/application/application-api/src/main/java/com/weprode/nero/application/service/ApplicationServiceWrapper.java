@@ -82,11 +82,6 @@ public class ApplicationServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getPortlets() {
-		return _applicationService.getPortlets();
-	}
-
-	@Override
 	public org.json.JSONObject getResourceUrls(long menuEntryId) {
 		return _applicationService.getResourceUrls(menuEntryId);
 	}
