@@ -253,6 +253,15 @@ public class NewsLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static List<News> getGroupNewsActivities(
+			com.liferay.portal.kernel.model.User user, long groupId,
+			java.util.Date minDate, java.util.Date maxDate, int nbNews)
+		throws SystemException {
+
+		return getService().getGroupNewsActivities(
+			user, groupId, minDate, maxDate, nbNews);
+	}
+
 	public static org.json.JSONObject getGroupNewsBroadcastGroups(
 		com.liferay.portal.kernel.model.User user) {
 
@@ -289,13 +298,13 @@ public class NewsLocalServiceUtil {
 	}
 
 	public static List<News> getNewsActivities(
-			com.liferay.portal.kernel.model.User user, long groupId,
+			com.liferay.portal.kernel.model.User user, List<Long> groupIds,
 			java.util.Date minDate, java.util.Date maxDate, int nbNews,
 			boolean groupNewsOnly)
 		throws SystemException {
 
 		return getService().getNewsActivities(
-			user, groupId, minDate, maxDate, nbNews, groupNewsOnly);
+			user, groupIds, minDate, maxDate, nbNews, groupNewsOnly);
 	}
 
 	public static int getNewsCount(

@@ -16,6 +16,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -131,23 +132,30 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
                 other += " AND news.isSchoolNews = 0";
             }
 
+            // If maxDate is today, we set AuthorMaxDate to the maximum, to be able to edit news published later in the future
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            Date authorMinDate = minDate;
+            Date authorMaxDate = maxDate;
+            if (isNow(maxDate)) {
+                authorMaxDate = sdf.parse("2030-01-01 00:00:000");
+            }
+
             String sql = customSQL.get(getClass(), GET_NEWS_ACTIVITIES);
             sql = StringUtil.replace(sql, "[$GROUP_IDS$]", buildIdList(groupIds));
             sql = StringUtil.replace(sql, "[$ROLE_IDS$]", buildIdList(roleIds));
             sql = StringUtil.replace(sql, "[$OTHER$]", other);
-            logger.debug("News activity sql = " + sql);
+            logger.debug("getNewsActivities = " + sql);
 
             SQLQuery q = session.createSQLQuery(sql);
             q.addEntity("News_News", NewsImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
             qPos.add(sdf.format(minDate));
             qPos.add(sdf.format(maxDate));
             qPos.add(userId);
-            qPos.add(sdf.format(minDate));
-            qPos.add(sdf.format(maxDate));
+            qPos.add(sdf.format(authorMinDate));
+            qPos.add(sdf.format(authorMaxDate));
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(nbNews);
@@ -169,18 +177,28 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
         try {
             session = openSession();
 
+            // If maxDate is today, we set AuthorMaxDate to the maximum, to be able to edit news published later in the future
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            Date authorMinDate = minDate;
+            Date authorMaxDate = maxDate;
+            if (isNow(maxDate)) {
+                authorMaxDate = sdf.parse("2030-01-01 00:00:000");
+            }
+
             String sql = customSQL.get(getClass(), GET_GROUP_ACTIVITIES);
             sql = StringUtil.replace(sql, "[$ROLE_IDS$]", buildIdList(roleIds));
-            logger.debug("News activity sql = " + sql);
+            logger.debug("getGroupActivities = " + sql);
 
             SQLQuery q = session.createSQLQuery(sql);
             q.addEntity("News_News", NewsImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
             qPos.add(sdf.format(minDate));
             qPos.add(sdf.format(maxDate));
+            qPos.add(userId);
+            qPos.add(sdf.format(authorMinDate));
+            qPos.add(sdf.format(authorMaxDate));
             qPos.add(groupId);
             qPos.add(userId);
             qPos.add(nbNews);
@@ -196,6 +214,16 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
         return Collections.emptyList();
     }
 
+    private static boolean isNow(Date date) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date);
+
+        Calendar cal2 = Calendar.getInstance();
+
+        return (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+                && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE));
+    }
 
     private String buildIdList(List<Long> groupIds) {
         StringBuilder groupIdsStr = new StringBuilder();
