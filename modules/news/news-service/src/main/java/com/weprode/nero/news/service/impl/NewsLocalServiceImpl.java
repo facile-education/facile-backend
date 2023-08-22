@@ -230,7 +230,23 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         return newsFinder.getNewsCount(user.getUserId(), groupIds, roleIds, groupNews, importantOnly, unreadOnly);
     }
 
-    public List<News> getNewsActivities(User user, long groupId, Date minDate, Date maxDate, int nbNews, boolean groupNewsOnly) throws SystemException {
+    // Called from dashboard : either with all user's groups or with 1 filtered group
+    public List<News> getNewsActivities(User user, List<Long> groupIds, Date minDate, Date maxDate, int nbNews, boolean groupNewsOnly) throws SystemException {
+        // Get user role ids
+        List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
+
+        List<Long> roleIds = new ArrayList<>();
+        for (Role role : roles) {
+            roleIds.add(role.getRoleId());
+        }
+        // For communities and one role school level orgs (Enseignants, Personnels...)
+        roleIds.add((long) 0);
+
+        return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews, groupNewsOnly);
+    }
+
+    // Called from Group service, with 1 groupId
+    public List<News> getGroupNewsActivities(User user, long groupId, Date minDate, Date maxDate, int nbNews) throws SystemException {
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
 
@@ -242,14 +258,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         roleIds.add((long) 0);
 
         // Get user groupIds
-        List<Long> groupIds = new ArrayList<>();
-        if (groupId == 0) {
-            groupIds.addAll(UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()));
-            return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews, groupNewsOnly);
-        } else {
-            groupIds.add(groupId);
-            return newsFinder.getGroupActivities(user.getUserId(), groupId, roleIds, minDate, maxDate, nbNews);
-        }
+        return newsFinder.getGroupActivities(user.getUserId(), groupId, roleIds, minDate, maxDate, nbNews);
     }
 
 
