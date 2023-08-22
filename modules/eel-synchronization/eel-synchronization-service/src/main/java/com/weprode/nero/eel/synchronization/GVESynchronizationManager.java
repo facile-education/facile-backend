@@ -193,9 +193,8 @@ public class GVESynchronizationManager {
         synchronizeClasses(school, classesDn);
         synchronizeVolees(school, classesDn);
 
-        // Commented out because subjects are not accented, we use the ones from the schedule file
-//        String subjectsDn = "OU=DISCIPLINES,OU=ENSEIGNANTS," + schoolDn;
-//        synchronizeTeacherSubjects(school, subjectsDn);
+        String subjectsDn = "OU=DISCIPLINES,OU=ENSEIGNANTS," + schoolDn;
+        synchronizeTeacherSubjects(school, subjectsDn);
 
         String sessionsDn = "OU=COURS," + schoolDn;
         synchronizeSessions(school, sessionsDn);
@@ -689,23 +688,24 @@ public class GVESynchronizationManager {
                     continue;
                 }
 
+                // Commented out because subjects are not accented, we use the ones from the schedule file
                 // Remove dashes
-                subjectName = subjectName.replace("-", " ");
-                // LowerCase + Capitalize subject
-                subjectName = subjectName.substring(0, 1).toUpperCase() + subjectName.substring(1).toLowerCase();
-
-                // Create subject if needed
-                Subject subject = SubjectLocalServiceUtil.getOrCreateSubject(subjectName);
+//                subjectName = subjectName.replace("-", " ");
+//                // LowerCase + Capitalize subject
+//                subjectName = subjectName.substring(0, 1).toUpperCase() + subjectName.substring(1).toLowerCase();
+//
+//                // Create subject if needed
+//                Subject subject = SubjectLocalServiceUtil.getOrCreateSubject(subjectName);
 
                 // Loop over teachers
                 String[] attributeIds = {MEMBER};
                 String subjectDn = subjectResult.getName() + "," + subjectsDn;
-                logger.info("SubjectDn = "+ subjectDn);
-
-                // Now manage subject groups
-                String subjectOrgName = OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true) + OrgConstants.SUBJECT_ORG_TEACHERS +
-                        (subjectName.startsWith("A") || subjectName.startsWith("E") || subjectName.startsWith("H") || subjectName.startsWith("I") ? " d'" : " de ") + subjectName;
-                Organization subjectOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(school.getCompanyId(), subjectOrgName, school.getOrganizationId(), OrgConstants.SUBJECT_TYPE);
+//                logger.info("SubjectDn = "+ subjectDn);
+//
+//                // Now manage subject groups
+//                String subjectOrgName = OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true) + OrgConstants.SUBJECT_ORG_TEACHERS +
+//                        (subjectName.startsWith("A") || subjectName.startsWith("E") || subjectName.startsWith("H") || subjectName.startsWith("I") ? " d'" : " de ") + subjectName;
+//                Organization subjectOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(school.getCompanyId(), subjectOrgName, school.getOrganizationId(), OrgConstants.SUBJECT_TYPE);
 
                 Attributes attrs = getContext().getAttributes(subjectDn, attributeIds);
                 if (attrs.get(MEMBER) != null) {
@@ -723,13 +723,13 @@ public class GVESynchronizationManager {
                                 addTeacherRole(teacher);
 
                                 // Add teacher to subject org
-                                addUserToOrgMap(teacher, subjectOrg.getOrganizationId());
+                                //addUserToOrgMap(teacher, subjectOrg.getOrganizationId());
 
                                 setSynchroDate(teacher);
                                 registerTeacherToSchool(teacher, school);
 
                                 // Add him/her the subject
-                                TeacherSubjectLocalServiceUtil.addTeacherSubjectInSchool(teacher.getUserId(), subject.getSubjectId(), school.getOrganizationId());
+                                //TeacherSubjectLocalServiceUtil.addTeacherSubjectInSchool(teacher.getUserId(), subject.getSubjectId(), school.getOrganizationId());
                             }
                         } catch (Exception e) {
                             logger.error("Error processing teacher " + memberCn);
@@ -1696,8 +1696,8 @@ public class GVESynchronizationManager {
                         for (Long teacherId : teacherIdList) {
                             teacherIdsStr.append(teacherId).append(",");
                         }
-                        logger.info("-----------------------");
-                        logger.info("Loop over sessionInfos with fullCoursName " + sessionInfos.getFullCoursName() + " and teachers " + teacherIdsStr);
+                        //logger.info("-----------------------");
+                        //logger.info("Loop over sessionInfos with fullCoursName " + sessionInfos.getFullCoursName() + " and teachers " + teacherIdsStr);
                         //end tmp
 
 
@@ -1889,7 +1889,7 @@ public class GVESynchronizationManager {
 
     private CDTSession getExistingSession(List<CDTSession> existingSessions, Date startDate, Date endDate, String fullCoursName, String room) {
         DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        logger.info("getExistingSession for fullCoursName="+fullCoursName + ", startDate " + sdf.format(startDate) + " and endDate " + sdf.format(endDate));
+        logger.debug("getExistingSession for fullCoursName="+fullCoursName + ", startDate " + sdf.format(startDate) + " and endDate " + sdf.format(endDate));
 
         // First filter on startDate and endDate only
         List<CDTSession> sessionCandidates = new ArrayList<>();
