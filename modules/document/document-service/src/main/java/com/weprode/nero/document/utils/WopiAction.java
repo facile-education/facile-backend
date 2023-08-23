@@ -260,7 +260,7 @@ public class WopiAction implements StrutsAction {
 
             FileEntry feUpdate = DLAppLocalServiceUtil.updateFileEntry(userId, fileEntry.getFileEntryId(), fileEntry.getTitle(),
                     fileEntry.getMimeType(), fileEntry.getTitle(), fileEntry.getDescription(), "", "", DLVersionNumberIncrease.MINOR,
-                    data, null, new Date(), new ServiceContext());
+                    data, null, null, new ServiceContext());
 
             logger.info("End file saving : " + fileEntryId + " to " + feUpdate.getVersion() + " for user : " + userId);
             LoolStatLocalServiceUtil.addLoolStat(fileEntryId, userId, true, 0);
