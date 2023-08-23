@@ -348,7 +348,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 				break;
 			default:
-				Date d = new Date();
+				// Date d = new Date();
 
 				documentURL =
 						PortalUtil.getPathContext()
@@ -357,8 +357,8 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 						+ file.getFolderId() + StringPool.SLASH
 						+ file.getTitle() + StringPool.SLASH
 						+ file.getUuid() + StringPool.QUESTION
-						+ "version=" + file.getVersion() + StringPool.AMPERSAND
-						+ "t=" + d.getTime();
+						+ "version=" + file.getVersion();
+						// + StringPool.AMPERSAND + "t=" + d.getTime();
 
 				// Add parameter in URL in case of video/audio conversion is needed
 				if (typeOfView.equals("Video") && !file.getExtension().equals("mp4")) {
