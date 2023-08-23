@@ -1,22 +1,31 @@
 package com.weprode.nero.eel.synchronization;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.EmailAddressException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.security.RandomUtil;
+import com.liferay.portal.kernel.security.SecureRandom;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.util.PropsValues;
 import com.weprode.nero.about.service.EntVersionUserLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
@@ -59,6 +68,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Main class for GVE synchronization process
@@ -250,11 +260,12 @@ public class GVEParentSynchronizationManager {
                     User student = LDAPMappingLocalServiceUtil.getUserFromUID(uid);
                     if (student == null) {
                         logger.error("Error finding student with NBDS " + uid);
-                        errorLines.add(csvLine);
+                        errorLines.add("Eleve manquant," + csvLine);
                         continue;
                     }
                     if (!student.isActive()) {
                         logger.error("Found student is inactive");
+                        errorLines.add("Eleve desactive," + csvLine);
                         continue;
                     }
 
@@ -293,14 +304,14 @@ public class GVEParentSynchronizationManager {
                         String parent3FirstName = extractColumn(csvLineTab, 17, false);
                         String parent3Phone = extractColumn(csvLineTab, 20, true);
                         String parent3Mail = extractColumn(csvLineTab, 21, true);
-                        if (!parent3LastName.equals("") && !parent3FirstName.equals("")) {
+                        if (!parent3LastName.isEmpty() && !parent3FirstName.isEmpty()) {
                             gveParent3 = new GVEParent(parent3LastName, parent3FirstName, parent3Phone, parent3Mail, parent3Link);
                         }
                     }
 
-                    boolean success = synchronizeStudentParents(student, uid, gveParent1, gveParent2, gveParent3);
-                    if (!success) {
-                        errorLines.add(csvLine);
+                    String success = synchronizeStudentParents(student, uid, gveParent1, gveParent2, gveParent3);
+                    if (!success.isEmpty()) {
+                        errorLines.add(success + "," + csvLine);
                     }
                 } catch (Exception e) {
                     logger.error("ERROR PROCESSING LINE " + csvLine, e);
@@ -325,7 +336,7 @@ public class GVEParentSynchronizationManager {
                 ParentSynchroLocalServiceUtil.updateParentSynchro(lastSchoolSynchro);
             }
 
-            //archiveFile(parentsFile, exportDirectory);
+            archiveFile(parentsFile, exportDirectory);
 
             // Generate password file
             byte[] report = createCsvReport(errorLines);
@@ -384,8 +395,8 @@ public class GVEParentSynchronizationManager {
         return value;
     }
 
-    private boolean synchronizeStudentParents(User student, String uid, GVEParent gveParent1, GVEParent gveParent2, GVEParent gveParent3) {
-        boolean success = true;
+    private String synchronizeStudentParents(User student, String uid, GVEParent gveParent1, GVEParent gveParent2, GVEParent gveParent3) {
+        String success = StringPool.BLANK;
 
         // Get existing student's parents
         List<User> existingParents = UserRelationshipLocalServiceUtil.getParents(student.getUserId());
@@ -445,9 +456,12 @@ public class GVEParentSynchronizationManager {
 
                 logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent1.getFullName());
                 UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent1.getUserId());
+            } catch (EmailAddressException e) {
+                logger.error("Error creating parent " + gveParent1.getFirstName() + " " + gveParent1.getLastName() + " " + gveParent1.getEmail(), e);
+                success += " - E-mail existant Parent_1";
             } catch (Exception e) {
                 logger.error("Error creating parent " + gveParent1.getFirstName() + " " + gveParent1.getLastName(), e);
-                success = false;
+                success += " - Informations invalides Parent_1";
             }
         }
         
@@ -475,9 +489,12 @@ public class GVEParentSynchronizationManager {
 
                 logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent2.getFullName());
                 UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent2.getUserId());
+            } catch (EmailAddressException e) {
+                logger.error("Error creating parent " + gveParent2.getFirstName() + " " + gveParent2.getLastName() + " " + gveParent2.getEmail(), e);
+                success += " - E-mail existant Parent_2";
             } catch (Exception e) {
                 logger.error("Error creating parent " + gveParent2.getFirstName() + " " + gveParent2.getLastName(), e);
-                success = false;
+                success += " - Informations invalides Parent_2";
             }
         }
         if (parent2 != null) {
@@ -502,9 +519,12 @@ public class GVEParentSynchronizationManager {
 
                 logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent3.getFullName());
                 UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent3.getUserId());
+            } catch (EmailAddressException e) {
+                logger.error("Error creating parent " + gveParent3.getFirstName() + " " + gveParent3.getLastName() + " " + gveParent3.getEmail(), e);
+                success += " - E-mail existant Parent_3";
             } catch (Exception e) {
                 logger.error("Error creating parent " + gveParent3.getFirstName() + " " + gveParent3.getLastName(), e);
-                success = false;
+                success += " - Informations invalides Parent_3";
             }
         }
         if (parent3 != null) {
@@ -642,11 +662,25 @@ public class GVEParentSynchronizationManager {
 
             List<User> candidates = UserSearchLocalServiceUtil.searchUsers(query, null, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
             if (candidates == null || candidates.isEmpty()) {
+
+                // Check if e-mail exists in DB with the same identity (could be a deactivated account)
+                User sameMailParent = UserLocalServiceUtil.fetchUserByEmailAddress(companyId, mail);
+                if (sameMailParent != null &&
+                        lastName.equalsIgnoreCase(sameMailParent.getLastName()) &&
+                        firstName.equalsIgnoreCase(sameMailParent.getFirstName())) {
+
+                    logger.info("Found deactivated parent with mail " + mail + ", lastName=" + lastName + ", firstName="	+ firstName);
+                    sameMailParent.setStatus(WorkflowConstants.STATUS_APPROVED);
+                    UserLocalServiceUtil.updateUser(sameMailParent);
+
+                    return sameMailParent;
+                }
+
                 return null;
             } else {
-                // More than 1 candidate -> use email
-                logger.error("More than 1 candidate -> use email to decide");
-                if (!mail.equals("")) {
+
+                logger.info("Found " + candidates.size() + " candidates");
+                if (!mail.isEmpty()) {
                     for (User candidate : candidates) {
                         logger.info("Candidate email is " + candidate.getEmailAddress());
                         if (candidate.getEmailAddress().equals(mail)) {
@@ -662,29 +696,32 @@ public class GVEParentSynchronizationManager {
         } catch (Exception e) {
             logger.error("Error while identifying parent with mail " + mail + ", lastName=" + lastName + " and firstName = " + firstName, e);
         }
+
         return null;
     }
 
     /**
      * Import a user
      */
-    private User createParent (String lastName, String firstName, String mail, String phone, String password, String link) {
+    private User createParent (String lastName, String firstName, String mail, String phone, String password, String link) throws EmailAddressException {
 
-        if (Validator.isNull(lastName) || Validator.isNull(firstName)) {
-            logger.warn("Cannot add user because lastName (" + lastName + ") or firstName (" + firstName + ") is empty");
+        if (Validator.isNull(lastName) || Validator.isNull(firstName) || mail.isEmpty()) {
+            logger.warn("Cannot add user because lastName (" + lastName + "), firstName (" + firstName + ") or mail (" + mail + ") is empty");
             return null;
         }
 
         if (!Validator.isNull(mail)) {
+            User sameMailParent = null;
+
             try {
-                User sameMailParent = UserLocalServiceUtil.fetchUserByEmailAddress(companyId, mail);
-                if (sameMailParent != null) {
-                    logger.info("An other parent exists with the same mail " + mail + " -> use auto-generated mail");
-                    // Email address will be generated by create user method
-                    mail = null;
-                }
+                sameMailParent = UserLocalServiceUtil.fetchUserByEmailAddress(companyId, mail);
             } catch (Exception e) {
                 logger.debug(e);
+            }
+
+            if (sameMailParent != null) {
+                logger.warn("Cannot add user because the e-mail (" + mail + ") is already used by an other user : " + sameMailParent.getFullName());
+                throw new EmailAddressException();
             }
         }
 
@@ -731,35 +768,25 @@ public class GVEParentSynchronizationManager {
             UserContactLocalServiceUtil.updateUserContact(userContact);
 
             // Send welcome message
-            List<Long> recipientList = new ArrayList<>();
-            recipientList.add(user.getUserId());
+            // List<Long> recipientList = new ArrayList<>();
+            // recipientList.add(user.getUserId());
 
-            String subject = "Bienvenue dans votre environnement digital \u00e9ducatif";
-            String content = "Ch\u00e8re Madame, cher Monsieur,</br></br>" +
-                    "La plateforme FACILE assure le prolongement num\u00e9rique de l'\u00e9tablissement scolaire de votre.vos enfant.s.</br>" +
-                    "Il vous propose un espace priv\u00e9 et s\u00e9curis\u00e9 o\u00f9 vous pourrez suivre la vie de l'\u00e9tablissement et de la classe de votre.vos enfant.s.</br>" +
-                    "Il repr\u00e9sente surtout votre moyen de communication privil\u00e9gi\u00e9 avec l'\u00e9cole,  les enseignant.e.s et le personnel encadrant.</br>" +
-                    "N'h\u00e9sitez pas \u00e0 consulter le service d'aide accessible en haut \u00e0 droite de votre \u00e9cran sous le \" ? \" pour r\u00e9pondre \u00e0 vos \u00e9ventuelles questions.</br></br>" +
-                    "Meilleurs messages,</br>L'\u00e9quipe projet";
+            // String subject = "Bienvenue dans votre environnement digital \u00e9ducatif";
+            // String content = "Ch\u00e8re Madame, cher Monsieur,</br></br>" +
+            //         "La plateforme FACILE assure le prolongement num\u00e9rique de l'\u00e9tablissement scolaire de votre.vos enfant.s.</br>" +
+            //         "Il vous propose un espace priv\u00e9 et s\u00e9curis\u00e9 o\u00f9 vous pourrez suivre la vie de l'\u00e9tablissement et de la classe de votre.vos enfant.s.</br>" +
+            //         "Il repr\u00e9sente surtout votre moyen de communication privil\u00e9gi\u00e9 avec l'\u00e9cole,  les enseignant.e.s et le personnel encadrant.</br>" +
+            //         "N'h\u00e9sitez pas \u00e0 consulter le service d'aide accessible en haut \u00e0 droite de votre \u00e9cran sous le \" ? \" pour r\u00e9pondre \u00e0 vos \u00e9ventuelles questions.</br></br>" +
+            //         "Meilleurs messages,</br>L'\u00e9quipe projet";
 
-            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
-            MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_OTHER);
+            // long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
+            // MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_OTHER);
 
             // Mark latest ent news as read so that it does not pop at first connection
             EntVersionUserLocalServiceUtil.markLastVersionAsRead(user.getUserId());
         }
 
         return user;
-    }
-
-    private static String generatePassword() {
-        try {
-            return PwdGenerator.getPassword(16);
-        } catch (Exception e) {
-            logger.debug(e);
-        }
-
-        return null;
     }
 
     /**
@@ -1058,6 +1085,141 @@ public class GVEParentSynchronizationManager {
         }
 
         return new byte[0];
+    }
+
+    private static String generatePassword() {
+        PasswordPolicy passwordPolicy;
+
+        try {
+            passwordPolicy = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId());
+
+            // return PwdGenerator.getPassword(16, PwdGenerator.KEY1, PwdGenerator.KEY2, PwdGenerator.KEY3, "_.!@$*=-?");
+        } catch (Exception e) {
+            logger.debug(e);
+            return null;
+        }
+
+        final String _generatorCompleteCharset = StringBundler.concat(
+                PropsValues.
+                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_LOWERCASE,
+                PropsValues.
+                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_NUMBERS,
+                PropsValues.
+                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_SYMBOLS,
+                PropsValues.
+                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_UPPERCASE);
+
+        final char[] generatorLowerCaseCharsetArray = getSortedCharArray(
+                PropsValues.
+                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_LOWERCASE);
+
+        final char[] generatorNumbersCharsetArray = getSortedCharArray(
+                PropsValues.
+                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_NUMBERS);
+
+        final char[] generatorSymbolsCharsetArray = getSortedCharArray(
+                PropsValues.
+                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_SYMBOLS);
+
+        final char[] generatorUpperCaseCharsetArray = getSortedCharArray(
+                PropsValues.
+                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_UPPERCASE);
+
+        char[] generatorAlphanumericCharsetArray = ArrayUtil.append(
+                generatorLowerCaseCharsetArray, generatorUpperCaseCharsetArray,
+                generatorNumbersCharsetArray);
+
+        Arrays.sort(generatorAlphanumericCharsetArray);
+
+        int alphanumericActualMinLength =
+                passwordPolicy.getMinLowerCase() + passwordPolicy.getMinNumbers() +
+                        passwordPolicy.getMinUpperCase();
+
+        int alphanumericMinLength = Math.max(
+                passwordPolicy.getMinAlphanumeric(), alphanumericActualMinLength);
+
+        int passwordMinLength = Math.max(
+                passwordPolicy.getMinLength(),
+                alphanumericMinLength + passwordPolicy.getMinSymbols());
+
+        StringBundler sb = new StringBundler(6);
+
+        if (passwordPolicy.getMinLowerCase() > 0) {
+            sb.append(
+                    getRandomString(
+                            passwordPolicy.getMinLowerCase(),
+                            generatorLowerCaseCharsetArray));
+        }
+
+        if (passwordPolicy.getMinNumbers() > 0) {
+            sb.append(
+                    getRandomString(
+                            passwordPolicy.getMinNumbers(),
+                            generatorNumbersCharsetArray));
+        }
+
+        if (passwordPolicy.getMinSymbols() > 0) {
+            sb.append(
+                    getRandomString(
+                            passwordPolicy.getMinSymbols(),
+                            generatorSymbolsCharsetArray));
+        }
+
+        if (passwordPolicy.getMinUpperCase() > 0) {
+            sb.append(
+                    getRandomString(
+                            passwordPolicy.getMinUpperCase(),
+                            generatorUpperCaseCharsetArray));
+        }
+
+        if (alphanumericMinLength > alphanumericActualMinLength) {
+            int count = alphanumericMinLength - alphanumericActualMinLength;
+
+            sb.append(
+                    getRandomString(count, generatorAlphanumericCharsetArray));
+        }
+
+        if (passwordMinLength >
+                (alphanumericMinLength + passwordPolicy.getMinSymbols())) {
+
+            int count =
+                    passwordMinLength -
+                            (alphanumericMinLength + passwordPolicy.getMinSymbols());
+
+            sb.append(
+                    PwdGenerator.getPassword(_generatorCompleteCharset, count));
+        }
+
+        if (sb.index() == 0) {
+            sb.append(
+                    PwdGenerator.getPassword(
+                            _generatorCompleteCharset,
+                            PropsValues.PASSWORDS_DEFAULT_POLICY_MIN_LENGTH));
+        }
+
+        return RandomUtil.shuffle(new SecureRandom(), sb.toString());
+    }
+
+    private static String getRandomString(int count, char[] chars) {
+        Random random = new SecureRandom();
+
+        StringBundler sb = new StringBundler(count);
+
+        for (int i = 0; i < count; i++) {
+            int index = random.nextInt(chars.length);
+
+            sb.append(chars[index]);
+        }
+
+        return sb.toString();
+    }
+
+    private static char[] getSortedCharArray(String s) {
+        char[] chars = s.toCharArray();
+
+        Arrays.sort(chars);
+
+        return chars;
     }
 
     private static final String CSV_SEPARATOR = ",";
