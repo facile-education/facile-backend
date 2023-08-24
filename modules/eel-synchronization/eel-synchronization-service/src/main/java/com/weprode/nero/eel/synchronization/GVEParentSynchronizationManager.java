@@ -354,7 +354,7 @@ public class GVEParentSynchronizationManager {
                 recipientList.add(directionMember.getUserId());
             }
 
-            String fileName = "Rapport_synchronization_parents_" + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(new Date()) + ".csv";
+            String fileName = "Rapport_synchronization_parents_" + new SimpleDateFormat("yyyy-MM-dd_HHmm").format(new Date()) + ".csv";
             InputStream is = new ByteArrayInputStream(report);
             long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             User noReplyUser = UserLocalServiceUtil.getUser(noReplyUserId);
