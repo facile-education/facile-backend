@@ -59,6 +59,7 @@ public class AnonymizationUtil {
         try {
             int nbUsers = 0;
             List<User> allUsers = UserLocalServiceUtil.getUsers(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+            int nbTotalUsers = allUsers.size();
             for (User user : allUsers) {
                 logger.info("Processing user " + user.getFullName() + " (id " + user.getUserId() + ")");
 
@@ -74,7 +75,11 @@ public class AnonymizationUtil {
                     //logger.info("  > lastName " + user.getLastName() + " -> " + newLastName);
                     user.setLastName(newLastName);
 
-                    String newFirstName = renameFirstName(user.getFirstName());
+                    //String newFirstName = renameFirstName(user.getFirstName());
+                    Random r = new Random();
+                    int otherUserIndex = (r.nextInt(nbTotalUsers - 1));
+                    String newFirstName = allUsers.get(otherUserIndex).getFirstName();
+
                     //logger.info("  > firstName " + user.getFirstName() + " -> " + newFirstName);
                     user.setFirstName(newFirstName);
 

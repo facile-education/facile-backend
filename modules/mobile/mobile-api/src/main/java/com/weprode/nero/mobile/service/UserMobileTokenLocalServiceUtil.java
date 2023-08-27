@@ -249,6 +249,12 @@ public class UserMobileTokenLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	public static UserMobileToken getTokenUser(String mobileToken)
+		throws SystemException {
+
+		return getService().getTokenUser(mobileToken);
+	}
+
 	/**
 	 * Returns the user mobile token with the primary key.
 	 *

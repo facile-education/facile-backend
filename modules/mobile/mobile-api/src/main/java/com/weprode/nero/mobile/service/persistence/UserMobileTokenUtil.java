@@ -121,6 +121,66 @@ public class UserMobileTokenUtil {
 	}
 
 	/**
+	 * Returns the user mobile token where mobileToken = &#63; or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the matching user mobile token
+	 * @throws NoSuchUserMobileTokenException if a matching user mobile token could not be found
+	 */
+	public static UserMobileToken findBymobileToken(String mobileToken)
+		throws com.weprode.nero.mobile.exception.
+			NoSuchUserMobileTokenException {
+
+		return getPersistence().findBymobileToken(mobileToken);
+	}
+
+	/**
+	 * Returns the user mobile token where mobileToken = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
+	 */
+	public static UserMobileToken fetchBymobileToken(String mobileToken) {
+		return getPersistence().fetchBymobileToken(mobileToken);
+	}
+
+	/**
+	 * Returns the user mobile token where mobileToken = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param mobileToken the mobile token
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
+	 */
+	public static UserMobileToken fetchBymobileToken(
+		String mobileToken, boolean useFinderCache) {
+
+		return getPersistence().fetchBymobileToken(mobileToken, useFinderCache);
+	}
+
+	/**
+	 * Removes the user mobile token where mobileToken = &#63; from the database.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the user mobile token that was removed
+	 */
+	public static UserMobileToken removeBymobileToken(String mobileToken)
+		throws com.weprode.nero.mobile.exception.
+			NoSuchUserMobileTokenException {
+
+		return getPersistence().removeBymobileToken(mobileToken);
+	}
+
+	/**
+	 * Returns the number of user mobile tokens where mobileToken = &#63;.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the number of matching user mobile tokens
+	 */
+	public static int countBymobileToken(String mobileToken) {
+		return getPersistence().countBymobileToken(mobileToken);
+	}
+
+	/**
 	 * Caches the user mobile token in the entity cache if it is enabled.
 	 *
 	 * @param userMobileToken the user mobile token

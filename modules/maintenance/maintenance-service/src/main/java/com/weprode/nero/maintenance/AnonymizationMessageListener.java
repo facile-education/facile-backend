@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Component(
-        immediate = true, property = {"cron.expression=0 34 8 * * ?"},
+        immediate = true, property = {"cron.expression=0 54 11 * * ?"},
         service = AnonymizationMessageListener.class
 )
 public class AnonymizationMessageListener extends BaseMessageListener {
@@ -44,7 +44,7 @@ public class AnonymizationMessageListener extends BaseMessageListener {
                 // Uncomment to use
                 // logger.info("Scheduled anonymization starting ...");
                 // AnonymizationUtil.anonymize();
-                //logger.info("END anonymization.");
+                // logger.info("END anonymization.");
             } catch (Exception e) {
                 logger.error("Error running anonymization", e);
             }

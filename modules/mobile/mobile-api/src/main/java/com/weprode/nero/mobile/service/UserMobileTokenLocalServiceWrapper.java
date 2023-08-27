@@ -276,6 +276,14 @@ public class UserMobileTokenLocalServiceWrapper
 		return _userMobileTokenLocalService.getPersistedModel(primaryKeyObj);
 	}
 
+	@Override
+	public com.weprode.nero.mobile.model.UserMobileToken getTokenUser(
+			String mobileToken)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _userMobileTokenLocalService.getTokenUser(mobileToken);
+	}
+
 	/**
 	 * Returns the user mobile token with the primary key.
 	 *
