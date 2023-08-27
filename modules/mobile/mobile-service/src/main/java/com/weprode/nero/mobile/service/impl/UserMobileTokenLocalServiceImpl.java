@@ -75,4 +75,14 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 		return userMobileToken != null && userMobileToken.getMobileToken().equals(mobileToken);
 	}
 
+	public UserMobileToken getTokenUser(String mobileToken) throws SystemException {
+		UserMobileToken userMobileToken = null;
+		try {
+			userMobileToken = userMobileTokenPersistence.findBymobileToken(mobileToken);
+		} catch (Exception e) {
+			// Nothing
+		}
+		return userMobileToken;
+	}
+
 }

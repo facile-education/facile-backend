@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
+import com.weprode.nero.mobile.model.UserMobileToken;
 import com.weprode.nero.mobile.service.UserMobileTokenLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
@@ -37,36 +38,23 @@ public class MobileApplicationAutoLogin implements AutoLogin {
         String[] credentials;
 
         try {
+            logger.info("Start MobileApplicationAutoLogin");
             String referer = request.getHeader("Referer");
-            if (referer == null || !referer.contains("mobile_token")) {
-                return null;
-            }
-            logger.info("referer = " + referer);
+            String mobileToken = getTokenFromUrl(referer);
 
-            String mobileToken = "";
-            long userId = 0;
-
-            URL url = new URL(referer);
-            String query = url.getQuery();
-            String[] queryTab = query.split("&");
-            for (String param : queryTab) {
-                String[] paramTab = param.split("=");
-                String paramName = paramTab[0];
-                String paramValue = paramTab[1];
-                if (paramName.equals("mobile_token")) {
-                    mobileToken = paramValue;
-                }
-                if (paramName.equals("user_id")) {
-                    userId = Long.parseLong(paramValue);
-                }
+            // If no mobile_token found in url, look into cookies
+            if (mobileToken.isEmpty()) {
+                mobileToken = CookieKeys.getCookie(request, "mobileToken");
+                logger.info("MobileApplicationAutoLogin : mobileToken in cookies is " + mobileToken);
             }
 
             String service = ParamUtil.getString(request, "service", "");
-            logger.info("MobileApplicationAutoLogin : userId="+userId+", mobileToken="+mobileToken + ", service="+service);
+            logger.info("MobileApplicationAutoLogin : mobileToken="+mobileToken + ", service="+service);
 
-            if (!mobileToken.isEmpty() && userId > 0) {
-                if (UserMobileTokenLocalServiceUtil.hasUserMobileToken(userId, mobileToken)) {
-                    User user = UserLocalServiceUtil.getUserById(userId);
+            if (mobileToken != null && !mobileToken.isEmpty()) {
+                UserMobileToken userMobileToken = UserMobileTokenLocalServiceUtil.getTokenUser(mobileToken);
+                if (userMobileToken != null) {
+                    User user = UserLocalServiceUtil.getUserById(userMobileToken.getUserId());
 
                     credentials = new String[3];
                     credentials[0] = String.valueOf(user.getUserId());
@@ -76,10 +64,11 @@ public class MobileApplicationAutoLogin implements AutoLogin {
                     setCookies(request, response, user.getUserId(), PortalUtil.getCompany(request),
                             String.valueOf(user.getUserId()), user.getPassword());
                     logger.info("User  " + user.getFullName() + "(" + user.getUserId() + ") authenticated on mobile application.");
+                    logger.info("================ User " + user.getFullName() + " (" + user.getUserId() + ") logs in =======================");
 
                     return credentials;
                 } else {
-                    logger.error("Unknown token " + mobileToken + " for userId " + userId + " when logging on mobile application.");
+                    logger.error("Unknown token " + mobileToken + " when logging on mobile application.");
                     Object noSuchUserException = session.getAttribute(WebKeys.CAS_NO_SUCH_USER_EXCEPTION);
 
                     if (noSuchUserException == null) {
@@ -108,6 +97,39 @@ public class MobileApplicationAutoLogin implements AutoLogin {
             logger.error("Error in MobileApplicationAutoLogin", e);
             throw new AutoLoginException(e);
         }
+    }
+
+    private String getTokenFromUrl(String referer) {
+
+        try {
+            if (referer != null) {
+                logger.info("referer = " + referer);
+
+                // long userId = 0;
+
+                URL url = new URL(referer);
+                String query = url.getQuery();
+                if (query != null) {
+                    String[] queryTab = query.split("&");
+                    for (String param : queryTab) {
+                        String[] paramTab = param.split("=");
+                        String paramName = paramTab[0];
+                        String paramValue = paramTab[1];
+                        if (paramName.equals("mobile_token")) {
+                            int percentIndex = paramValue.indexOf("%");
+                            if (percentIndex != -1) {
+                                paramValue = paramValue.substring(0, percentIndex);
+                            }
+                            logger.info("Extracted mobileToken = " + paramValue);
+                            return paramValue;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error while extracting mobileToken from referer url", e);
+        }
+        return "";
     }
 
     // Set user session cookies

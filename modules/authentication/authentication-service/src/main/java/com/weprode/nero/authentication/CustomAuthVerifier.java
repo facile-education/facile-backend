@@ -30,6 +30,64 @@ public class CustomAuthVerifier implements AuthVerifier {
 
     @Override
     public AuthVerifierResult verify(AccessControlContext accessControlContext, Properties properties) {
+
+//        try {
+//            AuthVerifierResult authVerifierResult = new AuthVerifierResult();
+//
+//            HttpServletRequest httpServletRequest =
+//                    accessControlContext.getRequest();
+//
+//            User user = PortalUtil.getUser(httpServletRequest);
+//
+//            boolean checkCSRFToken = GetterUtil.getBoolean(properties.get("check.csrf.token"), true);
+//
+//            if (checkCSRFToken) {
+//                HttpServletRequest originalHttpServletRequest = PortalUtil.getOriginalServletRequest(httpServletRequest);
+//                String requestURI = originalHttpServletRequest.getRequestURI();
+//
+//                try {
+//                    AuthTokenUtil.checkCSRFToken(originalHttpServletRequest, requestURI);
+//                } catch (PrincipalException principalException) {
+//                    if (logger.isDebugEnabled()) {
+//                        logger.error(
+//                                StringBundler.concat(
+//                                        "Unable to verify CSRF token for ", requestURI,
+//                                        ": ", principalException.getMessage()));
+//                    }
+//
+////                    return authVerifierResult;
+//                }
+//            }
+//
+//            if (user == null) {
+//                //System.out.println("CustomAuthVerifier: Session user is null");
+//            } else if (user.isDefaultUser()) {
+//                //System.out.println("CustomAuthVerifier: Session user is default");
+//            }
+//
+//            String sessionId = accessControlContext.getRequest().getSession().getId();
+//            String contextPath = accessControlContext.getRequest().getContextPath();
+//            String secure = "";
+//            if (accessControlContext.getRequest().isSecure()) {
+//                secure = "; Secure";
+//            }
+            //logger.info("CustomAuthVerifier : Session id is : " + sessionId);
+//            accessControlContext.getResponse().setHeader("SET-COOKIE", "JSESSIONID=" + sessionId
+//                    + "; Path=" + contextPath + secure + "; HttpOnly");
+//
+//            if ((user != null) && !user.isDefaultUser()) {
+//                logger.info("CustomAuthVerifier: identify " + user.getScreenName() + " with session");
+//                authVerifierResult.setPasswordBasedAuthentication(true);
+//                authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
+//                authVerifierResult.setUserId(user.getUserId());
+//
+//                return authVerifierResult;
+//            }
+//
+//        } catch (Exception e) {
+//            logger.error(e);
+//        }
+
         try {
             String[] credentials = new ShibbolethAutoLogin().login(accessControlContext.getRequest(), accessControlContext.getResponse());
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();

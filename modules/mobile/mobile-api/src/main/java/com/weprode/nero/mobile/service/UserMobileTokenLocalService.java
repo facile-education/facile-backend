@@ -224,6 +224,10 @@ public interface UserMobileTokenLocalService
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public UserMobileToken getTokenUser(String mobileToken)
+		throws SystemException;
+
 	/**
 	 * Returns the user mobile token with the primary key.
 	 *
