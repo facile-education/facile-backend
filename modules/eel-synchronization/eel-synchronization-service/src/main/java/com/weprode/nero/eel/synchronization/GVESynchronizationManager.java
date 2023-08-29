@@ -206,6 +206,8 @@ public class GVESynchronizationManager {
         // Roles
         synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.NATIONAL_4);
         synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.GROUP_ADMIN);
+        synchronizeRole(school, "CN=ENT-ADMINISTRATEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.NATIONAL_4);
+        synchronizeRole(school, "CN=ENT-ADMINISTRATEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.GROUP_ADMIN);
         synchronizeRole(school, "CN=ENT-DOYENS,OU=ENT-DOYENS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.DOYEN);
 
         synchronizeRole(school, "CN=ENT-CONSEILLERS-ORIENTATIONS,OU=ENT-EMPS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CONSEILLER_ORIENTATION);
@@ -836,6 +838,7 @@ public class GVESynchronizationManager {
                             // Personal role
                             if (!RoleLocalServiceUtil.hasUserRole(user.getUserId(), personalRole.getRoleId())) {
                                 RoleLocalServiceUtil.addUserRoles(user.getUserId(), new long[]{personalRole.getRoleId()});
+                                logger.info("Added role " + personalRole.getName() + " to member : "+user.getFullName());
                             }
 
                             // For school admin role -> add UserGroupRole
@@ -2137,6 +2140,17 @@ public class GVESynchronizationManager {
                 logger.error("Error giving teacher role to user " + teacher.getFullName(), e);
             }
         }
+
+        // Personal role
+        Role personalRole = RoleUtilsLocalServiceUtil.getPersonalRole();
+        if (!RoleLocalServiceUtil.hasUserRole(teacher.getUserId(), personalRole.getRoleId())) {
+            try {
+                RoleLocalServiceUtil.addUserRoles(teacher.getUserId(), new long[]{personalRole.getRoleId()});
+                logger.info("Added role " + personalRole.getName() + " to teacher : " + teacher.getFullName());
+            } catch (Exception e) {
+                logger.error("Error giving personal role to teacher " + teacher.getFullName(), e);
+            }
+        }
     }
 
     private static class SlotData {
@@ -2399,7 +2413,7 @@ public class GVESynchronizationManager {
 //		roleIds = RoleUtilsLocalServiceUtil.getAgentsRoleIds();
 //		try {
 //			List<User> allAgents = UserSearchLocalServiceUtil.searchUsers("", processedSchoolIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-//			_log.info("There is a total of " + allAgents.size() + " agents");
+//			logger.info("There is a total of " + allAgents.size() + " agents");
 //			for (User agent : allAgents) {
 //				if (processedUserIds.contains(agent.getUserId())) {
 //					continue;
@@ -2408,11 +2422,16 @@ public class GVESynchronizationManager {
 //				if (userProperties.getManualAccount()) {
 //					continue;
 //				}
-//				UserLocalServiceUtil.updateStatus(agent.getUserId(), WorkflowConstants.STATUS_INACTIVE);
-//				_log.info("Deactivated agent " + agent.getFullName() + " (userId " + agent.getUserId() + ")");
+//
+//				// Update last synchro date to avoid purging the user the next day
+//				userProperties.setLastSynchroDate(new Date());
+//				UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
+//
+//				UserLocalServiceUtil.updateStatus(agent.getUserId(), WorkflowConstants.STATUS_INACTIVE, new ServiceContext());
+//				logger.info("Deactivated agent " + agent.getFullName() + " (userId " + agent.getUserId() + ")");
 //			}
 //		} catch (Exception e) {
-//			_log.error("Error processing obsolete students deactivation", e);
+//			logger.error("Error processing obsolete students deactivation", e);
 //		}
 
     }
