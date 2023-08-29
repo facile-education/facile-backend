@@ -46,6 +46,10 @@ public class UserUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static org.json.JSONObject getParentInfos(long parentUserId) {
+		return getService().getParentInfos(parentUserId);
+	}
+
 	public static org.json.JSONObject getPersonnalDetails() {
 		return getService().getPersonnalDetails();
 	}

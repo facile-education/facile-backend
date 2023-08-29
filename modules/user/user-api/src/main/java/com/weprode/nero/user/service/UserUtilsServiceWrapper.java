@@ -46,6 +46,11 @@ public class UserUtilsServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getParentInfos(long parentUserId) {
+		return _userUtilsService.getParentInfos(parentUserId);
+	}
+
+	@Override
 	public org.json.JSONObject getPersonnalDetails() {
 		return _userUtilsService.getPersonnalDetails();
 	}

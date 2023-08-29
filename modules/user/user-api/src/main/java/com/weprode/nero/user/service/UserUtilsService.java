@@ -60,6 +60,10 @@ public interface UserUtilsService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
+	@JSONWebService(method = "GET", value = "get-parent-infos")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getParentInfos(long parentUserId);
+
 	@JSONWebService(method = "GET", value = "get-personnal-details")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getPersonnalDetails();

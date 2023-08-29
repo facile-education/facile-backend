@@ -112,17 +112,15 @@ public class MobileApplicationAutoLogin implements AutoLogin {
         }
     }
 
-    private String getTokenFromUrl(String referer) {
+    private String getTokenFromUrl(String url) {
 
         try {
-            if (referer != null) {
-                logger.info("referer = " + referer);
+            if (url != null) {
+                logger.info("url = " + url);
 
-                // long userId = 0;
-                String query = referer;
                 String mobileTokenStr = "mobile_token=";
-                if (query != null && query.contains(mobileTokenStr)) {
-                    String mobileToken = query.substring(query.indexOf(mobileTokenStr) + mobileTokenStr.length());
+                if (url.contains(mobileTokenStr)) {
+                    String mobileToken = url.substring(url.indexOf(mobileTokenStr) + mobileTokenStr.length());
                     //logger.info("mobile_token long = " + mobileToken);
                     int maxIndex = mobileToken.length();
                     int andIndex = mobileToken.indexOf("&");
@@ -137,24 +135,6 @@ public class MobileApplicationAutoLogin implements AutoLogin {
                     //logger.info("mobile_token short = " + mobileToken);
                     return mobileToken;
                 }
-
-//                if (query != null) {
-//                    String[] queryTab = query.split("&");
-//                    for (String param : queryTab) {
-//                        String[] paramTab = param.split("=");
-//                        String paramName = paramTab[0];
-//                        String paramValue = paramTab[1];
-//                        if (paramName.equals("mobile_token")) {
-//                            logger.info("> value = " + paramValue);
-//                            int percentIndex = paramValue.indexOf("%");
-//                            if (percentIndex != -1) {
-//                                paramValue = paramValue.substring(0, percentIndex);
-//                            }
-//                            logger.info("Extracted mobileToken = " + paramValue);
-//                            return paramValue;
-//                        }
-//                    }
-//                }
             }
         } catch (Exception e) {
             logger.error("Error while extracting mobileToken from referer url", e);
@@ -169,10 +149,13 @@ public class MobileApplicationAutoLogin implements AutoLogin {
             if (url != null && url.contains(userIdStr)) {
                 String userIdValue = url.substring(url.indexOf(userIdStr) + userIdStr.length());
                 //logger.info("user_id = " + userIdValue);
+                if (userIdValue.contains("&")) {
+                    userIdValue = userIdValue.substring(0, userIdValue.indexOf("&"));
+                }
                 return Long.parseLong(userIdValue);
             }
         } catch (Exception e) {
-            logger.error("Error while extracting mobileToken from referer url", e);
+            logger.error("Error while extracting userId from referer url", e);
         }
         return 0;
     }

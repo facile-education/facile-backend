@@ -214,4 +214,44 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         return result;
     }
 
+    @JSONWebService(value = "get-parent-infos", method = "GET")
+    public JSONObject getParentInfos(long parentUserId) {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
+                !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
+                !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
+                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
+        try {
+            StringBuilder strBuilder = new StringBuilder();
+            List<User> children = UserRelationshipLocalServiceUtil.getChildren(parentUserId);
+            if (children != null) {
+                strBuilder.append("Responsable légal de ");
+                for (User child : children) {
+                    strBuilder.append(child.getFullName()).append(" (").append(UserOrgsLocalServiceUtil.getStudentClassName(child)).append("), ");
+                }
+            }
+
+            result.put(JSONConstants.INFOS, strBuilder.toString());
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error fetching children for user " + user.getUserId(), e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+        return result;
+    }
+
 }
