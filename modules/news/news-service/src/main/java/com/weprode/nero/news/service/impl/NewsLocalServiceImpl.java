@@ -541,6 +541,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
     public JSONObject convertNewsToJson(long newsId, long userId, boolean withDetails) throws SystemException, PortalException {
         JSONObject jsonNews = new JSONObject();
 
+        User user = UserLocalServiceUtil.getUser(userId);
         News news = NewsLocalServiceUtil.getNews(newsId);
         jsonNews.put(JSONConstants.AUTHOR_ID, news.getAuthorId());
         User author = UserLocalServiceUtil.getUser(news.getAuthorId());
@@ -560,13 +561,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         jsonNews.put(JSONConstants.HAS_READ, NewsReadLocalServiceUtil.hasUserReadNews(userId, newsId));
         jsonNews.put(JSONConstants.HAS_ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.hasAttachedFiles(newsId));
         jsonNews.put(JSONConstants.IS_SCHOOL_NEWS, news.getIsSchoolNews());
-        // Author and direction can edit/delete the event
-        User user = UserLocalServiceUtil.getUser(userId);
-        if (news.getIsSchoolNews()) {
-            jsonNews.put(JSONConstants.IS_EDITABLE, news.getAuthorId() == userId || RoleUtilsLocalServiceUtil.isDirectionMember(user));
-        } else {
-            jsonNews.put(JSONConstants.IS_EDITABLE, news.getAuthorId() == userId);
-        }
+
+        // Only the author can edit/delete the event
+        jsonNews.put(JSONConstants.IS_EDITABLE, news.getAuthorId() == userId);
+
         // Thumbnail
         if (news.getImageId() != 0) {
             try {
@@ -610,8 +608,12 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         if (withDetails) {
             jsonNews.put(JSONConstants.THUMBNAIL_ID, news.getImageId());
             jsonNews.put(JSONConstants.ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.convertNewsFiles(newsId, userId));
-            if (news.getAuthorId() == userId) {
-                jsonNews.put(JSONConstants.POPULATIONS, NewsPopulationLocalServiceUtil.convertNewsPopulations(newsId, userId));
+            jsonNews.put(JSONConstants.POPULATIONS, NewsPopulationLocalServiceUtil.convertNewsPopulations(newsId, userId));
+            // Who can see the read matrix : the author, the directors and the news delegates
+            boolean canSeeReadMatrix = news.getAuthorId() == userId || RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user);
+            jsonNews.put(JSONConstants.CAN_SEE_READ_MATRIX, canSeeReadMatrix);
+
+            if (canSeeReadMatrix) {
                 jsonNews.put(JSONConstants.READ_INFOS, NewsReadLocalServiceUtil.getNewsReadStatus(newsId, userId));
             }
         }

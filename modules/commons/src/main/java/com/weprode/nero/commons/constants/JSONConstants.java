@@ -440,6 +440,7 @@ public class JSONConstants {
     public static final String PUBLICATION_DATE = "publicationDate";
     public static final String HAS_ATTACHED_FILES = "hasAttachedFiles";
     public static final String IS_EDITABLE = "isEditable";
+    public static final String CAN_SEE_READ_MATRIX = "canSeeReadMatrix";
     public static final String IS_SCHOOL_NEWS = "isSchoolNews";
     public static final String THUMBNAIL_ID = "thumbnailId";
     public static final String THUMBNAIL_URL = "thumbnailUrl";
