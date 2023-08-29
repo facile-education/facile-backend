@@ -611,8 +611,6 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             jsonNews.put(JSONConstants.POPULATIONS, NewsPopulationLocalServiceUtil.convertNewsPopulations(newsId, userId));
             // Who can see the read matrix : the author, the directors and the news delegates
             boolean canSeeReadMatrix = news.getAuthorId() == userId || RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user);
-            jsonNews.put(JSONConstants.CAN_SEE_READ_MATRIX, canSeeReadMatrix);
-
             if (canSeeReadMatrix) {
                 jsonNews.put(JSONConstants.READ_INFOS, NewsReadLocalServiceUtil.getNewsReadStatus(newsId, userId));
             }
