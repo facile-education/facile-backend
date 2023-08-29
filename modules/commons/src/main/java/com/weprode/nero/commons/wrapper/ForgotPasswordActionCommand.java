@@ -204,7 +204,7 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
         logger.info("Sending password recovery link by email to user " + user.getFullName() + " (id " + user.getUserId() + ")");
 
         String fromName = "Equipe technique";
-        String fromAddress = "no-reply@eduge.ch";
+        String fromAddress = "no-reply@ent.eduge.ch";
         String toAddress = user.getEmailAddress();
 
         String subject = "[ENTA Genève] Changement de mot de passe";

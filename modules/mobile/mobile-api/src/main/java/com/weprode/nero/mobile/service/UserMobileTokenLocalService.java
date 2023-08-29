@@ -64,6 +64,9 @@ public interface UserMobileTokenLocalService
 	 */
 	public String addMobileToken(long userId) throws SystemException;
 
+	public UserMobileToken addMobileToken(long userId, String token)
+		throws SystemException;
+
 	/**
 	 * Adds the user mobile token to the database. Also notifies the appropriate model listeners.
 	 *
