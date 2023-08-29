@@ -40,6 +40,14 @@ public class UserMobileTokenLocalServiceWrapper
 		return _userMobileTokenLocalService.addMobileToken(userId);
 	}
 
+	@Override
+	public com.weprode.nero.mobile.model.UserMobileToken addMobileToken(
+			long userId, String token)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _userMobileTokenLocalService.addMobileToken(userId, token);
+	}
+
 	/**
 	 * Adds the user mobile token to the database. Also notifies the appropriate model listeners.
 	 *

@@ -30,7 +30,8 @@ public class LogFilter extends BaseFilter {
 
         User user = PortalUtil.getUser(request);
         String uri = (String)request.getAttribute(WebKeys.INVOKER_FILTER_URI);
-        log.info("User " + (user != null ? user.getFullName() : "null") + " called API " + uri);
+        String query = request.getQueryString();
+        log.info("User " + (user != null ? user.getFullName() : "null") + " called API " + uri + " with params " + (query == null ? "null" : query));
         super.processFilter(request, response, filterChain);
     }
 

@@ -88,11 +88,14 @@ public class CustomAuthVerifier implements AuthVerifier {
 //            logger.error(e);
 //        }
 
+        logger.info("CustomAuthVerifier for URI " + accessControlContext.getRequest().getRequestURI());
+
         try {
+            long userId = 0;
             String[] credentials = new ShibbolethAutoLogin().login(accessControlContext.getRequest(), accessControlContext.getResponse());
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();
             if (credentials != null) {
-                long userId = Long.parseLong(credentials[0]);
+                userId = Long.parseLong(credentials[0]);
                 User user = UserLocalServiceUtil.getUser(userId);
                 logger.debug("Connected user is " + user.getFullName());
                 authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
@@ -102,7 +105,7 @@ public class CustomAuthVerifier implements AuthVerifier {
             } else {
                 credentials = new MobileApplicationAutoLogin().login(accessControlContext.getRequest(), accessControlContext.getResponse());
                 if (credentials != null) {
-                    long userId = Long.parseLong(credentials[0]);
+                    userId = Long.parseLong(credentials[0]);
                     User user = UserLocalServiceUtil.getUser(userId);
                     logger.debug("Connected user on mobile app is " + user.getFullName());
                     authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
@@ -111,6 +114,19 @@ public class CustomAuthVerifier implements AuthVerifier {
                     authVerifierResult.setPassword(credentials[1]);
                 }
             }
+//            if (credentials != null && userId != 0) {
+//                try {
+//                    User user = UserLocalServiceUtil.getUser(userId);
+//                    logger.info("companyId = " + PortalUtil.getCompany(accessControlContext.getRequest()));
+//                    logger.info(" > found user " + user.getScreenName() + ", password=" + user.getPassword() + ", authType=" + PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_EA));
+//                    logger.info("Before AuthenticatedSessionManagerUtil session=" + accessControlContext.getRequest().getSession().getId());
+//                    AuthenticatedSessionManagerUtil.renewSession(accessControlContext.getRequest(), accessControlContext.getRequest().getSession());
+//                    //AuthenticatedSessionManagerUtil.login(accessControlContext.getRequest(), accessControlContext.getResponse(), user.getScreenName(), "WeProde73!", false, PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_EA));
+//                    logger.info("After AuthenticatedSessionManagerUtil session=" + accessControlContext.getRequest().getSession().getId());
+//                } catch (Exception e) {
+//                    logger.error("Error in AuthenticatedSessionManagerUtil", e);
+//                }
+//            }
 
             return authVerifierResult;
         } catch (Exception e) {

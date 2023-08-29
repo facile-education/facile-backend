@@ -26,7 +26,7 @@ public class ShibbolethAutoLogin implements AutoLogin {
             HttpServletRequest request, HttpServletResponse response)
             throws AutoLoginException {
 
-        logger.debug("ShibbolethAutoLogin : URI = " + request.getRequestURI());
+        logger.info("ShibbolethAutoLogin : URI = " + request.getRequestURI());
 
         try {
             String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_EA);
@@ -54,7 +54,7 @@ public class ShibbolethAutoLogin implements AutoLogin {
             }
 
             if (user != null) {
-                logger.info("User authenticated: " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
+                logger.info("User authenticated: " + user.getScreenName() + " (" + user.getEmailAddress() + "), uri=" + request.getRequestURI());
                 //logger.info("================ User " + user.getFullName() + " (" + user.getUserId() + ") logs in =======================");
                 String[] credentials = new String[3];
                 credentials[0] = String.valueOf(user.getUserId());
@@ -70,6 +70,7 @@ public class ShibbolethAutoLogin implements AutoLogin {
             throw new AutoLoginException(e);
         }
 
+        logger.info("ShibAutoLogin returns null for uri=" + request.getRequestURI());
         return null;
     }
 
