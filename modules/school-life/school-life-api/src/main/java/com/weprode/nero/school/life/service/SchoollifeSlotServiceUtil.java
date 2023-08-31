@@ -34,29 +34,33 @@ public class SchoollifeSlotServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.school.life.service.impl.SchoollifeSlotServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static org.json.JSONObject createSlot(
-		long schoolId, java.lang.String startDateStr, int day,
-		java.lang.String startHour, java.lang.String endHour, long teacherId,
-		int type, java.lang.String room, int capacity) {
+		long schoolId, java.lang.String startDateStr,
+		java.lang.String endDateStr, int day, java.lang.String startHour,
+		java.lang.String endHour, long teacherId, int type,
+		java.lang.String room, int capacity) {
 
 		return getService().createSlot(
-			schoolId, startDateStr, day, startHour, endHour, teacherId, type,
-			room, capacity);
+			schoolId, startDateStr, endDateStr, day, startHour, endHour,
+			teacherId, type, room, capacity);
 	}
 
 	public static org.json.JSONObject deleteSlot(
-		long schoollifeSessionId, java.lang.String startDateStr) {
+		long schoollifeSessionId, java.lang.String startDateStr,
+		java.lang.String endDateStr) {
 
-		return getService().deleteSlot(schoollifeSessionId, startDateStr);
+		return getService().deleteSlot(
+			schoollifeSessionId, startDateStr, endDateStr);
 	}
 
 	public static org.json.JSONObject editSlot(
-		long schoollifeSessionId, java.lang.String startDateStr, int newDay,
-		java.lang.String newStartHour, java.lang.String newEndHour,
-		long newTeacherId, java.lang.String newRoom, int newCapacity) {
+		long schoollifeSessionId, java.lang.String startDateStr,
+		java.lang.String endDateStr, int newDay, java.lang.String newStartHour,
+		java.lang.String newEndHour, long newTeacherId,
+		java.lang.String newRoom, int newCapacity) {
 
 		return getService().editSlot(
-			schoollifeSessionId, startDateStr, newDay, newStartHour, newEndHour,
-			newTeacherId, newRoom, newCapacity);
+			schoollifeSessionId, startDateStr, endDateStr, newDay, newStartHour,
+			newEndHour, newTeacherId, newRoom, newCapacity);
 	}
 
 	/**
@@ -66,6 +70,12 @@ public class SchoollifeSlotServiceUtil {
 	 */
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static org.json.JSONObject getSessionLimitSlotDate(
+		long schoollifeSessionId) {
+
+		return getService().getSessionLimitSlotDate(schoollifeSessionId);
 	}
 
 	public static SchoollifeSlotService getService() {

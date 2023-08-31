@@ -34,31 +34,32 @@ public class SchoollifeSlotServiceWrapper
 
 	@Override
 	public org.json.JSONObject createSlot(
-		long schoolId, String startDateStr, int day, String startHour,
-		String endHour, long teacherId, int type, String room, int capacity) {
+		long schoolId, String startDateStr, String endDateStr, int day,
+		String startHour, String endHour, long teacherId, int type, String room,
+		int capacity) {
 
 		return _schoollifeSlotService.createSlot(
-			schoolId, startDateStr, day, startHour, endHour, teacherId, type,
-			room, capacity);
+			schoolId, startDateStr, endDateStr, day, startHour, endHour,
+			teacherId, type, room, capacity);
 	}
 
 	@Override
 	public org.json.JSONObject deleteSlot(
-		long schoollifeSessionId, String startDateStr) {
+		long schoollifeSessionId, String startDateStr, String endDateStr) {
 
 		return _schoollifeSlotService.deleteSlot(
-			schoollifeSessionId, startDateStr);
+			schoollifeSessionId, startDateStr, endDateStr);
 	}
 
 	@Override
 	public org.json.JSONObject editSlot(
-		long schoollifeSessionId, String startDateStr, int newDay,
-		String newStartHour, String newEndHour, long newTeacherId,
+		long schoollifeSessionId, String startDateStr, String endDateStr,
+		int newDay, String newStartHour, String newEndHour, long newTeacherId,
 		String newRoom, int newCapacity) {
 
 		return _schoollifeSlotService.editSlot(
-			schoollifeSessionId, startDateStr, newDay, newStartHour, newEndHour,
-			newTeacherId, newRoom, newCapacity);
+			schoollifeSessionId, startDateStr, endDateStr, newDay, newStartHour,
+			newEndHour, newTeacherId, newRoom, newCapacity);
 	}
 
 	/**
@@ -69,6 +70,14 @@ public class SchoollifeSlotServiceWrapper
 	@Override
 	public String getOSGiServiceIdentifier() {
 		return _schoollifeSlotService.getOSGiServiceIdentifier();
+	}
+
+	@Override
+	public org.json.JSONObject getSessionLimitSlotDate(
+		long schoollifeSessionId) {
+
+		return _schoollifeSlotService.getSessionLimitSlotDate(
+			schoollifeSessionId);
 	}
 
 	@Override

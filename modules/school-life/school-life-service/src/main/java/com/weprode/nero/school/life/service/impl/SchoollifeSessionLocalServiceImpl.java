@@ -27,6 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Collections;
+import java.util.Comparator;
+
 
 @Component(
         property = "model.class.name=com.weprode.nero.school.life.model.SchoollifeSession",
@@ -129,7 +132,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
         return daySessions;
     }
 
-    public boolean deleteSlotSessions(long schoollifeSlotId, Date limitDate) {
+    public boolean deleteSlotSessions(long schoollifeSlotId, Date startDate, Date endDate) {
         logger.info("Deleting schoollife sessions with schoollifeSlotId=" + schoollifeSlotId);
 
         boolean isAllSlotSessionAreDeleted = true;
@@ -137,7 +140,8 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
             List<SchoollifeSession> sessionsToDelete = schoollifeSessionPersistence.findByschoollifeSlotId(schoollifeSlotId);
             if (sessionsToDelete != null) {
                 for (SchoollifeSession sessionToDelete : sessionsToDelete) {
-                    if (limitDate == null || !sessionToDelete.getStartDate().before(limitDate)) { // !before = after or equals
+                    if ((startDate == null || !sessionToDelete.getStartDate().before(startDate)) &&
+                        (endDate == null || !sessionToDelete.getStartDate().after(endDate))) { // !before = after or equals
                         deleteSession(sessionToDelete.getSchoollifeSessionId());
                     } else {
                         isAllSlotSessionAreDeleted = false;
@@ -150,6 +154,22 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
         }
 
         return isAllSlotSessionAreDeleted;
+    }
+
+    public SchoollifeSession getLastSession(long schoollifeSlotId) {
+        List<SchoollifeSession> sessionsList = schoollifeSessionPersistence.findByschoollifeSlotId(schoollifeSlotId);
+
+        // Sort by startDate
+        // Create a new modifiable list in order to sort elements
+        List<SchoollifeSession> modifiableSessionList = new ArrayList<>(sessionsList);
+        Collections.sort(modifiableSessionList, new Comparator<>() {
+            @Override
+            public int compare(SchoollifeSession session1, SchoollifeSession session2) {
+                return session1.getStartDate().compareTo(session2.getStartDate());
+            }
+        });
+
+        return modifiableSessionList.get(sessionsList.size() - 1);
     }
 
     public boolean deleteSession(long schoollifeSessionId) {

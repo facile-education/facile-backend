@@ -269,6 +269,8 @@ public class JSONConstants {
     public static final String SESSION = "session";
     public static final String SESSIONS = "sessions";
     public static final String SCHOOLLIFE_SESSIONS = "schoollifeSessions";
+
+    public static final String LAST_SESSION_DATE = "lastSessionDate";
     public static final String SESSION_DETAILS = "sessionDetails";
     public static final String START_DATE = "startDate";
     public static final String END_DATE = "endDate";

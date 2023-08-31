@@ -139,7 +139,8 @@ public interface SchoollifeSessionLocalService
 
 	public boolean deleteSession(long schoollifeSessionId);
 
-	public boolean deleteSlotSessions(long schoollifeSlotId, Date limitDate);
+	public boolean deleteSlotSessions(
+		long schoollifeSlotId, Date startDate, Date endDate);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T> T dslQuery(DSLQuery dslQuery);
@@ -228,6 +229,9 @@ public interface SchoollifeSessionLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public SchoollifeSession getLastSession(long schoollifeSlotId);
 
 	/**
 	 * Returns the OSGi service identifier.

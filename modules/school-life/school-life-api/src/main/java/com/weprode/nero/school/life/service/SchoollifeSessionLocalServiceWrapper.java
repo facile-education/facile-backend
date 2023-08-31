@@ -148,10 +148,11 @@ public class SchoollifeSessionLocalServiceWrapper
 
 	@Override
 	public boolean deleteSlotSessions(
-		long schoollifeSlotId, java.util.Date limitDate) {
+		long schoollifeSlotId, java.util.Date startDate,
+		java.util.Date endDate) {
 
 		return _schoollifeSessionLocalService.deleteSlotSessions(
-			schoollifeSlotId, limitDate);
+			schoollifeSlotId, startDate, endDate);
 	}
 
 	@Override
@@ -294,6 +295,13 @@ public class SchoollifeSessionLocalServiceWrapper
 
 		return _schoollifeSessionLocalService.
 			getIndexableActionableDynamicQuery();
+	}
+
+	@Override
+	public com.weprode.nero.school.life.model.SchoollifeSession getLastSession(
+		long schoollifeSlotId) {
+
+		return _schoollifeSessionLocalService.getLastSession(schoollifeSlotId);
 	}
 
 	/**
