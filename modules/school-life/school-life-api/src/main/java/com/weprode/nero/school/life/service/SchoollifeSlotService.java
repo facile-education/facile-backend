@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
 import org.json.JSONObject;
@@ -51,16 +52,18 @@ public interface SchoollifeSlotService extends BaseService {
 	 */
 	@JSONWebService(method = "GET", value = "create-slot")
 	public JSONObject createSlot(
-		long schoolId, String startDateStr, int day, String startHour,
-		String endHour, long teacherId, int type, String room, int capacity);
+		long schoolId, String startDateStr, String endDateStr, int day,
+		String startHour, String endHour, long teacherId, int type, String room,
+		int capacity);
 
 	@JSONWebService(method = "GET", value = "delete-slot")
-	public JSONObject deleteSlot(long schoollifeSessionId, String startDateStr);
+	public JSONObject deleteSlot(
+		long schoollifeSessionId, String startDateStr, String endDateStr);
 
 	@JSONWebService(method = "GET", value = "edit-slot")
 	public JSONObject editSlot(
-		long schoollifeSessionId, String startDateStr, int newDay,
-		String newStartHour, String newEndHour, long newTeacherId,
+		long schoollifeSessionId, String startDateStr, String endDateStr,
+		int newDay, String newStartHour, String newEndHour, long newTeacherId,
 		String newRoom, int newCapacity);
 
 	/**
@@ -69,5 +72,9 @@ public interface SchoollifeSlotService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
+
+	@JSONWebService(method = "GET", value = "get-session-limit-slot-date")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getSessionLimitSlotDate(long schoollifeSessionId);
 
 }

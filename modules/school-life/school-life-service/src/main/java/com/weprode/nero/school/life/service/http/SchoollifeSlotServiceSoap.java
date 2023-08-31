@@ -65,15 +65,16 @@ import java.rmi.RemoteException;
 public class SchoollifeSlotServiceSoap {
 
 	public static org.json.JSONObject createSlot(
-			long schoolId, String startDateStr, int day, String startHour,
-			String endHour, long teacherId, int type, String room, int capacity)
+			long schoolId, String startDateStr, String endDateStr, int day,
+			String startHour, String endHour, long teacherId, int type,
+			String room, int capacity)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				SchoollifeSlotServiceUtil.createSlot(
-					schoolId, startDateStr, day, startHour, endHour, teacherId,
-					type, room, capacity);
+					schoolId, startDateStr, endDateStr, day, startHour, endHour,
+					teacherId, type, room, capacity);
 
 			return returnValue;
 		}
@@ -85,16 +86,17 @@ public class SchoollifeSlotServiceSoap {
 	}
 
 	public static org.json.JSONObject editSlot(
-			long schoollifeSessionId, String startDateStr, int newDay,
-			String newStartHour, String newEndHour, long newTeacherId,
-			String newRoom, int newCapacity)
+			long schoollifeSessionId, String startDateStr, String endDateStr,
+			int newDay, String newStartHour, String newEndHour,
+			long newTeacherId, String newRoom, int newCapacity)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				SchoollifeSlotServiceUtil.editSlot(
-					schoollifeSessionId, startDateStr, newDay, newStartHour,
-					newEndHour, newTeacherId, newRoom, newCapacity);
+					schoollifeSessionId, startDateStr, endDateStr, newDay,
+					newStartHour, newEndHour, newTeacherId, newRoom,
+					newCapacity);
 
 			return returnValue;
 		}
@@ -106,13 +108,31 @@ public class SchoollifeSlotServiceSoap {
 	}
 
 	public static org.json.JSONObject deleteSlot(
-			long schoollifeSessionId, String startDateStr)
+			long schoollifeSessionId, String startDateStr, String endDateStr)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
 				SchoollifeSlotServiceUtil.deleteSlot(
-					schoollifeSessionId, startDateStr);
+					schoollifeSessionId, startDateStr, endDateStr);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getSessionLimitSlotDate(
+			long schoollifeSessionId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				SchoollifeSlotServiceUtil.getSessionLimitSlotDate(
+					schoollifeSessionId);
 
 			return returnValue;
 		}

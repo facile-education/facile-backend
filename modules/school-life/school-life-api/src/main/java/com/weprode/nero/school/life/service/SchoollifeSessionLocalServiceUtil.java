@@ -141,9 +141,11 @@ public class SchoollifeSessionLocalServiceUtil {
 	}
 
 	public static boolean deleteSlotSessions(
-		long schoollifeSlotId, java.util.Date limitDate) {
+		long schoollifeSlotId, java.util.Date startDate,
+		java.util.Date endDate) {
 
-		return getService().deleteSlotSessions(schoollifeSlotId, limitDate);
+		return getService().deleteSlotSessions(
+			schoollifeSlotId, startDate, endDate);
 	}
 
 	public static <T> T dslQuery(DSLQuery dslQuery) {
@@ -260,6 +262,10 @@ public class SchoollifeSessionLocalServiceUtil {
 			getIndexableActionableDynamicQuery() {
 
 		return getService().getIndexableActionableDynamicQuery();
+	}
+
+	public static SchoollifeSession getLastSession(long schoollifeSlotId) {
+		return getService().getLastSession(schoollifeSlotId);
 	}
 
 	/**

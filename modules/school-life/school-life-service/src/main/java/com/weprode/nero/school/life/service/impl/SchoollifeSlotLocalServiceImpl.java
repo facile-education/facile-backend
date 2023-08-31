@@ -23,9 +23,8 @@ public class SchoollifeSlotLocalServiceImpl extends SchoollifeSlotLocalServiceBa
 
     private final Log logger = LogFactoryUtil.getLog(SchoollifeSlotLocalServiceImpl.class);
 
-    public SchoollifeSlot addSlot(long schoolId, Date startDate, int day, String startHour, String endHour, long teacherId, int type, String room, int capacity) {
+    public SchoollifeSlot addSlot(long schoolId, Date startDate, Date endDate, int day, String startHour, String endHour, long teacherId, int type, String room, int capacity) {
         logger.info("About to create a schoollife slot for schoolId " + schoolId + ", day=" + day + ", startHour=" + startHour +", endHour=" + endHour + ", teacherId=" + teacherId + ", type=" + type + ", room = " + room + ", capacity = " + capacity);
-
         try {
             long schoollifeSlotId = counterLocalService.increment();
             SchoollifeSlot schoollifeSlot = createSchoollifeSlot(schoollifeSlotId);
@@ -40,7 +39,8 @@ public class SchoollifeSlotLocalServiceImpl extends SchoollifeSlotLocalServiceBa
             schoollifeSlot = schoollifeSlotPersistence.update(schoollifeSlot);
 
             // Create sessions from now to the end of the school year
-            if (startDate.before(ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate()) || startDate.after(ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate())) {
+            if (startDate.before(ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate()) || startDate.after(ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate()) ||
+                   endDate.before(ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate()) || endDate.after(ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate()) ) {
                 logger.error("Error when creating a schoollife slot : school configuration start and end dates are not properly configured");
             } else {
                 // Current week
@@ -74,13 +74,13 @@ public class SchoollifeSlotLocalServiceImpl extends SchoollifeSlotLocalServiceBa
                 endCal.set(Calendar.HOUR_OF_DAY, endH);
                 endCal.set(Calendar.MINUTE, endM);
 
-                while (endCal.getTime().before(ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate())) {
+                while (endCal.getTime().before(endDate)) {
                     SchoollifeSessionLocalServiceUtil.addSession(schoollifeSlotId, schoolId, startCal.getTime(), endCal.getTime(), type);
                     startCal.add(Calendar.DATE, 7);
                     endCal.add(Calendar.DATE, 7);
                 }
 
-                logger.info("Created schoollife slot for schoolId " + schoolId + ", day=" + day + ", startHour=" + startHour +", endHour=" + endHour + ", teacherId=" + teacherId + ", type=" + type + ", capacity = " + capacity);
+                logger.info("Created schoollife slot for schoolId " + schoolId + ", day=" + day + ", startHour=" + startHour +", endHour=" + endHour + ",between startDate=" + startDate + " and endDate=" + endDate + " teacherId=" + teacherId + ", type=" + type + ", capacity = " + capacity);
             }
 
             return schoollifeSlot;
@@ -90,7 +90,7 @@ public class SchoollifeSlotLocalServiceImpl extends SchoollifeSlotLocalServiceBa
         }
     }
 
-    public SchoollifeSlot editSlot(long schoollifeSlotId, Date currentDate, int newDay, String newStartHour, String newEndHour, long newTeacherId, String newRoom, int newCapacity) {
+    public SchoollifeSlot editSlot(long schoollifeSlotId, Date startDate, Date endDate, int newDay, String newStartHour, String newEndHour, long newTeacherId, String newRoom, int newCapacity) {
         logger.info("About to edit schoollife " + schoollifeSlotId + ", newDay=" + newDay + ", newStartHour=" + newStartHour +", newEndHour=" + newEndHour + ", newTeacherId=" + newTeacherId + ", newRoom = " + newRoom + ", newCapacity = " + newCapacity);
 
         try {
@@ -108,7 +108,7 @@ public class SchoollifeSlotLocalServiceImpl extends SchoollifeSlotLocalServiceBa
                 List<SchoollifeSession> slotSessions = SchoollifeSessionLocalServiceUtil.getSlotSessions(schoollifeSlotId);
                 if (slotSessions != null) {
                     for (SchoollifeSession slotSession : slotSessions) {
-                        if (!slotSession.getStartDate().before(currentDate)) {
+                        if (!slotSession.getStartDate().before(startDate) && !slotSession.getStartDate().after(endDate)) {
 
                             // Init calendar to old startDate
                             Calendar startCal = Calendar.getInstance();
@@ -171,9 +171,9 @@ public class SchoollifeSlotLocalServiceImpl extends SchoollifeSlotLocalServiceBa
         }
     }
 
-    public boolean deleteSlot(long schoollifeSlotId, Date limitDate) {
+    public boolean deleteSlot(long schoollifeSlotId, Date startDate, Date endDate) {
         // Delete associated future sessions
-        boolean isAllSlotSessionAreDeleted = SchoollifeSessionLocalServiceUtil.deleteSlotSessions(schoollifeSlotId, limitDate);
+        boolean isAllSlotSessionAreDeleted = SchoollifeSessionLocalServiceUtil.deleteSlotSessions(schoollifeSlotId, startDate, endDate);
 
         try {
             if (isAllSlotSessionAreDeleted) {

@@ -54,8 +54,8 @@ public class SchoollifeSlotServiceHttp {
 
 	public static org.json.JSONObject createSlot(
 		HttpPrincipal httpPrincipal, long schoolId, String startDateStr,
-		int day, String startHour, String endHour, long teacherId, int type,
-		String room, int capacity) {
+		String endDateStr, int day, String startHour, String endHour,
+		long teacherId, int type, String room, int capacity) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -63,8 +63,8 @@ public class SchoollifeSlotServiceHttp {
 				_createSlotParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, schoolId, startDateStr, day, startHour, endHour,
-				teacherId, type, room, capacity);
+				methodKey, schoolId, startDateStr, endDateStr, day, startHour,
+				endHour, teacherId, type, room, capacity);
 
 			Object returnObj = null;
 
@@ -89,8 +89,8 @@ public class SchoollifeSlotServiceHttp {
 
 	public static org.json.JSONObject editSlot(
 		HttpPrincipal httpPrincipal, long schoollifeSessionId,
-		String startDateStr, int newDay, String newStartHour, String newEndHour,
-		long newTeacherId, String newRoom, int newCapacity) {
+		String startDateStr, String endDateStr, int newDay, String newStartHour,
+		String newEndHour, long newTeacherId, String newRoom, int newCapacity) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -98,8 +98,9 @@ public class SchoollifeSlotServiceHttp {
 				_editSlotParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, schoollifeSessionId, startDateStr, newDay,
-				newStartHour, newEndHour, newTeacherId, newRoom, newCapacity);
+				methodKey, schoollifeSessionId, startDateStr, endDateStr,
+				newDay, newStartHour, newEndHour, newTeacherId, newRoom,
+				newCapacity);
 
 			Object returnObj = null;
 
@@ -124,7 +125,7 @@ public class SchoollifeSlotServiceHttp {
 
 	public static org.json.JSONObject deleteSlot(
 		HttpPrincipal httpPrincipal, long schoollifeSessionId,
-		String startDateStr) {
+		String startDateStr, String endDateStr) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -132,7 +133,39 @@ public class SchoollifeSlotServiceHttp {
 				_deleteSlotParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, schoollifeSessionId, startDateStr);
+				methodKey, schoollifeSessionId, startDateStr, endDateStr);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject getSessionLimitSlotDate(
+		HttpPrincipal httpPrincipal, long schoollifeSessionId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				SchoollifeSlotServiceUtil.class, "getSessionLimitSlotDate",
+				_getSessionLimitSlotDateParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, schoollifeSessionId);
 
 			Object returnObj = null;
 
@@ -159,15 +192,17 @@ public class SchoollifeSlotServiceHttp {
 		SchoollifeSlotServiceHttp.class);
 
 	private static final Class<?>[] _createSlotParameterTypes0 = new Class[] {
-		long.class, String.class, int.class, String.class, String.class,
-		long.class, int.class, String.class, int.class
+		long.class, String.class, String.class, int.class, String.class,
+		String.class, long.class, int.class, String.class, int.class
 	};
 	private static final Class<?>[] _editSlotParameterTypes1 = new Class[] {
-		long.class, String.class, int.class, String.class, String.class,
-		long.class, String.class, int.class
+		long.class, String.class, String.class, int.class, String.class,
+		String.class, long.class, String.class, int.class
 	};
 	private static final Class<?>[] _deleteSlotParameterTypes2 = new Class[] {
-		long.class, String.class
+		long.class, String.class, String.class
 	};
+	private static final Class<?>[] _getSessionLimitSlotDateParameterTypes3 =
+		new Class[] {long.class};
 
 }

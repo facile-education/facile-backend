@@ -78,7 +78,7 @@ public interface SchoollifeSlotLocalService
 	public SchoollifeSlot addSchoollifeSlot(SchoollifeSlot schoollifeSlot);
 
 	public SchoollifeSlot addSlot(
-		long schoolId, Date startDate, int day, String startHour,
+		long schoolId, Date startDate, Date endDate, int day, String startHour,
 		String endHour, long teacherId, int type, String room, int capacity);
 
 	/**
@@ -131,7 +131,8 @@ public interface SchoollifeSlotLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public SchoollifeSlot deleteSchoollifeSlot(SchoollifeSlot schoollifeSlot);
 
-	public boolean deleteSlot(long schoollifeSlotId, Date limitDate);
+	public boolean deleteSlot(
+		long schoollifeSlotId, Date startDate, Date endDate);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T> T dslQuery(DSLQuery dslQuery);
@@ -206,7 +207,7 @@ public interface SchoollifeSlotLocalService
 		DynamicQuery dynamicQuery, Projection projection);
 
 	public SchoollifeSlot editSlot(
-		long schoollifeSlotId, Date currentDate, int newDay,
+		long schoollifeSlotId, Date startDate, Date endDate, int newDay,
 		String newStartHour, String newEndHour, long newTeacherId,
 		String newRoom, int newCapacity);
 

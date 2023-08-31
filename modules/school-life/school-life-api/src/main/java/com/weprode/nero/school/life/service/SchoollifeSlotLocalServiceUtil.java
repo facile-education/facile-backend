@@ -63,12 +63,13 @@ public class SchoollifeSlotLocalServiceUtil {
 	}
 
 	public static SchoollifeSlot addSlot(
-		long schoolId, java.util.Date startDate, int day, String startHour,
-		String endHour, long teacherId, int type, String room, int capacity) {
+		long schoolId, java.util.Date startDate, java.util.Date endDate,
+		int day, String startHour, String endHour, long teacherId, int type,
+		String room, int capacity) {
 
 		return getService().addSlot(
-			schoolId, startDate, day, startHour, endHour, teacherId, type, room,
-			capacity);
+			schoolId, startDate, endDate, day, startHour, endHour, teacherId,
+			type, room, capacity);
 	}
 
 	/**
@@ -135,9 +136,10 @@ public class SchoollifeSlotLocalServiceUtil {
 	}
 
 	public static boolean deleteSlot(
-		long schoollifeSlotId, java.util.Date limitDate) {
+		long schoollifeSlotId, java.util.Date startDate,
+		java.util.Date endDate) {
 
-		return getService().deleteSlot(schoollifeSlotId, limitDate);
+		return getService().deleteSlot(schoollifeSlotId, startDate, endDate);
 	}
 
 	public static <T> T dslQuery(DSLQuery dslQuery) {
@@ -226,13 +228,13 @@ public class SchoollifeSlotLocalServiceUtil {
 	}
 
 	public static SchoollifeSlot editSlot(
-		long schoollifeSlotId, java.util.Date currentDate, int newDay,
-		String newStartHour, String newEndHour, long newTeacherId,
+		long schoollifeSlotId, java.util.Date startDate, java.util.Date endDate,
+		int newDay, String newStartHour, String newEndHour, long newTeacherId,
 		String newRoom, int newCapacity) {
 
 		return getService().editSlot(
-			schoollifeSlotId, currentDate, newDay, newStartHour, newEndHour,
-			newTeacherId, newRoom, newCapacity);
+			schoollifeSlotId, startDate, endDate, newDay, newStartHour,
+			newEndHour, newTeacherId, newRoom, newCapacity);
 	}
 
 	public static SchoollifeSlot fetchSchoollifeSlot(long schoollifeSlotId) {

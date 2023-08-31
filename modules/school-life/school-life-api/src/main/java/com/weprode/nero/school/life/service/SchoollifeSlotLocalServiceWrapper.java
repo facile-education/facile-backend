@@ -52,12 +52,13 @@ public class SchoollifeSlotLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.school.life.model.SchoollifeSlot addSlot(
-		long schoolId, java.util.Date startDate, int day, String startHour,
-		String endHour, long teacherId, int type, String room, int capacity) {
+		long schoolId, java.util.Date startDate, java.util.Date endDate,
+		int day, String startHour, String endHour, long teacherId, int type,
+		String room, int capacity) {
 
 		return _schoollifeSlotLocalService.addSlot(
-			schoolId, startDate, day, startHour, endHour, teacherId, type, room,
-			capacity);
+			schoolId, startDate, endDate, day, startHour, endHour, teacherId,
+			type, room, capacity);
 	}
 
 	/**
@@ -135,9 +136,12 @@ public class SchoollifeSlotLocalServiceWrapper
 	}
 
 	@Override
-	public boolean deleteSlot(long schoollifeSlotId, java.util.Date limitDate) {
+	public boolean deleteSlot(
+		long schoollifeSlotId, java.util.Date startDate,
+		java.util.Date endDate) {
+
 		return _schoollifeSlotLocalService.deleteSlot(
-			schoollifeSlotId, limitDate);
+			schoollifeSlotId, startDate, endDate);
 	}
 
 	@Override
@@ -245,13 +249,13 @@ public class SchoollifeSlotLocalServiceWrapper
 
 	@Override
 	public com.weprode.nero.school.life.model.SchoollifeSlot editSlot(
-		long schoollifeSlotId, java.util.Date currentDate, int newDay,
-		String newStartHour, String newEndHour, long newTeacherId,
+		long schoollifeSlotId, java.util.Date startDate, java.util.Date endDate,
+		int newDay, String newStartHour, String newEndHour, long newTeacherId,
 		String newRoom, int newCapacity) {
 
 		return _schoollifeSlotLocalService.editSlot(
-			schoollifeSlotId, currentDate, newDay, newStartHour, newEndHour,
-			newTeacherId, newRoom, newCapacity);
+			schoollifeSlotId, startDate, endDate, newDay, newStartHour,
+			newEndHour, newTeacherId, newRoom, newCapacity);
 	}
 
 	@Override
