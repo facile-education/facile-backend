@@ -2410,29 +2410,29 @@ public class GVESynchronizationManager {
         }
 
         // Loop over agents and deactivate the ones that were not previously processed
-		roleIds = RoleUtilsLocalServiceUtil.getAgentsRoleIds();
-		try {
-			List<User> allAgents = UserSearchLocalServiceUtil.searchUsers("", processedSchoolIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-			logger.info("There is a total of " + allAgents.size() + " agents");
-			for (User agent : allAgents) {
-				if (processedUserIds.contains(agent.getUserId())) {
-					continue;
-				}
-				UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(agent.getUserId());
-				if (userProperties.getManualAccount()) {
-					continue;
-				}
-
-				// Update last synchro date to avoid purging the user the next day
-				userProperties.setLastSynchroDate(new Date());
-				UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
-
-				UserLocalServiceUtil.updateStatus(agent.getUserId(), WorkflowConstants.STATUS_INACTIVE, new ServiceContext());
-				logger.info("Deactivated agent " + agent.getFullName() + " (userId " + agent.getUserId() + ")");
-			}
-		} catch (Exception e) {
-			logger.error("Error processing obsolete students deactivation", e);
-		}
+//		roleIds = RoleUtilsLocalServiceUtil.getAgentsRoleIds();
+//		try {
+//			List<User> allAgents = UserSearchLocalServiceUtil.searchUsers("", processedSchoolIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+//			logger.info("There is a total of " + allAgents.size() + " agents");
+//			for (User agent : allAgents) {
+//				if (processedUserIds.contains(agent.getUserId())) {
+//					continue;
+//				}
+//				UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(agent.getUserId());
+//				if (userProperties.getManualAccount()) {
+//					continue;
+//				}
+//
+//				// Update last synchro date to avoid purging the user the next day
+//				userProperties.setLastSynchroDate(new Date());
+//				UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
+//
+//				UserLocalServiceUtil.updateStatus(agent.getUserId(), WorkflowConstants.STATUS_INACTIVE, new ServiceContext());
+//				logger.info("Deactivated agent " + agent.getFullName() + " (userId " + agent.getUserId() + ")");
+//			}
+//		} catch (Exception e) {
+//			logger.error("Error processing obsolete students deactivation", e);
+//		}
 
     }
 
