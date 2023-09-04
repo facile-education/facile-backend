@@ -37,6 +37,10 @@ public class UserUtilsServiceUtil {
 		return getService().acceptTermsOfUse();
 	}
 
+	public static org.json.JSONObject getCasAttributes() {
+		return getService().getCasAttributes();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

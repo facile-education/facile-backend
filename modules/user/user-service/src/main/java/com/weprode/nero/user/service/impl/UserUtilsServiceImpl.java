@@ -254,4 +254,34 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         return result;
     }
 
+    @JSONWebService(value = "get-cas-attributes", method = "GET")
+    public JSONObject getCasAttributes() {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        try {
+            result.put(JSONConstants.SCREEN_NAME, user.getScreenName());
+            result.put(JSONConstants.USER_ID, user.getUserId());
+            result.put(JSONConstants.LAST_NAME, user.getLastName());
+            result.put(JSONConstants.FIRST_NAME, user.getFirstName());
+            result.put(JSONConstants.EMAIL, user.getEmailAddress());
+            result.put(JSONConstants.ROLE_ID, RoleUtilsLocalServiceUtil.displayUserRoles(user));
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error fetching cas attributes for user " + user.getUserId(), e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+        return result;
+    }
+
+
 }
