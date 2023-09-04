@@ -50,6 +50,12 @@ public class UserMobileTokenLocalServiceUtil {
 		return getService().addMobileToken(userId);
 	}
 
+	public static UserMobileToken addMobileToken(long userId, String token)
+		throws SystemException {
+
+		return getService().addMobileToken(userId, token);
+	}
+
 	/**
 	 * Adds the user mobile token to the database. Also notifies the appropriate model listeners.
 	 *
@@ -247,6 +253,12 @@ public class UserMobileTokenLocalServiceUtil {
 		throws PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static UserMobileToken getTokenUser(String mobileToken)
+		throws SystemException {
+
+		return getService().getTokenUser(mobileToken);
 	}
 
 	/**

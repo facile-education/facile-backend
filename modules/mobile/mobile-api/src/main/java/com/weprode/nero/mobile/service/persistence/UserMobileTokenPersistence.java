@@ -43,6 +43,51 @@ public interface UserMobileTokenPersistence
 	 */
 
 	/**
+	 * Returns the user mobile token where mobileToken = &#63; or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the matching user mobile token
+	 * @throws NoSuchUserMobileTokenException if a matching user mobile token could not be found
+	 */
+	public UserMobileToken findBymobileToken(String mobileToken)
+		throws NoSuchUserMobileTokenException;
+
+	/**
+	 * Returns the user mobile token where mobileToken = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
+	 */
+	public UserMobileToken fetchBymobileToken(String mobileToken);
+
+	/**
+	 * Returns the user mobile token where mobileToken = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param mobileToken the mobile token
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
+	 */
+	public UserMobileToken fetchBymobileToken(
+		String mobileToken, boolean useFinderCache);
+
+	/**
+	 * Removes the user mobile token where mobileToken = &#63; from the database.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the user mobile token that was removed
+	 */
+	public UserMobileToken removeBymobileToken(String mobileToken)
+		throws NoSuchUserMobileTokenException;
+
+	/**
+	 * Returns the number of user mobile tokens where mobileToken = &#63;.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the number of matching user mobile tokens
+	 */
+	public int countBymobileToken(String mobileToken);
+
+	/**
 	 * Caches the user mobile token in the entity cache if it is enabled.
 	 *
 	 * @param userMobileToken the user mobile token

@@ -127,25 +127,30 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
             modifiedUser.setEmailAddress(email);
             UserLocalServiceUtil.updateUser(modifiedUser);
 
-            List<Role> oldRoles = RoleLocalServiceUtil.getUserRoles(userId);
-            for (Role oldRole : oldRoles) {
-                if (!oldRole.getName().equals("Power User") && !oldRole.getName().equals("User")) {
-                    logger.info("Removing role " + oldRole.getName() + " to user " + modifiedUser.getFullName());
-                    RoleLocalServiceUtil.unsetUserRoles(modifiedUser.getUserId(), new long[]{oldRole.getRoleId()});
-                }
-            }
-            long[] roleIds = new long[1];
-            roleIds[0] = roleId;
-            RoleLocalServiceUtil.addUserRoles(modifiedUser.getUserId(), roleIds);
+            // For parents do not update roles and orgs
+            if (!RoleUtilsLocalServiceUtil.isParent(modifiedUser)) {
 
-            List<Organization> existingOrgs = OrganizationLocalServiceUtil.getUserOrganizations(modifiedUser.getUserId());
-            for (Organization existingOrg : existingOrgs) {
-                logger.info("Removing user from org " + existingOrg.getName());
-                UserLocalServiceUtil.unsetOrganizationUsers(existingOrg.getOrganizationId(), new long[]{modifiedUser.getUserId()});
+                List<Role> oldRoles = RoleLocalServiceUtil.getUserRoles(userId);
+                for (Role oldRole : oldRoles) {
+                    if (!oldRole.getName().equals("Power User") && !oldRole.getName().equals("User")) {
+                        logger.info("Removing role " + oldRole.getName() + " to user " + modifiedUser.getFullName());
+                        RoleLocalServiceUtil.unsetUserRoles(modifiedUser.getUserId(), new long[]{oldRole.getRoleId()});
+                    }
+                }
+                long[] roleIds = new long[1];
+                roleIds[0] = roleId;
+                RoleLocalServiceUtil.addUserRoles(modifiedUser.getUserId(), roleIds);
+
+                List<Organization> existingOrgs = OrganizationLocalServiceUtil.getUserOrganizations(modifiedUser.getUserId());
+                for (Organization existingOrg : existingOrgs) {
+                    logger.info("Removing user from org " + existingOrg.getName());
+                    UserLocalServiceUtil.unsetOrganizationUsers(existingOrg.getOrganizationId(), new long[]{modifiedUser.getUserId()});
+                }
+                Organization school = OrganizationLocalServiceUtil.getOrganization(schoolId);
+                logger.info("Adding user to school " + school.getName());
+                UserManagementLocalServiceUtil.synchronizeUserSchool(modifiedUser.getUserId(), school.getOrganizationId());
+
             }
-            Organization school = OrganizationLocalServiceUtil.getOrganization(schoolId);
-            logger.info("Adding user to school " + school.getName());
-            UserManagementLocalServiceUtil.synchronizeUserSchool(modifiedUser.getUserId(), school.getOrganizationId());
 
             JSONObject jsonUser = convertUser(modifiedUser);
 

@@ -39,6 +39,7 @@ import com.weprode.nero.messaging.service.MessagingConfigLocalServiceUtil;
 import com.weprode.nero.messaging.service.base.MessageLocalServiceBaseImpl;
 import com.weprode.nero.messaging.utils.MessagingUtil;
 import com.weprode.nero.messaging.utils.ThreadSendMessage;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -543,7 +544,8 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         String forwardedMailSubject = bundle.getString("forward-subject") + HtmlParserUtil.extractText(subject);
         String forwardedMailContent = bundle.getString("forward-content");
 
-        if (PrefsPropsUtil.getBoolean(NeroSystemProperties.MAIL_FORWARD_ADDCONTENT)) {
+        // Exception for administrator
+        if (PrefsPropsUtil.getBoolean(NeroSystemProperties.MAIL_FORWARD_ADDCONTENT) || RoleUtilsLocalServiceUtil.isAdministrator(receiver)) {
             forwardedMailContent += "</br></br>" + content;
         }
 
@@ -558,10 +560,11 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
                 mailMessage.setHTMLFormat(true);
                 mailMessage.setSubject(forwardedMailSubject);
                 mailMessage.setBody(forwardedMailContent);
-                for (File file : attachmentFileList) {
-                    mailMessage.addFileAttachment(file);
+                if (PrefsPropsUtil.getBoolean(NeroSystemProperties.MAIL_FORWARD_ADDCONTENT)) {
+                    for (File file : attachmentFileList) {
+                        mailMessage.addFileAttachment(file);
+                    }
                 }
-
                 MailServiceUtil.sendEmail(mailMessage);
             } catch (Exception e) {
                 logger.error("Error forwarding mail to address " + forwardMail, e);

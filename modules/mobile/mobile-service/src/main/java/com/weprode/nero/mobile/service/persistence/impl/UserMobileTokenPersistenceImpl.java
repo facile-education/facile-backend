@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
@@ -31,6 +32,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.mobile.exception.NoSuchUserMobileTokenException;
 import com.weprode.nero.mobile.model.UserMobileToken;
@@ -44,9 +47,12 @@ import com.weprode.nero.mobile.service.persistence.impl.constants.MobilePersiste
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -88,6 +94,249 @@ public class UserMobileTokenPersistenceImpl
 	private FinderPath _finderPathWithPaginationFindAll;
 	private FinderPath _finderPathWithoutPaginationFindAll;
 	private FinderPath _finderPathCountAll;
+	private FinderPath _finderPathFetchBymobileToken;
+	private FinderPath _finderPathCountBymobileToken;
+
+	/**
+	 * Returns the user mobile token where mobileToken = &#63; or throws a <code>NoSuchUserMobileTokenException</code> if it could not be found.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the matching user mobile token
+	 * @throws NoSuchUserMobileTokenException if a matching user mobile token could not be found
+	 */
+	@Override
+	public UserMobileToken findBymobileToken(String mobileToken)
+		throws NoSuchUserMobileTokenException {
+
+		UserMobileToken userMobileToken = fetchBymobileToken(mobileToken);
+
+		if (userMobileToken == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			sb.append("mobileToken=");
+			sb.append(mobileToken);
+
+			sb.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(sb.toString());
+			}
+
+			throw new NoSuchUserMobileTokenException(sb.toString());
+		}
+
+		return userMobileToken;
+	}
+
+	/**
+	 * Returns the user mobile token where mobileToken = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
+	 */
+	@Override
+	public UserMobileToken fetchBymobileToken(String mobileToken) {
+		return fetchBymobileToken(mobileToken, true);
+	}
+
+	/**
+	 * Returns the user mobile token where mobileToken = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param mobileToken the mobile token
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching user mobile token, or <code>null</code> if a matching user mobile token could not be found
+	 */
+	@Override
+	public UserMobileToken fetchBymobileToken(
+		String mobileToken, boolean useFinderCache) {
+
+		mobileToken = Objects.toString(mobileToken, "");
+
+		Object[] finderArgs = null;
+
+		if (useFinderCache) {
+			finderArgs = new Object[] {mobileToken};
+		}
+
+		Object result = null;
+
+		if (useFinderCache) {
+			result = finderCache.getResult(
+				_finderPathFetchBymobileToken, finderArgs);
+		}
+
+		if (result instanceof UserMobileToken) {
+			UserMobileToken userMobileToken = (UserMobileToken)result;
+
+			if (!Objects.equals(
+					mobileToken, userMobileToken.getMobileToken())) {
+
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(_SQL_SELECT_USERMOBILETOKEN_WHERE);
+
+			boolean bindMobileToken = false;
+
+			if (mobileToken.isEmpty()) {
+				sb.append(_FINDER_COLUMN_MOBILETOKEN_MOBILETOKEN_3);
+			}
+			else {
+				bindMobileToken = true;
+
+				sb.append(_FINDER_COLUMN_MOBILETOKEN_MOBILETOKEN_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindMobileToken) {
+					queryPos.add(mobileToken);
+				}
+
+				List<UserMobileToken> list = query.list();
+
+				if (list.isEmpty()) {
+					if (useFinderCache) {
+						finderCache.putResult(
+							_finderPathFetchBymobileToken, finderArgs, list);
+					}
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							if (!useFinderCache) {
+								finderArgs = new Object[] {mobileToken};
+							}
+
+							_log.warn(
+								"UserMobileTokenPersistenceImpl.fetchBymobileToken(String, boolean) with parameters (" +
+									StringUtil.merge(finderArgs) +
+										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					UserMobileToken userMobileToken = list.get(0);
+
+					result = userMobileToken;
+
+					cacheResult(userMobileToken);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (UserMobileToken)result;
+		}
+	}
+
+	/**
+	 * Removes the user mobile token where mobileToken = &#63; from the database.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the user mobile token that was removed
+	 */
+	@Override
+	public UserMobileToken removeBymobileToken(String mobileToken)
+		throws NoSuchUserMobileTokenException {
+
+		UserMobileToken userMobileToken = findBymobileToken(mobileToken);
+
+		return remove(userMobileToken);
+	}
+
+	/**
+	 * Returns the number of user mobile tokens where mobileToken = &#63;.
+	 *
+	 * @param mobileToken the mobile token
+	 * @return the number of matching user mobile tokens
+	 */
+	@Override
+	public int countBymobileToken(String mobileToken) {
+		mobileToken = Objects.toString(mobileToken, "");
+
+		FinderPath finderPath = _finderPathCountBymobileToken;
+
+		Object[] finderArgs = new Object[] {mobileToken};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(_SQL_COUNT_USERMOBILETOKEN_WHERE);
+
+			boolean bindMobileToken = false;
+
+			if (mobileToken.isEmpty()) {
+				sb.append(_FINDER_COLUMN_MOBILETOKEN_MOBILETOKEN_3);
+			}
+			else {
+				bindMobileToken = true;
+
+				sb.append(_FINDER_COLUMN_MOBILETOKEN_MOBILETOKEN_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindMobileToken) {
+					queryPos.add(mobileToken);
+				}
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_MOBILETOKEN_MOBILETOKEN_2 =
+		"userMobileToken.mobileToken = ?";
+
+	private static final String _FINDER_COLUMN_MOBILETOKEN_MOBILETOKEN_3 =
+		"(userMobileToken.mobileToken IS NULL OR userMobileToken.mobileToken = '')";
 
 	public UserMobileTokenPersistenceImpl() {
 		setModelClass(UserMobileToken.class);
@@ -108,6 +357,10 @@ public class UserMobileTokenPersistenceImpl
 		entityCache.putResult(
 			UserMobileTokenImpl.class, userMobileToken.getPrimaryKey(),
 			userMobileToken);
+
+		finderCache.putResult(
+			_finderPathFetchBymobileToken,
+			new Object[] {userMobileToken.getMobileToken()}, userMobileToken);
 	}
 
 	private int _valueObjectFinderCacheListThreshold;
@@ -178,6 +431,19 @@ public class UserMobileTokenPersistenceImpl
 		for (Serializable primaryKey : primaryKeys) {
 			entityCache.removeResult(UserMobileTokenImpl.class, primaryKey);
 		}
+	}
+
+	protected void cacheUniqueFindersCache(
+		UserMobileTokenModelImpl userMobileTokenModelImpl) {
+
+		Object[] args = new Object[] {
+			userMobileTokenModelImpl.getMobileToken()
+		};
+
+		finderCache.putResult(
+			_finderPathCountBymobileToken, args, Long.valueOf(1));
+		finderCache.putResult(
+			_finderPathFetchBymobileToken, args, userMobileTokenModelImpl);
 	}
 
 	/**
@@ -286,6 +552,26 @@ public class UserMobileTokenPersistenceImpl
 	public UserMobileToken updateImpl(UserMobileToken userMobileToken) {
 		boolean isNew = userMobileToken.isNew();
 
+		if (!(userMobileToken instanceof UserMobileTokenModelImpl)) {
+			InvocationHandler invocationHandler = null;
+
+			if (ProxyUtil.isProxyClass(userMobileToken.getClass())) {
+				invocationHandler = ProxyUtil.getInvocationHandler(
+					userMobileToken);
+
+				throw new IllegalArgumentException(
+					"Implement ModelWrapper in userMobileToken proxy " +
+						invocationHandler.getClass());
+			}
+
+			throw new IllegalArgumentException(
+				"Implement ModelWrapper in custom UserMobileToken implementation " +
+					userMobileToken.getClass());
+		}
+
+		UserMobileTokenModelImpl userMobileTokenModelImpl =
+			(UserMobileTokenModelImpl)userMobileToken;
+
 		Session session = null;
 
 		try {
@@ -307,7 +593,9 @@ public class UserMobileTokenPersistenceImpl
 		}
 
 		entityCache.putResult(
-			UserMobileTokenImpl.class, userMobileToken, false, true);
+			UserMobileTokenImpl.class, userMobileTokenModelImpl, false, true);
+
+		cacheUniqueFindersCache(userMobileTokenModelImpl);
 
 		if (isNew) {
 			userMobileToken.setNew(false);
@@ -589,6 +877,16 @@ public class UserMobileTokenPersistenceImpl
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0], new String[0], false);
 
+		_finderPathFetchBymobileToken = new FinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchBymobileToken",
+			new String[] {String.class.getName()}, new String[] {"mobileToken"},
+			true);
+
+		_finderPathCountBymobileToken = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countBymobileToken",
+			new String[] {String.class.getName()}, new String[] {"mobileToken"},
+			false);
+
 		_setUserMobileTokenUtilPersistence(this);
 	}
 
@@ -650,13 +948,22 @@ public class UserMobileTokenPersistenceImpl
 	private static final String _SQL_SELECT_USERMOBILETOKEN =
 		"SELECT userMobileToken FROM UserMobileToken userMobileToken";
 
+	private static final String _SQL_SELECT_USERMOBILETOKEN_WHERE =
+		"SELECT userMobileToken FROM UserMobileToken userMobileToken WHERE ";
+
 	private static final String _SQL_COUNT_USERMOBILETOKEN =
 		"SELECT COUNT(userMobileToken) FROM UserMobileToken userMobileToken";
+
+	private static final String _SQL_COUNT_USERMOBILETOKEN_WHERE =
+		"SELECT COUNT(userMobileToken) FROM UserMobileToken userMobileToken WHERE ";
 
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userMobileToken.";
 
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY =
 		"No UserMobileToken exists with the primary key ";
+
+	private static final String _NO_SUCH_ENTITY_WITH_KEY =
+		"No UserMobileToken exists with the key {";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		UserMobileTokenPersistenceImpl.class);

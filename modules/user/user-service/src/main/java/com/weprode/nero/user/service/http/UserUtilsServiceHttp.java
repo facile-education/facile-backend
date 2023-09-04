@@ -145,6 +145,69 @@ public class UserUtilsServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getParentInfos(
+		HttpPrincipal httpPrincipal, long parentUserId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				UserUtilsServiceUtil.class, "getParentInfos",
+				_getParentInfosParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, parentUserId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject getCasAttributes(
+		HttpPrincipal httpPrincipal) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				UserUtilsServiceUtil.class, "getCasAttributes",
+				_getCasAttributesParameterTypes4);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(UserUtilsServiceHttp.class);
 
 	private static final Class<?>[] _getUserInfosParameterTypes0 =
@@ -152,6 +215,10 @@ public class UserUtilsServiceHttp {
 	private static final Class<?>[] _getPersonnalDetailsParameterTypes1 =
 		new Class[] {};
 	private static final Class<?>[] _acceptTermsOfUseParameterTypes2 =
+		new Class[] {};
+	private static final Class<?>[] _getParentInfosParameterTypes3 =
+		new Class[] {long.class};
+	private static final Class<?>[] _getCasAttributesParameterTypes4 =
 		new Class[] {};
 
 }

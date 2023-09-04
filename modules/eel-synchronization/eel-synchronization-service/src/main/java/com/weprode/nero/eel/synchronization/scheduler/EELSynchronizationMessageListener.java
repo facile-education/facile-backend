@@ -5,16 +5,24 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.scheduler.*;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.service.SynchronizationLocalServiceUtil;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Component(
@@ -34,6 +42,12 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
     @Override
     protected void doReceive(Message message) {
         new Thread(() -> {
+            // Do as administrator, to get rid of permission issues
+            List<User> adminUsers = UserLocalServiceUtil.getRoleUsers(RoleUtilsLocalServiceUtil.getAdministratorRole().getRoleId());
+            PrincipalThreadLocal.setName(adminUsers.get(0).getUserId());
+            PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(adminUsers.get(0));
+            PermissionThreadLocal.setPermissionChecker(permissionChecker);
+
             try {
                 if (PropsUtil.get(NeroSystemProperties.SYNCHRO_ENABLED).equals("true")) {
                     logger.info("Scheduled GVE synchronization starting ...");

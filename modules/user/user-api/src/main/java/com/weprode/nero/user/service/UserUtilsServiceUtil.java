@@ -37,6 +37,10 @@ public class UserUtilsServiceUtil {
 		return getService().acceptTermsOfUse();
 	}
 
+	public static org.json.JSONObject getCasAttributes() {
+		return getService().getCasAttributes();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -44,6 +48,10 @@ public class UserUtilsServiceUtil {
 	 */
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static org.json.JSONObject getParentInfos(long parentUserId) {
+		return getService().getParentInfos(parentUserId);
 	}
 
 	public static org.json.JSONObject getPersonnalDetails() {

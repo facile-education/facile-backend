@@ -193,9 +193,8 @@ public class GVESynchronizationManager {
         synchronizeClasses(school, classesDn);
         synchronizeVolees(school, classesDn);
 
-        // Commented out because subjects are not accented, we use the ones from the schedule file
-//        String subjectsDn = "OU=DISCIPLINES,OU=ENSEIGNANTS," + schoolDn;
-//        synchronizeTeacherSubjects(school, subjectsDn);
+        String subjectsDn = "OU=DISCIPLINES,OU=ENSEIGNANTS," + schoolDn;
+        synchronizeTeacherSubjects(school, subjectsDn);
 
         String sessionsDn = "OU=COURS," + schoolDn;
         synchronizeSessions(school, sessionsDn);
@@ -207,6 +206,8 @@ public class GVESynchronizationManager {
         // Roles
         synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.NATIONAL_4);
         synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.GROUP_ADMIN);
+        synchronizeRole(school, "CN=ENT-ADMINISTRATEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.NATIONAL_4);
+        synchronizeRole(school, "CN=ENT-ADMINISTRATEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.GROUP_ADMIN);
         synchronizeRole(school, "CN=ENT-DOYENS,OU=ENT-DOYENS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.DOYEN);
 
         synchronizeRole(school, "CN=ENT-CONSEILLERS-ORIENTATIONS,OU=ENT-EMPS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CONSEILLER_ORIENTATION);
@@ -689,23 +690,24 @@ public class GVESynchronizationManager {
                     continue;
                 }
 
+                // Commented out because subjects are not accented, we use the ones from the schedule file
                 // Remove dashes
-                subjectName = subjectName.replace("-", " ");
-                // LowerCase + Capitalize subject
-                subjectName = subjectName.substring(0, 1).toUpperCase() + subjectName.substring(1).toLowerCase();
-
-                // Create subject if needed
-                Subject subject = SubjectLocalServiceUtil.getOrCreateSubject(subjectName);
+//                subjectName = subjectName.replace("-", " ");
+//                // LowerCase + Capitalize subject
+//                subjectName = subjectName.substring(0, 1).toUpperCase() + subjectName.substring(1).toLowerCase();
+//
+//                // Create subject if needed
+//                Subject subject = SubjectLocalServiceUtil.getOrCreateSubject(subjectName);
 
                 // Loop over teachers
                 String[] attributeIds = {MEMBER};
                 String subjectDn = subjectResult.getName() + "," + subjectsDn;
-                logger.info("SubjectDn = "+ subjectDn);
-
-                // Now manage subject groups
-                String subjectOrgName = OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true) + OrgConstants.SUBJECT_ORG_TEACHERS +
-                        (subjectName.startsWith("A") || subjectName.startsWith("E") || subjectName.startsWith("H") || subjectName.startsWith("I") ? " d'" : " de ") + subjectName;
-                Organization subjectOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(school.getCompanyId(), subjectOrgName, school.getOrganizationId(), OrgConstants.SUBJECT_TYPE);
+//                logger.info("SubjectDn = "+ subjectDn);
+//
+//                // Now manage subject groups
+//                String subjectOrgName = OrgUtilsLocalServiceUtil.formatOrgName(school.getName(), true) + OrgConstants.SUBJECT_ORG_TEACHERS +
+//                        (subjectName.startsWith("A") || subjectName.startsWith("E") || subjectName.startsWith("H") || subjectName.startsWith("I") ? " d'" : " de ") + subjectName;
+//                Organization subjectOrg = OrgUtilsLocalServiceUtil.getOrCreateOrganization(school.getCompanyId(), subjectOrgName, school.getOrganizationId(), OrgConstants.SUBJECT_TYPE);
 
                 Attributes attrs = getContext().getAttributes(subjectDn, attributeIds);
                 if (attrs.get(MEMBER) != null) {
@@ -723,13 +725,13 @@ public class GVESynchronizationManager {
                                 addTeacherRole(teacher);
 
                                 // Add teacher to subject org
-                                addUserToOrgMap(teacher, subjectOrg.getOrganizationId());
+                                //addUserToOrgMap(teacher, subjectOrg.getOrganizationId());
 
                                 setSynchroDate(teacher);
                                 registerTeacherToSchool(teacher, school);
 
                                 // Add him/her the subject
-                                TeacherSubjectLocalServiceUtil.addTeacherSubjectInSchool(teacher.getUserId(), subject.getSubjectId(), school.getOrganizationId());
+                                //TeacherSubjectLocalServiceUtil.addTeacherSubjectInSchool(teacher.getUserId(), subject.getSubjectId(), school.getOrganizationId());
                             }
                         } catch (Exception e) {
                             logger.error("Error processing teacher " + memberCn);
@@ -836,6 +838,7 @@ public class GVESynchronizationManager {
                             // Personal role
                             if (!RoleLocalServiceUtil.hasUserRole(user.getUserId(), personalRole.getRoleId())) {
                                 RoleLocalServiceUtil.addUserRoles(user.getUserId(), new long[]{personalRole.getRoleId()});
+                                logger.info("Added role " + personalRole.getName() + " to member : "+user.getFullName());
                             }
 
                             // For school admin role -> add UserGroupRole
@@ -1696,8 +1699,8 @@ public class GVESynchronizationManager {
                         for (Long teacherId : teacherIdList) {
                             teacherIdsStr.append(teacherId).append(",");
                         }
-                        logger.info("-----------------------");
-                        logger.info("Loop over sessionInfos with fullCoursName " + sessionInfos.getFullCoursName() + " and teachers " + teacherIdsStr);
+                        //logger.info("-----------------------");
+                        //logger.info("Loop over sessionInfos with fullCoursName " + sessionInfos.getFullCoursName() + " and teachers " + teacherIdsStr);
                         //end tmp
 
 
@@ -1889,7 +1892,7 @@ public class GVESynchronizationManager {
 
     private CDTSession getExistingSession(List<CDTSession> existingSessions, Date startDate, Date endDate, String fullCoursName, String room) {
         DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        logger.info("getExistingSession for fullCoursName="+fullCoursName + ", startDate " + sdf.format(startDate) + " and endDate " + sdf.format(endDate));
+        logger.debug("getExistingSession for fullCoursName="+fullCoursName + ", startDate " + sdf.format(startDate) + " and endDate " + sdf.format(endDate));
 
         // First filter on startDate and endDate only
         List<CDTSession> sessionCandidates = new ArrayList<>();
@@ -2135,6 +2138,17 @@ public class GVESynchronizationManager {
                 RoleLocalServiceUtil.addUserRoles(teacher.getUserId(), teacherRoles);
             } catch (Exception e) {
                 logger.error("Error giving teacher role to user " + teacher.getFullName(), e);
+            }
+        }
+
+        // Personal role
+        Role personalRole = RoleUtilsLocalServiceUtil.getPersonalRole();
+        if (!RoleLocalServiceUtil.hasUserRole(teacher.getUserId(), personalRole.getRoleId())) {
+            try {
+                RoleLocalServiceUtil.addUserRoles(teacher.getUserId(), new long[]{personalRole.getRoleId()});
+                logger.info("Added role " + personalRole.getName() + " to teacher : " + teacher.getFullName());
+            } catch (Exception e) {
+                logger.error("Error giving personal role to teacher " + teacher.getFullName(), e);
             }
         }
     }
@@ -2399,7 +2413,7 @@ public class GVESynchronizationManager {
 //		roleIds = RoleUtilsLocalServiceUtil.getAgentsRoleIds();
 //		try {
 //			List<User> allAgents = UserSearchLocalServiceUtil.searchUsers("", processedSchoolIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-//			_log.info("There is a total of " + allAgents.size() + " agents");
+//			logger.info("There is a total of " + allAgents.size() + " agents");
 //			for (User agent : allAgents) {
 //				if (processedUserIds.contains(agent.getUserId())) {
 //					continue;
@@ -2408,11 +2422,16 @@ public class GVESynchronizationManager {
 //				if (userProperties.getManualAccount()) {
 //					continue;
 //				}
-//				UserLocalServiceUtil.updateStatus(agent.getUserId(), WorkflowConstants.STATUS_INACTIVE);
-//				_log.info("Deactivated agent " + agent.getFullName() + " (userId " + agent.getUserId() + ")");
+//
+//				// Update last synchro date to avoid purging the user the next day
+//				userProperties.setLastSynchroDate(new Date());
+//				UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
+//
+//				UserLocalServiceUtil.updateStatus(agent.getUserId(), WorkflowConstants.STATUS_INACTIVE, new ServiceContext());
+//				logger.info("Deactivated agent " + agent.getFullName() + " (userId " + agent.getUserId() + ")");
 //			}
 //		} catch (Exception e) {
-//			_log.error("Error processing obsolete students deactivation", e);
+//			logger.error("Error processing obsolete students deactivation", e);
 //		}
 
     }
