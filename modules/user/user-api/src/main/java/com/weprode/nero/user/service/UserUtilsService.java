@@ -53,12 +53,20 @@ public interface UserUtilsService extends BaseService {
 	@JSONWebService(method = "GET", value = "accept-terms-of-use")
 	public JSONObject acceptTermsOfUse();
 
+	@JSONWebService(method = "GET", value = "get-cas-attributes")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getCasAttributes();
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
+
+	@JSONWebService(method = "GET", value = "get-parent-infos")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getParentInfos(long parentUserId);
 
 	@JSONWebService(method = "GET", value = "get-personnal-details")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

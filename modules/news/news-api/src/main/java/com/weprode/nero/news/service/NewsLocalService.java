@@ -229,6 +229,11 @@ public interface NewsLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<News> getGroupNewsActivities(
+			User user, long groupId, Date minDate, Date maxDate, int nbNews)
+		throws SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getGroupNewsBroadcastGroups(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -252,8 +257,8 @@ public interface NewsLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<News> getNewsActivities(
-			User user, long groupId, Date minDate, Date maxDate, int nbNews,
-			boolean groupNewsOnly)
+			User user, List<Long> groupIds, Date minDate, Date maxDate,
+			int nbNews, boolean groupNewsOnly)
 		throws SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -25,6 +25,7 @@ import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.mobile.model.MobileDevice;
 import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
+import com.weprode.nero.mobile.service.UserMobileTokenLocalServiceUtil;
 import com.weprode.nero.mobile.service.base.MobileDeviceServiceBaseImpl;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -149,6 +150,10 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		try {
 			MobileDevice mobileDevice = MobileDeviceLocalServiceUtil.getMobileDeviceByManufacturerDeviceId(deviceId);
 			MobileDeviceLocalServiceUtil.deleteMobileDevice(mobileDevice);
+
+			// Delete user token
+			UserMobileTokenLocalServiceUtil.deleteUserMobileToken(mobileDevice.getUserId());
+
 			result.put("success", true);
 		} catch (Exception e) {
 			logger.error("Failed to remove mobile device with manufacturer id = " + deviceId);

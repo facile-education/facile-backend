@@ -121,6 +121,7 @@ public class JSONConstants {
     public static final String IS_WEBDAV_ENABLED = "isWebdavEnabled";
     public static final String WEBDAV_URL = "webdavUrl";
     public static final String PROFILE_ID = "profileId";
+    public static final String INFOS = "infos";
 
 
     // Organization

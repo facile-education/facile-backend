@@ -24,6 +24,7 @@ import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.mobile.constants.MobileConstants;
 import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.nero.user.service.NewsAdminLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
@@ -183,13 +184,13 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
             jsonEvent.put(JSONConstants.START_DATE, sdf.format(event.getStartDate()));
             jsonEvent.put(JSONConstants.END_DATE, sdf.format(event.getEndDate()));
             jsonEvent.put(JSONConstants.HAS_READ, EventReadLocalServiceUtil.hasUserReadEvent(userId, eventId));
-            // Author and direction can edit/delete the event
+            // Only the author can edit/delete the event
             User user = UserLocalServiceUtil.getUser(userId);
-            jsonEvent.put(JSONConstants.IS_EDITABLE, event.getAuthorId() == userId || RoleUtilsLocalServiceUtil.isDirectionMember(user));
+            jsonEvent.put(JSONConstants.IS_EDITABLE, event.getAuthorId() == userId);
             if (withDetails) {
                 jsonEvent.put(JSONConstants.DESCRIPTION, event.getDescription());
                 jsonEvent.put(JSONConstants.POPULATIONS, EventPopulationLocalServiceUtil.convertEventPopulations(eventId, userId));
-                if (event.getAuthorId() == userId) {
+                if (event.getAuthorId() == userId || RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)) {
                     jsonEvent.put(JSONConstants.READ_INFOS, EventReadLocalServiceUtil.getEventReadStatus(eventId, userId));
                 }
             }

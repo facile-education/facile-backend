@@ -72,14 +72,13 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             // Get activities by successive range dates going back in time, so that we ensure pagination is fine
             // Do not exceed 1 month back in time
-            while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
+            while (groupActivities.size() < nbResults && maxDate.after(limitMinDate)) {
                 // Fetch activities from minDate = maxDate minus 7 days
                 //logger.info("Fetching group activities for userId " + userId + " from " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(minDate) + " to " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(maxDate) + " : having " + groupActivities.size() + " results");
 
                 // Group news
                 if (withNews) {
-                    long groupId = 0;
-                    List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, groupId, minDate, maxDate, nbResults, true);
+                    List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, groupIds, minDate, maxDate, nbResults, true);
                     for (News news : groupNews) {
                         GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
                         groupActivities.add(newsActivity);
@@ -211,12 +210,12 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             // Get activities by successive range dates going back in time, so that we ensure pagination is fine
             // Do not exceed 1 month back in time
-            while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
+            while (groupActivities.size() < nbResults && maxDate.after(limitMinDate)) {
                 // Fetch activities from minDate = maxDate minus 7 days
                 logger.debug("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
 
                 // Group news
-                List<News> groupNews = NewsLocalServiceUtil.getNewsActivities(user, groupId, minDate, maxDate, nbResults, false);
+                List<News> groupNews = NewsLocalServiceUtil.getGroupNewsActivities(user, groupId, minDate, maxDate, nbResults);
                 for (News news : groupNews) {
                     GroupActivity newsActivity = new GroupActivity(news.getNewsId(), 0, news.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_NEWS);
                     groupActivities.add(newsActivity);
@@ -301,7 +300,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             // Get activities by successive range dates going back in time, so that we ensure pagination is fine
             // Do not exceed 1 month back in time
-            while (groupActivities.size() < nbResults && minDate.after(limitMinDate)) {
+            while (groupActivities.size() < nbResults && maxDate.after(limitMinDate)) {
                 // Fetch activities from minDate = maxDate minus 7 days
                 logger.debug("getGroupActivities for userId " + userId + " from " + minDate + " to " + maxDate);
 

@@ -99,6 +99,38 @@ public class UserUtilsServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject getParentInfos(long parentUserId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				UserUtilsServiceUtil.getParentInfos(parentUserId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static org.json.JSONObject getCasAttributes()
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				UserUtilsServiceUtil.getCasAttributes();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(UserUtilsServiceSoap.class);
 
 }

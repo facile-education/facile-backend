@@ -48,6 +48,20 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 		return newToken;
 	}
 
+	public UserMobileToken addMobileToken(long userId, String token) throws SystemException {
+
+		UserMobileToken userMobileToken = null;
+		try {
+			userMobileToken = userMobileTokenPersistence.create(userId);
+			userMobileToken.setMobileToken(token);
+			userMobileToken = userMobileTokenPersistence.update(userMobileToken);
+			return userMobileToken;
+		} catch (Exception e) {
+			// Nothing
+		}
+		return null;
+	}
+
 	public String refreshMobileToken(long userId, String mobileToken) throws SystemException {
 
 		UserMobileToken userMobileToken = null;
@@ -73,6 +87,16 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 			// Nothing
 		}
 		return userMobileToken != null && userMobileToken.getMobileToken().equals(mobileToken);
+	}
+
+	public UserMobileToken getTokenUser(String mobileToken) throws SystemException {
+		UserMobileToken userMobileToken = null;
+		try {
+			userMobileToken = userMobileTokenPersistence.findBymobileToken(mobileToken);
+		} catch (Exception e) {
+			// Nothing
+		}
+		return userMobileToken;
 	}
 
 }

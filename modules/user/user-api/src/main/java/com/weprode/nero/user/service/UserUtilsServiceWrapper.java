@@ -35,6 +35,11 @@ public class UserUtilsServiceWrapper
 		return _userUtilsService.acceptTermsOfUse();
 	}
 
+	@Override
+	public org.json.JSONObject getCasAttributes() {
+		return _userUtilsService.getCasAttributes();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -43,6 +48,11 @@ public class UserUtilsServiceWrapper
 	@Override
 	public String getOSGiServiceIdentifier() {
 		return _userUtilsService.getOSGiServiceIdentifier();
+	}
+
+	@Override
+	public org.json.JSONObject getParentInfos(long parentUserId) {
+		return _userUtilsService.getParentInfos(parentUserId);
 	}
 
 	@Override

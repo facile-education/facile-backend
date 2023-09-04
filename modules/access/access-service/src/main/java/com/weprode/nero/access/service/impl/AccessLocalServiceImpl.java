@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.weprode.nero.document.service.ThumbnailsLocalServiceUtil;
 import com.weprode.nero.access.AccessConstants;
 import com.weprode.nero.access.model.Access;
 import com.weprode.nero.access.model.AccessCategory;
@@ -33,6 +32,7 @@ import com.weprode.nero.access.service.AccessProfileLocalServiceUtil;
 import com.weprode.nero.access.service.base.AccessLocalServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.ThumbnailsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,17 +66,18 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 				if (accesses != null) {
 					for (Access access : accesses) {
 						JSONObject jsonAccess = convertToJson(access);
-
-						// Loop over roles
-						JSONArray jsonProfiles = new JSONArray();
-						List<AccessProfile> accessProfiles = accessProfilePersistence.findByaccessId(access.getAccessId());
-						if (accessProfiles != null) {
-							for (AccessProfile accessProfile : accessProfiles) {
-								jsonProfiles.put(accessProfile.getRoleId());
+						if (jsonAccess != null) {
+							// Loop over roles
+							JSONArray jsonProfiles = new JSONArray();
+							List<AccessProfile> accessProfiles = accessProfilePersistence.findByaccessId(access.getAccessId());
+							if (accessProfiles != null) {
+								for (AccessProfile accessProfile : accessProfiles) {
+									jsonProfiles.put(accessProfile.getRoleId());
+								}
 							}
+							jsonAccess.put(AccessConstants.PROFILES, jsonProfiles);
+							jsonAccesses.put(jsonAccess);
 						}
-						jsonAccess.put(AccessConstants.PROFILES, jsonProfiles);
-						jsonAccesses.put(jsonAccess);
 					}
 				}
 				jsonCategory.put(AccessConstants.ACCESSES, jsonAccesses);
@@ -195,7 +196,10 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 					JSONObject jsonCategory = AccessCategoryLocalServiceUtil.convertToJson(schoolCategory);
 					JSONArray jsonUserAccesses = new JSONArray();
 					for (Access userCategoryAccess : userCategoryAccesses) {
-						jsonUserAccesses.put(convertToJson(userCategoryAccess));
+						JSONObject jsonAccess = convertToJson(userCategoryAccess);
+						if (jsonAccess != null) {
+							jsonUserAccesses.put(jsonAccess);
+						}
 					}
 					jsonCategory.put(AccessConstants.ACCESSES, jsonUserAccesses);
 					// Override category position to manage multi-school
@@ -221,7 +225,10 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 				JSONObject jsonCategory = AccessCategoryLocalServiceUtil.convertToJson(schoolCategory);
 				JSONArray jsonUserAccesses = new JSONArray();
 				for (Access userCategoryAccess : roleCategoryAccesses) {
-					jsonUserAccesses.put(convertToJson(userCategoryAccess));
+					JSONObject jsonAccess = convertToJson(userCategoryAccess);
+					if (jsonAccess != null) {
+						jsonUserAccesses.put(jsonAccess);
+					}
 				}
 				jsonCategory.put(AccessConstants.ACCESSES, jsonUserAccesses);
 				userAccesses.put(jsonCategory);
@@ -263,7 +270,9 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 			try {
 				jsonAccess.put(AccessConstants.FOLDER_NAME, DLAppServiceUtil.getFolder(access.getFolderId()).getName());
 			} catch (Exception e) {
-				logger.error(e);
+				// Folder is not accessible anymore -> return null to skip the access
+				logger.error("Folder " + access.getFolderId() + " may have been deleted -> skipping this access");
+				return null;
 			}
 		}
 		jsonAccess.put(AccessConstants.FILE_ID, access.getFileId());
@@ -271,7 +280,9 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 			try {
 				jsonAccess.put(AccessConstants.FOLDER_NAME, DLAppServiceUtil.getFileEntry(access.getFileId()).getFileName());
 			} catch (Exception e) {
-				logger.error(e);
+				// File is not accessible anymore -> return null to skip the access
+				logger.error("File " + access.getFileId() + " may have been deleted -> skipping this access");
+				return null;
 			}
 		}
 		jsonAccess.put(AccessConstants.POSITION, access.getPosition());
