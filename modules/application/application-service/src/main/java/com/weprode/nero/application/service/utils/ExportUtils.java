@@ -566,7 +566,7 @@ public class ExportUtils {
                     .append("password").append(";").append("email_address")
                     .append(";").append("user_type").append(";")
                     .append("status").append(";").append("auth_type")
-                    .append(";\n");
+                    .append(";").append("pass").append(";\n");
 
             // Type d'utilisateur : "visiteur", "utilisateur", "administrateur"
             // Statut : "actif" ou "inactif"
@@ -585,8 +585,8 @@ public class ExportUtils {
                             userType = "administrateur";
                         }
                         file.append(user.getScreenName()).append(";").append(user.getLastName()).append(";")
-                                .append(user.getFirstName()).append(";;").append(email).append(";").append(userType)
-                                .append(";actif;ext\n");
+                                .append(user.getFirstName().replaceAll(",", "")).append(";;").append(email).append(";").append(userType)
+                                .append(";actif;ext;0\n");
                     }
                 } catch (Exception e) {
                     logger.error("GRR : Error exporting user "+user.getFullName(), e);
