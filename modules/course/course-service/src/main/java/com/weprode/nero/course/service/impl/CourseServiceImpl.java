@@ -36,6 +36,7 @@ import com.weprode.nero.course.model.SessionContent;
 import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
 import com.weprode.nero.course.service.SessionContentLocalServiceUtil;
 import com.weprode.nero.course.service.base.CourseServiceBaseImpl;
+import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.nero.organization.constants.OrgConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
@@ -57,6 +58,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Cédric Lecarpentier
@@ -124,6 +126,39 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			jsonCourse.put(JSONConstants.COLOR, CourseDetailsLocalServiceUtil.getCourseColor(userCours.getGroupId()));
 			jsonCourse.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
 			jsonCourses.put(jsonCourse);
+		}
+		// Add student pedagogical communities
+		List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(userToFetchCourses.getUserId(), true, true);
+		if (userGroups != null) {
+			for (Group userGroup : userGroups) {
+				JSONObject jsonCourse = new JSONObject();
+				jsonCourse.put(JSONConstants.COURSE_ID, userGroup.getGroupId());
+				jsonCourse.put(JSONConstants.COLOR, CourseDetailsLocalServiceUtil.getCourseColor(userGroup.getGroupId()));
+				jsonCourse.put(JSONConstants.GROUP_NAME, userGroup.getName(Locale.getDefault()));
+				jsonCourse.put(JSONConstants.SUBJECT, userGroup.getName(Locale.getDefault()));
+				try {
+					JSONArray teachers = new JSONArray();
+
+					List<Long> groupIds = new ArrayList<>();
+					groupIds.add(userGroup.getGroupId());
+
+					List<Long> roleIds = new ArrayList<>();
+					roleIds.add(RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId());
+
+					for (User teacher : UserSearchLocalServiceUtil.searchUsers(StringPool.BLANK, null, groupIds, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+						JSONObject teacherJson = new JSONObject();
+						teacherJson.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
+						teacherJson.put(JSONConstants.LAST_NAME, teacher.getLastName());
+						teachers.put(teacherJson);
+					}
+
+					jsonCourse.put(JSONConstants.TEACHERS, teachers);
+
+				} catch (Exception e) {
+					logger.error(e);
+				}
+				jsonCourses.put(jsonCourse);
+			}
 		}
 		result.put(JSONConstants.COURSES, jsonCourses);
 		result.put(JSONConstants.SUCCESS, true);
