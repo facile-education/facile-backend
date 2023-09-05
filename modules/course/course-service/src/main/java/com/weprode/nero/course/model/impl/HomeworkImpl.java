@@ -109,6 +109,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         } catch (Exception e) {
             logger.error("Cannot fetch coursName for homeworkId = " + this.getHomeworkId(), e);
         }
+        jsonHomework.put(JSONConstants.COURSE_ID, this.getCourseId());
         jsonHomework.put(JSONConstants.COURS, coursName);
         jsonHomework.put(JSONConstants.SUBJECT, CourseDetailsLocalServiceUtil.getCourseSubject(getCourseId()));
 

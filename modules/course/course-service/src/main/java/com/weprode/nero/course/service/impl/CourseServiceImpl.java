@@ -112,6 +112,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 				for (User teacher : UserSearchLocalServiceUtil.searchUsers(StringPool.BLANK, orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
 					JSONObject teacherJson = new JSONObject();
+					teacherJson.put(JSONConstants.USER_ID, teacher.getUserId());
 					teacherJson.put(JSONConstants.FIRST_NAME, teacher.getFirstName());
 					teacherJson.put(JSONConstants.LAST_NAME, teacher.getLastName());
 					teachers.put(teacherJson);
