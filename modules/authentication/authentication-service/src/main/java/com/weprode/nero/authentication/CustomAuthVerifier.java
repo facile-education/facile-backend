@@ -66,6 +66,11 @@ public class CustomAuthVerifier implements AuthVerifier {
     @Override
     public AuthVerifierResult verify(AccessControlContext accessControlContext, Properties properties) {
         logger.info("CustomAuthVerifier for URI " + accessControlContext.getRequest().getRequestURI());
+        if (accessControlContext.getRequest().getRequestURI().contains("mobile.mobiledevice/save-user-device")
+                || accessControlContext.getRequest().getRequestURI().contains("mobile.mobiledevice/save-full-user-device")) {
+            logger.info("Public URI -> Move on");
+            return new AuthVerifierResult();
+        }
 
         try {
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();
@@ -77,21 +82,7 @@ public class CustomAuthVerifier implements AuthVerifier {
                 return portalAuthVerifierResult;
             }
 
-            String[] credentials = checkRememberMeSession(accessControlContext.getRequest(), accessControlContext.getResponse());
-            if (credentials != null) {
-                userId = Long.parseLong(credentials[0]);
-                User user = UserLocalServiceUtil.getUser(userId);
-                logger.debug("Connected user is " + user.getFullName());
-                authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
-                authVerifierResult.setPasswordBasedAuthentication(true);
-                authVerifierResult.setUserId(userId);
-                authVerifierResult.setPassword(credentials[1]);
-
-                logger.info("Returning rememberMe authVerifierResult.");
-                return authVerifierResult;
-            }
-
-            credentials = checkShibbolethSession(accessControlContext.getRequest(), accessControlContext.getResponse());
+            String[] credentials = checkShibbolethSession(accessControlContext.getRequest(), accessControlContext.getResponse());
             if (credentials != null) {
                 userId = Long.parseLong(credentials[0]);
                 User user = UserLocalServiceUtil.getUser(userId);
@@ -109,6 +100,19 @@ public class CustomAuthVerifier implements AuthVerifier {
                 userId = Long.parseLong(credentials[0]);
                 User user = UserLocalServiceUtil.getUser(userId);
                 logger.debug("Connected user on mobile app is " + user.getFullName());
+                authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
+                authVerifierResult.setPasswordBasedAuthentication(true);
+                authVerifierResult.setUserId(userId);
+                authVerifierResult.setPassword(credentials[1]);
+
+                return authVerifierResult;
+            }
+
+            credentials = checkRememberMeSession(accessControlContext.getRequest(), accessControlContext.getResponse());
+            if (credentials != null) {
+                userId = Long.parseLong(credentials[0]);
+                User user = UserLocalServiceUtil.getUser(userId);
+                logger.debug("Connected user is " + user.getFullName());
                 authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
                 authVerifierResult.setPasswordBasedAuthentication(true);
                 authVerifierResult.setUserId(userId);
@@ -528,29 +532,16 @@ public class CustomAuthVerifier implements AuthVerifier {
             if (url == null) {
                 url = request.getRequestURI();
             }
+
             String mobileToken = getTokenFromUrl(url);
             long userId = getUserIdFromUrl(url);
 
-            // If no mobile_token found in url, look into cookies
-            // TODO remove mobile_token cookie : only used for authentication so should be in URL
-            if (mobileToken.isEmpty()) {
-                mobileToken = CookieKeys.getCookie(request, "mobileToken");
-                if (mobileToken != null && !mobileToken.isEmpty()) {
-                    logger.info("MobileApplicationAutoLogin : mobileToken in cookies is " + mobileToken);
-                }
-            }
-
             String service = ParamUtil.getString(request, "service", "");
+
             if (mobileToken != null && !mobileToken.isEmpty()) {
                 logger.info("MobileApplicationAutoLogin : mobileToken=" + mobileToken + ", userId=" + userId + ", service=" + service);
-            }
-
-            if (mobileToken != null && !mobileToken.isEmpty()) {
                 UserMobileToken userMobileToken = UserMobileTokenLocalServiceUtil.getTokenUser(mobileToken);
-//                if (userMobileToken == null && userId != 0) {
-//                    userMobileToken = UserMobileTokenLocalServiceUtil.addMobileToken(userId, mobileToken);
-//                    logger.info("Created userToken");
-//                }
+
                 if (userMobileToken != null) {
                     User user = UserLocalServiceUtil.getUserById(userMobileToken.getUserId());
 
@@ -565,10 +556,12 @@ public class CustomAuthVerifier implements AuthVerifier {
 
                     return credentials;
                 } else {
+                    logger.debug("Mobile token not found in database");
                     return null;
                 }
 
             } else {
+                logger.debug("No mobile token is empty or null");
                 return null;
             }
 
