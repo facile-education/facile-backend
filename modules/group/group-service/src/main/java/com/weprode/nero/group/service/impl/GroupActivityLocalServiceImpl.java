@@ -56,7 +56,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         List<GroupActivity> groupActivities = new ArrayList<>();
 
         logger.info("Get dashboard group activities for userId " + userId + " for " + groupIds.size() + " groups, until maxDate " + maxDate);
-        if (!(withNews || withDocs || !withMemberships || withSchoollife || withSessions)) {
+        if (!(withNews || withDocs || withMemberships || withSchoollife || withSessions)) {
             return groupActivities;
         }
 
