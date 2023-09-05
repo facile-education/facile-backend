@@ -102,23 +102,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				}
 			} else {
 				homework.setIsCustomStudentList(false);
-				// Create StudentHomeworks for all class students
-				List<Long> organizationIds = new ArrayList<>();
-				Group courseGroup = GroupLocalServiceUtil.getGroup(courseId);
-				organizationIds.add(courseGroup.getClassPK());
-
-				Role studentRole = RoleUtilsLocalServiceUtil.getStudentRole();
-				List<Long> roleIds = new ArrayList<>();
-				roleIds.add(studentRole.getRoleId());
-				List<User> studentList = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null,
-						roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-				for (User student : studentList) {
-					StudentHomeworkLocalServiceUtil.getOrCreateStudentHomework(homework.getHomeworkId(), student.getUserId());
-					// Push mobile - Commented
-					// MobileDeviceLocalServiceUtil.pushNotificationToUser(student.getUserId(), teacher.getFullName(), NEW_HOMEWORK, homework.getTitle(),
-					//		MobileConstants.HOMEWORK_TYPE, homework.getHomeworkId());
-				}
-
+				assignHomeworkToStudents(courseId, homework.getHomeworkId());
 			}
 
 			// Create deposit folder
@@ -192,6 +176,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				logger.info("Homework update (id="+homeworkId+") - Case 3 : student list -> group");
 				homework.setIsCustomStudentList(false);
 				StudentHomeworkLocalServiceUtil.removeHomework(homeworkId);
+				assignHomeworkToStudents(homework.getCourseId(), homework.getHomeworkId());
 
 				// Case 4 : student list -> student list
 			} else {
@@ -212,6 +197,37 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		return null;
 	}
 
+	private void assignHomeworkToStudents(long courseId, long homeworkId) {
+		try {
+			// Course is either an org or a community
+			Group courseGroup = GroupLocalServiceUtil.getGroup(courseId);
+			Role studentRole = RoleUtilsLocalServiceUtil.getStudentRole();
+			List<Long> roleIds = new ArrayList<>();
+			roleIds.add(studentRole.getRoleId());
+			List<User> studentList;
+			if (courseGroup.isRegularSite()) {
+
+				List<Long> groupIds = new ArrayList<>();
+				groupIds.add(courseId);
+				studentList = UserSearchLocalServiceUtil.searchUsers("", null, groupIds,
+						roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+			} else {
+
+				// Create StudentHomeworks for all class students
+				List<Long> organizationIds = new ArrayList<>();
+				organizationIds.add(courseGroup.getClassPK());
+
+				studentList = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null,
+						roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+			}
+			for (User student : studentList) {
+				StudentHomeworkLocalServiceUtil.getOrCreateStudentHomework(homeworkId, student.getUserId());
+			}
+		} catch (Exception e) {
+			logger.error("Error while affecting homework " + homeworkId + " to course students", e);
+		}
+
+	}
 
 	public List<Homework> getSessionToDoHomeworks (User user, long sessionId) {
 		List<Homework> toDoHomeworks = new ArrayList<>();
