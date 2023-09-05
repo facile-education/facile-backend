@@ -146,13 +146,14 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                     OrganizationLocalServiceUtil.addGroupOrganizations(createdGroup.getGroupId(), new long[]{memberId});
                 } else {
 
-                    // Add members to the group and empty their group cache so that they see the new group immediately
+                    // Add member to the group
                     UserLocalServiceUtil.addGroupUsers(createdGroup.getGroupId(), new long[]{memberId});
 
                     if (isAdmin) {
                         // Give admin users the group admin role
                         UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[]{memberId}, createdGroup.getGroupId(), managerRole.getRoleId());
                     }
+                    MembershipActivityLocalServiceUtil.addMembershipActivity(createdGroup.getGroupId(), user.getUserId(), Collections.singletonList(memberId), true);
                 }
             }
 
