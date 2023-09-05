@@ -112,10 +112,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             // Mark the news as read for the author
             NewsReadLocalServiceUtil.setNewsRead(authorId, news.getNewsId());
 
-            // Mobile push for school news only
-            if (isSchoolNews) {
-                manageMobilePush(title, content, populations);
-            }
+            manageMobilePush(title, content, populations);
 
             return news;
         } catch (Exception e) {
