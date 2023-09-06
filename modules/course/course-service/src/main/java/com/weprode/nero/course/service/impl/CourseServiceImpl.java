@@ -238,26 +238,25 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 				List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, courseSession.getSessionId(), hideDrafts);
 				// Given homeworks
 				List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, courseSession.getSessionId(), hideDrafts);
+				// Homework to do in session
+				List<Homework> sessionHomeworks = new ArrayList<>();
+				for (Homework sessionHomework : givenHomeworks) {
+					if (sessionHomework.getTargetSessionId() == courseSession.getSessionId()) {
+						sessionHomeworks.add(sessionHomework);
+					}
+				}
 
-				if (sessionContent != null  || toDoHomeworks.size() > 0 || givenHomeworks.size() > 0) {
+				if (sessionContent != null  || toDoHomeworks.size() > 0 || sessionHomeworks.size() > 0) {
 					if (sessionContent != null) {
 						jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, true));
 					}
 
-					JSONArray jsonGivenHomeworks = new JSONArray();
-					for (Homework givenHomework : givenHomeworks) {
-						if (givenHomework.getTargetSessionId() != courseSession.getSessionId()) {
-							jsonGivenHomeworks.put(givenHomework.convertToJSON(user, true));
-						}
-					}
-					jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, jsonGivenHomeworks);
-
+					// Do not return given homeworks for list display
+					jsonSession.put(JSONConstants.GIVEN_HOMEWORKS, new JSONArray());
 
 					JSONArray jsonSessionHomeworks = new JSONArray();
-					for (Homework sessionHomework : givenHomeworks) {
-						if (sessionHomework.getTargetSessionId() == courseSession.getSessionId()) {
-							jsonSessionHomeworks.put(sessionHomework.convertToJSON(user, true));
-						}
+					for (Homework sessionHomework : sessionHomeworks) {
+						jsonSessionHomeworks.put(sessionHomework.convertToJSON(user, true));
 					}
 					jsonSession.put(JSONConstants.SESSION_HOMEWORKS, jsonSessionHomeworks);
 
