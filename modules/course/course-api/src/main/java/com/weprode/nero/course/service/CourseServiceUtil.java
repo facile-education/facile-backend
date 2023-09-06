@@ -37,8 +37,10 @@ public class CourseServiceUtil {
 		return getService().getCourse(sessionId);
 	}
 
-	public static org.json.JSONObject getCourseContent(long courseId) {
-		return getService().getCourseContent(courseId);
+	public static org.json.JSONObject getCourseContent(
+		long courseId, boolean hideDrafts) {
+
+		return getService().getCourseContent(courseId, hideDrafts);
 	}
 
 	public static org.json.JSONObject getCourseStudents(long courseId) {

@@ -229,14 +229,14 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 	}
 
-	public List<Homework> getSessionToDoHomeworks (User user, long sessionId) {
+	public List<Homework> getSessionToDoHomeworks (User user, long sessionId, boolean hideDraftsForTeachers) {
 		List<Homework> toDoHomeworks = new ArrayList<>();
 
 		try {
 			List<Homework> homeworks = homeworkPersistence.findBytargetSessionId(sessionId);
 			if (homeworks != null && !homeworks.isEmpty()) {
 				for (Homework homework : homeworks) {
-					if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+					if (RoleUtilsLocalServiceUtil.isTeacher(user) && !(hideDraftsForTeachers && homework.getIsDraft())) {
 						// Teachers see all homeworks
 						toDoHomeworks.add(homework);
 					} else if (RoleUtilsLocalServiceUtil.isStudent(user) &&
@@ -263,14 +263,14 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		return toDoHomeworks;
 	}
 
-	public List<Homework> getSessionGivenHomeworks (User user, long sessionId) {
+	public List<Homework> getSessionGivenHomeworks (User user, long sessionId, boolean hideDraftsForTeachers) {
 		List<Homework> givenHomeworks = new ArrayList<>();
 
 		try {
 			List<Homework> homeworks = homeworkPersistence.findBysourceSessionId(sessionId);
 			if (homeworks != null && !homeworks.isEmpty()) {
 				for (Homework homework : homeworks) {
-					if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+					if (RoleUtilsLocalServiceUtil.isTeacher(user) && !(hideDraftsForTeachers && homework.getIsDraft())) {
 						// Teachers see all homeworks
 						givenHomeworks.add(homework);
 					} else if (RoleUtilsLocalServiceUtil.isStudent(user) &&

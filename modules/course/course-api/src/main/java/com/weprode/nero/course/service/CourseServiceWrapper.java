@@ -36,8 +36,10 @@ public class CourseServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getCourseContent(long courseId) {
-		return _courseService.getCourseContent(courseId);
+	public org.json.JSONObject getCourseContent(
+		long courseId, boolean hideDrafts) {
+
+		return _courseService.getCourseContent(courseId, hideDrafts);
 	}
 
 	@Override

@@ -197,7 +197,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "get-course-content", method = "GET")
-	public JSONObject getCourseContent(long courseId) {
+	public JSONObject getCourseContent(long courseId, boolean hideDrafts) {
 		JSONObject result = new JSONObject();
 
 		User user;
@@ -219,7 +219,6 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 			// Loop over sessions
 			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate(), ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate(), true);
-			// TODO: Not return content in draft state for others than teachers
 			JSONArray jsonSessions = new JSONArray();
 			for (CDTSession courseSession : courseSessions) {
 				JSONObject jsonSession = courseSession.convertToJSON(user);
@@ -228,7 +227,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 				SessionContent sessionContent;
 				try {
 					sessionContent = SessionContentLocalServiceUtil.getSessionContent(courseSession.getSessionId());
-					if (!RoleUtilsLocalServiceUtil.isTeacher(user) && (sessionContent.getIsDraft() || sessionContent.getPublicationDate().after(new Date()))) {
+					if ((!RoleUtilsLocalServiceUtil.isTeacher(user) || hideDrafts) && (sessionContent.getIsDraft() || sessionContent.getPublicationDate().after(new Date()))) {
 						sessionContent = null;
 					}
 				} catch (NoSuchSessionContentException e) {
@@ -236,9 +235,9 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 				}
 
 				// To perform homeworks
-				List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, courseSession.getSessionId());
+				List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, courseSession.getSessionId(), hideDrafts);
 				// Given homeworks
-				List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, courseSession.getSessionId());
+				List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, courseSession.getSessionId(), hideDrafts);
 
 				if (sessionContent != null  || toDoHomeworks.size() > 0 || givenHomeworks.size() > 0) {
 					if (sessionContent != null) {
@@ -323,7 +322,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			}
 
 			// 2. Given homeworks
-			List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, sessionId);
+			List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getSessionGivenHomeworks(user, sessionId, false);
 			JSONArray jsonGivenHomeworks = new JSONArray();
 			for (Homework givenHomework : givenHomeworks) {
 				if (givenHomework.getTargetSessionId() != sessionId) {
@@ -342,7 +341,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			jsonSession.put(JSONConstants.SESSION_HOMEWORKS, jsonSessionHomeworks);
 
 			// 4. To do homeworks
-			List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, sessionId);
+			List<Homework> toDoHomeworks = HomeworkLocalServiceUtil.getSessionToDoHomeworks(user, sessionId, false);
 			JSONArray jsonToDoHomeworks = new JSONArray();
 			for (Homework toDoHomework : toDoHomeworks) {
 				if (toDoHomework.getSourceSessionId() != sessionId) {
