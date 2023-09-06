@@ -33,10 +33,12 @@ public class SessionContentImpl extends SessionContentBaseImpl {
 
         JSONObject jsonItem = new JSONObject();
         SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
-
         jsonItem.put(JSONConstants.ITEM_ID, this.getSessionId());
-        jsonItem.put(JSONConstants.MODIFIED_DATE, df.format(this.getModificationDate()));
         jsonItem.put(JSONConstants.TITLE, this.getTitle());
+        jsonItem.put(JSONConstants.IS_DRAFT, this.getIsDraft());
+        jsonItem.put(JSONConstants.MODIFIED_DATE, df.format(this.getModificationDate()));
+        jsonItem.put(JSONConstants.PUBLICATION_DATE, df.format(this.getPublicationDate()));
+
         jsonItem.put(JSONConstants.BLOCKS, new JSONArray());
 
         if (isContentIncluded) {
