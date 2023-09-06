@@ -1,11 +1,9 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
@@ -25,13 +23,11 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.course.exception.UnauthorizedUrlException;
-import com.weprode.nero.course.model.ContentBlock;
 import com.weprode.nero.course.model.SessionContent;
 import com.weprode.nero.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.nero.course.service.SessionContentLocalServiceUtil;
 import com.weprode.nero.course.service.base.SessionContentServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.SessionTeacherLocalServiceUtil;
 import org.json.JSONArray;
@@ -42,7 +38,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Cédric Lecarpentier
@@ -215,21 +210,11 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
-			SessionContent content = SessionContentLocalServiceUtil.fetchSessionContent(sessionId);
-			if (content != null) {
-				CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
-				result.put(JSONConstants.SLOT_NUMBER, session.getSlot());
-				result.put(JSONConstants.TITLE, content.getTitle());
-				result.put(JSONConstants.IS_DRAFT, content.getIsDraft());
-				result.put(JSONConstants.PUBLICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(content.getPublicationDate()));
+			SessionContent sessionContent = SessionContentLocalServiceUtil.fetchSessionContent(sessionId);
+			if (sessionContent != null) {
+				result.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, true));
 			}
 
-			JSONArray jsonContents = new JSONArray();
-			List<ContentBlock> blocks = ContentBlockLocalServiceUtil.getContentsByItemId(sessionId);
-			for (ContentBlock block : blocks) {
-				jsonContents.put(block.convertToJSON());
-			}
-			result.put(JSONConstants.BLOCKS, jsonContents);
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
