@@ -403,17 +403,21 @@ public class HomeworkLocalServiceWrapper
 	@Override
 	public java.util.List<com.weprode.nero.course.model.Homework>
 		getSessionGivenHomeworks(
-			com.liferay.portal.kernel.model.User user, long sessionId) {
+			com.liferay.portal.kernel.model.User user, long sessionId,
+			boolean hideDraftsForTeachers) {
 
-		return _homeworkLocalService.getSessionGivenHomeworks(user, sessionId);
+		return _homeworkLocalService.getSessionGivenHomeworks(
+			user, sessionId, hideDraftsForTeachers);
 	}
 
 	@Override
 	public java.util.List<com.weprode.nero.course.model.Homework>
 		getSessionToDoHomeworks(
-			com.liferay.portal.kernel.model.User user, long sessionId) {
+			com.liferay.portal.kernel.model.User user, long sessionId,
+			boolean hideDraftsForTeachers) {
 
-		return _homeworkLocalService.getSessionToDoHomeworks(user, sessionId);
+		return _homeworkLocalService.getSessionToDoHomeworks(
+			user, sessionId, hideDraftsForTeachers);
 	}
 
 	@Override

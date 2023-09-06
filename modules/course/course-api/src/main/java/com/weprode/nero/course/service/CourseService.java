@@ -56,7 +56,7 @@ public interface CourseService extends BaseService {
 
 	@JSONWebService(method = "GET", value = "get-course-content")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getCourseContent(long courseId);
+	public JSONObject getCourseContent(long courseId, boolean hideDrafts);
 
 	@JSONWebService(method = "GET", value = "get-course-students")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

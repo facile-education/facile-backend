@@ -85,12 +85,13 @@ public class CourseServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject getCourseContent(long courseId)
+	public static org.json.JSONObject getCourseContent(
+			long courseId, boolean hideDrafts)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				CourseServiceUtil.getCourseContent(courseId);
+				CourseServiceUtil.getCourseContent(courseId, hideDrafts);
 
 			return returnValue;
 		}

@@ -116,7 +116,7 @@ public class CourseServiceHttp {
 	}
 
 	public static org.json.JSONObject getCourseContent(
-		HttpPrincipal httpPrincipal, long courseId) {
+		HttpPrincipal httpPrincipal, long courseId, boolean hideDrafts) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -124,7 +124,7 @@ public class CourseServiceHttp {
 				_getCourseContentParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, courseId);
+				methodKey, courseId, hideDrafts);
 
 			Object returnObj = null;
 
@@ -251,7 +251,7 @@ public class CourseServiceHttp {
 		long.class
 	};
 	private static final Class<?>[] _getCourseContentParameterTypes2 =
-		new Class[] {long.class};
+		new Class[] {long.class, boolean.class};
 	private static final Class<?>[] _getSessionDetailsParameterTypes3 =
 		new Class[] {long.class};
 	private static final Class<?>[] _getCourseStudentsParameterTypes4 =

@@ -296,10 +296,12 @@ public interface HomeworkLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Homework> getSessionGivenHomeworks(User user, long sessionId);
+	public List<Homework> getSessionGivenHomeworks(
+		User user, long sessionId, boolean hideDraftsForTeachers);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Homework> getSessionToDoHomeworks(User user, long sessionId);
+	public List<Homework> getSessionToDoHomeworks(
+		User user, long sessionId, boolean hideDraftsForTeachers);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Homework> getStudentHomeworkActivity(

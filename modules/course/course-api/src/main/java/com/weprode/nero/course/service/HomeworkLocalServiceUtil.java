@@ -357,15 +357,19 @@ public class HomeworkLocalServiceUtil {
 	}
 
 	public static List<Homework> getSessionGivenHomeworks(
-		com.liferay.portal.kernel.model.User user, long sessionId) {
+		com.liferay.portal.kernel.model.User user, long sessionId,
+		boolean hideDraftsForTeachers) {
 
-		return getService().getSessionGivenHomeworks(user, sessionId);
+		return getService().getSessionGivenHomeworks(
+			user, sessionId, hideDraftsForTeachers);
 	}
 
 	public static List<Homework> getSessionToDoHomeworks(
-		com.liferay.portal.kernel.model.User user, long sessionId) {
+		com.liferay.portal.kernel.model.User user, long sessionId,
+		boolean hideDraftsForTeachers) {
 
-		return getService().getSessionToDoHomeworks(user, sessionId);
+		return getService().getSessionToDoHomeworks(
+			user, sessionId, hideDraftsForTeachers);
 	}
 
 	public static List<Homework> getStudentHomeworkActivity(
