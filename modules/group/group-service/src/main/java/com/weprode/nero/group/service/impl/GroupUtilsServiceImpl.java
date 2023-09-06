@@ -216,8 +216,9 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                 organizations.addAll(UserOrgsLocalServiceUtil.getRoleAffectedClasses(user));
             }
 
+            List<Long> orgIds = new ArrayList<>(); // For duplicates
             for (Organization org : organizations) {
-                if (filter.equals("") || containsIgnoreCase(org.getName(),filter)) {
+                if ((filter.equals("") || containsIgnoreCase(org.getName(),filter)) && !orgIds.contains(org.getOrganizationId())) {
                     OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(org.getOrganizationId());
                     boolean withSchoolName = orgDetails.getType() == OrgConstants.SCHOOL_TYPE;
                     String formattedName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), withSchoolName);
@@ -245,6 +246,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(org.getGroupId());
                     jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
 
+                    orgIds.add(org.getOrganizationId());
                     groupsArray.put(jsonGroup);
                 }
             }
