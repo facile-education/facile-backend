@@ -49,7 +49,8 @@ import static com.liferay.portal.kernel.service.UserLocalServiceUtil.isPasswordE
         immediate = true,
         service = AuthVerifier.class,
         property = {
-                "auth.verifier.CustomAuthVerifier.urls.includes=*"
+                "auth.verifier.CustomAuthVerifier.urls.includes=*",
+                "auth.verifier.CustomAuthVerifier.urls.excludes=/api/jsonws/mobile.mobiledevice/*"
         }
 )
 public class CustomAuthVerifier implements AuthVerifier {
@@ -66,11 +67,6 @@ public class CustomAuthVerifier implements AuthVerifier {
     @Override
     public AuthVerifierResult verify(AccessControlContext accessControlContext, Properties properties) {
         logger.info("CustomAuthVerifier for URI " + accessControlContext.getRequest().getRequestURI());
-        if (accessControlContext.getRequest().getRequestURI().contains("mobile.mobiledevice/save-user-device")
-                || accessControlContext.getRequest().getRequestURI().contains("mobile.mobiledevice/save-full-user-device")) {
-            logger.info("Public URI -> Move on");
-            return new AuthVerifierResult();
-        }
 
         try {
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();
@@ -179,6 +175,8 @@ public class CustomAuthVerifier implements AuthVerifier {
                 CookiesConstants.NAME_ID, httpServletRequest, false);
         String autoPassword = CookiesManagerUtil.getCookieValue(
                 FACILE_PASSWORD, httpServletRequest, false);
+        String autoPasswordLfr = CookiesManagerUtil.getCookieValue(
+                CookiesConstants.NAME_PASSWORD, httpServletRequest, false);
         String rememberMe = CookiesManagerUtil.getCookieValue(
                 CookiesConstants.NAME_REMEMBER_ME, httpServletRequest, false);
 
@@ -190,6 +188,8 @@ public class CustomAuthVerifier implements AuthVerifier {
                     case CookiesConstants.NAME_ID:
                         autoUserId = cookie.getValue();
                         break;
+                    case CookiesConstants.NAME_PASSWORD:
+                        autoPasswordLfr = cookie.getValue();
                     case FACILE_PASSWORD:
                         autoPassword = cookie.getValue();
                         break;
@@ -219,21 +219,26 @@ public class CustomAuthVerifier implements AuthVerifier {
         String[] credentials = null;
 
         if (Validator.isNotNull(autoUserId) &&
-                Validator.isNotNull(autoPassword) &&
+                (Validator.isNotNull(autoPassword) || Validator.isNotNull(autoPasswordLfr)) &&
                 Validator.isNotNull(rememberMe)) {
 
             Company company = CompanyLocalServiceUtil.getCompany(PortalUtil.getDefaultCompanyId());
             // Company company = PortalUtil.getCompany(httpServletRequest);
 
             if (company.isAutoLogin()) {
-//                KeyValuePair kvp = UserLocalServiceUtil.decryptUserId(
-//                        company.getCompanyId(),
-//                        new String(UnicodeFormatter.hexToBytes(autoUserId)),
-//                        new String(UnicodeFormatter.hexToBytes(autoPassword)));
-                KeyValuePair kvp = decryptUserId(
-                        company,
-                        new String(UnicodeFormatter.hexToBytes(autoUserId)),
-                        new String(UnicodeFormatter.hexToBytes(autoPassword)));
+                KeyValuePair kvp;
+
+                if (Validator.isNotNull(autoPasswordLfr)) {
+                    kvp = UserLocalServiceUtil.decryptUserId(
+                            company.getCompanyId(),
+                            new String(UnicodeFormatter.hexToBytes(autoUserId)),
+                            new String(UnicodeFormatter.hexToBytes(autoPasswordLfr)));
+                } else {
+                    kvp = decryptUserId(
+                            company,
+                            new String(UnicodeFormatter.hexToBytes(autoUserId)),
+                            new String(UnicodeFormatter.hexToBytes(autoPassword)));
+                }
 
                 String tokenKey = WebKeys.AUTHENTICATION_TOKEN.concat("#CSRF");
                 String currentToken = httpServletRequest.getParameter("p_auth");
@@ -384,28 +389,34 @@ public class CustomAuthVerifier implements AuthVerifier {
 //                    CookiesConstants.CONSENT_TYPE_FUNCTIONAL, loginCookie,
 //                    httpServletRequest, httpServletResponse);
 
-            CookiesManagerUtil.deleteCookies(
-                    domain, httpServletRequest, httpServletResponse,
-                    CookiesConstants.NAME_PASSWORD);
-            CookiesManagerUtil.deleteCookies(
-                    domain, httpServletRequest, httpServletResponse,
-                    "mobileToken");
-            Cookie passwordCookie = new Cookie(
-                    FACILE_PASSWORD,
-                    UnicodeFormatter.bytesToHex(
-                        EncryptorUtil.encrypt(company.getKeyObj(), password).getBytes()));
 
-            if (domain != null) {
-                passwordCookie.setDomain(domain);
+            boolean hasLfrPasswordCookie = false;
+            Cookie[] cookies = httpServletRequest.getCookies();
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(CookiesConstants.NAME_PASSWORD)) {
+                    hasLfrPasswordCookie = true;
+                    break;
+                }
             }
 
-            passwordCookie.setMaxAge(loginMaxAge);
-            passwordCookie.setPath(StringPool.SLASH);
+            if (!hasLfrPasswordCookie) {
+                Cookie passwordCookie = new Cookie(
+                        FACILE_PASSWORD,
+                        UnicodeFormatter.bytesToHex(
+                                EncryptorUtil.encrypt(company.getKeyObj(), password).getBytes()));
 
-            httpServletResponse.addCookie(passwordCookie);
+                if (domain != null) {
+                    passwordCookie.setDomain(domain);
+                }
+
+                passwordCookie.setMaxAge(loginMaxAge);
+                passwordCookie.setPath(StringPool.SLASH);
+
+                httpServletResponse.addCookie(passwordCookie);
 //            CookiesManagerUtil.addCookie(
 //                    CookiesConstants.CONSENT_TYPE_FUNCTIONAL, passwordCookie,
 //                    httpServletRequest, httpServletResponse);
+            }
 
             Cookie rememberMeCookie = new Cookie(
                     CookiesConstants.NAME_REMEMBER_ME, Boolean.TRUE.toString());
