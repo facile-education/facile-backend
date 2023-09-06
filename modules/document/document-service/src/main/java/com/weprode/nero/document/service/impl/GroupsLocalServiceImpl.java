@@ -80,10 +80,14 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 		// Doyens, psys and conseillers sociaux see their classes
 		organizations.addAll(UserOrgsLocalServiceUtil.getRoleAffectedClasses(user));
 
+		List<Long> uniqueOrgsIds = new ArrayList<>(); // Avoid duplicates
 		for (Organization userOrg : organizations) {
-			Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(userOrg.getGroupId());
-			JSONObject jsonFolder = DLAppJsonFactory.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
-			userGroupsArray.put(jsonFolder);
+			if (!uniqueOrgsIds.contains(userOrg.getOrganizationId())) {
+				uniqueOrgsIds.add(userOrg.getOrganizationId());
+				Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(userOrg.getGroupId());
+				JSONObject jsonFolder = DLAppJsonFactory.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
+				userGroupsArray.put(jsonFolder);
+			}
 		}
 
 		return userGroupsArray;
