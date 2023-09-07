@@ -112,10 +112,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             // Mark the news as read for the author
             NewsReadLocalServiceUtil.setNewsRead(authorId, news.getNewsId());
 
-            // Mobile push for school news only
-            if (isSchoolNews) {
-                manageMobilePush(title, content, populations);
-            }
+            manageMobilePush(title, content, populations);
 
             return news;
         } catch (Exception e) {
@@ -425,6 +422,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 } else {
                     String populationName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);
                     jsonGroup.put(JSONConstants.POPULATION_NAME, populationName);
+                    jsonGroup.put(JSONConstants.ORDER, "order_" + order);
                 }
                 jsonGroups.put(jsonGroup);
             } catch (Exception e) {
@@ -498,7 +496,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         population.put(JSONConstants.ORG_ID, orgId);
         population.put(JSONConstants.GROUP_NAME, groupName);
         population.put(JSONConstants.ROLE_ID, roleId);
-        population.put(JSONConstants.ORDER, order);
+        population.put(JSONConstants.ORDER, "order_" + order);
         population.put(JSONConstants.POPULATION_NAME, ContactLocalServiceUtil.getPopulationName(orgId, roleId, userId));
 
         return population;

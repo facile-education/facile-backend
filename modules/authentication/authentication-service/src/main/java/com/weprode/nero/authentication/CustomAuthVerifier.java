@@ -4,8 +4,11 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cookies.CookiesManagerUtil;
 import com.liferay.portal.kernel.cookies.constants.CookiesConstants;
+import com.liferay.portal.kernel.encryptor.EncryptorException;
 import com.liferay.portal.kernel.encryptor.EncryptorUtil;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -40,16 +43,21 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Properties;
 
+import static com.liferay.portal.kernel.service.UserLocalServiceUtil.isPasswordExpired;
+
 @Component(
         immediate = true,
         service = AuthVerifier.class,
         property = {
-                "auth.verifier.CustomAuthVerifier.urls.includes=*"
+                "auth.verifier.CustomAuthVerifier.urls.includes=*",
+                "auth.verifier.CustomAuthVerifier.urls.excludes=/api/jsonws/mobile.mobiledevice/*"
         }
 )
 public class CustomAuthVerifier implements AuthVerifier {
 
     private static final Log logger = LogFactoryUtil.getLog(CustomAuthVerifier.class);
+
+    private static final String FACILE_PASSWORD = "FACILE_PASSWORD";
 
     @Override
     public String getAuthType() {
@@ -70,19 +78,6 @@ public class CustomAuthVerifier implements AuthVerifier {
                 return portalAuthVerifierResult;
             }
 
-//            String[] credentials = checkRememberMeSession(accessControlContext.getRequest(), accessControlContext.getResponse());
-//            if (credentials != null) {
-//                userId = Long.parseLong(credentials[0]);
-//                User user = UserLocalServiceUtil.getUser(userId);
-//                logger.info("User has been authenticated with remember me login " + user.getFullName());
-//                authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
-//                authVerifierResult.setPasswordBasedAuthentication(true);
-//                authVerifierResult.setUserId(userId);
-//                authVerifierResult.setPassword(credentials[1]);
-//
-//                return authVerifierResult;
-//            }
-
             String[] credentials = checkShibbolethSession(accessControlContext.getRequest(), accessControlContext.getResponse());
             if (credentials != null) {
                 userId = Long.parseLong(credentials[0]);
@@ -101,6 +96,19 @@ public class CustomAuthVerifier implements AuthVerifier {
                 userId = Long.parseLong(credentials[0]);
                 User user = UserLocalServiceUtil.getUser(userId);
                 logger.debug("Connected user on mobile app is " + user.getFullName());
+                authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
+                authVerifierResult.setPasswordBasedAuthentication(true);
+                authVerifierResult.setUserId(userId);
+                authVerifierResult.setPassword(credentials[1]);
+
+                return authVerifierResult;
+            }
+
+            credentials = checkRememberMeSession(accessControlContext.getRequest(), accessControlContext.getResponse());
+            if (credentials != null) {
+                userId = Long.parseLong(credentials[0]);
+                User user = UserLocalServiceUtil.getUser(userId);
+                logger.debug("Connected user is " + user.getFullName());
                 authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
                 authVerifierResult.setPasswordBasedAuthentication(true);
                 authVerifierResult.setUserId(userId);
@@ -166,6 +174,8 @@ public class CustomAuthVerifier implements AuthVerifier {
         String autoUserId = CookiesManagerUtil.getCookieValue(
                 CookiesConstants.NAME_ID, httpServletRequest, false);
         String autoPassword = CookiesManagerUtil.getCookieValue(
+                FACILE_PASSWORD, httpServletRequest, false);
+        String autoPasswordLfr = CookiesManagerUtil.getCookieValue(
                 CookiesConstants.NAME_PASSWORD, httpServletRequest, false);
         String rememberMe = CookiesManagerUtil.getCookieValue(
                 CookiesConstants.NAME_REMEMBER_ME, httpServletRequest, false);
@@ -179,6 +189,8 @@ public class CustomAuthVerifier implements AuthVerifier {
                         autoUserId = cookie.getValue();
                         break;
                     case CookiesConstants.NAME_PASSWORD:
+                        autoPasswordLfr = cookie.getValue();
+                    case FACILE_PASSWORD:
                         autoPassword = cookie.getValue();
                         break;
                     case CookiesConstants.NAME_REMEMBER_ME:
@@ -207,27 +219,40 @@ public class CustomAuthVerifier implements AuthVerifier {
         String[] credentials = null;
 
         if (Validator.isNotNull(autoUserId) &&
-                Validator.isNotNull(autoPassword) &&
+                (Validator.isNotNull(autoPassword) || Validator.isNotNull(autoPasswordLfr)) &&
                 Validator.isNotNull(rememberMe)) {
-            logger.info("RememberMe userId processed : " + new String(UnicodeFormatter.hexToBytes(autoUserId)));
 
             Company company = CompanyLocalServiceUtil.getCompany(PortalUtil.getDefaultCompanyId());
             // Company company = PortalUtil.getCompany(httpServletRequest);
 
             if (company.isAutoLogin()) {
-                KeyValuePair kvp = UserLocalServiceUtil.decryptUserId(
-                        company.getCompanyId(),
-                        new String(UnicodeFormatter.hexToBytes(autoUserId)),
-                        new String(UnicodeFormatter.hexToBytes(autoPassword)));
+                KeyValuePair kvp;
 
+                if (Validator.isNotNull(autoPasswordLfr)) {
+                    kvp = UserLocalServiceUtil.decryptUserId(
+                            company.getCompanyId(),
+                            new String(UnicodeFormatter.hexToBytes(autoUserId)),
+                            new String(UnicodeFormatter.hexToBytes(autoPasswordLfr)));
+                } else {
+                    kvp = decryptUserId(
+                            company,
+                            new String(UnicodeFormatter.hexToBytes(autoUserId)),
+                            new String(UnicodeFormatter.hexToBytes(autoPassword)));
+                }
+
+                String tokenKey = WebKeys.AUTHENTICATION_TOKEN.concat("#CSRF");
+                String currentToken = httpServletRequest.getParameter("p_auth");
+                logger.debug("Set session attribute " + tokenKey + " with value " + currentToken);
+                httpServletRequest.getSession().setAttribute(tokenKey, currentToken);
+
+                User user = UserLocalServiceUtil.getUser(Long.parseLong(kvp.getKey()));
+                logger.info("User authenticated with RememberMe : " + user.getScreenName() + " (" + user.getEmailAddress() + "), uri=" + httpServletRequest.getRequestURI());
                 credentials = new String[3];
-
                 credentials[0] = kvp.getKey();
                 credentials[1] = kvp.getValue();
                 credentials[2] = Boolean.FALSE.toString();
 
-                User user = UserLocalServiceUtil.getUser(Long.parseLong(credentials[0]));
-                setSessionCookies(httpServletRequest, httpServletResponse, user, user.getScreenName(), kvp.getValue(), true);
+                setSessionCookies(httpServletRequest, httpServletResponse, user, user.getScreenName(), user.getPassword(), true);
             }
         }
 
@@ -262,11 +287,14 @@ public class CustomAuthVerifier implements AuthVerifier {
         CookiesManagerUtil.deleteCookies(
                 domain, httpServletRequest, httpServletResponse,
                 CookiesConstants.NAME_PASSWORD);
+        CookiesManagerUtil.deleteCookies(
+                domain, httpServletRequest, httpServletResponse,
+                FACILE_PASSWORD);
     }
 
     public void setSessionCookies (HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                    User user, String login, String password, boolean rememberMe) throws Exception {
-        logger.debug("Set session cookie for " + login + " - rememberMe=" + rememberMe);
+        logger.debug("Set session cookies for " + login + " - rememberMe=" + rememberMe);
 
         httpServletRequest = PortalUtil.getOriginalServletRequest(
                 httpServletRequest);
@@ -285,18 +313,18 @@ public class CustomAuthVerifier implements AuthVerifier {
 
         httpSession.setAttribute("j_username", userIdString);
 
-        if (PropsValues.PORTAL_JAAS_PLAIN_PASSWORD) {
-            httpSession.setAttribute("j_password", password);
-        }
-        else {
+//        if (PropsValues.PORTAL_JAAS_PLAIN_PASSWORD) {
+//            httpSession.setAttribute("j_password", password);
+//        }
+//        else {
             httpSession.setAttribute("j_password", user.getPassword());
-        }
+//        }
 
         httpSession.setAttribute("j_remoteuser", userIdString);
 
-        if (PropsValues.SESSION_STORE_PASSWORD) {
-            httpSession.setAttribute(WebKeys.USER_PASSWORD, password);
-        }
+//        if (PropsValues.SESSION_STORE_PASSWORD) {
+//            httpSession.setAttribute(WebKeys.USER_PASSWORD, password);
+//        }
 
         Cookie companyIdCookie = new Cookie(
                 CookiesConstants.NAME_COMPANY_ID,
@@ -361,22 +389,34 @@ public class CustomAuthVerifier implements AuthVerifier {
 //                    CookiesConstants.CONSENT_TYPE_FUNCTIONAL, loginCookie,
 //                    httpServletRequest, httpServletResponse);
 
-            Cookie passwordCookie = new Cookie(
-                    CookiesConstants.NAME_PASSWORD,
-                    UnicodeFormatter.bytesToHex(
-                        EncryptorUtil.encrypt(company.getKeyObj(), password).getBytes()));
 
-            if (domain != null) {
-                passwordCookie.setDomain(domain);
+            boolean hasLfrPasswordCookie = false;
+            Cookie[] cookies = httpServletRequest.getCookies();
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(CookiesConstants.NAME_PASSWORD)) {
+                    hasLfrPasswordCookie = true;
+                    break;
+                }
             }
 
-            passwordCookie.setMaxAge(loginMaxAge);
-            passwordCookie.setPath(StringPool.SLASH);
+            if (!hasLfrPasswordCookie) {
+                Cookie passwordCookie = new Cookie(
+                        FACILE_PASSWORD,
+                        UnicodeFormatter.bytesToHex(
+                                EncryptorUtil.encrypt(company.getKeyObj(), password).getBytes()));
 
-            httpServletResponse.addCookie(passwordCookie);
+                if (domain != null) {
+                    passwordCookie.setDomain(domain);
+                }
+
+                passwordCookie.setMaxAge(loginMaxAge);
+                passwordCookie.setPath(StringPool.SLASH);
+
+                httpServletResponse.addCookie(passwordCookie);
 //            CookiesManagerUtil.addCookie(
 //                    CookiesConstants.CONSENT_TYPE_FUNCTIONAL, passwordCookie,
 //                    httpServletRequest, httpServletResponse);
+            }
 
             Cookie rememberMeCookie = new Cookie(
                     CookiesConstants.NAME_REMEMBER_ME, Boolean.TRUE.toString());
@@ -393,6 +433,46 @@ public class CustomAuthVerifier implements AuthVerifier {
 //                    CookiesConstants.CONSENT_TYPE_FUNCTIONAL, rememberMeCookie,
 //                    httpServletRequest, httpServletResponse);
         }
+    }
+
+    public KeyValuePair decryptUserId(
+            Company company, String name, String password)
+            throws PortalException {
+
+        try {
+            name = EncryptorUtil.decrypt(company.getKeyObj(), name);
+        }
+        catch (EncryptorException encryptorException) {
+            throw new SystemException(encryptorException);
+        }
+
+        try {
+            password = EncryptorUtil.decrypt(company.getKeyObj(), password);
+        }
+        catch (EncryptorException encryptorException) {
+            throw new SystemException(encryptorException);
+        }
+
+        long userId = GetterUtil.getLong(name);
+
+        User user = UserLocalServiceUtil.getUser(userId);
+
+        String userPassword = user.getPassword();
+
+        // String encPassword = PasswordEncryptorUtil.encrypt(
+        //        password, userPassword);
+
+        if (userPassword.equals(password)) {
+            if (isPasswordExpired(user)) {
+                user.setPasswordReset(true);
+
+                UserLocalServiceUtil.updateUser(user);
+            }
+
+            return new KeyValuePair(name, password);
+        }
+
+        throw new PrincipalException.MustBeAuthenticated(userId);
     }
 
     private String[] checkShibbolethSession(
@@ -463,28 +543,16 @@ public class CustomAuthVerifier implements AuthVerifier {
             if (url == null) {
                 url = request.getRequestURI();
             }
+
             String mobileToken = getTokenFromUrl(url);
             long userId = getUserIdFromUrl(url);
 
-            // If no mobile_token found in url, look into cookies
-            if (mobileToken.isEmpty()) {
-                mobileToken = CookieKeys.getCookie(request, "mobileToken");
-                if (mobileToken != null && !mobileToken.isEmpty()) {
-                    logger.info("MobileApplicationAutoLogin : mobileToken in cookies is " + mobileToken);
-                }
-            }
-
             String service = ParamUtil.getString(request, "service", "");
+
             if (mobileToken != null && !mobileToken.isEmpty()) {
                 logger.info("MobileApplicationAutoLogin : mobileToken=" + mobileToken + ", userId=" + userId + ", service=" + service);
-            }
-
-            if (mobileToken != null && !mobileToken.isEmpty()) {
                 UserMobileToken userMobileToken = UserMobileTokenLocalServiceUtil.getTokenUser(mobileToken);
-//                if (userMobileToken == null && userId != 0) {
-//                    userMobileToken = UserMobileTokenLocalServiceUtil.addMobileToken(userId, mobileToken);
-//                    logger.info("Created userToken");
-//                }
+
                 if (userMobileToken != null) {
                     User user = UserLocalServiceUtil.getUserById(userMobileToken.getUserId());
 
@@ -499,10 +567,12 @@ public class CustomAuthVerifier implements AuthVerifier {
 
                     return credentials;
                 } else {
+                    logger.debug("Mobile token not found in database");
                     return null;
                 }
 
             } else {
+                logger.debug("No mobile token is empty or null");
                 return null;
             }
 

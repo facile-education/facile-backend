@@ -28,6 +28,7 @@ public class NeroSystemProperties {
 	public static final String MOBILE_NOTIFICATIONS_ENABLED = "mobile.notifications.enabled";
 	public static final String MOBILE_API_URL = "mobile.api.url";
 	public static final String MOBILE_API_KEY = "mobile.api.key";
+	public static final String MOBILE_WS_TOKEN = "mobile.ws.token";
 
 	// Support
 	public static final String SUPPORT_GLOBAL_RECIPIENTS = "support.global.recipients";
@@ -51,5 +52,4 @@ public class NeroSystemProperties {
 	public static final String MATOMO_API_URL = "matomo.api_url";
 	public static final String MATOMO_AUTH_TOKEN = "matomo.token_auth";
 	public static final String MATOMO_SITE_ID = "matomo.siteId";
-
 }
