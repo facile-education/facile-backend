@@ -89,6 +89,10 @@ public class HomeworkServiceUtil {
 		return getService().dropHomeworkFile(homeworkId, fileEntryId);
 	}
 
+	public static org.json.JSONObject getHomeworkDoneStatus(long homeworkId) {
+		return getService().getHomeworkDoneStatus(homeworkId);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

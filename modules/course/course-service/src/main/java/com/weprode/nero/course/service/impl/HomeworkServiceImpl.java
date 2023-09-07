@@ -35,6 +35,7 @@ import com.weprode.nero.course.service.base.HomeworkServiceBaseImpl;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -215,6 +216,40 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		}
 
 		result.put(JSONConstants.SUCCESS, StudentHomeworkLocalServiceUtil.setHomeworkDone(homeworkId, user.getUserId(), isDone));
+
+		return result;
+	}
+
+	@JSONWebService(value = "get-students-done-status", method = "GET")
+	public JSONObject getHomeworkDoneStatus (long homeworkId) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		List<User> homeworkStudents = StudentHomeworkLocalServiceUtil.getHomeworkStudents(homeworkId);
+
+		JSONArray jsonHomeworkStudents = new JSONArray();
+		for (User student : homeworkStudents) {
+			JSONObject jsonStudent = UserUtilsLocalServiceUtil.convertUserToJson(student);
+			if (StudentHomeworkLocalServiceUtil.hasStudentDoneHomework(student.getUserId(), homeworkId)) {
+				jsonStudent.put(JSONConstants.IS_DONE, true);
+			}
+			jsonHomeworkStudents.put(jsonStudent);
+		}
+
+		result.put(JSONConstants.SELECTED_STUDENTS, jsonHomeworkStudents);
+		result.put(JSONConstants.SUCCESS, true);
 
 		return result;
 	}

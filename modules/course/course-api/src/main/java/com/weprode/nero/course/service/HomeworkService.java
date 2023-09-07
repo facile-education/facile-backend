@@ -81,6 +81,10 @@ public interface HomeworkService extends BaseService {
 	public JSONObject dropHomeworkFile(long homeworkId, long fileEntryId)
 		throws SystemException;
 
+	@JSONWebService(method = "GET", value = "get-students-done-status")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getHomeworkDoneStatus(long homeworkId);
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

@@ -150,6 +150,22 @@ public class HomeworkServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject getHomeworkDoneStatus(long homeworkId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				HomeworkServiceUtil.getHomeworkDoneStatus(homeworkId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	public static org.json.JSONObject createHomework(
 			long courseId, String title, long sourceSessionId,
 			long targetSessionId, String targetDateStr, int homeworkType,
