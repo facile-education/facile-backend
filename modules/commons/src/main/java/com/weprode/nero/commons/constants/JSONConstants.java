@@ -128,6 +128,7 @@ public class JSONConstants {
     public static final String ORG_ID = "orgId";
     public static final String ORG_NAME = "orgName";
     public static final String ORGS = "orgs";
+    public static final String SCHOOL_UAI = "schoolUai";
 
     // Group
     public static final String GROUP_ID = "groupId";
