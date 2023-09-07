@@ -15,6 +15,7 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.weprode.nero.messaging.model.Message;
 import com.weprode.nero.messaging.model.MessageContent;
 import com.weprode.nero.messaging.service.MessageContentLocalServiceUtil;
@@ -39,6 +40,12 @@ public class AnonymizationUtil {
     // Anonymize dlfileentries, dlfileversions, dlfolders
     // Lorem ipsum blog entries, messages
     public static void anonymize() {
+
+        // Check if portal-ext variable is present, for more safety
+        if (!PrefsPropsUtil.getString("anonymization.enabled").equals("true")) {
+            logger.info("Anonymization could not run because a property is not set");
+            return;
+        }
 
         // Do as administrator, to get rid of permission issues
         List<User> adminUsers = UserLocalServiceUtil.getRoleUsers(RoleUtilsLocalServiceUtil.getAdministratorRole().getRoleId());
