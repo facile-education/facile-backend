@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
 import com.weprode.nero.mobile.model.UserMobileToken;
 import com.weprode.nero.mobile.service.UserMobileTokenLocalServiceUtil;
+import com.weprode.nero.statistic.service.UserLoginLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import javax.servlet.http.Cookie;
@@ -88,6 +89,8 @@ public class CustomAuthVerifier implements AuthVerifier {
                 authVerifierResult.setUserId(userId);
                 authVerifierResult.setPassword(credentials[1]);
 
+                UserLoginLocalServiceUtil.addUserLogin(user, false);
+
                 return authVerifierResult;
             }
 
@@ -101,6 +104,8 @@ public class CustomAuthVerifier implements AuthVerifier {
                 authVerifierResult.setUserId(userId);
                 authVerifierResult.setPassword(credentials[1]);
 
+                UserLoginLocalServiceUtil.addUserLogin(user, true);
+
                 return authVerifierResult;
             }
 
@@ -113,6 +118,8 @@ public class CustomAuthVerifier implements AuthVerifier {
                 authVerifierResult.setPasswordBasedAuthentication(true);
                 authVerifierResult.setUserId(userId);
                 authVerifierResult.setPassword(credentials[1]);
+
+                // UserLoginLocalServiceUtil.addUserLogin(identifiedUser, true);
 
                 return authVerifierResult;
             }
@@ -190,6 +197,7 @@ public class CustomAuthVerifier implements AuthVerifier {
                         break;
                     case CookiesConstants.NAME_PASSWORD:
                         autoPasswordLfr = cookie.getValue();
+                        break;
                     case FACILE_PASSWORD:
                         autoPassword = cookie.getValue();
                         break;
@@ -228,16 +236,16 @@ public class CustomAuthVerifier implements AuthVerifier {
             if (company.isAutoLogin()) {
                 KeyValuePair kvp;
 
-                if (Validator.isNotNull(autoPasswordLfr)) {
-                    kvp = UserLocalServiceUtil.decryptUserId(
-                            company.getCompanyId(),
-                            new String(UnicodeFormatter.hexToBytes(autoUserId)),
-                            new String(UnicodeFormatter.hexToBytes(autoPasswordLfr)));
-                } else {
+                if (Validator.isNotNull(autoPassword)) {
                     kvp = decryptUserId(
                             company,
                             new String(UnicodeFormatter.hexToBytes(autoUserId)),
                             new String(UnicodeFormatter.hexToBytes(autoPassword)));
+                } else {
+                    kvp = UserLocalServiceUtil.decryptUserId(
+                            company.getCompanyId(),
+                            new String(UnicodeFormatter.hexToBytes(autoUserId)),
+                            new String(UnicodeFormatter.hexToBytes(autoPasswordLfr)));
                 }
 
                 String tokenKey = WebKeys.AUTHENTICATION_TOKEN.concat("#CSRF");
