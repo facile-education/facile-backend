@@ -90,6 +90,11 @@ public class HomeworkServiceWrapper
 		return _homeworkService.dropHomeworkFile(homeworkId, fileEntryId);
 	}
 
+	@Override
+	public org.json.JSONObject getHomeworkDoneStatus(long homeworkId) {
+		return _homeworkService.getHomeworkDoneStatus(homeworkId);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
