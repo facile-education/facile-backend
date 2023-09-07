@@ -180,7 +180,10 @@ public class HomeworkImpl extends HomeworkBaseImpl {
             for (ContentBlock block : blocks) {
                 if (block.getBlockType() == CourseConstants.TYPE_TEXT && shortContent == null) {
                     String text = HtmlParserUtil.extractText(block.getBlockValue());
-                    shortContent = text.substring(0, Math.min(200, text.length()));
+                    shortContent = text.substring(0, Math.min(100, text.length()));
+                    if (text.length() > 100) {
+                        shortContent = shortContent.concat("...");
+                    }
                 }
                 jsonBlocks.put(block.convertToJSON());
             }
