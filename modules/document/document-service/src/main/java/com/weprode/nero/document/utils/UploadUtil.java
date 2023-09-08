@@ -56,6 +56,9 @@ public class UploadUtil {
                 } catch (FileSizeException e) {
                     result.put(JSONConstants.ERROR, JSONConstants.FILE_SIZE_EXCEPTION);
                     return result;
+                } catch (FileExtensionException e) {
+                    result.put(JSONConstants.ERROR, JSONConstants.FILE_EXTENSION_EXCEPTION);
+                    return result;
                 } catch (DuplicateFileEntryException e) {
                     result.put(JSONConstants.ERROR, JSONConstants.DUPLICATE_FILE_EXCEPTION);
                     return result;
