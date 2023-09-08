@@ -37,7 +37,6 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
-import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.Base64;
@@ -66,7 +65,6 @@ import com.weprode.nero.document.utils.ENTDocumentConversionUtil;
 import com.weprode.nero.document.utils.FileNameUtil;
 import com.weprode.nero.document.utils.SupportedExtensions;
 import com.weprode.nero.group.constants.ActivityConstants;
-import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -566,31 +564,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		return sanitizedContent;
 	}
 
-
-	// Returns true if the user is member of the group or org, in case of group folder
-	public boolean isAllowedToAccessFolder(long userId, long folderId) {
-		try {
-			User user = UserLocalServiceUtil.getUser(userId);
-			Folder folder = DLAppServiceUtil.getFolder(folderId);
-			Group folderGroup = GroupLocalServiceUtil.getGroup(folder.getGroupId());
-			if (folderGroup.isOrganization()
-					&& !OrganizationLocalServiceUtil.hasUserOrganization(user.getUserId(), folderGroup.getClassPK())
-					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)
-					&& !RoleUtilsLocalServiceUtil.isDoyen(user, folderGroup.getClassPK())) {
-				logger.info("User " + user.getUserId() + " tries to access folder " + folderId + " of org group " + folderGroup.getGroupId() + " but does not belong to it");
-				return false;
-			} else if (folderGroup.isRegularSite()
-					&& !GroupLocalServiceUtil.hasUserGroup(user.getUserId(), folderGroup.getGroupId())
-					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-				logger.info("User " + user.getUserId() + " tries to access folder " + folderId + " of group " + folderGroup.getGroupId() + " but does not belong to it");
-				return false;
-			}
-		} catch (Exception e) {
-			logger.error("Error when determining if user " + userId + " is allowed to access folder " + folderId + " " + e.getMessage());
-		}
-
-		return true;
-	}
 
 	public boolean isGroupFile (long fileEntryId) {
 		try {

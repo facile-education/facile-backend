@@ -111,6 +111,18 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         }
 
         try {
+            // Check that the given roleId is allowed
+            boolean isRoleExisting = false;
+            for (Role role : RoleUtilsLocalServiceUtil.getAvailableRolesForLocalUser()) {
+                if (role.getRoleId() == roleId) {
+                    isRoleExisting = true;
+                }
+            }
+            if (!isRoleExisting) {
+                logger.info("User " + user.getFullName() + " tries to edit user " + userId + " with unauthorized roleId " + roleId);
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
+
             // Check if email is already used
             User modifiedUser = UserLocalServiceUtil.getUser(userId);
             if (!modifiedUser.getEmailAddress().equals(email)) {

@@ -212,6 +212,12 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public boolean isAllowedToAccessFolder(long userId, long folderId) {
+		return _folderUtilsLocalService.isAllowedToAccessFolder(
+			userId, folderId);
+	}
+
+	@Override
 	public boolean isGroupFolder(
 		com.liferay.portal.kernel.repository.model.Folder folder) {
 

@@ -36,9 +36,11 @@ import com.weprode.nero.document.exception.NoSuchVersionException;
 import com.weprode.nero.document.model.Version;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.GroupsLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.VersionLocalServiceUtil;
 import com.weprode.nero.document.service.base.GroupsServiceBaseImpl;
 import com.weprode.nero.document.utils.DLAppJsonFactory;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -104,8 +106,16 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 
 			} else {
 				// Specific group's folderId
-				List<Folder> folders = GroupsLocalServiceUtil.getFolderGroupFolders(user, parseLong(nodePath));
-				List<FileEntry> files = GroupsLocalServiceUtil.getFolderGroupFiles(user, parseLong(nodePath), mimeTypes);
+				long folderId = parseLong(nodePath);
+				Folder folder = DLAppServiceUtil.getFolder(folderId);
+				if ((FolderUtilsLocalServiceUtil.isGroupFolder(folder) &&
+						(!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(getGuestOrUserId(), folder, ActionKeys.VIEW) || !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(folder.getGroupId()))) ||
+						(!FolderUtilsLocalServiceUtil.isGroupFolder(folder) && folder.getGroupId() != user.getGroupId())) {
+					logger.info("User " + user.getFullName() + " tries to get all group entities of folder " + folderId + " but has no permission");
+					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				}
+				List<Folder> folders = GroupsLocalServiceUtil.getFolderGroupFolders(user, folderId);
+				List<FileEntry> files = GroupsLocalServiceUtil.getFolderGroupFiles(user, folderId, mimeTypes);
 				folderArray = GroupsLocalServiceUtil.groupFoldersToJSON(user, folders, false);
 				fileArray = GroupsLocalServiceUtil.groupFilesToJSON(user, files, true);
 			}

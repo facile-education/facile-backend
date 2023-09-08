@@ -18,11 +18,6 @@ import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
-
-
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.nero.commons.JSONProxy;
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -32,20 +27,26 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.lock.exception.NoSuchLockException;
 import com.liferay.portal.lock.model.Lock;
 import com.liferay.portal.lock.service.LockLocalServiceUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.constants.DocumentConstants;
 import com.weprode.nero.document.model.EditionLock;
 import com.weprode.nero.document.model.LoolToken;
-import com.weprode.nero.document.service.*;
+import com.weprode.nero.document.service.EditionLockLocalServiceUtil;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.LoolTokenLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.base.FileUtilsServiceBaseImpl;
-
 import com.weprode.nero.document.utils.DLAppJsonFactory;
 import com.weprode.nero.document.utils.SupportedExtensions;
 import com.weprode.nero.document.utils.UploadUtil;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.File;
@@ -75,6 +76,10 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to upload a file into folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " uploads file " + fileName + " to folderId " + folderId + " in mode " + mode);
 			return UploadUtil.uploadFile(user, folderId, fileName, file, mode);
 		} catch (Exception e) {
@@ -126,8 +131,12 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
-			logger.info("User " + user.getFullName() + " renames file " + fileId + " with name " + fileName);
 			FileEntry fileToRename = DLAppServiceUtil.getFileEntry(fileId);
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileToRename.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to rename file " + fileId + " in folder " + fileToRename.getFolderId() + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+			logger.info("User " + user.getFullName() + " renames file " + fileId + " with name " + fileName);
 			FileEntry renamedFile = FileUtilsLocalServiceUtil.renameFile(user.getUserId(), fileToRename, fileName);
 
 			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), renamedFile));
@@ -156,6 +165,10 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to create audio file in folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " creates audio file " + name + ".mp3 in folder " + folderId);
 
 			return UploadUtil.uploadFile(user, folderId, name + ".mp3", file, DocumentConstants.MODE_RENAME);
@@ -182,6 +195,10 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to create geogebra file in folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " creates geogebra file " + name + " in folder " + folderId);
 
 			FileEntry geogebraFile = FileUtilsLocalServiceUtil.createGeogebraFile(user, folderId, name);
@@ -210,6 +227,10 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to create mindmap file in folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " creates mindmap file " + name + " in folder " + folderId);
 
 			FileEntry mindmapFile = FileUtilsLocalServiceUtil.createMindMapFile(user, folderId, name);
@@ -239,6 +260,10 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to create scratch file in folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " creates scratch file " + name + " in folder " + folderId);
 
 			FileEntry scratchFile = FileUtilsLocalServiceUtil.createScratchFile(user, folderId, name);
@@ -268,6 +293,10 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to create lool file in folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " creates lool file " + name + " in folder " + folderId + " with type " + type);
 
 			FileEntry loolFile = FileUtilsLocalServiceUtil.createLoolFile(user, folderId, name, type);
@@ -296,6 +325,10 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to create html file in folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " creates html file " + name + " in folder " + folderId);
 
 			FileEntry htmlFile = FileUtilsLocalServiceUtil.createHtmlFile(user, folderId, name);
@@ -325,23 +358,26 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		}
 
 		try {
+			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to add lock on file " + fileId + " in folder " + fileEntry.getFolderId() + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			EditionLock lock = EditionLockLocalServiceUtil.isFileEdited(fileId);
-			if(lock != null) {
+			if (lock != null) {
 				if (user.getUserId() == lock.getUserId()) {
 					logger.info("Locked file is already edited by same user");
 					result.put(JSONConstants.SUCCESS, true);
-					return result;
 				} else {
 					result.put(JSONConstants.IS_WRITABLE, false);
 					result.put(JSONConstants.USER_ID, lock.getUserId());
 					User editor = UserLocalServiceUtil.getUser(lock.getUserId());
 					result.put(JSONConstants.USER_NAME, editor.getFullName());
 					result.put(JSONConstants.SUCCESS, false);
-					return result;
 				}
+				return result;
 			} else {
 				try {
-					FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
 					Lock lfrLock = LockLocalServiceUtil.getLock(DLFileEntry.class.getName(), fileId);
 					if (Validator.isNotNull(lfrLock) && lfrLock.getUserId() != user.getUserId() &&
 							DLAppServiceUtil.verifyFileEntryCheckOut(fileEntry.getRepositoryId(), fileEntry.getFileEntryId(), lfrLock.getUuid())) {
@@ -350,7 +386,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 						result.put(JSONConstants.SUCCESS, false);
 						return result;
 					}
-				} catch (NoSuchLockException nsle) {
+				} catch (NoSuchLockException e) {
 					// No Lfr lock, nothing to do here.
 				}
 			}
@@ -381,8 +417,13 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to unlock file " + fileId + " in folder " + fileEntry.getFolderId() + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			EditionLock lock = EditionLockLocalServiceUtil.isFileEdited(fileId);
-			if(lock != null && lock.getUserId() == user.getUserId()) {
+			if (lock != null && lock.getUserId() == user.getUserId()) {
 				logger.info("Removing lock on fileId " + fileId + " for userId " + user.getUserId());
 				result.put(JSONConstants.SUCCESS, EditionLockLocalServiceUtil.removeEditionLock(fileId));
 			} else {
@@ -412,19 +453,22 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
-			logger.info("User " + user.getUserId() + " fetches resource " + fileId + " with version " + versionId + ", readOnly=" + readOnly);
-
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to get resource of fileEntryId " + fileId + " with version " + versionId + ", readOnly=" + readOnly + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+			logger.info("User " + user.getUserId() + " fetches resource " + fileId + " with version " + versionId + ", readOnly=" + readOnly);
 
 			if (versionId == 0) {   // If the version is specified to 0, get the latest version
 				versionId = fileEntry.getLatestFileVersion().getFileVersionId();
 			}
 
-			boolean readOnly_ = readOnly
+			boolean isReadOnly = readOnly
 					|| versionId != fileEntry.getLatestFileVersion().getFileVersionId()   // read only if there is not the latest version
 					|| (FileUtilsLocalServiceUtil.isGroupFile(fileId) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)); // Or if group file without UPDATE permission
 			result.put(JSONConstants.FILE_VERSION_ID, versionId);
-			result.put(JSONConstants.READ_ONLY, readOnly_);
+			result.put(JSONConstants.READ_ONLY, isReadOnly);
 
 			// Get the type of view to manage how to display file in front (Lool document, pdf, image, video...)
 			String typeOfView = SupportedExtensions.getTypeOfView(fileEntry.getExtension());

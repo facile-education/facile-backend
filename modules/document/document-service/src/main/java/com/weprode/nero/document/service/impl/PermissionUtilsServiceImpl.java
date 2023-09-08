@@ -131,6 +131,11 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 		try {
 			Folder folder = DLAppServiceUtil.getFolder(folderId);
 
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS)) {
+				logger.info("User " + user.getFullName() + " tries to access permissions for folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
 			// Build the role list
 			List<String> roleNames = PermissionUtilsLocalServiceUtil.getPermissionRoles(folder.getGroupId());
 			// Available actions for DLFileEntry

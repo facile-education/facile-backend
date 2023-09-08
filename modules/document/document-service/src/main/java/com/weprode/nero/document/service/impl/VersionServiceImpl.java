@@ -14,12 +14,17 @@
 
 package com.weprode.nero.document.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
 
 
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -59,6 +64,13 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			// Check permissions
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(fileId);
+			if ((FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(getGuestOrUserId(), fileEntry, ActionKeys.VIEW)) ||
+					(!FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && fileEntry.getGroupId() != user.getGroupId())) {
+				logger.info("User " + user.getFullName() + " tries to get versions of fileEntryId " + fileId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " fetches versions for file " + fileId);
 
 			return VersionLocalServiceUtil.getFileVersions(user, fileId);

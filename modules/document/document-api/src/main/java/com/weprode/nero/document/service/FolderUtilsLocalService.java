@@ -22,12 +22,10 @@ import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+import org.osgi.annotation.versioning.ProviderType;
 
 import java.io.IOException;
-
 import java.util.List;
-
-import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Provides the local service interface for FolderUtils. Methods of this
@@ -127,6 +125,9 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 		throws PortalException, SystemException;
 
 	public void hideDLFolder(long folderId) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isAllowedToAccessFolder(long userId, long folderId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isGroupFolder(Folder folder);
