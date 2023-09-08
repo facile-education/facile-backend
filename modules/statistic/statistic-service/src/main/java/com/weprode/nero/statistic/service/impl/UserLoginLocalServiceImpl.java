@@ -5,6 +5,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.statistic.model.UserLogin;
@@ -29,20 +31,27 @@ public class UserLoginLocalServiceImpl extends UserLoginLocalServiceBaseImpl {
         long userLoginId;
 
         try {
-            userLoginId = counterLocalService.increment();
-            UserLogin userLogin = userLoginLocalService.createUserLogin(userLoginId);
-            userLogin.setUserId(user.getUserId());
-            userLogin.setLoginDate(new Date());
-            userLogin.setIsMobileApp(isMobileApp);
+            Date now = new Date();
+            OrderByComparator<UserLogin> odc = OrderByComparatorFactoryUtil.create("Statistics_UserLogin", "loginDate", false);
+            UserLogin lastLogin = userLoginPersistence.fetchByuserId_First(user.getUserId(), odc);
 
-            // Role
-            int role = getUserRole(user);
-            userLogin.setRole(role);
+            // Do not register new login if less than 5 minutes have passed
+            if (lastLogin == null || now.getTime() - lastLogin.getLoginDate().getTime() > 5*60*1000) {
+                userLoginId = counterLocalService.increment();
+                UserLogin userLogin = userLoginLocalService.createUserLogin(userLoginId);
+                userLogin.setUserId(user.getUserId());
+                userLogin.setLoginDate(now);
+                userLogin.setIsMobileApp(isMobileApp);
 
-            // Rattach school
-            Organization rattachSchool = UserOrgsLocalServiceUtil.getEtabRatachement(user);
-            userLogin.setSchoolId(rattachSchool.getOrganizationId());
-            UserLoginLocalServiceUtil.updateUserLogin(userLogin);
+                // Role
+                int role = getUserRole(user);
+                userLogin.setRole(role);
+
+                // Rattach school
+                Organization rattachSchool = UserOrgsLocalServiceUtil.getEtabRatachement(user);
+                userLogin.setSchoolId(rattachSchool.getOrganizationId());
+                UserLoginLocalServiceUtil.updateUserLogin(userLogin);
+            }
 
             return true;
         } catch (Exception e) {

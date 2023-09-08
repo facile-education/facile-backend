@@ -15,6 +15,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
+import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.nero.preference.model.NotifyConfig;
@@ -275,6 +276,11 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
             result.put(JSONConstants.FIRST_NAME, user.getFirstName());
             result.put(JSONConstants.EMAIL, user.getEmailAddress());
             result.put(JSONConstants.ROLE_ID, RoleUtilsLocalServiceUtil.displayUserRoles(user));
+
+            Organization school = UserOrgsLocalServiceUtil.getEtabRatachement(user);
+            String uai = OrgMappingLocalServiceUtil.getOrganizationStrutUAI(school);
+            result.put(JSONConstants.SCHOOL_UAI, uai);
+
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Error fetching cas attributes for user " + user.getUserId(), e);

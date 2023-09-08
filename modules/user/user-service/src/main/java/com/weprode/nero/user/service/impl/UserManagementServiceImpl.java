@@ -1,5 +1,6 @@
 package com.weprode.nero.user.service.impl;
 
+import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -126,7 +127,12 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
             // Check if email is already used
             User modifiedUser = UserLocalServiceUtil.getUser(userId);
             if (!modifiedUser.getEmailAddress().equals(email)) {
-                User existingUser = UserLocalServiceUtil.getUserByEmailAddress(user.getCompanyId(), email);
+                User existingUser = null;
+                try {
+                    existingUser = UserLocalServiceUtil.getUserByEmailAddress(user.getCompanyId(), email);
+                } catch (NoSuchUserException e) {
+                    // User does not exist with such email -> ok for edit
+                }
                 if (existingUser != null) {
                     result.put(JSONConstants.SUCCESS, false);
                     result.put(JSONConstants.ERROR_CODE, JSONConstants.EMAIL);
