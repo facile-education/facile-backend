@@ -147,28 +147,30 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
             }
             logger.info("Received forgotten password change for screenName " + login);
 
-            if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
-                user = _userLocalService.getUserByEmailAddress(
-                        themeDisplay.getCompanyId(), login);
-            }
-            else if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
-                user = _userLocalService.getUserByScreenName(
-                        themeDisplay.getCompanyId(), login);
-            }
-            else if (authType.equals(CompanyConstants.AUTH_TYPE_ID)) {
-                user = _userLocalService.getUserById(GetterUtil.getLong(login));
-            }
-            else {
-                throw new NoSuchUserException("User does not exist");
+            if (authType != null) {
+                if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
+                    user = _userLocalService.getUserByEmailAddress(
+                            themeDisplay.getCompanyId(), login);
+                }
+                else if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
+                    user = _userLocalService.getUserByScreenName(
+                            themeDisplay.getCompanyId(), login);
+                }
+                else if (authType.equals(CompanyConstants.AUTH_TYPE_ID)) {
+                    user = _userLocalService.getUserById(GetterUtil.getLong(login));
+                }
+                else {
+                    throw new NoSuchUserException("User does not exist");
+                }
+                if (!user.isActive()) {
+                    throw new UserActiveException("Inactive user " + user.getUuid());
+                }
+
+                _userLocalService.checkLockout(user);
+
+                return user;
             }
 
-            if (!user.isActive()) {
-                throw new UserActiveException("Inactive user " + user.getUuid());
-            }
-
-            _userLocalService.checkLockout(user);
-
-            return user;
         }
         catch (Exception exception) {
             if (!PropsValues.LOGIN_SECURE_FORGOT_PASSWORD) {
