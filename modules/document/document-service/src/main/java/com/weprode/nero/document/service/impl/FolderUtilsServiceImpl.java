@@ -70,6 +70,11 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to get breadcrumb for folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
 			List<Folder> folderList = FolderUtilsLocalServiceUtil.getFolderPath(folderId);
 
 			// Format breadCrumb
@@ -108,6 +113,10 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
+				logger.info("User " + user.getFullName() + " tries to create sub-folder in folder " + targetFolderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " creates folder " + folderName + " in folder " + targetFolderId);
 
 			Folder createdFolder = FolderUtilsLocalServiceUtil.createFolder(user, targetFolderId, folderName);
@@ -138,6 +147,10 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to rename folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " renames folder " + folderId + " into " + folderName);
 			Folder folderToRename = DLAppServiceUtil.getFolder(folderId);
 			Folder renamedFolder = FolderUtilsLocalServiceUtil.renameFolder(user.getUserId(), folderToRename, folderName);
@@ -166,9 +179,15 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
+
 		try {
-			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to download folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
 			logger.info("User " + user.getFullName() + " downloads folder " + folderId);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
 			result.put(JSONConstants.ZIP_URL, FolderUtilsLocalServiceUtil.downloadFolder(folder, user));
 			result.put(JSONConstants.SUCCESS, true);
 
@@ -227,6 +246,11 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			final JSONArray fileItems = new JSONArray();
 
 			User user = getGuestOrUser();
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+				logger.info("User " + user.getFullName() + " tries to get all entities of folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
 			logger.info("User " + user.getFullName() + " fetches documents in folder " + folderId + (withDetails ? " with details":""));
 
 			// Refresh file version to fix shared cache
@@ -237,9 +261,9 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 			// SubFolders
 			List<Folder> folderList = DLAppServiceUtil.getFolders(user.getGroupId(), folderId);
-			for (Folder folder : folderList) {
-				if (!folder.getName().startsWith(".")) {
-					JSONObject curr = DLAppJsonFactory.format(user.getUserId(), folder, space, withDetails);
+			for (Folder subFolder : folderList) {
+				if (!subFolder.getName().startsWith(".")) {
+					JSONObject curr = DLAppJsonFactory.format(user.getUserId(), subFolder, space, withDetails);
 					folderItems.put(curr);
 				}
 			}
@@ -262,7 +286,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			result.put(JSONConstants.FILES, fileItems);
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
-			logger.error("Error downloading folder " + folderId, e);
+			logger.error("Error getting all entities of folder " + folderId, e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
 

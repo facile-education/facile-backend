@@ -179,6 +179,10 @@ public class FolderUtilsLocalServiceUtil {
 		getService().hideDLFolder(folderId);
 	}
 
+	public static boolean isAllowedToAccessFolder(long userId, long folderId) {
+		return getService().isAllowedToAccessFolder(userId, folderId);
+	}
+
 	public static boolean isGroupFolder(
 		com.liferay.portal.kernel.repository.model.Folder folder) {
 

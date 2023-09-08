@@ -154,10 +154,6 @@ public class FileUtilsLocalServiceUtil {
 		return getService().getSizeInMegaOctet(pSize);
 	}
 
-	public static boolean isAllowedToAccessFolder(long userId, long folderId) {
-		return getService().isAllowedToAccessFolder(userId, folderId);
-	}
-
 	public static boolean isGroupFile(long fileEntryId) {
 		return getService().isGroupFile(fileEntryId);
 	}

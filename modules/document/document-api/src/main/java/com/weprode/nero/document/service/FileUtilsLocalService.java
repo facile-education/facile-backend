@@ -111,9 +111,6 @@ public interface FileUtilsLocalService extends BaseLocalService {
 	public long getSizeInMegaOctet(long pSize);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isAllowedToAccessFolder(long userId, long folderId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isGroupFile(long fileEntryId);
 
 	public FileEntry moveFileEntry(long userId, long fileId, long destFolderId)

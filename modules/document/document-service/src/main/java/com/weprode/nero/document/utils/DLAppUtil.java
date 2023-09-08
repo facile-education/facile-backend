@@ -2,6 +2,7 @@ package com.weprode.nero.document.utils;
 
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
+import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.exception.FileNameException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.model.DLFolder;
@@ -222,8 +223,11 @@ public class DLAppUtil {
                         }
                     }
                 } catch (FileSizeException e) {
-                    logger.error("Error while adding file entry to folder " + folder.getFolderId() + " by user " + user.getUserId(), e);
+                    logger.error("Max size exceeded while adding file entry to folder " + folder.getFolderId() + " by user " + user.getUserId());
                     throw new FileSizeException();
+                } catch (FileExtensionException e) {
+                    logger.error("Unauthorized extension while adding file entry " + fileName + " to folder " + folder.getFolderId() + " by user " + user.getUserId());
+                    throw new FileExtensionException();
                 } catch (Exception e) {
                     logger.error("Error while adding file entry to folder " + folder.getFolderId() + " by user " + user.getUserId(), e);
                     return null;

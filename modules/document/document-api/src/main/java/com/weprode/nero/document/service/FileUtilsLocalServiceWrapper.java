@@ -176,11 +176,6 @@ public class FileUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public boolean isAllowedToAccessFolder(long userId, long folderId) {
-		return _fileUtilsLocalService.isAllowedToAccessFolder(userId, folderId);
-	}
-
-	@Override
 	public boolean isGroupFile(long fileEntryId) {
 		return _fileUtilsLocalService.isGroupFile(fileEntryId);
 	}

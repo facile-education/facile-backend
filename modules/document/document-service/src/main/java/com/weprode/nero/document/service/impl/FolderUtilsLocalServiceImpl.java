@@ -15,15 +15,14 @@
 package com.weprode.nero.document.service.impl;
 
 import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
-import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.exception.FileNameException;
+import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.NoSuchResourcePermissionException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -32,12 +31,13 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.ResourceConstants;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -50,7 +50,6 @@ import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.base.FolderUtilsLocalServiceBaseImpl;
-
 import com.weprode.nero.document.utils.DLAppUtil;
 import com.weprode.nero.document.utils.FileNameUtil;
 import com.weprode.nero.document.utils.ZipUtil;
@@ -621,6 +620,36 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		}
 
 		return false;
+	}
+
+	// Returns true if the user is member of the group or org, in case of group folder
+	public boolean isAllowedToAccessFolder(long userId, long folderId) {
+		try {
+			User user = UserLocalServiceUtil.getUser(userId);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			Group folderGroup = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+			if (folderGroup.isOrganization()
+					&& !OrganizationLocalServiceUtil.hasUserOrganization(user.getUserId(), folderGroup.getClassPK())
+					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)
+					&& !RoleUtilsLocalServiceUtil.isDoyen(user, folderGroup.getClassPK())) {
+				logger.info("User " + user.getUserId() + " tries to access folder " + folderId + " of org group " + folderGroup.getGroupId() + " but does not belong to it");
+				return false;
+			} else if (folderGroup.isRegularSite()
+					&& !GroupLocalServiceUtil.hasUserGroup(user.getUserId(), folderGroup.getGroupId())
+					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+				logger.info("User " + user.getUserId() + " tries to access folder " + folderId + " of group " + folderGroup.getGroupId() + " but does not belong to it");
+				return false;
+			} else if (folderGroup.isUser() && folder.getGroupId() != user.getGroupId()) {
+				logger.info("User " + user.getUserId() + " tries to access user's folder " + folderId + " of group " + folderGroup.getGroupId() + " but it is not his");
+				return false;
+			} else {
+				logger.info("isAllowedToAccessFolder on folderId " + folderId + " that is of different type");
+			}
+		} catch (Exception e) {
+			logger.error("Error when determining if user " + userId + " is allowed to access folder " + folderId + " " + e.getMessage());
+		}
+
+		return true;
 	}
 
 	public void hideDLFolder (long folderId) throws PortalException {
