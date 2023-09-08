@@ -36,7 +36,7 @@ public class UserLoginLocalServiceImpl extends UserLoginLocalServiceBaseImpl {
             UserLogin lastLogin = userLoginPersistence.fetchByuserId_First(user.getUserId(), odc);
 
             // Do not register new login if less than 5 minutes have passed
-            if (now.getTime()- lastLogin.getLoginDate().getTime() > 5*60*1000) {
+            if (lastLogin == null || now.getTime() - lastLogin.getLoginDate().getTime() > 5*60*1000) {
                 userLoginId = counterLocalService.increment();
                 UserLogin userLogin = userLoginLocalService.createUserLogin(userLoginId);
                 userLogin.setUserId(user.getUserId());
