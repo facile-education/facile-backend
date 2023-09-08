@@ -185,7 +185,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		}
 
 		try {
-			AnonymizationUtil.anonymize();
+			new AnonymizationUtil().anonymize();
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {

@@ -330,16 +330,12 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			logger.error("Could not find user with userId = "+userId);
 		}
 
-		try {
-			if (user == null || user.getGroup() == null) {
-				logger.error("UserId "+userId+" has no group associated.");
-				return;
-			}
-		} catch (Exception e) {
-			logger.error(e);
+		if (user == null || user.getGroup() == null) {
+			logger.error("UserId "+userId+" has no group associated.");
+			return;
 		}
 
-		// Get SENDING BOX dlfolder
+		// Get SENDING BOX folder
 		DLFolder sendingBox;
 		try {
 			sendingBox = DLFolderLocalServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SENDING_BOX_FOLDER_NAME);

@@ -128,7 +128,10 @@ public class ENTDocumentConversionUtil {
             }).start();
 
             p.waitFor();
-        }catch(Exception e) {
+        } catch (InterruptedException ie) {
+            logger.error("InterruptedException: ", ie);
+            Thread.currentThread().interrupt();
+        } catch(Exception e) {
             logger.error(e);
         }
     }
@@ -218,15 +221,12 @@ public class ENTDocumentConversionUtil {
             // Write convert process state informations
             new Thread(() -> {
                 try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-                    String line = "";
-                    try {
-                        while((line = reader.readLine()) != null) {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
+                        String line = "";
+                        while ((line = reader.readLine()) != null) {
                             convertState.put(secureId, line);
                             logger.debug(line);
                         }
-                    } finally {
-                        reader.close();
                     }
                 } catch(IOException ioe) {
                     logger.error(ioe);
@@ -236,7 +236,10 @@ public class ENTDocumentConversionUtil {
             p.waitFor();
             fileResult = new File(fileName);
 
-        }catch(Exception e) {
+        } catch (InterruptedException ie) {
+            logger.error("InterruptedException: ", ie);
+            Thread.currentThread().interrupt();
+        } catch(Exception e) {
             logger.error(e);
         }
 

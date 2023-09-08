@@ -39,7 +39,7 @@ public class AnonymizationUtil {
     // Anonymize all sensible data: lastName, email, phones, screenname
     // Anonymize dlfileentries, dlfileversions, dlfolders
     // Lorem ipsum blog entries, messages
-    public static void anonymize() {
+    public void anonymize() {
 
         // Check if portal-ext variable is present, for more safety
         if (!PrefsPropsUtil.getString("anonymization.enabled").equals("true")) {
@@ -62,7 +62,7 @@ public class AnonymizationUtil {
         logger.info("END Anonymization");
     }
 
-    private static void anonymizeUsers () {
+    private void anonymizeUsers () {
         try {
             int nbUsers = 0;
             List<User> allUsers = UserLocalServiceUtil.getUsers(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
@@ -83,8 +83,7 @@ public class AnonymizationUtil {
                     user.setLastName(newLastName);
 
                     //String newFirstName = renameFirstName(user.getFirstName());
-                    Random r = new Random();
-                    int otherUserIndex = (r.nextInt(nbTotalUsers - 1));
+                    int otherUserIndex = (this.rand.nextInt(nbTotalUsers - 1));
                     String newFirstName = allUsers.get(otherUserIndex).getFirstName();
 
                     //logger.info("  > firstName " + user.getFirstName() + " -> " + newFirstName);
@@ -140,7 +139,7 @@ public class AnonymizationUtil {
 
     }
 
-    private static void anonymizeNews () {
+    private void anonymizeNews () {
         try {
             logger.info("Start anonymizing news ...");
             List<News> newsList = NewsLocalServiceUtil.getNewses(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
@@ -155,7 +154,7 @@ public class AnonymizationUtil {
         }
     }
 
-    private static void anonymizeMessages () {
+    private void anonymizeMessages () {
         try {
             logger.info("Start anonymizing messages ...");
             int nbMessages = 0;
@@ -181,7 +180,7 @@ public class AnonymizationUtil {
         }
     }
 
-    private static void anonymizeDlFileEntries () {
+    private void anonymizeDlFileEntries () {
         try {
             logger.info("Start anonymizing file entries ...");
             List<DLFileEntry> dlFileEntries = DLFileEntryLocalServiceUtil.getDLFileEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
@@ -203,7 +202,7 @@ public class AnonymizationUtil {
         }
     }
 
-    private static void anonymizeDlFileVersions () {
+    private void anonymizeDlFileVersions () {
         try {
             logger.info("Start anonymizing file versions ...");
             List<DLFileVersion> dlFileVersions = DLFileVersionLocalServiceUtil.getDLFileVersions(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
@@ -227,7 +226,7 @@ public class AnonymizationUtil {
         }
     }
 
-    private static void anonymizeDlFolders () {
+    private void anonymizeDlFolders () {
         try {
             logger.info("Start anonymizing folders ...");
             List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getDLFolders(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
@@ -246,7 +245,7 @@ public class AnonymizationUtil {
     }
 
 
-    private static String anonymizeContent (String inputString) {
+    private String anonymizeContent (String inputString) {
         StringBuilder anonymizedContent = new StringBuilder();
         // Pick up in Lorem Ipsum for the length of the input string
         while (anonymizedContent.length() < inputString.length()) {
@@ -258,7 +257,7 @@ public class AnonymizationUtil {
     // Remove first letter
     // Move last letter at the beginning
     // Add random letter every 3 letters
-    private static String anonymizeLastName(String lastName) {
+    private String anonymizeLastName(String lastName) {
 
         if (lastName.length() <= 2) {
             return "Zz";
@@ -270,28 +269,19 @@ public class AnonymizationUtil {
         newLastName = newLastName.toUpperCase();
 
         // Remove first letter
-        Random r = new Random();
         for (int i = 1; i < chars.length - 1; i++ ) {
             newLastName = newLastName + chars[i];
             // Add random letter every 3 letters
             if (i % 3 == 0) {
-                char randomChar = (char)(r.nextInt(26) + 'a');
+                char randomChar = (char)(this.rand.nextInt(26) + 'a');
                 newLastName += randomChar;
             }
         }
         return newLastName;
     }
 
-    private static String renameFirstName(String firstName) {
-        if (firstName.equals("")) {
-            return firstName;
-        }
-        String newFirstName = "" + firstName.toCharArray()[0];
-        newFirstName = newFirstName.toUpperCase() + firstName.substring(1).toLowerCase();
-        return newFirstName;
-    }
 
-    private static String generateScreenName(long companyId, String lastname, String firstname) {
+    private String generateScreenName(long companyId, String lastname, String firstname) {
 
         String formattedFirstName = quoteString(firstname);
         String formattedLastName = quoteString(lastname);
@@ -319,26 +309,27 @@ public class AnonymizationUtil {
             try {
                 user = UserLocalServiceUtil.fetchUserByScreenName(companyId, finalLogin);
             } catch (Exception e) {
+                // Nothing
             }
             if (user == null) {
                 found = false;
                 break;
             }
-            finalLogin = preLogin + new Random().nextInt(99);
+            finalLogin = preLogin + this.rand.nextInt(99);
         }
 
         return finalLogin;
     }
 
     private static String quoteString(String s) {
-        String res = "";
+        StringBuilder res = new StringBuilder();
         final char[] chars = s.toCharArray();
         for (final char c : chars) {
             if (((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'))) {
-                res = res + c;
+                res.append(c);
             }
         }
-        return res;
+        return res.toString();
     }
 
     private static final String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac ipsum erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean bibendum libero a varius pellentesque. Nulla mollis aliquet lorem, ut aliquam elit commodo sit amet. Fusce convallis varius nisl, eget pretium sem. Proin sit amet pretium orci, sed finibus tortor. Sed nec massa ante. Vivamus id nibh hendrerit, blandit nulla sit amet, scelerisque nisi. Morbi pulvinar rutrum urna vitae cursus.\n" +
@@ -351,4 +342,5 @@ public class AnonymizationUtil {
             "\n" +
             "Morbi est nunc, sagittis at maximus ut, lacinia at urna. Morbi consectetur, augue sed dictum dapibus, augue augue aliquam velit, ut aliquam nunc leo ut arcu. Nulla nulla lacus, volutpat eu aliquam nec, lacinia sit amet purus. Vestibulum nec consequat nisi. Aliquam congue vel quam ut fringilla. Etiam ullamcorper lectus eget sem aliquam, vel vulputate sapien egestas. Aliquam erat volutpat.";
 
+    private final Random rand = new Random();
 }

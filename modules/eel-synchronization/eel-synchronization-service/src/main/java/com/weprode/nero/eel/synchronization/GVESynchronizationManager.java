@@ -185,6 +185,9 @@ public class GVESynchronizationManager {
 
         String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_BASE_DN_GROUPS);
         Organization school = synchronizeSchool(schoolId);
+        if (school == null) {
+            return;
+        }
         processedSchoolIds.add(school.getOrganizationId());
 
         initSlotMaps(school.getOrganizationId());
@@ -2296,11 +2299,13 @@ public class GVESynchronizationManager {
 
         // Get truststore containing certification chain
         String storePassword = System.getProperty("javax.net.ssl.trustStorePassword");
-        InputStream trustStream = new FileInputStream(System.getProperty("javax.net.ssl.trustStore"));
-        char[] trustPassword = storePassword.toCharArray();
+        KeyStore trustStore;
+        try (InputStream trustStream = new FileInputStream(System.getProperty("javax.net.ssl.trustStore"))) {
+            char[] trustPassword = storePassword.toCharArray();
 
-        KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(trustStream, trustPassword);
+            trustStore = KeyStore.getInstance("JKS");
+            trustStore.load(trustStream, trustPassword);
+        }
 
         TrustManagerFactory trustFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         trustFactory.init(trustStore);

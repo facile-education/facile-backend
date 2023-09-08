@@ -45,10 +45,6 @@ import java.util.regex.Pattern;
 
 public class ExportUtils {
 
-    private ExportUtils() {
-        throw new IllegalStateException("Utility class");
-    }
-
     private static final Log logger = LogFactoryUtil.getLog(ExportUtils.class.getName());
 
     private static final String ELEVE = "eleve";
@@ -61,7 +57,7 @@ public class ExportUtils {
     private static final String IDENTIFIANT = "identifiant";
     private static final String EMAIL = "email";
 
-    public static String exportFile(long userId, long applicationId, long schoolId, String roleName) throws PortalException, SystemException {
+    public String exportFile(long userId, long applicationId, long schoolId, String roleName) throws PortalException, SystemException {
         JSONObject resultExport = new JSONObject();
 
         User currUser = UserLocalServiceUtil.getUser(userId);
@@ -140,7 +136,7 @@ public class ExportUtils {
         return resultExport.toString();
     }
 
-    private static String exportSacoche(String userRole, List<User> userList, ResourceBundle messages) throws SystemException {
+    private String exportSacoche(String userRole, List<User> userList, ResourceBundle messages) throws SystemException {
         StringBuilder file = new StringBuilder();
 
         SimpleDateFormat classicDateFormat = new SimpleDateFormat(JSONConstants.FRENCH_FORMAT);
@@ -196,7 +192,7 @@ public class ExportUtils {
         return file.toString();
     }
 
-    private static String exportParaschool(String userRole, List<User> userList, ResourceBundle messages) throws SystemException {
+    private String exportParaschool(String userRole, List<User> userList, ResourceBundle messages) throws SystemException {
         StringBuilder file = new StringBuilder();
 
         if (userRole.equalsIgnoreCase(ELEVE)) {
@@ -261,7 +257,7 @@ public class ExportUtils {
         return file.toString();
     }
 
-    private static String exportCerisePro(String userRole, List<User> userList, ResourceBundle messages) throws SystemException {
+    private String exportCerisePro(String userRole, List<User> userList, ResourceBundle messages) throws SystemException {
         StringBuilder file = new StringBuilder();
 
         if (userRole.equalsIgnoreCase(ELEVE)) {
@@ -304,7 +300,7 @@ public class ExportUtils {
     }
 
 
-    private static String exportMoodle(String userRole, List<User> listUser, ResourceBundle messages) throws SystemException {
+    private String exportMoodle(String userRole, List<User> listUser, ResourceBundle messages) throws SystemException {
         StringBuilder file = new StringBuilder();
 
         if (userRole.equalsIgnoreCase(ELEVE)) {
@@ -355,7 +351,7 @@ public class ExportUtils {
         return file.toString();
     }
 
-    private static String exportEsidoc(String userRole, List<User> userList) throws SystemException {
+    private String exportEsidoc(String userRole, List<User> userList) throws SystemException {
         StringBuilder file = new StringBuilder();
 
         final String fileHeader = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" + "<FICHES_XML>\n";
@@ -443,7 +439,7 @@ public class ExportUtils {
         return file.toString();
     }
 
-    private static String getEsidocBorrower(User user, String status, boolean hasDivision) {
+    private String getEsidocBorrower(User user, String status, boolean hasDivision) {
         StringBuilder borrower = new StringBuilder();
 
         String division = StringPool.BLANK;
@@ -475,14 +471,14 @@ public class ExportUtils {
         if (hasDivision) {
             borrower.append(division.isEmpty() ? StringPool.BLANK : "<CLASSE_M>" + division + "</CLASSE_M>\n");
         }
-        borrower.append("<MOT_DE_PASSE_M>").append(generatePassword(8)).append("</MOT_DE_PASSE_M>\n");
+        borrower.append("<MOT_DE_PASSE_M>").append(generatePassword()).append("</MOT_DE_PASSE_M>\n");
         borrower.append(jointure.isEmpty() ? StringPool.BLANK : "<IDENTITE_ENT_M>" + jointure + "</IDENTITE_ENT_M>\n");
         borrower.append("</EMPRUNTEURS>\n");
 
         return borrower.toString();
     }
 
-    private static String exportPearlTrees(String userRole, List<User> userList, ResourceBundle messages, Long etabId) throws PortalException, SystemException {
+    private String exportPearlTrees(String userRole, List<User> userList, ResourceBundle messages, Long etabId) throws PortalException, SystemException {
         StringBuilder file = new StringBuilder();
 
         Organization currentSchool = OrganizationLocalServiceUtil.getOrganization(etabId);
@@ -597,16 +593,17 @@ public class ExportUtils {
         return file.toString();
     }
 
-    private static String generatePassword(int size) {
+    private String generatePassword() {
         String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-
+        int passwordLength = 8;
         StringBuilder pwd = new StringBuilder();
-        Random rand = new Random();
-        for (int i = 0; i < size; i++) {
-            pwd.append(alphabet.charAt(rand.nextInt(alphabet.length())));
+        for (int i = 0; i < passwordLength; i++) {
+            pwd.append(alphabet.charAt(this.rand.nextInt(alphabet.length())));
         }
 
         return pwd.toString();
     }
+
+    private final Random rand = new Random();
 
 }

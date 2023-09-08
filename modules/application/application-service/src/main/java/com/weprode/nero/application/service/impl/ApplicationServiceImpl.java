@@ -210,7 +210,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
 
         try {
             result = new JSONObject(
-                    ExportUtils.exportFile(user.getUserId(), applicationId, schoolId, roleName));
+                    new ExportUtils().exportFile(user.getUserId(), applicationId, schoolId, roleName));
 
         } catch (Exception e) {
             logger.error("Error fetching applications for school " + schoolId, e);
