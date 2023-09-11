@@ -187,15 +187,18 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         List<User> mainTeachers = new ArrayList<>();
 
         try {
-            List<Organization> studentclasses = UserOrgsLocalServiceUtil.getUserClasses(student, false);
+            List<Organization> studentClasses = UserOrgsLocalServiceUtil.getUserClasses(student, false);
 
-            if (studentclasses != null && !studentclasses.isEmpty()) {
-                Organization studentclass = studentclasses.get(0);
-                List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(
-                        studentclass.getGroupId(), RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId());
+            if (studentClasses != null) {
+                for (Organization studentClass : studentClasses) {
+                    List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(
+                            studentClass.getGroupId(), RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId());
 
-                if (userGroupRoles != null && !userGroupRoles.isEmpty()) {
-                    mainTeachers.add(UserLocalServiceUtil.getUser(userGroupRoles.get(0).getUserId()));
+                    if (userGroupRoles != null) {
+                        for (UserGroupRole userGroupRole : userGroupRoles) {
+                            mainTeachers.add(UserLocalServiceUtil.getUser(userGroupRole.getUserId()));
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -222,7 +225,7 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
             n = n.substring(0, 5);
         }
 
-        String preLogin = "";
+        String preLogin;
 
         if (p.length() > 0) {
             char firstLetter = p.toCharArray()[0];
