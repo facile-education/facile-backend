@@ -1724,7 +1724,7 @@ public class GVESynchronizationManager {
                             }
 
                             // Update teachers if needed, add only if more than 1 sessionInfo (to preserve successive remove/add)
-                            updateTeachers(existingSession, teacherIdList, sessionInfosList.size() > 1);
+                            updateTeachers(existingSession, teacherIdList);
 
                             // Update parentGroupIds if needed
                             ClassCoursMappingLocalServiceUtil.updateClassCoursMapping(coursOrg.getOrganizationId(), slotData.getParentClassOrgIds());
@@ -1770,7 +1770,7 @@ public class GVESynchronizationManager {
                         if (toDeleteSession.getIsManual()) {
                             logger.info("Session "+toDeleteSession.getSessionId()+" not deleted because manually created");
                         } else {
-                            if (SessionContentLocalServiceUtil.hasSessionContent(toDeleteSession.getSessionId())
+                            if (!SessionContentLocalServiceUtil.hasSessionContent(toDeleteSession.getSessionId())
                                     && !HomeworkLocalServiceUtil.hasHomeworksGivenDuringSession(toDeleteSession.getSessionId())
                                     && !HomeworkLocalServiceUtil.hasHomeworksToDoForSession(toDeleteSession.getSessionId())) {
 
@@ -1852,13 +1852,13 @@ public class GVESynchronizationManager {
         return null;
     }
 
-    private void updateTeachers (CDTSession existingCdtSession, List<Long> newTeacherIdList, boolean addOnly) {
+    private void updateTeachers (CDTSession existingCdtSession, List<Long> newTeacherIdList) {
         try {
             boolean isDiff = false;
             List<Long> existingTeacherIds = SessionTeacherLocalServiceUtil.getTeacherIds(existingCdtSession.getSessionId());
             List<Long> teacherIdListToUpdate = new ArrayList<>(existingTeacherIds);
             for (Long existingTeacherId : existingTeacherIds) {
-                if (!newTeacherIdList.contains(existingTeacherId) && !addOnly) {
+                if (!newTeacherIdList.contains(existingTeacherId)) {
                     logger.info("++++ TeacherId is to delete : "+ existingTeacherId);
                     isDiff = true;
                     teacherIdListToUpdate.remove(existingTeacherId);
