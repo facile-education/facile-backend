@@ -21,11 +21,11 @@ import com.liferay.portal.kernel.service.http.TunnelUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 
-import com.weprode.nero.about.service.EntDetailsServiceUtil;
+import com.weprode.nero.about.service.VersionNoteServiceUtil;
 
 /**
  * Provides the HTTP utility for the
- * <code>EntDetailsServiceUtil</code> service
+ * <code>VersionNoteServiceUtil</code> service
  * utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it requires an additional
@@ -47,17 +47,17 @@ import com.weprode.nero.about.service.EntDetailsServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see EntDetailsServiceSoap
+ * @see VersionNoteServiceSoap
  * @generated
  */
-public class EntDetailsServiceHttp {
+public class VersionNoteServiceHttp {
 
 	public static org.json.JSONObject getVersionNotes(
 		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				EntDetailsServiceUtil.class, "getVersionNotes",
+				VersionNoteServiceUtil.class, "getVersionNotes",
 				_getVersionNotesParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
@@ -88,7 +88,7 @@ public class EntDetailsServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				EntDetailsServiceUtil.class, "getVersionNoteContent",
+				VersionNoteServiceUtil.class, "getVersionNoteContent",
 				_getVersionNoteContentParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
@@ -120,7 +120,7 @@ public class EntDetailsServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				EntDetailsServiceUtil.class, "createVersionNote",
+				VersionNoteServiceUtil.class, "createVersionNote",
 				_createVersionNoteParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
@@ -153,7 +153,7 @@ public class EntDetailsServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				EntDetailsServiceUtil.class, "updateVersionNote",
+				VersionNoteServiceUtil.class, "updateVersionNote",
 				_updateVersionNoteParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
@@ -180,13 +180,13 @@ public class EntDetailsServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject updateVersionNote(
+	public static org.json.JSONObject deleteVersionNote(
 		HttpPrincipal httpPrincipal, long versionNoteId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				EntDetailsServiceUtil.class, "updateVersionNote",
-				_updateVersionNoteParameterTypes4);
+				VersionNoteServiceUtil.class, "deleteVersionNote",
+				_deleteVersionNoteParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, versionNoteId);
@@ -212,39 +212,8 @@ public class EntDetailsServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject getTermsOfUse(
-		HttpPrincipal httpPrincipal) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				EntDetailsServiceUtil.class, "getTermsOfUse",
-				_getTermsOfUseParameterTypes5);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(
-		EntDetailsServiceHttp.class);
+		VersionNoteServiceHttp.class);
 
 	private static final Class<?>[] _getVersionNotesParameterTypes0 =
 		new Class[] {};
@@ -254,9 +223,7 @@ public class EntDetailsServiceHttp {
 		new Class[] {String.class, String.class};
 	private static final Class<?>[] _updateVersionNoteParameterTypes3 =
 		new Class[] {long.class, String.class, String.class};
-	private static final Class<?>[] _updateVersionNoteParameterTypes4 =
+	private static final Class<?>[] _deleteVersionNoteParameterTypes4 =
 		new Class[] {long.class};
-	private static final Class<?>[] _getTermsOfUseParameterTypes5 =
-		new Class[] {};
 
 }

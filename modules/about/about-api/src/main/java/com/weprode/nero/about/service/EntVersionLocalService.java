@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
+import com.weprode.nero.about.exception.NoSuchEntVersionException;
 import com.weprode.nero.about.model.EntVersion;
 
 import java.io.Serializable;
@@ -80,14 +81,14 @@ public interface EntVersionLocalService
 	/**
 	 * Add new ENT version with today date
 	 */
-	public EntVersion addVersion(String version, String details)
+	public EntVersion addVersionNote(String title, String content)
 		throws SystemException;
 
 	/**
 	 * Add new ENT version
 	 */
-	public EntVersion addVersion(
-			String version, String details, Date versionDate)
+	public EntVersion addVersionNote(
+			String title, String content, Date versionDate)
 		throws SystemException;
 
 	/**
@@ -219,12 +220,6 @@ public interface EntVersionLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	/**
-	 * Get all ENT versions sorted by date
-	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<EntVersion> getAllEntVersion() throws SystemException;
-
-	/**
 	 * Returns the ent version with the primary key.
 	 *
 	 * @param entVersionId the primary key of the ent version
@@ -263,7 +258,7 @@ public interface EntVersionLocalService
 	 * Get last ENT version
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public EntVersion getLastEntVersion();
+	public EntVersion getLastVersionNote();
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -281,6 +276,12 @@ public interface EntVersionLocalService
 		throws PortalException;
 
 	/**
+	 * Get all ENT versions sorted by date (the most recent un first position)
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<EntVersion> getSortedVersionNotes() throws SystemException;
+
+	/**
 	 * Updates the ent version in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
 	 * <p>
@@ -292,5 +293,9 @@ public interface EntVersionLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public EntVersion updateEntVersion(EntVersion entVersion);
+
+	public EntVersion updateVersionNote(
+			long versionNoteId, String title, String content)
+		throws NoSuchEntVersionException, SystemException;
 
 }

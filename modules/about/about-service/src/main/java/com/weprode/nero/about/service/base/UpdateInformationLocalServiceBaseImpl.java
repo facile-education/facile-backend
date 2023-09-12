@@ -42,9 +42,9 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.about.model.UpdateInformation;
 import com.weprode.nero.about.service.UpdateInformationLocalService;
 import com.weprode.nero.about.service.UpdateInformationLocalServiceUtil;
-import com.weprode.nero.about.service.persistence.EntVersionPersistence;
-import com.weprode.nero.about.service.persistence.EntVersionUserPersistence;
 import com.weprode.nero.about.service.persistence.UpdateInformationPersistence;
+import com.weprode.nero.about.service.persistence.UserReadVersionNotePersistence;
+import com.weprode.nero.about.service.persistence.VersionNotePersistence;
 
 import java.io.Serializable;
 
@@ -471,16 +471,16 @@ public abstract class UpdateInformationLocalServiceBaseImpl
 		}
 	}
 
-	@Reference
-	protected EntVersionPersistence entVersionPersistence;
-
-	@Reference
-	protected EntVersionUserPersistence entVersionUserPersistence;
-
 	protected UpdateInformationLocalService updateInformationLocalService;
 
 	@Reference
 	protected UpdateInformationPersistence updateInformationPersistence;
+
+	@Reference
+	protected UserReadVersionNotePersistence userReadVersionNotePersistence;
+
+	@Reference
+	protected VersionNotePersistence versionNotePersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

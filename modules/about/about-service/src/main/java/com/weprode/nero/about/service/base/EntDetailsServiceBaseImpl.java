@@ -27,9 +27,9 @@ import com.liferay.portal.kernel.util.PortalUtil;
 
 import com.weprode.nero.about.service.EntDetailsService;
 import com.weprode.nero.about.service.EntDetailsServiceUtil;
-import com.weprode.nero.about.service.persistence.EntVersionPersistence;
-import com.weprode.nero.about.service.persistence.EntVersionUserPersistence;
 import com.weprode.nero.about.service.persistence.UpdateInformationPersistence;
+import com.weprode.nero.about.service.persistence.UserReadVersionNotePersistence;
+import com.weprode.nero.about.service.persistence.VersionNotePersistence;
 
 import java.lang.reflect.Field;
 
@@ -132,13 +132,13 @@ public abstract class EntDetailsServiceBaseImpl
 	protected EntDetailsService entDetailsService;
 
 	@Reference
-	protected EntVersionPersistence entVersionPersistence;
-
-	@Reference
-	protected EntVersionUserPersistence entVersionUserPersistence;
-
-	@Reference
 	protected UpdateInformationPersistence updateInformationPersistence;
+
+	@Reference
+	protected UserReadVersionNotePersistence userReadVersionNotePersistence;
+
+	@Reference
+	protected VersionNotePersistence versionNotePersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

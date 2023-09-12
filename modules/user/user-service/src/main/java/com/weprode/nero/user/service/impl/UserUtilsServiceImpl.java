@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
@@ -80,6 +81,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         result.put(JSONConstants.PICTURE, portraitUrl);
         result.put(JSONConstants.THEME_COLOR, userProperties.getThemeColor());
         result.put(JSONConstants.HAS_WEBDAV_ENABLED, userProperties.getWebdavActivated());
+        result.put(JSONConstants.HAS_READ_LAST_VERSION_NOTE, UserReadVersionNoteLocalServiceUtil.hasReadLastVersionNote(user.getUserId()));
 
         // Roles
         result.put(JSONConstants.IS_ADMINISTRATOR, RoleUtilsLocalServiceUtil.isAdministrator(user));

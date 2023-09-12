@@ -64,20 +64,20 @@ public class EntVersionLocalServiceUtil {
 	/**
 	 * Add new ENT version with today date
 	 */
-	public static EntVersion addVersion(String version, String details)
+	public static EntVersion addVersionNote(String title, String content)
 		throws SystemException {
 
-		return getService().addVersion(version, details);
+		return getService().addVersionNote(title, content);
 	}
 
 	/**
 	 * Add new ENT version
 	 */
-	public static EntVersion addVersion(
-			String version, String details, java.util.Date versionDate)
+	public static EntVersion addVersionNote(
+			String title, String content, java.util.Date versionDate)
 		throws SystemException {
 
-		return getService().addVersion(version, details, versionDate);
+		return getService().addVersionNote(title, content, versionDate);
 	}
 
 	/**
@@ -237,13 +237,6 @@ public class EntVersionLocalServiceUtil {
 	}
 
 	/**
-	 * Get all ENT versions sorted by date
-	 */
-	public static List<EntVersion> getAllEntVersion() throws SystemException {
-		return getService().getAllEntVersion();
-	}
-
-	/**
 	 * Returns the ent version with the primary key.
 	 *
 	 * @param entVersionId the primary key of the ent version
@@ -290,8 +283,8 @@ public class EntVersionLocalServiceUtil {
 	/**
 	 * Get last ENT version
 	 */
-	public static EntVersion getLastEntVersion() {
-		return getService().getLastEntVersion();
+	public static EntVersion getLastVersionNote() {
+		return getService().getLastVersionNote();
 	}
 
 	/**
@@ -313,6 +306,15 @@ public class EntVersionLocalServiceUtil {
 	}
 
 	/**
+	 * Get all ENT versions sorted by date (the most recent un first position)
+	 */
+	public static List<EntVersion> getSortedVersionNotes()
+		throws SystemException {
+
+		return getService().getSortedVersionNotes();
+	}
+
+	/**
 	 * Updates the ent version in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
 	 * <p>
@@ -324,6 +326,14 @@ public class EntVersionLocalServiceUtil {
 	 */
 	public static EntVersion updateEntVersion(EntVersion entVersion) {
 		return getService().updateEntVersion(entVersion);
+	}
+
+	public static EntVersion updateVersionNote(
+			long versionNoteId, String title, String content)
+		throws com.weprode.nero.about.exception.NoSuchEntVersionException,
+			   SystemException {
+
+		return getService().updateVersionNote(versionNoteId, title, content);
 	}
 
 	public static EntVersionLocalService getService() {

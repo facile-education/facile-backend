@@ -17,3 +17,15 @@ create table About_UpdateInformation (
 	description STRING null,
 	modifyDate DATE null
 );
+
+create table About_UserReadVersionNote (
+	userId LONG not null primary key,
+	hasReadLastVersionNote BOOLEAN
+);
+
+create table About_VersionNote (
+	versionNoteId LONG not null primary key,
+	title VARCHAR(75) null,
+	content STRING null,
+	versionNoteDate DATE null
+);
