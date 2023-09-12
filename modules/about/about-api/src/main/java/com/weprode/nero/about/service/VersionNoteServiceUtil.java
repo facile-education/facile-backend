@@ -15,28 +15,32 @@
 package com.weprode.nero.about.service;
 
 /**
- * Provides the remote service utility for EntDetails. This utility wraps
- * <code>com.weprode.nero.about.service.impl.EntDetailsServiceImpl</code> and is an
+ * Provides the remote service utility for VersionNote. This utility wraps
+ * <code>com.weprode.nero.about.service.impl.VersionNoteServiceImpl</code> and is an
  * access point for service operations in application layer code running on a
  * remote server. Methods of this service are expected to have security checks
  * based on the propagated JAAS credentials because this service can be
  * accessed remotely.
  *
  * @author Brian Wing Shun Chan
- * @see EntDetailsService
+ * @see VersionNoteService
  * @generated
  */
-public class EntDetailsServiceUtil {
+public class VersionNoteServiceUtil {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.about.service.impl.EntDetailsServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
+	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.about.service.impl.VersionNoteServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static org.json.JSONObject createVersionNote(
 		java.lang.String title, java.lang.String htmlContent) {
 
 		return getService().createVersionNote(title, htmlContent);
+	}
+
+	public static org.json.JSONObject deleteVersionNote(long versionNoteId) {
+		return getService().deleteVersionNote(versionNoteId);
 	}
 
 	/**
@@ -46,10 +50,6 @@ public class EntDetailsServiceUtil {
 	 */
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
-	}
-
-	public static org.json.JSONObject getTermsOfUse() {
-		return getService().getTermsOfUse();
 	}
 
 	public static org.json.JSONObject getVersionNoteContent(
@@ -62,10 +62,6 @@ public class EntDetailsServiceUtil {
 		return getService().getVersionNotes();
 	}
 
-	public static org.json.JSONObject updateVersionNote(long versionNoteId) {
-		return getService().updateVersionNote(versionNoteId);
-	}
-
 	public static org.json.JSONObject updateVersionNote(
 		long versionNoteId, java.lang.String title,
 		java.lang.String htmlContent) {
@@ -74,10 +70,10 @@ public class EntDetailsServiceUtil {
 			versionNoteId, title, htmlContent);
 	}
 
-	public static EntDetailsService getService() {
+	public static VersionNoteService getService() {
 		return _service;
 	}
 
-	private static volatile EntDetailsService _service;
+	private static volatile VersionNoteService _service;
 
 }

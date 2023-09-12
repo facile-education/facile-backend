@@ -1,25 +1,16 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.weprode.nero.about.model.EntVersion">
-		<field name="entVersionId" type="long" />
-		<field name="version" type="String" />
-		<field name="details" type="String">
-			<hint-collection name="TEXTAREA" />
-		</field>
-		<field name="versionDate" type="Date" />
-		<field name="isLast" type="boolean" />
-	</model>
-	<model name="com.weprode.nero.about.model.EntVersionUser">
-		<field name="versionUserId" type="long" />
-		<field name="entVersionId" type="long" />
+	<model name="com.weprode.nero.about.model.UserReadVersionNote">
 		<field name="userId" type="long" />
+		<field name="hasReadLastVersionNote" type="boolean" />
 	</model>
-	<model name="com.weprode.nero.about.model.UpdateInformation">
-		<field name="updateInfoId" type="long" />
-		<field name="description" type="String">
+	<model name="com.weprode.nero.about.model.VersionNote">
+		<field name="versionNoteId" type="long" />
+		<field name="title" type="String" />
+		<field name="content" type="String">
 			<hint-collection name="TEXTAREA" />
 		</field>
-		<field name="modifyDate" type="Date" />
+		<field name="versionNoteDate" type="Date" />
 	</model>
 </model-hints>

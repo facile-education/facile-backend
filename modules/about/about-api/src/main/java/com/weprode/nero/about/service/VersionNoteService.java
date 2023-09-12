@@ -28,12 +28,12 @@ import org.json.JSONObject;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Provides the remote service interface for EntDetails. Methods of this
+ * Provides the remote service interface for VersionNote. Methods of this
  * service are expected to have security checks based on the propagated JAAS
  * credentials because this service can be accessed remotely.
  *
  * @author Brian Wing Shun Chan
- * @see EntDetailsServiceUtil
+ * @see VersionNoteServiceUtil
  * @generated
  */
 @AccessControlled
@@ -43,15 +43,18 @@ import org.osgi.annotation.versioning.ProviderType;
 	isolation = Isolation.PORTAL,
 	rollbackFor = {PortalException.class, SystemException.class}
 )
-public interface EntDetailsService extends BaseService {
+public interface VersionNoteService extends BaseService {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.about.service.impl.EntDetailsServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the ent details remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link EntDetailsServiceUtil} if injection and service tracking are not available.
+	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.about.service.impl.VersionNoteServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the version note remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link VersionNoteServiceUtil} if injection and service tracking are not available.
 	 */
 	@JSONWebService(method = "POST", value = "create-version-note")
 	public JSONObject createVersionNote(String title, String htmlContent);
+
+	@JSONWebService(method = "DELETE", value = "delete-version-note")
+	public JSONObject deleteVersionNote(long versionNoteId);
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -59,10 +62,6 @@ public interface EntDetailsService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
-
-	@JSONWebService(method = "GET", value = "get-terms-of-use")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getTermsOfUse();
 
 	@JSONWebService(method = "GET", value = "get-version-note-content")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -72,10 +71,7 @@ public interface EntDetailsService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getVersionNotes();
 
-	@JSONWebService(method = "DELETE", value = "delete-version-note")
-	public JSONObject updateVersionNote(long versionNoteId);
-
-	@JSONWebService(method = "PUT", value = "update-version-note")
+	@JSONWebService(method = "POST", value = "update-version-note")
 	public JSONObject updateVersionNote(
 		long versionNoteId, String title, String htmlContent);
 

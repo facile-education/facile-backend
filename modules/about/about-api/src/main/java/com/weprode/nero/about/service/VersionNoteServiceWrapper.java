@@ -17,24 +17,29 @@ package com.weprode.nero.about.service;
 import com.liferay.portal.kernel.service.ServiceWrapper;
 
 /**
- * Provides a wrapper for {@link EntDetailsService}.
+ * Provides a wrapper for {@link VersionNoteService}.
  *
  * @author Brian Wing Shun Chan
- * @see EntDetailsService
+ * @see VersionNoteService
  * @generated
  */
-public class EntDetailsServiceWrapper
-	implements EntDetailsService, ServiceWrapper<EntDetailsService> {
+public class VersionNoteServiceWrapper
+	implements ServiceWrapper<VersionNoteService>, VersionNoteService {
 
-	public EntDetailsServiceWrapper(EntDetailsService entDetailsService) {
-		_entDetailsService = entDetailsService;
+	public VersionNoteServiceWrapper(VersionNoteService versionNoteService) {
+		_versionNoteService = versionNoteService;
 	}
 
 	@Override
 	public org.json.JSONObject createVersionNote(
 		String title, String htmlContent) {
 
-		return _entDetailsService.createVersionNote(title, htmlContent);
+		return _versionNoteService.createVersionNote(title, htmlContent);
+	}
+
+	@Override
+	public org.json.JSONObject deleteVersionNote(long versionNoteId) {
+		return _versionNoteService.deleteVersionNote(versionNoteId);
 	}
 
 	/**
@@ -44,47 +49,37 @@ public class EntDetailsServiceWrapper
 	 */
 	@Override
 	public String getOSGiServiceIdentifier() {
-		return _entDetailsService.getOSGiServiceIdentifier();
-	}
-
-	@Override
-	public org.json.JSONObject getTermsOfUse() {
-		return _entDetailsService.getTermsOfUse();
+		return _versionNoteService.getOSGiServiceIdentifier();
 	}
 
 	@Override
 	public org.json.JSONObject getVersionNoteContent(Long versionNoteId) {
-		return _entDetailsService.getVersionNoteContent(versionNoteId);
+		return _versionNoteService.getVersionNoteContent(versionNoteId);
 	}
 
 	@Override
 	public org.json.JSONObject getVersionNotes() {
-		return _entDetailsService.getVersionNotes();
-	}
-
-	@Override
-	public org.json.JSONObject updateVersionNote(long versionNoteId) {
-		return _entDetailsService.updateVersionNote(versionNoteId);
+		return _versionNoteService.getVersionNotes();
 	}
 
 	@Override
 	public org.json.JSONObject updateVersionNote(
 		long versionNoteId, String title, String htmlContent) {
 
-		return _entDetailsService.updateVersionNote(
+		return _versionNoteService.updateVersionNote(
 			versionNoteId, title, htmlContent);
 	}
 
 	@Override
-	public EntDetailsService getWrappedService() {
-		return _entDetailsService;
+	public VersionNoteService getWrappedService() {
+		return _versionNoteService;
 	}
 
 	@Override
-	public void setWrappedService(EntDetailsService entDetailsService) {
-		_entDetailsService = entDetailsService;
+	public void setWrappedService(VersionNoteService versionNoteService) {
+		_versionNoteService = versionNoteService;
 	}
 
-	private EntDetailsService _entDetailsService;
+	private VersionNoteService _versionNoteService;
 
 }

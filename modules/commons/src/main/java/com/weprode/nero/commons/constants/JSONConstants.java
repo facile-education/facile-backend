@@ -111,6 +111,7 @@ public class JSONConstants {
     public static final String PICTURE = "picture";
     public static final String THEME_COLOR = "themeColor";
     public static final String HAS_WEBDAV_ENABLED = "hasWebdavEnabled";
+    public static final String HAS_READ_LAST_VERSION_NOTE = "hasReadLastVersionNote";
     public static final String MOBILE_PHONE = "mobilePhone";
     public static final String SMS_PHONE = "SMSPhone";
     public static final String HOME_PHONE = "homePhone";
@@ -530,10 +531,13 @@ public class JSONConstants {
     public static final String NEWS = "news";
     public static final String OTHERS = "others";
     public static final String VERSION_ID = "versionId";
+    public static final String VERSION_NOTE_ID = "versionNoteId";
     public static final String VERSION_NUMBER = "versionNumber";
     public static final String VERSION_DATE = "versionDate";
     public static final String LATEST = "latest";
     public static final String VERSIONS = "versions";
+    public static final String VERSION_NOTES = "versionNotes";
+    public static final String VERSION_NOTE_CONTENT = "content";
     public static final String VERSION_DETAILS = "versionDetails";
     public static final String TERMS_OF_USE = "termsOfUse";
     public static final String AGREED_TERMS_OF_USE = "agreedTermsOfUse";

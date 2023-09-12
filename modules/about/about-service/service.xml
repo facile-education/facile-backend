@@ -4,34 +4,19 @@
 <service-builder dependency-injector="ds" package-path="com.weprode.nero.about">
 	<namespace>About</namespace>
 
-	<entity name="EntDetails" local-service="true" remote-service="true" />
-
-	<entity name="UpdateInformation" local-service="true" remote-service="false">
-		<column name="updateInfoId" type="long" primary="true" />
-		<column name="description" type="String" />
-		<column name="modifyDate" type="Date" />
+	<entity name="VersionNote" local-service="true" remote-service="true">
+		<column name="versionNoteId" type="long" primary="true" />
+		<column name="title" type="String" />
+		<column name="content" type="String" />
+		<column name="versionNoteDate" type="Date" />
 	</entity>
 
-	<entity name="EntVersion" local-service="true" remote-service="false">
-		<column name="entVersionId" type="long" primary="true" />
-		<column name="version" type="String" />
-		<column name="details" type="String" />
-		<column name="versionDate" type="Date" />
-		<column name="isLast" type="boolean" />
+	<entity name="UserReadVersionNote" local-service="true" remote-service="false">
+		<column name="userId" type="long" primary="true"  />
+		<column name="hasReadLastVersionNote" type="boolean" />
 
-		<finder return-type="EntVersion" name="isLast">
-			<finder-column name="isLast" />
-		</finder>
-	</entity>
-
-	<entity name="EntVersionUser" local-service="true" remote-service="false">
-		<column name="versionUserId" type="long" primary="true" />
-		<column name="entVersionId" type="long" />
-		<column name="userId" type="long" />
-
-		<finder return-type="EntVersionUser" name="entVersionId_userId">
-			<finder-column name="entVersionId" />
-			<finder-column name="userId" />
+		<finder return-type="Collection" name="hasReadLastVersionNote">
+			<finder-column name="hasReadLastVersionNote" />
 		</finder>
 	</entity>
 

@@ -17,16 +17,27 @@ package com.weprode.nero.about.service.http;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
-import com.weprode.nero.about.service.EntDetailsServiceUtil;
+import com.weprode.nero.about.service.VersionNoteServiceUtil;
 
 import java.rmi.RemoteException;
 
 /**
  * Provides the SOAP utility for the
- * <code>EntDetailsServiceUtil</code> service
+ * <code>VersionNoteServiceUtil</code> service
  * utility. The static methods of this class call the same methods of the
  * service utility. However, the signatures are different because it is
  * difficult for SOAP to support certain types.
+ *
+ * <p>
+ * ServiceBuilder follows certain rules in translating the methods. For example,
+ * if the method in the service utility returns a <code>java.util.List</code>,
+ * that is translated to an array of
+ * <code>com.weprode.nero.about.model.VersionNoteSoap</code>. If the method in the
+ * service utility returns a
+ * <code>com.weprode.nero.about.model.VersionNote</code>, that is translated to a
+ * <code>com.weprode.nero.about.model.VersionNoteSoap</code>. Methods that SOAP
+ * cannot safely wire are skipped.
+ * </p>
  *
  * <p>
  * The benefits of using the SOAP utility is that it is cross platform
@@ -46,17 +57,17 @@ import java.rmi.RemoteException;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see EntDetailsServiceHttp
+ * @see VersionNoteServiceHttp
  * @deprecated As of Athanasius (7.3.x), with no direct replacement
  * @generated
  */
 @Deprecated
-public class EntDetailsServiceSoap {
+public class VersionNoteServiceSoap {
 
 	public static org.json.JSONObject getVersionNotes() throws RemoteException {
 		try {
 			org.json.JSONObject returnValue =
-				EntDetailsServiceUtil.getVersionNotes();
+				VersionNoteServiceUtil.getVersionNotes();
 
 			return returnValue;
 		}
@@ -72,7 +83,7 @@ public class EntDetailsServiceSoap {
 
 		try {
 			org.json.JSONObject returnValue =
-				EntDetailsServiceUtil.getVersionNoteContent(versionNoteId);
+				VersionNoteServiceUtil.getVersionNoteContent(versionNoteId);
 
 			return returnValue;
 		}
@@ -89,7 +100,7 @@ public class EntDetailsServiceSoap {
 
 		try {
 			org.json.JSONObject returnValue =
-				EntDetailsServiceUtil.createVersionNote(title, htmlContent);
+				VersionNoteServiceUtil.createVersionNote(title, htmlContent);
 
 			return returnValue;
 		}
@@ -106,7 +117,7 @@ public class EntDetailsServiceSoap {
 
 		try {
 			org.json.JSONObject returnValue =
-				EntDetailsServiceUtil.updateVersionNote(
+				VersionNoteServiceUtil.updateVersionNote(
 					versionNoteId, title, htmlContent);
 
 			return returnValue;
@@ -118,26 +129,12 @@ public class EntDetailsServiceSoap {
 		}
 	}
 
-	public static org.json.JSONObject updateVersionNote(long versionNoteId)
+	public static org.json.JSONObject deleteVersionNote(long versionNoteId)
 		throws RemoteException {
 
 		try {
 			org.json.JSONObject returnValue =
-				EntDetailsServiceUtil.updateVersionNote(versionNoteId);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static org.json.JSONObject getTermsOfUse() throws RemoteException {
-		try {
-			org.json.JSONObject returnValue =
-				EntDetailsServiceUtil.getTermsOfUse();
+				VersionNoteServiceUtil.deleteVersionNote(versionNoteId);
 
 			return returnValue;
 		}
@@ -149,6 +146,6 @@ public class EntDetailsServiceSoap {
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
-		EntDetailsServiceSoap.class);
+		VersionNoteServiceSoap.class);
 
 }

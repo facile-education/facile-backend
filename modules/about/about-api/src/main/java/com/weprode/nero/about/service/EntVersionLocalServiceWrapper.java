@@ -53,23 +53,23 @@ public class EntVersionLocalServiceWrapper
 	 * Add new ENT version with today date
 	 */
 	@Override
-	public com.weprode.nero.about.model.EntVersion addVersion(
-			String version, String details)
+	public com.weprode.nero.about.model.EntVersion addVersionNote(
+			String title, String content)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
-		return _entVersionLocalService.addVersion(version, details);
+		return _entVersionLocalService.addVersionNote(title, content);
 	}
 
 	/**
 	 * Add new ENT version
 	 */
 	@Override
-	public com.weprode.nero.about.model.EntVersion addVersion(
-			String version, String details, java.util.Date versionDate)
+	public com.weprode.nero.about.model.EntVersion addVersionNote(
+			String title, String content, java.util.Date versionDate)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
-		return _entVersionLocalService.addVersion(
-			version, details, versionDate);
+		return _entVersionLocalService.addVersionNote(
+			title, content, versionDate);
 	}
 
 	/**
@@ -260,17 +260,6 @@ public class EntVersionLocalServiceWrapper
 	}
 
 	/**
-	 * Get all ENT versions sorted by date
-	 */
-	@Override
-	public java.util.List<com.weprode.nero.about.model.EntVersion>
-			getAllEntVersion()
-		throws com.liferay.portal.kernel.exception.SystemException {
-
-		return _entVersionLocalService.getAllEntVersion();
-	}
-
-	/**
 	 * Returns the ent version with the primary key.
 	 *
 	 * @param entVersionId the primary key of the ent version
@@ -324,8 +313,8 @@ public class EntVersionLocalServiceWrapper
 	 * Get last ENT version
 	 */
 	@Override
-	public com.weprode.nero.about.model.EntVersion getLastEntVersion() {
-		return _entVersionLocalService.getLastEntVersion();
+	public com.weprode.nero.about.model.EntVersion getLastVersionNote() {
+		return _entVersionLocalService.getLastVersionNote();
 	}
 
 	/**
@@ -350,6 +339,17 @@ public class EntVersionLocalServiceWrapper
 	}
 
 	/**
+	 * Get all ENT versions sorted by date (the most recent un first position)
+	 */
+	@Override
+	public java.util.List<com.weprode.nero.about.model.EntVersion>
+			getSortedVersionNotes()
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _entVersionLocalService.getSortedVersionNotes();
+	}
+
+	/**
 	 * Updates the ent version in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
 	 * <p>
@@ -364,6 +364,16 @@ public class EntVersionLocalServiceWrapper
 		com.weprode.nero.about.model.EntVersion entVersion) {
 
 		return _entVersionLocalService.updateEntVersion(entVersion);
+	}
+
+	@Override
+	public com.weprode.nero.about.model.EntVersion updateVersionNote(
+			long versionNoteId, String title, String content)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			   com.weprode.nero.about.exception.NoSuchEntVersionException {
+
+		return _entVersionLocalService.updateVersionNote(
+			versionNoteId, title, content);
 	}
 
 	@Override
