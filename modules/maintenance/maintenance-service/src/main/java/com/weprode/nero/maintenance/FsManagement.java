@@ -2,6 +2,7 @@ package com.weprode.nero.maintenance;
 
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -11,27 +12,27 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.nero.document.constants.DocumentConstants;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class FsManagement {
 
-    private static final String ROOT_PATH = "/home/entnero/liferay/data/document_library/10202/";
+    private static final String ROOT_PATH = "/opt/liferay-7.4.3.40-ga40/data/document_library/10202/";
 
     private static final Log logger = LogFactoryUtil.getLog(FsManagement.class);
 
     int nbFilesWithoutAnyDbReference;
     int nbFilesWithDbReference;
     int nbFiles;
-
-    private static final String BLOG_ENTRIES = "blog_entries";
-    private static final String MESSAGE_BOARDS = "messageboards";
-    private static final String EXPORT_DATA_ENT = "exportDataENT";
-    private static final String CDT = "cahierdetexte";
+    int nbErrors;
 
     public FsManagement() {
         nbFilesWithoutAnyDbReference = 0;
         nbFilesWithDbReference = 0;
         nbFiles = 0;
+        nbErrors = 0;
     }
 
     public void exploreFileSystem() {
@@ -41,6 +42,8 @@ public class FsManagement {
         parseDirectory(rootFile);
 
         logger.info("On a total of " + nbFiles + " files, " + nbFilesWithDbReference + " were found in DB, whereas " + nbFilesWithoutAnyDbReference + " were not found in DB");
+        logger.info(nbErrors + "files deletion was in error");
+        logger.info("=======================================================================");
     }
 
 
@@ -70,7 +73,7 @@ public class FsManagement {
         nbFiles++;
 
         if (!isFileReferencedInDB(file.getAbsolutePath())) {
-            logger.info("   > file is not referenced in DB");
+            //logger.info("   > file is not referenced in DB");
             nbFilesWithoutAnyDbReference++;
         } else {
             nbFilesWithDbReference++;
@@ -85,7 +88,6 @@ public class FsManagement {
 
         String folderIdStr = "";
         String fileName = "";
-        logger.error("filePath=" + filePath);
 
         // Remove ROOT_PATH from filePath
         String filePathWithoutRoot = filePath.substring(ROOT_PATH.length());
@@ -96,11 +98,6 @@ public class FsManagement {
         // folderId is composed of the 2 first parts of the path
         folderIdStr = fileTab[0] + fileTab[1];
 
-        // Skip special paths
-        if (folderIdStr.contains(BLOG_ENTRIES) || folderIdStr.contains(MESSAGE_BOARDS) || folderIdStr.contains(EXPORT_DATA_ENT) || folderIdStr.contains(CDT)) {
-            logger.info("   Special path");
-            return true;
-        }
         // Check if the folder path corresponds to an existing DLFolder in DB
         DLFolder dlFolder = getFolderByStr(folderIdStr);
         if (dlFolder != null) {
@@ -142,6 +139,9 @@ public class FsManagement {
         }
         if (dlfe == null) {
             logger.info("   File entry could not be found for folderId="+dlFolder.getFolderId()+" and groupId="+dlFolder.getGroupId()+" and fileName="+fileName);
+            logger.info("Deleting TO DO");
+
+            logger.info("DELETION DONE");
             return false;
         } else {
             logger.info("   FOUND");
@@ -177,10 +177,21 @@ public class FsManagement {
         logger.error("Explore DB");
         int nbFilesExisting = 0;
         int nbFilesNotExisting = 0;
+        int nbUserDeleted = 0;
+        int nbOldFiles = 0;
+        int nbDeleted = 0;
+        nbErrors = 0;
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // Loop over all FileEntries
         try {
             List<DLFileEntry> dlFileEntries = DLFileEntryLocalServiceUtil.getDLFileEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+            logger.info("Got " + dlFileEntries.size() + " files to process");
+            int nbFilesProcessed = 0;
             for (DLFileEntry fileEntry : dlFileEntries) {
+                nbFilesProcessed++;
+                if (nbFilesProcessed % 100 == 0) {
+                    logger.info("Processed " + nbFilesProcessed + " files");
+                }
                 try {
                     // Check fileEntry existence on FS
                     String filePath = ROOT_PATH;
@@ -212,10 +223,24 @@ public class FsManagement {
                         UserLocalServiceUtil.getUser(fileEntry.getUserId());
                     } catch (Exception e) {
                         logger.info("   User " + fileEntry.getUserId() + " does not exist anymore -> candidate for deletion");
+                        nbUserDeleted++;
                     }
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(fileEntry.getModifiedDate());
+                    if (cal.get(Calendar.YEAR) < 2023) {
+                        nbOldFiles++;
+                    } else {
+                        logger.info(">> new File is " + fileEntry.getTitle() + " of user " + fileEntry.getUserName());
+                    }
+                    logger.info("NOT FOUND : modDate = " + sdf.format(fileEntry.getModifiedDate()) + ", folderId=" + fileEntry.getFolderId() + ", name=" + fileEntry.getName() + ", path=" + filePath);
 
+                    DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
+
+                    logger.info("DELETION DONE");
+                    nbDeleted++;
                 } catch (Exception e) {
                     logger.error("Error happened when looping over file entry " + fileEntry.getFileEntryId(), e);
+                    nbErrors++;
                 }
 
             }
@@ -223,6 +248,10 @@ public class FsManagement {
             logger.error("Error happened when looping over all file entries", e);
         }
         logger.info("END : " + nbFilesExisting + " were found on FS, whereas " + nbFilesNotExisting + " were not found on FS");
+        logger.info(nbUserDeleted + " files have their user not existing");
+        logger.info(nbOldFiles + " files are older than 2022");
+        logger.info(nbDeleted + " files were successfully deleted");
+        logger.info(nbErrors + " files were in error");
     }
 
 }

@@ -35,6 +35,11 @@ public class MaintenanceServiceWrapper
 		return _maintenanceService.addPermissions();
 	}
 
+	@Override
+	public org.json.JSONObject cleanupDropboxes() {
+		return _maintenanceService.cleanupDropboxes();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

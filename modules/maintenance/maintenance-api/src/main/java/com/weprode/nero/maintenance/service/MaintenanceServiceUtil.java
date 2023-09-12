@@ -37,6 +37,10 @@ public class MaintenanceServiceUtil {
 		return getService().addPermissions();
 	}
 
+	public static org.json.JSONObject cleanupDropboxes() {
+		return getService().cleanupDropboxes();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

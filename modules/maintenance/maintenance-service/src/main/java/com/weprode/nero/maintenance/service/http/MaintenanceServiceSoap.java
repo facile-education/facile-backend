@@ -143,6 +143,22 @@ public class MaintenanceServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject cleanupDropboxes()
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				MaintenanceServiceUtil.cleanupDropboxes();
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		MaintenanceServiceSoap.class);
 
