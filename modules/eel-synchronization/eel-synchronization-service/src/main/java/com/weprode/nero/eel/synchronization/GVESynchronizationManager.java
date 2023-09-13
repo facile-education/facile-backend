@@ -178,7 +178,7 @@ public class GVESynchronizationManager {
 
         logger.info("Synchronization END");
     }
-    
+
     private void processSchool(String schoolId) throws NamingException, PortalException {
 
         initSchoolSynchronization();
@@ -1702,8 +1702,8 @@ public class GVESynchronizationManager {
                         for (Long teacherId : teacherIdList) {
                             teacherIdsStr.append(teacherId).append(",");
                         }
-                        //logger.info("-----------------------");
-                        //logger.info("Loop over sessionInfos with fullCoursName " + sessionInfos.getFullCoursName() + " and teachers " + teacherIdsStr);
+                        logger.info("-----------------------");
+                        logger.info("Loop over sessionInfos with fullCoursName " + sessionInfos.getFullCoursName() + " and teachers " + teacherIdsStr);
                         //end tmp
 
 
@@ -1803,7 +1803,7 @@ public class GVESynchronizationManager {
 //						_log.info("Removing "+userIds.length+" members from organizationId "+toRemoveOrg.getOrganizationId()+"...");
 //						UserLocalServiceUtil.unsetOrganizationUsers(toRemoveOrg.getOrganizationId(), userIds);
 //					}
-//							
+//
 //					_log.info("Removing obsolete organization "+toRemoveOrg.getName()+" (with oganizationId "+toRemoveOrg.getOrganizationId());
 //					OrganizationLocalServiceUtil.deleteOrganization(toRemoveOrg.getOrganizationId());
 //
@@ -1860,7 +1860,8 @@ public class GVESynchronizationManager {
             boolean isDiff = false;
             List<Long> existingTeacherIds = SessionTeacherLocalServiceUtil.getTeacherIds(existingCdtSession.getSessionId());
             List<Long> teacherIdListToUpdate = new ArrayList<>(existingTeacherIds);
-            for (Long existingTeacherId : existingTeacherIds) {
+            for (int teacherIdx = 0 ; teacherIdx < existingTeacherIds.size() ; teacherIdx++) {
+                long existingTeacherId = existingTeacherIds.get(teacherIdx);
                 if (!newTeacherIdList.contains(existingTeacherId)) {
                     logger.info("++++ TeacherId is to delete : "+ existingTeacherId);
                     isDiff = true;
@@ -1912,8 +1913,9 @@ public class GVESynchronizationManager {
         } else if (sessionCandidates.size() == 1) {
             // If only 1 result, check that fullCoursName OR room are the same
             logger.info("1 session candidate");
-            if (sessionCandidates.get(0).getFullCoursName().contains(fullCoursName) || sessionCandidates.get(0).getRoom().equals(room)) {
-                logger.info(" -> fullCoursName or room are the same -> returning this 1 session");
+            //if (sessionCandidates.get(0).getFullCoursName().contains(fullCoursName) || sessionCandidates.get(0).getRoom().equals(room)) {
+            if (sessionCandidates.get(0).getRoom().equals(room)) {
+                logger.info(" -> room is the same -> returning this 1 session");
                 return sessionCandidates.get(0);
             }
         } else {
@@ -1951,7 +1953,7 @@ public class GVESynchronizationManager {
     private List<SessionInfos> getSessionInfos(String slot, SlotData slotData) {
         List<SessionInfos> sessionInfosList = new ArrayList<>();
 
-        logger.debug(" >> slot = " + slot);
+        logger.info(" >> slot = " + slot);
 
         // Convert slot to day number and hour number
         int slotDay = getSlotDay(slot);
@@ -1966,6 +1968,7 @@ public class GVESynchronizationManager {
         // First loop over TeacherFrequencies and calculate a list of dates for each frequency
         for (TeacherFrequency teacherFrequency : slotData.getTeacherFrequencyList()) {
             String frequency = teacherFrequency.getFrequency();
+            logger.info("Loop1 : frequency = " + frequency);
             try {
                 Date rangeStartDate;
                 Date rangeEndDate;
@@ -2030,21 +2033,25 @@ public class GVESynchronizationManager {
         for (int i = 0 ; i < slotData.getTeacherFrequencyList().size() ; i++) {
 
             TeacherFrequency teacherFrequency = slotData.getTeacherFrequencyList().get(i);
+            logger.info("Loop2 : teacherFrequency with teacherId " + teacherFrequency.getTeacherId() + " and frequency " + teacherFrequency.getFrequency());
 
             for (Date date : teacherFrequency.getDates()) {
 
                 List<Long> teacherIds = new ArrayList<>();
                 teacherIds.add(teacherFrequency.getTeacherId());
 
-                // Check if this date belongs to other TeacherFrequencies's range, with same fullCoursName
+                // Check if this date belongs to other TeacherFrequencies's range, with same short-CoursName
                 if (slotData.getTeacherFrequencyList().size() > 1) {
                     for (int j = 0 ; j <  slotData.getTeacherFrequencyList().size() ; j++) {
                         TeacherFrequency otherTeacherFrequency = slotData.getTeacherFrequencyList().get(j);
-                        if (j > i && teacherFrequency.getFullCoursName().equals(otherTeacherFrequency.getFullCoursName())) {
+                        if (j > i && getSessionName(teacherFrequency.getFullCoursName()).equals(getSessionName(otherTeacherFrequency.getFullCoursName()))) {
+                            logger.info("Date " + date.toString() + " : comparing with teacherFrequency with teacherId " + otherTeacherFrequency.getTeacherId() + " and frequency " + otherTeacherFrequency.getFrequency());
                             // Loop over other teacherfrequency dates
                             List<Date> otherDateList = new ArrayList<>(otherTeacherFrequency.getDates());
-                            for (Date otherDate : otherDateList) {
+                            for (int dateIdx = 0 ; dateIdx < otherDateList.size() ; dateIdx++) {
+                                Date otherDate = otherDateList.get(dateIdx);
                                 if (isSameDayAndHour(date, otherDate)) {
+                                    logger.info("  is same day : " + otherDate.toString());
 
                                     // Add teacher in the list
                                     if (!teacherIds.contains(otherTeacherFrequency.getTeacherId())) {
@@ -2052,7 +2059,8 @@ public class GVESynchronizationManager {
                                     }
 
                                     // Remove date from the other's date list so that it will not be processed after
-                                    otherTeacherFrequency.getDates().remove(date);
+                                    slotData.getTeacherFrequencyList().get(j).getDates().remove(dateIdx);
+                                    logger.info("other TeacherFrequency now has " + slotData.getTeacherFrequencyList().get(j).getDates().size() + " dates left");
                                 }
                             }
                         }
@@ -2073,6 +2081,7 @@ public class GVESynchronizationManager {
                 cal.set(Calendar.MINUTE, slotEndMinute);
                 Date endDate = cal.getTime();
 
+                logger.info("Create sessionInfos from " + startDate.toString() + " to " + endDate.toString() + ", coursName= " + teacherFrequency.getFullCoursName() + " and " + teacherIds.size() + " teachers");
                 SessionInfos sessionInfos = new SessionInfos(startDate, endDate, teacherFrequency.getFullCoursName(), teacherIds);
                 sessionInfosList.add(sessionInfos);
             }
@@ -2515,7 +2524,7 @@ public class GVESynchronizationManager {
             return !this.getSmogCours().isEmpty() || isDirectoryError() || !unknownSirh.isEmpty() || !unknownRoles.isEmpty();
         }
     }
-    
+
     public void sendReport(long schoolId) {
 
         if (!reportData.hasErrors()) {
@@ -2617,5 +2626,5 @@ public class GVESynchronizationManager {
     private static final String CSV_SEPARATOR = ",";
 
     static LdapContext ctx = null;
-    
+
 }
