@@ -249,7 +249,7 @@ public class GVESynchronizationManager {
         vacations = HolidayLocalServiceUtil.getHolidays();
     }
 
-    private Organization synchronizeSchool (String schoolId) {
+    private Organization synchronizeSchool (String schoolId) throws NamingException {
 
         // Get school informations
         String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_BASE_DN_GROUPS);
@@ -275,6 +275,7 @@ public class GVESynchronizationManager {
                 } catch (Exception e) {
                     logger.error("Error when creating school with name "+schoolName, e);
                 }
+
                 OrgMapping orgMapping = null;
                 try {
                     orgMapping = OrgMappingLocalServiceUtil.getOrgMapping(schoolId);
@@ -284,13 +285,15 @@ public class GVESynchronizationManager {
                 if (school != null && orgMapping == null) {
                     OrgMappingLocalServiceUtil.addOrgMapping(school, schoolId);
                 }
-
             }
         } catch (NamingException e) {
             logger.error("LDAP error when synchronizing school " + schoolId, e);
+            // Re-throw Exception to stop synchronization in case of LDAP exception
+            throw e;
         } catch (Exception e) {
             logger.error("Error while synchronizing school " + schoolId, e);
         }
+
         return school;
     }
 
