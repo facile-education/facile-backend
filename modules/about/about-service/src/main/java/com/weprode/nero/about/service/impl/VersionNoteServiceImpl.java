@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.about.model.VersionNote;
-import com.weprode.nero.about.service.EntVersionLocalServiceUtil;
 import com.weprode.nero.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.nero.about.service.VersionNoteLocalServiceUtil;
 import com.weprode.nero.about.service.base.VersionNoteServiceBaseImpl;

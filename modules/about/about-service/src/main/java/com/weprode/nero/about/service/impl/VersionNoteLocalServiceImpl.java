@@ -20,11 +20,8 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.weprode.nero.about.exception.NoSuchEntVersionException;
 import com.weprode.nero.about.exception.NoSuchVersionNoteException;
-import com.weprode.nero.about.model.EntVersion;
 import com.weprode.nero.about.model.VersionNote;
-import com.weprode.nero.about.service.EntVersionLocalServiceUtil;
 import com.weprode.nero.about.service.VersionNoteLocalServiceUtil;
 import com.weprode.nero.about.service.base.VersionNoteLocalServiceBaseImpl;
 
@@ -61,7 +58,7 @@ public class VersionNoteLocalServiceImpl extends VersionNoteLocalServiceBaseImpl
 	 */
 	public VersionNote getLastVersionNote() {
 		List<VersionNote> versionNotesList = getSortedVersionNotes();
-		if (versionNotesList.size() > 0) {
+		if (!versionNotesList.isEmpty()) {
 			return versionNotesList.get(0);
 		} else {
 			logger.debug("No versionNote to fetch");

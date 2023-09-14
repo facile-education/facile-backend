@@ -43,8 +43,6 @@ public class UserReadVersionNoteLocalServiceImpl extends UserReadVersionNoteLoca
 		}
 	}
 
-	// TODO: addNewVersionNoteForRoles
-
 	public boolean hasReadLastVersionNote (long userId) {
 		UserReadVersionNote userReadVersionNote;
 		try {
