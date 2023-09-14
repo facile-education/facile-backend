@@ -14,7 +14,9 @@ import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.safety.Safelist;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,6 @@ public class MobileNotification {
 	}
 
 	private static final Log logger = LogFactoryUtil.getLog(MobileNotification.class);
-	
-	private static final String IOS_OPERATING_SYSTEM = "iOS";
 
 	// TODO use these constants in future menu service
 	// These path must map the ones defined in front code
@@ -60,20 +60,14 @@ public class MobileNotification {
 			for (MobileDevice device : userDeviceList) {
 				try {
 					// Cannot use subtitle on Android devices
-					String notificationTitle = title;
-					String notificationSubtitle = subtitle;
-					if (!device.getOperatingSystem().equals(IOS_OPERATING_SYSTEM) && !subtitle.isEmpty()) {
-						notificationTitle += " : " + subtitle;
-						notificationSubtitle = "";
-					}
+					String notificationTitle = title + " : " + subtitle;
 
 					logger.info("Sending push notification to " + recipient.getFullName() + "(" + recipientId + "). DeviceId is " + device.getMobileDeviceId()+", redirect="+redirect);
 
 					String escapedTitle = formatHtml(notificationTitle, 70);
-					String escapedSubTitle = formatHtml(notificationSubtitle, 70);
 					String escapedMessage = formatHtml(message, 200);
 
-					JSONObject response = FCMNotification.pushFCMNotification(device.getManufacturerDeviceId(), escapedTitle, escapedSubTitle, escapedMessage, redirect);
+					JSONObject response = FCMNotification.pushFCMNotification(device.getManufacturerDeviceId(), escapedTitle, "", escapedMessage, redirect);
 					String results = response.getJSONArray("results").toString();
 					if (results.contains("NotRegistered") || results.contains("InvalidRegistration")) {
 						logger.info("Received '" + results + "' failure message so remove device " + device.getMobileDeviceId() + " for user id " + device.getUserId());
@@ -122,8 +116,13 @@ public class MobileNotification {
 		Document.OutputSettings outputSettings = new Document.OutputSettings();
 		outputSettings.prettyPrint(false);
 		jsoupDoc.outputSettings(outputSettings);
-		jsoupDoc.select("br").before("\\n");
-		jsoupDoc.select("p").before("\\n");
+
+		// Select all <p> tag except the first one
+		Elements paragraphs = jsoupDoc.select("p:not(:first-child)");
+		for (Element paragraph : paragraphs) {
+			paragraph.before("\\n");
+		}
+
 		String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
 		String formattedString = Jsoup.clean(str, "", Safelist.none(), outputSettings).replaceAll("&nbsp;", "");
 		if (formattedString.length() > maxSize) {
