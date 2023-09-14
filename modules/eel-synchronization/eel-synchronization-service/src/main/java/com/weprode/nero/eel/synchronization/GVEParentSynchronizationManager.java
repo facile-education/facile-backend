@@ -451,11 +451,12 @@ public class GVEParentSynchronizationManager {
                     logger.info("Found matching parent " + parent1.getFullName() + " among existing parents");
                     password1 = existingPasswords.get(parent1.getUserId());
                 }
-                assert parent1 != null;
-                addParentToPasswordMap(student, parent1, password1);
 
-                logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent1.getFullName());
-                UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent1.getUserId());
+                if (parent1 != null) {
+                    addParentToPasswordMap(student, parent1, password1);
+                    logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent1.getFullName());
+                    UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent1.getUserId());
+                }
             } catch (EmailAddressException e) {
                 logger.error("Error creating parent " + gveParent1.getFirstName() + " " + gveParent1.getLastName() + " " + gveParent1.getEmail(), e);
                 success += " - E-mail existant Parent_1";
@@ -484,11 +485,11 @@ public class GVEParentSynchronizationManager {
                     logger.info("Found matching parent " + parent2.getFullName() + " among existing parents");
                     password2 = existingPasswords.get(parent2.getUserId());
                 }
-                assert parent2 != null;
-                addParentToPasswordMap(student, parent2, password2);
-
-                logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent2.getFullName());
-                UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent2.getUserId());
+                if (parent2 != null) {
+                    addParentToPasswordMap(student, parent2, password2);
+                    logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent2.getFullName());
+                    UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent2.getUserId());
+                }
             } catch (EmailAddressException e) {
                 logger.error("Error creating parent " + gveParent2.getFirstName() + " " + gveParent2.getLastName() + " " + gveParent2.getEmail(), e);
                 success += " - E-mail existant Parent_2";
@@ -505,20 +506,23 @@ public class GVEParentSynchronizationManager {
             // Fetch parent among existing parents
             try {
                 parent3 = getParent(gveParent3.getLastName(), gveParent3.getFirstName(), gveParent3.getEmail());
+                String password3 = "";
                 if (parent3 == null) {
                     logger.info("Create new parent3");
 
-                    String password3 = generatePassword();
+                    password3 = generatePassword();
                     parent3 = createParent(gveParent3.getLastName(), GVESynchronizationUtils.formatName(gveParent3.getFirstName()), gveParent3.getEmail(), gveParent3.getPhone(), password3, gveParent3.getLink());
 
-                    assert parent3 != null;
-                    addParentToPasswordMap(student, parent3, password3);
                 } else {
                     logger.info("Found matching parent " + parent3.getFullName() + " among existing parents");
+                    password3 = existingPasswords.get(parent3.getUserId());
                 }
 
-                logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent3.getFullName());
-                UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent3.getUserId());
+                if (parent3 != null) {
+                    addParentToPasswordMap(student, parent3, password3);
+                    logger.info("Adding child/parent relationship between " + student.getFullName() + " and " + parent3.getFullName());
+                    UserRelationshipLocalServiceUtil.createUserRelationship(student.getUserId(), parent3.getUserId());
+                }
             } catch (EmailAddressException e) {
                 logger.error("Error creating parent " + gveParent3.getFirstName() + " " + gveParent3.getLastName() + " " + gveParent3.getEmail(), e);
                 success += " - E-mail existant Parent_3";
