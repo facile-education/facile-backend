@@ -73,6 +73,13 @@ public class CustomAuthVerifier implements AuthVerifier {
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();
             long userId;
 
+            // To remove after handling p_auth properly for third party tools
+            if (accessControlContext.getRequest().getRequestURI().contains("/api/jsonws/document.mindmap/")
+                    || accessControlContext.getRequest().getRequestURI().contains("/api/jsonws/document.scratch/")
+                    || accessControlContext.getRequest().getRequestURI().contains("/api/jsonws/document.geogebra/")) {
+                return authVerifierResult;
+            }
+
             AuthVerifierResult portalAuthVerifierResult = checkPortalSession(accessControlContext.getRequest(), accessControlContext.getResponse(), properties);
 
             if (portalAuthVerifierResult != null && portalAuthVerifierResult.getState() == AuthVerifierResult.State.SUCCESS) {
