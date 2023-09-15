@@ -16,19 +16,19 @@ public class SynchronizationLocalServiceImpl extends SynchronizationLocalService
 
     private static final Log logger = LogFactoryUtil.getLog(SynchronizationLocalServiceImpl.class);
 
-    public void runGVESynchronization() {
+    public void runGVESynchronization (boolean sendReport) {
         GVESynchronizationManager syncManager = new GVESynchronizationManager();
         try {
-            syncManager.runSynchronization();
+            syncManager.runSynchronization(sendReport);
         } catch (Exception e) {
             logger.error("Error while running GVE synchronization", e);
         }
     }
 
-    public void runGVEParentSynchronization() {
+    public void runGVEParentSynchronization (boolean sendReport) {
         GVEParentSynchronizationManager syncManager = new GVEParentSynchronizationManager();
         try {
-            syncManager.runParentSynchronization();
+            syncManager.runParentSynchronization(sendReport);
         } catch (Exception e) {
             logger.error("Error while running GVE parent synchronization", e);
         }

@@ -43,12 +43,12 @@ public class SynchronizationLocalServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static void runGVEParentSynchronization() {
-		getService().runGVEParentSynchronization();
+	public static void runGVEParentSynchronization(boolean sendReport) {
+		getService().runGVEParentSynchronization(sendReport);
 	}
 
-	public static void runGVESynchronization() {
-		getService().runGVESynchronization();
+	public static void runGVESynchronization(boolean sendReport) {
+		getService().runGVESynchronization(sendReport);
 	}
 
 	public static SynchronizationLocalService getService() {

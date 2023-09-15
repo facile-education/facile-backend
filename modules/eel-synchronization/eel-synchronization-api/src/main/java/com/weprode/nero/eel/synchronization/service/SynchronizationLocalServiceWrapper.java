@@ -44,13 +44,13 @@ public class SynchronizationLocalServiceWrapper
 	}
 
 	@Override
-	public void runGVEParentSynchronization() {
-		_synchronizationLocalService.runGVEParentSynchronization();
+	public void runGVEParentSynchronization(boolean sendReport) {
+		_synchronizationLocalService.runGVEParentSynchronization(sendReport);
 	}
 
 	@Override
-	public void runGVESynchronization() {
-		_synchronizationLocalService.runGVESynchronization();
+	public void runGVESynchronization(boolean sendReport) {
+		_synchronizationLocalService.runGVESynchronization(sendReport);
 	}
 
 	@Override

@@ -52,8 +52,8 @@ public interface SynchronizationLocalService extends BaseLocalService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	public void runGVEParentSynchronization();
+	public void runGVEParentSynchronization(boolean sendReport);
 
-	public void runGVESynchronization();
+	public void runGVESynchronization(boolean sendReport);
 
 }

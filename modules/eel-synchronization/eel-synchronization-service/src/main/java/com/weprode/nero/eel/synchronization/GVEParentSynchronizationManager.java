@@ -157,7 +157,7 @@ public class GVEParentSynchronizationManager {
 //		return null;
 //	}
 
-    public void runParentSynchronization() throws Exception {
+    public void runParentSynchronization(boolean sendReport) throws Exception {
         companyId = PortalUtil.getDefaultCompanyId();
         rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(companyId);
 
@@ -338,32 +338,34 @@ public class GVEParentSynchronizationManager {
 
             archiveFile(parentsFile, exportDirectory);
 
-            // Generate password file
-            byte[] report = createCsvReport(errorLines);
+            if (sendReport) {
+                // Generate password file
+                byte[] report = createCsvReport(errorLines);
 
-            // Send it to direction members
-            List<Long> organizationIds = new ArrayList<>();
-            organizationIds.add(schoolId);
-            List<Long> roleIds = new ArrayList<>();
-            roleIds.add(RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId());
+                // Send it to direction members
+                List<Long> organizationIds = new ArrayList<>();
+                organizationIds.add(schoolId);
+                List<Long> roleIds = new ArrayList<>();
+                roleIds.add(RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId());
 
-            List<Long> recipientList = new ArrayList<>();
-            List<User> directionMembers = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-            for (User directionMember : directionMembers) {
-                logger.info("Send report to " + directionMember.getFullName());
-                recipientList.add(directionMember.getUserId());
+                List<Long> recipientList = new ArrayList<>();
+                List<User> directionMembers = UserSearchLocalServiceUtil.searchUsers("", organizationIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+                for (User directionMember : directionMembers) {
+                    logger.info("Send report to " + directionMember.getFullName());
+                    recipientList.add(directionMember.getUserId());
+                }
+
+                String fileName = "Rapport_synchronization_parents_" + new SimpleDateFormat("yyyy-MM-dd_HHmm").format(new Date()) + ".csv";
+                InputStream is = new ByteArrayInputStream(report);
+                long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
+                User noReplyUser = UserLocalServiceUtil.getUser(noReplyUserId);
+                FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(noReplyUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(noReplyUserId).getFolderId(), "folderName", fileName, is, "html/text");
+                String subject = "Synchronization des parents";
+                String content = "Bonjour,<br><br>Veuillez trouver ci-joint la rapport de synchronization des parents pour votre etablissement.<br><br>Cordialement,<br>L'équipe technique";
+                List<Long> attachFileIds = new ArrayList<>();
+                attachFileIds.add(fileEntry.getFileEntryId());
+                MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_REPORT, attachFileIds, 0, 0);
             }
-
-            String fileName = "Rapport_synchronization_parents_" + new SimpleDateFormat("yyyy-MM-dd_HHmm").format(new Date()) + ".csv";
-            InputStream is = new ByteArrayInputStream(report);
-            long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
-            User noReplyUser = UserLocalServiceUtil.getUser(noReplyUserId);
-            FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(noReplyUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(noReplyUserId).getFolderId(), "folderName", fileName, is, "html/text");
-            String subject = "Synchronization des parents";
-            String content = "Bonjour,<br><br>Veuillez trouver ci-joint la rapport de synchronization des parents pour votre etablissement.<br><br>Cordialement,<br>L'équipe technique";
-            List<Long> attachFileIds = new ArrayList<>();
-            attachFileIds.add(fileEntry.getFileEntryId());
-            MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_REPORT, attachFileIds, 0, 0);
 
         } catch (Exception e) {
             logger.error("Error while synchronizing parents : ", e);

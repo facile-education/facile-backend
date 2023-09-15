@@ -127,6 +127,7 @@ public class GVESynchronizationManager {
 
     private long companyId;
     private Organization rootOrg;
+    private boolean sendReport;
 
     private Map<String, String> startSlotMap;
     private Map<String, String> endSlotMap;
@@ -140,9 +141,10 @@ public class GVESynchronizationManager {
     /**
      * Run the synchronization
      */
-    public void runSynchronization() {
+    public void runSynchronization(boolean doSendReport) {
 
         companyId = PortalUtil.getDefaultCompanyId();
+        sendReport = doSendReport;
 
         try {
             // Loop over schools
@@ -653,35 +655,6 @@ public class GVESynchronizationManager {
         return AffectationLocalServiceUtil.getUserAffectedOrgs(user.getUserId());
     }
 
-    // TO REMOVE WHEN NEW AFFECTATION MECHANISM IS OPERATIONAL
-//	private List<Long> getManuallyAddedOrganizations(User user) {
-//
-//		List<Long> manuallyAddedOrgIds = new ArrayList<Long>();
-//		try {
-//			Role orgUserRole = RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.ORGANIZATION_USER);
-//
-//			List<UserGroupRole> userGroupRoleList = UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId());
-//			for (UserGroupRole userGroupRole : userGroupRoleList) {
-//				if (userGroupRole.getRoleId() == orgUserRole.getRoleId()) {
-//					Group group = GroupLocalServiceUtil.getGroup(userGroupRole.getGroupId());
-//					Organization manualOrg = OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
-//
-//					// Skip archived organizations
-//					if (OrganizationDetailsLocalServiceUtil.isArchived(manualOrg.getOrganizationId())) {
-//						continue;
-//					}
-//
-//					_log.info("  Found manually added organization is "+manualOrg.getName());
-//					manuallyAddedOrgIds.add(manualOrg.getOrganizationId());
-//
-//				}
-//			}
-//		} catch (Exception e) {
-//			_log.error("Error when fetching manually added organizations for user "+user.getFullName());
-//		}
-//		return manuallyAddedOrgIds;
-//	}
-//
 
     private void synchronizeTeacherSubjects(Organization school, String subjectsDn) throws NamingException {
 
@@ -2530,6 +2503,10 @@ public class GVESynchronizationManager {
 
     public void sendReport(long schoolId) {
 
+        if (!sendReport) {
+            logger.info("Manual run -> no sending any report");
+            return;
+        }
         if (!reportData.hasErrors()) {
             logger.info("No error for school " + schoolId + " -> no sending any report");
             return;

@@ -66,7 +66,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		}
 
 		try {
-			SynchronizationLocalServiceUtil.runGVESynchronization();
+			SynchronizationLocalServiceUtil.runGVESynchronization(false);
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -95,7 +95,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		}
 
 		try {
-			SynchronizationLocalServiceUtil.runGVEParentSynchronization();
+			SynchronizationLocalServiceUtil.runGVEParentSynchronization(false);
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
