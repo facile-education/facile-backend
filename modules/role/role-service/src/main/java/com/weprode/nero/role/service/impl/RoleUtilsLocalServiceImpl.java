@@ -453,7 +453,18 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 
 		return false;
 	}
-	
+
+	public boolean isConseillerSocial(User user, long orgId) {
+		try {
+			Organization org = OrganizationLocalServiceUtil.getOrganization(orgId);
+			return UserGroupRoleLocalServiceUtil.hasUserGroupRole(user.getUserId(), org.getGroupId(), getConseillerSocialRole().getRoleId());
+		} catch (Exception e) {
+			logger.debug(e);
+		}
+
+		return false;
+	}
+
 	public boolean isInfirmiere(User user) {
 		try {
 			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getInfirmiereRole().getRoleId());
@@ -470,10 +481,19 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 		} catch (Exception e) {
 			logger.debug(e);
 		}
-
 		return false;
 	}
-	
+
+	public boolean isPsychologue(User user, long orgId) {
+		try {
+			Organization org = OrganizationLocalServiceUtil.getOrganization(orgId);
+			return UserGroupRoleLocalServiceUtil.hasUserGroupRole(user.getUserId(), org.getGroupId(), getPsychologueRole().getRoleId());
+		} catch (Exception e) {
+			logger.debug(e);
+		}
+		return false;
+	}
+
 	public boolean isAssistantTechnique(User user) {
 		try {
 			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getAssistantTechniqueRole().getRoleId());

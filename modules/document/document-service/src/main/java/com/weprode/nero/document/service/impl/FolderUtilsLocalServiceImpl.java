@@ -628,20 +628,26 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			User user = UserLocalServiceUtil.getUser(userId);
 			Folder folder = DLAppServiceUtil.getFolder(folderId);
 			Group folderGroup = GroupLocalServiceUtil.getGroup(folder.getGroupId());
-			if (folderGroup.isOrganization()
-					&& !OrganizationLocalServiceUtil.hasUserOrganization(user.getUserId(), folderGroup.getClassPK())
+			if (folderGroup.isOrganization()) {
+				if ( !OrganizationLocalServiceUtil.hasUserOrganization(user.getUserId(), folderGroup.getClassPK())
 					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)
-					&& !RoleUtilsLocalServiceUtil.isDoyen(user, folderGroup.getClassPK())) {
-				logger.info("User " + user.getUserId() + " tries to access folder " + folderId + " of org group " + folderGroup.getGroupId() + " but does not belong to it");
-				return false;
-			} else if (folderGroup.isRegularSite()
-					&& !GroupLocalServiceUtil.hasUserGroup(user.getUserId(), folderGroup.getGroupId())
+					&& !RoleUtilsLocalServiceUtil.isDoyen(user, folderGroup.getClassPK())
+					&& !RoleUtilsLocalServiceUtil.isPsychologue(user, folderGroup.getClassPK())
+					&& !RoleUtilsLocalServiceUtil.isConseillerSocial(user, folderGroup.getClassPK())) {
+					logger.info("User " + user.getUserId() + " tries to access folder " + folderId + " of org group " + folderGroup.getGroupId() + " but does not belong to it");
+					return false;
+				}
+			} else if (folderGroup.isRegularSite()) {
+				if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), folderGroup.getGroupId())
 					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-				logger.info("User " + user.getUserId() + " tries to access folder " + folderId + " of group " + folderGroup.getGroupId() + " but does not belong to it");
-				return false;
-			} else if (folderGroup.isUser() && folder.getGroupId() != user.getGroupId()) {
-				logger.info("User " + user.getUserId() + " tries to access user's folder " + folderId + " of group " + folderGroup.getGroupId() + " but it is not his");
-				return false;
+					logger.info("User " + user.getUserId() + " tries to access folder " + folderId + " of group " + folderGroup.getGroupId() + " but does not belong to it");
+					return false;
+				}
+			} else if (folderGroup.isUser()) {
+				if (folder.getGroupId() != user.getGroupId()) {
+					logger.info("User " + user.getUserId() + " tries to access user's folder " + folderId + " of group " + folderGroup.getGroupId() + " but it is not his");
+					return false;
+				}
 			} else {
 				logger.info("isAllowedToAccessFolder on folderId " + folderId + " that is of different type");
 			}
