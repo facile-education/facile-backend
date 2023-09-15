@@ -14,8 +14,10 @@
 
 package com.weprode.nero.document.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
@@ -71,6 +73,10 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 
 			for (long folderId : folderIds) {
 				try {
+					if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+						logger.info("User " + user.getFullName() + " tries to delete folder " + folderId + " but has no permission");
+						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+					}
 					FolderUtilsLocalServiceUtil.deleteFolder(user.getUserId(), folderId);
 				} catch (Exception e) {
 					JSONObject failedEntity = new JSONObject();
@@ -81,6 +87,11 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 			}
 			for (final long fileEntityId : fileIds) {
 				try {
+					FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntityId);
+					if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+						logger.info("User " + user.getFullName() + " tries to delete file " + fileEntityId + " but has no permission");
+						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+					}
 					FileUtilsLocalServiceUtil.deleteFile(user.getUserId(), fileEntityId);
 				} catch (Exception e) {
 					JSONObject failedEntity = new JSONObject();

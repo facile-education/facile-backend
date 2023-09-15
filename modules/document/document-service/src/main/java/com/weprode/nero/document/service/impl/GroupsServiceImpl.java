@@ -40,7 +40,6 @@ import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.VersionLocalServiceUtil;
 import com.weprode.nero.document.service.base.GroupsServiceBaseImpl;
 import com.weprode.nero.document.utils.DLAppJsonFactory;
-import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -108,9 +107,12 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 				// Specific group's folderId
 				long folderId = parseLong(nodePath);
 				Folder folder = DLAppServiceUtil.getFolder(folderId);
-				if ((FolderUtilsLocalServiceUtil.isGroupFolder(folder) &&
-						(!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(getGuestOrUserId(), folder, ActionKeys.VIEW) || !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(folder.getGroupId()))) ||
-						(!FolderUtilsLocalServiceUtil.isGroupFolder(folder) && folder.getGroupId() != user.getGroupId())) {
+				if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+					logger.info("User " + user.getFullName() + " tries to fetch content of folderId " + folderId + " but has no permission");
+					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				}
+				if (FolderUtilsLocalServiceUtil.isGroupFolder(folder) &&
+						!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(getGuestOrUserId(), folder, ActionKeys.VIEW)) {
 					logger.info("User " + user.getFullName() + " tries to get all group entities of folder " + folderId + " but has no permission");
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 				}
@@ -143,10 +145,15 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 			}
 
 			if (!nodePath.equals(COLLABORATIVE)) {
-				Folder folder = DLAppServiceUtil.getFolder(parseLong(nodePath));
+				long folderId = parseLong(nodePath);
+				Folder folder = DLAppServiceUtil.getFolder(folderId);
 				Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
 				if (group.isUserGroup()) {
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+				}
+				if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
+					logger.info("User " + user.getFullName() + " tries to fetch content of folderId " + folderId + " but has no permission");
+					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 				}
 			}
 		} catch (Exception e) {
