@@ -2,7 +2,6 @@ package com.weprode.nero.maintenance;
 
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
-import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -14,7 +13,6 @@ import com.weprode.nero.document.constants.DocumentConstants;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 public class FsManagement {
@@ -178,7 +176,6 @@ public class FsManagement {
         int nbFilesExisting = 0;
         int nbFilesNotExisting = 0;
         int nbUserDeleted = 0;
-        int nbOldFiles = 0;
         int nbDeleted = 0;
         nbErrors = 0;
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -225,16 +222,11 @@ public class FsManagement {
                         logger.info("   User " + fileEntry.getUserId() + " does not exist anymore -> candidate for deletion");
                         nbUserDeleted++;
                     }
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(fileEntry.getModifiedDate());
-                    if (cal.get(Calendar.YEAR) < 2023) {
-                        nbOldFiles++;
-                    } else {
-                        logger.info(">> new File is " + fileEntry.getTitle() + " of user " + fileEntry.getUserName());
-                    }
-                    logger.info("NOT FOUND : modDate = " + sdf.format(fileEntry.getModifiedDate()) + ", folderId=" + fileEntry.getFolderId() + ", name=" + fileEntry.getName() + ", path=" + filePath);
+                    logger.info("NOT FOUND : modDate = " + sdf.format(fileEntry.getModifiedDate()) + ", folderId=" + fileEntry.getFolderId() + ", name=" + fileEntry.getName());
+                    logger.info("          : file=" + fileEntry.getTitle() + ", author=" + fileEntry.getUserName());
+                    logger.info("          : path=" + filePath);
 
-                    DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
+                    DLFileEntryLocalServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
 
                     logger.info("DELETION DONE");
                     nbDeleted++;
@@ -249,7 +241,6 @@ public class FsManagement {
         }
         logger.info("END : " + nbFilesExisting + " were found on FS, whereas " + nbFilesNotExisting + " were not found on FS");
         logger.info(nbUserDeleted + " files have their user not existing");
-        logger.info(nbOldFiles + " files are older than 2022");
         logger.info(nbDeleted + " files were successfully deleted");
         logger.info(nbErrors + " files were in error");
     }
