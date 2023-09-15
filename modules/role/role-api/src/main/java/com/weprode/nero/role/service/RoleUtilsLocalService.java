@@ -22,9 +22,10 @@ import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
-import org.osgi.annotation.versioning.ProviderType;
 
 import java.util.List;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Provides the local service interface for RoleUtils. Methods of this
@@ -196,6 +197,9 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public boolean isConseillerSocial(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isConseillerSocial(User user, long orgId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isDirectionMember(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -248,6 +252,9 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isPsychologue(User user);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isPsychologue(User user, long orgId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isSchoolAdmin(User user);

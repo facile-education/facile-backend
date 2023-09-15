@@ -294,6 +294,13 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public boolean isConseillerSocial(
+		com.liferay.portal.kernel.model.User user, long orgId) {
+
+		return _roleUtilsLocalService.isConseillerSocial(user, orgId);
+	}
+
+	@Override
 	public boolean isDirectionMember(
 		com.liferay.portal.kernel.model.User user) {
 
@@ -389,6 +396,13 @@ public class RoleUtilsLocalServiceWrapper
 	@Override
 	public boolean isPsychologue(com.liferay.portal.kernel.model.User user) {
 		return _roleUtilsLocalService.isPsychologue(user);
+	}
+
+	@Override
+	public boolean isPsychologue(
+		com.liferay.portal.kernel.model.User user, long orgId) {
+
+		return _roleUtilsLocalService.isPsychologue(user, orgId);
 	}
 
 	@Override

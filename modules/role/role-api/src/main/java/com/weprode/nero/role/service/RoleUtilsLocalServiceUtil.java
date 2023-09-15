@@ -271,6 +271,12 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().isConseillerSocial(user);
 	}
 
+	public static boolean isConseillerSocial(
+		com.liferay.portal.kernel.model.User user, long orgId) {
+
+		return getService().isConseillerSocial(user, orgId);
+	}
+
 	public static boolean isDirectionMember(
 		com.liferay.portal.kernel.model.User user) {
 
@@ -367,6 +373,12 @@ public class RoleUtilsLocalServiceUtil {
 		com.liferay.portal.kernel.model.User user) {
 
 		return getService().isPsychologue(user);
+	}
+
+	public static boolean isPsychologue(
+		com.liferay.portal.kernel.model.User user, long orgId) {
+
+		return getService().isPsychologue(user, orgId);
 	}
 
 	public static boolean isSchoolAdmin(
