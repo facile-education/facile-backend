@@ -15,25 +15,25 @@
 package com.weprode.nero.document.service.impl;
 
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
-
-
-import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.nero.commons.JSONProxy;
-import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
-import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.VersionLocalServiceUtil;
 import com.weprode.nero.document.service.base.VersionServiceBaseImpl;
-
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -66,8 +66,12 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 		try {
 			// Check permissions
 			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(fileId);
-			if ((FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(getGuestOrUserId(), fileEntry, ActionKeys.VIEW)) ||
-					(!FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && fileEntry.getGroupId() != user.getGroupId())) {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to get versions of file " + fileId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
+			if (FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(getGuestOrUserId(), fileEntry, ActionKeys.VIEW)) {
 				logger.info("User " + user.getFullName() + " tries to get versions of fileEntryId " + fileId + " but has no permission");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
@@ -96,6 +100,11 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to delete version " + version + " of file " + fileEntryId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " deletes version " + version + " for file " + fileEntryId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.deleteVersion(user, fileEntryId, version));
 		} catch (Exception e) {
@@ -120,6 +129,12 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			FileVersion fileVersion = DLAppServiceUtil.getFileVersion(fileVersionId);
+			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileVersion.getFileEntryId());
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to restore version " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " restores version " + fileVersionId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.restoreVersion(user.getUserId(), fileVersionId));
 		} catch (Exception e) {
@@ -144,6 +159,12 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			FileVersion fileVersion = DLAppServiceUtil.getFileVersion(fileVersionId);
+			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileVersion.getFileEntryId());
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to save description for version " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " saves description for version " + fileVersionId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.saveVersionDescription(fileVersionId, description));
 		} catch (Exception e) {
@@ -168,6 +189,11 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
+			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to create major version of file " + fileEntryId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
 			logger.info("User " + user.getFullName() + " creates major version for file " + fileEntryId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.createMajorVersion(user, fileEntryId));
 		} catch (Exception e) {

@@ -122,6 +122,11 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 		try {
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 			DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to get scratch file for fileVersion " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+
 			InputStream is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), dlFileVersion.getVersion());
 
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -219,6 +224,10 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 
 			} else {
 				fileName = fileName.isEmpty() ?  fileEntry.getTitle() : fileName;
+				if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+					logger.info("User " + user.getFullName() + " tries to update scratch file for fileVersion " + fileVersionId + " but has no permission");
+					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				}
 				// Update file content
 				logger.info("Updating scratch file " + fileName);
 				newFileEntry = DLAppServiceUtil.updateFileEntry(
