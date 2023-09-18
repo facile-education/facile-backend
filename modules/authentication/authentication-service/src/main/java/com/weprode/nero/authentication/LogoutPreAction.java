@@ -28,10 +28,13 @@ public class LogoutPreAction implements LifecycleAction {
             Cookie[] cookies = lifecycleEvent.getRequest().getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
-                    cookie.setValue("");
-                    cookie.setPath("/");
-                    cookie.setMaxAge(0);
-                    lifecycleEvent.getResponse().addCookie(cookie);
+                    // Preserve agreement cookie
+                    if (!cookie.getName().equals("cookiesAgreement")) {
+                        cookie.setValue("");
+                        cookie.setPath("/");
+                        cookie.setMaxAge(0);
+                        lifecycleEvent.getResponse().addCookie(cookie);
+                    }
                 }
             }
 
