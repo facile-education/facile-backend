@@ -21,6 +21,7 @@ import com.weprode.nero.agenda.service.EventPopulationLocalServiceUtil;
 import com.weprode.nero.agenda.service.EventReadLocalServiceUtil;
 import com.weprode.nero.agenda.service.base.EventLocalServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.mobile.constants.MobileConstants;
 import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -58,7 +59,8 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         event.setCompanyId(PortalUtil.getDefaultCompanyId());
         event.setAuthorId(authorId);
         event.setTitle(title);
-        event.setDescription(description);
+        String sanitizedDescription = FileUtilsLocalServiceUtil.sanitizeHTMLContent(description);
+        event.setDescription(sanitizedDescription);
         event.setLocation(location);
 
         // Update startDate with current second and milliseconds to ensure that 2 events will not have the same startDate
@@ -98,7 +100,8 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         try {
             event = eventPersistence.findByPrimaryKey(eventId);
             event.setTitle(title);
-            event.setDescription(description);
+            String sanitizedDescription = FileUtilsLocalServiceUtil.sanitizeHTMLContent(description);
+            event.setDescription(sanitizedDescription);
             event.setLocation(location);
             event.setStartDate(startDate);
             event.setEndDate(endDate);

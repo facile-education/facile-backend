@@ -10,6 +10,7 @@ import com.weprode.nero.application.model.Application;
 import com.weprode.nero.application.service.ApplicationLocalServiceUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.help.model.HelpCategory;
 import com.weprode.nero.help.model.HelpItem;
 import com.weprode.nero.help.model.HelpLink;
@@ -222,8 +223,10 @@ public class HelpUtil {
                 helpItem = HelpItemLocalServiceUtil.getHelpItem(itemId);
                 helpItem.setItemName(itemName);
                 helpItem.setVideoURL(videoUrl);
-                helpItem.setVideoDescription(videoDescription);
-                helpItem.setManual(textualHelp);
+                String sanitizedVideoDescription = FileUtilsLocalServiceUtil.sanitizeHTMLContent(videoDescription);
+                helpItem.setVideoDescription(sanitizedVideoDescription);
+                String sanitizedManual = FileUtilsLocalServiceUtil.sanitizeHTMLContent(textualHelp);
+                helpItem.setManual(sanitizedManual);
                 helpItem.setPosition(position);
                 helpItem.setLanguage(language);
                 helpItem.setIsManagement(isManagement);
@@ -296,9 +299,10 @@ public class HelpUtil {
                 JSONObject jsonQuestion = questions.getJSONObject(i);
                 String question = jsonQuestion.getString(JSONConstants.QUESTION);
                 String answer = jsonQuestion.getString(JSONConstants.ANSWER);
+                String sanitizedAnswer = FileUtilsLocalServiceUtil.sanitizeHTMLContent(answer);
 
                 // Create new question
-                HelpQuestion helpQuestion = HelpQuestionLocalServiceUtil.addHelpQuestion(itemId, question, answer);
+                HelpQuestion helpQuestion = HelpQuestionLocalServiceUtil.addHelpQuestion(itemId, question, sanitizedAnswer);
                 logger.info("Created new question for itemId "+itemId+" with id "+helpQuestion.getQuestionId());
                 updatedJsonQuestions.put(convertQuestionToJson(helpQuestion));
             }

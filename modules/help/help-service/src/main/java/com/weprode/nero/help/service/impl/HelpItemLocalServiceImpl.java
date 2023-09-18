@@ -5,6 +5,7 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.help.model.HelpItem;
 import com.weprode.nero.help.model.HelpQuestion;
 import com.weprode.nero.help.service.HelpItemLocalServiceUtil;
@@ -34,8 +35,10 @@ public class HelpItemLocalServiceImpl extends HelpItemLocalServiceBaseImpl {
             helpItem.setCategoryId(categoryId);
             helpItem.setItemName(itemName);
             helpItem.setVideoURL(videoUrl);
-            helpItem.setVideoDescription(videoDescription);
-            helpItem.setManual(manual);
+            String sanitizedVideoDescription = FileUtilsLocalServiceUtil.sanitizeHTMLContent(videoDescription);
+            helpItem.setVideoDescription(sanitizedVideoDescription);
+            String sanitizedManual = FileUtilsLocalServiceUtil.sanitizeHTMLContent(manual);
+            helpItem.setManual(sanitizedManual);
             helpItem.setLanguage(language);
             helpItem.setIsManagement(isManagement);
 

@@ -89,7 +89,8 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             News news = newsPersistence.create(counterLocalService.increment());
             news.setAuthorId(authorId);
             news.setTitle(title);
-            news.setContent(content);
+            String sanitizedContent = FileUtilsLocalServiceUtil.sanitizeHTMLContent(content);
+            news.setContent(sanitizedContent);
             news.setIsSchoolNews(isSchoolNews);
             news.setIsImportant(isImportant);
             news.setPublicationDate(publicationDate);
@@ -130,7 +131,8 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         try {
             News news = newsPersistence.fetchByPrimaryKey(newsId);
             news.setTitle(title);
-            news.setContent(content);
+            String sanitizedContent = FileUtilsLocalServiceUtil.sanitizeHTMLContent(content);
+            news.setContent(sanitizedContent);
             news.setIsImportant(isImportant);
             news.setPublicationDate(publicationDate);
             news.setExpirationDate(expirationDate);
