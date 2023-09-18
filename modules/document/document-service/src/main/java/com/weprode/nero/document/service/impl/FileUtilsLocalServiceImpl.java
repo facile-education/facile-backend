@@ -15,6 +15,7 @@
 package com.weprode.nero.document.service.impl;
 
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
+import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
@@ -152,6 +153,12 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 	public FileEntry moveFileEntry(long userId, long fileId, long destFolderId, int mode) throws SystemException, PortalException {
 		final User user = UserLocalServiceUtil.getUser(userId);
 		FileEntry originFile = DLAppServiceUtil.getFileEntry(fileId);
+
+		if (originFile.getFolderId() == destFolderId) {
+			logger.info("User " + user.getFullName() + " is moving a file into it's current folder -> do nothing.");
+			return originFile;
+		}
+
 		logger.info("User " + user.getFullName() + " moves file " + fileId + " from folder " + originFile.getFolderId() + " to destination folder " + destFolderId + " in mode " + mode);
 		Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
@@ -346,8 +353,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 				break;
 			default:
-				// Date d = new Date();
-
 				documentURL =
 						PortalUtil.getPathContext()
 						+ "/documents/"
@@ -356,7 +361,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 						+ file.getTitle() + StringPool.SLASH
 						+ file.getUuid() + StringPool.QUESTION
 						+ "version=" + file.getVersion();
-						// + StringPool.AMPERSAND + "t=" + d.getTime();
 
 				// Add parameter in URL in case of video/audio conversion is needed
 				if (typeOfView.equals("Video") && !file.getExtension().equals("mp4")) {
@@ -465,7 +469,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 				byteArrayContent = Base64.decode(LoolConstants.ODP_NEW_FILE);
 				break;
 			default:
-				throw new Exception("Unknown lool type" + type);
+				throw new FileExtensionException("Unknown lool type" + type);
 		}
 
 		return DLAppUtil.addFileEntry(user, folder, name + "." + type, byteArrayContent, DocumentConstants.MODE_RENAME);
@@ -473,7 +477,11 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 	public String sanitizeHTMLContent(String content) {
 		// Do not allow style on a tag > click-jacking vulnerability (https://stackoverflow.com/questions/4546591/xss-attacks-and-style-attributes)
-		String sanitizedContent = "";
+		String sanitizedContent;
+		final String titleTag = "title";
+		final String iframeTag = "iframe";
+		final String styleTag = "style";
+		final String bodyOpening = "<body";
 
 		// Look for links to prevent href null value (causing sanitize failure)
 		Document doc = Jsoup.parse(content);
@@ -486,7 +494,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		}
 
 		// Check if iframe URL is in whitelist
-		Elements iframes = doc.select("iframe");
+		Elements iframes = doc.select(iframeTag);
 		for (Element iframe : iframes) {
 			if (!DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(iframe.attr("src"))) {
 				iframe.remove();
@@ -507,7 +515,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		try {
 			// Keep html meta info if existing
 			String header = "";
-			String bodyStartTag = "<body";
+			String bodyStartTag = bodyOpening;
 			int bodyIndex = content.indexOf(bodyStartTag);
 
 			if (bodyIndex > -1) {
@@ -524,31 +532,31 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 			}
 
 			// Cannot allow body element so we trick sanitizer with custom one
-			content = content.replace("<body", "<hbody");
+			content = content.replace(bodyOpening, "<hbody");
 			content = content.replace("</body", "</hbody");
 
 			String postcontent = header + Jsoup.clean(content, PropsUtil.get(NeroSystemProperties.PORTAL_URL),
 					Safelist.relaxed()
 							.preserveRelativeLinks(true)
-							.removeTags("title")
+							.removeTags(titleTag)
 							.addTags("hbody")
 							.addTags("address")
 							.addTags("center")
-							.addTags("style")
+							.addTags(styleTag)
 							.addTags("audio, video, source, code")
-							.addTags("iframe")
-							.addAttributes(":all", "style", "class", "title", "height", "width", "id", "aria-readonly")
+							.addTags(iframeTag)
+							.addAttributes(":all", styleTag, "class", titleTag, "height", "width", "id", "aria-readonly")
 							.addAttributes("img", "src")
 							.addAttributes("audio", "controls", "src")
 							.addAttributes("video", "controls", "src")
 							.addAttributes("source", "type", "src")
-							.addAttributes("iframe", "src", "height", "width", "title", "scrolling", "name", "frameborder", "longdesc", "allow", "allowfullscreen", "style")
+							.addAttributes(iframeTag, "src", "height", "width", titleTag, "scrolling", "name", "frameborder", "longdesc", "allow", "allowfullscreen", styleTag)
 							.addAttributes("a", "href", "target")
 							.addAttributes("table", "border", "cellpadding", "cellspacing", "align")
 							.addProtocols("img", "src", "http", "https", "data")
 							.addProtocols("a", "href", "#")) + footer;
 
-			postcontent = postcontent.replace("<hbody", "<body");
+			postcontent = postcontent.replace("<hbody", bodyOpening);
 			postcontent = postcontent.replace("</hbody", "</body");
 
 			sanitizedContent = postcontent;
