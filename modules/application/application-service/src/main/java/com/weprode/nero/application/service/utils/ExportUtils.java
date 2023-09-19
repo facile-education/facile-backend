@@ -101,7 +101,7 @@ public class ExportUtils {
             file = exportPearlTrees(roleName, listUser, messages, schoolId);
 
         } else if (typeExport.equalsIgnoreCase("GRR")) {
-            file = exportGRR(roleName, listUser, messages, schoolId);
+            file = exportGRR(roleName, listUser, schoolId);
 
         } else {
             resultExport.put(JSONConstants.SUCCESS, false);
@@ -116,7 +116,7 @@ public class ExportUtils {
             FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(currUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(userId).getFolderId(), "folderName", fileName, is, "html/text");
             long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             String subject = "Export " + typeExport;
-            String content = "Bonjour,<br><br>Veuillez trouver ci-joint l'export " + typeExport + " pour votre etablissement.<br><br>Cordialement,<br>L'équipe technique";
+            String content = "Bonjour,<br><br>Veuillez trouver ci-joint l'export " + typeExport + " pour votre établissement.<br><br>Meilleurs messages,<br>L'équipe technique";
             List<Long> recipientList = new ArrayList<>();
             recipientList.add(userId);
             List<Long> attachFileIds = new ArrayList<>();
@@ -478,115 +478,102 @@ public class ExportUtils {
         return borrower.toString();
     }
 
-    private String exportPearlTrees(String userRole, List<User> userList, ResourceBundle messages, Long etabId) throws PortalException, SystemException {
-        StringBuilder file = new StringBuilder();
-
-        Organization currentSchool = OrganizationLocalServiceUtil.getOrganization(etabId);
+    private List<Role> getAssociatedRoles(String userRole) {
         List<Role> roles = new ArrayList<>();
-        try {
 
-            if (userRole.equalsIgnoreCase(ELEVE)) {
-                roles.add(RoleUtilsLocalServiceUtil.getStudentRole());
-            } else if (userRole.equalsIgnoreCase(PARENT)) {
-                roles.add(RoleUtilsLocalServiceUtil.getParentRole());
-            } else if (userRole.equalsIgnoreCase(PROF)) {
-                roles.add(RoleUtilsLocalServiceUtil.getTeacherRole());
-                roles.add(RoleUtilsLocalServiceUtil.getDirectionRole());
-                roles.add(RoleUtilsLocalServiceUtil.getSchoolLifeRole());
-                roles.add(RoleUtilsLocalServiceUtil.getAdministrativeRole());
-                roles.add(RoleUtilsLocalServiceUtil.getAcademicRole());
-            }
-        } catch (Exception e) {
-            logger.error(e);
+        if (userRole.equalsIgnoreCase(ELEVE)) {
+            roles.add(RoleUtilsLocalServiceUtil.getStudentRole());
+        } else if (userRole.equalsIgnoreCase(PARENT)) {
+            roles.add(RoleUtilsLocalServiceUtil.getParentRole());
+        } else if (userRole.equalsIgnoreCase(PROF)) {
+            roles.add(RoleUtilsLocalServiceUtil.getTeacherRole());
+            roles.add(RoleUtilsLocalServiceUtil.getDirectionRole());
+            roles.add(RoleUtilsLocalServiceUtil.getSchoolLifeRole());
+            roles.add(RoleUtilsLocalServiceUtil.getAdministrativeRole());
+            roles.add(RoleUtilsLocalServiceUtil.getAcademicRole());
         }
 
-        if (!roles.isEmpty()) {
-            // -- uid ; Nom ; Prenom ; Email ; classe ; RNE ; --
-            file.append(messages.getString("uid")).append(";").append(messages.getString(NOM)).append(";")
-                    .append(messages.getString(PRENOM)).append(";").append(messages.getString(EMAIL))
-                    .append(";").append(messages.getString("class")).append(";").append(messages.getString("RNE"))
-                    .append(";\n");
+        return roles;
+    }
 
-            for (User user : userList) {
-                try {
-                    if (user.isActive() && !Collections.disjoint(user.getRoles(), roles)) {
+    private String exportPearlTrees(String userRole, List<User> userList, ResourceBundle messages, Long etabId) throws PortalException, SystemException {
+        List<Role> roles = getAssociatedRoles(userRole);
 
-                        List<String> classes = new ArrayList<>();
-                        List<Organization> userClasses = UserOrgsLocalServiceUtil.getUserClasses(user, false);
-                        for (Organization userClass : userClasses) {
-                            if (userClass.getOrganizationId() != etabId) {
-                                classes.add(userClass.getName());
-                            }
+        if (roles.isEmpty()) {
+            return StringPool.BLANK;
+        }
+
+        Organization currentSchool = OrganizationLocalServiceUtil.getOrganization(etabId);
+        StringBuilder file = new StringBuilder();
+        // -- uid ; Nom ; Prenom ; Email ; classe ; RNE ; --
+        file.append(messages.getString("uid")).append(";").append(messages.getString(NOM)).append(";")
+                .append(messages.getString(PRENOM)).append(";").append(messages.getString(EMAIL))
+                .append(";").append(messages.getString("class")).append(";").append(messages.getString("RNE"))
+                .append(";\n");
+
+        for (User user : userList) {
+            try {
+                if (user.isActive() && !Collections.disjoint(user.getRoles(), roles)) {
+
+                    List<String> classes = new ArrayList<>();
+                    List<Organization> userClasses = UserOrgsLocalServiceUtil.getUserClasses(user, false);
+                    for (Organization userClass : userClasses) {
+                        if (userClass.getOrganizationId() != etabId) {
+                            classes.add(userClass.getName());
                         }
-
-                        file.append(user.getScreenName()).append(";").append(user.getLastName()).append(";")
-                                .append(user.getFirstName()).append(";").append(user.getEmailAddress()).append(";")
-                                .append(StringUtil.join(classes, ",")).append(";")
-                                .append(OrgMappingLocalServiceUtil.getOrganizationStrutUAI(currentSchool)).append(";\n");
                     }
-                } catch (Exception e) {
-                    logger.error("Pearltrees : Error exporting user "+user.getFullName(), e);
-                }
-            }
 
+                    file.append(user.getScreenName()).append(";").append(user.getLastName()).append(";")
+                            .append(user.getFirstName()).append(";").append(user.getEmailAddress()).append(";")
+                            .append(StringUtil.join(classes, ",")).append(";")
+                            .append(OrgMappingLocalServiceUtil.getOrganizationStrutUAI(currentSchool)).append(";\n");
+                }
+            } catch (Exception e) {
+                logger.error("Pearltrees : Error exporting user "+user.getFullName(), e);
+            }
         }
 
         return file.toString();
     }
 
-    private static String exportGRR(String userRole, List<User> userList, ResourceBundle messages, Long etabId) throws SystemException {
-        StringBuilder file = new StringBuilder();
+    private String exportGRR(String userRole, List<User> userList, Long etabId) throws SystemException {
+        List<Role> roles = getAssociatedRoles(userRole);
 
-        List<Role> roles = new ArrayList<>();
-        try {
-
-            if (userRole.equalsIgnoreCase(ELEVE)) {
-                roles.add(RoleUtilsLocalServiceUtil.getStudentRole());
-            } else if (userRole.equalsIgnoreCase(PARENT)) {
-                roles.add(RoleUtilsLocalServiceUtil.getParentRole());
-            } else if (userRole.equalsIgnoreCase(PROF)) {
-                roles.add(RoleUtilsLocalServiceUtil.getTeacherRole());
-                roles.add(RoleUtilsLocalServiceUtil.getDirectionRole());
-                roles.add(RoleUtilsLocalServiceUtil.getSchoolLifeRole());
-                roles.add(RoleUtilsLocalServiceUtil.getAdministrativeRole());
-                roles.add(RoleUtilsLocalServiceUtil.getAcademicRole());
-            }
-        } catch (Exception e) {
-            logger.error(e);
+        if (roles.isEmpty()) {
+            return StringPool.BLANK;
         }
 
-        if (!roles.isEmpty()) {
-            // -- Identifiant ; Nom ; Prenom ; Mot de passe ; Adresse email ; Type d'utilisateur ; Statut ; Type d'authentification ; --
-            file.append(IDENTIFIANT).append(";").append(NOM)
-                    .append(";").append(PRENOM).append(";")
-                    .append("password").append(";").append("email_address")
-                    .append(";").append("user_type").append(";")
-                    .append("status").append(";").append("auth_type")
-                    .append(";").append("pass").append(";\n");
+        StringBuilder file = new StringBuilder();
+        // -- Identifiant ; Nom ; Prenom ; Mot de passe ; Adresse email ; Type d'utilisateur ; Statut ; Type d'authentification ; --
+        file.append(IDENTIFIANT).append(";").append(NOM)
+                .append(";").append(PRENOM).append(";")
+                .append("password").append(";").append("email_address")
+                .append(";").append("user_type").append(";")
+                .append("status").append(";").append("auth_type")
+                .append(";").append("pass").append(";\n");
 
-            // Type d'utilisateur : "visiteur", "utilisateur", "administrateur"
-            // Statut : "actif" ou "inactif"
-            // Type d'authentification : "local" ou "ext"
+        // Type d'utilisateur : "visiteur", "utilisateur", "administrateur"
+        // Statut : "actif" ou "inactif"
+        // Type d'authentification : "local" ou "ext"
 
-            for (User user : userList) {
-                try {
-                    if (user.isActive() && !Collections.disjoint(user.getRoles(), roles)) {
-                        String email = user.getEmailAddress();
-                        if (email.isEmpty()) {
-                            email = "-";
-                        }
-
-                        String userType = "utilisateur";
-                        if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user, etabId)) {
-                            userType = "administrateur";
-                        }
-                        file.append(user.getScreenName()).append(";").append(user.getLastName()).append(";")
-                                .append(user.getFirstName().replaceAll(",", "")).append(";;").append(email).append(";").append(userType)
-                                .append(";actif;ext;0\n");
+        for (User user : userList) {
+            try {
+                if (user.isActive() && !Collections.disjoint(user.getRoles(), roles)) {
+                    String email = user.getEmailAddress();
+                    if (email.isEmpty()) {
+                        email = "-";
                     }
-                } catch (Exception e) {
-                    logger.error("GRR : Error exporting user "+user.getFullName(), e);
+
+                    String userType = "utilisateur";
+                    if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user, etabId)) {
+                        userType = "administrateur";
+                    }
+                    file.append(user.getScreenName()).append(";").append(user.getLastName()).append(";")
+                            .append(user.getFirstName().replace(",", "")).append(";;").append(email).append(";").append(userType)
+                            .append(";actif;ext;0\n");
                 }
+            } catch (Exception e) {
+                logger.error("GRR : Error exporting user "+user.getFullName(), e);
             }
         }
 

@@ -160,7 +160,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             // Notify members that they have been added to a new group
             long noReplySenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             String subject = messages.getString("creation-du-groupe") + " " + createdGroup.getName(LocaleUtil.getDefault());
-            String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + createdGroup.getName(LocaleUtil.getDefault())+".</br></br> L'&eacute;quipe technique";
+            String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + createdGroup.getName(LocaleUtil.getDefault())+".</br></br>Meilleurs messages,</br>L'&eacute;quipe technique";
             MessageLocalServiceUtil.sendMessage(noReplySenderId, notifiedMemberIds, subject, content);
 
             // The creator has both owner and admin roles

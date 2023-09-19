@@ -360,8 +360,8 @@ public class GVEParentSynchronizationManager {
                 long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
                 User noReplyUser = UserLocalServiceUtil.getUser(noReplyUserId);
                 FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(noReplyUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(noReplyUserId).getFolderId(), "folderName", fileName, is, "html/text");
-                String subject = "Synchronization des parents";
-                String content = "Bonjour,<br><br>Veuillez trouver ci-joint la rapport de synchronization des parents pour votre etablissement.<br><br>Cordialement,<br>L'équipe technique";
+                String subject = "Synchronisation des parents";
+                String content = "Bonjour,<br><br>Veuillez trouver ci-joint le rapport de synchronisation des parents pour votre établissement.<br><br>Meilleurs messages,<br>L'équipe technique";
                 List<Long> attachFileIds = new ArrayList<>();
                 attachFileIds.add(fileEntry.getFileEntryId());
                 MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_REPORT, attachFileIds, 0, 0);
@@ -779,9 +779,9 @@ public class GVEParentSynchronizationManager {
 
             // String subject = "Bienvenue dans votre environnement digital \u00e9ducatif";
             // String content = "Ch\u00e8re Madame, cher Monsieur,</br></br>" +
-            //         "La plateforme FACILE assure le prolongement num\u00e9rique de l'\u00e9tablissement scolaire de votre.vos enfant.s.</br>" +
-            //         "Il vous propose un espace priv\u00e9 et s\u00e9curis\u00e9 o\u00f9 vous pourrez suivre la vie de l'\u00e9tablissement et de la classe de votre.vos enfant.s.</br>" +
-            //         "Il repr\u00e9sente surtout votre moyen de communication privil\u00e9gi\u00e9 avec l'\u00e9cole,  les enseignant.e.s et le personnel encadrant.</br>" +
+            //         "La plateforme FACILE assure le prolongement num\u00e9rique de l'\u00e9tablissement scolaire de votre•vos enfant•s.</br>" +
+            //         "Il vous propose un espace priv\u00e9 et s\u00e9curis\u00e9 o\u00f9 vous pourrez suivre la vie de l'\u00e9tablissement et de la classe de votre•vos enfant•s.</br>" +
+            //         "Il repr\u00e9sente surtout votre moyen de communication privil\u00e9gi\u00e9 avec l'\u00e9cole, les enseignant•e•s et le personnel encadrant.</br>" +
             //         "N'h\u00e9sitez pas \u00e0 consulter le service d'aide accessible en haut \u00e0 droite de votre \u00e9cran sous le \" ? \" pour r\u00e9pondre \u00e0 vos \u00e9ventuelles questions.</br></br>" +
             //         "Meilleurs messages,</br>L'\u00e9quipe projet";
 

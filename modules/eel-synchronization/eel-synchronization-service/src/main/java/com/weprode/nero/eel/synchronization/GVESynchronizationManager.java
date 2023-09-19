@@ -1440,7 +1440,7 @@ public class GVESynchronizationManager {
                 teacher = identifyTeacher(school.getOrganizationId(), lastName, firstName);
                 if (teacher == null) {
                     logger.error("===REPORT=== Maitre absent de l'EEL : SIRH " + teacherId + ", lastName " + lastName + " and firstName " + firstName);
-                    reportData.addTeacher(teacherId);
+                    reportData.addTeacher(teacherId + " - " + lastName + " " + firstName);
                     continue;
                 }
             }
@@ -2576,7 +2576,7 @@ public class GVESynchronizationManager {
                 content.append("Les modifications que vous avez r\u00e9alis\u00e9es dans SMOG ne sont pas encore prises en charge par l'annuaire EEL. Pour rappel <b>un d\u00e9lai de 48h</b> est n\u00e9cessaire.<br><br>");
             }
 
-            content.append("Bien cordialement,<br>L'\u00e9quipe technique");
+            content.append("Meilleurs messages,<br>L'\u00e9quipe technique");
 
             MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content.toString(), MessagingConstants.TYPE_REPORT);
         } catch (Exception e) {
