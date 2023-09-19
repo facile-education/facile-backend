@@ -112,8 +112,8 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         }
 
         try {
-            // Check that the given roleId is allowed
-            boolean isRoleExisting = false;
+            // Check that the given roleId is allowed (+ parents that are not in the list)
+            boolean isRoleExisting = RoleUtilsLocalServiceUtil.getParentRole().getRoleId() == roleId;
             for (Role role : RoleUtilsLocalServiceUtil.getAvailableRolesForLocalUser()) {
                 if (role.getRoleId() == roleId) {
                     isRoleExisting = true;
