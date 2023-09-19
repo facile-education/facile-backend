@@ -49,14 +49,27 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        MessageFolder folder = MessageFolderLocalServiceUtil.addFolderMessage(user.getUserId(), folderName, MessagingConstants.PERSONAL_FOLDER_TYPE, parentFolderId);
+        try {
+            // Check ownership
+            if (parentFolderId != 0) {
+                MessageFolder parentFolder = MessageFolderLocalServiceUtil.getMessageFolder(parentFolderId);
+                if (parentFolder.getUserId() != user.getUserId()) {
+                    logger.error("User " + user.getFullName() + " tries to add folder into folderId " + parentFolderId + " but he does not own it");
+                    return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+                }
+            }
 
-        JSONObject jsonFolder = convertFolder(folder);
-        jsonFolder.put(JSONConstants.SUB_FOLDERS, new JSONArray());
+            MessageFolder folder = MessageFolderLocalServiceUtil.addFolderMessage(user.getUserId(), folderName, MessagingConstants.PERSONAL_FOLDER_TYPE, parentFolderId);
 
-        result.put(JSONConstants.FOLDER, jsonFolder);
-        result.put(JSONConstants.SUCCESS, true);
+            JSONObject jsonFolder = convertFolder(folder);
+            jsonFolder.put(JSONConstants.SUB_FOLDERS, new JSONArray());
 
+            result.put(JSONConstants.FOLDER, jsonFolder);
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            logger.error("Error when adding a sub-folder to folder " + parentFolderId, e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
         return result;
     }
 
@@ -155,8 +168,10 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
         }
 
         try {
+            // Check ownership
             MessageFolder folder = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
             if (user.getUserId() != folder.getUserId()) {
+                logger.error("User " + user.getFullName() + " tries to rename folderId " + folderId + " but he does not own it");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             folder.setFolderName(newLabel);
@@ -190,15 +205,21 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
         }
 
         try {
+            // Check ownership
             MessageFolder folderToDelete = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
+            if (folderToDelete.getUserId() != user.getUserId()) {
+                logger.error("User " + user.getFullName() + " tries to delete folderId " + folderId + " but he does not own it");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
+
             if (folderToDelete.getType() != MessagingConstants.PERSONAL_FOLDER_TYPE) {
+                logger.error("User " + user.getFullName() + " is trying to delete one of the 4 mandatory messaging folders -> skipping");
+                result.put(JSONConstants.SUCCESS, false);
                 return result;
             }
 
             MessageFolder trashFolder = MessageFolderLocalServiceUtil.getUserTrashFolder(user.getUserId());
-
             recursiveDelete(user.getUserId(), folderToDelete, trashFolder.getFolderId());
-
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {

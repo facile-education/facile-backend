@@ -78,14 +78,13 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         }
 
         try {
-            // Check user's permission to fetch those folderId messages
-            logger.info("User " + user.getUserId() + " fetches messages of folderId " + folderId + ", from " + fromDate + (unreadOnly ? " (unread only)" : ""));
+            // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " try to fetch message from folderId " + folderId + ", but it not belong to him!");
-                result.put(JSONConstants.ERROR, "PermissionException");
-                return result;
+                logger.error("User " + user.getUserId() + " tries to fetch threads from folderId " + folderId + ", but he does not own it!");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
+            logger.info("User " + user.getUserId() + " fetches messages of folderId " + folderId + ", from " + fromDate + (unreadOnly ? " (unread only)" : ""));
             // If no date specified, get threads from now
             Date fromDateDate = fromDate.equals("-1") ? new Date() :
                     new SimpleDateFormat(MessagingUtil.messagingDateFormat).parse(fromDate);
@@ -116,11 +115,10 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
 
         try {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
-            // Check if user have the right to see the message (and it threads)
+            // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " try to fetch message from folderId " +  message.getFolderId() + ", but it not belong to him!");
-                result.put(JSONConstants.ERROR, "PermissionException");
-                return result;
+                logger.error("User " + user.getUserId() + " tries to fetch thread of message " +  messageId + ", but he does not own it!");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             logger.info("User " + user.getUserId() + " fetches thread from messageId " + messageId);
 
@@ -151,6 +149,11 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         }
 
         try {
+            // Check ownership
+            if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
+                logger.error("User " + user.getUserId() + " tries to fetch messages of thread " + threadId + " in folderId " + folderId + ", but he does not own it!");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
             logger.info("User " + user.getUserId() + " fetches all messages of threadId " + threadId + " and from folderId " + folderId);
             MessageFolder trashFolder = MessageFolderLocalServiceUtil.getUserTrashFolder(user.getUserId());
 
@@ -198,6 +201,12 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
+            // Check ownership
+            if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
+                logger.error("User " + user.getUserId() + " tries to count messages in folderId " + folderId + ", but he does not own it!");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
+
             result.put(JSONConstants.NB_MESSAGES, MessageLocalServiceUtil.countMessages(folderId));
             result.put(JSONConstants.NB_UNREAD, MessageLocalServiceUtil.countUnreadMessages(folderId));
             result.put(JSONConstants.SUCCESS, true);
@@ -277,11 +286,10 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         JSONArray jsonRecipients = new JSONArray();
         try {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
-            // Check if user have the right to see the message (and it threads)
+            // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " try to fetch recipients of messageId " +  messageId + ", but it not belong to him!");
-                result.put(JSONConstants.ERROR, "PermissionException");
-                return result;
+                logger.error("User " + user.getUserId() + " tries to get recipients of message " + messageId + ", but he does not own it!");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             logger.info("User " + user.getUserId() + " fetches recipients of messageId " + messageId);
             List<User> recipients = MessageRecipientsLocalServiceUtil.getRecipients(messageId);
@@ -327,8 +335,13 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         final String PREFIX_FORWARD = "Tr: ";
 
         try {
-            logger.info("User " + user.getUserId() + " fetches answer and forward infos of messageId " + messageId);
             Message message = MessageLocalServiceUtil.getMessage(messageId);
+            // Check ownership
+            if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
+                logger.error("User " + user.getUserId() + " tries to get answer infos for message " + messageId + ", but he does not own it!");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
+            logger.info("User " + user.getUserId() + " fetches answer and forward infos of messageId " + messageId);
 
             JSONArray jsonRecipients = new JSONArray();
             List<Long> addedRecipientIds = new ArrayList<>();
@@ -418,6 +431,13 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             for (int i = 0 ; i < jsonMessageIds.length() ; i++) {
                 try {
                     long messageId = jsonMessageIds.getLong(i);
+                    // Check ownership
+                    Message message = MessageLocalServiceUtil.getMessage(messageId);
+                    if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
+                        logger.error("User " + user.getUserId() + " tries to mark message " + messageId + " as " + (isRead ? "read" : "unread") + ", but he does not own it!");
+                        continue;
+                    }
+
                     MessageLocalServiceUtil.setMessageAsRead(messageId, isRead);
                 } catch (Exception e) {
                     logger.error("Error setting read/unread status to messages " + messageIds, e);
@@ -533,6 +553,11 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
 
         long nbMovedMessages = 0;
         try {
+            // Check ownership
+            if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
+                logger.error("User " + user.getUserId() + " tries to move messages into folderId " + folderId + ", but he does not own it!");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
             logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") " + "moves messages " + messageIds + " to folder " + folderId);
 
             if (folderId == -1) {
@@ -545,6 +570,11 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                 long messageId = jsonMessageIds.getLong(i);
                 try {
                     Message message = MessageLocalServiceUtil.getMessage(messageId);
+                    // Check ownership
+                    if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
+                        logger.error("User " + user.getUserId() + " tries to move message " + message.getMessageId() + " into folderId " + folderId + ", but he does not own it!");
+                        continue;
+                    }
                     message.setFolderId(folderId);
                     MessageLocalServiceUtil.updateMessage(message);
                     ++ nbMovedMessages;
@@ -590,6 +620,10 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                 long messageId = jsonMessageIds.getLong(i);
                 try {
                     Message messageToDelete = MessageLocalServiceUtil.getMessage(messageId);
+                    if (MessageFolderLocalServiceUtil.getMessageFolder(messageToDelete.getFolderId()).getUserId() != user.getUserId()) {
+                        logger.error("User " + user.getUserId() + " tries to delete message " + messageId + ", but he does not own it!");
+                        continue;
+                    }
 
                     if (messageToDelete.getFolderId() == trashFolderId) {
                         MessageLocalServiceUtil.deleteMessageAndDependencies(messageId);
