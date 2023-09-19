@@ -182,7 +182,7 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
                 + "Connectez-vous d&egrave;s &agrave; pr&eacute;sent sur <a href=\""+ portalURL +"\">" + portalURL + "</a> (acc&egrave;s personnel r&eacute;gion et autres profils) &agrave; l'aide des identifiants suivants :<br/><br/>"
                 + "Identifiant : " + login + "<br/>"
                 + "Mot de passe : " + password + "<br/><br/>"
-                + "Cordialement,<br/>"
+                + "Meilleurs messages,<br/>"
                 + "L'&eacute;quipe ENT";
 
         try {

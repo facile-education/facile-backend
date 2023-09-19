@@ -210,7 +210,7 @@ public class ForgotPasswordActionCommand extends BaseMVCActionCommand {
         String toAddress = user.getEmailAddress();
 
         String subject = "[ENTA Genève] Changement de mot de passe";
-        String body = "<p>Bonjour [$TO_NAME$],<br /><br />Cliquez sur <a href=\"[$PASSWORD_RESET_URL$]\" >ce lien</a> pour changer votre mot de passe de l&#39;ENT.<br /><br />Cordialement,<br />L'équipe technique<br /></p>";
+        String body = "<p>Bonjour [$TO_NAME$],<br /><br />Cliquez sur <a href=\"[$PASSWORD_RESET_URL$]\" >ce lien</a> pour changer votre mot de passe de l&#39;ENT.<br /><br />Meilleurs messages,<br />L'équipe technique<br /></p>";
 
         ServiceContext serviceContext = ServiceContextFactory.getInstance(User.class.getName(), actionRequest);
 
