@@ -8,6 +8,8 @@ import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -20,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,18 +30,20 @@ import java.util.List;
 
 public class CustomFileSystemStore implements Store {
 
+    private static final Log logger = LogFactoryUtil.getLog(CustomFileSystemStore.class);
+
     public CustomFileSystemStore() {
 
         String path = "data/document_library";
 
-        File rootDir = new File(path);
+        File rootDirFile = new File(path);
 
-        if (!rootDir.isAbsolute()) {
-            rootDir = new File(PropsUtil.get(PropsKeys.LIFERAY_HOME), path);
+        if (!rootDirFile.isAbsolute()) {
+            rootDirFile = new File(PropsUtil.get(PropsKeys.LIFERAY_HOME), path);
         }
 
-        _rootDir = rootDir;
-        _rootDir.mkdirs();
+        this.rootDir = rootDirFile;
+        this.rootDir.mkdirs();
     }
 
     @Override
@@ -76,7 +81,7 @@ public class CustomFileSystemStore implements Store {
 
         FileUtil.deltree(dirNameDir);
 
-        _deleteEmptyAncestors(parentFile);
+        deleteEmptyAncestors(parentFile);
     }
 
     @Override
@@ -98,9 +103,13 @@ public class CustomFileSystemStore implements Store {
 
         File parentFile = fileNameVersionFile.getParentFile();
 
-        fileNameVersionFile.delete();
+        try {
+            Files.delete(fileNameVersionFile.toPath());
+        } catch (IOException e) {
+            logger.error("Could not delete file " + fileNameVersionFile.getAbsolutePath());
+        }
 
-        _deleteEmptyAncestors(parentFile);
+        deleteEmptyAncestors(parentFile);
     }
 
     @Override
@@ -109,16 +118,13 @@ public class CustomFileSystemStore implements Store {
             String versionLabel)
             throws NoSuchFileException {
 
-        // System.out.println("getFileAsStream with repositoryId=" + repositoryId + ", fileName=" + fileName + ", versionLabel=" + versionLabel);
         if (Validator.isNull(versionLabel)) {
             versionLabel = getHeadVersionLabel(
                     companyId, repositoryId, fileName);
-            // System.out.println("versionLabel=" + versionLabel);
         }
 
         File fileNameVersionFile = getFileNameVersionFile(
                 companyId, repositoryId, fileName, versionLabel);
-        // System.out.println("fileNameVersionFile=" + fileNameVersionFile.getAbsolutePath());
 
         try {
             return new FileInputStream(fileNameVersionFile);
@@ -175,12 +181,9 @@ public class CustomFileSystemStore implements Store {
     public String[] getFileVersions(
             long companyId, long repositoryId, String fileName) {
 
-        // System.out.println("getFileVersions for repositoryId " + repositoryId + " and fileName=" + fileName);
         File fileNameDir = getFileNameDir(companyId, repositoryId, fileName);
-        // System.out.println("getFileVersions : fileNameDir=" + fileNameDir.getAbsolutePath());
 
         if (!fileNameDir.exists()) {
-            // System.out.println("getFileVersions : Return empty array");
             return StringPool.EMPTY_ARRAY;
         }
 
@@ -193,14 +196,13 @@ public class CustomFileSystemStore implements Store {
             if (x > -1) {
                 int y = versions[i].lastIndexOf(CharPool.PERIOD);
                 versions[i] = versions[i].substring(x + 1, y);
-                // System.out.println("getFileVersions : Return version = " + versions[i]);
             }
         }
         return versions;
     }
 
     public File getRootDir() {
-        return _rootDir;
+        return rootDir;
     }
 
     @Override
@@ -258,10 +260,6 @@ public class CustomFileSystemStore implements Store {
 
         String ext = StringPool.PERIOD + FileUtil.getExtension(fileName);
 
-//        if (ext.equals(StringPool.PERIOD)) {
-//            ext += _HOOK_EXTENSION;
-//        }
-
         StringBundler sb = new StringBundler();
 
         String fileNameFragment = FileUtil.stripExtension(fileName);
@@ -281,8 +279,6 @@ public class CustomFileSystemStore implements Store {
         pathSB.append(StringPool.SLASH);
         pathSB.append(fileNameFragment);
         pathSB.append(ext);
-
-        // System.out.println("getFileNameDir returns " + pathSB.toString());
 
         return new File(pathSB.toString());
     }
@@ -343,28 +339,18 @@ public class CustomFileSystemStore implements Store {
             StringBundler sb = new StringBundler();
 
             String fileNameFragment = removeExtension(fileName);
-            // System.out.println(" > fileNameFragment=" + fileNameFragment);
 
             buildPath(sb, fileNameFragment);
-            // System.out.println(" > sb=" + sb.toString());
-            // System.out.println(" > version=" + version);
 
             File repositoryDir = getRepositoryDir(companyId, repositoryId);
-            // System.out.println(" > repositoryDir=" + repositoryDir.getAbsolutePath());
-            // System.out.println(" > ext=" + ext);
 
-            String res = repositoryDir + StringPool.SLASH + sb.toString() + StringPool.SLASH + fileNameFragment + ext + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext;
-            // System.out.println("getFileNameVersionFile1 returns " + res);
-
-            return new File(repositoryDir + StringPool.SLASH + sb.toString() + StringPool.SLASH + fileNameFragment + ext + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext);
+            return new File(repositoryDir + StringPool.SLASH + sb + StringPool.SLASH + fileNameFragment + ext + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext);
         }
         else {
             File fileNameDir = getDirNameDir(companyId, repositoryId, fileName);
 
             String fileNameFragment = removeExtension(fileName.substring(pos + 1));
 
-            String res = fileNameDir + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext;
-            // System.out.println("getFileNameVersionFile2 returns " + res);
             return new File(fileNameDir + StringPool.SLASH + fileNameFragment + StringPool.UNDERLINE + version + ext);
         }
     }
@@ -388,7 +374,6 @@ public class CustomFileSystemStore implements Store {
             }
         }
 
-        // System.out.println("getHeadVersionLabel returns " + headVersionLabel);
         return headVersionLabel;
     }
 
@@ -410,19 +395,20 @@ public class CustomFileSystemStore implements Store {
 
         String newRepoId = hashRepositoryID("", String.valueOf(repositoryId));
 
-        File repositoryDir = new File(_rootDir, StringPool.SLASH + companyId + StringPool.SLASH + newRepoId);
+        File repositoryDir = new File(rootDir, StringPool.SLASH + companyId + StringPool.SLASH + newRepoId);
 
         if (!repositoryDir.exists()) {
             repositoryDir.mkdirs();
         }
 
-        // System.out.println("getRepositoryDir returns " + repositoryDir.getAbsolutePath());
         return repositoryDir;
     }
 
-    private void _deleteEmptyAncestors(File file) {
+    private void deleteEmptyAncestors(File file) {
         while (file != null) {
-            if (!file.delete()) {
+            try {
+                Files.delete(file.toPath());
+            } catch (IOException e) {
                 return;
             }
 
@@ -430,6 +416,5 @@ public class CustomFileSystemStore implements Store {
         }
     }
 
-    private final File _rootDir;
-    private static final String _HOOK_EXTENSION = "afsh";
+    private final File rootDir;
 }
