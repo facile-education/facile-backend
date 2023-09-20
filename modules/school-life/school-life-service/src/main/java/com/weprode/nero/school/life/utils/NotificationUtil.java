@@ -1,5 +1,6 @@
 package com.weprode.nero.school.life.utils;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -29,9 +30,14 @@ import java.util.*;
 
 public class NotificationUtil {
 
-    private static final Log _log = LogFactoryUtil.getLog(NotificationUtil.class);
+    private NotificationUtil() {
+        throw new IllegalStateException("Utility class");
+    }
 
-    static DateFormat df = new SimpleDateFormat("dd MMMM yyyy '\u00e0' HH'h'mm", new Locale("fr", "FR"));
+    private static final Log logger = LogFactoryUtil.getLog(NotificationUtil.class);
+
+    private static final String HTML_LINE_BREAK = "</br>";
+    private static final String GREETING = "Meilleurs messages," + HTML_LINE_BREAK;
 
     public static void notifyRenvoiRegistration(long teacherId, long sourceTeacherId, long sourceSessionId, long sourceSchoollifeSessionId, long studentId, long schoollifeSessionId) {
 
@@ -64,8 +70,9 @@ public class NotificationUtil {
             // Build notification subject and content
             SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId);
 
+            DateFormat df = getDateFormat();
             String subject = "Avis de renvoi : " + student.getFullName() + " le " + df.format(session.getStartDate());
-            String content = "Cher.e.s coll\u00e8gue.s,</br></br>Je vous informe que l'\u00e9l\u00e8ve " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e en salle de renvoi le " + df.format(session.getStartDate()) + ".</br>";
+            String content = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Je vous informe que l'\u00e9l\u00e8ve " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e en salle de renvoi le " + df.format(session.getStartDate()) + "."+ HTML_LINE_BREAK;
             content += "L'\u00e9l\u00e8ve m'a indiqu\u00e9 \u00eatre renvoy\u00e9.e ";
             if (sourceSessionId != 0) {
                 CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sourceSessionId);
@@ -77,15 +84,15 @@ public class NotificationUtil {
                     }
                 }
                 String coursName = GroupUtilsLocalServiceUtil.getGroupName(cdtSession.getGroupId());
-                content += "du cours " + coursName + " dispens\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
+                content += "du cours " + coursName + " dispens\u00e9 par " + sourceTeacher.getFullName() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK;
             } else {
-                content += "du cr\u00e9neau " + SchoollifeSessionLocalServiceUtil.getSessionName(sourceSchoollifeSessionId) + " encadr\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
+                content += "du cr\u00e9neau " + SchoollifeSessionLocalServiceUtil.getSessionName(sourceSchoollifeSessionId) + " encadr\u00e9 par " + sourceTeacher.getFullName() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK;
             }
-            content += "Meilleurs messages,</br>" + teacher.getFullName();
+            content += GREETING + teacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
         } catch (Exception e) {
-            _log.error("Error sending notification for renvoi", e);
+            logger.error("Error sending notification for renvoi", e);
         }
     }
 
@@ -120,7 +127,7 @@ public class NotificationUtil {
             }
 
             if (!recipientList.isEmpty()) {
-                String content = "Cher.e.s coll\u00e8gue.s,</br></br>Je vous informe de l'annuation du renvoi de l'\u00e9l\u00e8ve " + student.getFullName();
+                String content = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Je vous informe de l'annuation du renvoi de l'\u00e9l\u00e8ve " + student.getFullName();
 
                 if (sourceSessionId != 0) {
                     CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sourceSessionId);
@@ -133,17 +140,17 @@ public class NotificationUtil {
                     }
 
                     String coursName = GroupUtilsLocalServiceUtil.getGroupName(cdtSession.getGroupId());
-                    content += " du cours " + coursName + " dispens\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
+                    content += " du cours " + coursName + " dispens\u00e9 par " + sourceTeacher.getFullName() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK;
                 } else {
-                    content += " du cr\u00e9neau " + SchoollifeSessionLocalServiceUtil.getSessionName(sourceSchoollifeSessionId) + " encadr\u00e9 par " + sourceTeacher.getFullName() + ".</br></br>";
+                    content += " du cr\u00e9neau " + SchoollifeSessionLocalServiceUtil.getSessionName(sourceSchoollifeSessionId) + " encadr\u00e9 par " + sourceTeacher.getFullName() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK;
                 }
 
-                content += "Meilleurs messages,</br>" + teacher.getFullName();
+                content += GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for renvoi", e);
+            logger.error("Error sending notification for renvoi", e);
         }
     }
 
@@ -177,12 +184,13 @@ public class NotificationUtil {
 
             String subject = "Avis de renvoi";
 
-            String parentContent = "Ch\u00e8re Madame, Cher Monsieur,</br></br>Je suis au regret de vous informer que j'ai renvoy\u00e9 " + student.getFullName()
+            DateFormat df = getDateFormat();
+            String parentContent = "Ch\u00e8re Madame, Cher Monsieur," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Je suis au regret de vous informer que j'ai renvoy\u00e9 " + student.getFullName()
                     + sourceSession
                     + " le " + df.format(sourceDate)
-                    + " pour le motif suivant:</br>" + reason + "</br></br>"
-                    + "Je me tiens, bien entendu, \u00e0 votre disposition pour discuter de la situation de votre enfant.</br></br>"
-                    + "Meilleurs messages,</br>" + teacher.getFullName();
+                    + " pour le motif suivant:" + HTML_LINE_BREAK + reason + HTML_LINE_BREAK + HTML_LINE_BREAK
+                    + "Je me tiens, bien entendu, \u00e0 votre disposition pour discuter de la situation de votre enfant." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                    + GREETING + teacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
 
@@ -228,16 +236,16 @@ public class NotificationUtil {
 
             if (!recipientList.isEmpty()) {
 
-                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>J'ai renvoy\u00e9 l'\u00e9l\u00e8ve " + student.getFullName()
+                String teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "J'ai renvoy\u00e9 l'\u00e9l\u00e8ve " + student.getFullName()
                         + sourceSession
                         + " le " + df.format(renvoi.getRenvoiDate())
-                        + " pour le motif suivant:</br>" + reason + "</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                        + " pour le motif suivant:</br>" + reason + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for renvoi", e);
+            logger.error("Error sending notification for renvoi", e);
         }
     }
 
@@ -249,16 +257,17 @@ public class NotificationUtil {
             SchoollifeSlot slot = SchoollifeSlotLocalServiceUtil.getSchoollifeSlot(session.getSchoollifeSlotId());
 
             // Send notification to the student
-            List<Long> recipientList = new ArrayList<Long>();
+            List<Long> recipientList = new ArrayList<>();
             recipientList.add(studentId);
 
+            DateFormat df = getDateFormat();
             String subject = "Retenue le " + df.format(session.getStartDate());
 
-            String studentContent = student.getFullName() + ", </br></br>Vous serez en retenue le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br>";
-            if (!comment.equals("")) {
-                studentContent += "Motif : " + comment + "</br>";
+            String studentContent = student.getFullName() + ", " + HTML_LINE_BREAK + HTML_LINE_BREAK + "Vous serez en retenue le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + StringPool.PERIOD + HTML_LINE_BREAK;
+            if (!comment.isEmpty()) {
+                studentContent += "Motif : " + comment + HTML_LINE_BREAK;
             }
-            studentContent += "</br>Meilleurs messages,</br>" + teacher.getFullName();
+            studentContent += HTML_LINE_BREAK + GREETING + teacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, studentContent, MessagingConstants.TYPE_HHC);
 
@@ -269,11 +278,11 @@ public class NotificationUtil {
                 for (User parent : parents) {
                     recipientList.add(parent.getUserId());
                 }
-                String parentContent = "Ch\u00e8re Madame, cher Monsieur, </br></br>Votre enfant " + student.getFullName() + " sera en retenue le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br>";
-                if (!comment.equals("")) {
-                    parentContent += "Motif : " + comment + "</br>";
+                String parentContent = "Ch\u00e8re Madame, cher Monsieur, " + HTML_LINE_BREAK + HTML_LINE_BREAK + "Votre enfant " + student.getFullName() + " sera en retenue le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br>";
+                if (!comment.isEmpty()) {
+                    parentContent += "Motif : " + comment + HTML_LINE_BREAK;
                 }
-                parentContent += "</br>Meilleurs messages,</br>" + teacher.getFullName();
+                parentContent += HTML_LINE_BREAK + GREETING + teacher.getFullName();
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
 
@@ -294,17 +303,17 @@ public class NotificationUtil {
             }
 
             if (!recipientList.isEmpty()) {
-                String teacherContent = "Cher.e.s coll\u00e8gue.s, </br></br>L'\u00e9l\u00e8ve " + student.getFullName() + " sera en retenue le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br>";
-                if (!comment.equals("")) {
-                    teacherContent += "Motif : " + comment + "</br>";
+                String teacherContent = "Cher.e.s coll\u00e8gue.s, " + HTML_LINE_BREAK + HTML_LINE_BREAK + "L'\u00e9l\u00e8ve " + student.getFullName() + " sera en retenue le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br>";
+                if (!comment.isEmpty()) {
+                    teacherContent += "Motif : " + comment + HTML_LINE_BREAK;
                 }
-                teacherContent += "</br>Meilleurs messages,</br>" + teacher.getFullName();
+                teacherContent += HTML_LINE_BREAK + GREETING + teacher.getFullName();
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
 
 
         } catch (Exception e) {
-            _log.error("Error sending notification for retenue", e);
+            logger.error("Error sending notification for retenue", e);
         }
     }
 
@@ -326,8 +335,9 @@ public class NotificationUtil {
             String slotName = getFrenchDay(cal) + " \u00e0 " + cal.get(Calendar.HOUR_OF_DAY) + "h" + String.format("%02d", cal.get(Calendar.MINUTE));
             String subject = "Annulation retenue du " + slotName;
 
-            String content = "Cher.e " + student.getFullName() + ", </br></br>La retenue du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e.</br></br>"
-                    + "Meilleurs messages,</br>" + teacher.getFullName();
+            DateFormat df = getDateFormat();
+            String content = "Cher.e " + student.getFullName() + ", " + HTML_LINE_BREAK + HTML_LINE_BREAK + "La retenue du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                    + GREETING + teacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
 
@@ -338,8 +348,8 @@ public class NotificationUtil {
                 for (User parent : parents) {
                     recipientList.add(parent.getUserId());
                 }
-                String parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>La retenue de votre enfant " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String parentContent = "Ch\u00e8re Madame, cher Monsieur," + HTML_LINE_BREAK + HTML_LINE_BREAK + "La retenue de votre enfant " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
@@ -362,13 +372,13 @@ public class NotificationUtil {
 
             if (!recipientList.isEmpty()) {
 
-                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>La retenue de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "La retenue de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9e." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for retenue", e);
+            logger.error("Error sending notification for retenue", e);
         }
     }
 
@@ -405,12 +415,13 @@ public class NotificationUtil {
 
             String subject = "Retenue - Absence de " + student.getFullName();
 
-            String content = "Cher.e.s coll\u00e8gue.s, </br></br>" + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e en retenue le " + df.format(session.getStartDate()) + ".</br></br>";
-            content += "Meilleurs messages,</br>" + watchTeacher.getFullName();
+            DateFormat df = getDateFormat();
+            String content = "Cher.e.s coll\u00e8gue.s, " + HTML_LINE_BREAK + HTML_LINE_BREAK + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e en retenue le " + df.format(session.getStartDate()) + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK;
+            content += GREETING + watchTeacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
         } catch (Exception e) {
-            _log.error("Error sending notification for retenue", e);
+            logger.error("Error sending notification for retenue", e);
         }
     }
 
@@ -432,10 +443,11 @@ public class NotificationUtil {
             List<Long> recipientList = new ArrayList<>();
             recipientList.add(studentId);
 
+            DateFormat df = getDateFormat();
             String subject = "Travail \u00e0 refaire le " + df.format(session.getStartDate());
 
-            String studentContent = "Cher.e " + student.getFullName() + ", </br></br>Vous \u00eates convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
-                    + "Meilleurs messages,</br>" + teacher.getFullName();
+            String studentContent = "Cher.e " + student.getFullName() + ", " + HTML_LINE_BREAK + HTML_LINE_BREAK + "Vous \u00eates convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK
+                    + GREETING + teacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, studentContent, MessagingConstants.TYPE_HHC);
 
@@ -446,8 +458,8 @@ public class NotificationUtil {
                     recipientList.add(parent.getUserId());
                 }
                 String parentContent = "Ch\u00e8re Madame, cher Monsieur,"
-                        + ", </br></br>Votre enfant " + student.getFullName() + " est convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                        + ", " + HTML_LINE_BREAK + HTML_LINE_BREAK + "Votre enfant " + student.getFullName() + " est convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
@@ -469,13 +481,13 @@ public class NotificationUtil {
 
             if (!recipientList.isEmpty()) {
 
-                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>" + student.getFullName() + " est convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + student.getFullName() + " est convoqu\u00e9.e pour un travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for travaux", e);
+            logger.error("Error sending notification for travaux", e);
         }
     }
 
@@ -497,8 +509,9 @@ public class NotificationUtil {
             String slotName = getFrenchDay(cal) + " \u00e0 " + cal.get(Calendar.HOUR_OF_DAY) + "h" + String.format("%02d", cal.get(Calendar.MINUTE));
             String subject = "Annulation travail \u00e0 refaire en " + studentSession.getSubject() + " le " + slotName;
 
-            String content = "Cher.e " + student.getFullName() + ", </br></br>Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9.</br></br>"
-                    + "Meilleurs messages,</br>" + teacher.getFullName();
+            DateFormat df = getDateFormat();
+            String content = "Cher.e " + student.getFullName() + ", " + HTML_LINE_BREAK + HTML_LINE_BREAK + "Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                    + GREETING + teacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
 
@@ -509,8 +522,8 @@ public class NotificationUtil {
                 for (User parent : parents) {
                     recipientList.add(parent.getUserId());
                 }
-                String parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " par votre enfant " + student.getFullName() + " est annul\u00e9.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String parentContent = "Ch\u00e8re Madame, cher Monsieur," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " par votre enfant " + student.getFullName() + " est annul\u00e9." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
@@ -534,13 +547,13 @@ public class NotificationUtil {
 
             if (!recipientList.isEmpty()) {
 
-                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " par l'\u00e9l\u00e8ve " + student.getFullName() + " est annul\u00e9.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Le travail \u00e0 refaire en " + studentSession.getSubject() + " le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " par l'\u00e9l\u00e8ve " + student.getFullName() + " est annul\u00e9." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for travail a refaire", e);
+            logger.error("Error sending notification for travail a refaire", e);
         }
     }
 
@@ -578,12 +591,13 @@ public class NotificationUtil {
 
             String subject = "Travail \u00e0 refaire - Absence de " + student.getFullName();
 
-            String content = "Cher.e.s coll\u00e8gue.s, </br></br>L'\u00e9l\u00e8ve " + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e au travail \u00e0 refaire de " + sessionStudent.getSubject() + " le " + df.format(session.getStartDate()) + ".</br></br>";
-            content += "Meilleurs messages,</br>" + watchTeacher.getFullName();
+            DateFormat df = getDateFormat();
+            String content = "Cher.e.s coll\u00e8gue.s, " + HTML_LINE_BREAK + HTML_LINE_BREAK + "L'\u00e9l\u00e8ve " + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e au travail \u00e0 refaire de " + sessionStudent.getSubject() + " le " + df.format(session.getStartDate()) + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK;
+            content += GREETING + watchTeacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
         } catch (Exception e) {
-            _log.error("Error sending notification for travaux absence for studentId="+studentId+", schoollifeSessionId=" + schoollifeSessionId, e);
+            logger.error("Error sending notification for travaux absence for studentId="+studentId+", schoollifeSessionId=" + schoollifeSessionId, e);
         }
     }
 
@@ -597,6 +611,7 @@ public class NotificationUtil {
             // Send notification to student's parents if selected
             List<Long> recipientList;
 
+            DateFormat df = getDateFormat();
             String subject = "D\u00e9pannage le " + df.format(session.getStartDate());
 
             if (notifyParents) {
@@ -605,9 +620,9 @@ public class NotificationUtil {
                 for (User parent : parents) {
                     recipientList.add(parent.getUserId());
                 }
-                String parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>"
-                        + "Votre enfant " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e au d\u00e9pannage le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String parentContent = "Ch\u00e8re Madame, cher Monsieur," + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + "Votre enfant " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e au d\u00e9pannage le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
@@ -630,13 +645,13 @@ public class NotificationUtil {
 
             if (!recipientList.isEmpty()) {
 
-                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>" + student.getFullName() + " s'est pr\u00e9sent\u00e9.e au d\u00e9pannage le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + ".</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + student.getFullName() + " s'est pr\u00e9sent\u00e9.e au d\u00e9pannage le " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for dépannage", e);
+            logger.error("Error sending notification for dépannage", e);
         }
     }
 
@@ -657,15 +672,17 @@ public class NotificationUtil {
             String slotName = getFrenchDay(cal) + " \u00e0 " + cal.get(Calendar.HOUR_OF_DAY) + "h" + String.format("%02d", cal.get(Calendar.MINUTE));
             String subject = "Annulation d\u00e9pannage le " + slotName;
 
+            DateFormat df = getDateFormat();
             // Send notification to student's parents if selected
             if (notifyParents) {
-                recipientList = new ArrayList<Long>();
+                recipientList = new ArrayList<>();
                 List<User> parents = UserRelationshipLocalServiceUtil.getParents(studentId);
                 for (User parent : parents) {
                     recipientList.add(parent.getUserId());
                 }
-                String parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>Le d\u00e9pannage de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+
+                String parentContent = "Ch\u00e8re Madame, cher Monsieur," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Le d\u00e9pannage de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
@@ -688,13 +705,13 @@ public class NotificationUtil {
 
             if (!recipientList.isEmpty()) {
 
-                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>Le d\u00e9pannage de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Le d\u00e9pannage de l'\u00e9l\u00e8ve " + student.getFullName() + " du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + " est annul\u00e9." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for dépannage", e);
+            logger.error("Error sending notification for dépannage", e);
         }
     }
 
@@ -715,9 +732,9 @@ public class NotificationUtil {
             String slotName = getFrenchDay(cal) + " \u00e0 " + cal.get(Calendar.HOUR_OF_DAY) + "h" + String.format("%02d", cal.get(Calendar.MINUTE));
             String subject = "Cercle d'\u00e9tude le " + slotName;
 
-            String content = student.getFullName() + ", </br></br>Vous \u00eates inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
-                    + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
-                    + "Meilleurs messages,</br>" + teacher.getFullName();
+            String content = student.getFullName() + ", "+ HTML_LINE_BREAK + HTML_LINE_BREAK + "Vous \u00eates inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
+                    + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                    + GREETING + teacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
 
@@ -728,10 +745,10 @@ public class NotificationUtil {
                 for (User parent : parents) {
                     recipientList.add(parent.getUserId());
                 }
-                String parentContent = "Ch\u00e8re Madame, cher Monsieur,"
-                        + " </br></br>Votre enfant " + student.getFullName() + " est inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
-                        + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String parentContent = "Ch\u00e8re Madame, cher Monsieur," + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + "Votre enfant " + student.getFullName() + " est inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
+                        + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
             }
@@ -754,14 +771,14 @@ public class NotificationUtil {
 
             if (!recipientList.isEmpty()) {
 
-                String teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>L'\u00e9l\u00e8ve " + student.getFullName() + " est inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
-                        + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                String teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "L'\u00e9l\u00e8ve " + student.getFullName() + " est inscrit.e au cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
+                        + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for etude", e);
+            logger.error("Error sending notification for etude", e);
         }
     }
 
@@ -782,14 +799,15 @@ public class NotificationUtil {
             String slotName = getFrenchDay(cal) + " \u00e0 " + cal.get(Calendar.HOUR_OF_DAY) + "h" + String.format("%02d", cal.get(Calendar.MINUTE));
             String subject = "Fin du cercle d'\u00e9tude le " + slotName;
 
-            String content = "";
+            DateFormat df = getDateFormat();
+            String content;
             if (allSessions) {
-                content = "Cher.e " + student.getFullName() + ", </br></br>Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + slotName + " en salle " + slot.getRoom()
-                        + " du " + df.format(session.getStartDate()) + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                content = "Cher.e " + student.getFullName() + ", " + HTML_LINE_BREAK + HTML_LINE_BREAK + "Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + slotName + " en salle " + slot.getRoom()
+                        + " du " + df.format(session.getStartDate()) + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire." + HTML_LINE_BREAK + HTML_LINE_BREAK + ""
+                        + GREETING + teacher.getFullName();
             } else {
-                content = "Cher.e " + student.getFullName() + ", </br></br>Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + "</br></br>"
-                        + "Meilleurs messages,</br>" + teacher.getFullName();
+                content = "Cher.e " + student.getFullName() + ", " + HTML_LINE_BREAK + HTML_LINE_BREAK + "Vous \u00eates d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + " en salle " + slot.getRoom() + "" + HTML_LINE_BREAK + HTML_LINE_BREAK
+                        + GREETING + teacher.getFullName();
             }
             MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, content, MessagingConstants.TYPE_HHC);
 
@@ -802,12 +820,12 @@ public class NotificationUtil {
                 }
                 String parentContent = "";
                 if (allSessions) {
-                    parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>Votre enfant " + student.getFullName() + " est d\u00e9sinscrit.e du cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
-                            + "du " + df.format(session.getStartDate()) + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
-                            + "Meilleurs messages,</br>" + teacher.getFullName();
+                    parentContent = "Ch\u00e8re Madame, cher Monsieur," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Votre enfant " + student.getFullName() + " est d\u00e9sinscrit.e du cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
+                            + "du " + df.format(session.getStartDate()) + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                            + GREETING + teacher.getFullName();
                 } else {
-                    parentContent = "Ch\u00e8re Madame, cher Monsieur,</br></br>Votre enfant " + student.getFullName() + " est d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + ", en salle " + slot.getRoom() + ".</br></br>"
-                            + "Meilleurs messages,</br>" + teacher.getFullName();
+                    parentContent = "Ch\u00e8re Madame, cher Monsieur," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Votre enfant " + student.getFullName() + " est d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + ", en salle " + slot.getRoom() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK
+                            + GREETING + teacher.getFullName();
                 }
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, parentContent, MessagingConstants.TYPE_HHC);
@@ -833,18 +851,18 @@ public class NotificationUtil {
 
                 String teacherContent = "";
                 if (allSessions) {
-                    teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>L'\u00e9l\u00e8ve" + student.getFullName() + " est d\u00e9sinscrit.e du cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
-                            + "depuis le " + df.format(session.getStartDate()) + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire.</br></br>"
-                            + "Meilleurs messages,</br>" + teacher.getFullName();
+                    teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "L'\u00e9l\u00e8ve" + student.getFullName() + " est d\u00e9sinscrit.e du cercle d'\u00e9tude du " + slotName + ", en salle " + slot.getRoom() + ", "
+                            + "depuis le " + df.format(session.getStartDate()) + " jusqu'\u00e0 la fin de l'ann\u00e9e scolaire." + HTML_LINE_BREAK + HTML_LINE_BREAK
+                            + GREETING + teacher.getFullName();
                 } else {
-                    teacherContent = "Cher.e.s coll\u00e8gue.s,</br></br>L'\u00e9l\u00e8ve" + student.getFullName() + " est d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + ", en salle " + slot.getRoom() + ".</br></br>"
-                            + "Meilleurs messages,</br>" + teacher.getFullName();
+                    teacherContent = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "L'\u00e9l\u00e8ve" + student.getFullName() + " est d\u00e9sinscrit.e du cercle d'\u00e9tude du " + df.format(session.getStartDate()) + ", en salle " + slot.getRoom() + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK
+                            + GREETING + teacher.getFullName();
                 }
 
                 MessageLocalServiceUtil.sendMessage(teacherId, recipientList, subject, teacherContent, MessagingConstants.TYPE_HHC);
             }
         } catch (Exception e) {
-            _log.error("Error sending notification for etude deregistration", e);
+            logger.error("Error sending notification for etude deregistration", e);
         }
     }
 
@@ -880,12 +898,13 @@ public class NotificationUtil {
 
             String subject = "Cercle d'\u00e9tude - Absence de " + student.getFullName();
 
-            String content = "Cher.e.s coll\u00e8gue.s, </br></br>L'\u00e9l\u00e8ve " + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e au cercle d'\u00e9tude le " + df.format(session.getStartDate()) + ".</br></br>";
-            content += "Meilleurs messages,</br>" + watchTeacher.getFullName();
+            DateFormat df = getDateFormat();
+            String content = "Cher.e.s coll\u00e8gue.s, " + HTML_LINE_BREAK + HTML_LINE_BREAK + "L'\u00e9l\u00e8ve " + student.getFullName() + " ne s'est pas pr\u00e9sent\u00e9.e au cercle d'\u00e9tude le " + df.format(session.getStartDate()) + StringPool.PERIOD + HTML_LINE_BREAK + HTML_LINE_BREAK;
+            content += GREETING + watchTeacher.getFullName();
 
             MessageLocalServiceUtil.sendMessage(watchTeacher.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_HHC);
         } catch (Exception e) {
-            _log.error("Error sending notification for travaux absence for studentId="+studentId+", schoollifeSessionId=" + schoollifeSessionId, e);
+            logger.error("Error sending notification for travaux absence for studentId="+studentId+", schoollifeSessionId=" + schoollifeSessionId, e);
         }
     }
 
@@ -907,5 +926,11 @@ public class NotificationUtil {
         } else {
             return "";
         }
+    }
+    
+    private static DateFormat getDateFormat() {
+        final String messageDateFormat = "dd MMMM yyyy '\u00e0' HH'h'mm";
+
+        return new SimpleDateFormat(messageDateFormat, new Locale("fr", "FR"));
     }
 }
