@@ -14,22 +14,13 @@
 
 package com.weprode.nero.authentication.service.http;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.security.auth.HttpPrincipal;
-import com.liferay.portal.kernel.service.http.TunnelUtil;
-import com.liferay.portal.kernel.util.MethodHandler;
-import com.liferay.portal.kernel.util.MethodKey;
-
-import com.weprode.nero.authentication.service.AuthenticationServiceUtil;
-
 /**
  * Provides the HTTP utility for the
- * <code>AuthenticationServiceUtil</code> service
+ * <code>com.weprode.nero.authentication.service.AuthenticationServiceUtil</code> service
  * utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it requires an additional
- * <code>HttpPrincipal</code> parameter.
+ * <code>com.liferay.portal.kernel.security.auth.HttpPrincipal</code> parameter.
  *
  * <p>
  * The benefits of using the HTTP utility is that it is fast and allows for
@@ -51,77 +42,4 @@ import com.weprode.nero.authentication.service.AuthenticationServiceUtil;
  * @generated
  */
 public class AuthenticationServiceHttp {
-
-	public static org.json.JSONObject checkCredentials(
-		HttpPrincipal httpPrincipal, String login, String password) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				AuthenticationServiceUtil.class, "checkCredentials",
-				_checkCredentialsParameterTypes0);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, login, password);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	public static org.json.JSONObject authLog(
-		HttpPrincipal httpPrincipal, String str) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				AuthenticationServiceUtil.class, "authLog",
-				_authLogParameterTypes1);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, str);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	private static Log _log = LogFactoryUtil.getLog(
-		AuthenticationServiceHttp.class);
-
-	private static final Class<?>[] _checkCredentialsParameterTypes0 =
-		new Class[] {String.class, String.class};
-	private static final Class<?>[] _authLogParameterTypes1 = new Class[] {
-		String.class
-	};
-
 }
