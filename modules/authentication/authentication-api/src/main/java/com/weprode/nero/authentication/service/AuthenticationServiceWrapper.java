@@ -32,16 +32,6 @@ public class AuthenticationServiceWrapper
 		_authenticationService = authenticationService;
 	}
 
-	@Override
-	public org.json.JSONObject authLog(String str) {
-		return _authenticationService.authLog(str);
-	}
-
-	@Override
-	public org.json.JSONObject checkCredentials(String login, String password) {
-		return _authenticationService.checkCredentials(login, password);
-	}
-
 	/**
 	 * Returns the OSGi service identifier.
 	 *

@@ -15,17 +15,9 @@
 package com.weprode.nero.authentication.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.PasswordTrackerLocalServiceUtil;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.authentication.service.base.AuthenticationServiceBaseImpl;
-import com.weprode.nero.commons.constants.JSONConstants;
-import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -42,51 +34,15 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 
 	private final Log logger = LogFactoryUtil.getLog(AuthenticationServiceImpl.class);
 
-	// This is a public webservice
-	@JSONWebService(value = "check-credentials", method = "POST")
-	public JSONObject checkCredentials(String login, String password) {
-		JSONObject result = new JSONObject();
-
-		logger.info("checkCredentials for login " + login);
-		result.put(JSONConstants.IS_VALID, false);
-		try {
-			boolean isValid = false;
-			boolean isActive = false;
-			// First get user from login
-			User user = null;
-			try {
-				user = UserLocalServiceUtil.getUserByScreenName(PortalUtil.getDefaultCompanyId(), login);
-			} catch (Exception e) {
-				logger.info("Attempt to login with invalid screenName " + login);
-			}
-
-			if (user != null) {
-				try {
-					isValid = PasswordTrackerLocalServiceUtil.isSameAsCurrentPassword(user.getUserId(), password);
-					isActive = user.isActive();
-					result.put(JSONConstants.USER_ID, user.getUserId());
-				} catch (Exception e) {
-					logger.info("Error when comparing password with current one", e);
-				}
-			}
-			result.put(JSONConstants.IS_VALID, isValid);
-			result.put(JSONConstants.IS_ACTIVE, isActive);
-
-		} catch (SystemException e) {
-			logger.error("Error checking login/password pair", e);
-		}
-
-		return result;
-	}
-
-	@JSONWebService(value = "auth-log", method = "GET")
-	public JSONObject authLog(String str) {
-		JSONObject result = new JSONObject();
-
-		logger.info("authLog : " + str);
-		result.put("success", true);
-
-		return result;
-	}
+	// Uncomment for local testing only
+//	@JSONWebService(value = "auth-log", method = "GET")
+//	public JSONObject authLog(String str) {
+//		JSONObject result = new JSONObject();
+//
+//		logger.info("authLog : " + str);
+//		result.put("success", true);
+//
+//		return result;
+//	}
 
 }

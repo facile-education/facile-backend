@@ -598,7 +598,7 @@ public class CustomAuthVerifier implements AuthVerifier {
     private String getTokenFromUrl(String url) {
         try {
             if (url != null) {
-                logger.info("url = " + url);
+                //logger.info("url = " + url);
 
                 String mobileTokenStr = "mobile_token=";
                 if (url.contains(mobileTokenStr)) {

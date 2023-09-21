@@ -14,16 +14,9 @@
 
 package com.weprode.nero.authentication.service.http;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-
-import com.weprode.nero.authentication.service.AuthenticationServiceUtil;
-
-import java.rmi.RemoteException;
-
 /**
  * Provides the SOAP utility for the
- * <code>AuthenticationServiceUtil</code> service
+ * <code>com.weprode.nero.authentication.service.AuthenticationServiceUtil</code> service
  * utility. The static methods of this class call the same methods of the
  * service utility. However, the signatures are different because it is
  * difficult for SOAP to support certain types.
@@ -52,41 +45,4 @@ import java.rmi.RemoteException;
  */
 @Deprecated
 public class AuthenticationServiceSoap {
-
-	public static org.json.JSONObject checkCredentials(
-			String login, String password)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue =
-				AuthenticationServiceUtil.checkCredentials(login, password);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static org.json.JSONObject authLog(String str)
-		throws RemoteException {
-
-		try {
-			org.json.JSONObject returnValue = AuthenticationServiceUtil.authLog(
-				str);
-
-			return returnValue;
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	private static Log _log = LogFactoryUtil.getLog(
-		AuthenticationServiceSoap.class);
-
 }
