@@ -48,7 +48,6 @@ public class SchoollifeAbsenceMessageListener extends BaseMessageListener {
     @Override
     protected void doReceive(Message message) {
         long timer = System.currentTimeMillis();
-        logger.warn("Start schoollife absence scheduler");
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             // Fetch all passed schoollife sessions of the current day for which the 'call' has been done
@@ -106,10 +105,8 @@ public class SchoollifeAbsenceMessageListener extends BaseMessageListener {
             }
 
         } catch (Exception e) {
-            logger.debug(e);
+            logger.error("An error occurred while running the schoollife absence scheduler task", e);
         }
-
-        logger.warn("END schoollife absence scheduler. Total time " + (System.currentTimeMillis() - timer) + "ms.");
     }
 
 
