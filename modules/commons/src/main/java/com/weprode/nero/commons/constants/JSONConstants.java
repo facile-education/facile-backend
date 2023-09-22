@@ -592,6 +592,7 @@ public class JSONConstants {
     public static final String FILE_SIZE_EXCEPTION = "fileSizeException";
     public static final String DUPLICATE_FILE_EXCEPTION = "DuplicateFileException";
     public static final String FILE_EXTENSION_EXCEPTION = "FileExtensionException";
+    public static final String ANTIVIRUS_EXCEPTION = "AntivirusException";
 
     public static long getLongValue(JSONObject object, String property, long defaultValue) {
         try {

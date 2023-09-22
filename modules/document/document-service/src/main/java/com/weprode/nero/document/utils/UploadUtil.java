@@ -1,11 +1,10 @@
 package com.weprode.nero.document.utils;
 
+import com.liferay.document.library.kernel.antivirus.AntivirusVirusFoundException;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -16,6 +15,7 @@ import com.weprode.nero.document.constants.PermissionConstants;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
@@ -61,6 +61,9 @@ public class UploadUtil {
                     return result;
                 } catch (DuplicateFileEntryException e) {
                     result.put(JSONConstants.ERROR, JSONConstants.DUPLICATE_FILE_EXCEPTION);
+                    return result;
+                } catch (AntivirusVirusFoundException e) {
+                    result.put(JSONConstants.ERROR, JSONConstants.ANTIVIRUS_EXCEPTION);
                     return result;
                 }
 
