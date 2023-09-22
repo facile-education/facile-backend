@@ -1,13 +1,16 @@
 package com.weprode.nero.document.utils;
 
+import com.liferay.document.library.kernel.antivirus.AntivirusVirusFoundException;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
 import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.exception.FileNameException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
+import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchResourcePermissionException;
@@ -38,6 +41,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DLAppUtil {
 
@@ -157,6 +161,7 @@ public class DLAppUtil {
             int count = 0;
             String suffix = "";
             FileEntry fileEntry = null;
+            String externalReferenceCode = UUID.randomUUID().toString();
             while (!finished && count < DocumentConstants.NB_RENAMED_VERSIONS) {
                 try {
                     name = originalTitle + suffix + extension;
@@ -164,7 +169,7 @@ public class DLAppUtil {
                     name = Normalizer.normalize(name, Normalizer.Form.NFC);
 
                     fileEntry = DLAppServiceUtil.addFileEntry(
-                            StringPool.BLANK, // externalReferenceCode
+                            externalReferenceCode,
                             folder.getGroupId(),
                             folder.getFolderId(),
                             name,
@@ -224,10 +229,16 @@ public class DLAppUtil {
                     }
                 } catch (FileSizeException e) {
                     logger.error("Max size exceeded while adding file entry to folder " + folder.getFolderId() + " by user " + user.getUserId());
+                    deleteOrphanFile(folder.getGroupId(), externalReferenceCode);
                     throw new FileSizeException();
                 } catch (FileExtensionException e) {
                     logger.error("Unauthorized extension while adding file entry " + fileName + " to folder " + folder.getFolderId() + " by user " + user.getUserId());
+                    deleteOrphanFile(folder.getGroupId(), externalReferenceCode);
                     throw new FileExtensionException();
+                } catch (AntivirusVirusFoundException e) {
+                    logger.error("Virus found while adding file entry " + fileName + " to folder " + folder.getFolderId() + " by user " + user.getUserId());
+                    deleteOrphanFile(folder.getGroupId(), externalReferenceCode);
+                    throw new AntivirusVirusFoundException("Virus was found", "VirusName");
                 } catch (Exception e) {
                     logger.error("Error while adding file entry to folder " + folder.getFolderId() + " by user " + user.getUserId(), e);
                     return null;
@@ -242,6 +253,21 @@ public class DLAppUtil {
             return fileEntry;
         } else {
             throw new NoSuchResourcePermissionException();
+        }
+    }
+
+    private static void deleteOrphanFile(long groupId, String externalReferenceCode) {
+        // This method deletes a DLFileEntry that was just created but for which the store layer has failed (file too big, infected, etc)
+        // Liferay does not revert the DLFileEntry creation, so we do it here in order to not create an orphan DLFileEntry
+        logger.info("About to delete just created file in error, with groupId=" + groupId + " and externalReferenceCode=" + externalReferenceCode);
+        try {
+            DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getDLFileEntryByExternalReferenceCode(groupId, externalReferenceCode);
+            if (dlFileEntry != null) {
+                DLFileEntryLocalServiceUtil.deleteDLFileEntry(dlFileEntry);
+                logger.info("File deleted -> no orphan created");
+            }
+        } catch (PortalException e) {
+            logger.error("Error deleting file with externalReferenceCode=" + externalReferenceCode + " : this might create an orphan");
         }
     }
 
