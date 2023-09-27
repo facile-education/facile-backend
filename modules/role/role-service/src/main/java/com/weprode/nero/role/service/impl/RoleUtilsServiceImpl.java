@@ -9,7 +9,6 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsService;
 import com.weprode.nero.role.service.base.RoleUtilsServiceBaseImpl;
@@ -129,8 +128,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 				final JSONObject curr = new JSONObject();
 				curr.put(JSONConstants.ROLE_ID, role.getRoleId());
 				curr.put(JSONConstants.DISPLAY_TEXT, role.getTitle(user.getLocale()));
-				curr.put(JSONConstants.IS_FOR_CLASS, (role.getName().equals(NeroRoleConstants.NATIONAL_1) || role.getName().equals(NeroRoleConstants.NATIONAL_2) ||
-					role.getName().equals(NeroRoleConstants.NATIONAL_3) || role.getName().equals(NeroRoleConstants.MAIN_TEACHER)));
+				curr.put(JSONConstants.IS_FOR_CLASS, RoleUtilsLocalServiceUtil.isForClass(role));
 				roleList.put(curr);
 			}
 

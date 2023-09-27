@@ -261,38 +261,37 @@ public class PermissionUtilsLocalServiceImpl
 
 		// No permission roles
 		List<Role> noPermissionRoleList = new ArrayList<>();
-		noPermissionRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.EXTERNAL));
 		noPermissionRoleList.add(RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_MEMBER));
 
 		// Read-only roles
 		List<Role> viewerRoleList = new ArrayList<>();
-		viewerRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.NATIONAL_1));
-		viewerRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.NATIONAL_2));
+		viewerRoleList.add(RoleUtilsLocalServiceUtil.getStudentRole());
+		viewerRoleList.add(RoleUtilsLocalServiceUtil.getParentRole());
 
 		// Update / add content roles
 		List<Role> viewUpdateRoleList = new ArrayList<>();
 		// Students have update right in personal groups only
 		if (!isOrg) {
-			viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.NATIONAL_1));
+			viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getStudentRole());
 		}
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.NATIONAL_3));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.ASSISTANT_TECHNIQUE));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.CAISSIER_COMPTABLE));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.CONSEILLER_ORIENTATION));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.CONSEILLER_SOCIAL));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.DOYEN));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.INFIRMIERE));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.BIBLIOTHECAIRE));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.PSYCHOLOGUE));
-		viewUpdateRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.SECRETAIRE));
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getTeacherRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getAssistantTechniqueRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getCaissierComptableRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getConseillerOrientationRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getConseillerSocialRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getDoyenRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getInfirmiereRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getBibliothecaireRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getPsychologueRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getSecretariatRole());
 
 		// Delete roles
 		//List<Role> viewUpdateDeleteRoleList = new ArrayList<Role>();
 
 		// All permissions roles
 		allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, RoleConstants.OWNER));
-		allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.GROUP_ADMIN));
-		allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.NATIONAL_4));
+		allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.SCHOOL_ADMIN));
+		allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.DIRECTION));
 		if (!isOrg) {
 			allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_ADMINISTRATOR));
 			allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_OWNER));
@@ -568,8 +567,8 @@ public class PermissionUtilsLocalServiceImpl
 	}
 
 	public static final String[] PERMISSION_ROLES = {
-			NeroRoleConstants.NATIONAL_1, NeroRoleConstants.NATIONAL_3, NeroRoleConstants.NATIONAL_2, NeroRoleConstants.NATIONAL_4,
-			NeroRoleConstants.GROUP_ADMIN,
+			NeroRoleConstants.STUDENT, NeroRoleConstants.TEACHER, NeroRoleConstants.RELATIVE, NeroRoleConstants.DIRECTION,
+			NeroRoleConstants.SCHOOL_ADMIN,
 			NeroRoleConstants.ASSISTANT_TECHNIQUE, NeroRoleConstants.CAISSIER_COMPTABLE, NeroRoleConstants.CONSEILLER_ORIENTATION,
 			NeroRoleConstants.CONSEILLER_SOCIAL, NeroRoleConstants.DOYEN, NeroRoleConstants.INFIRMIERE, NeroRoleConstants.BIBLIOTHECAIRE,
 			NeroRoleConstants.PSYCHOLOGUE, NeroRoleConstants.SECRETAIRE

@@ -189,13 +189,13 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             // Organizations
             List<Integer> types = new ArrayList<>();
             List<Organization> organizations = new ArrayList<>();
-            if (allClasses && (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isPat(user) || RoleUtilsLocalServiceUtil.isEmps(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
+            if (allClasses && (RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
                 types.add(OrgConstants.CLASS_TYPE);
                 types.add(OrgConstants.SUBJECT_TYPE);
                 organizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, false);
                 // Adding school org
                 organizations.add(OrganizationLocalServiceUtil.getOrganization(schoolId));
-            } else if (allCours && (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isPat(user) || RoleUtilsLocalServiceUtil.isEmps(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
+            } else if (allCours && (RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
                 types.add(OrgConstants.COURS_TYPE);
                 organizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, false);
             } else if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) || (!allCommunities)) {

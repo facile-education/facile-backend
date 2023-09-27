@@ -38,23 +38,10 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.model.Role getAcademicRole() {
-		return _roleUtilsLocalService.getAcademicRole();
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.Role getAdministrativeRole() {
-		return _roleUtilsLocalService.getAdministrativeRole();
-	}
-
-	@Override
 	public com.liferay.portal.kernel.model.Role getAdministratorRole() {
 		return _roleUtilsLocalService.getAdministratorRole();
 	}
 
-	/**
-	 * Get the User Profile
-	 */
 	@Override
 	public java.util.List<Long> getAgentsRoleIds() {
 		return _roleUtilsLocalService.getAgentsRoleIds();
@@ -70,11 +57,6 @@ public class RoleUtilsLocalServiceWrapper
 		getAvailableRolesForLocalUser() {
 
 		return _roleUtilsLocalService.getAvailableRolesForLocalUser();
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.Role getBetaTesterRole() {
-		return _roleUtilsLocalService.getBetaTesterRole();
 	}
 
 	@Override
@@ -115,11 +97,6 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.model.Role getDocumentalistRole() {
-		return _roleUtilsLocalService.getDocumentalistRole();
-	}
-
-	@Override
 	public com.liferay.portal.kernel.model.Role getDoyenRole() {
 		return _roleUtilsLocalService.getDoyenRole();
 	}
@@ -130,18 +107,8 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.model.Role getGarAdminRole() {
-		return _roleUtilsLocalService.getGarAdminRole();
-	}
-
-	@Override
 	public com.liferay.portal.kernel.model.Role getInfirmiereRole() {
 		return _roleUtilsLocalService.getInfirmiereRole();
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.Role getInspectorRole() {
-		return _roleUtilsLocalService.getInspectorRole();
 	}
 
 	@Override
@@ -150,18 +117,8 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.model.Role getMedicalRole() {
-		return _roleUtilsLocalService.getMedicalRole();
-	}
-
-	@Override
 	public com.liferay.portal.kernel.model.Role getOrganizationUserRole() {
 		return _roleUtilsLocalService.getOrganizationUserRole();
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.Role getOrientationRole() {
-		return _roleUtilsLocalService.getOrientationRole();
 	}
 
 	/**
@@ -200,11 +157,6 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.model.Role getSchoolLifeRole() {
-		return _roleUtilsLocalService.getSchoolLifeRole();
-	}
-
-	@Override
 	public com.liferay.portal.kernel.model.Role getSecretariatRole() {
 		return _roleUtilsLocalService.getSecretariatRole();
 	}
@@ -231,16 +183,6 @@ public class RoleUtilsLocalServiceWrapper
 		getUserSearchableRoles(com.liferay.portal.kernel.model.User user) {
 
 		return _roleUtilsLocalService.getUserSearchableRoles(user);
-	}
-
-	@Override
-	public boolean isAcademic(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isAcademic(user);
-	}
-
-	@Override
-	public boolean isAdministrative(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isAdministrative(user);
 	}
 
 	@Override
@@ -308,11 +250,6 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public boolean isDocumentaliste(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isDocumentaliste(user);
-	}
-
-	@Override
 	public boolean isDoyen(com.liferay.portal.kernel.model.User user) {
 		return _roleUtilsLocalService.isDoyen(user);
 	}
@@ -325,35 +262,18 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public boolean isEmps(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isEmps(user);
-	}
-
-	@Override
 	public boolean isENTAdmin(com.liferay.portal.kernel.model.User user) {
 		return _roleUtilsLocalService.isENTAdmin(user);
 	}
 
 	@Override
-	public boolean isGARAdmin(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isGARAdmin(user);
-	}
-
-	@Override
-	public boolean isGARAdmin(
-		com.liferay.portal.kernel.model.User user, long orgId) {
-
-		return _roleUtilsLocalService.isGARAdmin(user, orgId);
+	public boolean isForClass(com.liferay.portal.kernel.model.Role role) {
+		return _roleUtilsLocalService.isForClass(role);
 	}
 
 	@Override
 	public boolean isInfirmiere(com.liferay.portal.kernel.model.User user) {
 		return _roleUtilsLocalService.isInfirmiere(user);
-	}
-
-	@Override
-	public boolean isInspector(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isInspector(user);
 	}
 
 	@Override
@@ -369,23 +289,8 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public boolean isMedical(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isMedical(user);
-	}
-
-	@Override
-	public boolean isOrientation(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isOrientation(user);
-	}
-
-	@Override
 	public boolean isParent(com.liferay.portal.kernel.model.User user) {
 		return _roleUtilsLocalService.isParent(user);
-	}
-
-	@Override
-	public boolean isPat(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isPat(user);
 	}
 
 	@Override
@@ -415,11 +320,6 @@ public class RoleUtilsLocalServiceWrapper
 		com.liferay.portal.kernel.model.User user, long schoolId) {
 
 		return _roleUtilsLocalService.isSchoolAdmin(user, schoolId);
-	}
-
-	@Override
-	public boolean isSchoolLife(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isSchoolLife(user);
 	}
 
 	@Override
