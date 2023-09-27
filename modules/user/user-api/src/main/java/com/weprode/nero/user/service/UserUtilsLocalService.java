@@ -85,6 +85,9 @@ public interface UserUtilsLocalService extends BaseLocalService {
 	public List<User> getUserListFromUserIdList(List<Long> userIds);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String getUserPicture(User user) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<User> getUserPsychologues(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

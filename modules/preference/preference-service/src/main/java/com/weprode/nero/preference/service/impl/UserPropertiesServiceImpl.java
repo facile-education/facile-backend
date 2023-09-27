@@ -16,6 +16,7 @@ import com.weprode.nero.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.preference.service.UserPropertiesService;
 import com.weprode.nero.preference.service.base.UserPropertiesServiceBaseImpl;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -80,16 +81,17 @@ public class UserPropertiesServiceImpl extends UserPropertiesServiceBaseImpl {
         }
 
         try {
-            long portraitId = UserLocalServiceUtil.getDefaultUser(PortalUtil.getDefaultCompanyId()).getPortraitId();
             if (picture.length() == 0) {	// Add condition to avoid nullPointerException
                 UserServiceUtil.deletePortrait(user.getUserId());
+
+                // Manually set the portraitId to 0
+                user.setPortraitId(0);
+                UserLocalServiceUtil.updateUser(user);
             } else {
                 user = UserServiceUtil.updatePortrait(user.getUserId(), Files.readAllBytes(picture.toPath()));
-                portraitId = user.getPortraitId();
             }
 
-            result.put(JSONConstants.IMAGE_URL, UserConstants.getPortraitURL(PortalUtil.getPathImage(), user.isMale(),
-                    portraitId, user.getUserUuid()));
+            result.put(JSONConstants.IMAGE_URL, UserUtilsLocalServiceUtil.getUserPicture(user));
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);

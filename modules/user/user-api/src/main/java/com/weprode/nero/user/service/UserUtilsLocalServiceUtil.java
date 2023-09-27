@@ -14,6 +14,8 @@
 
 package com.weprode.nero.user.service;
 
+import com.liferay.portal.kernel.exception.PortalException;
+
 import java.util.List;
 
 /**
@@ -91,6 +93,13 @@ public class UserUtilsLocalServiceUtil {
 		getUserListFromUserIdList(List<Long> userIds) {
 
 		return getService().getUserListFromUserIdList(userIds);
+	}
+
+	public static String getUserPicture(
+			com.liferay.portal.kernel.model.User user)
+		throws PortalException {
+
+		return getService().getUserPicture(user);
 	}
 
 	public static List<com.liferay.portal.kernel.model.User>
