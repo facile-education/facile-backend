@@ -8,9 +8,10 @@ import com.liferay.portal.kernel.exception.UserPasswordException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.PasswordPolicy;
-import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.model.UserGroupRole;
 import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
@@ -53,6 +54,19 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
             rand = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public String getUserPicture (User user) throws PortalException {
+        if (user.getPortraitId() != 0) {
+            return UserConstants.getPortraitURL(
+                    PortalUtil.getPathImage(),
+                    user.isMale(),
+                    user.getPortraitId(),
+                    user.getUserUuid()
+            );
+        } else {
+            return ""; // To avoid liferay to return liferay's default picture
         }
     }
 

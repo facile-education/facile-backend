@@ -100,6 +100,13 @@ public class UserUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public String getUserPicture(com.liferay.portal.kernel.model.User user)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _userUtilsLocalService.getUserPicture(user);
+	}
+
+	@Override
 	public java.util.List<com.liferay.portal.kernel.model.User>
 		getUserPsychologues(com.liferay.portal.kernel.model.User user) {
 

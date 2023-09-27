@@ -28,6 +28,7 @@ import com.weprode.nero.statistic.service.MatomoLocalServiceUtil;
 import com.weprode.nero.user.model.UserContact;
 import com.weprode.nero.user.service.UserContactLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
+import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.base.UserUtilsServiceBaseImpl;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,8 +67,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
         try {
             userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
-            portraitUrl = UserConstants.getPortraitURL(PortalUtil.getPathImage(), user.isMale(),
-                    user.getPortraitId(), user.getUserUuid());
+            portraitUrl = UserUtilsLocalServiceUtil.getUserPicture(user);
         } catch (Exception e) {
             logger.error("Cannot get user ("+user.getUserId()+") informations", e);
             result.put(JSONConstants.SUCCESS, false);
