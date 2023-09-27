@@ -41,21 +41,10 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().displayUserRoles(user);
 	}
 
-	public static com.liferay.portal.kernel.model.Role getAcademicRole() {
-		return getService().getAcademicRole();
-	}
-
-	public static com.liferay.portal.kernel.model.Role getAdministrativeRole() {
-		return getService().getAdministrativeRole();
-	}
-
 	public static com.liferay.portal.kernel.model.Role getAdministratorRole() {
 		return getService().getAdministratorRole();
 	}
 
-	/**
-	 * Get the User Profile
-	 */
 	public static List<Long> getAgentsRoleIds() {
 		return getService().getAgentsRoleIds();
 	}
@@ -70,10 +59,6 @@ public class RoleUtilsLocalServiceUtil {
 		getAvailableRolesForLocalUser() {
 
 		return getService().getAvailableRolesForLocalUser();
-	}
-
-	public static com.liferay.portal.kernel.model.Role getBetaTesterRole() {
-		return getService().getBetaTesterRole();
 	}
 
 	public static com.liferay.portal.kernel.model.Role getBibliothecaireRole() {
@@ -112,10 +97,6 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().getDirectionRole();
 	}
 
-	public static com.liferay.portal.kernel.model.Role getDocumentalistRole() {
-		return getService().getDocumentalistRole();
-	}
-
 	public static com.liferay.portal.kernel.model.Role getDoyenRole() {
 		return getService().getDoyenRole();
 	}
@@ -124,34 +105,18 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().getEntAdminRole();
 	}
 
-	public static com.liferay.portal.kernel.model.Role getGarAdminRole() {
-		return getService().getGarAdminRole();
-	}
-
 	public static com.liferay.portal.kernel.model.Role getInfirmiereRole() {
 		return getService().getInfirmiereRole();
-	}
-
-	public static com.liferay.portal.kernel.model.Role getInspectorRole() {
-		return getService().getInspectorRole();
 	}
 
 	public static com.liferay.portal.kernel.model.Role getMainTeacherRole() {
 		return getService().getMainTeacherRole();
 	}
 
-	public static com.liferay.portal.kernel.model.Role getMedicalRole() {
-		return getService().getMedicalRole();
-	}
-
 	public static com.liferay.portal.kernel.model.Role
 		getOrganizationUserRole() {
 
 		return getService().getOrganizationUserRole();
-	}
-
-	public static com.liferay.portal.kernel.model.Role getOrientationRole() {
-		return getService().getOrientationRole();
 	}
 
 	/**
@@ -185,10 +150,6 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().getSchoolAdminRole();
 	}
 
-	public static com.liferay.portal.kernel.model.Role getSchoolLifeRole() {
-		return getService().getSchoolLifeRole();
-	}
-
 	public static com.liferay.portal.kernel.model.Role getSecretariatRole() {
 		return getService().getSecretariatRole();
 	}
@@ -211,18 +172,6 @@ public class RoleUtilsLocalServiceUtil {
 		getUserSearchableRoles(com.liferay.portal.kernel.model.User user) {
 
 		return getService().getUserSearchableRoles(user);
-	}
-
-	public static boolean isAcademic(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().isAcademic(user);
-	}
-
-	public static boolean isAdministrative(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().isAdministrative(user);
 	}
 
 	public static boolean isAdministrator(
@@ -283,12 +232,6 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().isDirectionMember(user);
 	}
 
-	public static boolean isDocumentaliste(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().isDocumentaliste(user);
-	}
-
 	public static boolean isDoyen(com.liferay.portal.kernel.model.User user) {
 		return getService().isDoyen(user);
 	}
@@ -299,38 +242,22 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().isDoyen(user, orgId);
 	}
 
-	public static boolean isEmps(com.liferay.portal.kernel.model.User user) {
-		return getService().isEmps(user);
-	}
-
 	public static boolean isENTAdmin(
 		com.liferay.portal.kernel.model.User user) {
 
 		return getService().isENTAdmin(user);
 	}
 
-	public static boolean isGARAdmin(
-		com.liferay.portal.kernel.model.User user) {
+	public static boolean isForClass(
+		com.liferay.portal.kernel.model.Role role) {
 
-		return getService().isGARAdmin(user);
-	}
-
-	public static boolean isGARAdmin(
-		com.liferay.portal.kernel.model.User user, long orgId) {
-
-		return getService().isGARAdmin(user, orgId);
+		return getService().isForClass(role);
 	}
 
 	public static boolean isInfirmiere(
 		com.liferay.portal.kernel.model.User user) {
 
 		return getService().isInfirmiere(user);
-	}
-
-	public static boolean isInspector(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().isInspector(user);
 	}
 
 	public static boolean isMainTeacher(
@@ -345,22 +272,8 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().isMainTeacher(user, orgId);
 	}
 
-	public static boolean isMedical(com.liferay.portal.kernel.model.User user) {
-		return getService().isMedical(user);
-	}
-
-	public static boolean isOrientation(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().isOrientation(user);
-	}
-
 	public static boolean isParent(com.liferay.portal.kernel.model.User user) {
 		return getService().isParent(user);
-	}
-
-	public static boolean isPat(com.liferay.portal.kernel.model.User user) {
-		return getService().isPat(user);
 	}
 
 	public static boolean isPersonal(
@@ -391,12 +304,6 @@ public class RoleUtilsLocalServiceUtil {
 		com.liferay.portal.kernel.model.User user, long schoolId) {
 
 		return getService().isSchoolAdmin(user, schoolId);
-	}
-
-	public static boolean isSchoolLife(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().isSchoolLife(user);
 	}
 
 	public static boolean isSecretariat(

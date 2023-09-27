@@ -13,7 +13,7 @@ import com.weprode.nero.application.exception.NoSuchDefaultRoleException;
 import com.weprode.nero.application.model.DefaultRole;
 import com.weprode.nero.application.service.base.DefaultRoleLocalServiceBaseImpl;
 import com.weprode.nero.commons.constants.JSONConstants;
-import com.weprode.nero.role.constants.NeroRoleConstants;
+import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -57,7 +57,7 @@ public class DefaultRoleLocalServiceImpl extends DefaultRoleLocalServiceBaseImpl
                     String displayText = LanguageUtil.get(UserLocalServiceUtil.getDefaultUser(companyId).getLocale(), role.getName());
                     roleJson.put(JSONConstants.ROLE_ID, defaultRole.getRoleId());
                     roleJson.put(JSONConstants.DISPLAY_TEXT, displayText);
-                    roleJson.put(JSONConstants.IS_FOR_CLASS, isForClass(role.getName()));
+                    roleJson.put(JSONConstants.IS_FOR_CLASS, RoleUtilsLocalServiceUtil.isForClass(role));
                     rolesTab.put(roleJson);
                 }
             }
@@ -100,13 +100,6 @@ public class DefaultRoleLocalServiceImpl extends DefaultRoleLocalServiceBaseImpl
         defaultRolePersistence.removeByapplicationId(applicationId);
 
         return true;
-    }
-
-    private boolean isForClass(String roleName) {
-        return roleName.equals(NeroRoleConstants.NATIONAL_1) ||
-                roleName.equals(NeroRoleConstants.NATIONAL_2) ||
-                roleName.equals(NeroRoleConstants.NATIONAL_3) ||
-                roleName.equals(NeroRoleConstants.MAIN_TEACHER);
     }
 
 }

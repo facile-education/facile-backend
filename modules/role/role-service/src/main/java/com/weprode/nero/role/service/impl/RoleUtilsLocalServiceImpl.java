@@ -48,63 +48,31 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	private static final Log logger = LogFactoryUtil.getLog(RoleUtilsLocalServiceImpl.class);
 
 	public Role getStudentRole() {
-		return getRole(NeroRoleConstants.NATIONAL_1);
+		return getRole(NeroRoleConstants.STUDENT);
 	}
 	
 	public Role getParentRole() {
-		return getRole(NeroRoleConstants.NATIONAL_2);
+		return getRole(NeroRoleConstants.RELATIVE);
 	}
 
 	public Role getTeacherRole() {
-		return getRole(NeroRoleConstants.NATIONAL_3);
+		return getRole(NeroRoleConstants.TEACHER);
 	}
 
 	public Role getPersonalRole() {
 		return getRole(NeroRoleConstants.PERSONAL);
 	}
 
-	public Role getSchoolLifeRole() {
-		return getRole(NeroRoleConstants.NATIONAL_5);
-	}
-
-	public Role getAdministrativeRole() {
-		return getRole(NeroRoleConstants.NATIONAL_6);
-	}
-
-	public Role getInspectorRole() {
-		return getRole(NeroRoleConstants.INSPECTOR);
-	}
-
-	public Role getDocumentalistRole() {
-		return getRole(NeroRoleConstants.NATIONAL_24);
-	}
-
-	public Role getMedicalRole() {
-		return getRole(NeroRoleConstants.NATIONAL_28);
-	}
-
-	public Role getOrientationRole() {
-		return getRole(NeroRoleConstants.NATIONAL_29);
-	}
-
-	public Role getAcademicRole() {
-		return getRole(NeroRoleConstants.NATIONAL_7);
-	}
-
 	public Role getDirectionRole() {
-		return getRole(NeroRoleConstants.NATIONAL_4);
+		return getRole(NeroRoleConstants.DIRECTION);
 	}
 
 	public Role getSchoolAdminRole() {
-		return getRole(NeroRoleConstants.GROUP_ADMIN);
+		return getRole(NeroRoleConstants.SCHOOL_ADMIN);
 	}
 
 	public Role getEntAdminRole() {
 		return getRole(NeroRoleConstants.ENT_ADMIN);
-	}
-
-	public Role getGarAdminRole() {
-		return getRole(NeroRoleConstants.GAR_ADMIN);
 	}
 
 	public Role getAdministratorRole() {
@@ -163,10 +131,6 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 		return getRole(NeroRoleConstants.ORGANIZATION_USER);
 	}
 
-	public Role getBetaTesterRole() {
-		return getRole(NeroRoleConstants.BETA_TESTER);
-	}
-
 	public Role getRole(String roleName) {
 		Role desiredRole = null;
 		try {
@@ -206,7 +170,7 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 
 	public boolean isTeacher(User user) {
 		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getTeacherRole().getRoleId()) || RoleLocalServiceUtil.hasUserRole(user.getUserId(), getDocumentalistRole().getRoleId());
+			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getTeacherRole().getRoleId());
 		} catch (Exception e) {
 			logger.debug(e);
 		}
@@ -234,70 +198,7 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 
 	public boolean isDirectionMember(User user) {
 		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getDirectionRole().getRoleId()) || RoleLocalServiceUtil.hasUserRole(user.getUserId(), getRole(NeroRoleConstants.NATIONAL_23).getRoleId());
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-		return false;
-	}
-
-	public boolean isSchoolLife(User user) {
-		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getSchoolLifeRole().getRoleId());
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-		return false;
-	}
-
-	public boolean isAdministrative(User user) {
-		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getAdministrativeRole().getRoleId());
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-		return false;
-	}
-
-	public boolean isInspector(User user) {
-		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getInspectorRole().getRoleId());
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-		return false;
-	}
-
-	public boolean isAcademic(User user) {
-		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getAcademicRole().getRoleId());
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-		return false;
-	}
-
-	public boolean isDocumentaliste(User user) {
-		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getDocumentalistRole().getRoleId());
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-		return false;
-	}
-
-	public boolean isMedical(User user) {
-		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getMedicalRole().getRoleId());
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-		return false;
-	}
-
-	public boolean isOrientation(User user) {
-		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getOrientationRole().getRoleId());
+			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getDirectionRole().getRoleId());
 		} catch (Exception e) {
 			logger.debug(e);
 		}
@@ -315,26 +216,6 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 
 	public boolean isPersonal(User user) {
 		for (String roleName : NeroRoleConstants.PERSONAL_ROLES) {
-			if (RoleLocalServiceUtil.hasUserRole(user.getUserId(), getRole(roleName).getRoleId())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean isPat(User user) {
-		for (String roleName : NeroRoleConstants.PAT_ROLES) {
-			if (RoleLocalServiceUtil.hasUserRole(user.getUserId(), getRole(roleName).getRoleId())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean isEmps(User user) {
-		for (String roleName : NeroRoleConstants.EMPS_ROLES) {
 			if (RoleLocalServiceUtil.hasUserRole(user.getUserId(), getRole(roleName).getRoleId())) {
 				return true;
 			}
@@ -370,31 +251,6 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	public boolean isENTAdmin(User user) {
 		try {
 			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getEntAdminRole().getRoleId());
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-
-		return false;
-	}
-	
-	public boolean isGARAdmin(User user) {
-		try {
-			 for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
-			 	if(UserGroupRoleLocalServiceUtil.hasUserGroupRole(user.getUserId(), school.getGroupId(), getGarAdminRole().getRoleId())) {
-			 		return true;
-			 	}
-			 }
-		} catch (Exception e) {
-			logger.debug(e);
-		}
-
-		return false;
-	}
-
-	public boolean isGARAdmin(User user, long orgId) {
-		try {
-			 Organization org = OrganizationLocalServiceUtil.getOrganization(orgId);
-			 return UserGroupRoleLocalServiceUtil.hasUserGroupRole(user.getUserId(), org.getGroupId(), getGarAdminRole().getRoleId());
 		} catch (Exception e) {
 			logger.debug(e);
 		}
@@ -611,41 +467,13 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 		return roles;
 	}
 
-	/**
-	 * Get the User Profile 
-	 */
-/*	 public int getUserProfile(User user) throws SystemException,NoSuchRoleException {
-		
-	 	int userProfile = 0;
+	public boolean isForClass(Role role) {
+		return role.getRoleId() == RoleUtilsLocalServiceUtil.getStudentRole().getRoleId() ||
+				role.getRoleId() == RoleUtilsLocalServiceUtil.getParentRole().getRoleId() ||
+				role.getRoleId() == RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId() ||
+				role.getRoleId() == RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId();
+	}
 
-	 	if (isStudent(user)) {
-	 		userProfile = UserProfile.STUDENT.getId();
-
-	 	} else if (isParent(user)) {
-	 		userProfile = UserProfile.PARENT.getId();
-
-	 	} else if (isTeacher(user)) {
-	 		userProfile = UserProfile.TEACHER.getId();
-			
-	 	} else if (isInspector(user)) {
-	 		userProfile = UserProfile.INSPECTOR.getId();
-
-	 	} else if (isDirectionMember(user)) {
-	 		userProfile = UserProfile.DIRECTOR.getId();
-
-	 	} else if (isPersonal(user)) {
-	 		userProfile = UserProfile.PERSONNAL.getId();
-
-	 	} else {
-	 		userProfile = UserProfile.OTHER.getId();
-	 	}
-		
-	 	if (userProfile == 0) {
-	 		throw new NoSuchRoleException("User "+user.getFullName()+" with id "+user.getUserId()+" doesn't have a valid role");
-	 	} else {
-	 		return userProfile;
-	 	}
-	 }*/
 
 	 public List<Long> getAgentsRoleIds() {
 	 	List<Long> agentsRoleIds = new ArrayList<>();
@@ -745,34 +573,4 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 	 	return userEntRoles;
 	 }
 
-/*	public JSONObject getAllEntRolesAsJson(User user, boolean addEmptyRole) {
-
-		JSONObject ret = new JSONObject();
-		JSONArray roles = new JSONArray();
-		
-		// Empty role to search them all (only for agents)
-		if (addEmptyRole && !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-			JSONObject emptyRole = new JSONObject();
-			emptyRole.put("roleId", "0");
-			emptyRole.put("roleCode", "0");
-			emptyRole.put("label", "Tous");
-			roles.put(emptyRole);
-		}
-		
-		List<Role> entRoles = getUserSearchableRoles(user);
-		
-		// Create JSON object for visible roles
-		for (Role role : entRoles) {
-			JSONObject currRole = new JSONObject();
-			currRole.put("roleId", role.getRoleId());
-			currRole.put("roleCode", role.getName());
-			currRole.put("label", role.getTitle(user.getLocale()));
-			roles.put(currRole);
-		}
-		
-		ret.put("roles", roles);
-		ret.put("success", true);
-		
-		return ret;
-	}*/
 }

@@ -52,4 +52,8 @@ public class NeroSystemProperties {
 	public static final String MATOMO_API_URL = "matomo.api_url";
 	public static final String MATOMO_AUTH_TOKEN = "matomo.token_auth";
 	public static final String MATOMO_SITE_ID = "matomo.siteId";
+
+	// Roles
+	public static final String ROLES_DOYEN_ENABLED = "roles.doyen.enabled";
+
 }

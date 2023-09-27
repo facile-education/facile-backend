@@ -247,6 +247,8 @@ public class JSONConstants {
     public static final String HAS_MINDMAP_BROADCASTED = "hasMindmapBroadcasted";
     public static final String HAS_GEOGEBRA_BROADCASTED = "hasGeogebraBroadcasted";
     public static final String HAS_SCRATCH_BROADCASTED = "hasScratchBroadcasted";
+    public static final String HAS_LOOL_BROADCASTED = "hasLoolBroadcasted";
+    public static final String HAS_H5P_BROADCASTED = "hasH5pBroadcasted";
     public static final String SCRATCH_FILES = "scratchFiles";
     public static final String TYPE_OF_VIEW = "typeOfView";
     public static final String FILE_URL = "fileUrl";

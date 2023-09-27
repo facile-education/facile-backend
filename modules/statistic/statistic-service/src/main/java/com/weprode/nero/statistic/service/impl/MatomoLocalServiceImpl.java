@@ -7,7 +7,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
-import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -165,7 +164,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
     }
 
     private String getProfileMetadata(Long profileId) {
-        String metadata = UserProfile.OTHER.getName();
+        String metadata = UserProfile.PERSONAL.getName();
         for (UserProfile userProfile : UserProfile.values()) {
             if (userProfile.getMatomoId() == profileId) {
                 metadata = userProfile.getName();
@@ -396,15 +395,16 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
     }
 
     public long getUserProfileId(User user) {
-        List<Role> roles = RoleUtilsLocalServiceUtil.getUserEntRoles(user);
-        for (Role role : roles) {
-            for (UserProfile userProfile : UserProfile.values()) {
-                if (userProfile.getRoleId() == role.getRoleId()) {
-                    return userProfile.getMatomoId();
-                }
-            }
+
+        if (RoleUtilsLocalServiceUtil.isStudent(user)) {
+            return UserProfile.STUDENT.getMatomoId();
+        } else if (RoleUtilsLocalServiceUtil.isParent(user)) {
+            return UserProfile.PARENT.getMatomoId();
+        } else if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            return UserProfile.TEACHER.getMatomoId();
+        } else {
+            return UserProfile.PERSONAL.getMatomoId();
         }
-        return 0;
     }
 
 }

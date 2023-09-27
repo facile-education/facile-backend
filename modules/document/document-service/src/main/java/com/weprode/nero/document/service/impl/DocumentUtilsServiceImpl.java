@@ -92,6 +92,8 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		result.put(JSONConstants.HAS_MINDMAP_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "mindmap"));
 		result.put(JSONConstants.HAS_GEOGEBRA_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "geogebra"));
 		result.put(JSONConstants.HAS_SCRATCH_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "scratch"));
+		result.put(JSONConstants.HAS_LOOL_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "lool"));
+		result.put(JSONConstants.HAS_H5P_BROADCASTED, BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "h5p"));
 		result.put(JSONConstants.SUCCESS, true);
 
 		return result;

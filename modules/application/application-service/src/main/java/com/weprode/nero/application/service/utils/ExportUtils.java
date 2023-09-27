@@ -488,9 +488,6 @@ public class ExportUtils {
         } else if (userRole.equalsIgnoreCase(PROF)) {
             roles.add(RoleUtilsLocalServiceUtil.getTeacherRole());
             roles.add(RoleUtilsLocalServiceUtil.getDirectionRole());
-            roles.add(RoleUtilsLocalServiceUtil.getSchoolLifeRole());
-            roles.add(RoleUtilsLocalServiceUtil.getAdministrativeRole());
-            roles.add(RoleUtilsLocalServiceUtil.getAcademicRole());
         }
 
         return roles;

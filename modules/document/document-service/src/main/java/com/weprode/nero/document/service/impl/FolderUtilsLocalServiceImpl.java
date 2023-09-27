@@ -191,11 +191,10 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			List<Role> updateThumbnailsRoles = new ArrayList<>();
 			// Direction members
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getDirectionRole());
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.NATIONAL_23));
 			// Secretariat
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getSecretariatRole());
 			// Personals
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.NATIONAL_4));
+			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.DIRECTION));
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.DOYEN));
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CONSEILLER_ORIENTATION));
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CONSEILLER_SOCIAL));
@@ -205,7 +204,6 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CAISSIER_COMPTABLE));
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.BIBLIOTHECAIRE));
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.SECRETAIRE));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.NATIONAL_6));
 			// Teachers
 			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getTeacherRole());
 			PermissionUtilsLocalServiceUtil.setUpdatePermissionForRolesOnResource(tumbnailFolder, updateThumbnailsRoles);

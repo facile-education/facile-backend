@@ -28,7 +28,9 @@ import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.contact.constants.ContactConstants;
 import com.weprode.nero.contact.service.base.ContactLocalServiceBaseImpl;
 import com.weprode.nero.group.service.CommunityInfosLocalServiceUtil;
@@ -93,9 +95,11 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				if (RoleUtilsLocalServiceUtil.isStudent(user)
 						|| RoleUtilsLocalServiceUtil.isParent(user)) {
 					jsonSchoolGlobalLists.put(getJsonPopulation(userSchool.getGroupId(), userSchool.getOrganizationId(), ContactConstants.MY_TEACHER, NeroRoleConstants.TEACHER_INCLUSIVE, user.getUserId()));
-					jsonSchoolGlobalLists.put(getJsonPopulation(userSchool.getGroupId(), userSchool.getOrganizationId(), ContactConstants.MY_DOYEN, NeroRoleConstants.DOYEN_INCLUSIVE, user.getUserId()));
 					jsonSchoolGlobalLists.put(getJsonPopulation(userSchool.getGroupId(), userSchool.getOrganizationId(), ContactConstants.MY_PSY, NeroRoleConstants.PSYCHOLOGUE_INCLUSIVE, user.getUserId()));
 					jsonSchoolGlobalLists.put(getJsonPopulation(userSchool.getGroupId(), userSchool.getOrganizationId(), ContactConstants.MY_SOCIAL, NeroRoleConstants.CONSEILLER_SOCIAL_INCLUSIVE, user.getUserId()));
+					if (PropsUtil.get(NeroSystemProperties.ROLES_DOYEN_ENABLED).equals("true")) {
+						jsonSchoolGlobalLists.put(getJsonPopulation(userSchool.getGroupId(), userSchool.getOrganizationId(), ContactConstants.MY_DOYEN, NeroRoleConstants.DOYEN_INCLUSIVE, user.getUserId()));
+					}
 				} else {
 					jsonSchoolGlobalLists.put(getJsonPopulation(userSchool.getGroupId(), userSchool.getOrganizationId(), RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId(), NeroRoleConstants.TEACHER_INCLUSIVE, user.getUserId()));
 					jsonSchoolGlobalLists.put(getJsonPopulation(userSchool.getGroupId(), userSchool.getOrganizationId(), RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId(), NeroRoleConstants.DOYEN_INCLUSIVE, user.getUserId()));

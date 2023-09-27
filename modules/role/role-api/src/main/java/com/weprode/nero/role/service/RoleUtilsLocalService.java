@@ -52,17 +52,8 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public String displayUserRoles(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getAcademicRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getAdministrativeRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getAdministratorRole();
 
-	/**
-	 * Get the User Profile
-	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Long> getAgentsRoleIds();
 
@@ -71,9 +62,6 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Role> getAvailableRolesForLocalUser();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getBetaTesterRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getBibliothecaireRole();
@@ -97,34 +85,19 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public Role getDirectionRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getDocumentalistRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getDoyenRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getEntAdminRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getGarAdminRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getInfirmiereRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getInspectorRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getMainTeacherRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getMedicalRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getOrganizationUserRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getOrientationRole();
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -149,9 +122,6 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public Role getSchoolAdminRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getSchoolLifeRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getSecretariatRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -165,12 +135,6 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Role> getUserSearchableRoles(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isAcademic(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isAdministrative(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isAdministrator(User user);
@@ -203,31 +167,19 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public boolean isDirectionMember(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isDocumentaliste(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isDoyen(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isDoyen(User user, long orgId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isEmps(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isENTAdmin(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isGARAdmin(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isGARAdmin(User user, long orgId);
+	public boolean isForClass(Role role);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isInfirmiere(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isInspector(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isMainTeacher(User user);
@@ -236,16 +188,7 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public boolean isMainTeacher(User user, long orgId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isMedical(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isOrientation(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isParent(User user);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isPat(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isPersonal(User user);
@@ -261,9 +204,6 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isSchoolAdmin(User user, long schoolId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isSchoolLife(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isSecretariat(User user);

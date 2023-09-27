@@ -209,10 +209,10 @@ public class GVESynchronizationManager {
         synchronizeTeacherGuests(school, schoolDn);
 
         // Roles
-        synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.NATIONAL_4);
-        synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.GROUP_ADMIN);
-        synchronizeRole(school, "CN=ENT-ADMINISTRATEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.NATIONAL_4);
-        synchronizeRole(school, "CN=ENT-ADMINISTRATEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.GROUP_ADMIN);
+        synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.DIRECTION);
+        synchronizeRole(school, "CN=ENT-DIRECTEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.SCHOOL_ADMIN);
+        synchronizeRole(school, "CN=ENT-ADMINISTRATEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.DIRECTION);
+        synchronizeRole(school, "CN=ENT-ADMINISTRATEURS,OU=ENT-DIRECTEURS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.SCHOOL_ADMIN);
         synchronizeRole(school, "CN=ENT-DOYENS,OU=ENT-DOYENS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.DOYEN);
 
         synchronizeRole(school, "CN=ENT-CONSEILLERS-ORIENTATIONS,OU=ENT-EMPS,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.CONSEILLER_ORIENTATION);
