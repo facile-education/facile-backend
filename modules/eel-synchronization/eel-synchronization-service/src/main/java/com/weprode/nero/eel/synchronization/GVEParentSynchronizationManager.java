@@ -26,7 +26,7 @@ import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.PropsValues;
-import com.weprode.nero.about.service.EntVersionUserLocalServiceUtil;
+import com.weprode.nero.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
@@ -789,7 +789,7 @@ public class GVEParentSynchronizationManager {
             // MessageLocalServiceUtil.sendMessage(noReplyUserId, recipientList, subject, content, MessagingConstants.TYPE_OTHER);
 
             // Mark latest ent news as read so that it does not pop at first connection
-            EntVersionUserLocalServiceUtil.markLastVersionAsRead(user.getUserId());
+            UserReadVersionNoteLocalServiceUtil.setLastVersionNoteAsReadForUser(user.getUserId());
         }
 
         return user;
