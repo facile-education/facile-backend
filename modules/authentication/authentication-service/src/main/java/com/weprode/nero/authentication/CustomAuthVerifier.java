@@ -67,7 +67,7 @@ public class CustomAuthVerifier implements AuthVerifier {
 
     @Override
     public AuthVerifierResult verify(AccessControlContext accessControlContext, Properties properties) {
-        logger.info("CustomAuthVerifier for URI " + accessControlContext.getRequest().getRequestURI());
+        logger.debug("CustomAuthVerifier for URI " + accessControlContext.getRequest().getRequestURI());
 
         try {
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();
@@ -166,7 +166,7 @@ public class CustomAuthVerifier implements AuthVerifier {
             }
 
             if ((user != null) && !user.isDefaultUser()) {
-                logger.info("PortalSession: authenticated user is " + user.getScreenName());
+                logger.debug("PortalSession: authenticated user is " + user.getScreenName());
                 authVerifierResult.setPasswordBasedAuthentication(true);
                 authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
                 authVerifierResult.setUserId(user.getUserId());

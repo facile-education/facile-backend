@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.agenda.exception.NoSuchEventException;
 import com.weprode.nero.agenda.model.Event;
+import com.weprode.nero.agenda.model.EventPopulation;
 import com.weprode.nero.agenda.service.EventLocalServiceUtil;
 import com.weprode.nero.agenda.service.EventPopulationLocalServiceUtil;
 import com.weprode.nero.agenda.service.EventReadLocalServiceUtil;
@@ -165,6 +166,40 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         roleIds.add((long) 0);
 
         return eventFinder.countEvents(user.getUserId(), minDate, groupIds, roleIds, unreadOnly);
+    }
+
+    public boolean hasUserEvent(long userId, long eventId) {
+        try {
+            // Return true if the user is the author
+            Event event = EventLocalServiceUtil.getEvent(eventId);
+            if (event.getAuthorId() == userId) {
+                return true;
+            }
+
+            // Get user group ids
+            List<Long> userGroupIds = UserUtilsLocalServiceUtil.getUserGroupIds(userId);
+
+            // Get user role ids
+            List<Role> roles = RoleLocalServiceUtil.getUserRoles(userId);
+            List<Long> roleIds = new ArrayList<>();
+            for (Role role : roles) {
+                roleIds.add(role.getRoleId());
+            }
+
+            // Loop over populations and match both groupId and roleId
+            List<EventPopulation> eventPopulations = eventPopulationPersistence.findByeventId(eventId);
+            if (eventPopulations != null) {
+                for (EventPopulation eventPopulation : eventPopulations) {
+                    if ((eventPopulation.getRoleId() == 0 || roleIds.contains(eventPopulation.getRoleId())) && userGroupIds.contains(eventPopulation.getGroupId())) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error checking if user " + userId + " has the view on eventId " + eventId, e);
+        }
+
+        return false;
     }
 
     public JSONObject convertEventToJson (long userId, long eventId, boolean withDetails) {

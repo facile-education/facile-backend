@@ -5,7 +5,7 @@ import com.liferay.petra.string.StringPool;
 import java.util.*;
 
 public class MenuEntry {
-    public static final MenuEntry DASHBOARD = new MenuEntry(0, "icon-home", "dashboard", true, 0, "Dashboard");
+    public static final MenuEntry DASHBOARD = new MenuEntry(0, "icon-home", "dashboard", true, 0, "Dashboard", ":dashboardId(\\d+)?");
     public static final MenuEntry GROUPS = new MenuEntry(1, "icon-collab-workspace", "groups", 1, "Groups");
     public static final MenuEntry CDT = new MenuEntry(4, "icon-school-life", "cdt", 2, "Course");
     public static final MenuEntry HORAIRES = new MenuEntry(5, "icon-calendar", "horaires", 3, "Horaires");
@@ -57,13 +57,14 @@ public class MenuEntry {
         this.param = param;
     }
 
-    MenuEntry(long id, String icon, String key, boolean isLandingPage, int position, String component) {
+    MenuEntry(long id, String icon, String key, boolean isLandingPage, int position, String component, String param) {
         this.id = id;
         this.position = position;
         this.icon = icon;
         this.key = key;
         this.isLandingPage = isLandingPage;
         this.component = component;
+        this.param = param;
     }
 
     MenuEntry(String icon, String key, int position, List<MenuEntry> entries) {

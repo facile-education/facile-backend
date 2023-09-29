@@ -7,12 +7,16 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.nero.agenda.model.Event;
+import com.weprode.nero.agenda.service.EventLocalServiceUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.dashboard.service.base.DashboardServiceBaseImpl;
 import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.service.GroupActivityLocalServiceUtil;
+import com.weprode.nero.news.model.News;
+import com.weprode.nero.news.service.NewsLocalServiceUtil;
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
@@ -255,4 +259,61 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
 
         return result;
     }
+
+    @JSONWebService(value = "check-dashboard-parameter", method = "GET")
+    public JSONObject checkDashboardParameter(long dashboardId) {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        try {
+            // dashboardId can be either an eventId or an announceId
+            Event event = null;
+            try {
+                event = EventLocalServiceUtil.getEvent(dashboardId);
+            } catch (Exception e) {
+                // Nothing
+            }
+            if (event != null) {
+                // This is an event, check permission
+                if (EventLocalServiceUtil.hasUserEvent(user.getUserId(), dashboardId)) {
+                    result.put(JSONConstants.IS_AUTHORIZED, true);
+                    result.put(JSONConstants.IS_EVENT, true);
+                } else {
+                    logger.error("User " + user.getFullName() + " tries to access event " + dashboardId + " but does have permission to do it");
+                }
+            }
+            News news = null;
+            try {
+                news = NewsLocalServiceUtil.getNews(dashboardId);
+            } catch (Exception e) {
+                // Nothing
+            }
+            if (news != null) {
+                // This is a news, check permission
+                if (NewsLocalServiceUtil.hasUserNews(user.getUserId(), dashboardId)) {
+                    result.put(JSONConstants.IS_AUTHORIZED, true);
+                    result.put(JSONConstants.IS_NEWS, true);
+                } else {
+                    logger.error("User " + user.getFullName() + " tries to access news " + dashboardId + " but does have permission to do it");
+                }
+            }
+            result.put(JSONConstants.SUCCESS, true);
+        } catch (Exception e) {
+            result.put(JSONConstants.SUCCESS, false);
+            logger.error("Error when checking dashboard parameter " + dashboardId, e);
+        }
+
+        return result;
+    }
+
+
 }

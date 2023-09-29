@@ -84,8 +84,16 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            result = EventLocalServiceUtil.convertEventToJson(user.getUserId(), eventId, true);
-            result.put(JSONConstants.SUCCESS, true);
+            // Check if the user can read the event
+            if (EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
+                logger.info("User " + user.getFullName() + " fetches details for event " + eventId);
+                result = EventLocalServiceUtil.convertEventToJson(user.getUserId(), eventId, true);
+                result.put(JSONConstants.SUCCESS, true);
+            } else {
+                result.put(JSONConstants.SUCCESS, false);
+                logger.error("User tries to read eventId " + eventId + " but does not have the permission to do it");
+                return result;
+            }
         } catch (Exception e) {
             logger.error("Error while fetching groups activity for user " + user.getUserId(), e);
             result.put(JSONConstants.SUCCESS, false);
@@ -229,10 +237,18 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            if (read) {
-                result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsRead(user.getUserId(), eventId));
-            } else  {
-                result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsUnRead(user.getUserId(), eventId));
+            // Check if the user can read the event
+            if (EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
+                logger.info("User " + user.getFullName() + " marks event " + eventId + " as " + (read ? "read" : "unread"));
+                if (read) {
+                    result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsRead(user.getUserId(), eventId));
+                } else  {
+                    result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsUnRead(user.getUserId(), eventId));
+                }
+            } else {
+                result.put(JSONConstants.SUCCESS, false);
+                logger.error("User tries to mark eventId " + eventId + " as read but does not have the permission to do it");
+                return result;
             }
         } catch (Exception e) {
             logger.error("Error while setting event " + eventId + " as read/unread", e);

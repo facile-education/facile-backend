@@ -33,6 +33,12 @@ public class DashboardServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.dashboard.service.impl.DashboardServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static org.json.JSONObject checkDashboardParameter(
+		long dashboardId) {
+
+		return getService().checkDashboardParameter(dashboardId);
+	}
+
 	public static org.json.JSONObject getDashboardActivity(
 		long groupId, java.lang.String maxDate, int nbResults, boolean withNews,
 		boolean withDocs, boolean withMemberships, boolean withSchoollife,

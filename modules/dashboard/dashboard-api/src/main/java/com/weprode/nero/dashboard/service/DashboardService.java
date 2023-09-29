@@ -50,6 +50,9 @@ public interface DashboardService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.dashboard.service.impl.DashboardServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the dashboard remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link DashboardServiceUtil} if injection and service tracking are not available.
 	 */
+	@JSONWebService(method = "GET", value = "check-dashboard-parameter")
+	public JSONObject checkDashboardParameter(long dashboardId);
+
 	@JSONWebService(method = "GET", value = "get-dashboard-activity")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getDashboardActivity(

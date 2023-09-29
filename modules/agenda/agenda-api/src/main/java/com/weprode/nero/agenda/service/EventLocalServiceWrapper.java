@@ -347,6 +347,11 @@ public class EventLocalServiceWrapper
 	}
 
 	@Override
+	public boolean hasUserEvent(long userId, long eventId) {
+		return _eventLocalService.hasUserEvent(userId, eventId);
+	}
+
+	@Override
 	public com.weprode.nero.agenda.model.Event modifyEvent(
 			long eventId, String title, String description, String location,
 			java.util.Date startDate, java.util.Date endDate,

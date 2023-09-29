@@ -316,6 +316,10 @@ public class EventLocalServiceUtil {
 			user, startIndex, nbEvents, unreadOnly);
 	}
 
+	public static boolean hasUserEvent(long userId, long eventId) {
+		return getService().hasUserEvent(userId, eventId);
+	}
+
 	public static Event modifyEvent(
 			long eventId, String title, String description, String location,
 			java.util.Date startDate, java.util.Date endDate,
