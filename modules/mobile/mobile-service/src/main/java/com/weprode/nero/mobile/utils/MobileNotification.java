@@ -50,7 +50,12 @@ public class MobileNotification {
 					redirect += "%2F" + MESSAGING_PATH + "%2F" + paramId;
 					break;
 				case MobileConstants.HOMEWORK_TYPE:
+					// Not used for now
 					redirect += "%2F" + HOMEWORK_PATH + "%2F" + paramId;
+					break;
+				case MobileConstants.EVENT_TYPE:
+				case MobileConstants.ANNOUNCEMENT_TYPE:
+					redirect += "%2F" + DASHBOARD_PATH + "%2F" + paramId;
 					break;
 				default:
 					redirect += "%2F" + DASHBOARD_PATH;

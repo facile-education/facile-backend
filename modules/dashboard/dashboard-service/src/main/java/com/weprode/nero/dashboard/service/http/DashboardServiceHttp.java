@@ -151,6 +151,38 @@ public class DashboardServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject checkDashboardParameter(
+		HttpPrincipal httpPrincipal, long dashboardId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				DashboardServiceUtil.class, "checkDashboardParameter",
+				_checkDashboardParameterParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, dashboardId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(DashboardServiceHttp.class);
 
 	private static final Class<?>[] _initDashboardParameterTypes0 =
@@ -162,5 +194,7 @@ public class DashboardServiceHttp {
 			long.class, String.class, int.class, boolean.class, boolean.class,
 			boolean.class, boolean.class, boolean.class
 		};
+	private static final Class<?>[] _checkDashboardParameterParameterTypes3 =
+		new Class[] {long.class};
 
 }

@@ -478,6 +478,9 @@ public class JSONConstants {
     public static final String EVENT_LIST = "eventList";
     public static final String LAST_DASHBOARD_ACCESS_DATE = "lastDashboardAccessDate";
     public static final String NB_NEW_ACTIVITIES = "nbNewActivities";
+    public static final String IS_AUTHORIZED = "isAuthorized";
+    public static final String IS_EVENT = "isEvent";
+    public static final String IS_NEWS = "isNews";
 
     // Statistics
     public static final String DATASETS = "datasets";

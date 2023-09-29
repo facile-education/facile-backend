@@ -280,6 +280,9 @@ public interface EventLocalService
 			User user, int startIndex, int nbEvents, boolean unreadOnly)
 		throws SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasUserEvent(long userId, long eventId);
+
 	@Indexable(type = IndexableType.REINDEX)
 	public Event modifyEvent(
 			long eventId, String title, String description, String location,

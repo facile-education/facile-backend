@@ -105,6 +105,22 @@ public class DashboardServiceSoap {
 		}
 	}
 
+	public static org.json.JSONObject checkDashboardParameter(long dashboardId)
+		throws RemoteException {
+
+		try {
+			org.json.JSONObject returnValue =
+				DashboardServiceUtil.checkDashboardParameter(dashboardId);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(DashboardServiceSoap.class);
 
 }

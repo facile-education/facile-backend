@@ -31,6 +31,11 @@ public class DashboardServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject checkDashboardParameter(long dashboardId) {
+		return _dashboardService.checkDashboardParameter(dashboardId);
+	}
+
+	@Override
 	public org.json.JSONObject getDashboardActivity(
 		long groupId, String maxDate, int nbResults, boolean withNews,
 		boolean withDocs, boolean withMemberships, boolean withSchoollife,

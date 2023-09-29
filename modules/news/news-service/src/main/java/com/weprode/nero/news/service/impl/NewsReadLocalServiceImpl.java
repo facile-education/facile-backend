@@ -45,7 +45,7 @@ public class NewsReadLocalServiceImpl extends NewsReadLocalServiceBaseImpl {
             NewsLocalServiceUtil.getNews(newsId);
             // Mark it as read
             try {
-                newsReadPersistence.findByPrimaryKey(new NewsReadPK(userId, newsId));
+                newsReadPersistence.findByPrimaryKey(new NewsReadPK(newsId, userId));
             } catch (NoSuchReadException e) {
                 NewsRead nr = newsReadPersistence.create(new NewsReadPK(newsId, userId));
                 nr.setReadDate(new Date());
