@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.ldap.util.LDAPUtil;
-import com.weprode.nero.about.service.EntVersionUserLocalServiceUtil;
+import com.weprode.nero.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
@@ -1397,9 +1397,8 @@ public class GVESynchronizationManager {
             return;
         }
 
-        // 1st line contains the column names
-        // Loop over other lines
-        for (int i = 1 ; i < csvLines.size() ; i++) {
+        // Loop over the lines (no first line to skip)
+        for (int i = 0 ; i < csvLines.size() ; i++) {
             String csvLine = csvLines.get(i);
             logger.info(i + "/" + csvLines.size() + " : " + csvLine);
             String[] csvLineTab = csvLine.split(CSV_SEPARATOR);
@@ -2439,7 +2438,7 @@ public class GVESynchronizationManager {
                 // MessageLocalServiceUtil.sendWelcomeMessage(createdUser);
 
                 // Mark latest ent news as read so that it does not pop at first connection
-                EntVersionUserLocalServiceUtil.markLastVersionAsRead(createdUser.getUserId());
+                UserReadVersionNoteLocalServiceUtil.setLastVersionNoteAsReadForUser(createdUser.getUserId());
 
             } catch (Exception e) {
                 logger.error("Error when initiating created account", e);
