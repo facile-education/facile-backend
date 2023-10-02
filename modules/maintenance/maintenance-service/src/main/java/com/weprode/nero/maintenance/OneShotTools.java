@@ -26,8 +26,7 @@ public class OneShotTools {
         for (DLFolder dlFolder : dlFolders) {
             if (dlFolder.getName().equals("._CASIER_")) {
                 nbFolders++;
-                // Uncomment to use
-//                deleteFolder(dlFolder.getFolderId());
+                deleteFolder(dlFolder.getFolderId());
 //                // tmp limitation for testing
 //                if (nbFolders > 20) {
 //                    break;
