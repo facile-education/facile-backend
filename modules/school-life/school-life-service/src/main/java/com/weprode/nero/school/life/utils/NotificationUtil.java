@@ -65,7 +65,7 @@ public class NotificationUtil {
             SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId);
 
             String subject = "Avis de renvoi : " + student.getFullName() + " le " + df.format(session.getStartDate());
-            String content = "Cher.e.s coll\u00e8gue.s,</br></br>Je vous informe que l'\u00e9l\u00e8ve " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e en salle de renvoi le " + df.format(session.getStartDate()) + ".</br>";
+            String content = "Cher.e.s coll\u00e8gue.s,</br></br>Je vous informe que l'\u00e9l\u00e8ve " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e en salle de renvoi le " + df.format(new Date()) + ".</br>";
             content += "L'\u00e9l\u00e8ve m'a indiqu\u00e9 \u00eatre renvoy\u00e9.e ";
             if (sourceSessionId != 0) {
                 CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sourceSessionId);
