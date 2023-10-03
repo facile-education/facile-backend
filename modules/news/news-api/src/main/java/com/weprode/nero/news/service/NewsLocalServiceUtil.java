@@ -236,11 +236,11 @@ public class NewsLocalServiceUtil {
 		long newsId, String title, String content, boolean isImportant,
 		long imageId, java.util.Date publicationDate,
 		java.util.Date expirationDate, org.json.JSONArray populations,
-		List<Long> attachFileIds) {
+		List<Long> attachFileIds, boolean notifyRecipients) {
 
 		return getService().editNews(
 			newsId, title, content, isImportant, imageId, publicationDate,
-			expirationDate, populations, attachFileIds);
+			expirationDate, populations, attachFileIds, notifyRecipients);
 	}
 
 	public static News fetchNews(long newsId) {

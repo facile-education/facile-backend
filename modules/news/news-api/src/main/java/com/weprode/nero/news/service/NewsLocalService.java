@@ -220,7 +220,8 @@ public interface NewsLocalService
 	public News editNews(
 		long newsId, String title, String content, boolean isImportant,
 		long imageId, Date publicationDate, Date expirationDate,
-		JSONArray populations, List<Long> attachFileIds);
+		JSONArray populations, List<Long> attachFileIds,
+		boolean notifyRecipients);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public News fetchNews(long newsId);

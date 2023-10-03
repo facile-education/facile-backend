@@ -50,10 +50,12 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
+        if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+            logger.error("User " + user.getFullName() + " tries to add a school news but has not permission");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         if (!isSchoolNews && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            logger.error("User " + user.getFullName() + " tries to add a group news but has not permission");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -94,13 +96,18 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
 
         try {
             // Who can edit a news ?
-            // School news : direction (all news), secretary/delegate (their own news only)
+            // School news : direction, secretary, delegate, author
             // Group news : only the author
             News news = NewsLocalServiceUtil.getNews(newsId);
-            if (news.getIsSchoolNews() && news.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+            if (news.getIsSchoolNews()
+                    && news.getAuthorId() != user.getUserId()
+                    && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                    && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+                logger.error("User " + user.getFullName() + " tries to edit school news " + newsId + " but has not permission");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             if (!news.getIsSchoolNews() && news.getAuthorId() != user.getUserId()) {
+                logger.error("User " + user.getFullName() + " tries to edit group news" + newsId + " but has not permission");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
@@ -110,7 +117,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             JSONArray attachFilesArray = new JSONArray(attachFiles);
 
             News editedNews = NewsLocalServiceUtil.editNews(newsId, title, content, isImportant, imageId, publication, expiration,
-                    populationJSONArray, splitLongs(attachFilesArray));
+                    populationJSONArray, splitLongs(attachFilesArray), markAsUnreadForAll);
 
             if (markAsUnreadForAll) {
                 NewsReadLocalServiceUtil.setNewsAsUnReadForAll(newsId);
@@ -298,13 +305,15 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
-            // Only the author of a news or a direction member can delete it
+            // Only the author of a news
             News news = NewsLocalServiceUtil.getNews(newsId);
-            if (user.getUserId() == news.getAuthorId() || RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-                logger.info("User " + user.getFullName() + " deletes news " + newsId);
-                NewsLocalServiceUtil.deleteNewsAndDependencies(news);
-                result.put(JSONConstants.SUCCESS, true);
+            if (user.getUserId() != news.getAuthorId()) {
+                logger.error("User " + user.getFullName() + " tries to delete news " + newsId + " but has no permission");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
+            logger.info("User " + user.getFullName() + " deletes news " + newsId);
+            NewsLocalServiceUtil.deleteNewsAndDependencies(news);
+            result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);

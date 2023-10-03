@@ -116,7 +116,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -157,14 +157,14 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            // Only the event's creator or a direction member is allowed to modify it
+            // Only the event's creator or a direction member or a delegate is allowed to modify it
             Event event = EventLocalServiceUtil.getEvent(eventId);
-            if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+            if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+                logger.error("User " + user.getFullName() + " tries to edit event " + eventId + " but has no permission");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
+            logger.info("User " + user.getFullName() + " edits event " + eventId);
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
             Date start = df.parse(startDate);
             Date end = df.parse(endDate);
@@ -204,14 +204,14 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            // Only the event's creator or a direction member is allowed to delete it
+            // Only the event's creator is allowed to delete it
             Event event = EventLocalServiceUtil.getEvent(eventId);
-            if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-                result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-                result.put(JSONConstants.SUCCESS, false);
-                return result;
+            if (event.getAuthorId() != user.getUserId()) {
+                logger.error("User " + user.getFullName() + " tries to delete event " + eventId + " but has no permission");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
+            logger.info("User " + user.getFullName() + " deletes event " + eventId);
             EventLocalServiceUtil.deleteEventWithDependencies(eventId);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
