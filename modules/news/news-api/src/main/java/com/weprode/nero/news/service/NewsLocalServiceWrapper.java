@@ -255,11 +255,11 @@ public class NewsLocalServiceWrapper
 		long newsId, String title, String content, boolean isImportant,
 		long imageId, java.util.Date publicationDate,
 		java.util.Date expirationDate, org.json.JSONArray populations,
-		java.util.List<Long> attachFileIds) {
+		java.util.List<Long> attachFileIds, boolean notifyRecipients) {
 
 		return _newsLocalService.editNews(
 			newsId, title, content, isImportant, imageId, publicationDate,
-			expirationDate, populations, attachFileIds);
+			expirationDate, populations, attachFileIds, notifyRecipients);
 	}
 
 	@Override

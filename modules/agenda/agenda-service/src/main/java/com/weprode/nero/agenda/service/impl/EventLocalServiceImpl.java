@@ -222,9 +222,18 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
             jsonEvent.put(JSONConstants.START_DATE, sdf.format(event.getStartDate()));
             jsonEvent.put(JSONConstants.END_DATE, sdf.format(event.getEndDate()));
             jsonEvent.put(JSONConstants.HAS_READ, EventReadLocalServiceUtil.hasUserReadEvent(userId, eventId));
-            // Only the author can edit/delete the event
+
+            // The directors, delegates and author can edit the events
+            // Only the author can edit an event
             User user = UserLocalServiceUtil.getUser(userId);
-            jsonEvent.put(JSONConstants.IS_EDITABLE, event.getAuthorId() == userId);
+            boolean isEditable = event.getAuthorId() == userId ||
+                    NewsAdminLocalServiceUtil.isUserDelegate(user) ||
+                    RoleUtilsLocalServiceUtil.isDirectionMember(user);
+            jsonEvent.put(JSONConstants.IS_EDITABLE, isEditable);
+
+            // Only the author can delete the news
+            jsonEvent.put(JSONConstants.IS_DELETABLE, event.getAuthorId() == userId);
+
             if (withDetails) {
                 jsonEvent.put(JSONConstants.DESCRIPTION, event.getDescription());
                 jsonEvent.put(JSONConstants.POPULATIONS, EventPopulationLocalServiceUtil.convertEventPopulations(eventId, userId));

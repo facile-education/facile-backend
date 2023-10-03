@@ -125,7 +125,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     @Indexable(type = IndexableType.REINDEX)
     public News editNews(long newsId, String title, String content, boolean isImportant,
-                         long imageId, Date publicationDate, Date expirationDate, JSONArray populations, List<Long> attachFileIds) {
+                         long imageId, Date publicationDate, Date expirationDate, JSONArray populations, List<Long> attachFileIds, boolean notifyRecipients) {
         logger.info("Author edits news " + newsId + " named " + title + " for " + populations.length() + " groups and with " + (attachFileIds != null ? attachFileIds.size() : 0) + " attached files");
 
         try {
@@ -152,7 +152,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             manageAttachedFiles(news.getNewsId(), populations, attachFileIds, false);
 
             // Mobile push for school news only
-            if (news.getIsSchoolNews()) {
+            if (news.getIsSchoolNews() && notifyRecipients) {
                 manageMobilePush(title, content, populations);
             }
 
@@ -562,8 +562,16 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         jsonNews.put(JSONConstants.HAS_ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.hasAttachedFiles(newsId));
         jsonNews.put(JSONConstants.IS_SCHOOL_NEWS, news.getIsSchoolNews());
 
-        // Only the author can edit/delete the event
-        jsonNews.put(JSONConstants.IS_EDITABLE, news.getAuthorId() == userId);
+        // The directors, delegates and author can edit the school news
+        // Only the author can edit a group news
+        boolean isEditable = news.getAuthorId() == userId ||
+                (news.getIsSchoolNews() &&
+                NewsAdminLocalServiceUtil.isUserDelegate(user) ||
+                RoleUtilsLocalServiceUtil.isDirectionMember(user));
+        jsonNews.put(JSONConstants.IS_EDITABLE, isEditable);
+
+        // Only the author can delete the news
+        jsonNews.put(JSONConstants.IS_DELETABLE, news.getAuthorId() == userId);
 
         // Thumbnail
         if (news.getImageId() != 0) {
