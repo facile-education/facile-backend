@@ -1871,7 +1871,7 @@ public class GVESynchronizationManager {
 
     private CDTSession getExistingSession(List<CDTSession> existingSessions, Date startDate, Date endDate, String fullCoursName, String room) {
         DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        logger.debug("getExistingSession for fullCoursName="+fullCoursName + ", startDate " + sdf.format(startDate) + " and endDate " + sdf.format(endDate));
+        logger.info("getExistingSession for fullCoursName="+fullCoursName + ", startDate " + sdf.format(startDate) + " and endDate " + sdf.format(endDate));
 
         // First filter on startDate and endDate only
         List<CDTSession> sessionCandidates = new ArrayList<>();
@@ -1879,6 +1879,7 @@ public class GVESynchronizationManager {
             logger.debug("Compare session " + sdf.format(startDate) + " / " + sdf.format(existingSession.getStart()) + " and " + sdf.format(endDate) + " / " + sdf.format(existingSession.getEnd()) + " and " + room + " / " + existingSession.getRoom());
             if (isSameDayAndHour(existingSession.getStart(), startDate)
                     && isSameDayAndHour(existingSession.getEnd(), endDate)) {
+                logger.info("Candidate session is " + existingSession.getSessionId());
                 sessionCandidates.add(existingSession);
             }
         }
@@ -1894,11 +1895,11 @@ public class GVESynchronizationManager {
                 return sessionCandidates.get(0);
             }
         } else {
-            // Else, filter on the fullCoursName
-            logger.info("More than 1 candidate -> filtering on fullCoursName");
+            // Else, filter on the room + fullCoursName
+            logger.info("More than 1 candidate -> filtering on room and fullCoursName");
             for (CDTSession sessionCandidate : sessionCandidates) {
-                if (sessionCandidate.getFullCoursName().contains(fullCoursName)) {
-                    logger.info("Found fullCoursName -> returning it");
+                if (sessionCandidate.getRoom().equals(room) && sessionCandidate.getFullCoursName().contains(fullCoursName)) {
+                    logger.info("Found room and fullCoursName -> returning it");
                     return sessionCandidate;
                 }
             }
