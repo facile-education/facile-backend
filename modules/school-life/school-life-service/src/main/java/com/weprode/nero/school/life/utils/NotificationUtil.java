@@ -72,7 +72,7 @@ public class NotificationUtil {
 
             DateFormat df = getDateFormat();
             String subject = "Avis de renvoi : " + student.getFullName() + " le " + df.format(session.getStartDate());
-            String content = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Je vous informe que l'\u00e9l\u00e8ve " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e en salle de renvoi le " + df.format(session.getStartDate()) + "."+ HTML_LINE_BREAK;
+            String content = "Cher.e.s coll\u00e8gue.s," + HTML_LINE_BREAK + HTML_LINE_BREAK + "Je vous informe que l'\u00e9l\u00e8ve " + student.getFullName() + " s'est pr\u00e9sent\u00e9.e en salle de renvoi le " + df.format(new Date()) + "."+ HTML_LINE_BREAK;
             content += "L'\u00e9l\u00e8ve m'a indiqu\u00e9 \u00eatre renvoy\u00e9.e ";
             if (sourceSessionId != 0) {
                 CDTSession cdtSession = CDTSessionLocalServiceUtil.getCDTSession(sourceSessionId);
