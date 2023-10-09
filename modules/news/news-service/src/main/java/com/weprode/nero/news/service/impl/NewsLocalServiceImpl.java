@@ -336,6 +336,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 jsonCommunity.put(JSONConstants.GROUP_ID, userGroup.getGroupId());
                 jsonCommunity.put(JSONConstants.ROLE_ID, 0);
                 jsonCommunity.put(JSONConstants.IS_COMMUNITY, true);
+                jsonCommunity.put(JSONConstants.ORDER, "order_6");
                 jsonCommunities.put(jsonCommunity);
             }
             broadcastTree.put(ContactConstants.COMMUNITIES, jsonCommunities);
