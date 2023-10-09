@@ -98,7 +98,7 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table News_News (newsId LONG not null primary key,companyId LONG,title VARCHAR(75) null,content VARCHAR(75) null,authorId LONG,isSchoolNews BOOLEAN,isImportant BOOLEAN,expirationDate DATE null,publicationDate DATE null,modificationDate DATE null,imageId LONG)";
+		"create table News_News (newsId LONG not null primary key,companyId LONG,title VARCHAR(75) null,content STRING null,authorId LONG,isSchoolNews BOOLEAN,isImportant BOOLEAN,expirationDate DATE null,publicationDate DATE null,modificationDate DATE null,imageId LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table News_News";
 

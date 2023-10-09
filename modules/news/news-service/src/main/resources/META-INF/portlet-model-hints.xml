@@ -5,7 +5,9 @@
 		<field name="newsId" type="long" />
 		<field name="companyId" type="long" />
 		<field name="title" type="String" />
-		<field name="content" type="String" />
+		<field name="content" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
 		<field name="authorId" type="long" />
 		<field name="isSchoolNews" type="boolean" />
 		<field name="isImportant" type="boolean" />
