@@ -113,7 +113,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             // Mark the news as read for the author
             NewsReadLocalServiceUtil.setNewsRead(authorId, news.getNewsId());
 
-            manageMobilePush(title, content, populations);
+            manageMobilePush(title, content, populations, news.getNewsId());
 
             return news;
         } catch (Exception e) {
@@ -153,7 +153,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
             // Mobile push for school news only
             if (news.getIsSchoolNews() && notifyRecipients) {
-                manageMobilePush(title, content, populations);
+                manageMobilePush(title, content, populations, news.getNewsId());
             }
 
             return news;
@@ -797,7 +797,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
     }
 
-    private void manageMobilePush(String title, String content, JSONArray populations) {
+    private void manageMobilePush(String title, String content, JSONArray populations, long newsId) {
 
         // Title is the news title
         // No subtitle
@@ -825,7 +825,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 for (User member : groupMembers) {
 
                     MobileDeviceLocalServiceUtil.pushNotificationToUser(member.getUserId(), title, "", content,
-                            MobileConstants.ANNOUNCEMENT_TYPE, 0);
+                            MobileConstants.ANNOUNCEMENT_TYPE, newsId);
                 }
             }
         } catch (Exception e) {
