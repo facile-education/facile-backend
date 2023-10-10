@@ -84,7 +84,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         EventReadLocalServiceUtil.markEventAsRead(authorId, event.getEventId());
 
         // Mobile push
-        manageMobilePush(title, location, description, populations);
+        manageMobilePush(title, location, description, populations, event.getEventId());
 
         return event;
     }
@@ -120,7 +120,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
 
         // Mobile push
         if (markAsUnread) {
-            manageMobilePush(title, location, description, populations);
+            manageMobilePush(title, location, description, populations, event.getEventId());
         }
 
         return event;
@@ -248,7 +248,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         return jsonEvent;
     }
 
-    private void manageMobilePush(String title, String location, String content, JSONArray populations) {
+    private void manageMobilePush(String title, String location, String content, JSONArray populations, long eventId) {
 
         try {
             for (int idx = 0; idx < populations.length(); idx++) {
@@ -271,7 +271,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
                 for (User member : groupMembers) {
 
                     MobileDeviceLocalServiceUtil.pushNotificationToUser(member.getUserId(), title, location, content,
-                            MobileConstants.EVENT_TYPE, 0);
+                            MobileConstants.EVENT_TYPE, eventId);
                 }
             }
         } catch (Exception e) {
