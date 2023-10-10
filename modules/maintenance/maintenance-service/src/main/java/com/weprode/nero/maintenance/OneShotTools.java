@@ -1,6 +1,7 @@
 package com.weprode.nero.maintenance;
 
 import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -54,8 +55,13 @@ public class OneShotTools {
             fileList = DLAppServiceUtil.getFileEntries(folder.getGroupId(), folderId);
             for (FileEntry fileEntry : fileList) {
                 nbFiles++;
-                DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
+                logger.info("Deleting file " + fileEntry.getTitle() + " (id " + fileEntry.getFileEntryId() + ")");
+                DLAppLocalServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
             }
+
+            logger.info("Deleting folder " + folder.getName() + " (id " + folder.getFolderId() + ")");
+            DLAppLocalServiceUtil.deleteFolder(folderId);
+
         } catch (Exception e) {
             logger.error("Error deleting folder " + folderId, e);
         }
