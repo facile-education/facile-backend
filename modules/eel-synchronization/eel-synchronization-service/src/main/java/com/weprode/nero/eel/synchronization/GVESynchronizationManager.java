@@ -2292,7 +2292,7 @@ public class GVESynchronizationManager {
         trustFactory.init(trustStore);
         TrustManager[] trustManagers = trustFactory.getTrustManagers();
 
-        SSLContext sslContext = SSLContext.getInstance("SSL");
+        SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
         sslContext.init(null, trustManagers, null);
 
         SSLSocketFactory sslsocketfactory = sslContext.getSocketFactory();
