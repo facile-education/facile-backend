@@ -2,7 +2,6 @@ package com.weprode.nero.commons.wrapper;
 
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
-import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
@@ -335,55 +334,33 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			return;
 		}
 
-		// Get SENDING BOX folder
-		DLFolder sendingBox;
 		try {
-			sendingBox = DLFolderLocalServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SENDING_BOX_FOLDER_NAME);
-		} catch (Exception exc) {
-			logger.error("Could not get sending box for user "+userId);
-			return;
-		}
-		if (sendingBox == null) {
-			logger.error("Could not get sending box for user "+userId);
-			return;
-		}
-		logger.info("Sending box folderid is "+sendingBox.getFolderId());
+			// Loop over user's folders
+			for (MessageFolder folder : MessageFolderLocalServiceUtil.getAllUserFolders(userId)) {
+				logger.info("Cleaning folder "+folder.getFolderName()+", id="+folder.getFolderId());
 
-		List<MessageFolder> folderMessageList;
-		try {
-			folderMessageList = MessageFolderLocalServiceUtil.getAllUserFolders(userId);
-			if (folderMessageList != null) {
-				// Loop over user's folders
-				for (MessageFolder folder : folderMessageList) {
-					logger.debug("Folder name = "+folder.getFolderName()+", id="+folder.getFolderId());
+				// Delete messages + internal receivers + attached files + attached files folders
+				try {
+					List<Message> messageList = MessageLocalServiceUtil.getMessagesByFolder(folder.getFolderId(), userId);
+					if (messageList != null) {
 
-					// Delete messages + internal receivers + attached files + attached files folders
-					try {
-						List<Message> messageList = MessageLocalServiceUtil.getMessagesByFolder(folder.getFolderId(), userId);
-						if (messageList != null) {
+						for (Message message : messageList) {
 
-							for (Message message : messageList) {
-								if (message.getFolderId() == sendingBox.getFolderId()) {
-									logger.info("Do not delete message "+message.getMessageId()+" because in user's sending box");
-									continue;
-								}
-
-								try {
-									MessageLocalServiceUtil.deleteMessageAndDependencies(message.getMessageId());
-									logger.debug("Deleted message id "+message.getMessageId()+ "(subject="+message.getMessageSubject()+")");
-									userNbMessagesSuccess++;
-								} catch (Exception e) {
-									userNbMessagesError++;
-								}
+							try {
+								MessageLocalServiceUtil.deleteMessageAndDependencies(message.getMessageId());
+								logger.debug("Deleted message id "+message.getMessageId()+ "(subject="+message.getMessageSubject()+")");
+								userNbMessagesSuccess++;
+							} catch (Exception e) {
+								userNbMessagesError++;
 							}
 						}
-					} catch (Exception e) {
-						logger.info("Error : could not get all messages by folderId "+folder.getFolderId());
 					}
+				} catch (Exception e) {
+					logger.info("Error : could not get all messages by folderId "+folder.getFolderId());
 				}
 			}
 		} catch (SystemException e) {
-			logger.error(e);
+			logger.error("Error cleaning internal messages for user " + userId, e);
 		}
 	}
 
