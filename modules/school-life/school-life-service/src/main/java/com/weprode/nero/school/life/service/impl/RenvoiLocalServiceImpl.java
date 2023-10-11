@@ -111,7 +111,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
             List<Renvoi> renvois = renvoiPersistence.findByschoolId(schoolId);
             if (renvois != null) {
                 for (Renvoi renvoi : renvois) {
-                    if (renvoi.getRenvoiDate().after(minDate) && renvoi.getRenvoiDate().before(maxDate)) {
+                    if (renvoi.getRenvoiDate().after(minDate) && !renvoi.getRenvoiDate().after(maxDate)) {
                         schoolRenvois.add(renvoi);
                     }
                 }

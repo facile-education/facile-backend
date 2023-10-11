@@ -110,7 +110,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                     List<Renvoi> pendingRenvois = RenvoiLocalServiceUtil.getTeacherPendingRenvois(user.getUserId());
                     for (Renvoi pendingRenvoi : pendingRenvois) {
                         // First filter on dates
-                        if (pendingRenvoi.getRenvoiDate().after(minDate) && pendingRenvoi.getRenvoiDate().before(maxDate)) {
+                        if (pendingRenvoi.getRenvoiDate().after(minDate) && !pendingRenvoi.getRenvoiDate().after(maxDate)) {
                             // Then filter on group : either coursGroupId or classOrgId
                             Organization renvoiClass = OrganizationLocalServiceUtil.getOrganization(pendingRenvoi.getOrgId());
                             CDTSession sourceSession = CDTSessionLocalServiceUtil.getCDTSession(pendingRenvoi.getSourceSessionId());
