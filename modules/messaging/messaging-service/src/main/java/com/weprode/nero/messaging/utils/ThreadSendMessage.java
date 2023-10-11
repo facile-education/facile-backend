@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 
 import java.util.List;
 
@@ -46,10 +47,16 @@ public class ThreadSendMessage extends Thread{
 				PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(this.user);
 				PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
+				StringBuilder formattedRecipients = new StringBuilder("");
+				for (Long recipientId : recipientList) {
+					User recipient = UserLocalServiceUtil.getUser(recipientId);
+					formattedRecipients.append(recipient.getFullName()).append(", ");
+				}
 				logger.info("Start ThreadSendMessage " + this.getId() + " - "
 						+ "User " + user.getFullName() + " (userId = "+ user.getUserId() + ") " 
 						+ "sends IM with subject '" + subject + "' "
-						+ "to " + this.recipientList.size() + " recipients "
+						+ "to " + this.recipientList.size() + " recipients :"
+						+ formattedRecipients
 						+ "with " + (this.attachFileIds != null ? this.attachFileIds.size() : 0) + " attachments");
 				MessageUtil.sendMessage(user, recipientList, subject, content, attachFileIds, draftMessageId, originMessageId, type);
 
