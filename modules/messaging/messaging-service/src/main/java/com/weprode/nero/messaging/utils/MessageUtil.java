@@ -314,6 +314,7 @@ public class MessageUtil {
 		
 		result.put(JSONConstants.IS_ANSWERED, message.getIsAnswered());
 		result.put(JSONConstants.IS_FORWARDED, message.getIsForwarded());
+		result.put(JSONConstants.IS_DRAFT, MessageFolderLocalServiceUtil.getUserDraftFolder(message.getSenderId()).getFolderId() == message.getFolderId());
 
 		// Attach files
 		result.put(JSONConstants.HAS_ATTACH_FILES, MessageAttachFileLocalServiceUtil.countAttachedFiles(message.getMessageId()) > 0);
