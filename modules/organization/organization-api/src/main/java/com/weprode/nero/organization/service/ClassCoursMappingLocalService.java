@@ -95,6 +95,10 @@ public interface ClassCoursMappingLocalService
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	public void deleteByClassOrgId(long classOrgId);
+
+	public void deleteByCoursOrgId(long coursOrgId);
+
 	/**
 	 * Deletes the class cours mapping from the database. Also notifies the appropriate model listeners.
 	 *

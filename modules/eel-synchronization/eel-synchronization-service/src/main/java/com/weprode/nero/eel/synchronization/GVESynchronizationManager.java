@@ -225,8 +225,9 @@ public class GVESynchronizationManager {
         synchronizeRole(school, "CN=ENT-MEDIATHECAIRES,OU=ENT-PAT,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.BIBLIOTHECAIRE);
         synchronizeRole(school, "CN=ENT-SECRETAIRES,OU=ENT-PAT,OU=ESPACES-SCOLAIRES," + schoolDn, NeroRoleConstants.SECRETAIRE);
 
-        synchronizeHoraires(school, schoolId);
-        createHoraires(school);
+        if (synchronizeHoraires(school, schoolId)) {
+            createHoraires(school);
+        }
 
         synchronizeUserOrgs();
 
@@ -1377,20 +1378,20 @@ public class GVESynchronizationManager {
         return true;
     }
 
-    private void synchronizeHoraires(Organization school, String schoolId) {
+    private boolean synchronizeHoraires(Organization school, String schoolId) {
 
         logger.info("Start parsing access csv file");
 
         File csvFile = getLatestFile(schoolId);
         if (csvFile == null) {
             logger.info("Not found any file for schoolId " + schoolId);
-            return;
+            return false;
         }
 
         List<String> csvLines = GVESynchronizationUtils.getFileContent(csvFile);
         if (!isFileValid(csvLines)) {
             logger.error("File is not valid -> skipping");
-            return;
+            return false;
         }
 
         // Loop over the lines (no first line to skip)
@@ -1508,6 +1509,7 @@ public class GVESynchronizationManager {
 
             coursMap.get(shortSessionName).get(slot).add(slotData);
         }
+        return true;
     }
 
 
@@ -1527,9 +1529,11 @@ public class GVESynchronizationManager {
         String regex1 = "[A-Z]{2}\\d{4}.*";
         String regex2 = "[A-Z]{2}[_.+]\\d{4}.*";
 
-        if (newSessionName.endsWith("G1") || newSessionName.endsWith("G2")) {
+        if (newSessionName.contains("G1") || newSessionName.contains("G2")) {
             logger.debug("======================= KEEP FULL NAME ===================");
             // Nothing so that we generate groups with complete session name
+            // Just shorten to 8 chars
+            newSessionName = newSessionName.substring(0, (Math.min(newSessionName.length(), 8)));
         }
         // If session is 2 letters and 4 numerics, shorten to 6 chars
         else if (Pattern.matches(regex1, newSessionName)) {
@@ -1763,8 +1767,10 @@ public class GVESynchronizationManager {
 
         // Delete obsolete cours orgs
         // Be careful to not delete cours orgs for which the teacher has not been identified (ex. XXBUDE)
+        String tmpGroupIdList = "";
         for (Organization toRemoveOrg : existingCoursOrgs) {
             if (!newCoursOrgIds.contains(toRemoveOrg.getOrganizationId())) {
+                tmpGroupIdList += "," + toRemoveOrg.getGroupId();
                 logger.info("Should delete obsolete cours org " + toRemoveOrg.getName() + " for school " + school.getName() + " (But for safety reason we keep it for now)");
 //				logger.info("Deleting obsolete cours org " + toRemoveOrg.getName() + " for school " + school.getName());
 //				try {
@@ -1783,6 +1789,7 @@ public class GVESynchronizationManager {
 //				}
             }
         }
+        logger.info("toRemoveGroupIds = " + tmpGroupIdList);
     }
 
     private static int getSlotNumber(String slot) {
