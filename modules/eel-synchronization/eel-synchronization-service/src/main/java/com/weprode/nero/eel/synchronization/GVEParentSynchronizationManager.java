@@ -319,7 +319,11 @@ public class GVEParentSynchronizationManager {
                 }
             }
 
-            logger.error("Error lines are " + errorLines.size() + " : " + errorLines);
+            logger.info("--------------------------------------");
+            logger.error("There are " + errorLines.size() + " errors :");
+            for (String errorLine : errorLines) {
+                logger.error(errorLine);
+            }
 
             // Update database
             if (lastSchoolSynchro == null) {
