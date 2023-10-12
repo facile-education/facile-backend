@@ -46,6 +46,10 @@ public class UserReadVersionNoteLocalServiceImpl extends UserReadVersionNoteLoca
 	public boolean hasReadLastVersionNote (long userId) {
 		UserReadVersionNote userReadVersionNote;
 		try {
+			if (versionNotePersistence.countAll() == 0) {
+				// No version
+				return true;
+			}
 			userReadVersionNote = userReadVersionNotePersistence.findByPrimaryKey(userId);
 		} catch (NoSuchUserReadVersionNoteException e) {
 			return false; // if user doesn't exist in this table, he has not read the last version note
