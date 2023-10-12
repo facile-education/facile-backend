@@ -98,7 +98,7 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 
 				JSONObject roleActions = new JSONObject();
 				roleActions.put(JSONConstants.ROLE_ID, role.getRoleId());
-				roleActions.put(JSONConstants.ROLE_NAME, role.getName());
+				roleActions.put(JSONConstants.ROLE_NAME, role.getTitle(user.getLocale()));
 				roleActions.put(JSONConstants.EDITABLE, areRoleActionsEditable);
 
 				for (ResourceAction resourceAction : dLFileEntryResourceActions) {
@@ -160,7 +160,7 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 
 				JSONObject roleActions = new JSONObject();
 				roleActions.put(JSONConstants.ROLE_ID, role.getRoleId());
-				roleActions.put(JSONConstants.ROLE_NAME, role.getName());
+				roleActions.put(JSONConstants.ROLE_NAME, role.getTitle(user.getLocale()));
 				roleActions.put(JSONConstants.EDITABLE, areRoleActionsEditable);
 
 				for (ResourceAction resourceAction : dLFolderResourceActions) {
