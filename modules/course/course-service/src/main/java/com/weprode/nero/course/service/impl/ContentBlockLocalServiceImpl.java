@@ -33,6 +33,7 @@ import com.weprode.nero.course.service.base.ContentBlockLocalServiceBaseImpl;
 
 import com.weprode.nero.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.IOException;
@@ -69,6 +70,9 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 			}
 			FileEntry contentFile = FileUtilsLocalServiceUtil.copyFileEntry(userId, fileEntryId, parentFolder.getFolderId(), true);
 			block.setFileEntryId(contentFile.getFileEntryId());
+
+			// Apply default permissions so that students can VIEW
+			PermissionUtilsLocalServiceUtil.addDefaultPermissionsFile(contentFile);
 		}
 
 		// Content value is either the default one, or the provided one
