@@ -158,7 +158,7 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 			// Increment minor version
 			DLAppServiceUtil.updateFileEntry(
 					fileEntry.getFileEntryId(),
-					fileEntry.getName(),
+					fileEntry.getTitle(),
 					fileEntry.getMimeType(),
 					fileEntry.getTitle(),
 					StringPool.BLANK, // urlTitle
