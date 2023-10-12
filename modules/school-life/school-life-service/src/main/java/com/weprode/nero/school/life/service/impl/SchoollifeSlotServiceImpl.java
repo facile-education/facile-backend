@@ -18,8 +18,8 @@ import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Component(
         property = {
@@ -55,6 +55,11 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         try {
             Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
             Date endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDateStr);
+            // Set 23:00 to endDate so that endDate is included
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(endDate);
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            endDate = cal.getTime();
             SchoollifeSlotLocalServiceUtil.addSlot(schoolId, startDate, endDate, day, startHour, endHour, teacherId, type, room, capacity);
 
             result.put(JSONConstants.SUCCESS, true);
@@ -89,6 +94,11 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         try {
             Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
             Date endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDateStr);
+            // Set 23:00 to endDate so that endDate is included
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(endDate);
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            endDate = cal.getTime();
             long schoollifeSlotId = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId).getSchoollifeSlotId();
             SchoollifeSlotLocalServiceUtil.editSlot(schoollifeSlotId, startDate, endDate, newDay, newStartHour, newEndHour, newTeacherId, newRoom, newCapacity);
 
