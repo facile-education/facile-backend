@@ -35,6 +35,7 @@ import com.weprode.nero.course.model.SessionContent;
 import com.weprode.nero.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.nero.course.service.base.SessionContentLocalServiceBaseImpl;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
@@ -195,12 +196,14 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 					courseFolder.getGroupId(),
 					courseFolder.getFolderId(),
 					String.valueOf(sessionId),
-					"",
+					"Dossier de la séance " + sessionId,
 					new ServiceContext()
 			);
 		} catch (Exception e) {
 			logger.error("Error when fetching folder for sessionId " + sessionId, e);
 		}
+		// Apply default permissions so that students can VIEW
+		PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(sessionFolder);
 
 		return sessionFolder;
 	}
