@@ -87,6 +87,16 @@ public class ClassCoursMappingLocalServiceWrapper
 			primaryKeyObj);
 	}
 
+	@Override
+	public void deleteByClassOrgId(long classOrgId) {
+		_classCoursMappingLocalService.deleteByClassOrgId(classOrgId);
+	}
+
+	@Override
+	public void deleteByCoursOrgId(long coursOrgId) {
+		_classCoursMappingLocalService.deleteByCoursOrgId(coursOrgId);
+	}
+
 	/**
 	 * Deletes the class cours mapping from the database. Also notifies the appropriate model listeners.
 	 *

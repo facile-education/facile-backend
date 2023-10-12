@@ -88,6 +88,14 @@ public class ClassCoursMappingLocalServiceUtil {
 		return getService().createPersistedModel(primaryKeyObj);
 	}
 
+	public static void deleteByClassOrgId(long classOrgId) {
+		getService().deleteByClassOrgId(classOrgId);
+	}
+
+	public static void deleteByCoursOrgId(long coursOrgId) {
+		getService().deleteByCoursOrgId(coursOrgId);
+	}
+
 	/**
 	 * Deletes the class cours mapping from the database. Also notifies the appropriate model listeners.
 	 *

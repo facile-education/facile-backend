@@ -113,4 +113,12 @@ public class ClassCoursMappingLocalServiceImpl extends ClassCoursMappingLocalSer
 		return coursOrgIds;
 	}
 
+	public void deleteByClassOrgId(long classOrgId) {
+		classCoursMappingPersistence.removeByclassOrgId(classOrgId);
+	}
+
+	public void deleteByCoursOrgId(long coursOrgId) {
+		classCoursMappingPersistence.removeBycoursOrgId(coursOrgId);
+	}
+
 }

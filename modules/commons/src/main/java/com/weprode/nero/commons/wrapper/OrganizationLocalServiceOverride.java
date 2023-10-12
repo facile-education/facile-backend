@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.service.OrganizationLocalService;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceWrapper;
 import com.liferay.portal.kernel.service.ServiceWrapper;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.organization.service.ClassCoursMappingLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.nero.organization.service.OrgMappingLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
@@ -56,6 +57,10 @@ public class OrganizationLocalServiceOverride extends OrganizationLocalServiceWr
 		} catch (Exception e) {
 			logger.error("Could not remove orgDetails");
 		}
+
+		// ClassCours mapping
+		ClassCoursMappingLocalServiceUtil.deleteByClassOrgId(organizationId);
+		ClassCoursMappingLocalServiceUtil.deleteByCoursOrgId(organizationId);
 
 		if (isSchool) {
 			try {
