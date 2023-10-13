@@ -91,13 +91,15 @@ public class ContactCompletionLocalServiceImpl
 			allContacts = new JSONArray(cache);
 		}
 
+		String normalizedQuery = Normalizer.normalize(query, Normalizer.Form.NFKD).toLowerCase();
+
 		for (int i=0 ; i < allContacts.length() ; ++i) {
 			JSONObject contact = allContacts.getJSONObject(i);
-			String lastName = Normalizer.normalize(contact.getString(JSONConstants.LAST_NAME), Normalizer.Form.NFC).toLowerCase();
-			String firstName = Normalizer.normalize(contact.getString(JSONConstants.FIRST_NAME), Normalizer.Form.NFC).toLowerCase();
-			String normalizedQuery = Normalizer.normalize(query, Normalizer.Form.NFC).toLowerCase();
+			String lastName = Normalizer.normalize(contact.getString(JSONConstants.LAST_NAME), Normalizer.Form.NFKD).toLowerCase();
+			String firstName = Normalizer.normalize(contact.getString(JSONConstants.FIRST_NAME), Normalizer.Form.NFKD).toLowerCase();
 
-			if (stringMatches(firstName, normalizedQuery) || stringMatches(lastName, normalizedQuery)) {
+			// Match lastName, firstName and aggregations of both
+			if (stringMatches(firstName, normalizedQuery) || stringMatches(lastName, normalizedQuery) || stringMatches(firstName + " " + lastName, normalizedQuery) || stringMatches(lastName + " " + firstName, normalizedQuery)) {
 
 				try {
 					User completedUser = UserLocalServiceUtil.getUser(contact.getLong(JSONConstants.USER_ID));
@@ -529,9 +531,10 @@ public class ContactCompletionLocalServiceImpl
 	}
 
 	private boolean stringMatches(String source, String query) {
-		String name = Normalizer.normalize(source, Normalizer.Form.NFD).toLowerCase();
+		String name = Normalizer.normalize(source, Normalizer.Form.NFKD).toLowerCase();
 		name = name.replaceAll("[^\\p{ASCII}]", "");
-		return name.length() >= query.length() && name.contains(query);
+		String newQuery = query.replaceAll("[^\\p{ASCII}]", "");
+		return name.length() >= newQuery.length() && name.contains(newQuery);
 	}
 
 }
