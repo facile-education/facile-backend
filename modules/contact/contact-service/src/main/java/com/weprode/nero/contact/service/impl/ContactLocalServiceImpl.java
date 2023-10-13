@@ -538,7 +538,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 		jsonUser.put(JSONConstants.USER_ID, user.getUserId());
 		jsonUser.put(JSONConstants.FIRST_NAME, formatName(user.getFirstName()));
-		jsonUser.put(JSONConstants.LAST_NAME, formatName(user.getLastName()));
+		jsonUser.put(JSONConstants.LAST_NAME, user.getLastName());
 		jsonUser.put(JSONConstants.TYPE, ContactConstants.RECIPIENT_TYPE_USER);
 		List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserSchools(user);
 		if (userSchools != null && userSchools.size() > 0) {
