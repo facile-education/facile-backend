@@ -29,11 +29,6 @@ import com.weprode.nero.messaging.model.Message;
 import com.weprode.nero.messaging.service.MessageLocalServiceUtil;
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.service.NewsLocalServiceUtil;
-import com.weprode.nero.progression.constants.ProgressionConstants;
-import com.weprode.nero.progression.model.Progression;
-import com.weprode.nero.progression.model.ProgressionItem;
-import com.weprode.nero.progression.service.ProgressionItemLocalServiceUtil;
-import com.weprode.nero.progression.service.ProgressionLocalServiceUtil;
 import com.weprode.nero.search.constants.SearchConstants;
 import org.json.JSONObject;
 
@@ -107,32 +102,6 @@ public class SearchResults {
 
             JSONObject event = EventLocalServiceUtil.convertEventToJson(userId, entityId, false);
             result.put(JSONConstants.EVENT, event);
-
-        // Progression
-        } else if (doc.getString(Field.ENTRY_CLASS_NAME).equals(Progression.class.getName())) {
-            result.put(JSONConstants.SERVICE, SearchConstants.TYPE_PROGRESSION);
-
-            try {
-                Progression progression = ProgressionLocalServiceUtil.getProgression(entityId);
-                result.put(JSONConstants.NAME, progression.getName());
-                result.put(JSONConstants.DESCRIPTION, progression.getDescription());
-            } catch (PortalException e) {
-                logger.error("Failed to get progression details for progressionId=" + entityId, e);
-            }
-
-        // ProgressionItem
-        } else if (doc.getString(Field.ENTRY_CLASS_NAME).equals(ProgressionItem.class.getName())) {
-            int service = (doc.getInteger(Field.TYPE) == ProgressionConstants.SESSION_TYPE) ?
-                    SearchConstants.TYPE_PROGRESSION_COURSE : SearchConstants.TYPE_PROGRESSION_HOMEWORK;
-            result.put(JSONConstants.SERVICE, service);
-
-            try {
-                ProgressionItem progressionItem = ProgressionItemLocalServiceUtil.getProgressionItem(entityId);
-                result.put(JSONConstants.PROGRESSION_ID, progressionItem.getProgressionId());
-                result.put(JSONConstants.SECTION, progressionItem.getItemName());
-            } catch (PortalException e) {
-                logger.error("Failed to get progressionItem details for progressionItemId=" + entityId, e);
-            }
 
         // File
         } else if (doc.getString(Field.ENTRY_CLASS_NAME).equals(DLFileEntry.class.getName())) {
