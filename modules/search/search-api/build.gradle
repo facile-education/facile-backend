@@ -2,7 +2,6 @@ dependencies {
 	compile project(":modules:commons")
 	compile project(":modules:messaging:messaging-api")
 	compile project(":modules:news:news-api")
-	compile project(":modules:progression:progression-api")
 	compile project(":modules:agenda:agenda-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"

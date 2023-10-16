@@ -25,8 +25,6 @@ import com.weprode.nero.agenda.model.Event;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.messaging.model.Message;
 import com.weprode.nero.news.model.News;
-import com.weprode.nero.progression.model.Progression;
-import com.weprode.nero.progression.model.ProgressionItem;
 import com.weprode.nero.search.model.SearchResults;
 import com.weprode.nero.search.service.base.SearchEngineLocalServiceBaseImpl;
 import org.osgi.service.component.annotations.Component;
@@ -97,7 +95,6 @@ public class SearchEngineLocalServiceImpl extends SearchEngineLocalServiceBaseIm
 
                 // Class names
                 String[] classNames = {Message.class.getName(), News.class.getName(),
-                        Progression.class.getName(), ProgressionItem.class.getName(),
                         Event.class.getName(),
                         DLFileEntry.class.getName(), DLFolder.class.getName()};
                 searchContext.setEntryClassNames(classNames);

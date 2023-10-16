@@ -6,7 +6,6 @@ dependencies {
 	compile project(":modules:organization:organization-api")
 	compile project(":modules:group:group-api")
 	compile project(":modules:course:course-api")
-	compile project(":modules:progression:progression-api")
 	compile project(":modules:school-life:school-life-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
