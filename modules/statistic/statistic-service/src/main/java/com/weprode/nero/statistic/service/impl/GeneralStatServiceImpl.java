@@ -70,6 +70,12 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         String period = MatomoConstants.PERIOD_DAY;
 
         try {
+            // If Matomo is disabled, return
+            if (PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) == null || !PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true")) {
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
+
             List<Long> profileIds = UserProfile.getAllStatProfileIds();
 
             List<Long> schoolIds = new ArrayList<>();
@@ -128,6 +134,11 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         String period = MatomoConstants.PERIOD_DAY;
 
         try {
+            // If Matomo is disabled, return
+            if (PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) == null || !PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true")) {
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
+            }
             List<Long> profileIds = UserProfile.getAllStatProfileIds();
 
             List<Long> schoolIds = new ArrayList<>();
@@ -367,10 +378,9 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
-        // If no Matomo url specified, return empty object
+        // If Matomo is not enabled, return
         if (PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) == null || !PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true")) {
             result.put(JSONConstants.SUCCESS, false);
-            logger.error("No Matomo url specified");
             return result;
         }
 
