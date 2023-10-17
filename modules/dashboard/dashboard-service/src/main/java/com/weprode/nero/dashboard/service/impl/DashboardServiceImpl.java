@@ -7,11 +7,13 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.nero.agenda.model.Event;
 import com.weprode.nero.agenda.service.EventLocalServiceUtil;
 import com.weprode.nero.application.service.BroadcastLocalServiceUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.dashboard.service.base.DashboardServiceBaseImpl;
 import com.weprode.nero.group.model.GroupActivity;
 import com.weprode.nero.group.service.GroupActivityLocalServiceUtil;
@@ -73,7 +75,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             result.put(JSONConstants.HAS_DIARY_WIDGET, true);
             result.put(JSONConstants.HAS_HOMEWORK_WIDGET, isStudentOrParent && BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "cdt"));
             result.put(JSONConstants.HAS_EDT_WIDGET, isStudentOrParent || RoleUtilsLocalServiceUtil.isTeacher(user));
-            result.put(JSONConstants.HAS_STATISTIC_WIDGET, isDirectionMember || RoleUtilsLocalServiceUtil.isENTAdmin(user));
+            result.put(JSONConstants.HAS_STATISTIC_WIDGET, (isDirectionMember || RoleUtilsLocalServiceUtil.isENTAdmin(user)) && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) != null && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true"));
 
             // If we are a parent, get our children list
             if (RoleUtilsLocalServiceUtil.isParent(user)) {
