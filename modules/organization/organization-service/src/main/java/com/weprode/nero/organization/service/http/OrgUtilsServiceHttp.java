@@ -47,7 +47,6 @@ import com.weprode.nero.organization.service.OrgUtilsServiceUtil;
  * </p>
  *
  * @author Marc Salvat
- * @see OrgUtilsServiceSoap
  * @generated
  */
 public class OrgUtilsServiceHttp {

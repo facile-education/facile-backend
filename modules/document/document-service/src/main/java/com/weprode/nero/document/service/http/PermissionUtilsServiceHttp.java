@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.PermissionUtilsServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see PermissionUtilsServiceSoap
  * @generated
  */
 public class PermissionUtilsServiceHttp {

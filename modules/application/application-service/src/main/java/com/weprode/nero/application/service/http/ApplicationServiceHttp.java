@@ -47,7 +47,6 @@ import com.weprode.nero.application.service.ApplicationServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ApplicationServiceSoap
  * @generated
  */
 public class ApplicationServiceHttp {

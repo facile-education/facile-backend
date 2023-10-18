@@ -47,7 +47,6 @@ import com.weprode.nero.application.service.BroadcastRuleServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see BroadcastRuleServiceSoap
  * @generated
  */
 public class BroadcastRuleServiceHttp {

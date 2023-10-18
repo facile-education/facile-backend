@@ -27,6 +27,10 @@ public class MessageAttachFileLocalServiceWrapper
 	implements MessageAttachFileLocalService,
 			   ServiceWrapper<MessageAttachFileLocalService> {
 
+	public MessageAttachFileLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MessageAttachFileLocalServiceWrapper(
 		MessageAttachFileLocalService messageAttachFileLocalService) {
 

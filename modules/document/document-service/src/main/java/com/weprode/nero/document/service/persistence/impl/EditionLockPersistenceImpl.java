@@ -166,7 +166,7 @@ public class EditionLockPersistenceImpl
 
 		if (useFinderCache) {
 			result = dummyFinderCache.getResult(
-				_finderPathFetchByfileId_userId, finderArgs);
+				_finderPathFetchByfileId_userId, finderArgs, this);
 		}
 
 		if (result instanceof EditionLock) {
@@ -279,7 +279,8 @@ public class EditionLockPersistenceImpl
 
 		Object[] finderArgs = new Object[] {fileId, userId};
 
-		Long count = (Long)dummyFinderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)dummyFinderCache.getResult(
+			finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -720,7 +721,7 @@ public class EditionLockPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<EditionLock>)dummyFinderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -790,7 +791,7 @@ public class EditionLockPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)dummyFinderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -945,9 +946,5 @@ public class EditionLockPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return dummyFinderCache;
 	}
-
-	@Reference
-	private EditionLockModelArgumentsResolver
-		_editionLockModelArgumentsResolver;
 
 }

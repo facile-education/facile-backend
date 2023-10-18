@@ -47,7 +47,6 @@ import com.weprode.nero.user.service.UserPasswordServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserPasswordServiceSoap
  * @generated
  */
 public class UserPasswordServiceHttp {

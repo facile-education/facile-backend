@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class ContactLocalServiceWrapper
 	implements ContactLocalService, ServiceWrapper<ContactLocalService> {
 
+	public ContactLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ContactLocalServiceWrapper(ContactLocalService contactLocalService) {
 		_contactLocalService = contactLocalService;
 	}

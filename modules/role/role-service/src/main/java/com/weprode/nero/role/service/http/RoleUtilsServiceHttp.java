@@ -47,7 +47,6 @@ import com.weprode.nero.role.service.RoleUtilsServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see RoleUtilsServiceSoap
  * @generated
  */
 public class RoleUtilsServiceHttp {

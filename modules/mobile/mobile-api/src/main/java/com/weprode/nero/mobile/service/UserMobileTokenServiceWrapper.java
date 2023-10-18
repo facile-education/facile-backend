@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class UserMobileTokenServiceWrapper
 	implements ServiceWrapper<UserMobileTokenService>, UserMobileTokenService {
 
+	public UserMobileTokenServiceWrapper() {
+		this(null);
+	}
+
 	public UserMobileTokenServiceWrapper(
 		UserMobileTokenService userMobileTokenService) {
 

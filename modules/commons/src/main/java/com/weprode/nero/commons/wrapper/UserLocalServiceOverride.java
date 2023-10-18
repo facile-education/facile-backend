@@ -80,7 +80,7 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			String firstName, String middleName, String lastName,
 			long prefixId, long suffixId, boolean male,
 			int birthdayMonth, int birthdayDay, int birthdayYear,
-			String jobTitle, long[] groupIds, long[] organizationIds,
+			String jobTitle, int type, long[] groupIds, long[] organizationIds,
 			long[] roleIds, long[] userGroupIds, boolean sendEmail,
 			ServiceContext serviceContext)
 			throws PortalException {
@@ -99,7 +99,7 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 				firstName, middleName, lastName,
 				prefixId, suffixId, male,
 				birthdayMonth, birthdayDay, birthdayYear,
-				jobTitle, groupIds, organizationIds, roleIds, userGroupIds, sendEmail,
+				jobTitle, type, groupIds, organizationIds, roleIds, userGroupIds, sendEmail,
 				serviceContext);
 
 		// Create default user properties

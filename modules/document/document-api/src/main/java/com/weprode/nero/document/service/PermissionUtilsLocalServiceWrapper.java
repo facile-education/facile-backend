@@ -27,6 +27,10 @@ public class PermissionUtilsLocalServiceWrapper
 	implements PermissionUtilsLocalService,
 			   ServiceWrapper<PermissionUtilsLocalService> {
 
+	public PermissionUtilsLocalServiceWrapper() {
+		this(null);
+	}
+
 	public PermissionUtilsLocalServiceWrapper(
 		PermissionUtilsLocalService permissionUtilsLocalService) {
 

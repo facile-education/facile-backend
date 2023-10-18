@@ -27,6 +27,10 @@ public class EventPopulationLocalServiceWrapper
 	implements EventPopulationLocalService,
 			   ServiceWrapper<EventPopulationLocalService> {
 
+	public EventPopulationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public EventPopulationLocalServiceWrapper(
 		EventPopulationLocalService eventPopulationLocalService) {
 

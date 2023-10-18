@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class DocumentUtilsServiceWrapper
 	implements DocumentUtilsService, ServiceWrapper<DocumentUtilsService> {
 
+	public DocumentUtilsServiceWrapper() {
+		this(null);
+	}
+
 	public DocumentUtilsServiceWrapper(
 		DocumentUtilsService documentUtilsService) {
 

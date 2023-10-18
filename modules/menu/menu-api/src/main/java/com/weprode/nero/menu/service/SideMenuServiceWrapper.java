@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class SideMenuServiceWrapper
 	implements ServiceWrapper<SideMenuService>, SideMenuService {
 
+	public SideMenuServiceWrapper() {
+		this(null);
+	}
+
 	public SideMenuServiceWrapper(SideMenuService sideMenuService) {
 		_sideMenuService = sideMenuService;
 	}

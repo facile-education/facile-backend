@@ -47,7 +47,6 @@ import com.weprode.nero.user.service.SchoolAdminServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SchoolAdminServiceSoap
  * @generated
  */
 public class SchoolAdminServiceHttp {

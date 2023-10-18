@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -77,7 +78,7 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             boolean autoScreenName = Validator.isNull(screenName);
             User user = UserLocalServiceUtil.addUser(0, companyId, false, password, password, autoScreenName,
                     screenName, email, LocaleUtil.getDefault(), firstName, StringPool.BLANK, lastName, 0,
-                    0, isMale, birthdayMonth, birthdayDay, birthdayYear, StringPool.BLANK, null,
+                    0, isMale, birthdayMonth, birthdayDay, birthdayYear, StringPool.BLANK, UserConstants.TYPE_REGULAR, null,
                     null, null, null, false, serviceContext);
 
             Date today = new Date();

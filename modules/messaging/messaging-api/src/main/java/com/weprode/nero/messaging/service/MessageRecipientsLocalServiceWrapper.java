@@ -27,6 +27,10 @@ public class MessageRecipientsLocalServiceWrapper
 	implements MessageRecipientsLocalService,
 			   ServiceWrapper<MessageRecipientsLocalService> {
 
+	public MessageRecipientsLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MessageRecipientsLocalServiceWrapper(
 		MessageRecipientsLocalService messageRecipientsLocalService) {
 

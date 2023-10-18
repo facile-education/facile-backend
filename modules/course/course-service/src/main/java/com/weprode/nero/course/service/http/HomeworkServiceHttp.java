@@ -47,7 +47,6 @@ import com.weprode.nero.course.service.HomeworkServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see HomeworkServiceSoap
  * @generated
  */
 public class HomeworkServiceHttp {

@@ -47,7 +47,6 @@ import com.weprode.nero.schedule.service.CDTSessionServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see CDTSessionServiceSoap
  * @generated
  */
 public class CDTSessionServiceHttp {

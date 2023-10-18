@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class UserPropertiesServiceWrapper
 	implements ServiceWrapper<UserPropertiesService>, UserPropertiesService {
 
+	public UserPropertiesServiceWrapper() {
+		this(null);
+	}
+
 	public UserPropertiesServiceWrapper(
 		UserPropertiesService userPropertiesService) {
 

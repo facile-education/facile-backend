@@ -163,7 +163,7 @@ public class ApplicationPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchByapplicationKey, finderArgs);
+				_finderPathFetchByapplicationKey, finderArgs, this);
 		}
 
 		if (result instanceof Application) {
@@ -283,7 +283,7 @@ public class ApplicationPersistenceImpl
 
 		Object[] finderArgs = new Object[] {applicationKey};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -730,7 +730,7 @@ public class ApplicationPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Application>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -800,7 +800,7 @@ public class ApplicationPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -961,9 +961,5 @@ public class ApplicationPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private ApplicationModelArgumentsResolver
-		_applicationModelArgumentsResolver;
 
 }

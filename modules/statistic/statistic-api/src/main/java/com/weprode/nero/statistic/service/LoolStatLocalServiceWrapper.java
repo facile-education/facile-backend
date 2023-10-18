@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class LoolStatLocalServiceWrapper
 	implements LoolStatLocalService, ServiceWrapper<LoolStatLocalService> {
 
+	public LoolStatLocalServiceWrapper() {
+		this(null);
+	}
+
 	public LoolStatLocalServiceWrapper(
 		LoolStatLocalService loolStatLocalService) {
 

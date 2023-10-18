@@ -47,7 +47,6 @@ import com.weprode.nero.maintenance.service.GroupsMaintenanceServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see GroupsMaintenanceServiceSoap
  * @generated
  */
 public class GroupsMaintenanceServiceHttp {

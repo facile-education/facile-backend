@@ -27,6 +27,10 @@ public class DefaultRoleLocalServiceWrapper
 	implements DefaultRoleLocalService,
 			   ServiceWrapper<DefaultRoleLocalService> {
 
+	public DefaultRoleLocalServiceWrapper() {
+		this(null);
+	}
+
 	public DefaultRoleLocalServiceWrapper(
 		DefaultRoleLocalService defaultRoleLocalService) {
 

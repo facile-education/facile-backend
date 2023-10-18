@@ -47,7 +47,6 @@ import com.weprode.nero.messaging.service.MessagingConfigServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MessagingConfigServiceSoap
  * @generated
  */
 public class MessagingConfigServiceHttp {

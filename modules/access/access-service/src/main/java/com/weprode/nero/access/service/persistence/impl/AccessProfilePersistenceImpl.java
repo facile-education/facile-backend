@@ -35,7 +35,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
+import com.liferay.portal.kernel.uuid.PortalUUID;
 
 import com.weprode.nero.access.exception.NoSuchProfileException;
 import com.weprode.nero.access.model.AccessProfile;
@@ -192,7 +192,7 @@ public class AccessProfilePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<AccessProfile>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AccessProfile accessProfile : list) {
@@ -574,7 +574,7 @@ public class AccessProfilePersistenceImpl
 
 		Object[] finderArgs = new Object[] {uuid};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -724,7 +724,7 @@ public class AccessProfilePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<AccessProfile>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AccessProfile accessProfile : list) {
@@ -1083,7 +1083,7 @@ public class AccessProfilePersistenceImpl
 
 		Object[] finderArgs = new Object[] {accessId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1231,7 +1231,7 @@ public class AccessProfilePersistenceImpl
 		accessProfile.setNew(true);
 		accessProfile.setPrimaryKey(accessProfilePK);
 
-		String uuid = PortalUUIDUtil.generate();
+		String uuid = _portalUUID.generate();
 
 		accessProfile.setUuid(uuid);
 
@@ -1348,7 +1348,7 @@ public class AccessProfilePersistenceImpl
 			(AccessProfileModelImpl)accessProfile;
 
 		if (Validator.isNull(accessProfile.getUuid())) {
-			String uuid = PortalUUIDUtil.generate();
+			String uuid = _portalUUID.generate();
 
 			accessProfile.setUuid(uuid);
 		}
@@ -1518,7 +1518,7 @@ public class AccessProfilePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<AccessProfile>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1588,7 +1588,7 @@ public class AccessProfilePersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1792,7 +1792,6 @@ public class AccessProfilePersistenceImpl
 	}
 
 	@Reference
-	private AccessProfileModelArgumentsResolver
-		_accessProfileModelArgumentsResolver;
+	private PortalUUID _portalUUID;
 
 }

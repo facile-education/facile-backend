@@ -47,7 +47,6 @@ import com.weprode.nero.help.service.HelpItemServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see HelpItemServiceSoap
  * @generated
  */
 public class HelpItemServiceHttp {

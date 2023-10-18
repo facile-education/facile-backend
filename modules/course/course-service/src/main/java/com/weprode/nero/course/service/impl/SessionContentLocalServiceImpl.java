@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Cédric Lecarpentier
@@ -193,6 +194,7 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 			sessionFolder = FolderUtilsLocalServiceUtil.getFolderByName(courseFolder, String.valueOf(sessionId));
 		} catch (NoSuchFolderException e) {
 			sessionFolder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					courseFolder.getGroupId(),
 					courseFolder.getFolderId(),
 					String.valueOf(sessionId),

@@ -47,7 +47,6 @@ import com.weprode.nero.menu.service.SideMenuServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SideMenuServiceSoap
  * @generated
  */
 public class SideMenuServiceHttp {

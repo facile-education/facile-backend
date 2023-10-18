@@ -184,7 +184,8 @@ public class RenvoiPersistenceImpl
 		List<Renvoi> list = null;
 
 		if (useFinderCache) {
-			list = (List<Renvoi>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Renvoi>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Renvoi renvoi : list) {
@@ -539,7 +540,7 @@ public class RenvoiPersistenceImpl
 
 		Object[] finderArgs = new Object[] {schoolId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -685,7 +686,8 @@ public class RenvoiPersistenceImpl
 		List<Renvoi> list = null;
 
 		if (useFinderCache) {
-			list = (List<Renvoi>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Renvoi>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Renvoi renvoi : list) {
@@ -1075,7 +1077,7 @@ public class RenvoiPersistenceImpl
 
 		Object[] finderArgs = new Object[] {sourceTeacherId, status};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -1489,7 +1491,8 @@ public class RenvoiPersistenceImpl
 		List<Renvoi> list = null;
 
 		if (useFinderCache) {
-			list = (List<Renvoi>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Renvoi>)finderCache.getResult(
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1559,7 +1562,7 @@ public class RenvoiPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1758,8 +1761,5 @@ public class RenvoiPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private RenvoiModelArgumentsResolver _renvoiModelArgumentsResolver;
 
 }

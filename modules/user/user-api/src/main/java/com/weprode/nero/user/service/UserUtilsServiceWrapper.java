@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class UserUtilsServiceWrapper
 	implements ServiceWrapper<UserUtilsService>, UserUtilsService {
 
+	public UserUtilsServiceWrapper() {
+		this(null);
+	}
+
 	public UserUtilsServiceWrapper(UserUtilsService userUtilsService) {
 		_userUtilsService = userUtilsService;
 	}

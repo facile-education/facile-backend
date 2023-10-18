@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Component(
 	property = "model.class.name=com.weprode.nero.document.model.FolderUtils",
@@ -83,6 +84,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		} catch (NoSuchFolderException e) {
 			logger.info("Root folder does not exists for user " + userId + ". Creating it...");
 			rootFolder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					user.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.SCHOOL_BAG_FOLDER_NAME,
@@ -102,6 +104,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			folder = DLAppServiceUtil.getFolder(user.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SENDING_BOX_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
 			folder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					user.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.SENDING_BOX_FOLDER_NAME,
@@ -121,7 +124,13 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		try {
 			folder = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.IM_BOX_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
-			folder = DLAppServiceUtil.addFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.IM_BOX_FOLDER_NAME, "PJs de messagerie", new ServiceContext());
+			folder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
+					user.getGroup().getGroupId(),
+					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+					DocumentConstants.IM_BOX_FOLDER_NAME,
+					"PJs de messagerie",
+					new ServiceContext());
 			hideDLFolder(folder.getFolderId());
 			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(folder);
 		}
@@ -137,6 +146,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			tmpFolder = DLAppServiceUtil.getFolder(user.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.TMP_FILE_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
 			tmpFolder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					user.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.TMP_FILE_FOLDER_NAME,
@@ -156,6 +166,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			folder = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.PROGRESSION_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
 			folder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					user.getGroup().getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.PROGRESSION_FOLDER_NAME,
@@ -176,6 +187,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			tumbnailFolder = DLAppServiceUtil.getFolder(rootOrg.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.THUMBNAILS_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
 			tumbnailFolder = DLAppLocalServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					UserLocalServiceUtil.getDefaultUser(companyId).getUserId(),
 					rootOrg.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
@@ -534,6 +546,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 				Group group = GroupLocalServiceUtil.getGroup(groupId);
 				logger.info("Creating root folder for group " + group.getName(LocaleUtil.getDefault()));
 				Folder createdFolder = DLAppLocalServiceUtil.addFolder(
+						UUID.randomUUID().toString(),
 						UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
 						groupId,
 						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
@@ -559,6 +572,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			folder = DLAppServiceUtil.getFolder(groupId, groupRootFolder.getFolderId(), DocumentConstants.NEWS_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
 			folder = DLAppLocalServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
 					groupId,
 					groupRootFolder.getFolderId(),
@@ -588,6 +602,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			folder = DLAppServiceUtil.getFolder(groupId, groupRootFolder.getFolderId(), DocumentConstants.COURSE_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
 			folder = DLAppLocalServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
 					groupId,
 					groupRootFolder.getFolderId(),

@@ -47,7 +47,6 @@ import com.weprode.nero.course.service.ContentBlockServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ContentBlockServiceSoap
  * @generated
  */
 public class ContentBlockServiceHttp {

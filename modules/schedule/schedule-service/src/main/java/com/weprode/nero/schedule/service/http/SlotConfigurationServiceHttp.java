@@ -47,7 +47,6 @@ import com.weprode.nero.schedule.service.SlotConfigurationServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SlotConfigurationServiceSoap
  * @generated
  */
 public class SlotConfigurationServiceHttp {

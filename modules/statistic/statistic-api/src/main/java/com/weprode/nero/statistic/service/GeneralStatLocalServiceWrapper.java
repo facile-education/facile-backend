@@ -27,6 +27,10 @@ public class GeneralStatLocalServiceWrapper
 	implements GeneralStatLocalService,
 			   ServiceWrapper<GeneralStatLocalService> {
 
+	public GeneralStatLocalServiceWrapper() {
+		this(null);
+	}
+
 	public GeneralStatLocalServiceWrapper(
 		GeneralStatLocalService generalStatLocalService) {
 

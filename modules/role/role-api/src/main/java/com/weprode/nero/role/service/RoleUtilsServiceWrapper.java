@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class RoleUtilsServiceWrapper
 	implements RoleUtilsService, ServiceWrapper<RoleUtilsService> {
 
+	public RoleUtilsServiceWrapper() {
+		this(null);
+	}
+
 	public RoleUtilsServiceWrapper(RoleUtilsService roleUtilsService) {
 		_roleUtilsService = roleUtilsService;
 	}

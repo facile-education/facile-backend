@@ -27,6 +27,10 @@ public class ContactCompletionLocalServiceWrapper
 	implements ContactCompletionLocalService,
 			   ServiceWrapper<ContactCompletionLocalService> {
 
+	public ContactCompletionLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ContactCompletionLocalServiceWrapper(
 		ContactCompletionLocalService contactCompletionLocalService) {
 

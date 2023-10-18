@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class SchoolAdminServiceWrapper
 	implements SchoolAdminService, ServiceWrapper<SchoolAdminService> {
 
+	public SchoolAdminServiceWrapper() {
+		this(null);
+	}
+
 	public SchoolAdminServiceWrapper(SchoolAdminService schoolAdminService) {
 		_schoolAdminService = schoolAdminService;
 	}

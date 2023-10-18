@@ -471,7 +471,7 @@ public class ScheduleConfigurationPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<ScheduleConfiguration>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -541,7 +541,7 @@ public class ScheduleConfigurationPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -685,9 +685,5 @@ public class ScheduleConfigurationPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private ScheduleConfigurationModelArgumentsResolver
-		_scheduleConfigurationModelArgumentsResolver;
 
 }

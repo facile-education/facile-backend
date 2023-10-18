@@ -47,7 +47,6 @@ import com.weprode.nero.contact.service.ContactServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ContactServiceSoap
  * @generated
  */
 public class ContactServiceHttp {

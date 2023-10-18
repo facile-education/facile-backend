@@ -47,7 +47,6 @@ import com.weprode.nero.user.service.UserManagementServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserManagementServiceSoap
  * @generated
  */
 public class UserManagementServiceHttp {

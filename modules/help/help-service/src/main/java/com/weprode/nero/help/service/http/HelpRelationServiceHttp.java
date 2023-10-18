@@ -47,7 +47,6 @@ import com.weprode.nero.help.service.HelpRelationServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see HelpRelationServiceSoap
  * @generated
  */
 public class HelpRelationServiceHttp {

@@ -29,22 +29,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.schedule.model.SessionTeacher;
 import com.weprode.nero.schedule.model.SessionTeacherModel;
-import com.weprode.nero.schedule.model.SessionTeacherSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -149,57 +145,6 @@ public class SessionTeacherModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static SessionTeacher toModel(SessionTeacherSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		SessionTeacher model = new SessionTeacherImpl();
-
-		model.setSessionTeacherId(soapModel.getSessionTeacherId());
-		model.setSessionId(soapModel.getSessionId());
-		model.setTeacherId(soapModel.getTeacherId());
-		model.setStatus(soapModel.getStatus());
-		model.setSubstituteId(soapModel.getSubstituteId());
-		model.setModificationDate(soapModel.getModificationDate());
-		model.setPrivateNotes(soapModel.getPrivateNotes());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<SessionTeacher> toModels(
-		SessionTeacherSoap[] soapModels) {
-
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<SessionTeacher> models = new ArrayList<SessionTeacher>(
-			soapModels.length);
-
-		for (SessionTeacherSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public SessionTeacherModelImpl() {
 	}
 
@@ -283,34 +228,6 @@ public class SessionTeacherModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, SessionTeacher>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			SessionTeacher.class.getClassLoader(), SessionTeacher.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<SessionTeacher> constructor =
-				(Constructor<SessionTeacher>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<SessionTeacher, Object>>
@@ -749,41 +666,12 @@ public class SessionTeacherModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<SessionTeacher, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<SessionTeacher, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<SessionTeacher, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((SessionTeacher)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, SessionTeacher>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					SessionTeacher.class, ModelWrapper.class);
 
 	}
 

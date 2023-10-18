@@ -5,5 +5,5 @@ dependencies {
 	compile project(":modules:agenda:agenda-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
-	compileOnly group: 'org.json', name: 'json'
+	compileOnly group: 'org.json', name: 'json', version: '20230227'
 }

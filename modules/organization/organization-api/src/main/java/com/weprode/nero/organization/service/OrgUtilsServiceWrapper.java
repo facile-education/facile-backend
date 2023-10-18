@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class OrgUtilsServiceWrapper
 	implements OrgUtilsService, ServiceWrapper<OrgUtilsService> {
 
+	public OrgUtilsServiceWrapper() {
+		this(null);
+	}
+
 	public OrgUtilsServiceWrapper(OrgUtilsService orgUtilsService) {
 		_orgUtilsService = orgUtilsService;
 	}

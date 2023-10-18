@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class SubjectLocalServiceWrapper
 	implements ServiceWrapper<SubjectLocalService>, SubjectLocalService {
 
+	public SubjectLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SubjectLocalServiceWrapper(SubjectLocalService subjectLocalService) {
 		_subjectLocalService = subjectLocalService;
 	}

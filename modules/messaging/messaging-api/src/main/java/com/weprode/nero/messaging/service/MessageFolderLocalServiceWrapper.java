@@ -27,6 +27,10 @@ public class MessageFolderLocalServiceWrapper
 	implements MessageFolderLocalService,
 			   ServiceWrapper<MessageFolderLocalService> {
 
+	public MessageFolderLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MessageFolderLocalServiceWrapper(
 		MessageFolderLocalService messageFolderLocalService) {
 

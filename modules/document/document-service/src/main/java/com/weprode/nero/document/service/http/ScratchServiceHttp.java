@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.ScratchServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ScratchServiceSoap
  * @generated
  */
 public class ScratchServiceHttp {

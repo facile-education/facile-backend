@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class UserSearchServiceWrapper
 	implements ServiceWrapper<UserSearchService>, UserSearchService {
 
+	public UserSearchServiceWrapper() {
+		this(null);
+	}
+
 	public UserSearchServiceWrapper(UserSearchService userSearchService) {
 		_userSearchService = userSearchService;
 	}

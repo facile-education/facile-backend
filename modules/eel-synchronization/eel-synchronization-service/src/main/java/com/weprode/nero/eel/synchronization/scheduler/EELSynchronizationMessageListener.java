@@ -3,11 +3,14 @@ package com.weprode.nero.eel.synchronization.scheduler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
-import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
-import com.liferay.portal.kernel.scheduler.*;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
+import com.liferay.portal.kernel.scheduler.SchedulerEntryImpl;
+import com.liferay.portal.kernel.scheduler.StorageType;
+import com.liferay.portal.kernel.scheduler.TriggerConfiguration;
+import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
@@ -19,9 +22,12 @@ import com.weprode.nero.commons.properties.NeroSystemProperties;
 import com.weprode.nero.eel.synchronization.service.SynchronizationLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
-import org.osgi.service.component.annotations.*;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -117,12 +123,13 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
         logger.info("EEL cronExpression: " + cronExpression);
 
         // Create a new trigger definition for the job.
-        String listenerClass = getClass().getName();
-        Trigger jobTrigger = triggerFactory.createTrigger(listenerClass, listenerClass, new Date(), null, cronExpression);
+        // String listenerClass = getClass().getName();
+        // Trigger jobTrigger = triggerFactory.createTrigger(listenerClass, listenerClass, new Date(), null, cronExpression);
+        TriggerConfiguration triggerConfiguration = TriggerConfiguration.createTriggerConfiguration(cronExpression);
 
         // Wrap the current scheduler entry in our new wrapper.
         // Use the persisted storaget type and set the wrapper back to the class field.
-        schedulerEntryImpl = new SchedulerEntryImpl(getClass().getName(), jobTrigger);
+        schedulerEntryImpl = new SchedulerEntryImpl(getClass().getName(), triggerConfiguration);
 
         // If we were initialized (i.e. if this is called due to CA modification)
         if (initialized) {
@@ -131,7 +138,7 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
         }
 
         // Register the scheduled task
-        schedulerEngineHelper.register(this, schedulerEntryImpl, DestinationNames.SCHEDULER_DISPATCH);
+        // TODO schedulerEngineHelper.register(this, schedulerEntryImpl, DestinationNames.SCHEDULER_DISPATCH);
 
         // Set the initialized flag.
         initialized = true;
@@ -145,16 +152,16 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
         // If we previously were initialized
         if (initialized) {
             // Unschedule the job so it is cleaned up
-            try {
-                schedulerEngineHelper.unschedule(schedulerEntryImpl, getStorageType());
-            } catch (SchedulerException se) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("Unable to unschedule trigger", se);
-                }
-            }
-
-            // Unregister this listener
-            schedulerEngineHelper.unregister(this);
+//            try {
+//                schedulerEngineHelper.unschedule(schedulerEntryImpl, getStorageType());
+//            } catch (SchedulerException se) {
+//                if (logger.isWarnEnabled()) {
+//                    logger.warn("Unable to unschedule trigger", se);
+//                }
+//            }
+//
+//            // Unregister this listener
+//            schedulerEngineHelper.unregister(this);
         }
 
         // Clear the initialized flag
@@ -166,9 +173,9 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
      * @return StorageType The storage type to use.
      */
     protected StorageType getStorageType() {
-        if (schedulerEntryImpl instanceof StorageTypeAware) {
-            return ((StorageTypeAware) schedulerEntryImpl).getStorageType();
-        }
+//        if (schedulerEntryImpl instanceof StorageTypeAware) {
+//            return schedulerEntryImpl.getStorageType();
+//        }
 
         return StorageType.MEMORY_CLUSTERED;
     }

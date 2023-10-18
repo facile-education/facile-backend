@@ -27,6 +27,10 @@ public class UserContactLocalServiceWrapper
 	implements ServiceWrapper<UserContactLocalService>,
 			   UserContactLocalService {
 
+	public UserContactLocalServiceWrapper() {
+		this(null);
+	}
+
 	public UserContactLocalServiceWrapper(
 		UserContactLocalService userContactLocalService) {
 

@@ -27,6 +27,10 @@ public class VersionNoteLocalServiceWrapper
 	implements ServiceWrapper<VersionNoteLocalService>,
 			   VersionNoteLocalService {
 
+	public VersionNoteLocalServiceWrapper() {
+		this(null);
+	}
+
 	public VersionNoteLocalServiceWrapper(
 		VersionNoteLocalService versionNoteLocalService) {
 

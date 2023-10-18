@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class CommunityInfosServiceWrapper
 	implements CommunityInfosService, ServiceWrapper<CommunityInfosService> {
 
+	public CommunityInfosServiceWrapper() {
+		this(null);
+	}
+
 	public CommunityInfosServiceWrapper(
 		CommunityInfosService communityInfosService) {
 

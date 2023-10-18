@@ -173,7 +173,8 @@ public class VersionPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchBydlFileEntryId_versionNumber, finderArgs);
+				_finderPathFetchBydlFileEntryId_versionNumber, finderArgs,
+				this);
 		}
 
 		if (result instanceof Version) {
@@ -295,7 +296,7 @@ public class VersionPersistenceImpl
 
 		Object[] finderArgs = new Object[] {dlFileEntryId, versionNumber};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -443,7 +444,8 @@ public class VersionPersistenceImpl
 		List<Version> list = null;
 
 		if (useFinderCache) {
-			list = (List<Version>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Version>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Version version : list) {
@@ -802,7 +804,7 @@ public class VersionPersistenceImpl
 
 		Object[] finderArgs = new Object[] {dlFileEntryId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1241,7 +1243,8 @@ public class VersionPersistenceImpl
 		List<Version> list = null;
 
 		if (useFinderCache) {
-			list = (List<Version>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Version>)finderCache.getResult(
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1311,7 +1314,7 @@ public class VersionPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1498,8 +1501,5 @@ public class VersionPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private VersionModelArgumentsResolver _versionModelArgumentsResolver;
 
 }

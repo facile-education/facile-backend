@@ -22,11 +22,9 @@ import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.kernel.util.ObjectValuePair;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -91,14 +89,6 @@ public interface FileUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getDownloadUrl(FileEntry file);
-
-	/**
-	 * Get file as Object Value Pair
-	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ObjectValuePair<String, InputStream> getFileAsOVPStream(
-			long companyId, long fileId, String fileName)
-		throws IOException, PortalException, SystemException;
 
 	/**
 	 * Returns the OSGi service identifier.

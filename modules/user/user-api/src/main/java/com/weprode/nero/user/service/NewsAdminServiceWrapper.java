@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class NewsAdminServiceWrapper
 	implements NewsAdminService, ServiceWrapper<NewsAdminService> {
 
+	public NewsAdminServiceWrapper() {
+		this(null);
+	}
+
 	public NewsAdminServiceWrapper(NewsAdminService newsAdminService) {
 		_newsAdminService = newsAdminService;
 	}

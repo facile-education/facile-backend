@@ -27,6 +27,10 @@ public class UserReadVersionNoteLocalServiceWrapper
 	implements ServiceWrapper<UserReadVersionNoteLocalService>,
 			   UserReadVersionNoteLocalService {
 
+	public UserReadVersionNoteLocalServiceWrapper() {
+		this(null);
+	}
+
 	public UserReadVersionNoteLocalServiceWrapper(
 		UserReadVersionNoteLocalService userReadVersionNoteLocalService) {
 

@@ -28,22 +28,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.help.model.HelpCategory;
 import com.weprode.nero.help.model.HelpCategoryModel;
-import com.weprode.nero.help.model.HelpCategorySoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -122,52 +118,6 @@ public class HelpCategoryModelImpl
 	 */
 	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-	}
-
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static HelpCategory toModel(HelpCategorySoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		HelpCategory model = new HelpCategoryImpl();
-
-		model.setCategoryId(soapModel.getCategoryId());
-		model.setCategoryName(soapModel.getCategoryName());
-		model.setServiceId(soapModel.getServiceId());
-		model.setPosition(soapModel.getPosition());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<HelpCategory> toModels(HelpCategorySoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<HelpCategory> models = new ArrayList<HelpCategory>(
-			soapModels.length);
-
-		for (HelpCategorySoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
 	}
 
 	public HelpCategoryModelImpl() {
@@ -253,34 +203,6 @@ public class HelpCategoryModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, HelpCategory>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			HelpCategory.class.getClassLoader(), HelpCategory.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<HelpCategory> constructor =
-				(Constructor<HelpCategory>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<HelpCategory, Object>>
@@ -603,41 +525,12 @@ public class HelpCategoryModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<HelpCategory, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<HelpCategory, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<HelpCategory, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((HelpCategory)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, HelpCategory>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					HelpCategory.class, ModelWrapper.class);
 
 	}
 

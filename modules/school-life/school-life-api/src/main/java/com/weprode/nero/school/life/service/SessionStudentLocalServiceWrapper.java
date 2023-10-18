@@ -27,6 +27,10 @@ public class SessionStudentLocalServiceWrapper
 	implements ServiceWrapper<SessionStudentLocalService>,
 			   SessionStudentLocalService {
 
+	public SessionStudentLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SessionStudentLocalServiceWrapper(
 		SessionStudentLocalService sessionStudentLocalService) {
 

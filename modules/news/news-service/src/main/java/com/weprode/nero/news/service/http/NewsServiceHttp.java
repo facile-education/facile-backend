@@ -47,7 +47,6 @@ import com.weprode.nero.news.service.NewsServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see NewsServiceSoap
  * @generated
  */
 public class NewsServiceHttp {

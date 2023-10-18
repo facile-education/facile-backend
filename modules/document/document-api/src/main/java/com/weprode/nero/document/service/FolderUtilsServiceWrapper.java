@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class FolderUtilsServiceWrapper
 	implements FolderUtilsService, ServiceWrapper<FolderUtilsService> {
 
+	public FolderUtilsServiceWrapper() {
+		this(null);
+	}
+
 	public FolderUtilsServiceWrapper(FolderUtilsService folderUtilsService) {
 		_folderUtilsService = folderUtilsService;
 	}

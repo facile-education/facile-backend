@@ -69,6 +69,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Component(
         property = "model.class.name=com.weprode.nero.news.model.News",
@@ -740,6 +741,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 if (newsIdFolder == null) {
                     logger.info("Creating news folder for newsId " + newsId + " and groupId " + groupId);
                     newsIdFolder = DLAppLocalServiceUtil.addFolder(
+                            UUID.randomUUID().toString(),
                             UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
                             groupId,
                             groupNewsFolder.getFolderId(),

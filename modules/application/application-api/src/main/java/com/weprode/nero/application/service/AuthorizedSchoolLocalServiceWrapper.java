@@ -27,6 +27,10 @@ public class AuthorizedSchoolLocalServiceWrapper
 	implements AuthorizedSchoolLocalService,
 			   ServiceWrapper<AuthorizedSchoolLocalService> {
 
+	public AuthorizedSchoolLocalServiceWrapper() {
+		this(null);
+	}
+
 	public AuthorizedSchoolLocalServiceWrapper(
 		AuthorizedSchoolLocalService authorizedSchoolLocalService) {
 

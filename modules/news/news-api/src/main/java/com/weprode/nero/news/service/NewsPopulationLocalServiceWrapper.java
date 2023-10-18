@@ -27,6 +27,10 @@ public class NewsPopulationLocalServiceWrapper
 	implements NewsPopulationLocalService,
 			   ServiceWrapper<NewsPopulationLocalService> {
 
+	public NewsPopulationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public NewsPopulationLocalServiceWrapper(
 		NewsPopulationLocalService newsPopulationLocalService) {
 

@@ -184,7 +184,7 @@ public class NewsReadPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<NewsRead>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (NewsRead newsRead : list) {
@@ -539,7 +539,7 @@ public class NewsReadPersistenceImpl
 
 		Object[] finderArgs = new Object[] {newsId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -949,7 +949,7 @@ public class NewsReadPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<NewsRead>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1019,7 +1019,7 @@ public class NewsReadPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1194,8 +1194,5 @@ public class NewsReadPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private NewsReadModelArgumentsResolver _newsReadModelArgumentsResolver;
 
 }

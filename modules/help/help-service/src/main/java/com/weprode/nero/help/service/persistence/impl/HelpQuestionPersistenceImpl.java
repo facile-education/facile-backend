@@ -184,7 +184,7 @@ public class HelpQuestionPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<HelpQuestion>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (HelpQuestion helpQuestion : list) {
@@ -541,7 +541,7 @@ public class HelpQuestionPersistenceImpl
 
 		Object[] finderArgs = new Object[] {itemId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -956,7 +956,7 @@ public class HelpQuestionPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<HelpQuestion>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1026,7 +1026,7 @@ public class HelpQuestionPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1194,9 +1194,5 @@ public class HelpQuestionPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private HelpQuestionModelArgumentsResolver
-		_helpQuestionModelArgumentsResolver;
 
 }

@@ -27,6 +27,10 @@ public class CommunityInfosLocalServiceWrapper
 	implements CommunityInfosLocalService,
 			   ServiceWrapper<CommunityInfosLocalService> {
 
+	public CommunityInfosLocalServiceWrapper() {
+		this(null);
+	}
+
 	public CommunityInfosLocalServiceWrapper(
 		CommunityInfosLocalService communityInfosLocalService) {
 

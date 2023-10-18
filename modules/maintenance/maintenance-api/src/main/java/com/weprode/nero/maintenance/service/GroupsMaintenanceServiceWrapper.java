@@ -27,6 +27,10 @@ public class GroupsMaintenanceServiceWrapper
 	implements GroupsMaintenanceService,
 			   ServiceWrapper<GroupsMaintenanceService> {
 
+	public GroupsMaintenanceServiceWrapper() {
+		this(null);
+	}
+
 	public GroupsMaintenanceServiceWrapper(
 		GroupsMaintenanceService groupsMaintenanceService) {
 

@@ -27,6 +27,10 @@ public class MembershipActivityLocalServiceWrapper
 	implements MembershipActivityLocalService,
 			   ServiceWrapper<MembershipActivityLocalService> {
 
+	public MembershipActivityLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MembershipActivityLocalServiceWrapper(
 		MembershipActivityLocalService membershipActivityLocalService) {
 

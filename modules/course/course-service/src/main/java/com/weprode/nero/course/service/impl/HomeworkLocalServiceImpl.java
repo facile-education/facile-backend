@@ -55,6 +55,7 @@ import org.osgi.service.component.annotations.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Cédric Lecarpentier
@@ -111,6 +112,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				Folder courseFolder = FolderUtilsLocalServiceUtil.getGroupCourseFolder(courseId);
 
 				Folder homeworkFolder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					courseFolder.getGroupId(),
 					courseFolder.getFolderId(),
 					String.valueOf(homework.getHomeworkId()),
@@ -418,6 +420,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			homeworkFolder = FolderUtilsLocalServiceUtil.getFolderByName(courseFolder, String.valueOf(homeworkId));
 		} catch (NoSuchFolderException e) {
 			homeworkFolder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					courseFolder.getGroupId(),
 					courseFolder.getFolderId(),
 					String.valueOf(homeworkId),
@@ -442,6 +445,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			homeworkDropFolder = FolderUtilsLocalServiceUtil.getFolderByName(homeworkFolder, CourseConstants.DROP_FOLDER);
 		} catch (NoSuchFolderException e) {
 			homeworkDropFolder = DLAppServiceUtil.addFolder(
+					UUID.randomUUID().toString(),
 					homeworkFolder.getGroupId(),
 					homeworkFolder.getFolderId(),
 					CourseConstants.DROP_FOLDER,

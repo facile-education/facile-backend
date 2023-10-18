@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.GeogebraServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see GeogebraServiceSoap
  * @generated
  */
 public class GeogebraServiceHttp {

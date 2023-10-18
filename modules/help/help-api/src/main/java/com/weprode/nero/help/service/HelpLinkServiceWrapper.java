@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class HelpLinkServiceWrapper
 	implements HelpLinkService, ServiceWrapper<HelpLinkService> {
 
+	public HelpLinkServiceWrapper() {
+		this(null);
+	}
+
 	public HelpLinkServiceWrapper(HelpLinkService helpLinkService) {
 		_helpLinkService = helpLinkService;
 	}

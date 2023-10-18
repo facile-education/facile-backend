@@ -17,8 +17,6 @@ package com.weprode.nero.document.service;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
-import java.io.InputStream;
-
 /**
  * Provides the local service utility for FileUtils. This utility wraps
  * <code>com.weprode.nero.document.service.impl.FileUtilsLocalServiceImpl</code> and
@@ -128,17 +126,6 @@ public class FileUtilsLocalServiceUtil {
 		com.liferay.portal.kernel.repository.model.FileEntry file) {
 
 		return getService().getDownloadUrl(file);
-	}
-
-	/**
-	 * Get file as Object Value Pair
-	 */
-	public static com.liferay.portal.kernel.util.ObjectValuePair
-		<String, InputStream> getFileAsOVPStream(
-				long companyId, long fileId, String fileName)
-			throws java.io.IOException, PortalException, SystemException {
-
-		return getService().getFileAsOVPStream(companyId, fileId, fileName);
 	}
 
 	/**

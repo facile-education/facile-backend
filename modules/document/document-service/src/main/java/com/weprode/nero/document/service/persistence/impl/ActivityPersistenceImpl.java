@@ -185,7 +185,7 @@ public class ActivityPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Activity>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Activity activity : list) {
@@ -540,7 +540,7 @@ public class ActivityPersistenceImpl
 
 		Object[] finderArgs = new Object[] {groupId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -678,7 +678,7 @@ public class ActivityPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Activity>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Activity activity : list) {
@@ -1036,7 +1036,7 @@ public class ActivityPersistenceImpl
 
 		Object[] finderArgs = new Object[] {fileEntryId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1169,7 +1169,7 @@ public class ActivityPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Activity>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Activity activity : list) {
@@ -1524,7 +1524,7 @@ public class ActivityPersistenceImpl
 
 		Object[] finderArgs = new Object[] {folderId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1942,7 +1942,7 @@ public class ActivityPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Activity>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -2012,7 +2012,7 @@ public class ActivityPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -2224,8 +2224,5 @@ public class ActivityPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private ActivityModelArgumentsResolver _activityModelArgumentsResolver;
 
 }

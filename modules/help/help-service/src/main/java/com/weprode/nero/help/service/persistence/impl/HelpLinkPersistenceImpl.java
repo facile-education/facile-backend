@@ -182,7 +182,7 @@ public class HelpLinkPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<HelpLink>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (HelpLink helpLink : list) {
@@ -537,7 +537,7 @@ public class HelpLinkPersistenceImpl
 
 		Object[] finderArgs = new Object[] {itemId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -945,7 +945,7 @@ public class HelpLinkPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<HelpLink>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1015,7 +1015,7 @@ public class HelpLinkPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1182,8 +1182,5 @@ public class HelpLinkPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private HelpLinkModelArgumentsResolver _helpLinkModelArgumentsResolver;
 
 }

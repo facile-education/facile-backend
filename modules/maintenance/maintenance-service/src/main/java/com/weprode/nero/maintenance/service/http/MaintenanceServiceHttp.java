@@ -47,7 +47,6 @@ import com.weprode.nero.maintenance.service.MaintenanceServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MaintenanceServiceSoap
  * @generated
  */
 public class MaintenanceServiceHttp {

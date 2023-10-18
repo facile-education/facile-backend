@@ -187,7 +187,7 @@ public class MobileDevicePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<MobileDevice>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MobileDevice mobileDevice : list) {
@@ -544,7 +544,7 @@ public class MobileDevicePersistenceImpl
 
 		Object[] finderArgs = new Object[] {userId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -657,7 +657,7 @@ public class MobileDevicePersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchBymanufacturerDeviceId, finderArgs);
+				_finderPathFetchBymanufacturerDeviceId, finderArgs, this);
 		}
 
 		if (result instanceof MobileDevice) {
@@ -785,7 +785,7 @@ public class MobileDevicePersistenceImpl
 
 		Object[] finderArgs = new Object[] {manufacturerDeviceId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1241,7 +1241,7 @@ public class MobileDevicePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<MobileDevice>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1311,7 +1311,7 @@ public class MobileDevicePersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1490,9 +1490,5 @@ public class MobileDevicePersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private MobileDeviceModelArgumentsResolver
-		_mobileDeviceModelArgumentsResolver;
 
 }

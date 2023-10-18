@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class MatomoLocalServiceWrapper
 	implements MatomoLocalService, ServiceWrapper<MatomoLocalService> {
 
+	public MatomoLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MatomoLocalServiceWrapper(MatomoLocalService matomoLocalService) {
 		_matomoLocalService = matomoLocalService;
 	}

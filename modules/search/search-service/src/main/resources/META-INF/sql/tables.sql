@@ -1,4 +1,3 @@
-
 create table Search_SearchHistory (
 	searchHistoryId LONG not null primary key,
 	userId LONG,

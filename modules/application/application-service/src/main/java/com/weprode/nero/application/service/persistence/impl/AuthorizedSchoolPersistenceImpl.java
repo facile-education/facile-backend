@@ -192,7 +192,7 @@ public class AuthorizedSchoolPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<AuthorizedSchool>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AuthorizedSchool authorizedSchool : list) {
@@ -560,7 +560,7 @@ public class AuthorizedSchoolPersistenceImpl
 
 		Object[] finderArgs = new Object[] {applicationId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -678,7 +678,7 @@ public class AuthorizedSchoolPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchByapplicationId_schoolId, finderArgs);
+				_finderPathFetchByapplicationId_schoolId, finderArgs, this);
 		}
 
 		if (result instanceof AuthorizedSchool) {
@@ -798,7 +798,7 @@ public class AuthorizedSchoolPersistenceImpl
 
 		Object[] finderArgs = new Object[] {applicationId, schoolId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -1256,7 +1256,7 @@ public class AuthorizedSchoolPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<AuthorizedSchool>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1326,7 +1326,7 @@ public class AuthorizedSchoolPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1506,9 +1506,5 @@ public class AuthorizedSchoolPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private AuthorizedSchoolModelArgumentsResolver
-		_authorizedSchoolModelArgumentsResolver;
 
 }

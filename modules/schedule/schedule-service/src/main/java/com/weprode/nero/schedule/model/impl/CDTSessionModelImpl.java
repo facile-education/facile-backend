@@ -29,22 +29,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.model.CDTSessionModel;
-import com.weprode.nero.schedule.model.CDTSessionSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -140,56 +136,6 @@ public class CDTSessionModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static CDTSession toModel(CDTSessionSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		CDTSession model = new CDTSessionImpl();
-
-		model.setSessionId(soapModel.getSessionId());
-		model.setStart(soapModel.getStart());
-		model.setEnd(soapModel.getEnd());
-		model.setSlot(soapModel.getSlot());
-		model.setFullCoursName(soapModel.getFullCoursName());
-		model.setRoom(soapModel.getRoom());
-		model.setSubject(soapModel.getSubject());
-		model.setGroupId(soapModel.getGroupId());
-		model.setIsManual(soapModel.isIsManual());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<CDTSession> toModels(CDTSessionSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<CDTSession> models = new ArrayList<CDTSession>(soapModels.length);
-
-		for (CDTSessionSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public CDTSessionModelImpl() {
 	}
 
@@ -272,34 +218,6 @@ public class CDTSessionModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, CDTSession>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			CDTSession.class.getClassLoader(), CDTSession.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<CDTSession> constructor =
-				(Constructor<CDTSession>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<CDTSession, Object>>
@@ -781,41 +699,12 @@ public class CDTSessionModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<CDTSession, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<CDTSession, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<CDTSession, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((CDTSession)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, CDTSession>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					CDTSession.class, ModelWrapper.class);
 
 	}
 

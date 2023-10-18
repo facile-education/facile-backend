@@ -47,7 +47,6 @@ import com.weprode.nero.help.service.HelpLinkServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see HelpLinkServiceSoap
  * @generated
  */
 public class HelpLinkServiceHttp {

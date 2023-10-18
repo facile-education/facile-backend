@@ -185,7 +185,7 @@ public class UserLoginPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<UserLogin>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserLogin userLogin : list) {
@@ -540,7 +540,7 @@ public class UserLoginPersistenceImpl
 
 		Object[] finderArgs = new Object[] {userId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -683,7 +683,7 @@ public class UserLoginPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<UserLogin>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserLogin userLogin : list) {
@@ -1069,7 +1069,7 @@ public class UserLoginPersistenceImpl
 
 		Object[] finderArgs = new Object[] {schoolId, role};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -1494,7 +1494,7 @@ public class UserLoginPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<UserLogin>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1564,7 +1564,7 @@ public class UserLoginPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1758,8 +1758,5 @@ public class UserLoginPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private UserLoginModelArgumentsResolver _userLoginModelArgumentsResolver;
 
 }

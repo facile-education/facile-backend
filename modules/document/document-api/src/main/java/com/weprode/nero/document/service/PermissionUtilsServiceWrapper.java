@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class PermissionUtilsServiceWrapper
 	implements PermissionUtilsService, ServiceWrapper<PermissionUtilsService> {
 
+	public PermissionUtilsServiceWrapper() {
+		this(null);
+	}
+
 	public PermissionUtilsServiceWrapper(
 		PermissionUtilsService permissionUtilsService) {
 

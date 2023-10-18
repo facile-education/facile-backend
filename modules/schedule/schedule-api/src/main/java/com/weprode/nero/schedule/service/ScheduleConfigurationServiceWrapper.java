@@ -27,6 +27,10 @@ public class ScheduleConfigurationServiceWrapper
 	implements ScheduleConfigurationService,
 			   ServiceWrapper<ScheduleConfigurationService> {
 
+	public ScheduleConfigurationServiceWrapper() {
+		this(null);
+	}
+
 	public ScheduleConfigurationServiceWrapper(
 		ScheduleConfigurationService scheduleConfigurationService) {
 

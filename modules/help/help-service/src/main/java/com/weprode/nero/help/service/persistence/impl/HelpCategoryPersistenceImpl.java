@@ -444,7 +444,7 @@ public class HelpCategoryPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<HelpCategory>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -514,7 +514,7 @@ public class HelpCategoryPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -656,9 +656,5 @@ public class HelpCategoryPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private HelpCategoryModelArgumentsResolver
-		_helpCategoryModelArgumentsResolver;
 
 }

@@ -32,22 +32,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.mobile.model.MobileDevice;
 import com.weprode.nero.mobile.model.MobileDeviceModel;
-import com.weprode.nero.mobile.model.MobileDeviceSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -147,56 +143,6 @@ public class MobileDeviceModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static MobileDevice toModel(MobileDeviceSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		MobileDevice model = new MobileDeviceImpl();
-
-		model.setMobileDeviceId(soapModel.getMobileDeviceId());
-		model.setUserId(soapModel.getUserId());
-		model.setManufacturerDeviceId(soapModel.getManufacturerDeviceId());
-		model.setDeviceModel(soapModel.getDeviceModel());
-		model.setManufacturer(soapModel.getManufacturer());
-		model.setOperatingSystem(soapModel.getOperatingSystem());
-		model.setOperatingSystemVersion(soapModel.getOperatingSystemVersion());
-		model.setBrowserUA(soapModel.getBrowserUA());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<MobileDevice> toModels(MobileDeviceSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<MobileDevice> models = new ArrayList<MobileDevice>(
-			soapModels.length);
-
-		for (MobileDeviceSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public MobileDeviceModelImpl() {
 	}
 
@@ -280,34 +226,6 @@ public class MobileDeviceModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, MobileDevice>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			MobileDevice.class.getClassLoader(), MobileDevice.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<MobileDevice> constructor =
-				(Constructor<MobileDevice>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<MobileDevice, Object>>
@@ -827,41 +745,12 @@ public class MobileDeviceModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<MobileDevice, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<MobileDevice, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<MobileDevice, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((MobileDevice)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, MobileDevice>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					MobileDevice.class, ModelWrapper.class);
 
 	}
 

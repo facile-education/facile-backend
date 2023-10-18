@@ -47,7 +47,6 @@ import com.weprode.nero.messaging.service.MessageServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MessageServiceSoap
  * @generated
  */
 public class MessageServiceHttp {

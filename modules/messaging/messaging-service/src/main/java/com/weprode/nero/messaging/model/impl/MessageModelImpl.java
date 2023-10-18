@@ -29,22 +29,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.messaging.model.Message;
 import com.weprode.nero.messaging.model.MessageModel;
-import com.weprode.nero.messaging.model.MessageSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -166,62 +162,6 @@ public class MessageModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static Message toModel(MessageSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		Message model = new MessageImpl();
-
-		model.setMessageId(soapModel.getMessageId());
-		model.setCompanyId(soapModel.getCompanyId());
-		model.setFolderId(soapModel.getFolderId());
-		model.setThreadId(soapModel.getThreadId());
-		model.setSendMessageId(soapModel.getSendMessageId());
-		model.setSenderId(soapModel.getSenderId());
-		model.setSendDate(soapModel.getSendDate());
-		model.setSenderName(soapModel.getSenderName());
-		model.setMessageSubject(soapModel.getMessageSubject());
-		model.setMessageContent(soapModel.getMessageContent());
-		model.setIsNew(soapModel.isIsNew());
-		model.setReadDate(soapModel.getReadDate());
-		model.setIsAnswered(soapModel.isIsAnswered());
-		model.setIsForwarded(soapModel.isIsForwarded());
-		model.setType(soapModel.getType());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<Message> toModels(MessageSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<Message> models = new ArrayList<Message>(soapModels.length);
-
-		for (MessageSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public MessageModelImpl() {
 	}
 
@@ -304,33 +244,6 @@ public class MessageModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, Message>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			Message.class.getClassLoader(), Message.class, ModelWrapper.class);
-
-		try {
-			Constructor<Message> constructor =
-				(Constructor<Message>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<Message, Object>>
@@ -994,41 +907,12 @@ public class MessageModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<Message, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<Message, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<Message, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((Message)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, Message>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					Message.class, ModelWrapper.class);
 
 	}
 

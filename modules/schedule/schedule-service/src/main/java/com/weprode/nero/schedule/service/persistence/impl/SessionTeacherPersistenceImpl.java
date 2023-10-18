@@ -191,7 +191,7 @@ public class SessionTeacherPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SessionTeacher>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SessionTeacher sessionTeacher : list) {
@@ -550,7 +550,7 @@ public class SessionTeacherPersistenceImpl
 
 		Object[] finderArgs = new Object[] {teacherId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -688,7 +688,7 @@ public class SessionTeacherPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SessionTeacher>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SessionTeacher sessionTeacher : list) {
@@ -1047,7 +1047,7 @@ public class SessionTeacherPersistenceImpl
 
 		Object[] finderArgs = new Object[] {sessionId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1165,7 +1165,7 @@ public class SessionTeacherPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchBysessionId_teacherId, finderArgs);
+				_finderPathFetchBysessionId_teacherId, finderArgs, this);
 		}
 
 		if (result instanceof SessionTeacher) {
@@ -1283,7 +1283,7 @@ public class SessionTeacherPersistenceImpl
 
 		Object[] finderArgs = new Object[] {sessionId, teacherId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -1408,7 +1408,7 @@ public class SessionTeacherPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchBysessionId_substituteId, finderArgs);
+				_finderPathFetchBysessionId_substituteId, finderArgs, this);
 		}
 
 		if (result instanceof SessionTeacher) {
@@ -1528,7 +1528,7 @@ public class SessionTeacherPersistenceImpl
 
 		Object[] finderArgs = new Object[] {sessionId, substituteId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -1999,7 +1999,7 @@ public class SessionTeacherPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SessionTeacher>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -2069,7 +2069,7 @@ public class SessionTeacherPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -2278,9 +2278,5 @@ public class SessionTeacherPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private SessionTeacherModelArgumentsResolver
-		_sessionTeacherModelArgumentsResolver;
 
 }

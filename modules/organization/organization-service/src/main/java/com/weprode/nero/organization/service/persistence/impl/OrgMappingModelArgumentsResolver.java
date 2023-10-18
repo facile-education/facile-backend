@@ -33,10 +33,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Marc Salvat
  * @generated
  */
-@Component(
-	immediate = true,
-	service = {OrgMappingModelArgumentsResolver.class, ArgumentsResolver.class}
-)
+@Component(service = ArgumentsResolver.class)
 public class OrgMappingModelArgumentsResolver implements ArgumentsResolver {
 
 	@Override

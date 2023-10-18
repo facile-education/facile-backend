@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class RenvoiLocalServiceWrapper
 	implements RenvoiLocalService, ServiceWrapper<RenvoiLocalService> {
 
+	public RenvoiLocalServiceWrapper() {
+		this(null);
+	}
+
 	public RenvoiLocalServiceWrapper(RenvoiLocalService renvoiLocalService) {
 		_renvoiLocalService = renvoiLocalService;
 	}

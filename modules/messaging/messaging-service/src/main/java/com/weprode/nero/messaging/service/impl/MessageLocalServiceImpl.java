@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 @Component(
         property = "model.class.name=com.weprode.nero.messaging.model.Message",
@@ -350,6 +351,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
                 if (attachFileIds != null) {
                     Folder imBox = FolderUtilsLocalServiceUtil.getIMBox(senderId);
                     Folder attachedFilesFolder = DLAppServiceUtil.addFolder(
+                            UUID.randomUUID().toString(),
                             imBox.getGroupId(),
                             imBox.getFolderId(),
                             "PJ du message " + message.getMessageId(),

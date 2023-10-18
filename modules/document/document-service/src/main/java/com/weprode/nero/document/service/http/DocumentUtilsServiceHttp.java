@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.DocumentUtilsServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DocumentUtilsServiceSoap
  * @generated
  */
 public class DocumentUtilsServiceHttp {

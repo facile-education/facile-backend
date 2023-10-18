@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class AffectationServiceWrapper
 	implements AffectationService, ServiceWrapper<AffectationService> {
 
+	public AffectationServiceWrapper() {
+		this(null);
+	}
+
 	public AffectationServiceWrapper(AffectationService affectationService) {
 		_affectationService = affectationService;
 	}

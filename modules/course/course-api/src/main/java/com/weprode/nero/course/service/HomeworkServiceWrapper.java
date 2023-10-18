@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class HomeworkServiceWrapper
 	implements HomeworkService, ServiceWrapper<HomeworkService> {
 
+	public HomeworkServiceWrapper() {
+		this(null);
+	}
+
 	public HomeworkServiceWrapper(HomeworkService homeworkService) {
 		_homeworkService = homeworkService;
 	}

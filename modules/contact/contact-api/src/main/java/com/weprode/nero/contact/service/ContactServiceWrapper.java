@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class ContactServiceWrapper
 	implements ContactService, ServiceWrapper<ContactService> {
 
+	public ContactServiceWrapper() {
+		this(null);
+	}
+
 	public ContactServiceWrapper(ContactService contactService) {
 		_contactService = contactService;
 	}

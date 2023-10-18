@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.GroupsServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see GroupsServiceSoap
  * @generated
  */
 public class GroupsServiceHttp {

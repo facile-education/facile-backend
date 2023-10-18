@@ -27,6 +27,10 @@ public class GroupActivityLocalServiceWrapper
 	implements GroupActivityLocalService,
 			   ServiceWrapper<GroupActivityLocalService> {
 
+	public GroupActivityLocalServiceWrapper() {
+		this(null);
+	}
+
 	public GroupActivityLocalServiceWrapper(
 		GroupActivityLocalService groupActivityLocalService) {
 

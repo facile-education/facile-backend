@@ -27,6 +27,10 @@ public class ParentSynchroLocalServiceWrapper
 	implements ParentSynchroLocalService,
 			   ServiceWrapper<ParentSynchroLocalService> {
 
+	public ParentSynchroLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ParentSynchroLocalServiceWrapper(
 		ParentSynchroLocalService parentSynchroLocalService) {
 

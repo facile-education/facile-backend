@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class MessagingConfigServiceWrapper
 	implements MessagingConfigService, ServiceWrapper<MessagingConfigService> {
 
+	public MessagingConfigServiceWrapper() {
+		this(null);
+	}
+
 	public MessagingConfigServiceWrapper(
 		MessagingConfigService messagingConfigService) {
 

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class HelpRelationServiceWrapper
 	implements HelpRelationService, ServiceWrapper<HelpRelationService> {
 
+	public HelpRelationServiceWrapper() {
+		this(null);
+	}
+
 	public HelpRelationServiceWrapper(HelpRelationService helpRelationService) {
 		_helpRelationService = helpRelationService;
 	}

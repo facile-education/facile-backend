@@ -191,7 +191,7 @@ public class DefaultRolePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<DefaultRole>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DefaultRole defaultRole : list) {
@@ -552,7 +552,7 @@ public class DefaultRolePersistenceImpl
 
 		Object[] finderArgs = new Object[] {applicationId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -670,7 +670,7 @@ public class DefaultRolePersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchByapplicationId_roleId, finderArgs);
+				_finderPathFetchByapplicationId_roleId, finderArgs, this);
 		}
 
 		if (result instanceof DefaultRole) {
@@ -788,7 +788,7 @@ public class DefaultRolePersistenceImpl
 
 		Object[] finderArgs = new Object[] {applicationId, roleId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -1235,7 +1235,7 @@ public class DefaultRolePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<DefaultRole>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1305,7 +1305,7 @@ public class DefaultRolePersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1485,9 +1485,5 @@ public class DefaultRolePersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private DefaultRoleModelArgumentsResolver
-		_defaultRoleModelArgumentsResolver;
 
 }

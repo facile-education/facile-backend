@@ -27,6 +27,10 @@ public class UserMobileTokenLocalServiceWrapper
 	implements ServiceWrapper<UserMobileTokenLocalService>,
 			   UserMobileTokenLocalService {
 
+	public UserMobileTokenLocalServiceWrapper() {
+		this(null);
+	}
+
 	public UserMobileTokenLocalServiceWrapper(
 		UserMobileTokenLocalService userMobileTokenLocalService) {
 

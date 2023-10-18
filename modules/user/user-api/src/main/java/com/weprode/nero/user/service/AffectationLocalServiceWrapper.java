@@ -27,6 +27,10 @@ public class AffectationLocalServiceWrapper
 	implements AffectationLocalService,
 			   ServiceWrapper<AffectationLocalService> {
 
+	public AffectationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public AffectationLocalServiceWrapper(
 		AffectationLocalService affectationLocalService) {
 

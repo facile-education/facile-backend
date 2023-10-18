@@ -47,7 +47,6 @@ import com.weprode.nero.school.life.service.RenvoiServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see RenvoiServiceSoap
  * @generated
  */
 public class RenvoiServiceHttp {

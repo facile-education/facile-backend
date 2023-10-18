@@ -27,6 +27,10 @@ public class ScheduleConfigurationLocalServiceWrapper
 	implements ScheduleConfigurationLocalService,
 			   ServiceWrapper<ScheduleConfigurationLocalService> {
 
+	public ScheduleConfigurationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ScheduleConfigurationLocalServiceWrapper(
 		ScheduleConfigurationLocalService scheduleConfigurationLocalService) {
 

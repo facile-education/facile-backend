@@ -27,6 +27,10 @@ public class HelpQuestionLocalServiceWrapper
 	implements HelpQuestionLocalService,
 			   ServiceWrapper<HelpQuestionLocalService> {
 
+	public HelpQuestionLocalServiceWrapper() {
+		this(null);
+	}
+
 	public HelpQuestionLocalServiceWrapper(
 		HelpQuestionLocalService helpQuestionLocalService) {
 

@@ -197,7 +197,7 @@ public class OrgCiteScolairePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<OrgCiteScolaire>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (OrgCiteScolaire orgCiteScolaire : list) {
@@ -598,7 +598,7 @@ public class OrgCiteScolairePersistenceImpl
 
 		Object[] finderArgs = new Object[] {parentENTStructureUAI};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1040,7 +1040,7 @@ public class OrgCiteScolairePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<OrgCiteScolaire>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1110,7 +1110,7 @@ public class OrgCiteScolairePersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1283,9 +1283,5 @@ public class OrgCiteScolairePersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private OrgCiteScolaireModelArgumentsResolver
-		_orgCiteScolaireModelArgumentsResolver;
 
 }

@@ -164,7 +164,7 @@ public class UserMobileTokenPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchBymobileToken, finderArgs);
+				_finderPathFetchBymobileToken, finderArgs, this);
 		}
 
 		if (result instanceof UserMobileToken) {
@@ -284,7 +284,7 @@ public class UserMobileTokenPersistenceImpl
 
 		Object[] finderArgs = new Object[] {mobileToken};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -741,7 +741,7 @@ public class UserMobileTokenPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<UserMobileToken>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -811,7 +811,7 @@ public class UserMobileTokenPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -972,9 +972,5 @@ public class UserMobileTokenPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private UserMobileTokenModelArgumentsResolver
-		_userMobileTokenModelArgumentsResolver;
 
 }

@@ -27,6 +27,10 @@ public class NotifyConfigLocalServiceWrapper
 	implements NotifyConfigLocalService,
 			   ServiceWrapper<NotifyConfigLocalService> {
 
+	public NotifyConfigLocalServiceWrapper() {
+		this(null);
+	}
+
 	public NotifyConfigLocalServiceWrapper(
 		NotifyConfigLocalService notifyConfigLocalService) {
 

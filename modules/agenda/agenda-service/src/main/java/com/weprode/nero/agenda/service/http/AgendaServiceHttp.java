@@ -47,7 +47,6 @@ import com.weprode.nero.agenda.service.AgendaServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AgendaServiceSoap
  * @generated
  */
 public class AgendaServiceHttp {

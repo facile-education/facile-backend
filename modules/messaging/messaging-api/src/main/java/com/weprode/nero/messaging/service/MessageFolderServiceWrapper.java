@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class MessageFolderServiceWrapper
 	implements MessageFolderService, ServiceWrapper<MessageFolderService> {
 
+	public MessageFolderServiceWrapper() {
+		this(null);
+	}
+
 	public MessageFolderServiceWrapper(
 		MessageFolderService messageFolderService) {
 

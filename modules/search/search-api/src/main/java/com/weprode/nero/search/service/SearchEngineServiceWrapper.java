@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class SearchEngineServiceWrapper
 	implements SearchEngineService, ServiceWrapper<SearchEngineService> {
 
+	public SearchEngineServiceWrapper() {
+		this(null);
+	}
+
 	public SearchEngineServiceWrapper(SearchEngineService searchEngineService) {
 		_searchEngineService = searchEngineService;
 	}

@@ -161,7 +161,7 @@ public class ParentSynchroPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchByschoolId, finderArgs);
+				_finderPathFetchByschoolId, finderArgs, this);
 		}
 
 		if (result instanceof ParentSynchro) {
@@ -266,7 +266,7 @@ public class ParentSynchroPersistenceImpl
 
 		Object[] finderArgs = new Object[] {schoolId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -702,7 +702,7 @@ public class ParentSynchroPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<ParentSynchro>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -772,7 +772,7 @@ public class ParentSynchroPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -933,9 +933,5 @@ public class ParentSynchroPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private ParentSynchroModelArgumentsResolver
-		_parentSynchroModelArgumentsResolver;
 
 }

@@ -27,6 +27,10 @@ public class HelpItemRoleLocalServiceWrapper
 	implements HelpItemRoleLocalService,
 			   ServiceWrapper<HelpItemRoleLocalService> {
 
+	public HelpItemRoleLocalServiceWrapper() {
+		this(null);
+	}
+
 	public HelpItemRoleLocalServiceWrapper(
 		HelpItemRoleLocalService helpItemRoleLocalService) {
 

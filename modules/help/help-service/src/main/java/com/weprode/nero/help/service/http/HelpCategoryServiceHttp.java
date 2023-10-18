@@ -47,7 +47,6 @@ import com.weprode.nero.help.service.HelpCategoryServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see HelpCategoryServiceSoap
  * @generated
  */
 public class HelpCategoryServiceHttp {

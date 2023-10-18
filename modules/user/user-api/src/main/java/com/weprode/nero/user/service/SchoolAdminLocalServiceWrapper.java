@@ -27,6 +27,10 @@ public class SchoolAdminLocalServiceWrapper
 	implements SchoolAdminLocalService,
 			   ServiceWrapper<SchoolAdminLocalService> {
 
+	public SchoolAdminLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SchoolAdminLocalServiceWrapper(
 		SchoolAdminLocalService schoolAdminLocalService) {
 

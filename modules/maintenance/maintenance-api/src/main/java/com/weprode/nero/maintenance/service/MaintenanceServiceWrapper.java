@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class MaintenanceServiceWrapper
 	implements MaintenanceService, ServiceWrapper<MaintenanceService> {
 
+	public MaintenanceServiceWrapper() {
+		this(null);
+	}
+
 	public MaintenanceServiceWrapper(MaintenanceService maintenanceService) {
 		_maintenanceService = maintenanceService;
 	}

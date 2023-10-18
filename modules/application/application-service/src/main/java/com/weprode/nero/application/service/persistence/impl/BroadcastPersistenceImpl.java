@@ -170,7 +170,7 @@ public class BroadcastPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchByapplicationId_schoolId, finderArgs);
+				_finderPathFetchByapplicationId_schoolId, finderArgs, this);
 		}
 
 		if (result instanceof Broadcast) {
@@ -290,7 +290,7 @@ public class BroadcastPersistenceImpl
 
 		Object[] finderArgs = new Object[] {applicationId, schoolId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -438,7 +438,7 @@ public class BroadcastPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Broadcast>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Broadcast broadcast : list) {
@@ -797,7 +797,7 @@ public class BroadcastPersistenceImpl
 
 		Object[] finderArgs = new Object[] {applicationId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1232,7 +1232,7 @@ public class BroadcastPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Broadcast>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1302,7 +1302,7 @@ public class BroadcastPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1481,8 +1481,5 @@ public class BroadcastPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private BroadcastModelArgumentsResolver _broadcastModelArgumentsResolver;
 
 }

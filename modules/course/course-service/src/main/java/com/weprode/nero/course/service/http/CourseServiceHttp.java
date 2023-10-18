@@ -47,7 +47,6 @@ import com.weprode.nero.course.service.CourseServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see CourseServiceSoap
  * @generated
  */
 public class CourseServiceHttp {

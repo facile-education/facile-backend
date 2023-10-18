@@ -27,6 +27,10 @@ public class SynchronizationLocalServiceWrapper
 	implements ServiceWrapper<SynchronizationLocalService>,
 			   SynchronizationLocalService {
 
+	public SynchronizationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SynchronizationLocalServiceWrapper(
 		SynchronizationLocalService synchronizationLocalService) {
 

@@ -27,6 +27,10 @@ public class StudentHomeworkLocalServiceWrapper
 	implements ServiceWrapper<StudentHomeworkLocalService>,
 			   StudentHomeworkLocalService {
 
+	public StudentHomeworkLocalServiceWrapper() {
+		this(null);
+	}
+
 	public StudentHomeworkLocalServiceWrapper(
 		StudentHomeworkLocalService studentHomeworkLocalService) {
 

@@ -196,7 +196,7 @@ public class SessionStudentPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SessionStudent>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SessionStudent sessionStudent : list) {
@@ -565,7 +565,7 @@ public class SessionStudentPersistenceImpl
 
 		Object[] finderArgs = new Object[] {schoollifeSessionId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -704,7 +704,7 @@ public class SessionStudentPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SessionStudent>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SessionStudent sessionStudent : list) {
@@ -1063,7 +1063,7 @@ public class SessionStudentPersistenceImpl
 
 		Object[] finderArgs = new Object[] {studentId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1489,7 +1489,7 @@ public class SessionStudentPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SessionStudent>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1559,7 +1559,7 @@ public class SessionStudentPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1761,9 +1761,5 @@ public class SessionStudentPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private SessionStudentModelArgumentsResolver
-		_sessionStudentModelArgumentsResolver;
 
 }

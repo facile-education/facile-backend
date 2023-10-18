@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class SessionContentServiceWrapper
 	implements ServiceWrapper<SessionContentService>, SessionContentService {
 
+	public SessionContentServiceWrapper() {
+		this(null);
+	}
+
 	public SessionContentServiceWrapper(
 		SessionContentService sessionContentService) {
 

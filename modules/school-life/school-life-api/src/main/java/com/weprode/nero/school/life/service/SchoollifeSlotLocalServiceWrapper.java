@@ -27,6 +27,10 @@ public class SchoollifeSlotLocalServiceWrapper
 	implements SchoollifeSlotLocalService,
 			   ServiceWrapper<SchoollifeSlotLocalService> {
 
+	public SchoollifeSlotLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SchoollifeSlotLocalServiceWrapper(
 		SchoollifeSlotLocalService schoollifeSlotLocalService) {
 

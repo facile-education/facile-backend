@@ -27,6 +27,10 @@ public class TeacherSubjectLocalServiceWrapper
 	implements ServiceWrapper<TeacherSubjectLocalService>,
 			   TeacherSubjectLocalService {
 
+	public TeacherSubjectLocalServiceWrapper() {
+		this(null);
+	}
+
 	public TeacherSubjectLocalServiceWrapper(
 		TeacherSubjectLocalService teacherSubjectLocalService) {
 

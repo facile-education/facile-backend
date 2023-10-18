@@ -193,7 +193,7 @@ public class MessageAttachFilePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<MessageAttachFile>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MessageAttachFile messageAttachFile : list) {
@@ -559,7 +559,7 @@ public class MessageAttachFilePersistenceImpl
 
 		Object[] finderArgs = new Object[] {messageId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -991,7 +991,7 @@ public class MessageAttachFilePersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<MessageAttachFile>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1061,7 +1061,7 @@ public class MessageAttachFilePersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1238,9 +1238,5 @@ public class MessageAttachFilePersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private MessageAttachFileModelArgumentsResolver
-		_messageAttachFileModelArgumentsResolver;
 
 }

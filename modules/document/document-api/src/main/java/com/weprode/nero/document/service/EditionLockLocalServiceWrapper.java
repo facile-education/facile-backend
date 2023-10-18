@@ -27,6 +27,10 @@ public class EditionLockLocalServiceWrapper
 	implements EditionLockLocalService,
 			   ServiceWrapper<EditionLockLocalService> {
 
+	public EditionLockLocalServiceWrapper() {
+		this(null);
+	}
+
 	public EditionLockLocalServiceWrapper(
 		EditionLockLocalService editionLockLocalService) {
 

@@ -29,22 +29,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.application.model.BroadcastRule;
 import com.weprode.nero.application.model.BroadcastRuleModel;
-import com.weprode.nero.application.model.BroadcastRuleSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -141,54 +137,6 @@ public class BroadcastRuleModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static BroadcastRule toModel(BroadcastRuleSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		BroadcastRule model = new BroadcastRuleImpl();
-
-		model.setBroadcastRuleId(soapModel.getBroadcastRuleId());
-		model.setApplicationId(soapModel.getApplicationId());
-		model.setSchoolId(soapModel.getSchoolId());
-		model.setRoleId(soapModel.getRoleId());
-		model.setOrgId(soapModel.getOrgId());
-		model.setGroupId(soapModel.getGroupId());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<BroadcastRule> toModels(BroadcastRuleSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<BroadcastRule> models = new ArrayList<BroadcastRule>(
-			soapModels.length);
-
-		for (BroadcastRuleSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public BroadcastRuleModelImpl() {
 	}
 
@@ -272,34 +220,6 @@ public class BroadcastRuleModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, BroadcastRule>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			BroadcastRule.class.getClassLoader(), BroadcastRule.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<BroadcastRule> constructor =
-				(Constructor<BroadcastRule>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<BroadcastRule, Object>>
@@ -678,41 +598,12 @@ public class BroadcastRuleModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<BroadcastRule, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<BroadcastRule, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<BroadcastRule, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((BroadcastRule)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, BroadcastRule>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					BroadcastRule.class, ModelWrapper.class);
 
 	}
 

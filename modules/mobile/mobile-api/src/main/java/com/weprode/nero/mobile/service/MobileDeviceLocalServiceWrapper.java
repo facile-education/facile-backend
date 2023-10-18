@@ -27,6 +27,10 @@ public class MobileDeviceLocalServiceWrapper
 	implements MobileDeviceLocalService,
 			   ServiceWrapper<MobileDeviceLocalService> {
 
+	public MobileDeviceLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MobileDeviceLocalServiceWrapper(
 		MobileDeviceLocalService mobileDeviceLocalService) {
 

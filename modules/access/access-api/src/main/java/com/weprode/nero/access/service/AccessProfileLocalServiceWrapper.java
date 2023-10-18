@@ -27,6 +27,10 @@ public class AccessProfileLocalServiceWrapper
 	implements AccessProfileLocalService,
 			   ServiceWrapper<AccessProfileLocalService> {
 
+	public AccessProfileLocalServiceWrapper() {
+		this(null);
+	}
+
 	public AccessProfileLocalServiceWrapper(
 		AccessProfileLocalService accessProfileLocalService) {
 

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class UserManagementServiceWrapper
 	implements ServiceWrapper<UserManagementService>, UserManagementService {
 
+	public UserManagementServiceWrapper() {
+		this(null);
+	}
+
 	public UserManagementServiceWrapper(
 		UserManagementService userManagementService) {
 

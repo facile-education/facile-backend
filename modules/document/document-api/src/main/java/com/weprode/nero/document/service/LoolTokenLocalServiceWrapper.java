@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class LoolTokenLocalServiceWrapper
 	implements LoolTokenLocalService, ServiceWrapper<LoolTokenLocalService> {
 
+	public LoolTokenLocalServiceWrapper() {
+		this(null);
+	}
+
 	public LoolTokenLocalServiceWrapper(
 		LoolTokenLocalService loolTokenLocalService) {
 

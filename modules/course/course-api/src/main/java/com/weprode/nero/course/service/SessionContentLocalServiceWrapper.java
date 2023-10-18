@@ -27,6 +27,10 @@ public class SessionContentLocalServiceWrapper
 	implements ServiceWrapper<SessionContentLocalService>,
 			   SessionContentLocalService {
 
+	public SessionContentLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SessionContentLocalServiceWrapper(
 		SessionContentLocalService sessionContentLocalService) {
 

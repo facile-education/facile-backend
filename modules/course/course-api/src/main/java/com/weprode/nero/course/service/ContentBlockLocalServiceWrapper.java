@@ -27,6 +27,10 @@ public class ContentBlockLocalServiceWrapper
 	implements ContentBlockLocalService,
 			   ServiceWrapper<ContentBlockLocalService> {
 
+	public ContentBlockLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ContentBlockLocalServiceWrapper(
 		ContentBlockLocalService contentBlockLocalService) {
 

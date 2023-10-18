@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class SessionTeacherServiceWrapper
 	implements ServiceWrapper<SessionTeacherService>, SessionTeacherService {
 
+	public SessionTeacherServiceWrapper() {
+		this(null);
+	}
+
 	public SessionTeacherServiceWrapper(
 		SessionTeacherService sessionTeacherService) {
 

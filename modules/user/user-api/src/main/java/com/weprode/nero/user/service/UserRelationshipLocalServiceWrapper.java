@@ -27,6 +27,10 @@ public class UserRelationshipLocalServiceWrapper
 	implements ServiceWrapper<UserRelationshipLocalService>,
 			   UserRelationshipLocalService {
 
+	public UserRelationshipLocalServiceWrapper() {
+		this(null);
+	}
+
 	public UserRelationshipLocalServiceWrapper(
 		UserRelationshipLocalService userRelationshipLocalService) {
 

@@ -27,6 +27,10 @@ public class SchoollifeSessionServiceWrapper
 	implements SchoollifeSessionService,
 			   ServiceWrapper<SchoollifeSessionService> {
 
+	public SchoollifeSessionServiceWrapper() {
+		this(null);
+	}
+
 	public SchoollifeSessionServiceWrapper(
 		SchoollifeSessionService schoollifeSessionService) {
 

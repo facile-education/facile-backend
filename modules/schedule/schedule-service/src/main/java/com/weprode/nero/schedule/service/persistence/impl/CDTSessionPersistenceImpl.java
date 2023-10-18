@@ -186,7 +186,7 @@ public class CDTSessionPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<CDTSession>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (CDTSession cdtSession : list) {
@@ -542,7 +542,7 @@ public class CDTSessionPersistenceImpl
 
 		Object[] finderArgs = new Object[] {groupId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -962,7 +962,7 @@ public class CDTSessionPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<CDTSession>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1032,7 +1032,7 @@ public class CDTSessionPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1208,8 +1208,5 @@ public class CDTSessionPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private CDTSessionModelArgumentsResolver _cdtSessionModelArgumentsResolver;
 
 }

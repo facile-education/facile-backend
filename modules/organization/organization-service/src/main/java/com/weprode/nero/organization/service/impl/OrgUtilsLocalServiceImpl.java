@@ -30,6 +30,7 @@ import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component(
         property = "model.class.name=com.weprode.nero.organization.model.OrgUtils",
@@ -64,7 +65,8 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
         } catch (NoSuchOrganizationException e) {
             // Do not create org root ?
             long defUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
-            return OrganizationLocalServiceUtil.addOrganization(defUserId, OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
+            return OrganizationLocalServiceUtil.addOrganization(UUID.randomUUID().toString(),
+                    defUserId, OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
                     orgRootName, OrganizationConstants.TYPE_ORGANIZATION,
                     RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
                     StringPool.BLANK, true, new ServiceContext());
@@ -86,7 +88,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
             schoolOrg = OrganizationLocalServiceUtil.getOrganization(companyId, formattedSchoolName);
         } catch (NoSuchOrganizationException e) {
             long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
-            schoolOrg = OrganizationLocalServiceUtil.addOrganization(
+            schoolOrg = OrganizationLocalServiceUtil.addOrganization(UUID.randomUUID().toString(),
                     defaultUserId, getOrCreateRootOrg(companyId).getOrganizationId(),
                     formattedSchoolName, OrganizationConstants.TYPE_ORGANIZATION,
                     RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
@@ -112,7 +114,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
             org = OrganizationLocalServiceUtil.getOrganization(companyId, orgName);
         } catch (NoSuchOrganizationException e) {
             long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
-            org = OrganizationLocalServiceUtil.addOrganization(
+            org = OrganizationLocalServiceUtil.addOrganization(UUID.randomUUID().toString(),
                     defaultUserId, schoolId, orgName, OrganizationConstants.TYPE_ORGANIZATION,
                     RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
                     StringPool.BLANK, true, new ServiceContext());

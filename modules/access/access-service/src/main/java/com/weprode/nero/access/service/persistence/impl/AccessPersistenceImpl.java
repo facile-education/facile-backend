@@ -35,7 +35,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
+import com.liferay.portal.kernel.uuid.PortalUUID;
 
 import com.weprode.nero.access.exception.NoSuchAccessException;
 import com.weprode.nero.access.model.Access;
@@ -188,7 +188,8 @@ public class AccessPersistenceImpl
 		List<Access> list = null;
 
 		if (useFinderCache) {
-			list = (List<Access>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Access>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Access access : list) {
@@ -568,7 +569,7 @@ public class AccessPersistenceImpl
 
 		Object[] finderArgs = new Object[] {uuid};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -716,7 +717,8 @@ public class AccessPersistenceImpl
 		List<Access> list = null;
 
 		if (useFinderCache) {
-			list = (List<Access>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Access>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Access access : list) {
@@ -1072,7 +1074,7 @@ public class AccessPersistenceImpl
 
 		Object[] finderArgs = new Object[] {categoryId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1218,7 +1220,7 @@ public class AccessPersistenceImpl
 		access.setNew(true);
 		access.setPrimaryKey(accessId);
 
-		String uuid = PortalUUIDUtil.generate();
+		String uuid = _portalUUID.generate();
 
 		access.setUuid(uuid);
 
@@ -1328,7 +1330,7 @@ public class AccessPersistenceImpl
 		AccessModelImpl accessModelImpl = (AccessModelImpl)access;
 
 		if (Validator.isNull(access.getUuid())) {
-			String uuid = PortalUUIDUtil.generate();
+			String uuid = _portalUUID.generate();
 
 			access.setUuid(uuid);
 		}
@@ -1493,7 +1495,8 @@ public class AccessPersistenceImpl
 		List<Access> list = null;
 
 		if (useFinderCache) {
-			list = (List<Access>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Access>)finderCache.getResult(
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1563,7 +1566,7 @@ public class AccessPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1759,6 +1762,6 @@ public class AccessPersistenceImpl
 	}
 
 	@Reference
-	private AccessModelArgumentsResolver _accessModelArgumentsResolver;
+	private PortalUUID _portalUUID;
 
 }

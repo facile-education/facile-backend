@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class HelpItemServiceWrapper
 	implements HelpItemService, ServiceWrapper<HelpItemService> {
 
+	public HelpItemServiceWrapper() {
+		this(null);
+	}
+
 	public HelpItemServiceWrapper(HelpItemService helpItemService) {
 		_helpItemService = helpItemService;
 	}

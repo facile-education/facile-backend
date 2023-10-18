@@ -9,6 +9,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -1003,7 +1004,7 @@ public class GVESynchronizationManager {
                 logger.info("===== Adding user "+firstName+" "+lastName+ " to portal =====");
                 user = UserLocalServiceUtil.addUser(0, companyId, autoPassword, StringPool.BLANK, StringPool.BLANK, autoScreenName,
                         shortCn, mail, LocaleUtil.getDefault(), firstName, StringPool.BLANK, lastName, 0,
-                        0, true, 1, 1, 2000, StringPool.BLANK, null,
+                        0, true, 1, 1, 2000, StringPool.BLANK, UserConstants.TYPE_REGULAR, null,
                         null, null, null, false, serviceContext);
 
                 createdUserList.add(user);
