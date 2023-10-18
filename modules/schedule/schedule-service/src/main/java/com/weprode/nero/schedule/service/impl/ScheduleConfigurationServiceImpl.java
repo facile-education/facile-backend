@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @Component(
@@ -101,7 +102,16 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
 			Date schoolYearStartDate = sdf.parse(startDateStr);
+
 			Date schoolYearEndDate = sdf.parse(endDateStr);
+			// Set schoolYearEndDate to 23:59:59
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(schoolYearEndDate);
+			calendar.set(Calendar.HOUR_OF_DAY, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			calendar.set(Calendar.SECOND, 59);
+			schoolYearEndDate = calendar.getTime();
+
 			Date semesterDate = sdf.parse(semesterDateStr);
 			ScheduleConfigurationLocalServiceUtil.setScheduleConfiguration(schoolYearStartDate, semesterDate, schoolYearEndDate, h1Weeks, h2Weeks);
 
