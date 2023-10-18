@@ -27,6 +27,10 @@ public class ClassCoursMappingLocalServiceWrapper
 	implements ClassCoursMappingLocalService,
 			   ServiceWrapper<ClassCoursMappingLocalService> {
 
+	public ClassCoursMappingLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ClassCoursMappingLocalServiceWrapper(
 		ClassCoursMappingLocalService classCoursMappingLocalService) {
 

@@ -29,22 +29,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.group.model.CommunityInfos;
 import com.weprode.nero.group.model.CommunityInfosModel;
-import com.weprode.nero.group.model.CommunityInfosSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -158,59 +154,6 @@ public class CommunityInfosModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static CommunityInfos toModel(CommunityInfosSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		CommunityInfos model = new CommunityInfosImpl();
-
-		model.setCommunityInfosId(soapModel.getCommunityInfosId());
-		model.setGroupId(soapModel.getGroupId());
-		model.setStatus(soapModel.getStatus());
-		model.setCreatorId(soapModel.getCreatorId());
-		model.setCreationDate(soapModel.getCreationDate());
-		model.setExpirationDate(soapModel.getExpirationDate());
-		model.setIsPedagogical(soapModel.isIsPedagogical());
-		model.setIsContactList(soapModel.isIsContactList());
-		model.setColor(soapModel.getColor());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<CommunityInfos> toModels(
-		CommunityInfosSoap[] soapModels) {
-
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<CommunityInfos> models = new ArrayList<CommunityInfos>(
-			soapModels.length);
-
-		for (CommunityInfosSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public CommunityInfosModelImpl() {
 	}
 
@@ -294,34 +237,6 @@ public class CommunityInfosModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, CommunityInfos>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			CommunityInfos.class.getClassLoader(), CommunityInfos.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<CommunityInfos> constructor =
-				(Constructor<CommunityInfos>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<CommunityInfos, Object>>
@@ -836,41 +751,12 @@ public class CommunityInfosModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<CommunityInfos, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<CommunityInfos, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<CommunityInfos, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((CommunityInfos)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, CommunityInfos>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					CommunityInfos.class, ModelWrapper.class);
 
 	}
 

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class NewsReadLocalServiceWrapper
 	implements NewsReadLocalService, ServiceWrapper<NewsReadLocalService> {
 
+	public NewsReadLocalServiceWrapper() {
+		this(null);
+	}
+
 	public NewsReadLocalServiceWrapper(
 		NewsReadLocalService newsReadLocalService) {
 

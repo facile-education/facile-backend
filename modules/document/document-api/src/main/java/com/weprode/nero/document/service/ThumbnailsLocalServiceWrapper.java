@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class ThumbnailsLocalServiceWrapper
 	implements ServiceWrapper<ThumbnailsLocalService>, ThumbnailsLocalService {
 
+	public ThumbnailsLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ThumbnailsLocalServiceWrapper(
 		ThumbnailsLocalService thumbnailsLocalService) {
 

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class HolidayLocalServiceWrapper
 	implements HolidayLocalService, ServiceWrapper<HolidayLocalService> {
 
+	public HolidayLocalServiceWrapper() {
+		this(null);
+	}
+
 	public HolidayLocalServiceWrapper(HolidayLocalService holidayLocalService) {
 		_holidayLocalService = holidayLocalService;
 	}

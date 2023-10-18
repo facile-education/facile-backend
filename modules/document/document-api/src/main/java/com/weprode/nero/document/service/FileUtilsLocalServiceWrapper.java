@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class FileUtilsLocalServiceWrapper
 	implements FileUtilsLocalService, ServiceWrapper<FileUtilsLocalService> {
 
+	public FileUtilsLocalServiceWrapper() {
+		this(null);
+	}
+
 	public FileUtilsLocalServiceWrapper(
 		FileUtilsLocalService fileUtilsLocalService) {
 
@@ -143,21 +147,6 @@ public class FileUtilsLocalServiceWrapper
 		com.liferay.portal.kernel.repository.model.FileEntry file) {
 
 		return _fileUtilsLocalService.getDownloadUrl(file);
-	}
-
-	/**
-	 * Get file as Object Value Pair
-	 */
-	@Override
-	public com.liferay.portal.kernel.util.ObjectValuePair
-		<String, java.io.InputStream> getFileAsOVPStream(
-				long companyId, long fileId, String fileName)
-			throws com.liferay.portal.kernel.exception.PortalException,
-				   com.liferay.portal.kernel.exception.SystemException,
-				   java.io.IOException {
-
-		return _fileUtilsLocalService.getFileAsOVPStream(
-			companyId, fileId, fileName);
 	}
 
 	/**

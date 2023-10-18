@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.MindmapServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MindmapServiceSoap
  * @generated
  */
 public class MindmapServiceHttp {

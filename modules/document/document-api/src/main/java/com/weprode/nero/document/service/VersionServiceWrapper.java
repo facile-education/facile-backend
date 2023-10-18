@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class VersionServiceWrapper
 	implements ServiceWrapper<VersionService>, VersionService {
 
+	public VersionServiceWrapper() {
+		this(null);
+	}
+
 	public VersionServiceWrapper(VersionService versionService) {
 		_versionService = versionService;
 	}

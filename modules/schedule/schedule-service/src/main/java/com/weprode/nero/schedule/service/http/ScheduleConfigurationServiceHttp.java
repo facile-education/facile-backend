@@ -47,7 +47,6 @@ import com.weprode.nero.schedule.service.ScheduleConfigurationServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ScheduleConfigurationServiceSoap
  * @generated
  */
 public class ScheduleConfigurationServiceHttp {

@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.FolderUtilsServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see FolderUtilsServiceSoap
  * @generated
  */
 public class FolderUtilsServiceHttp {

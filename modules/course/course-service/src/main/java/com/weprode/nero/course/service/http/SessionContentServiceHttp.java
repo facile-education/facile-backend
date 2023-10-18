@@ -47,7 +47,6 @@ import com.weprode.nero.course.service.SessionContentServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SessionContentServiceSoap
  * @generated
  */
 public class SessionContentServiceHttp {

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class GeogebraServiceWrapper
 	implements GeogebraService, ServiceWrapper<GeogebraService> {
 
+	public GeogebraServiceWrapper() {
+		this(null);
+	}
+
 	public GeogebraServiceWrapper(GeogebraService geogebraService) {
 		_geogebraService = geogebraService;
 	}

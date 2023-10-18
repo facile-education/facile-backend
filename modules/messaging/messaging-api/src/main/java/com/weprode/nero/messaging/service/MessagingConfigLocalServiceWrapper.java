@@ -27,6 +27,10 @@ public class MessagingConfigLocalServiceWrapper
 	implements MessagingConfigLocalService,
 			   ServiceWrapper<MessagingConfigLocalService> {
 
+	public MessagingConfigLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MessagingConfigLocalServiceWrapper(
 		MessagingConfigLocalService messagingConfigLocalService) {
 

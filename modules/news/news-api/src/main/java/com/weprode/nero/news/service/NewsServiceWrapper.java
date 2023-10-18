@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class NewsServiceWrapper
 	implements NewsService, ServiceWrapper<NewsService> {
 
+	public NewsServiceWrapper() {
+		this(null);
+	}
+
 	public NewsServiceWrapper(NewsService newsService) {
 		_newsService = newsService;
 	}

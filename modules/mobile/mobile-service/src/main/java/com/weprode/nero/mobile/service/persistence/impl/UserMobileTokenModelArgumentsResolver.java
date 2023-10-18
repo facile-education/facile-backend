@@ -33,12 +33,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Brian Wing Shun Chan
  * @generated
  */
-@Component(
-	immediate = true,
-	service = {
-		UserMobileTokenModelArgumentsResolver.class, ArgumentsResolver.class
-	}
-)
+@Component(service = ArgumentsResolver.class)
 public class UserMobileTokenModelArgumentsResolver
 	implements ArgumentsResolver {
 

@@ -27,6 +27,10 @@ public class MessageContentLocalServiceWrapper
 	implements MessageContentLocalService,
 			   ServiceWrapper<MessageContentLocalService> {
 
+	public MessageContentLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MessageContentLocalServiceWrapper(
 		MessageContentLocalService messageContentLocalService) {
 

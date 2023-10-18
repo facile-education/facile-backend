@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class MobileDeviceServiceWrapper
 	implements MobileDeviceService, ServiceWrapper<MobileDeviceService> {
 
+	public MobileDeviceServiceWrapper() {
+		this(null);
+	}
+
 	public MobileDeviceServiceWrapper(MobileDeviceService mobileDeviceService) {
 		_mobileDeviceService = mobileDeviceService;
 	}

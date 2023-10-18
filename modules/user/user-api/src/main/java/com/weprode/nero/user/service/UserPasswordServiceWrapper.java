@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class UserPasswordServiceWrapper
 	implements ServiceWrapper<UserPasswordService>, UserPasswordService {
 
+	public UserPasswordServiceWrapper() {
+		this(null);
+	}
+
 	public UserPasswordServiceWrapper(UserPasswordService userPasswordService) {
 		_userPasswordService = userPasswordService;
 	}

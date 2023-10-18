@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class GroupUtilsServiceWrapper
 	implements GroupUtilsService, ServiceWrapper<GroupUtilsService> {
 
+	public GroupUtilsServiceWrapper() {
+		this(null);
+	}
+
 	public GroupUtilsServiceWrapper(GroupUtilsService groupUtilsService) {
 		_groupUtilsService = groupUtilsService;
 	}

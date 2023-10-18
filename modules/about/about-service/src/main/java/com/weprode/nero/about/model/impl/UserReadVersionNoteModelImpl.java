@@ -34,7 +34,6 @@ import com.weprode.nero.about.model.UserReadVersionNoteModel;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
@@ -211,34 +210,6 @@ public class UserReadVersionNoteModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, UserReadVersionNote>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			UserReadVersionNote.class.getClassLoader(),
-			UserReadVersionNote.class, ModelWrapper.class);
-
-		try {
-			Constructor<UserReadVersionNote> constructor =
-				(Constructor<UserReadVersionNote>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<UserReadVersionNote, Object>>
@@ -542,41 +513,12 @@ public class UserReadVersionNoteModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<UserReadVersionNote, Object>>
-			attributeGetterFunctions = getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<UserReadVersionNote, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<UserReadVersionNote, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((UserReadVersionNote)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, UserReadVersionNote>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					UserReadVersionNote.class, ModelWrapper.class);
 
 	}
 

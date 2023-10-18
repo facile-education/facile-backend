@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class AuthenticationServiceWrapper
 	implements AuthenticationService, ServiceWrapper<AuthenticationService> {
 
+	public AuthenticationServiceWrapper() {
+		this(null);
+	}
+
 	public AuthenticationServiceWrapper(
 		AuthenticationService authenticationService) {
 

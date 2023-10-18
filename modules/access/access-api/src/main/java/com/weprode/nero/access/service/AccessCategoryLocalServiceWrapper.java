@@ -27,6 +27,10 @@ public class AccessCategoryLocalServiceWrapper
 	implements AccessCategoryLocalService,
 			   ServiceWrapper<AccessCategoryLocalService> {
 
+	public AccessCategoryLocalServiceWrapper() {
+		this(null);
+	}
+
 	public AccessCategoryLocalServiceWrapper(
 		AccessCategoryLocalService accessCategoryLocalService) {
 

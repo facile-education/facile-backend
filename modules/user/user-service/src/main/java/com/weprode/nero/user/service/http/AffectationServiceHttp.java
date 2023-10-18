@@ -47,7 +47,6 @@ import com.weprode.nero.user.service.AffectationServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AffectationServiceSoap
  * @generated
  */
 public class AffectationServiceHttp {

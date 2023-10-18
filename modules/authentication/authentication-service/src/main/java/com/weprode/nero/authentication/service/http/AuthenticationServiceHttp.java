@@ -38,7 +38,6 @@ package com.weprode.nero.authentication.service.http;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AuthenticationServiceSoap
  * @generated
  */
 public class AuthenticationServiceHttp {

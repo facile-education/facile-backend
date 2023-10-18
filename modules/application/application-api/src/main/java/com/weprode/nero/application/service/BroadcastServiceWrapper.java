@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class BroadcastServiceWrapper
 	implements BroadcastService, ServiceWrapper<BroadcastService> {
 
+	public BroadcastServiceWrapper() {
+		this(null);
+	}
+
 	public BroadcastServiceWrapper(BroadcastService broadcastService) {
 		_broadcastService = broadcastService;
 	}

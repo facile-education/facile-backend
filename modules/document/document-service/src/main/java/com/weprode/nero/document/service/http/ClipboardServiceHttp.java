@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.ClipboardServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see ClipboardServiceSoap
  * @generated
  */
 public class ClipboardServiceHttp {

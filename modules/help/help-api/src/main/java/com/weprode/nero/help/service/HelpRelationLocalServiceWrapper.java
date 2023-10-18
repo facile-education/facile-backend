@@ -27,6 +27,10 @@ public class HelpRelationLocalServiceWrapper
 	implements HelpRelationLocalService,
 			   ServiceWrapper<HelpRelationLocalService> {
 
+	public HelpRelationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public HelpRelationLocalServiceWrapper(
 		HelpRelationLocalService helpRelationLocalService) {
 

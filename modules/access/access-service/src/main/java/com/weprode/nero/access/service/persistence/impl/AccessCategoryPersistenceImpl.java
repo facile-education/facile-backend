@@ -35,7 +35,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
+import com.liferay.portal.kernel.uuid.PortalUUID;
 
 import com.weprode.nero.access.exception.NoSuchCategoryException;
 import com.weprode.nero.access.model.AccessCategory;
@@ -191,7 +191,7 @@ public class AccessCategoryPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<AccessCategory>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AccessCategory accessCategory : list) {
@@ -574,7 +574,7 @@ public class AccessCategoryPersistenceImpl
 
 		Object[] finderArgs = new Object[] {uuid};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -724,7 +724,7 @@ public class AccessCategoryPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<AccessCategory>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AccessCategory accessCategory : list) {
@@ -1083,7 +1083,7 @@ public class AccessCategoryPersistenceImpl
 
 		Object[] finderArgs = new Object[] {schoolId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1232,7 +1232,7 @@ public class AccessCategoryPersistenceImpl
 		accessCategory.setNew(true);
 		accessCategory.setPrimaryKey(categoryId);
 
-		String uuid = PortalUUIDUtil.generate();
+		String uuid = _portalUUID.generate();
 
 		accessCategory.setUuid(uuid);
 
@@ -1350,7 +1350,7 @@ public class AccessCategoryPersistenceImpl
 			(AccessCategoryModelImpl)accessCategory;
 
 		if (Validator.isNull(accessCategory.getUuid())) {
-			String uuid = PortalUUIDUtil.generate();
+			String uuid = _portalUUID.generate();
 
 			accessCategory.setUuid(uuid);
 		}
@@ -1520,7 +1520,7 @@ public class AccessCategoryPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<AccessCategory>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1590,7 +1590,7 @@ public class AccessCategoryPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1787,7 +1787,6 @@ public class AccessCategoryPersistenceImpl
 	}
 
 	@Reference
-	private AccessCategoryModelArgumentsResolver
-		_accessCategoryModelArgumentsResolver;
+	private PortalUUID _portalUUID;
 
 }

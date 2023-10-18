@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class MindmapServiceWrapper
 	implements MindmapService, ServiceWrapper<MindmapService> {
 
+	public MindmapServiceWrapper() {
+		this(null);
+	}
+
 	public MindmapServiceWrapper(MindmapService mindmapService) {
 		_mindmapService = mindmapService;
 	}

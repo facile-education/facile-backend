@@ -5,19 +5,30 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
-import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
-import com.liferay.portal.kernel.scheduler.*;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
+import com.liferay.portal.kernel.scheduler.SchedulerEntryImpl;
+import com.liferay.portal.kernel.scheduler.StorageType;
+import com.liferay.portal.kernel.scheduler.Trigger;
+import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.weprode.nero.preference.model.NotifyConfig;
 import com.weprode.nero.preference.service.NotifyConfigLocalServiceUtil;
-import org.osgi.service.component.annotations.*;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
 
 @Component(
         immediate = true, property = {"cron.expression=0 11 13 * * ?"},
@@ -306,7 +317,7 @@ public class NotificationMessageListener extends BaseMessageListener {
 
         // Wrap the current scheduler entry in our new wrapper.
         // Use the persisted storaget type and set the wrapper back to the class field.
-        schedulerEntryImpl = new SchedulerEntryImpl(getClass().getName(), jobTrigger);
+        //schedulerEntryImpl = new SchedulerEntryImpl(getClass().getName(), jobTrigger);
 
         // If we were initialized (i.e. if this is called due to CA modification)
         if (initialized) {
@@ -315,7 +326,7 @@ public class NotificationMessageListener extends BaseMessageListener {
         }
 
         // Register the scheduled task
-        schedulerEngineHelper.register(this, schedulerEntryImpl, DestinationNames.SCHEDULER_DISPATCH);
+        //schedulerEngineHelper.register(this, schedulerEntryImpl, DestinationNames.SCHEDULER_DISPATCH);
 
         // Set the initialized flag.
         initialized = true;
@@ -329,16 +340,16 @@ public class NotificationMessageListener extends BaseMessageListener {
         // If we previously were initialized
         if (initialized) {
             // Unschedule the job so it is cleaned up
-            try {
-                schedulerEngineHelper.unschedule(schedulerEntryImpl, getStorageType());
-            } catch (SchedulerException se) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("Unable to unschedule trigger", se);
-                }
-            }
-
-            // Unregister this listener
-            schedulerEngineHelper.unregister(this);
+//            try {
+//                schedulerEngineHelper.unschedule(schedulerEntryImpl, getStorageType());
+//            } catch (SchedulerException se) {
+//                if (logger.isWarnEnabled()) {
+//                    logger.warn("Unable to unschedule trigger", se);
+//                }
+//            }
+//
+//            // Unregister this listener
+//            schedulerEngineHelper.unregister(this);
         }
 
         // Clear the initialized flag
@@ -350,10 +361,6 @@ public class NotificationMessageListener extends BaseMessageListener {
      * @return StorageType The storage type to use.
      */
     protected StorageType getStorageType() {
-        if (schedulerEntryImpl instanceof StorageTypeAware) {
-            return ((StorageTypeAware) schedulerEntryImpl).getStorageType();
-        }
-
         return StorageType.MEMORY_CLUSTERED;
     }
 }

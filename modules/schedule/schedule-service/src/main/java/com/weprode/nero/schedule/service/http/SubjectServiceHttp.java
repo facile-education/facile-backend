@@ -47,7 +47,6 @@ import com.weprode.nero.schedule.service.SubjectServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SubjectServiceSoap
  * @generated
  */
 public class SubjectServiceHttp {

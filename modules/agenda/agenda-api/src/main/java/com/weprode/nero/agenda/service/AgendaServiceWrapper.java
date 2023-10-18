@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class AgendaServiceWrapper
 	implements AgendaService, ServiceWrapper<AgendaService> {
 
+	public AgendaServiceWrapper() {
+		this(null);
+	}
+
 	public AgendaServiceWrapper(AgendaService agendaService) {
 		_agendaService = agendaService;
 	}

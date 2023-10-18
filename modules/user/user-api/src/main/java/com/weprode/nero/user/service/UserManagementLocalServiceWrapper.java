@@ -27,6 +27,10 @@ public class UserManagementLocalServiceWrapper
 	implements ServiceWrapper<UserManagementLocalService>,
 			   UserManagementLocalService {
 
+	public UserManagementLocalServiceWrapper() {
+		this(null);
+	}
+
 	public UserManagementLocalServiceWrapper(
 		UserManagementLocalService userManagementLocalService) {
 

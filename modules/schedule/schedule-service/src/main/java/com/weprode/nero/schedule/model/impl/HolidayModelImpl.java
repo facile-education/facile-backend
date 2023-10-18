@@ -30,7 +30,6 @@ import com.weprode.nero.schedule.model.HolidayModel;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
@@ -201,33 +200,6 @@ public class HolidayModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, Holiday>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			Holiday.class.getClassLoader(), Holiday.class, ModelWrapper.class);
-
-		try {
-			Constructor<Holiday> constructor =
-				(Constructor<Holiday>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<Holiday, Object>>
@@ -552,41 +524,12 @@ public class HolidayModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<Holiday, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<Holiday, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<Holiday, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((Holiday)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, Holiday>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					Holiday.class, ModelWrapper.class);
 
 	}
 

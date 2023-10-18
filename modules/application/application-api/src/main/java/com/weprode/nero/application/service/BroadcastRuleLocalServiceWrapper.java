@@ -27,6 +27,10 @@ public class BroadcastRuleLocalServiceWrapper
 	implements BroadcastRuleLocalService,
 			   ServiceWrapper<BroadcastRuleLocalService> {
 
+	public BroadcastRuleLocalServiceWrapper() {
+		this(null);
+	}
+
 	public BroadcastRuleLocalServiceWrapper(
 		BroadcastRuleLocalService broadcastRuleLocalService) {
 

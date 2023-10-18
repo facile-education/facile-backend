@@ -47,7 +47,6 @@ import com.weprode.nero.mobile.service.UserMobileTokenServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserMobileTokenServiceSoap
  * @generated
  */
 public class UserMobileTokenServiceHttp {

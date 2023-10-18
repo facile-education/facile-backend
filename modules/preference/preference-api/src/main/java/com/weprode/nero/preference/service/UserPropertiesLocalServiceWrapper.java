@@ -27,6 +27,10 @@ public class UserPropertiesLocalServiceWrapper
 	implements ServiceWrapper<UserPropertiesLocalService>,
 			   UserPropertiesLocalService {
 
+	public UserPropertiesLocalServiceWrapper() {
+		this(null);
+	}
+
 	public UserPropertiesLocalServiceWrapper(
 		UserPropertiesLocalService userPropertiesLocalService) {
 

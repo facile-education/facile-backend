@@ -47,7 +47,6 @@ import com.weprode.nero.user.service.UserSearchServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserSearchServiceSoap
  * @generated
  */
 public class UserSearchServiceHttp {

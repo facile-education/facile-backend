@@ -196,7 +196,7 @@ public class SchoollifeSessionPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SchoollifeSession>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SchoollifeSession schoollifeSession : list) {
@@ -567,7 +567,7 @@ public class SchoollifeSessionPersistenceImpl
 
 		Object[] finderArgs = new Object[] {schoollifeSlotId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -701,7 +701,7 @@ public class SchoollifeSessionPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SchoollifeSession>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SchoollifeSession schoollifeSession : list) {
@@ -1061,7 +1061,7 @@ public class SchoollifeSessionPersistenceImpl
 
 		Object[] finderArgs = new Object[] {type};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1206,7 +1206,7 @@ public class SchoollifeSessionPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SchoollifeSession>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SchoollifeSession schoollifeSession : list) {
@@ -1597,7 +1597,7 @@ public class SchoollifeSessionPersistenceImpl
 
 		Object[] finderArgs = new Object[] {schoolId, type};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -2039,7 +2039,7 @@ public class SchoollifeSessionPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<SchoollifeSession>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -2109,7 +2109,7 @@ public class SchoollifeSessionPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -2323,9 +2323,5 @@ public class SchoollifeSessionPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private SchoollifeSessionModelArgumentsResolver
-		_schoollifeSessionModelArgumentsResolver;
 
 }

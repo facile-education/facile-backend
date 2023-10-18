@@ -26,23 +26,19 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.school.life.model.Renvoi;
 import com.weprode.nero.school.life.model.RenvoiModel;
-import com.weprode.nero.school.life.model.RenvoiSoap;
 import com.weprode.nero.school.life.service.persistence.RenvoiPK;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -160,59 +156,6 @@ public class RenvoiModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static Renvoi toModel(RenvoiSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		Renvoi model = new RenvoiImpl();
-
-		model.setSchoollifeSessionId(soapModel.getSchoollifeSessionId());
-		model.setStudentId(soapModel.getStudentId());
-		model.setOrgId(soapModel.getOrgId());
-		model.setSchoolId(soapModel.getSchoolId());
-		model.setRenvoiDate(soapModel.getRenvoiDate());
-		model.setTeacherId(soapModel.getTeacherId());
-		model.setSourceSessionId(soapModel.getSourceSessionId());
-		model.setSourceSchoollifeSessionId(
-			soapModel.getSourceSchoollifeSessionId());
-		model.setSourceTeacherId(soapModel.getSourceTeacherId());
-		model.setReason(soapModel.getReason());
-		model.setStatus(soapModel.getStatus());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<Renvoi> toModels(RenvoiSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<Renvoi> models = new ArrayList<Renvoi>(soapModels.length);
-
-		for (RenvoiSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public RenvoiModelImpl() {
 	}
 
@@ -293,33 +236,6 @@ public class RenvoiModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, Renvoi>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			Renvoi.class.getClassLoader(), Renvoi.class, ModelWrapper.class);
-
-		try {
-			Constructor<Renvoi> constructor =
-				(Constructor<Renvoi>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<Renvoi, Object>>
@@ -817,40 +733,12 @@ public class RenvoiModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<Renvoi, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<Renvoi, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<Renvoi, Object> attributeGetterFunction = entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((Renvoi)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, Renvoi>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					Renvoi.class, ModelWrapper.class);
 
 	}
 

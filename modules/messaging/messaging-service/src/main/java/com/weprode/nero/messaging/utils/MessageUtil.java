@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class MessageUtil {
 
@@ -179,6 +180,7 @@ public class MessageUtil {
 
 				// Create the folder in the user's sending box
 				Folder attachedFilesFolder = DLAppLocalServiceUtil.addFolder(
+						UUID.randomUUID().toString(),
 						userId,
 						imBox.getGroupId(),
 						imBox.getFolderId(),

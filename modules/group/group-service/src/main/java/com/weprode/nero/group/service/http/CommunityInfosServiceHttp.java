@@ -47,7 +47,6 @@ import com.weprode.nero.group.service.CommunityInfosServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see CommunityInfosServiceSoap
  * @generated
  */
 public class CommunityInfosServiceHttp {

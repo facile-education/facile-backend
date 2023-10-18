@@ -33,10 +33,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Brian Wing Shun Chan
  * @generated
  */
-@Component(
-	immediate = true,
-	service = {HomeworkModelArgumentsResolver.class, ArgumentsResolver.class}
-)
+@Component(service = ArgumentsResolver.class)
 public class HomeworkModelArgumentsResolver implements ArgumentsResolver {
 
 	@Override

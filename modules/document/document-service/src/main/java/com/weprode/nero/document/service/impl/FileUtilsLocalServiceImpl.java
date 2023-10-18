@@ -23,7 +23,6 @@ import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
-import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.NoSuchResourcePermissionException;
@@ -31,7 +30,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -42,7 +40,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
-import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.URLCodec;
@@ -588,30 +585,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 	public long getSizeInMegaOctet(long pSize){
 		return pSize / (1024 * 1024);
-	}
-
-	/**
-	 * Get file as Object Value Pair
-	 */
-	public ObjectValuePair<String, InputStream> getFileAsOVPStream(long companyId, long fileId, String fileName) throws PortalException, SystemException, IOException {
-		String formattedTitle = "";
-
-		ObjectValuePair<String, InputStream> ovp = new ObjectValuePair<>();
-		if(fileId > 0){
-			FileEntry fe = DLAppServiceUtil.getFileEntry(fileId);
-			InputStream is = fe.getContentStream();
-			formattedTitle = FileNameUtil.getValidName(fe.getTitle(), true, true);
-			ovp.setValue(is);
-		}
-		// Copy attachment
-		else {
-			InputStream file = DLStoreUtil.getFileAsStream(companyId, CompanyConstants.SYSTEM, fileName);
-			formattedTitle = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
-			ovp.setValue(file);
-		}
-		ovp.setKey(formattedTitle);
-
-		return ovp;
 	}
 
 }

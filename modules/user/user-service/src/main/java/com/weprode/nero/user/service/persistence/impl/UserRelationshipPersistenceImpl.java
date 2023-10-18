@@ -192,7 +192,7 @@ public class UserRelationshipPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<UserRelationship>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserRelationship userRelationship : list) {
@@ -559,7 +559,7 @@ public class UserRelationshipPersistenceImpl
 
 		Object[] finderArgs = new Object[] {childUserId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -698,7 +698,7 @@ public class UserRelationshipPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<UserRelationship>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserRelationship userRelationship : list) {
@@ -1065,7 +1065,7 @@ public class UserRelationshipPersistenceImpl
 
 		Object[] finderArgs = new Object[] {parentUserId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1492,7 +1492,7 @@ public class UserRelationshipPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<UserRelationship>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1562,7 +1562,7 @@ public class UserRelationshipPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1757,9 +1757,5 @@ public class UserRelationshipPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private UserRelationshipModelArgumentsResolver
-		_userRelationshipModelArgumentsResolver;
 
 }

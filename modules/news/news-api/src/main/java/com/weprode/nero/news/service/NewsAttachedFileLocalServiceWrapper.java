@@ -27,6 +27,10 @@ public class NewsAttachedFileLocalServiceWrapper
 	implements NewsAttachedFileLocalService,
 			   ServiceWrapper<NewsAttachedFileLocalService> {
 
+	public NewsAttachedFileLocalServiceWrapper() {
+		this(null);
+	}
+
 	public NewsAttachedFileLocalServiceWrapper(
 		NewsAttachedFileLocalService newsAttachedFileLocalService) {
 

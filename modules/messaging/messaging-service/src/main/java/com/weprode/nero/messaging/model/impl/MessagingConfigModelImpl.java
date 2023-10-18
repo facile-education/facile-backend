@@ -31,22 +31,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.messaging.model.MessagingConfig;
 import com.weprode.nero.messaging.model.MessagingConfigModel;
-import com.weprode.nero.messaging.model.MessagingConfigSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -133,57 +129,6 @@ public class MessagingConfigModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static MessagingConfig toModel(MessagingConfigSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		MessagingConfig model = new MessagingConfigImpl();
-
-		model.setUserId(soapModel.getUserId());
-		model.setIsForwardActive(soapModel.isIsForwardActive());
-		model.setForwardMail(soapModel.getForwardMail());
-		model.setIsSignatureActive(soapModel.isIsSignatureActive());
-		model.setSignature(soapModel.getSignature());
-		model.setIsAutoReplyActive(soapModel.isIsAutoReplyActive());
-		model.setAutoReplyContent(soapModel.getAutoReplyContent());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<MessagingConfig> toModels(
-		MessagingConfigSoap[] soapModels) {
-
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<MessagingConfig> models = new ArrayList<MessagingConfig>(
-			soapModels.length);
-
-		for (MessagingConfigSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public MessagingConfigModelImpl() {
 	}
 
@@ -267,34 +212,6 @@ public class MessagingConfigModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, MessagingConfig>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			MessagingConfig.class.getClassLoader(), MessagingConfig.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<MessagingConfig> constructor =
-				(Constructor<MessagingConfig>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<MessagingConfig, Object>>
@@ -756,41 +673,12 @@ public class MessagingConfigModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<MessagingConfig, Object>>
-			attributeGetterFunctions = getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<MessagingConfig, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<MessagingConfig, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((MessagingConfig)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, MessagingConfig>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					MessagingConfig.class, ModelWrapper.class);
 
 	}
 

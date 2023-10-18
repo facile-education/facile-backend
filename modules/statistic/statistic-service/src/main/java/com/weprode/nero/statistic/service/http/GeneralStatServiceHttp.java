@@ -47,7 +47,6 @@ import com.weprode.nero.statistic.service.GeneralStatServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see GeneralStatServiceSoap
  * @generated
  */
 public class GeneralStatServiceHttp {

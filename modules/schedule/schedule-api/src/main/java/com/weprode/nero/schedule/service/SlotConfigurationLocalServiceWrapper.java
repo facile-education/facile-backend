@@ -27,6 +27,10 @@ public class SlotConfigurationLocalServiceWrapper
 	implements ServiceWrapper<SlotConfigurationLocalService>,
 			   SlotConfigurationLocalService {
 
+	public SlotConfigurationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SlotConfigurationLocalServiceWrapper(
 		SlotConfigurationLocalService slotConfigurationLocalService) {
 

@@ -47,7 +47,6 @@ import com.weprode.nero.schedule.service.SessionTeacherServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SessionTeacherServiceSoap
  * @generated
  */
 public class SessionTeacherServiceHttp {

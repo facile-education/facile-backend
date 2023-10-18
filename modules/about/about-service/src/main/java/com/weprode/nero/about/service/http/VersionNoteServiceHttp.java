@@ -47,7 +47,6 @@ import com.weprode.nero.about.service.VersionNoteServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see VersionNoteServiceSoap
  * @generated
  */
 public class VersionNoteServiceHttp {

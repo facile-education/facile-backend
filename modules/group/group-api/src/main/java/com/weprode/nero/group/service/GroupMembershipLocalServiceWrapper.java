@@ -27,6 +27,10 @@ public class GroupMembershipLocalServiceWrapper
 	implements GroupMembershipLocalService,
 			   ServiceWrapper<GroupMembershipLocalService> {
 
+	public GroupMembershipLocalServiceWrapper() {
+		this(null);
+	}
+
 	public GroupMembershipLocalServiceWrapper(
 		GroupMembershipLocalService groupMembershipLocalService) {
 

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class DashboardServiceWrapper
 	implements DashboardService, ServiceWrapper<DashboardService> {
 
+	public DashboardServiceWrapper() {
+		this(null);
+	}
+
 	public DashboardServiceWrapper(DashboardService dashboardService) {
 		_dashboardService = dashboardService;
 	}

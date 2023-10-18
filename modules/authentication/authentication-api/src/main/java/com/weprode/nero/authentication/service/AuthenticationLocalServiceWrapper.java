@@ -27,6 +27,10 @@ public class AuthenticationLocalServiceWrapper
 	implements AuthenticationLocalService,
 			   ServiceWrapper<AuthenticationLocalService> {
 
+	public AuthenticationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public AuthenticationLocalServiceWrapper(
 		AuthenticationLocalService authenticationLocalService) {
 

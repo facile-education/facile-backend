@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.TrashServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see TrashServiceSoap
  * @generated
  */
 public class TrashServiceHttp {

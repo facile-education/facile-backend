@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class AccessLocalServiceWrapper
 	implements AccessLocalService, ServiceWrapper<AccessLocalService> {
 
+	public AccessLocalServiceWrapper() {
+		this(null);
+	}
+
 	public AccessLocalServiceWrapper(AccessLocalService accessLocalService) {
 		_accessLocalService = accessLocalService;
 	}

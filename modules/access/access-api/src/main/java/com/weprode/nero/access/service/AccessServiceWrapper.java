@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class AccessServiceWrapper
 	implements AccessService, ServiceWrapper<AccessService> {
 
+	public AccessServiceWrapper() {
+		this(null);
+	}
+
 	public AccessServiceWrapper(AccessService accessService) {
 		_accessService = accessService;
 	}

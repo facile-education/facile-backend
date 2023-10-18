@@ -27,6 +27,10 @@ public class CourseDetailsLocalServiceWrapper
 	implements CourseDetailsLocalService,
 			   ServiceWrapper<CourseDetailsLocalService> {
 
+	public CourseDetailsLocalServiceWrapper() {
+		this(null);
+	}
+
 	public CourseDetailsLocalServiceWrapper(
 		CourseDetailsLocalService courseDetailsLocalService) {
 

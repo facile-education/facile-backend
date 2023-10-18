@@ -440,7 +440,8 @@ public class HolidayPersistenceImpl
 		List<Holiday> list = null;
 
 		if (useFinderCache) {
-			list = (List<Holiday>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Holiday>)finderCache.getResult(
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -510,7 +511,7 @@ public class HolidayPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -651,8 +652,5 @@ public class HolidayPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private HolidayModelArgumentsResolver _holidayModelArgumentsResolver;
 
 }

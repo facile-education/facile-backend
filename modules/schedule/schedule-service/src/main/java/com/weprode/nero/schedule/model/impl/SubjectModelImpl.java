@@ -28,22 +28,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.schedule.model.Subject;
 import com.weprode.nero.schedule.model.SubjectModel;
-import com.weprode.nero.schedule.model.SubjectSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -125,49 +121,6 @@ public class SubjectModelImpl
 	 */
 	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-	}
-
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static Subject toModel(SubjectSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		Subject model = new SubjectImpl();
-
-		model.setSubjectId(soapModel.getSubjectId());
-		model.setName(soapModel.getName());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<Subject> toModels(SubjectSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<Subject> models = new ArrayList<Subject>(soapModels.length);
-
-		for (SubjectSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
 	}
 
 	public SubjectModelImpl() {
@@ -252,33 +205,6 @@ public class SubjectModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, Subject>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			Subject.class.getClassLoader(), Subject.class, ModelWrapper.class);
-
-		try {
-			Constructor<Subject> constructor =
-				(Constructor<Subject>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<Subject, Object>>
@@ -557,41 +483,12 @@ public class SubjectModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<Subject, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<Subject, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<Subject, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((Subject)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, Subject>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					Subject.class, ModelWrapper.class);
 
 	}
 

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class SchoollifeSlotServiceWrapper
 	implements SchoollifeSlotService, ServiceWrapper<SchoollifeSlotService> {
 
+	public SchoollifeSlotServiceWrapper() {
+		this(null);
+	}
+
 	public SchoollifeSlotServiceWrapper(
 		SchoollifeSlotService schoollifeSlotService) {
 

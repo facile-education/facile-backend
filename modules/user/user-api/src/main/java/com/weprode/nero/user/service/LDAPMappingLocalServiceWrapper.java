@@ -27,6 +27,10 @@ public class LDAPMappingLocalServiceWrapper
 	implements LDAPMappingLocalService,
 			   ServiceWrapper<LDAPMappingLocalService> {
 
+	public LDAPMappingLocalServiceWrapper() {
+		this(null);
+	}
+
 	public LDAPMappingLocalServiceWrapper(
 		LDAPMappingLocalService ldapMappingLocalService) {
 

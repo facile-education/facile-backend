@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class CourseLocalServiceWrapper
 	implements CourseLocalService, ServiceWrapper<CourseLocalService> {
 
+	public CourseLocalServiceWrapper() {
+		this(null);
+	}
+
 	public CourseLocalServiceWrapper(CourseLocalService courseLocalService) {
 		_courseLocalService = courseLocalService;
 	}

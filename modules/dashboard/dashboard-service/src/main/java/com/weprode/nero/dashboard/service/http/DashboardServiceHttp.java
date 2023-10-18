@@ -47,7 +47,6 @@ import com.weprode.nero.dashboard.service.DashboardServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see DashboardServiceSoap
  * @generated
  */
 public class DashboardServiceHttp {

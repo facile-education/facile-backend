@@ -190,7 +190,8 @@ public class MessagePersistenceImpl
 		List<Message> list = null;
 
 		if (useFinderCache) {
-			list = (List<Message>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Message>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Message message : list) {
@@ -549,7 +550,7 @@ public class MessagePersistenceImpl
 
 		Object[] finderArgs = new Object[] {sendMessageId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -681,7 +682,8 @@ public class MessagePersistenceImpl
 		List<Message> list = null;
 
 		if (useFinderCache) {
-			list = (List<Message>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Message>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Message message : list) {
@@ -1036,7 +1038,7 @@ public class MessagePersistenceImpl
 
 		Object[] finderArgs = new Object[] {folderId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1168,7 +1170,8 @@ public class MessagePersistenceImpl
 		List<Message> list = null;
 
 		if (useFinderCache) {
-			list = (List<Message>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Message>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Message message : list) {
@@ -1523,7 +1526,7 @@ public class MessagePersistenceImpl
 
 		Object[] finderArgs = new Object[] {threadId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1665,7 +1668,8 @@ public class MessagePersistenceImpl
 		List<Message> list = null;
 
 		if (useFinderCache) {
-			list = (List<Message>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Message>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Message message : list) {
@@ -2051,7 +2055,7 @@ public class MessagePersistenceImpl
 
 		Object[] finderArgs = new Object[] {folderId, threadId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -2199,7 +2203,8 @@ public class MessagePersistenceImpl
 		List<Message> list = null;
 
 		if (useFinderCache) {
-			list = (List<Message>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Message>)finderCache.getResult(
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Message message : list) {
@@ -2585,7 +2590,7 @@ public class MessagePersistenceImpl
 
 		Object[] finderArgs = new Object[] {folderId, isNew};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -3010,7 +3015,8 @@ public class MessagePersistenceImpl
 		List<Message> list = null;
 
 		if (useFinderCache) {
-			list = (List<Message>)finderCache.getResult(finderPath, finderArgs);
+			list = (List<Message>)finderCache.getResult(
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -3080,7 +3086,7 @@ public class MessagePersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -3332,8 +3338,5 @@ public class MessagePersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private MessageModelArgumentsResolver _messageModelArgumentsResolver;
 
 }

@@ -183,7 +183,7 @@ public class HomeworkPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Homework>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Homework homework : list) {
@@ -538,7 +538,7 @@ public class HomeworkPersistenceImpl
 
 		Object[] finderArgs = new Object[] {courseId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -676,7 +676,7 @@ public class HomeworkPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Homework>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Homework homework : list) {
@@ -1035,7 +1035,7 @@ public class HomeworkPersistenceImpl
 
 		Object[] finderArgs = new Object[] {sourceSessionId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1174,7 +1174,7 @@ public class HomeworkPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Homework>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Homework homework : list) {
@@ -1533,7 +1533,7 @@ public class HomeworkPersistenceImpl
 
 		Object[] finderArgs = new Object[] {targetSessionId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1946,7 +1946,7 @@ public class HomeworkPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<Homework>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -2016,7 +2016,7 @@ public class HomeworkPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -2220,8 +2220,5 @@ public class HomeworkPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private HomeworkModelArgumentsResolver _homeworkModelArgumentsResolver;
 
 }

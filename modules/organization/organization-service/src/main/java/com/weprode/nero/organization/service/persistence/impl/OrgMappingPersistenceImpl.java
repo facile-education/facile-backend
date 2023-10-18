@@ -160,7 +160,7 @@ public class OrgMappingPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchByorganisationId, finderArgs);
+				_finderPathFetchByorganisationId, finderArgs, this);
 		}
 
 		if (result instanceof OrgMapping) {
@@ -265,7 +265,7 @@ public class OrgMappingPersistenceImpl
 
 		Object[] finderArgs = new Object[] {organizationId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -697,7 +697,7 @@ public class OrgMappingPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<OrgMapping>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -767,7 +767,7 @@ public class OrgMappingPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -927,8 +927,5 @@ public class OrgMappingPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private OrgMappingModelArgumentsResolver _orgMappingModelArgumentsResolver;
 
 }

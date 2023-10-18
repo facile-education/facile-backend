@@ -47,7 +47,6 @@ import com.weprode.nero.user.service.UserUtilsServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserUtilsServiceSoap
  * @generated
  */
 public class UserUtilsServiceHttp {

@@ -158,7 +158,8 @@ public class LDAPMappingPersistenceImpl
 		Object result = null;
 
 		if (useFinderCache) {
-			result = finderCache.getResult(_finderPathFetchByUID, finderArgs);
+			result = finderCache.getResult(
+				_finderPathFetchByUID, finderArgs, this);
 		}
 
 		if (result instanceof LDAPMapping) {
@@ -276,7 +277,7 @@ public class LDAPMappingPersistenceImpl
 
 		Object[] finderArgs = new Object[] {UID};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -437,7 +438,7 @@ public class LDAPMappingPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<LDAPMapping>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (LDAPMapping ldapMapping : list) {
@@ -837,7 +838,7 @@ public class LDAPMappingPersistenceImpl
 
 		Object[] finderArgs = new Object[] {EntEleveStructRattachId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -965,7 +966,7 @@ public class LDAPMappingPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchByEntPersonJointure, finderArgs);
+				_finderPathFetchByEntPersonJointure, finderArgs, this);
 		}
 
 		if (result instanceof LDAPMapping) {
@@ -1086,7 +1087,7 @@ public class LDAPMappingPersistenceImpl
 
 		Object[] finderArgs = new Object[] {EntPersonJointure};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1543,7 +1544,7 @@ public class LDAPMappingPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<LDAPMapping>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1613,7 +1614,7 @@ public class LDAPMappingPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -1804,9 +1805,5 @@ public class LDAPMappingPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private LDAPMappingModelArgumentsResolver
-		_ldapMappingModelArgumentsResolver;
 
 }

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class VersionNoteServiceWrapper
 	implements ServiceWrapper<VersionNoteService>, VersionNoteService {
 
+	public VersionNoteServiceWrapper() {
+		this(null);
+	}
+
 	public VersionNoteServiceWrapper(VersionNoteService versionNoteService) {
 		_versionNoteService = versionNoteService;
 	}

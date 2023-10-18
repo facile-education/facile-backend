@@ -32,22 +32,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.preference.model.UserProperties;
 import com.weprode.nero.preference.model.UserPropertiesModel;
-import com.weprode.nero.preference.model.UserPropertiesSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -152,61 +148,6 @@ public class UserPropertiesModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static UserProperties toModel(UserPropertiesSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		UserProperties model = new UserPropertiesImpl();
-
-		model.setUserId(soapModel.getUserId());
-		model.setManualAccount(soapModel.isManualAccount());
-		model.setHideMenu(soapModel.isHideMenu());
-		model.setThemeColor(soapModel.getThemeColor());
-		model.setEtabId(soapModel.getEtabId());
-		model.setPreferedSchoolId(soapModel.getPreferedSchoolId());
-		model.setWebdavActivated(soapModel.isWebdavActivated());
-		model.setTermsOfUseAgreedDate(soapModel.getTermsOfUseAgreedDate());
-		model.setLastSynchroDate(soapModel.getLastSynchroDate());
-		model.setLastDashboardAccessDate(
-			soapModel.getLastDashboardAccessDate());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<UserProperties> toModels(
-		UserPropertiesSoap[] soapModels) {
-
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<UserProperties> models = new ArrayList<UserProperties>(
-			soapModels.length);
-
-		for (UserPropertiesSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public UserPropertiesModelImpl() {
 	}
 
@@ -290,34 +231,6 @@ public class UserPropertiesModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, UserProperties>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			UserProperties.class.getClassLoader(), UserProperties.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<UserProperties> constructor =
-				(Constructor<UserProperties>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<UserProperties, Object>>
@@ -875,41 +788,12 @@ public class UserPropertiesModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<UserProperties, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<UserProperties, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<UserProperties, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((UserProperties)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, UserProperties>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					UserProperties.class, ModelWrapper.class);
 
 	}
 

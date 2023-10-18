@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class GeneralStatServiceWrapper
 	implements GeneralStatService, ServiceWrapper<GeneralStatService> {
 
+	public GeneralStatServiceWrapper() {
+		this(null);
+	}
+
 	public GeneralStatServiceWrapper(GeneralStatService generalStatService) {
 		_generalStatService = generalStatService;
 	}

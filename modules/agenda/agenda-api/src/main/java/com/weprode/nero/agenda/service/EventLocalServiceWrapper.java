@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class EventLocalServiceWrapper
 	implements EventLocalService, ServiceWrapper<EventLocalService> {
 
+	public EventLocalServiceWrapper() {
+		this(null);
+	}
+
 	public EventLocalServiceWrapper(EventLocalService eventLocalService) {
 		_eventLocalService = eventLocalService;
 	}

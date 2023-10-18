@@ -47,7 +47,6 @@ import com.weprode.nero.access.service.AccessServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AccessServiceSoap
  * @generated
  */
 public class AccessServiceHttp {

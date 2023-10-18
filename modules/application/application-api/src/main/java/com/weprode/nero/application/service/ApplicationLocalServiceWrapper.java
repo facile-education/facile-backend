@@ -27,6 +27,10 @@ public class ApplicationLocalServiceWrapper
 	implements ApplicationLocalService,
 			   ServiceWrapper<ApplicationLocalService> {
 
+	public ApplicationLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ApplicationLocalServiceWrapper(
 		ApplicationLocalService applicationLocalService) {
 

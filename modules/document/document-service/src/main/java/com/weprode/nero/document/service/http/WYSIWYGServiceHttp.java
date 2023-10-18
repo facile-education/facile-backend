@@ -47,7 +47,6 @@ import com.weprode.nero.document.service.WYSIWYGServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see WYSIWYGServiceSoap
  * @generated
  */
 public class WYSIWYGServiceHttp {

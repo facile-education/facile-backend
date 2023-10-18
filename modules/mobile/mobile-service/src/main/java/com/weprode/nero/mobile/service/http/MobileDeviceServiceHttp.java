@@ -47,7 +47,6 @@ import com.weprode.nero.mobile.service.MobileDeviceServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see MobileDeviceServiceSoap
  * @generated
  */
 public class MobileDeviceServiceHttp {

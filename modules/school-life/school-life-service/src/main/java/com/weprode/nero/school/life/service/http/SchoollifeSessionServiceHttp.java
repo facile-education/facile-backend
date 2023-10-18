@@ -47,7 +47,6 @@ import com.weprode.nero.school.life.service.SchoollifeSessionServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SchoollifeSessionServiceSoap
  * @generated
  */
 public class SchoollifeSessionServiceHttp {

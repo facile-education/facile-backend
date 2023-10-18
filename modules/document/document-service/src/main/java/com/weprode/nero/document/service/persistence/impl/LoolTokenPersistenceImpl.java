@@ -159,7 +159,7 @@ public class LoolTokenPersistenceImpl
 
 		if (useFinderCache) {
 			result = dummyFinderCache.getResult(
-				_finderPathFetchBytoken, finderArgs);
+				_finderPathFetchBytoken, finderArgs, this);
 		}
 
 		if (result instanceof LoolToken) {
@@ -277,7 +277,8 @@ public class LoolTokenPersistenceImpl
 
 		Object[] finderArgs = new Object[] {token};
 
-		Long count = (Long)dummyFinderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)dummyFinderCache.getResult(
+			finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -720,7 +721,7 @@ public class LoolTokenPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<LoolToken>)dummyFinderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -790,7 +791,7 @@ public class LoolTokenPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)dummyFinderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -944,8 +945,5 @@ public class LoolTokenPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return dummyFinderCache;
 	}
-
-	@Reference
-	private LoolTokenModelArgumentsResolver _loolTokenModelArgumentsResolver;
 
 }

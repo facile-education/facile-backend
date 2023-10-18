@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class ScratchServiceWrapper
 	implements ScratchService, ServiceWrapper<ScratchService> {
 
+	public ScratchServiceWrapper() {
+		this(null);
+	}
+
 	public ScratchServiceWrapper(ScratchService scratchService) {
 		_scratchService = scratchService;
 	}

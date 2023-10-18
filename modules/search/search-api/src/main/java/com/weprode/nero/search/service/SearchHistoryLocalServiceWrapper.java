@@ -27,6 +27,10 @@ public class SearchHistoryLocalServiceWrapper
 	implements SearchHistoryLocalService,
 			   ServiceWrapper<SearchHistoryLocalService> {
 
+	public SearchHistoryLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SearchHistoryLocalServiceWrapper(
 		SearchHistoryLocalService searchHistoryLocalService) {
 

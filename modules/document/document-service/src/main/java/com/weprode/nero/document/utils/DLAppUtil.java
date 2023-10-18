@@ -108,6 +108,7 @@ public class DLAppUtil {
                         serviceContext.setAddGroupPermissions(true);
 
                         folder = DLAppServiceUtil.addFolder(
+                                UUID.randomUUID().toString(),
                                 folder.getRepositoryId(),
                                 folder.getFolderId(),
                                 intermediaryFolderName,
@@ -261,7 +262,7 @@ public class DLAppUtil {
         // Liferay does not revert the DLFileEntry creation, so we do it here in order to not create an orphan DLFileEntry
         logger.info("About to delete just created file in error, with groupId=" + groupId + " and externalReferenceCode=" + externalReferenceCode);
         try {
-            DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getDLFileEntryByExternalReferenceCode(groupId, externalReferenceCode);
+            DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getDLFileEntryByExternalReferenceCode(externalReferenceCode, groupId);
             if (dlFileEntry != null) {
                 DLFileEntryLocalServiceUtil.deleteDLFileEntry(dlFileEntry);
                 logger.info("File deleted -> no orphan created");
@@ -293,7 +294,9 @@ public class DLAppUtil {
             while (!finished && count < DocumentConstants.NB_RENAMED_VERSIONS) {
                 try {
                     title = folderTitle + suffixe;
-                    folder = DLAppServiceUtil.addFolder(groupId, parentFolderId, title, "", serviceContext);
+                    folder = DLAppServiceUtil.addFolder(
+                            UUID.randomUUID().toString(),
+                            groupId, parentFolderId, title, "", serviceContext);
                     finished = true;
                 } catch (DuplicateFolderNameException exception) {
                     if (mode == DocumentConstants.MODE_NORMAL) {

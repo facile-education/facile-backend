@@ -47,7 +47,6 @@ import com.weprode.nero.search.service.SearchEngineServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see SearchEngineServiceSoap
  * @generated
  */
 public class SearchEngineServiceHttp {

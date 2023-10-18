@@ -27,6 +27,10 @@ public class HelpCategoryLocalServiceWrapper
 	implements HelpCategoryLocalService,
 			   ServiceWrapper<HelpCategoryLocalService> {
 
+	public HelpCategoryLocalServiceWrapper() {
+		this(null);
+	}
+
 	public HelpCategoryLocalServiceWrapper(
 		HelpCategoryLocalService helpCategoryLocalService) {
 

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class HelpCategoryServiceWrapper
 	implements HelpCategoryService, ServiceWrapper<HelpCategoryService> {
 
+	public HelpCategoryServiceWrapper() {
+		this(null);
+	}
+
 	public HelpCategoryServiceWrapper(HelpCategoryService helpCategoryService) {
 		_helpCategoryService = helpCategoryService;
 	}

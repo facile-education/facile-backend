@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class FileUtilsServiceWrapper
 	implements FileUtilsService, ServiceWrapper<FileUtilsService> {
 
+	public FileUtilsServiceWrapper() {
+		this(null);
+	}
+
 	public FileUtilsServiceWrapper(FileUtilsService fileUtilsService) {
 		_fileUtilsService = fileUtilsService;
 	}

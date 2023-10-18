@@ -28,22 +28,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.schedule.model.ScheduleConfiguration;
 import com.weprode.nero.schedule.model.ScheduleConfigurationModel;
-import com.weprode.nero.schedule.model.ScheduleConfigurationSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -132,59 +128,6 @@ public class ScheduleConfigurationModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static ScheduleConfiguration toModel(
-		ScheduleConfigurationSoap soapModel) {
-
-		if (soapModel == null) {
-			return null;
-		}
-
-		ScheduleConfiguration model = new ScheduleConfigurationImpl();
-
-		model.setConfigId(soapModel.getConfigId());
-		model.setProjectStartDate(soapModel.getProjectStartDate());
-		model.setSchoolYearStartDate(soapModel.getSchoolYearStartDate());
-		model.setSchoolYearSemesterDate(soapModel.getSchoolYearSemesterDate());
-		model.setSchoolYearEndDate(soapModel.getSchoolYearEndDate());
-		model.setH1Weeks(soapModel.getH1Weeks());
-		model.setH2Weeks(soapModel.getH2Weeks());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<ScheduleConfiguration> toModels(
-		ScheduleConfigurationSoap[] soapModels) {
-
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<ScheduleConfiguration> models =
-			new ArrayList<ScheduleConfiguration>(soapModels.length);
-
-		for (ScheduleConfigurationSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public ScheduleConfigurationModelImpl() {
 	}
 
@@ -269,34 +212,6 @@ public class ScheduleConfigurationModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, ScheduleConfiguration>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			ScheduleConfiguration.class.getClassLoader(),
-			ScheduleConfiguration.class, ModelWrapper.class);
-
-		try {
-			Constructor<ScheduleConfiguration> constructor =
-				(Constructor<ScheduleConfiguration>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<ScheduleConfiguration, Object>>
@@ -761,42 +676,12 @@ public class ScheduleConfigurationModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<ScheduleConfiguration, Object>>
-			attributeGetterFunctions = getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<ScheduleConfiguration, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<ScheduleConfiguration, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(
-				attributeGetterFunction.apply((ScheduleConfiguration)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, ScheduleConfiguration>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					ScheduleConfiguration.class, ModelWrapper.class);
 
 	}
 

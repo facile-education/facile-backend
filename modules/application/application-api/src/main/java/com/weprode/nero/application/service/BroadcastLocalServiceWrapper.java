@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class BroadcastLocalServiceWrapper
 	implements BroadcastLocalService, ServiceWrapper<BroadcastLocalService> {
 
+	public BroadcastLocalServiceWrapper() {
+		this(null);
+	}
+
 	public BroadcastLocalServiceWrapper(
 		BroadcastLocalService broadcastLocalService) {
 

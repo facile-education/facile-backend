@@ -47,7 +47,6 @@ import com.weprode.nero.preference.service.UserPropertiesServiceUtil;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see UserPropertiesServiceSoap
  * @generated
  */
 public class UserPropertiesServiceHttp {

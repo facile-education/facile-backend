@@ -27,6 +27,10 @@ public class SearchEngineLocalServiceWrapper
 	implements SearchEngineLocalService,
 			   ServiceWrapper<SearchEngineLocalService> {
 
+	public SearchEngineLocalServiceWrapper() {
+		this(null);
+	}
+
 	public SearchEngineLocalServiceWrapper(
 		SearchEngineLocalService searchEngineLocalService) {
 

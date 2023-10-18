@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class MessageServiceWrapper
 	implements MessageService, ServiceWrapper<MessageService> {
 
+	public MessageServiceWrapper() {
+		this(null);
+	}
+
 	public MessageServiceWrapper(MessageService messageService) {
 		_messageService = messageService;
 	}

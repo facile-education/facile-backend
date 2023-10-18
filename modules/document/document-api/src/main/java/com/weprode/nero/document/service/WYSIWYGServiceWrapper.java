@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class WYSIWYGServiceWrapper
 	implements ServiceWrapper<WYSIWYGService>, WYSIWYGService {
 
+	public WYSIWYGServiceWrapper() {
+		this(null);
+	}
+
 	public WYSIWYGServiceWrapper(WYSIWYGService wysiwygService) {
 		_wysiwygService = wysiwygService;
 	}

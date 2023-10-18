@@ -36,7 +36,7 @@ public class LoginAction implements StrutsAction {
         boolean rememberMe = ParamUtil.getBoolean(request, "rememberMe");
         logger.info("Called login with screenName = " + login);
 
-        String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_EA);
+        String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_SN);
 
         JSONObject userStatus = new JSONObject();
         try {
@@ -51,7 +51,7 @@ public class LoginAction implements StrutsAction {
 
         } catch (AuthException e) {
             userStatus.put("success", false);
-            logger.error("Login failed");
+            logger.error("Login failed", e);
             // Get nb remaining tries
             int nbRemainingTries = getNbRemainingTries(login);
             if (nbRemainingTries >= 0) {

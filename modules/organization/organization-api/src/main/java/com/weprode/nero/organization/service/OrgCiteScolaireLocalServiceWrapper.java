@@ -27,6 +27,10 @@ public class OrgCiteScolaireLocalServiceWrapper
 	implements OrgCiteScolaireLocalService,
 			   ServiceWrapper<OrgCiteScolaireLocalService> {
 
+	public OrgCiteScolaireLocalServiceWrapper() {
+		this(null);
+	}
+
 	public OrgCiteScolaireLocalServiceWrapper(
 		OrgCiteScolaireLocalService orgCiteScolaireLocalService) {
 

@@ -159,7 +159,7 @@ public class NotifyConfigPersistenceImpl
 
 		if (useFinderCache) {
 			result = finderCache.getResult(
-				_finderPathFetchByuserId, finderArgs);
+				_finderPathFetchByuserId, finderArgs, this);
 		}
 
 		if (result instanceof NotifyConfig) {
@@ -264,7 +264,7 @@ public class NotifyConfigPersistenceImpl
 
 		Object[] finderArgs = new Object[] {userId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -400,7 +400,7 @@ public class NotifyConfigPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<NotifyConfig>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (NotifyConfig notifyConfig : list) {
@@ -758,7 +758,7 @@ public class NotifyConfigPersistenceImpl
 
 		Object[] finderArgs = new Object[] {activate};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -905,7 +905,7 @@ public class NotifyConfigPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<NotifyConfig>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (NotifyConfig notifyConfig : list) {
@@ -1298,7 +1298,7 @@ public class NotifyConfigPersistenceImpl
 
 		Object[] finderArgs = new Object[] {activate, digestPeriod};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -1740,7 +1740,7 @@ public class NotifyConfigPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<NotifyConfig>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -1810,7 +1810,7 @@ public class NotifyConfigPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -2011,9 +2011,5 @@ public class NotifyConfigPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private NotifyConfigModelArgumentsResolver
-		_notifyConfigModelArgumentsResolver;
 
 }

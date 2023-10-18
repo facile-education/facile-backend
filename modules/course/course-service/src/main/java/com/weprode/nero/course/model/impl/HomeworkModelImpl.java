@@ -29,22 +29,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.course.model.Homework;
 import com.weprode.nero.course.model.HomeworkModel;
-import com.weprode.nero.course.model.HomeworkSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -157,60 +153,6 @@ public class HomeworkModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static Homework toModel(HomeworkSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		Homework model = new HomeworkImpl();
-
-		model.setHomeworkId(soapModel.getHomeworkId());
-		model.setHomeworkType(soapModel.getHomeworkType());
-		model.setCourseId(soapModel.getCourseId());
-		model.setTeacherId(soapModel.getTeacherId());
-		model.setTitle(soapModel.getTitle());
-		model.setModificationDate(soapModel.getModificationDate());
-		model.setSourceSessionId(soapModel.getSourceSessionId());
-		model.setTargetSessionId(soapModel.getTargetSessionId());
-		model.setTargetDate(soapModel.getTargetDate());
-		model.setIsCustomStudentList(soapModel.isIsCustomStudentList());
-		model.setEstimatedTime(soapModel.getEstimatedTime());
-		model.setPublicationDate(soapModel.getPublicationDate());
-		model.setIsDraft(soapModel.isIsDraft());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<Homework> toModels(HomeworkSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<Homework> models = new ArrayList<Homework>(soapModels.length);
-
-		for (HomeworkSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public HomeworkModelImpl() {
 	}
 
@@ -293,34 +235,6 @@ public class HomeworkModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, Homework>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			Homework.class.getClassLoader(), Homework.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<Homework> constructor =
-				(Constructor<Homework>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<Homework, Object>>
@@ -918,41 +832,12 @@ public class HomeworkModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<Homework, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<Homework, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<Homework, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((Homework)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, Homework>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					Homework.class, ModelWrapper.class);
 
 	}
 

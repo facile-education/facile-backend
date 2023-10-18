@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class CDTSessionServiceWrapper
 	implements CDTSessionService, ServiceWrapper<CDTSessionService> {
 
+	public CDTSessionServiceWrapper() {
+		this(null);
+	}
+
 	public CDTSessionServiceWrapper(CDTSessionService cdtSessionService) {
 		_cdtSessionService = cdtSessionService;
 	}

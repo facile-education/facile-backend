@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class BroadcastRuleServiceWrapper
 	implements BroadcastRuleService, ServiceWrapper<BroadcastRuleService> {
 
+	public BroadcastRuleServiceWrapper() {
+		this(null);
+	}
+
 	public BroadcastRuleServiceWrapper(
 		BroadcastRuleService broadcastRuleService) {
 

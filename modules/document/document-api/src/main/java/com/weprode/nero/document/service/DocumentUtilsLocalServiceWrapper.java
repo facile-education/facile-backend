@@ -27,6 +27,10 @@ public class DocumentUtilsLocalServiceWrapper
 	implements DocumentUtilsLocalService,
 			   ServiceWrapper<DocumentUtilsLocalService> {
 
+	public DocumentUtilsLocalServiceWrapper() {
+		this(null);
+	}
+
 	public DocumentUtilsLocalServiceWrapper(
 		DocumentUtilsLocalService documentUtilsLocalService) {
 

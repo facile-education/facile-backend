@@ -192,7 +192,7 @@ public class ClassCoursMappingPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<ClassCoursMapping>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (ClassCoursMapping classCoursMapping : list) {
@@ -558,7 +558,7 @@ public class ClassCoursMappingPersistenceImpl
 
 		Object[] finderArgs = new Object[] {classOrgId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -697,7 +697,7 @@ public class ClassCoursMappingPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<ClassCoursMapping>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (ClassCoursMapping classCoursMapping : list) {
@@ -1063,7 +1063,7 @@ public class ClassCoursMappingPersistenceImpl
 
 		Object[] finderArgs = new Object[] {coursOrgId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(2);
@@ -1210,7 +1210,7 @@ public class ClassCoursMappingPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<ClassCoursMapping>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 
 			if ((list != null) && !list.isEmpty()) {
 				for (ClassCoursMapping classCoursMapping : list) {
@@ -1603,7 +1603,7 @@ public class ClassCoursMappingPersistenceImpl
 
 		Object[] finderArgs = new Object[] {classOrgId, coursOrgId};
 
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
 			StringBundler sb = new StringBundler(3);
@@ -2041,7 +2041,7 @@ public class ClassCoursMappingPersistenceImpl
 
 		if (useFinderCache) {
 			list = (List<ClassCoursMapping>)finderCache.getResult(
-				finderPath, finderArgs);
+				finderPath, finderArgs, this);
 		}
 
 		if (list == null) {
@@ -2111,7 +2111,7 @@ public class ClassCoursMappingPersistenceImpl
 	@Override
 	public int countAll() {
 		Long count = (Long)finderCache.getResult(
-			_finderPathCountAll, FINDER_ARGS_EMPTY);
+			_finderPathCountAll, FINDER_ARGS_EMPTY, this);
 
 		if (count == null) {
 			Session session = null;
@@ -2321,9 +2321,5 @@ public class ClassCoursMappingPersistenceImpl
 	protected FinderCache getFinderCache() {
 		return finderCache;
 	}
-
-	@Reference
-	private ClassCoursMappingModelArgumentsResolver
-		_classCoursMappingModelArgumentsResolver;
 
 }

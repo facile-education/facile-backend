@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class ActivityLocalServiceWrapper
 	implements ActivityLocalService, ServiceWrapper<ActivityLocalService> {
 
+	public ActivityLocalServiceWrapper() {
+		this(null);
+	}
+
 	public ActivityLocalServiceWrapper(
 		ActivityLocalService activityLocalService) {
 

@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class ContentBlockServiceWrapper
 	implements ContentBlockService, ServiceWrapper<ContentBlockService> {
 
+	public ContentBlockServiceWrapper() {
+		this(null);
+	}
+
 	public ContentBlockServiceWrapper(ContentBlockService contentBlockService) {
 		_contentBlockService = contentBlockService;
 	}

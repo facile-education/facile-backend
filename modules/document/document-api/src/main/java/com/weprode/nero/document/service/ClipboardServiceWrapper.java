@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class ClipboardServiceWrapper
 	implements ClipboardService, ServiceWrapper<ClipboardService> {
 
+	public ClipboardServiceWrapper() {
+		this(null);
+	}
+
 	public ClipboardServiceWrapper(ClipboardService clipboardService) {
 		_clipboardService = clipboardService;
 	}

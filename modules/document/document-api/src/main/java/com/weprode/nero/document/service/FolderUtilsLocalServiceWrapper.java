@@ -27,6 +27,10 @@ public class FolderUtilsLocalServiceWrapper
 	implements FolderUtilsLocalService,
 			   ServiceWrapper<FolderUtilsLocalService> {
 
+	public FolderUtilsLocalServiceWrapper() {
+		this(null);
+	}
+
 	public FolderUtilsLocalServiceWrapper(
 		FolderUtilsLocalService folderUtilsLocalService) {
 

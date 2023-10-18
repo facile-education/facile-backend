@@ -29,22 +29,18 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.nero.news.model.News;
 import com.weprode.nero.news.model.NewsModel;
-import com.weprode.nero.news.model.NewsSoap;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
 import java.sql.Blob;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -139,58 +135,6 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static News toModel(NewsSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		News model = new NewsImpl();
-
-		model.setNewsId(soapModel.getNewsId());
-		model.setCompanyId(soapModel.getCompanyId());
-		model.setTitle(soapModel.getTitle());
-		model.setContent(soapModel.getContent());
-		model.setAuthorId(soapModel.getAuthorId());
-		model.setIsSchoolNews(soapModel.isIsSchoolNews());
-		model.setIsImportant(soapModel.isIsImportant());
-		model.setExpirationDate(soapModel.getExpirationDate());
-		model.setPublicationDate(soapModel.getPublicationDate());
-		model.setModificationDate(soapModel.getModificationDate());
-		model.setImageId(soapModel.getImageId());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<News> toModels(NewsSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<News> models = new ArrayList<News>(soapModels.length);
-
-		for (NewsSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public NewsModelImpl() {
 	}
 
@@ -269,33 +213,6 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, News>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			News.class.getClassLoader(), News.class, ModelWrapper.class);
-
-		try {
-			Constructor<News> constructor =
-				(Constructor<News>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<News, Object>>
@@ -824,40 +741,12 @@ public class NewsModelImpl extends BaseModelImpl<News> implements NewsModel {
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<News, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<News, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<News, Object> attributeGetterFunction = entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((News)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, News>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					News.class, ModelWrapper.class);
 
 	}
 
