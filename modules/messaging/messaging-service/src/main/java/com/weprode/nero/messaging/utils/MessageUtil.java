@@ -338,7 +338,7 @@ public class MessageUtil {
 			}
 			result.put(JSONConstants.ATTACHMENTS, jsonAttachments);
 		}
-		
+
 		// Recipients
 		JSONArray jsonRecipients = new JSONArray();
 		if (isDraftMessage(message)) {	// Match the wanted recipients for the draft
@@ -348,43 +348,54 @@ public class MessageUtil {
 				jsonRecipients.put(jsonRecipient);
 			}
 			result.put(JSONConstants.NB_RECIPIENTS, recipients.size());
-		} else { // Match reals recipients and status
-			List<Message> recipientsMessages = MessageLocalServiceUtil.getRecipientsMessages(message);
-			if (recipientsMessages == null || recipientsMessages.isEmpty()) {
-				// This is indeed a draft that was moved to an other folder
-				List<User> recipients = MessageRecipientsLocalServiceUtil.getRecipients(message.getMessageId());
-				for (User recipient : recipients) {
-					JSONObject jsonRecipient = convertRecipient(recipient);
-					jsonRecipients.put(jsonRecipient);
+		} else {
+			List<User> recipients = MessageRecipientsLocalServiceUtil.getRecipients(message.getMessageId());
+
+			// Build a map userId/Message for read infos in case of sent folder
+			Map<Long, Message> recipientMessageMap = new HashMap<>();
+			if (message.getSendMessageId() == 0) {
+				try {
+					List<Message> recipientsMessages = MessageLocalServiceUtil.getRecipientsMessages(message);
+					for (Message recipientsMessage : recipientsMessages) {
+						MessageFolder messageFolder = MessageFolderLocalServiceUtil.getMessageFolder(recipientsMessage.getFolderId());
+						recipientMessageMap.put(messageFolder.getUserId(), recipientsMessage);
+					}
+				} catch (Exception e) {
+					logger.error("Error processing the recipients map", e);
 				}
-				result.put(JSONConstants.NB_RECIPIENTS, recipients.size());
-			} else {
-				for (Message recipientMessage : recipientsMessages) {
-					try {
-						User recipient = MessageFolderLocalServiceUtil.getFolderUser(recipientMessage.getFolderId());
-						JSONObject jsonRecipient = convertRecipient(recipient);
-						if (message.getSendMessageId() == 0 && recipient != null) {    // Only in case of sent message, add recipient's message status
+			}
+			for (User recipient : recipients) {
+				try {
+					JSONObject jsonRecipient = convertRecipient(recipient);
+					// Only in case of sent message, add recipient's message status
+					if (message.getSendMessageId() == 0 && recipient != null) {
+						if (recipientMessageMap.containsKey(recipient.getUserId())) {
+							// Sent message still exists -> we have a read date
+							Message recipientMessage = recipientMessageMap.get(recipient.getUserId());
 							jsonRecipient.put(JSONConstants.HAS_READ, recipientMessage.getReadDate() != null);
 							if (recipientMessage.getReadDate() != null) {
 								jsonRecipient.put(JSONConstants.READ_DATE, sdf.format(recipientMessage.getReadDate()));
 							}
+						} else {
+							// Message has been deleted by the recipient, then is read but we have no date
+							jsonRecipient.put(JSONConstants.HAS_READ, true);
 						}
-						jsonRecipients.put(jsonRecipient);
-						// Limit to 2 recipients
-						if (!fetchFullContent && jsonRecipients.length() >= 3) {
-							break;
-						}
-					} catch (Exception e) {
-						logger.error("Error fetching recipients for message " + message.getMessageId() + " and recipient message " + recipientMessage.getMessageId());
 					}
-				}
-				// No recipient means deleted user(s)
-				if (jsonRecipients.length() == 0) {
-					JSONObject jsonRecipient = convertRecipient(null);
 					jsonRecipients.put(jsonRecipient);
+					// Limit to 2 recipients
+					if (!fetchFullContent && jsonRecipients.length() >= 3) {
+						break;
+					}
+				} catch (Exception e) {
+					logger.error("Error fetching recipients for message " + message.getMessageId() + " and recipient " + (recipient == null ? "deleted" : recipient.getUserId()));
 				}
-				result.put(JSONConstants.NB_RECIPIENTS, recipientsMessages.size());
 			}
+			// No recipient means deleted user(s) -> should not happen anymore
+			if (jsonRecipients.length() == 0) {
+				JSONObject jsonRecipient = convertRecipient(null);
+				jsonRecipients.put(jsonRecipient);
+			}
+			result.put(JSONConstants.NB_RECIPIENTS, recipients.size());
 		}
 		result.put(JSONConstants.RECIPIENTS, jsonRecipients);
 
