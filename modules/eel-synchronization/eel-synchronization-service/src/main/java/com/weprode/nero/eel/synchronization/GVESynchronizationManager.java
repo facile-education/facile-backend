@@ -264,10 +264,9 @@ public class GVESynchronizationManager {
             if (schoolAttrs.get(ATTRIBUTE_SCHOOL_DESCRIPTION) != null) {
                 String schoolName = schoolAttrs.get(ATTRIBUTE_SCHOOL_DESCRIPTION).get().toString();
                 logger.info("SchoolName is -"+ schoolName + "-");
-                // Do not normalize because it breaks escaped characters
-                // schoolName = Normalizer.normalize(schoolName, Normalizer.Form.NFD);
-                // schoolName = schoolName.replace("[^\\p{ASCII}]", "");
-                schoolName = schoolName.replace("Cycle d'orientation", "CO");
+                // Active Directory
+                //schoolName = schoolName.replace("Cycle d'orientation", "CO");
+                schoolName = schoolName.replace("Collège", "CO");
                 logger.info("Formatted SchoolName is -"+ schoolName + "-");
 
                 // Create school and school-level orgs
@@ -855,7 +854,9 @@ public class GVESynchronizationManager {
         if (cnUserMap.containsKey(fullCn)) {
             return cnUserMap.get(fullCn);
         } else {
-            String[] attributeIds = {ATTRIBUTE_USER_SN, ATTRIBUTE_USER_GIVEN_NAME, ATTRIBUTE_USER_MAIL, ATTRIBUTE_USER_EMPLOYEE_ID};
+            // Active Directory
+            //String[] attributeIds = {ATTRIBUTE_USER_SN, ATTRIBUTE_USER_GIVEN_NAME, ATTRIBUTE_USER_MAIL, ATTRIBUTE_USER_EMPLOYEE_ID};
+            String[] attributeIds = {ATTRIBUTE_USER_SN, ATTRIBUTE_USER_GIVEN_NAME, ATTRIBUTE_USER_MAIL, ATTRIBUTE_USER_DESCRIPTION};
 
             try {
                 // Get specified LDAP attributes
@@ -864,7 +865,9 @@ public class GVESynchronizationManager {
                 String givenName    = LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_GIVEN_NAME);
                 String sn   		= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_SN);
                 String mail   		= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_MAIL);
-                String uid			= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_EMPLOYEE_ID);
+                String uid			= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_DESCRIPTION);
+                // Active Directory
+                //String uid			= LDAPUtil.getAttributeString(attrs, ATTRIBUTE_USER_EMPLOYEE_ID);
                 String shortCn = extractCn(fullCn);
 
                 // First fetch by screenname
@@ -2312,7 +2315,8 @@ public class GVESynchronizationManager {
         environmentProperties.put(Context.SECURITY_PRINCIPAL, principal);
         environmentProperties.put(Context.SECURITY_CREDENTIALS, credentials);
         environmentProperties.put("java.naming.ldap.factory.socket", sslsocketfactory.getClass().getName());
-        environmentProperties.put("java.naming.ldap.version", "3");
+        // Active Directory
+        //environmentProperties.put("java.naming.ldap.version", "3");
 
         try {
             ctx = new InitialLdapContext(environmentProperties, null);
@@ -2587,8 +2591,13 @@ public class GVESynchronizationManager {
         }
     }
 
-    private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=eTATGEgroup)";
-    private static final String ETAT_GE_PROPRIETAIRE = "eTATGEproprietaire";
+    // Active Directory
+    //private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=eTATGEgroup)";
+    //private static final String ETAT_GE_PROPRIETAIRE = "eTATGEproprietaire";
+
+    // For Openldap
+    private static final String GVE_LDAP_CLASS_FILTER = "(objectClass=ETATGEgroupOfNames)";
+    private static final String ETAT_GE_PROPRIETAIRE = "ETATGEproprietaire";
 
     private static final String MEMBER = "member";
 
@@ -2598,7 +2607,8 @@ public class GVESynchronizationManager {
     private static final String ATTRIBUTE_USER_GIVEN_NAME = "givenName";
     private static final String ATTRIBUTE_USER_MAIL = "mail";
     private static final String ATTRIBUTE_USER_DESCRIPTION = "description";
-    private static final String ATTRIBUTE_USER_EMPLOYEE_ID = "employeeId";
+    // Active Directory
+    // private static final String ATTRIBUTE_USER_EMPLOYEE_ID = "employeeId";
 
     private static final String CSV_SEPARATOR = ",";
 
