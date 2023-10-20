@@ -68,7 +68,6 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         try {
             boolean isDirectionMember = RoleUtilsLocalServiceUtil.isDirectionMember(user);
             boolean isStudentOrParent = RoleUtilsLocalServiceUtil.isStudentOrParent(user);
-            boolean isAgent = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isPersonal(user);
 
             result.put(JSONConstants.HAS_ACTIVITY_THREAD_WIDGET, true);
             result.put(JSONConstants.HAS_SCHOOL_NEWS_WIDGET, true);
@@ -94,7 +93,9 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             // Check delegations
             boolean isDelegate = NewsAdminLocalServiceUtil.isUserDelegate(user);
             result.put(JSONConstants.IS_DELEGATE, isDelegate);
-            result.put(JSONConstants.CAN_ADD_GROUP_NEWS, isAgent);
+
+            boolean canAddGroupNews = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isDoyen(user) || RoleUtilsLocalServiceUtil.isPsychologue(user) || RoleUtilsLocalServiceUtil.isConseillerSocial(user) || RoleUtilsLocalServiceUtil.isMainTeacher(user);
+            result.put(JSONConstants.CAN_ADD_GROUP_NEWS, canAddGroupNews);
             result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate);
             result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate);
 
