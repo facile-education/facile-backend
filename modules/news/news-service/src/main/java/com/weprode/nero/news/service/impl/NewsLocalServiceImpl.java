@@ -304,14 +304,6 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
                 List<Organization> schoolClasses = new ArrayList<>();
                 // Personals can write news to no class
-//                if (RoleUtilsLocalServiceUtil.isConseillerOrientation(user) ||
-//                        RoleUtilsLocalServiceUtil.isSecretariat(user) ||
-//                        RoleUtilsLocalServiceUtil.isAdministrative(user) ||
-//                        RoleUtilsLocalServiceUtil.isInfirmiere(user) ||
-//                        RoleUtilsLocalServiceUtil.isBibliothecaire(user)) {
-//                    types.add(OrgConstants.CLASS_TYPE);
-//                    schoolClasses.addAll(OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false));
-//                }
                 // Main teachers
                 if (RoleUtilsLocalServiceUtil.isMainTeacher(user)) {
                     schoolClasses.addAll(UserOrgsLocalServiceUtil.getAffectedClasses(user, RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId()));
