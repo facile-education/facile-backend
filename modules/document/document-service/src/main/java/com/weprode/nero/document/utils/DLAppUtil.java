@@ -246,9 +246,11 @@ public class DLAppUtil {
             }
 
             // Register activity except for ._NEWS_ and ._COURSE_ folders
-            Folder parentFolder = DLAppServiceUtil.getFolder(folder.getParentFolderId());
-            if (fileEntry != null && !parentFolder.getName().equals(DocumentConstants.NEWS_FOLDER_NAME) && !parentFolder.getName().equals(DocumentConstants.COURSE_FOLDER_NAME)) {
-                ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_CREATION);
+            if (folder.getParentFolderId() != 0) {
+                Folder parentFolder = DLAppServiceUtil.getFolder(folder.getParentFolderId());
+                if (fileEntry != null && !parentFolder.getName().equals(DocumentConstants.NEWS_FOLDER_NAME) && !parentFolder.getName().equals(DocumentConstants.COURSE_FOLDER_NAME)) {
+                    ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_CREATION);
+                }
             }
 
             return fileEntry;
