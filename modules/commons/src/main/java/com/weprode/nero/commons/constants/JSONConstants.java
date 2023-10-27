@@ -309,22 +309,27 @@ public class JSONConstants {
     public static final String HOMEWORK_ID = "homeworkId";
     public static final String HOMEWORKS = "homeworks";
     public static final String ESTIMATED_TIME = "estimatedTime";
-    public static final String FROM_DATE = "fromDate";
     public static final String TO_DATE = "toDate";
     public static final String SOURCE_SESSION_ID = "sourceSessionId";
     public static final String TARGET_SESSION_ID = "targetSessionId";
     public static final String TARGET_SLOT_NUMBER = "targetSlotNumber";
+    public static final String IS_DONE = "isDone";
     public static final String IS_SENT = "isSent";
     public static final String SENT_DATE = "sentDate";
     public static final String SENT_FILE_ID = "sentFileId";
-    public static final String IS_DONE = "isDone";
+    public static final String IS_CORRECTED = "isCorrected";
+    public static final String CORRECTION_DATE = "correctionDate";
+    public static final String CORRECTION = "correction";
     public static final String SELECTED_STUDENTS = "selectedStudents";
     public static final String IS_WHOLE_CLASS = "isWholeClass";
     public static final String DONE_STUDENTS = "doneStudents";
     public static final String GROUP_STUDENTS = "groupStudents";
-    public static final String SENT_FILE = "sentFile";
+    public static final String IS_CORRECTION_SENT = "isCorrectionSent";
+    public static final String NB_CORRECTED = "nbCorrected";
+    public static final String HOMEWORK_STATUS = "homeworkStatus";
     public static final String NB_UNDONE_HOMEWORKS = "nbUndoneHomeworks";
     public static final String NB_HOMEWORKS_TO_CORRECT = "nbHomeworksToCorrect";
+    public static final String WEEK_NB = "weekNb";
 
     // Progression
     public static final String COURSE_ID = "courseId";
@@ -351,7 +356,6 @@ public class JSONConstants {
     public static final String DOWNLOAD_URL = "downloadUrl";
     public static final String CONTENT_VALUE = "contentValue";
     public static final String ATTACHED_FILE_ID = "attachedFileId";
-    public static final String CORRECTION_DATE = "correctionDate";
     public static final String IS_AUDIO_RECORDING = "isAudioRecording";
     public static final String SESSION_START_DATE = "sessionStartDate";
     public static final String SESSION_END_DATE = "sessionEndDate";

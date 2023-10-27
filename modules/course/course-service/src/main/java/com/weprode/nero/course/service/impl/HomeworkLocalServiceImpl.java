@@ -28,21 +28,23 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.course.CourseConstants;
 import com.weprode.nero.course.model.Homework;
 import com.weprode.nero.course.model.StudentHomework;
 import com.weprode.nero.course.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.course.service.base.HomeworkLocalServiceBaseImpl;
-import com.weprode.nero.document.constants.DocumentConstants;
-import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.nero.document.service.PermissionUtilsLocalServiceUtil;
+import com.weprode.nero.group.service.GroupUtilsLocalServiceUtil;
+import com.weprode.nero.mobile.constants.MobileConstants;
+import com.weprode.nero.mobile.service.MobileDeviceLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
@@ -50,11 +52,16 @@ import com.weprode.nero.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.nero.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.nero.user.service.UserSearchLocalServiceUtil;
 import com.weprode.nero.user.service.UserUtilsLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -98,9 +105,6 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				homework.setIsCustomStudentList(true);
 				for (long studentId : studentIds) {
 					StudentHomeworkLocalServiceUtil.getOrCreateStudentHomework(homework.getHomeworkId(), studentId);
-					// Push mobile - Commented
-					//MobileDeviceLocalServiceUtil.pushNotificationToUser(studentId, teacher.getFullName(), NEW_HOMEWORK, homework.getTitle(),
-					//		MobileConstants.HOMEWORK_TYPE, homework.getHomeworkId());
 				}
 			} else {
 				homework.setIsCustomStudentList(false);
@@ -321,6 +325,26 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		return studentHomeworkList;
 	}
 
+	// Used for work load
+	public List<Homework> getStudentsHomeworks(List<Long> studentIds, Date minDate, Date maxDate) {
+
+		List<Homework> studentHomeworkList = new ArrayList<>();
+
+		// Limit to school year
+		Date schoolYearStartDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate();
+		if (minDate.before(schoolYearStartDate)) {
+			minDate = schoolYearStartDate;
+		}
+		try {
+			return homeworkFinder.getStudentsHomeworks(studentIds, minDate, maxDate);
+		} catch (Exception e) {
+			logger.error("Error when fetching homeworks for " + studentIds.size() + " students", e);
+		}
+
+		// No sorting, we can return more than NB_HOMEWORKS homeworks, just the maxDate is important
+		return studentHomeworkList;
+	}
+
 	public int countUndoneHomeworks(long studentId) {
 		try {
 			Date minDate = new Date();
@@ -388,25 +412,43 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 	}
 
 
-	public List<Homework> getTeacherHomeworksToCorrect(User teacher) {
+	public List<Homework> getTeacherHomeworksToCorrect(long teacherId, long courseId) {
 
 		try {
-			return homeworkFinder.getTeacherHomeworksToCorrect(teacher.getUserId());
+			return homeworkFinder.getTeacherHomeworksToCorrect(teacherId, courseId);
 		} catch (Exception e) {
-			logger.error("Error when running dynamic query to get all homeworks for student "+teacher.getUserId()+" at given date range", e);
+			logger.error("Error when running dynamic query to get all homeworks to correct for teacher " + teacherId + " at given date range", e);
 		}
 		return new ArrayList<>();
 	}
 
-	public int countHomeworksToCorrect(long teacherId) {
+	public JSONArray countHomeworksToCorrect(long teacherId) {
 
+		JSONArray nbHomeworks = new JSONArray();
 		try {
-			return homeworkFinder.countHomeworksToCorrect(teacherId);
-
+			List<Homework> homeworks = getTeacherHomeworksToCorrect(teacherId, 0);
+			// Group them by week number
+			Map<Integer, Integer> nbHomeworksToCorrectMap = new HashMap<>();
+			for (Homework homework : homeworks) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(homework.getTargetDate());
+				int weekNb = cal.get(Calendar.WEEK_OF_YEAR);
+				if (!nbHomeworksToCorrectMap.containsKey(weekNb)) {
+					nbHomeworksToCorrectMap.put(weekNb, 0);
+				}
+				nbHomeworksToCorrectMap.put(weekNb, nbHomeworksToCorrectMap.get(weekNb) + 1);
+			}
+			// Build JSONArray
+			for (Map.Entry<Integer, Integer> entry : nbHomeworksToCorrectMap.entrySet()) {
+				JSONObject weekJson = new JSONObject();
+				weekJson.put(JSONConstants.WEEK_NB, entry.getKey());
+				weekJson.put(JSONConstants.NB_HOMEWORKS_TO_CORRECT, entry.getValue());
+				nbHomeworks.put(weekJson);
+			}
 		} catch (Exception e) {
 			logger.error("Error when counting homeworks to correct for teacher " + teacherId, e);
 		}
-		return 0;
+		return nbHomeworks;
 	}
 
 
@@ -457,29 +499,6 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		}
 
 		return homeworkDropFolder;
-	}
-
-	public void dropHomeworkFile(long studentId, long homeworkId, long fileEntryId) throws PortalException {
-
-		// Check if a file was previously dropped by the student -> delete it
-		StudentHomework studentHomework = StudentHomeworkLocalServiceUtil.getStudentHomework(homeworkId, studentId);
-		if (studentHomework != null && studentHomework.getIsSent()) {
-			FileUtilsLocalServiceUtil.deleteFile(studentId, studentHomework.getSentFileId());
-			logger.info("Old dropped file deleted");
-		}
-
-		Folder homeworkDropFolder = getHomeworkDropFolder(homeworkId);
-		FileEntry copiedFile = FileUtilsLocalServiceUtil.moveFileEntry(studentId, fileEntryId, homeworkDropFolder.getFolderId(), DocumentConstants.MODE_NORMAL);
-		StudentHomeworkLocalServiceUtil.setHomeworkSent(studentId, homeworkId, copiedFile.getFileEntryId());
-	}
-
-	public void cancelDrop(long studentId, long homeworkId) throws PortalException {
-
-		StudentHomework studentHomework = StudentHomeworkLocalServiceUtil.getStudentHomework(homeworkId, studentId);
-		if (studentHomework != null && studentHomework.getIsSent()) {
-			FileUtilsLocalServiceUtil.deleteFile(studentId, studentHomework.getSentFileId());
-			logger.info("Old dropped file deleted");
-		}
 	}
 
 	public boolean deleteSessionHomeworks(long sessionId) {
@@ -551,13 +570,28 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		return false;
 	}
 
-	public void correctFile(long homeworkId, long studentId, String comment) {
-		StudentHomework studentHomework = StudentHomeworkLocalServiceUtil.getStudentHomework(homeworkId, studentId);
-		if (studentHomework != null) {
-			studentHomework.setIsCorrected(true);
-			studentHomework.setCorrectionDate(new Date());
-			studentHomework.setComment(comment);
-			studentHomeworkPersistence.update(studentHomework);
+	public void sendCorrections(long teacherId, long homeworkId) throws PortalException {
+
+		Homework homework = getHomework(homeworkId);
+		homework.setIsCorrectionSent(true);
+		updateHomework(homework);
+
+		// Push mobile notification to students having sent a document
+		String courseName = GroupUtilsLocalServiceUtil.getGroupName(homework.getCourseId());
+		String title = "Cours & Devoirs - " + courseName;
+		User teacher = UserLocalServiceUtil.getUser(teacherId);
+		List<StudentHomework> studentHomeworks = studentHomeworkPersistence.findByhomeworkId(homeworkId);
+		if (studentHomeworks != null) {
+			for (StudentHomework studentHomework : studentHomeworks) {
+				if (studentHomework.getIsSent() && studentHomework.getSentFileId() != 0 && studentHomework.getIsCorrected()) {
+					User student = UserLocalServiceUtil.getUser(studentHomework.getStudentId());
+					String content = teacher.getFullName() + " a corrigé le devoir " + homework.getTitle() + " de " + student.getFullName();
+					MobileDeviceLocalServiceUtil.pushNotificationToUser(studentHomework.getStudentId(), title, "", content,
+							MobileConstants.HOMEWORK_TYPE, homeworkId);
+					logger.info("Pushed correction to student " + student.getFullName());
+				}
+			}
 		}
+
 	}
 }

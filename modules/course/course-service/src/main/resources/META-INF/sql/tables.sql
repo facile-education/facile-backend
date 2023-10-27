@@ -22,7 +22,8 @@ create table Course_Homework (
 	isCustomStudentList BOOLEAN,
 	estimatedTime INTEGER,
 	publicationDate DATE null,
-	isDraft BOOLEAN
+	isDraft BOOLEAN,
+	isCorrectionSent BOOLEAN
 );
 
 create table Course_SessionContent (

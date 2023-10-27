@@ -50,10 +50,7 @@ public interface HomeworkService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.nero.course.service.impl.HomeworkServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the homework remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link HomeworkServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "cancel-drop")
-	public JSONObject cancelDrop(long homeworkId) throws SystemException;
-
-	@JSONWebService(method = "GET", value = "correct-file")
+	@JSONWebService(method = "POST", value = "correct-file")
 	public JSONObject correctFile(
 			long homeworkId, long studentId, String comment)
 		throws SystemException;
@@ -74,6 +71,10 @@ public interface HomeworkService extends BaseService {
 			String publicationDateStr, boolean isDraft)
 		throws PortalException;
 
+	@JSONWebService(method = "GET", value = "delete-dropped-file")
+	public JSONObject deleteDroppedFile(long homeworkId, long fileEntryId)
+		throws SystemException;
+
 	@JSONWebService(method = "POST", value = "delete-homework")
 	public JSONObject deleteHomework(long homeworkId) throws SystemException;
 
@@ -84,6 +85,10 @@ public interface HomeworkService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-students-done-status")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getHomeworkDoneStatus(long homeworkId);
+
+	@JSONWebService(method = "GET", value = "get-homework-status")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getHomeworkStatus(long homeworkId);
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -101,7 +106,16 @@ public interface HomeworkService extends BaseService {
 
 	@JSONWebService(method = "GET", value = "get-teacher-homeworks-to-correct")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getTeacherHomeworksToCorrect() throws SystemException;
+	public JSONObject getTeacherHomeworksToCorrect(long courseId)
+		throws SystemException;
+
+	@JSONWebService(method = "POST", value = "get-work-load")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getWorkLoad(
+		long courseId, String students, String startDate, String endDate);
+
+	@JSONWebService(method = "GET", value = "send-corrections")
+	public JSONObject sendCorrections(long homeworkId) throws SystemException;
 
 	@JSONWebService(method = "GET", value = "set-homework-done")
 	public JSONObject setHomeworkDone(long homeworkId, boolean isDone);

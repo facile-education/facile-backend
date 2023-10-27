@@ -62,7 +62,7 @@ public class HomeworkCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{homeworkId=");
 		sb.append(homeworkId);
@@ -90,6 +90,8 @@ public class HomeworkCacheModel
 		sb.append(publicationDate);
 		sb.append(", isDraft=");
 		sb.append(isDraft);
+		sb.append(", isCorrectionSent=");
+		sb.append(isCorrectionSent);
 		sb.append("}");
 
 		return sb.toString();
@@ -139,6 +141,7 @@ public class HomeworkCacheModel
 		}
 
 		homeworkImpl.setIsDraft(isDraft);
+		homeworkImpl.setIsCorrectionSent(isCorrectionSent);
 
 		homeworkImpl.resetOriginalValues();
 
@@ -168,6 +171,8 @@ public class HomeworkCacheModel
 		publicationDate = objectInput.readLong();
 
 		isDraft = objectInput.readBoolean();
+
+		isCorrectionSent = objectInput.readBoolean();
 	}
 
 	@Override
@@ -200,6 +205,8 @@ public class HomeworkCacheModel
 		objectOutput.writeLong(publicationDate);
 
 		objectOutput.writeBoolean(isDraft);
+
+		objectOutput.writeBoolean(isCorrectionSent);
 	}
 
 	public long homeworkId;
@@ -215,5 +222,6 @@ public class HomeworkCacheModel
 	public int estimatedTime;
 	public long publicationDate;
 	public boolean isDraft;
+	public boolean isCorrectionSent;
 
 }

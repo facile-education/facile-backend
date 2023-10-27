@@ -34,6 +34,7 @@
 		<column name="estimatedTime" type="int"/>
 		<column name="publicationDate" type="Date"/>
 		<column name="isDraft" type="boolean" />
+		<column name="isCorrectionSent" type="boolean" />
 
 		<finder return-type="Collection" name="courseId">
 			<finder-column name="courseId" />

@@ -61,19 +61,7 @@ public class HomeworkLocalServiceUtil {
 		return getService().addHomework(homework);
 	}
 
-	public static void cancelDrop(long studentId, long homeworkId)
-		throws PortalException {
-
-		getService().cancelDrop(studentId, homeworkId);
-	}
-
-	public static void correctFile(
-		long homeworkId, long studentId, String comment) {
-
-		getService().correctFile(homeworkId, studentId, comment);
-	}
-
-	public static int countHomeworksToCorrect(long teacherId) {
+	public static org.json.JSONArray countHomeworksToCorrect(long teacherId) {
 		return getService().countHomeworksToCorrect(teacherId);
 	}
 
@@ -170,13 +158,6 @@ public class HomeworkLocalServiceUtil {
 
 	public static boolean deleteSessionHomeworks(long sessionId) {
 		return getService().deleteSessionHomeworks(sessionId);
-	}
-
-	public static void dropHomeworkFile(
-			long studentId, long homeworkId, long fileEntryId)
-		throws PortalException {
-
-		getService().dropHomeworkFile(studentId, homeworkId, fileEntryId);
 	}
 
 	public static <T> T dslQuery(DSLQuery dslQuery) {
@@ -387,10 +368,16 @@ public class HomeworkLocalServiceUtil {
 			studentId, minDate, maxDate, undoneOnly);
 	}
 
-	public static List<Homework> getTeacherHomeworksToCorrect(
-		com.liferay.portal.kernel.model.User teacher) {
+	public static List<Homework> getStudentsHomeworks(
+		List<Long> studentIds, java.util.Date minDate, java.util.Date maxDate) {
 
-		return getService().getTeacherHomeworksToCorrect(teacher);
+		return getService().getStudentsHomeworks(studentIds, minDate, maxDate);
+	}
+
+	public static List<Homework> getTeacherHomeworksToCorrect(
+		long teacherId, long courseId) {
+
+		return getService().getTeacherHomeworksToCorrect(teacherId, courseId);
 	}
 
 	public static boolean hasHomeworksGivenDuringSession(long sessionId) {
@@ -399,6 +386,12 @@ public class HomeworkLocalServiceUtil {
 
 	public static boolean hasHomeworksToDoForSession(long sessionId) {
 		return getService().hasHomeworksToDoForSession(sessionId);
+	}
+
+	public static void sendCorrections(long teacherId, long homeworkId)
+		throws PortalException {
+
+		getService().sendCorrections(teacherId, homeworkId);
 	}
 
 	/**

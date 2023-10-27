@@ -54,19 +54,7 @@ public class HomeworkLocalServiceWrapper
 	}
 
 	@Override
-	public void cancelDrop(long studentId, long homeworkId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		_homeworkLocalService.cancelDrop(studentId, homeworkId);
-	}
-
-	@Override
-	public void correctFile(long homeworkId, long studentId, String comment) {
-		_homeworkLocalService.correctFile(homeworkId, studentId, comment);
-	}
-
-	@Override
-	public int countHomeworksToCorrect(long teacherId) {
+	public org.json.JSONArray countHomeworksToCorrect(long teacherId) {
 		return _homeworkLocalService.countHomeworksToCorrect(teacherId);
 	}
 
@@ -179,15 +167,6 @@ public class HomeworkLocalServiceWrapper
 	@Override
 	public boolean deleteSessionHomeworks(long sessionId) {
 		return _homeworkLocalService.deleteSessionHomeworks(sessionId);
-	}
-
-	@Override
-	public void dropHomeworkFile(
-			long studentId, long homeworkId, long fileEntryId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		_homeworkLocalService.dropHomeworkFile(
-			studentId, homeworkId, fileEntryId);
 	}
 
 	@Override
@@ -445,10 +424,20 @@ public class HomeworkLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.weprode.nero.course.model.Homework>
-		getTeacherHomeworksToCorrect(
-			com.liferay.portal.kernel.model.User teacher) {
+		getStudentsHomeworks(
+			java.util.List<Long> studentIds, java.util.Date minDate,
+			java.util.Date maxDate) {
 
-		return _homeworkLocalService.getTeacherHomeworksToCorrect(teacher);
+		return _homeworkLocalService.getStudentsHomeworks(
+			studentIds, minDate, maxDate);
+	}
+
+	@Override
+	public java.util.List<com.weprode.nero.course.model.Homework>
+		getTeacherHomeworksToCorrect(long teacherId, long courseId) {
+
+		return _homeworkLocalService.getTeacherHomeworksToCorrect(
+			teacherId, courseId);
 	}
 
 	@Override
@@ -459,6 +448,13 @@ public class HomeworkLocalServiceWrapper
 	@Override
 	public boolean hasHomeworksToDoForSession(long sessionId) {
 		return _homeworkLocalService.hasHomeworksToDoForSession(sessionId);
+	}
+
+	@Override
+	public void sendCorrections(long teacherId, long homeworkId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_homeworkLocalService.sendCorrections(teacherId, homeworkId);
 	}
 
 	/**

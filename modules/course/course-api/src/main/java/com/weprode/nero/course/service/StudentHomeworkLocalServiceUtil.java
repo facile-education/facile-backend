@@ -62,6 +62,16 @@ public class StudentHomeworkLocalServiceUtil {
 		return getService().addStudentHomework(studentHomework);
 	}
 
+	public static void correctFile(
+		long homeworkId, long studentId, String comment) {
+
+		getService().correctFile(homeworkId, studentId, comment);
+	}
+
+	public static int countCorrectedWorks(long homeworkId) {
+		return getService().countCorrectedWorks(homeworkId);
+	}
+
 	/**
 	 * @throws PortalException
 	 */
@@ -82,6 +92,13 @@ public class StudentHomeworkLocalServiceUtil {
 		long studentHomeworkId) {
 
 		return getService().createStudentHomework(studentHomeworkId);
+	}
+
+	public static void deleteDroppedFile(
+			long studentId, long homeworkId, long fileEntryId)
+		throws PortalException {
+
+		getService().deleteDroppedFile(studentId, homeworkId, fileEntryId);
 	}
 
 	/**
@@ -125,6 +142,13 @@ public class StudentHomeworkLocalServiceUtil {
 		StudentHomework studentHomework) {
 
 		return getService().deleteStudentHomework(studentHomework);
+	}
+
+	public static void dropHomeworkFile(
+			long studentId, long homeworkId, long fileEntryId)
+		throws java.io.IOException, PortalException {
+
+		getService().dropHomeworkFile(studentId, homeworkId, fileEntryId);
 	}
 
 	public static <T> T dslQuery(DSLQuery dslQuery) {
@@ -222,6 +246,10 @@ public class StudentHomeworkLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static org.json.JSONArray getHomeworkStatus(long homeworkId) {
+		return getService().getHomeworkStatus(homeworkId);
+	}
+
 	/**
 	 * Get all students having given homework Id
 	 */
@@ -260,10 +288,6 @@ public class StudentHomeworkLocalServiceUtil {
 		throws PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
-	}
-
-	public static org.json.JSONArray getSentFiles(long homeworkId) {
-		return getService().getSentFiles(homeworkId);
 	}
 
 	/**
@@ -339,6 +363,13 @@ public class StudentHomeworkLocalServiceUtil {
 		return getService().hasStudentHomework(studentId, homeworkId);
 	}
 
+	public static boolean hasStudentSentFile(
+		long studentId, long homeworkId, long fileEntryId) {
+
+		return getService().hasStudentSentFile(
+			studentId, homeworkId, fileEntryId);
+	}
+
 	public static boolean removeHomework(long homeworkId) {
 		return getService().removeHomework(homeworkId);
 	}
@@ -355,10 +386,10 @@ public class StudentHomeworkLocalServiceUtil {
 		return getService().setHomeworkDone(homeworkId, studentId, isDone);
 	}
 
-	public static boolean setHomeworkSent(
+	public static void setHomeworkSent(
 		long studentId, long homeworkId, long fileEntryId) {
 
-		return getService().setHomeworkSent(studentId, homeworkId, fileEntryId);
+		getService().setHomeworkSent(studentId, homeworkId, fileEntryId);
 	}
 
 	/**

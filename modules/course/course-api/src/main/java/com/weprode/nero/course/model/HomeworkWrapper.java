@@ -55,6 +55,7 @@ public class HomeworkWrapper
 		attributes.put("estimatedTime", getEstimatedTime());
 		attributes.put("publicationDate", getPublicationDate());
 		attributes.put("isDraft", isIsDraft());
+		attributes.put("isCorrectionSent", isIsCorrectionSent());
 
 		return attributes;
 	}
@@ -139,6 +140,12 @@ public class HomeworkWrapper
 		if (isDraft != null) {
 			setIsDraft(isDraft);
 		}
+
+		Boolean isCorrectionSent = (Boolean)attributes.get("isCorrectionSent");
+
+		if (isCorrectionSent != null) {
+			setIsCorrectionSent(isCorrectionSent);
+		}
 	}
 
 	@Override
@@ -191,6 +198,16 @@ public class HomeworkWrapper
 	@Override
 	public int getHomeworkType() {
 		return model.getHomeworkType();
+	}
+
+	/**
+	 * Returns the is correction sent of this homework.
+	 *
+	 * @return the is correction sent of this homework
+	 */
+	@Override
+	public boolean getIsCorrectionSent() {
+		return model.getIsCorrectionSent();
 	}
 
 	/**
@@ -294,6 +311,16 @@ public class HomeworkWrapper
 	}
 
 	/**
+	 * Returns <code>true</code> if this homework is is correction sent.
+	 *
+	 * @return <code>true</code> if this homework is is correction sent; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isIsCorrectionSent() {
+		return model.isIsCorrectionSent();
+	}
+
+	/**
 	 * Returns <code>true</code> if this homework is is custom student list.
 	 *
 	 * @return <code>true</code> if this homework is is custom student list; <code>false</code> otherwise
@@ -356,6 +383,16 @@ public class HomeworkWrapper
 	@Override
 	public void setHomeworkType(int homeworkType) {
 		model.setHomeworkType(homeworkType);
+	}
+
+	/**
+	 * Sets whether this homework is is correction sent.
+	 *
+	 * @param isCorrectionSent the is correction sent of this homework
+	 */
+	@Override
+	public void setIsCorrectionSent(boolean isCorrectionSent) {
+		model.setIsCorrectionSent(isCorrectionSent);
 	}
 
 	/**

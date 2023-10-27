@@ -35,13 +35,6 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject cancelDrop(long homeworkId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-
-		return _homeworkService.cancelDrop(homeworkId);
-	}
-
-	@Override
 	public org.json.JSONObject correctFile(
 			long homeworkId, long studentId, String comment)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -80,6 +73,14 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject deleteDroppedFile(
+			long homeworkId, long fileEntryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _homeworkService.deleteDroppedFile(homeworkId, fileEntryId);
+	}
+
+	@Override
 	public org.json.JSONObject deleteHomework(long homeworkId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
@@ -97,6 +98,11 @@ public class HomeworkServiceWrapper
 	@Override
 	public org.json.JSONObject getHomeworkDoneStatus(long homeworkId) {
 		return _homeworkService.getHomeworkDoneStatus(homeworkId);
+	}
+
+	@Override
+	public org.json.JSONObject getHomeworkStatus(long homeworkId) {
+		return _homeworkService.getHomeworkStatus(homeworkId);
 	}
 
 	/**
@@ -121,10 +127,25 @@ public class HomeworkServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getTeacherHomeworksToCorrect()
+	public org.json.JSONObject getTeacherHomeworksToCorrect(long courseId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
-		return _homeworkService.getTeacherHomeworksToCorrect();
+		return _homeworkService.getTeacherHomeworksToCorrect(courseId);
+	}
+
+	@Override
+	public org.json.JSONObject getWorkLoad(
+		long courseId, String students, String startDate, String endDate) {
+
+		return _homeworkService.getWorkLoad(
+			courseId, students, startDate, endDate);
+	}
+
+	@Override
+	public org.json.JSONObject sendCorrections(long homeworkId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _homeworkService.sendCorrections(homeworkId);
 	}
 
 	@Override

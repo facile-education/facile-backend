@@ -23,14 +23,13 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlParserUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.course.CourseConstants;
 import com.weprode.nero.course.model.ContentBlock;
 import com.weprode.nero.course.model.StudentHomework;
 import com.weprode.nero.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.nero.course.service.StudentHomeworkLocalServiceUtil;
-import com.weprode.nero.course.CourseConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.nero.schedule.exception.NoSuchCDTSessionException;
 import com.weprode.nero.schedule.model.CDTSession;
 import com.weprode.nero.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.nero.schedule.service.CourseDetailsLocalServiceUtil;
@@ -84,13 +83,6 @@ public class HomeworkImpl extends HomeworkBaseImpl {
                     jsonHomework.put(JSONConstants.SENT_FILE_ID, studentHomework.getSentFileId());
                 }
             }
-        }
-
-        // Sent files
-        if (RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            jsonHomework.put(JSONConstants.SENT_FILES, StudentHomeworkLocalServiceUtil.getSentFiles(getHomeworkId()));
-        } else if (RoleUtilsLocalServiceUtil.isStudent(user)) {
-            jsonHomework.put(JSONConstants.SENT_FILE, StudentHomeworkLocalServiceUtil.getStudentSentFile(user.getUserId(), getHomeworkId()));
         }
 
         long referenceSessionId = (this.getTargetSessionId() != 0) ? this.getTargetSessionId() : this.getSourceSessionId();
@@ -171,6 +163,12 @@ public class HomeworkImpl extends HomeworkBaseImpl {
             // Students having done the homework
             List<User> doneStudents = StudentHomeworkLocalServiceUtil.getStudentsHavingDoneHomework(this.getHomeworkId());
             jsonHomework.put(JSONConstants.DONE_STUDENTS, UserUtilsLocalServiceUtil.convertUsersToJson(doneStudents));
+
+            // Number of corrected files
+            jsonHomework.put(JSONConstants.NB_CORRECTED, StudentHomeworkLocalServiceUtil.countCorrectedWorks(this.getHomeworkId()));
+
+            // Is the correction sent ?
+            jsonHomework.put(JSONConstants.IS_CORRECTION_SENT, this.isIsCorrectionSent());
         }
 
         if (includeBlocks) {

@@ -21,11 +21,15 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.nero.commons.JSONProxy;
 import com.weprode.nero.commons.constants.JSONConstants;
+import com.weprode.nero.contact.service.ContactLocalServiceUtil;
 import com.weprode.nero.course.exception.UnauthorizedUrlException;
 import com.weprode.nero.course.model.Homework;
 import com.weprode.nero.course.service.ContentBlockLocalServiceUtil;
@@ -67,7 +71,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User currentUser;
 		try {
 			currentUser = getGuestOrUser();
-			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (currentUser.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -109,13 +113,13 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 	}
 
 	@JSONWebService(value = "get-teacher-homeworks-to-correct", method = "GET")
-	public JSONObject getTeacherHomeworksToCorrect() throws SystemException {
+	public JSONObject getTeacherHomeworksToCorrect(long courseId) throws SystemException {
 		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -127,7 +131,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 		logger.info("Teacher " + user.getFullName() + " fetches his homeworks to correct");
 		JSONArray homeworks = new JSONArray();
-		List<Homework> homeworkList = HomeworkLocalServiceUtil.getTeacherHomeworksToCorrect(user);
+		List<Homework> homeworkList = HomeworkLocalServiceUtil.getTeacherHomeworksToCorrect(user.getUserId(), courseId);
 		for (Homework homework : homeworkList) {
 			JSONObject homeworkJson = homework.convertToJSON(user, true);
 			homeworks.put(homeworkJson);
@@ -145,7 +149,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -182,7 +186,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -192,7 +196,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
-		int nbHomeworksToCorrect = HomeworkLocalServiceUtil.countHomeworksToCorrect(user.getUserId());
+		JSONArray nbHomeworksToCorrect = HomeworkLocalServiceUtil.countHomeworksToCorrect(user.getUserId());
 		result.put(JSONConstants.NB_HOMEWORKS_TO_CORRECT, nbHomeworksToCorrect);
 		result.put(JSONConstants.SUCCESS, true);
 		return result;
@@ -205,7 +209,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -227,7 +231,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -254,6 +258,64 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		return result;
 	}
 
+	@JSONWebService(value = "get-work-load", method = "POST")
+	public JSONObject getWorkLoad(long courseId, String students, String startDate, String endDate) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		logger.info("Teacher " + user.getFullName() + " displays work load for " + (courseId != 0 ? "course " + courseId : "n students"));
+		try {
+			Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDate);
+			Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDate);
+
+			List<Long> studentIds = new ArrayList<>();
+			if (courseId != 0) {
+				// Get all course students
+				Role studentRole = RoleUtilsLocalServiceUtil.getStudentRole();
+				Group courseGroup = GroupLocalServiceUtil.getGroup(courseId);
+				List<User> courseStudents = ContactLocalServiceUtil.getListMembers(user, studentRole.getRoleId(), courseGroup.getClassPK());
+				for (User student : courseStudents) {
+					studentIds.add(student.getUserId());
+				}
+			} else {
+				// Workload for a subset of students
+				JSONArray jsonStudents = new JSONArray(students);
+				for (int i = 0 ; i < jsonStudents.length() ; i++) {
+					JSONObject jsonStudent = jsonStudents.getJSONObject(i);
+					studentIds.add(jsonStudent.getLong(JSONConstants.USER_ID));
+				}
+			}
+			List<Homework> homeworkList = HomeworkLocalServiceUtil.getStudentsHomeworks(studentIds, minDate, maxDate);
+
+			// Convert to JSON
+			JSONArray homeworks = new JSONArray();
+			for (Homework homework : homeworkList) {
+				JSONObject homeworkJson = homework.convertToJSON(user, false);
+				homeworks.put(homeworkJson);
+			}
+
+			result.put(JSONConstants.HOMEWORKS, homeworks);
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error fetching workload", e);
+		}
+
+		return result;
+	}
+
 	@JSONWebService(value = "create-homework", method = "POST")
 	public JSONObject createHomework(long courseId, String title, long sourceSessionId, long targetSessionId, String targetDateStr, int homeworkType, int estimatedTime, String students, String blocks, String publicationDateStr, boolean isDraft) throws PortalException {
 		JSONObject result = new JSONObject();
@@ -261,7 +323,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -283,17 +345,17 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			result.put(JSONConstants.SUCCESS, false);
 			return result;
 		}
-			List<Long> studentIds = new ArrayList<>();
-			if (!students.equals("")) {
-				JSONArray jsonStudents = new JSONArray(students);
-				for (int i = 0 ; i < jsonStudents.length() ; i++) {
-					JSONObject jsonStudent = jsonStudents.getJSONObject(i);
-					studentIds.add(jsonStudent.getLong(JSONConstants.USER_ID));
-				}
+		List<Long> studentIds = new ArrayList<>();
+		if (!students.equals("")) {
+			JSONArray jsonStudents = new JSONArray(students);
+			for (int i = 0 ; i < jsonStudents.length() ; i++) {
+				JSONObject jsonStudent = jsonStudents.getJSONObject(i);
+				studentIds.add(jsonStudent.getLong(JSONConstants.USER_ID));
 			}
-			Homework homework = HomeworkLocalServiceUtil.createHomework(user, title, sourceSessionId, targetSessionId, courseId, targetDate, homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
+		}
+		Homework homework = HomeworkLocalServiceUtil.createHomework(user, title, sourceSessionId, targetSessionId, courseId, targetDate, homeworkType, estimatedTime, studentIds, publicationDate, isDraft);
 
-			try {
+		try {
 			// Create blocks
 			JSONArray jsonBlocks = new JSONArray(blocks);
 			for (int i = 0 ; i < jsonBlocks.length() ; i++) {
@@ -320,7 +382,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -383,7 +445,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -402,7 +464,6 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		return result;
 	}
 
-
 	@JSONWebService(value = "drop-homework-file", method = "GET")
 	public JSONObject dropHomeworkFile(long homeworkId, long fileEntryId) throws SystemException {
 		JSONObject result = new JSONObject();
@@ -410,18 +471,23 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isStudent(user)) {
+			logger.error("User " + user.getFullName() + " tries to drop file " + fileEntryId + " but is not a student");
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+		if (!StudentHomeworkLocalServiceUtil.hasStudentHomework(user.getUserId(), homeworkId)) {
+			logger.error("User " + user.getFullName() + " tries to drop file " + fileEntryId + " but has not homework " + homeworkId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
-			HomeworkLocalServiceUtil.dropHomeworkFile(user.getUserId(), homeworkId, fileEntryId);
+			StudentHomeworkLocalServiceUtil.dropHomeworkFile(user.getUserId(), homeworkId, fileEntryId);
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -431,14 +497,14 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "cancel-drop", method = "GET")
-	public JSONObject cancelDrop(long homeworkId) throws SystemException {
+	@JSONWebService(value = "delete-dropped-file", method = "GET")
+	public JSONObject deleteDroppedFile(long homeworkId, long fileEntryId) throws SystemException {
 		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -447,9 +513,14 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		if (!RoleUtilsLocalServiceUtil.isStudent(user)) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
+		// Check that the student drops one of his files
+		if (!StudentHomeworkLocalServiceUtil.hasStudentSentFile(user.getUserId(), homeworkId, fileEntryId)) {
+			logger.error("Student " + user.getFullName() + " tries to drop file " + fileEntryId + " but does not own it");
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
 
 		try {
-			HomeworkLocalServiceUtil.cancelDrop(user.getUserId(), homeworkId);
+			StudentHomeworkLocalServiceUtil.deleteDroppedFile(user.getUserId(), homeworkId, fileEntryId);
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -459,25 +530,100 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "correct-file", method = "GET")
+
+	@JSONWebService(value = "get-homework-status", method = "GET")
+	public JSONObject getHomeworkStatus(long homeworkId) {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			// Check that the teacher owns the homework
+			Homework homework = HomeworkLocalServiceUtil.getHomework(homeworkId);
+			if (homework.getTeacherId() != user.getUserId()) {
+				logger.error("Teacher " + user.getFullName() + " tries to correct file but he does not own the homework");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			result.put(JSONConstants.HOMEWORK_STATUS, StudentHomeworkLocalServiceUtil.getHomeworkStatus(homeworkId));
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error when teacher " + user.getUserId() + " corrects file for homeworkId " + homeworkId);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
+	@JSONWebService(value = "correct-file", method = "POST")
 	public JSONObject correctFile(long homeworkId, long studentId, String comment) throws SystemException {
 		JSONObject result = new JSONObject();
 
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		if (!RoleUtilsLocalServiceUtil.isStudent(user)) {
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
-			HomeworkLocalServiceUtil.correctFile(homeworkId, studentId, comment);
+			// Check that the teacher owns the homework
+			Homework homework = HomeworkLocalServiceUtil.getHomework(homeworkId);
+			if (homework.getTeacherId() != user.getUserId()) {
+				logger.error("Teacher " + user.getFullName() + " tries to correct file but he does not own the homework");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			StudentHomeworkLocalServiceUtil.correctFile(homeworkId, studentId, comment);
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error when teacher " + user.getUserId() + " corrects file for homeworkId " + homeworkId);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
+	@JSONWebService(value = "send-corrections", method = "GET")
+	public JSONObject sendCorrections(long homeworkId) throws SystemException {
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			// Check that the teacher owns the homework
+			Homework homework = HomeworkLocalServiceUtil.getHomework(homeworkId);
+			if (homework.getTeacherId() != user.getUserId()) {
+				logger.error("Teacher " + user.getFullName() + " tries to send corrections but he does not own the homework");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			HomeworkLocalServiceUtil.sendCorrections(user.getUserId(), homeworkId);
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {

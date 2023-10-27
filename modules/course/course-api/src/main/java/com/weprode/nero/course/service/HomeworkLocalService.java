@@ -40,6 +40,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -79,12 +81,7 @@ public interface HomeworkLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Homework addHomework(Homework homework);
 
-	public void cancelDrop(long studentId, long homeworkId)
-		throws PortalException;
-
-	public void correctFile(long homeworkId, long studentId, String comment);
-
-	public int countHomeworksToCorrect(long teacherId);
+	public JSONArray countHomeworksToCorrect(long teacherId);
 
 	public int countUndoneHomeworks(long studentId);
 
@@ -150,10 +147,6 @@ public interface HomeworkLocalService
 		throws PortalException;
 
 	public boolean deleteSessionHomeworks(long sessionId);
-
-	public void dropHomeworkFile(
-			long studentId, long homeworkId, long fileEntryId)
-		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T> T dslQuery(DSLQuery dslQuery);
@@ -312,13 +305,21 @@ public interface HomeworkLocalService
 		long studentId, Date minDate, Date maxDate, boolean undoneOnly);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Homework> getTeacherHomeworksToCorrect(User teacher);
+	public List<Homework> getStudentsHomeworks(
+		List<Long> studentIds, Date minDate, Date maxDate);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Homework> getTeacherHomeworksToCorrect(
+		long teacherId, long courseId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasHomeworksGivenDuringSession(long sessionId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasHomeworksToDoForSession(long sessionId);
+
+	public void sendCorrections(long teacherId, long homeworkId)
+		throws PortalException;
 
 	/**
 	 * Updates the homework in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
