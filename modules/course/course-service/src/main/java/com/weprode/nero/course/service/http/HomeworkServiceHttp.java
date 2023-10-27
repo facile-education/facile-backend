@@ -101,7 +101,7 @@ public class HomeworkServiceHttp {
 	}
 
 	public static org.json.JSONObject getTeacherHomeworksToCorrect(
-			HttpPrincipal httpPrincipal)
+			HttpPrincipal httpPrincipal, long courseId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		try {
@@ -109,7 +109,8 @@ public class HomeworkServiceHttp {
 				HomeworkServiceUtil.class, "getTeacherHomeworksToCorrect",
 				_getTeacherHomeworksToCorrectParameterTypes1);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey);
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, courseId);
 
 			Object returnObj = null;
 
@@ -283,6 +284,39 @@ public class HomeworkServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getWorkLoad(
+		HttpPrincipal httpPrincipal, long courseId, String students,
+		String startDate, String endDate) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				HomeworkServiceUtil.class, "getWorkLoad",
+				_getWorkLoadParameterTypes6);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, courseId, students, startDate, endDate);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject createHomework(
 			HttpPrincipal httpPrincipal, long courseId, String title,
 			long sourceSessionId, long targetSessionId, String targetDateStr,
@@ -293,7 +327,7 @@ public class HomeworkServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				HomeworkServiceUtil.class, "createHomework",
-				_createHomeworkParameterTypes6);
+				_createHomeworkParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, courseId, title, sourceSessionId, targetSessionId,
@@ -338,7 +372,7 @@ public class HomeworkServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				HomeworkServiceUtil.class, "updateHomework",
-				_updateHomeworkParameterTypes7);
+				_updateHomeworkParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, homeworkId, title, targetSessionId, targetDateStr,
@@ -379,7 +413,7 @@ public class HomeworkServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				HomeworkServiceUtil.class, "deleteHomework",
-				_deleteHomeworkParameterTypes8);
+				_deleteHomeworkParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, homeworkId);
@@ -419,7 +453,7 @@ public class HomeworkServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				HomeworkServiceUtil.class, "dropHomeworkFile",
-				_dropHomeworkFileParameterTypes9);
+				_dropHomeworkFileParameterTypes10);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, homeworkId, fileEntryId);
@@ -452,17 +486,17 @@ public class HomeworkServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject cancelDrop(
-			HttpPrincipal httpPrincipal, long homeworkId)
+	public static org.json.JSONObject deleteDroppedFile(
+			HttpPrincipal httpPrincipal, long homeworkId, long fileEntryId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				HomeworkServiceUtil.class, "cancelDrop",
-				_cancelDropParameterTypes10);
+				HomeworkServiceUtil.class, "deleteDroppedFile",
+				_deleteDroppedFileParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, homeworkId);
+				methodKey, homeworkId, fileEntryId);
 
 			Object returnObj = null;
 
@@ -492,6 +526,38 @@ public class HomeworkServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getHomeworkStatus(
+		HttpPrincipal httpPrincipal, long homeworkId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				HomeworkServiceUtil.class, "getHomeworkStatus",
+				_getHomeworkStatusParameterTypes12);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, homeworkId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject correctFile(
 			HttpPrincipal httpPrincipal, long homeworkId, long studentId,
 			String comment)
@@ -500,10 +566,50 @@ public class HomeworkServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				HomeworkServiceUtil.class, "correctFile",
-				_correctFileParameterTypes11);
+				_correctFileParameterTypes13);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, homeworkId, studentId, comment);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.SystemException) {
+
+					throw (com.liferay.portal.kernel.exception.SystemException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject sendCorrections(
+			HttpPrincipal httpPrincipal, long homeworkId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				HomeworkServiceUtil.class, "sendCorrections",
+				_sendCorrectionsParameterTypes14);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, homeworkId);
 
 			Object returnObj = null;
 
@@ -538,7 +644,7 @@ public class HomeworkServiceHttp {
 	private static final Class<?>[] _getStudentHomeworksParameterTypes0 =
 		new Class[] {long.class, String.class, String.class, boolean.class};
 	private static final Class<?>[]
-		_getTeacherHomeworksToCorrectParameterTypes1 = new Class[] {};
+		_getTeacherHomeworksToCorrectParameterTypes1 = new Class[] {long.class};
 	private static final Class<?>[] _countUndoneHomeworksParameterTypes2 =
 		new Class[] {long.class, String.class, String.class};
 	private static final Class<?>[] _countHomeworksToCorrectParameterTypes3 =
@@ -547,26 +653,32 @@ public class HomeworkServiceHttp {
 		new Class[] {long.class, boolean.class};
 	private static final Class<?>[] _getHomeworkDoneStatusParameterTypes5 =
 		new Class[] {long.class};
-	private static final Class<?>[] _createHomeworkParameterTypes6 =
+	private static final Class<?>[] _getWorkLoadParameterTypes6 = new Class[] {
+		long.class, String.class, String.class, String.class
+	};
+	private static final Class<?>[] _createHomeworkParameterTypes7 =
 		new Class[] {
 			long.class, String.class, long.class, long.class, String.class,
 			int.class, int.class, String.class, String.class, String.class,
 			boolean.class
 		};
-	private static final Class<?>[] _updateHomeworkParameterTypes7 =
+	private static final Class<?>[] _updateHomeworkParameterTypes8 =
 		new Class[] {
 			long.class, String.class, long.class, String.class, int.class,
 			String.class, String.class, String.class, boolean.class
 		};
-	private static final Class<?>[] _deleteHomeworkParameterTypes8 =
+	private static final Class<?>[] _deleteHomeworkParameterTypes9 =
 		new Class[] {long.class};
-	private static final Class<?>[] _dropHomeworkFileParameterTypes9 =
+	private static final Class<?>[] _dropHomeworkFileParameterTypes10 =
 		new Class[] {long.class, long.class};
-	private static final Class<?>[] _cancelDropParameterTypes10 = new Class[] {
-		long.class
-	};
-	private static final Class<?>[] _correctFileParameterTypes11 = new Class[] {
+	private static final Class<?>[] _deleteDroppedFileParameterTypes11 =
+		new Class[] {long.class, long.class};
+	private static final Class<?>[] _getHomeworkStatusParameterTypes12 =
+		new Class[] {long.class};
+	private static final Class<?>[] _correctFileParameterTypes13 = new Class[] {
 		long.class, long.class, String.class
 	};
+	private static final Class<?>[] _sendCorrectionsParameterTypes14 =
+		new Class[] {long.class};
 
 }

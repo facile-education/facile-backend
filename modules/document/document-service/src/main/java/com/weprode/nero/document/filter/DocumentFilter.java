@@ -49,6 +49,7 @@ public class DocumentFilter extends BaseFilter {
             User user = UserLocalServiceUtil.getUser(userId);
 
             // URI split : /documents/{repositoryId}/{folderId}/{fileTitle}/...
+            logger.info("URI=" + httpServletRequest.getRequestURI());
             String[] splitURI = httpServletRequest.getRequestURI().split("/documents/");
             String[] splitPath = splitURI[1].split("/");
             long groupId = Long.parseLong(splitPath[0]);

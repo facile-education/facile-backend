@@ -15,16 +15,25 @@
 package com.weprode.nero.course.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.course.model.StudentHomework;
+import com.weprode.nero.course.service.HomeworkLocalServiceUtil;
+import com.weprode.nero.course.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.nero.course.service.base.StudentHomeworkLocalServiceBaseImpl;
+import com.weprode.nero.document.service.FileUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -89,21 +98,18 @@ public class StudentHomeworkLocalServiceImpl
 		}
 	}
 
-	public boolean setHomeworkSent(long studentId, long homeworkId, long fileEntryId) {
+	public void setHomeworkSent(long studentId, long homeworkId, long fileEntryId) {
 
 		try {
 			StudentHomework studentHomework = getOrCreateStudentHomework(homeworkId, studentId);
-			if (!studentHomework.getIsSent()) {
-				studentHomework.setIsDone(true);
-				studentHomework.setIsSent(true);
-			}
+			studentHomework.setIsDone(true);
+			studentHomework.setIsSent(true);
 			studentHomework.setSentDate(new Date());
 			studentHomework.setSentFileId(fileEntryId);
 			studentHomework.setIsCorrected(false);
 			studentHomeworkPersistence.update(studentHomework);
-			return true;
 		} catch (Exception e) {
-			return false;
+			logger.error("Error setting homework " + homeworkId + " sent with fileEntryId " + fileEntryId);
 		}
 	}
 
@@ -175,22 +181,20 @@ public class StudentHomeworkLocalServiceImpl
 		return students;
 	}
 
-	public JSONArray getSentFiles(long homeworkId) {
-		JSONArray sentFiles = new JSONArray();
+	public boolean hasStudentSentFile(long studentId, long homeworkId, long fileEntryId) {
 		try {
 			List<StudentHomework> studentHomeworkList = studentHomeworkPersistence.findByhomeworkId(homeworkId);
 			if (studentHomeworkList != null && !studentHomeworkList.isEmpty()) {
 				for (StudentHomework studentHomework : studentHomeworkList) {
-					if (studentHomework.getIsSent()) {
-						JSONObject jsonFile = studentHomework.convertToJSON();
-						sentFiles.put(jsonFile);
+					if (studentHomework.getIsSent() && studentHomework.getStudentId() == studentId && studentHomework.getSentFileId() == fileEntryId) {
+						return true;
 					}
 				}
 			}
 		} catch (Exception e) {
-			logger.error("Error fetching students having done homeworkId " + homeworkId, e);
+			logger.error("Error fetching if student " + studentId + " has sent file " + fileEntryId + " for homeworkId " + homeworkId, e);
 		}
-		return sentFiles;
+		return false;
 	}
 
 	public JSONObject getStudentSentFile(long studentId, long homeworkId) {
@@ -201,6 +205,88 @@ public class StudentHomeworkLocalServiceImpl
 			logger.error("Error fetching sent file for studentId " + studentId + " and homeworkId " + homeworkId, e);
 		}
 		return null;
+	}
+
+	public void dropHomeworkFile(long studentId, long homeworkId, long fileEntryId) throws PortalException, IOException {
+
+		// Check if a file was previously dropped by the student -> delete it
+		StudentHomework studentHomework = StudentHomeworkLocalServiceUtil.getStudentHomework(homeworkId, studentId);
+		if (studentHomework != null && studentHomework.getIsSent() && studentHomework.getSentFileId() != 0) {
+			FileUtilsLocalServiceUtil.deleteFile(studentId, studentHomework.getSentFileId());
+			logger.info("Old dropped file deleted");
+		}
+
+		Folder homeworkDropFolder = HomeworkLocalServiceUtil.getHomeworkDropFolder(homeworkId);
+		FileEntry copiedFile = FileUtilsLocalServiceUtil.copyFileEntry(studentId, fileEntryId, homeworkDropFolder.getFolderId(), true);
+		logger.info("File is dropped");
+		StudentHomeworkLocalServiceUtil.setHomeworkSent(studentId, homeworkId, copiedFile.getFileEntryId());
+	}
+
+
+	public void deleteDroppedFile(long studentId, long homeworkId, long fileEntryId) throws PortalException {
+
+		StudentHomework studentHomework = StudentHomeworkLocalServiceUtil.getStudentHomework(homeworkId, studentId);
+		if (studentHomework != null && studentHomework.getIsSent() && studentHomework.getSentFileId() == fileEntryId) {
+			FileUtilsLocalServiceUtil.deleteFile(studentId, studentHomework.getSentFileId());
+			logger.info("Dropped file deleted");
+		}
+	}
+
+	public void correctFile(long homeworkId, long studentId, String comment) {
+		StudentHomework studentHomework = StudentHomeworkLocalServiceUtil.getStudentHomework(homeworkId, studentId);
+		if (studentHomework != null) {
+			studentHomework.setIsCorrected(true);
+			studentHomework.setCorrectionDate(new Date());
+			studentHomework.setComment(comment);
+			studentHomeworkPersistence.update(studentHomework);
+		}
+	}
+
+	public int countCorrectedWorks(long homeworkId) {
+
+		int count = 0;
+		List<StudentHomework> studentHomeworks = studentHomeworkPersistence.findByhomeworkId(homeworkId);
+		if (studentHomeworks != null) {
+			for (StudentHomework studentHomework : studentHomeworks) {
+				if (studentHomework.getIsCorrected()) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	public JSONArray getHomeworkStatus(long homeworkId) {
+
+		JSONArray jsonArray = new JSONArray();
+		SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+
+		List<StudentHomework> studentHomeworks = studentHomeworkPersistence.findByhomeworkId(homeworkId);
+		if (studentHomeworks != null) {
+			for (StudentHomework studentHomework : studentHomeworks) {
+				try {
+					JSONObject jsonStudent = new JSONObject();
+					jsonStudent.put(JSONConstants.STUDENT_ID, studentHomework.getStudentId());
+					User student = UserLocalServiceUtil.getUser(studentHomework.getStudentId());
+					jsonStudent.put(JSONConstants.STUDENT_NAME, student.getFullName());
+					jsonStudent.put(JSONConstants.IS_DONE, studentHomework.getIsDone());
+					jsonStudent.put(JSONConstants.IS_SENT, studentHomework.getIsSent());
+					if (studentHomework.getIsSent() && studentHomework.getSentDate() != null) {
+						jsonStudent.put(JSONConstants.SENT_DATE, sdf.format(studentHomework.getSentDate()));
+						jsonStudent.put(JSONConstants.SENT_FILE_ID, studentHomework.getSentFileId());
+					}
+					jsonStudent.put(JSONConstants.IS_CORRECTED, studentHomework.getIsCorrected());
+					if (studentHomework.getIsCorrected()) {
+						jsonStudent.put(JSONConstants.CORRECTION_DATE, sdf.format(studentHomework.getCorrectionDate()));
+						jsonStudent.put(JSONConstants.CORRECTION, studentHomework.getComment());
+					}
+					jsonArray.put(jsonStudent);
+				} catch (Exception e) {
+					logger.error("Error processing homework correction matrix", e);
+				}
+			}
+		}
+		return jsonArray;
 	}
 
 	public boolean removeStudentHomework(long homeworkId, long studentId) {

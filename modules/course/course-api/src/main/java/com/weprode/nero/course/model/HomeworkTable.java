@@ -60,6 +60,8 @@ public class HomeworkTable extends BaseTable<HomeworkTable> {
 		"publicationDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<HomeworkTable, Boolean> isDraft = createColumn(
 		"isDraft", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
+	public final Column<HomeworkTable, Boolean> isCorrectionSent = createColumn(
+		"isCorrectionSent", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
 
 	private HomeworkTable() {
 		super("Course_Homework", HomeworkTable::new);

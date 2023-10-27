@@ -56,6 +56,7 @@ public class SearchEngineServiceImpl extends SearchEngineServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
+        logger.info("User " + user.getFullName() + " searches query " + query);
         JSONArray jsonResults = new JSONArray();
         int page = start / (end - start) + 1;
         SearchResults results = SearchEngineLocalServiceUtil.search(user, query, page, (end - start));

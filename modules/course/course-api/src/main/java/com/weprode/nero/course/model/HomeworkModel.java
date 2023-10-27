@@ -252,6 +252,27 @@ public interface HomeworkModel extends BaseModel<Homework> {
 	 */
 	public void setIsDraft(boolean isDraft);
 
+	/**
+	 * Returns the is correction sent of this homework.
+	 *
+	 * @return the is correction sent of this homework
+	 */
+	public boolean getIsCorrectionSent();
+
+	/**
+	 * Returns <code>true</code> if this homework is is correction sent.
+	 *
+	 * @return <code>true</code> if this homework is is correction sent; <code>false</code> otherwise
+	 */
+	public boolean isIsCorrectionSent();
+
+	/**
+	 * Sets whether this homework is is correction sent.
+	 *
+	 * @param isCorrectionSent the is correction sent of this homework
+	 */
+	public void setIsCorrectionSent(boolean isCorrectionSent);
+
 	@Override
 	public Homework cloneWithOriginalValues();
 

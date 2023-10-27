@@ -75,7 +75,7 @@ public class HomeworkModelImpl
 		{"sourceSessionId", Types.BIGINT}, {"targetSessionId", Types.BIGINT},
 		{"targetDate", Types.TIMESTAMP}, {"isCustomStudentList", Types.BOOLEAN},
 		{"estimatedTime", Types.INTEGER}, {"publicationDate", Types.TIMESTAMP},
-		{"isDraft", Types.BOOLEAN}
+		{"isDraft", Types.BOOLEAN}, {"isCorrectionSent", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -95,10 +95,11 @@ public class HomeworkModelImpl
 		TABLE_COLUMNS_MAP.put("estimatedTime", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("publicationDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("isDraft", Types.BOOLEAN);
+		TABLE_COLUMNS_MAP.put("isCorrectionSent", Types.BOOLEAN);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Course_Homework (homeworkId LONG not null primary key,homeworkType INTEGER,courseId LONG,teacherId LONG,title VARCHAR(255) null,modificationDate DATE null,sourceSessionId LONG,targetSessionId LONG,targetDate DATE null,isCustomStudentList BOOLEAN,estimatedTime INTEGER,publicationDate DATE null,isDraft BOOLEAN)";
+		"create table Course_Homework (homeworkId LONG not null primary key,homeworkType INTEGER,courseId LONG,teacherId LONG,title VARCHAR(255) null,modificationDate DATE null,sourceSessionId LONG,targetSessionId LONG,targetDate DATE null,isCustomStudentList BOOLEAN,estimatedTime INTEGER,publicationDate DATE null,isDraft BOOLEAN,isCorrectionSent BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP = "drop table Course_Homework";
 
@@ -300,6 +301,11 @@ public class HomeworkModelImpl
 		attributeGetterFunctions.put("isDraft", Homework::getIsDraft);
 		attributeSetterBiConsumers.put(
 			"isDraft", (BiConsumer<Homework, Boolean>)Homework::setIsDraft);
+		attributeGetterFunctions.put(
+			"isCorrectionSent", Homework::getIsCorrectionSent);
+		attributeSetterBiConsumers.put(
+			"isCorrectionSent",
+			(BiConsumer<Homework, Boolean>)Homework::setIsCorrectionSent);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -549,6 +555,27 @@ public class HomeworkModelImpl
 		_isDraft = isDraft;
 	}
 
+	@JSON
+	@Override
+	public boolean getIsCorrectionSent() {
+		return _isCorrectionSent;
+	}
+
+	@JSON
+	@Override
+	public boolean isIsCorrectionSent() {
+		return _isCorrectionSent;
+	}
+
+	@Override
+	public void setIsCorrectionSent(boolean isCorrectionSent) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_isCorrectionSent = isCorrectionSent;
+	}
+
 	public long getColumnBitmask() {
 		if (_columnBitmask > 0) {
 			return _columnBitmask;
@@ -618,6 +645,7 @@ public class HomeworkModelImpl
 		homeworkImpl.setEstimatedTime(getEstimatedTime());
 		homeworkImpl.setPublicationDate(getPublicationDate());
 		homeworkImpl.setIsDraft(isIsDraft());
+		homeworkImpl.setIsCorrectionSent(isIsCorrectionSent());
 
 		homeworkImpl.resetOriginalValues();
 
@@ -652,6 +680,8 @@ public class HomeworkModelImpl
 			this.<Date>getColumnOriginalValue("publicationDate"));
 		homeworkImpl.setIsDraft(
 			this.<Boolean>getColumnOriginalValue("isDraft"));
+		homeworkImpl.setIsCorrectionSent(
+			this.<Boolean>getColumnOriginalValue("isCorrectionSent"));
 
 		return homeworkImpl;
 	}
@@ -780,6 +810,8 @@ public class HomeworkModelImpl
 
 		homeworkCacheModel.isDraft = isIsDraft();
 
+		homeworkCacheModel.isCorrectionSent = isIsCorrectionSent();
+
 		return homeworkCacheModel;
 	}
 
@@ -854,6 +886,7 @@ public class HomeworkModelImpl
 	private int _estimatedTime;
 	private Date _publicationDate;
 	private boolean _isDraft;
+	private boolean _isCorrectionSent;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<Homework, Object> function = _attributeGetterFunctions.get(
@@ -895,6 +928,7 @@ public class HomeworkModelImpl
 		_columnOriginalValues.put("estimatedTime", _estimatedTime);
 		_columnOriginalValues.put("publicationDate", _publicationDate);
 		_columnOriginalValues.put("isDraft", _isDraft);
+		_columnOriginalValues.put("isCorrectionSent", _isCorrectionSent);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -933,6 +967,8 @@ public class HomeworkModelImpl
 		columnBitmasks.put("publicationDate", 2048L);
 
 		columnBitmasks.put("isDraft", 4096L);
+
+		columnBitmasks.put("isCorrectionSent", 8192L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

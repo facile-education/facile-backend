@@ -54,6 +54,17 @@ public class StudentHomeworkLocalServiceWrapper
 		return _studentHomeworkLocalService.addStudentHomework(studentHomework);
 	}
 
+	@Override
+	public void correctFile(long homeworkId, long studentId, String comment) {
+		_studentHomeworkLocalService.correctFile(
+			homeworkId, studentId, comment);
+	}
+
+	@Override
+	public int countCorrectedWorks(long homeworkId) {
+		return _studentHomeworkLocalService.countCorrectedWorks(homeworkId);
+	}
+
 	/**
 	 * @throws PortalException
 	 */
@@ -77,6 +88,15 @@ public class StudentHomeworkLocalServiceWrapper
 
 		return _studentHomeworkLocalService.createStudentHomework(
 			studentHomeworkId);
+	}
+
+	@Override
+	public void deleteDroppedFile(
+			long studentId, long homeworkId, long fileEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_studentHomeworkLocalService.deleteDroppedFile(
+			studentId, homeworkId, fileEntryId);
 	}
 
 	/**
@@ -127,6 +147,16 @@ public class StudentHomeworkLocalServiceWrapper
 
 		return _studentHomeworkLocalService.deleteStudentHomework(
 			studentHomework);
+	}
+
+	@Override
+	public void dropHomeworkFile(
+			long studentId, long homeworkId, long fileEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   java.io.IOException {
+
+		_studentHomeworkLocalService.dropHomeworkFile(
+			studentId, homeworkId, fileEntryId);
 	}
 
 	@Override
@@ -247,6 +277,11 @@ public class StudentHomeworkLocalServiceWrapper
 		return _studentHomeworkLocalService.getActionableDynamicQuery();
 	}
 
+	@Override
+	public org.json.JSONArray getHomeworkStatus(long homeworkId) {
+		return _studentHomeworkLocalService.getHomeworkStatus(homeworkId);
+	}
+
 	/**
 	 * Get all students having given homework Id
 	 */
@@ -292,11 +327,6 @@ public class StudentHomeworkLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _studentHomeworkLocalService.getPersistedModel(primaryKeyObj);
-	}
-
-	@Override
-	public org.json.JSONArray getSentFiles(long homeworkId) {
-		return _studentHomeworkLocalService.getSentFiles(homeworkId);
 	}
 
 	/**
@@ -386,6 +416,14 @@ public class StudentHomeworkLocalServiceWrapper
 	}
 
 	@Override
+	public boolean hasStudentSentFile(
+		long studentId, long homeworkId, long fileEntryId) {
+
+		return _studentHomeworkLocalService.hasStudentSentFile(
+			studentId, homeworkId, fileEntryId);
+	}
+
+	@Override
 	public boolean removeHomework(long homeworkId) {
 		return _studentHomeworkLocalService.removeHomework(homeworkId);
 	}
@@ -405,10 +443,10 @@ public class StudentHomeworkLocalServiceWrapper
 	}
 
 	@Override
-	public boolean setHomeworkSent(
+	public void setHomeworkSent(
 		long studentId, long homeworkId, long fileEntryId) {
 
-		return _studentHomeworkLocalService.setHomeworkSent(
+		_studentHomeworkLocalService.setHomeworkSent(
 			studentId, homeworkId, fileEntryId);
 	}
 

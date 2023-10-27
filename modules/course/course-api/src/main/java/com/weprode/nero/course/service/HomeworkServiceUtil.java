@@ -36,12 +36,6 @@ public class HomeworkServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.nero.course.service.impl.HomeworkServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static org.json.JSONObject cancelDrop(long homeworkId)
-		throws SystemException {
-
-		return getService().cancelDrop(homeworkId);
-	}
-
 	public static org.json.JSONObject correctFile(
 			long homeworkId, long studentId, String comment)
 		throws SystemException {
@@ -76,6 +70,13 @@ public class HomeworkServiceUtil {
 			isDraft);
 	}
 
+	public static org.json.JSONObject deleteDroppedFile(
+			long homeworkId, long fileEntryId)
+		throws SystemException {
+
+		return getService().deleteDroppedFile(homeworkId, fileEntryId);
+	}
+
 	public static org.json.JSONObject deleteHomework(long homeworkId)
 		throws SystemException {
 
@@ -91,6 +92,10 @@ public class HomeworkServiceUtil {
 
 	public static org.json.JSONObject getHomeworkDoneStatus(long homeworkId) {
 		return getService().getHomeworkDoneStatus(homeworkId);
+	}
+
+	public static org.json.JSONObject getHomeworkStatus(long homeworkId) {
+		return getService().getHomeworkStatus(homeworkId);
 	}
 
 	/**
@@ -111,10 +116,23 @@ public class HomeworkServiceUtil {
 			studentId, minDateStr, maxDateStr, undoneOnly);
 	}
 
-	public static org.json.JSONObject getTeacherHomeworksToCorrect()
+	public static org.json.JSONObject getTeacherHomeworksToCorrect(
+			long courseId)
 		throws SystemException {
 
-		return getService().getTeacherHomeworksToCorrect();
+		return getService().getTeacherHomeworksToCorrect(courseId);
+	}
+
+	public static org.json.JSONObject getWorkLoad(
+		long courseId, String students, String startDate, String endDate) {
+
+		return getService().getWorkLoad(courseId, students, startDate, endDate);
+	}
+
+	public static org.json.JSONObject sendCorrections(long homeworkId)
+		throws SystemException {
+
+		return getService().sendCorrections(homeworkId);
 	}
 
 	public static org.json.JSONObject setHomeworkDone(

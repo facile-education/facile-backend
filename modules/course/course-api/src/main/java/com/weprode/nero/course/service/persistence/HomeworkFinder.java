@@ -24,15 +24,18 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface HomeworkFinder {
 
 	public java.util.List<com.weprode.nero.course.model.Homework>
-			getTeacherHomeworksToCorrect(long teacherId)
+			getTeacherHomeworksToCorrect(long teacherId, long courseId)
 		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public int countHomeworksToCorrect(long teacherId);
 
 	public java.util.List<com.weprode.nero.course.model.Homework>
 		getStudentHomeworks(
 			long studentId, java.util.Date minDate, java.util.Date maxDate,
 			boolean undoneOnly);
+
+	public java.util.List<com.weprode.nero.course.model.Homework>
+		getStudentsHomeworks(
+			java.util.List<Long> studentIds, java.util.Date minDate,
+			java.util.Date maxDate);
 
 	public int countUndoneHomeworks(
 		long studentId, java.util.Date minDate, java.util.Date maxDate);

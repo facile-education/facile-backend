@@ -19,17 +19,7 @@
             AND homework.homeworkType >= 1
             AND studentHomework.isDone = 1
             AND studentHomework.isCorrected = 0
-        ]]>
-    </sql>
-    <sql id="countHomeworksToCorrect">
-        <![CDATA[
-	        SELECT count(DISTINCT studentHomework.studentHomeworkId) as count
-            FROM Course_Homework homework
-            JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
-            WHERE homework.teacherId = ?
-            AND homework.homeworkType >= 1
-            AND studentHomework.isDone = 1
-            AND studentHomework.isCorrected = 0
+			[$OTHER$]
         ]]>
     </sql>
     <sql id="getStudentHomeworks">
@@ -41,6 +31,16 @@
             AND homework.isDraft = 0
             AND studentHomework.studentId = ?
 			[$OTHER$]
+        ]]>
+    </sql>
+    <sql id="getStudentsHomeworks">
+        <![CDATA[
+            SELECT DISTINCT homework.*
+            FROM Course_Homework homework
+            JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
+            WHERE homework.targetDate BETWEEN ? AND ?
+            AND homework.isDraft = 0
+            AND studentHomework.studentId IN ([$STUDENT_IDS$])
         ]]>
     </sql>
     <sql id="countUndoneHomeworks">

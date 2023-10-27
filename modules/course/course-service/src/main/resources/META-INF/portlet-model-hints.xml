@@ -31,6 +31,7 @@
 		<field name="estimatedTime" type="int" />
 		<field name="publicationDate" type="Date" />
 		<field name="isDraft" type="boolean" />
+		<field name="isCorrectionSent" type="boolean" />
 	</model>
 	<model name="com.weprode.nero.course.model.SessionContent">
 		<field name="sessionId" type="long" />

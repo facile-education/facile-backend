@@ -29,8 +29,8 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
     private static final Log logger = LogFactoryUtil.getLog(HomeworkFinderImpl.class);
 
     public static final String GET_TEACHER_HOMEWORKS = "getTeacherHomeworksToCorrect";
-    public static final String COUNT_HOMEWORKS_TO_CORRECT = "countHomeworksToCorrect";
     public static final String GET_STUDENT_HOMEWORKS = "getStudentHomeworks";
+    public static final String GET_STUDENTS_HOMEWORKS = "getStudentsHomeworks";
     public static final String COUNT_UNDONE_HOMEWORKS = "countUndoneHomeworks";
     public static final String GET_STUDENT_HOMEWORK_ACTIVITY = "getStudentHomeworkActivity";
 
@@ -38,14 +38,19 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
     @Reference
     private CustomSQL customSQL;
 
-    public List<Homework> getTeacherHomeworksToCorrect(long teacherId) throws SystemException {
+    public List<Homework> getTeacherHomeworksToCorrect(long teacherId, long courseId) throws SystemException {
 
         Session session = null;
 
         try {
             session = openSession();
 
+            String other = "";
+            if (courseId != 0) {
+                other += " AND homework.courseId = " + courseId;
+            }
             String sql = customSQL.get(getClass(), GET_TEACHER_HOMEWORKS);
+            sql = StringUtil.replace(sql, "[$OTHER$]", other);
             SQLQuery q = session.createSQLQuery(sql);
             q.setCacheable(false);
             q.addEntity("Course_Homework", HomeworkImpl.class);
@@ -61,30 +66,6 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
         }
 
         return null;
-    }
-
-    public int countHomeworksToCorrect (long teacherId) {
-
-        Session session = null;
-
-        try {
-            session = openSession();
-
-            String sql = customSQL.get(getClass(), COUNT_HOMEWORKS_TO_CORRECT);
-            SQLQuery q = session.createSQLQuery(sql);
-            q.setCacheable(false);
-            q.addScalar("count", Type.INTEGER);
-
-            QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(teacherId);
-
-            return (Integer) q.uniqueResult();
-        } catch (Exception e) {
-            logger.error("Error while counting homeworks to correct for teacher " + teacherId, e);
-        } finally {
-            closeSession(session);
-        }
-        return 0;
     }
 
     public List<Homework> getStudentHomeworks (long studentId, Date minDate, Date maxDate, boolean undoneOnly) {
@@ -113,6 +94,33 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
             return (List<Homework>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
         } catch (Exception e) {
             logger.error("Error while finding homeworks for student " + studentId + " in date range", e);
+        } finally {
+            closeSession(session);
+        }
+        return new ArrayList<>();
+    }
+
+    public List<Homework> getStudentsHomeworks (List<Long> studentIds, Date minDate, Date maxDate) {
+
+        Session session = null;
+
+        try {
+            session = openSession();
+
+            String sql = customSQL.get(getClass(), GET_STUDENTS_HOMEWORKS);
+            sql = StringUtil.replace(sql, "[$STUDENT_IDS$]", buildIdList(studentIds));
+
+            SQLQuery q = session.createSQLQuery(sql);
+            q.setCacheable(false);
+            q.addEntity("Course_Homework", HomeworkImpl.class);
+
+            QueryPos qPos = QueryPos.getInstance(q);
+            qPos.add(minDate);
+            qPos.add(maxDate);
+
+            return (List<Homework>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+        } catch (Exception e) {
+            logger.error("Error while finding homeworks for n students in date range", e);
         } finally {
             closeSession(session);
         }

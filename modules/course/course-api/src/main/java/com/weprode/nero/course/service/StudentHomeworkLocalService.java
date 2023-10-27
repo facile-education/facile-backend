@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import com.weprode.nero.course.model.StudentHomework;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.List;
@@ -80,6 +81,10 @@ public interface StudentHomeworkLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public StudentHomework addStudentHomework(StudentHomework studentHomework);
 
+	public void correctFile(long homeworkId, long studentId, String comment);
+
+	public int countCorrectedWorks(long homeworkId);
+
 	/**
 	 * @throws PortalException
 	 */
@@ -94,6 +99,10 @@ public interface StudentHomeworkLocalService
 	 */
 	@Transactional(enabled = false)
 	public StudentHomework createStudentHomework(long studentHomeworkId);
+
+	public void deleteDroppedFile(
+			long studentId, long homeworkId, long fileEntryId)
+		throws PortalException;
 
 	/**
 	 * @throws PortalException
@@ -130,6 +139,10 @@ public interface StudentHomeworkLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public StudentHomework deleteStudentHomework(
 		StudentHomework studentHomework);
+
+	public void dropHomeworkFile(
+			long studentId, long homeworkId, long fileEntryId)
+		throws IOException, PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T> T dslQuery(DSLQuery dslQuery);
@@ -209,6 +222,9 @@ public interface StudentHomeworkLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getHomeworkStatus(long homeworkId);
+
 	/**
 	 * Get all students having given homework Id
 	 */
@@ -236,9 +252,6 @@ public interface StudentHomeworkLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONArray getSentFiles(long homeworkId);
 
 	/**
 	 * Returns the student homework with the primary key.
@@ -294,6 +307,10 @@ public interface StudentHomeworkLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasStudentHomework(long studentId, long homeworkId);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasStudentSentFile(
+		long studentId, long homeworkId, long fileEntryId);
+
 	public boolean removeHomework(long homeworkId);
 
 	public boolean removeStudentHomework(long homeworkId, long studentId);
@@ -301,7 +318,7 @@ public interface StudentHomeworkLocalService
 	public boolean setHomeworkDone(
 		long homeworkId, long studentId, boolean isDone);
 
-	public boolean setHomeworkSent(
+	public void setHomeworkSent(
 		long studentId, long homeworkId, long fileEntryId);
 
 	/**
