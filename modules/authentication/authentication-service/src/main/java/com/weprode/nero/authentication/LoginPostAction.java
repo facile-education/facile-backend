@@ -1,6 +1,5 @@
 package com.weprode.nero.authentication;
 
-import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.LifecycleAction;
 import com.liferay.portal.kernel.events.LifecycleEvent;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -12,7 +11,8 @@ import com.weprode.nero.statistic.service.UserLoginLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
-        immediate = true, property = "key=login.events.post",
+        immediate = true,
+        property = "key=login.events.post",
         service = LifecycleAction.class
 )
 public class LoginPostAction implements LifecycleAction {
@@ -20,13 +20,13 @@ public class LoginPostAction implements LifecycleAction {
     private static final Log logger = LogFactoryUtil.getLog(LoginPostAction.class);
 
     @Override
-    public void processLifecycleEvent(LifecycleEvent lifecycleEvent)
-            throws ActionException {
+    public void processLifecycleEvent(LifecycleEvent lifecycleEvent) {
 
         try {
             User identifiedUser = PortalUtil.getUser(lifecycleEvent.getRequest());
             logger.info("+++++ loginPostAction for user " + identifiedUser.getFullName());
             UserLoginLocalServiceUtil.addUserLogin(identifiedUser, false);
+
         } catch (PortalException e) {
             logger.error("Could not add login stat for logged user", e);
         }

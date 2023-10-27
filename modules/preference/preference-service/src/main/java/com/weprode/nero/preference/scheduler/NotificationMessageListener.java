@@ -31,14 +31,14 @@ import java.util.List;
 import java.util.Map;
 
 @Component(
-        immediate = true, property = {"cron.expression=0 11 13 * * ?"},
+        immediate = true, property = {"cron.expression=0 * * * * ?"},
         service = NotificationMessageListener.class
 )
 public class NotificationMessageListener extends BaseMessageListener {
 
     private static final Log logger = LogFactoryUtil.getLog(NotificationMessageListener.class);
 
-    private static final String DEFAULT_CRON_EXPRESSION = "0 0 0 * * ?";
+    private static final String DEFAULT_CRON_EXPRESSION = "0 * * * * ?";
     private volatile boolean initialized;
     private TriggerFactory triggerFactory;
     private SchedulerEngineHelper schedulerEngineHelper;
