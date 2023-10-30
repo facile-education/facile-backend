@@ -8,7 +8,7 @@ dependencies {
 	compile project(":modules:mobile:mobile-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
-	compileOnly group: 'org.json', name: 'json', version: '20230227'
+	implementation group: 'org.json', name: 'json', version: '20230227'
 }
 
 buildService {
