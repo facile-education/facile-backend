@@ -82,7 +82,7 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 
-			InputStream is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), dlFileVersion.getVersion());
+			InputStream is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), dlFileVersion.getStoreFileName());
 
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			int nRead;

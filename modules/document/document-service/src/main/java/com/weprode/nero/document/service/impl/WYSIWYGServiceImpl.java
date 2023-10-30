@@ -86,7 +86,7 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 			}
 
 			// Get file content
-			InputStream is = DLStoreUtil.getFileAsStream(dlFileEntry.getCompanyId(), dlFileEntry.getDataRepositoryId(), dlFileEntry.getName(), dlFileVersion.getVersion());
+			InputStream is = DLStoreUtil.getFileAsStream(dlFileEntry.getCompanyId(), dlFileEntry.getDataRepositoryId(), dlFileEntry.getName(), dlFileVersion.getStoreFileName());
 			String content = StringUtil.read(is);
 
 			try {
