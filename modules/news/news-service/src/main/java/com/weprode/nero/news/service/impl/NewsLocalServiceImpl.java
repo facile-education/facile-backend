@@ -546,7 +546,11 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             jsonNews.put(JSONConstants.CONTENT, news.getContent());
         } else {
             String text = HtmlParserUtil.extractText(news.getContent());
-            jsonNews.put(JSONConstants.SHORT_CONTENT, text.substring(0, Math.min(200, text.length())));
+            String shortContent = text.substring(0, Math.min(140, text.length()));
+            if (text.length() > 140) {
+                shortContent = shortContent.concat("...");
+            }
+            jsonNews.put(JSONConstants.SHORT_CONTENT, shortContent);
         }
         jsonNews.put(JSONConstants.TYPE, ActivityConstants.TYPE_NEWS);
         jsonNews.put(JSONConstants.IS_IMPORTANT, news.isIsImportant());
