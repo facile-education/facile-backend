@@ -310,10 +310,16 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			minDate = schoolYearStartDate;
 		}
 		try {
-			return homeworkFinder.getStudentHomeworks(studentId, minDate, maxDate, undoneOnly);
+			studentHomeworkList = homeworkFinder.getStudentHomeworks(studentId, minDate, maxDate, undoneOnly);
+			// tmp for permissions, because old folders were created without permissions
+			for (Homework homework : studentHomeworkList) {
+				logger.info("TMP add permission on homework " + homework.getHomeworkId());
+				getHomeworkFolder(homework.getHomeworkId());
+			}
 		} catch (Exception e) {
 			logger.error("Error when fetching homeworks for student " + studentId, e);
 		}
+
 
 		// No sorting, we can return more than NB_HOMEWORKS homeworks, just the maxDate is important
 		return studentHomeworkList;
@@ -428,6 +434,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			logger.error("Error when fetching folder for homeworkId " + homeworkId, e);
 		}
 		// Apply default permissions so that students can VIEW
+		logger.info("Applying default permissions on homework folder " + homeworkFolder.getFolderId());
 		PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(homeworkFolder);
 
 		return homeworkFolder;
