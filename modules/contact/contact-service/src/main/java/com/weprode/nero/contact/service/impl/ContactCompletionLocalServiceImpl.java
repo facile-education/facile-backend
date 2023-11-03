@@ -338,10 +338,18 @@ public class ContactCompletionLocalServiceImpl
 				List<User> schoolUsers = UserSearchLocalServiceUtil.searchUsers(search, orgIds, null, roleIds, null, startIndex, limit, comparator);
 				resultUsers.addAll(schoolUsers);
 
-				// 2. Direction members and infirmieres
+				// 2. All personals (except teachers)
 				List<Long> schoolRoleIds = new ArrayList<>();
 				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId());
 				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getAssistantTechniqueRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId());
 				resultUsers.addAll(getSchoolRolesMembers(search, school.getOrganizationId(), schoolRoleIds, startIndex, limit, comparator));
 
 				// 3. His doyens, psychologues and conseillers sociaux
@@ -366,10 +374,18 @@ public class ContactCompletionLocalServiceImpl
 				List<User> schoolUsers = UserSearchLocalServiceUtil.searchUsers(search, orgIds, null, roleIds, null, startIndex, limit, comparator);
 				resultUsers.addAll(schoolUsers);
 
-				// 2. Direction members and infirmiers
+				// 2. All personals (except teachers)
 				List<Long> schoolRoleIds = new ArrayList<>();
 				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId());
 				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getAssistantTechniqueRole().getRoleId());
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId());
 				resultUsers.addAll(getSchoolRolesMembers(search, school.getOrganizationId(), schoolRoleIds, startIndex, limit, comparator));
 
 				// 3. His doyens, psychologue and conseiller social
@@ -399,34 +415,14 @@ public class ContactCompletionLocalServiceImpl
 
 				// 2. All school teachers + personals
 				List<Long> schoolRoleIds = new ArrayList<>();
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getAssistantTechniqueRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId());
-
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getPersonalRole().getRoleId());
 				resultUsers.addAll(getSchoolRolesMembers(search, school.getOrganizationId(), schoolRoleIds, startIndex, limit, comparator));
 
 			} else if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
+
 				// All school personals
 				List<Long> schoolRoleIds = new ArrayList<>();
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getAssistantTechniqueRole().getRoleId());
-				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId());
-
+				schoolRoleIds.add(RoleUtilsLocalServiceUtil.getPersonalRole().getRoleId());
 				resultUsers.addAll(getSchoolRolesMembers(search, school.getOrganizationId(), schoolRoleIds, startIndex, limit, comparator));
 			}
 
