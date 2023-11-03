@@ -404,9 +404,7 @@ public class VersionLocalServiceWrapper
 	}
 
 	@Override
-	public void removeVersionByFileEntryId(long dlFileEntryId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-
+	public void removeVersionByFileEntryId(long dlFileEntryId) {
 		_versionLocalService.removeVersionByFileEntryId(dlFileEntryId);
 	}
 

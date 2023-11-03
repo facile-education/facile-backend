@@ -333,8 +333,12 @@ public class VersionLocalServiceImpl extends VersionLocalServiceBaseImpl {
 		return versionPersistence.findBydlFileEntryId(dlFileEntryId);
 	}
 
-	public void removeVersionByFileEntryId(long dlFileEntryId) throws SystemException {
-		versionPersistence.removeBydlFileEntryId(dlFileEntryId);
+	public void removeVersionByFileEntryId(long dlFileEntryId) {
+		try {
+			versionPersistence.removeBydlFileEntryId(dlFileEntryId);
+		} catch (Exception e) {
+			// Nothing
+		}
 	}
 
 }
