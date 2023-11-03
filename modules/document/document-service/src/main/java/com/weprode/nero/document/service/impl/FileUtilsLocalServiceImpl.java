@@ -408,6 +408,9 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 			// Delete previous activity
 			ActivityLocalServiceUtil.deleteFileActivity(file.getFileEntryId());
+
+			// Delete Versions (view and download counts)
+			VersionLocalServiceUtil.removeVersionByFileEntryId(file.getFileEntryId());
 		} else {
 			throw new NoSuchResourcePermissionException();
 		}

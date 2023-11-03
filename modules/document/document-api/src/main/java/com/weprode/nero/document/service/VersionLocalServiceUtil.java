@@ -351,9 +351,7 @@ public class VersionLocalServiceUtil {
 		getService().incrementViewCount(fileVersion);
 	}
 
-	public static void removeVersionByFileEntryId(long dlFileEntryId)
-		throws SystemException {
-
+	public static void removeVersionByFileEntryId(long dlFileEntryId) {
 		getService().removeVersionByFileEntryId(dlFileEntryId);
 	}
 

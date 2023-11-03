@@ -292,8 +292,7 @@ public interface VersionLocalService
 	public void incrementViewCount(Version fileVersion)
 		throws PortalException, SystemException;
 
-	public void removeVersionByFileEntryId(long dlFileEntryId)
-		throws SystemException;
+	public void removeVersionByFileEntryId(long dlFileEntryId);
 
 	public void removeVersionByFileEntryId(long dlFileEntryId, double versionNb)
 		throws PortalException, SystemException;
