@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
@@ -204,7 +205,8 @@ public class DLAppUtil {
                         for (FileEntry subFile : files) {
                             if (subFile.getTitle().equals(name) || subFile.getFileName().equals(name)) {
                                 hasFound = true;
-//								VersionLocalServiceUtil.createMajorVersion(user, subFile.getFileEntryId());	// save the current file as a new version
+                                // Fetch DLFileVersion to prevent from OptimisticLockException
+                                FileVersion fileVersion = DLAppServiceUtil.getFileVersion(subFile.getLatestFileVersion().getFileVersionId());
                                 fileEntry = DLAppServiceUtil.updateFileEntry(
                                         subFile.getFileEntryId(),
                                         name,
@@ -213,7 +215,7 @@ public class DLAppUtil {
                                         StringPool.BLANK, // urlTitle
                                         StringPool.BLANK, // description
                                         StringPool.BLANK, // changeLog
-                                        DLVersionNumberIncrease.AUTOMATIC,
+                                        DLVersionNumberIncrease.MAJOR,
                                         bytes,
                                         null,
                                         null,
@@ -252,6 +254,9 @@ public class DLAppUtil {
                 if (fileEntry != null && !parentFolder.getName().equals(DocumentConstants.NEWS_FOLDER_NAME) && !parentFolder.getName().equals(DocumentConstants.COURSE_FOLDER_NAME)) {
                     ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_CREATION);
                 }
+            } else if (fileEntry != null) {
+                // File is added in a group or personal root folder
+                ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_CREATION);
             }
 
             return fileEntry;
