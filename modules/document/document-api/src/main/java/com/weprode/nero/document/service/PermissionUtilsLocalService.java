@@ -93,8 +93,7 @@ public interface PermissionUtilsLocalService extends BaseLocalService {
 	public void setParentPermissionToFolder(Folder folder)
 		throws PortalException, SystemException;
 
-	public void setUpdatePermissionForRolesOnResource(
-			Object resource, java.util.List<Role> roleList)
+	public void setThumbnailFolderPermissions(long thumbnailFolderId)
 		throws PortalException, SystemException;
 
 	/**
