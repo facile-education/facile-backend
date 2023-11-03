@@ -112,12 +112,10 @@ public class PermissionUtilsLocalServiceUtil {
 		getService().setParentPermissionToFolder(folder);
 	}
 
-	public static void setUpdatePermissionForRolesOnResource(
-			Object resource,
-			List<com.liferay.portal.kernel.model.Role> roleList)
+	public static void setThumbnailFolderPermissions(long thumbnailFolderId)
 		throws PortalException, SystemException {
 
-		getService().setUpdatePermissionForRolesOnResource(resource, roleList);
+		getService().setThumbnailFolderPermissions(thumbnailFolderId);
 	}
 
 	/**

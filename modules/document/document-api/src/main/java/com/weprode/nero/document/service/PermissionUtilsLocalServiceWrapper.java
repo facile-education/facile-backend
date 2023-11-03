@@ -131,14 +131,12 @@ public class PermissionUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public void setUpdatePermissionForRolesOnResource(
-			Object resource,
-			java.util.List<com.liferay.portal.kernel.model.Role> roleList)
+	public void setThumbnailFolderPermissions(long thumbnailFolderId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		_permissionUtilsLocalService.setUpdatePermissionForRolesOnResource(
-			resource, roleList);
+		_permissionUtilsLocalService.setThumbnailFolderPermissions(
+			thumbnailFolderId);
 	}
 
 	/**

@@ -22,6 +22,7 @@ import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.PortalUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -156,30 +157,6 @@ public class PermissionUtilsLocalServiceImpl
 		}
 	}
 
-	public void setUpdatePermissionForRolesOnResource(Object resource, List<Role> roleList) throws PortalException, SystemException {
-
-		int scope = ResourceConstants.SCOPE_INDIVIDUAL;
-		String[] actionsIds = {ActionKeys.VIEW, ActionKeys.UPDATE, ActionKeys.ADD_DOCUMENT, PermissionConstants.ADD_OBJECT, ActionKeys.ADD_SUBFOLDER};
-		Map<Long, String[]> roleIdActionIds = new HashMap<>();
-		for (Role role : roleList) {
-			roleIdActionIds.put(role.getRoleId(), actionsIds);
-		}
-
-		// Use the 'USER' role to match all users
-		if (resource instanceof FileEntry) {
-			String name = DLFileEntry.class.getName();
-			FileEntry file = (FileEntry) resource;
-			ResourcePermissionLocalServiceUtil.setResourcePermissions(file.getCompanyId(), name, scope, String.valueOf(file.getPrimaryKey()), roleIdActionIds );
-		}
-		else if (resource instanceof Folder) {
-			String name = DLFolder.class.getName();
-			Folder folder = (Folder) resource;
-			ResourcePermissionLocalServiceUtil.setResourcePermissions(folder.getCompanyId(), name, scope, String.valueOf(folder.getPrimaryKey()), roleIdActionIds );
-		}
-		else {
-			throw new IllegalArgumentException("Resource must be an FileEntry or a Folder object");
-		}
-	}
 
 	public void addDefaultPermissionsFolder(Folder folder) throws PortalException, SystemException {
 		Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
@@ -232,18 +209,6 @@ public class PermissionUtilsLocalServiceImpl
 			viewUpdatePermissions.add(ActionKeys.ADD_SUBFOLDER);
 		}
 
-		// Delete permissions
-		List<String> viewUpdateDeletePermissions = new ArrayList<>();
-		viewUpdateDeletePermissions.add(ActionKeys.VIEW);
-		viewUpdateDeletePermissions.add(ActionKeys.ACCESS);
-		viewUpdateDeletePermissions.add(ActionKeys.UPDATE);
-		if (isFolder) {
-			viewUpdateDeletePermissions.add(PermissionConstants.ADD_OBJECT);
-			viewUpdateDeletePermissions.add(ActionKeys.ADD_DOCUMENT);
-			viewUpdateDeletePermissions.add(ActionKeys.ADD_SUBFOLDER);
-		}
-		viewUpdateDeletePermissions.add(ActionKeys.DELETE);
-
 		// All permissions list
 		List<String> allPermissions = new ArrayList<>();
 		allPermissions.add(ActionKeys.VIEW);
@@ -285,9 +250,6 @@ public class PermissionUtilsLocalServiceImpl
 		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getPsychologueRole());
 		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getSecretariatRole());
 
-		// Delete roles
-		//List<Role> viewUpdateDeleteRoleList = new ArrayList<Role>();
-
 		// All permissions roles
 		allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, RoleConstants.OWNER));
 		allPermissionsRoleList.add(RoleLocalServiceUtil.getRole(companyId, NeroRoleConstants.SCHOOL_ADMIN));
@@ -309,21 +271,64 @@ public class PermissionUtilsLocalServiceImpl
 		logger.debug("Update perm. : " + viewUpdateRoleList + viewUpdatePermissions);
 		setPermissionsToRoles(viewUpdateRoleList, viewUpdatePermissions, companyId, name, scope, String.valueOf(objectId));
 
-		// Set delete permissions
-		//setPermissionsToRoles(viewUpdateDeleteRoleList, viewUpdateDeletePermissions, companyId, name, scope, String.valueOf(objectId));
-
 		// Set admin permissions
 		logger.debug("All perm. : " + allPermissionsRoleList + allPermissions);
 		setPermissionsToRoles(allPermissionsRoleList, allPermissions, companyId, name, scope, String.valueOf(objectId));
 	}
 
-	private void setPermissionsToRoles(List<Role> pRoles, List<String> pPermissions, long pCompanyId,
-									   String pName, int pScope, String pPrimKey)
+	public void setThumbnailFolderPermissions(long thumbnailFolderId) throws PortalException, SystemException {
+
+		int scope = ResourceConstants.SCOPE_INDIVIDUAL;
+		String name = DLFolder.class.getName();
+		long companyId = PortalUtil.getDefaultCompanyId();
+
+		// Read permissions
+		List<String> viewPermissions = new ArrayList<>();
+		viewPermissions.add(ActionKeys.VIEW);
+		viewPermissions.add(ActionKeys.ACCESS);
+
+		// Add content permissions
+		List<String> viewUpdatePermissions = new ArrayList<>();
+		viewUpdatePermissions.add(ActionKeys.VIEW);
+		viewUpdatePermissions.add(ActionKeys.UPDATE);
+		viewUpdatePermissions.add(PermissionConstants.ADD_OBJECT);
+		viewUpdatePermissions.add(ActionKeys.ADD_DOCUMENT);
+		viewUpdatePermissions.add(ActionKeys.ADD_SUBFOLDER);
+
+		// Read-only roles
+		List<Role> viewerRoleList = new ArrayList<>();
+		viewerRoleList.add(RoleUtilsLocalServiceUtil.getStudentRole());
+		viewerRoleList.add(RoleUtilsLocalServiceUtil.getParentRole());
+
+		// Add content roles
+		List<Role> viewUpdateRoleList = new ArrayList<>();
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getTeacherRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getAssistantTechniqueRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getCaissierComptableRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getConseillerOrientationRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getConseillerSocialRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getDoyenRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getInfirmiereRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getBibliothecaireRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getPsychologueRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getSecretariatRole());
+		viewUpdateRoleList.add(RoleUtilsLocalServiceUtil.getDirectionRole());
+
+		// Set read permissions
+		logger.debug("Read perm. : " + viewerRoleList + viewPermissions);
+		setPermissionsToRoles(viewerRoleList, viewPermissions, companyId, name, scope, String.valueOf(thumbnailFolderId));
+
+		// Set read and update / add content permissions
+		logger.debug("Update perm. : " + viewUpdateRoleList + viewUpdatePermissions);
+		setPermissionsToRoles(viewUpdateRoleList, viewUpdatePermissions, companyId, name, scope, String.valueOf(thumbnailFolderId));
+	}
+
+
+	private void setPermissionsToRoles(List<Role> roles, List<String> permissions, long companyId, String name, int scope, String primKey)
 			throws PortalException, SystemException {
 
-		for (Role role : pRoles) {
-			ResourcePermissionLocalServiceUtil.setResourcePermissions(pCompanyId,
-					pName, pScope, pPrimKey, role.getRoleId(), pPermissions.toArray(new String[0]));
+		for (Role role : roles) {
+			ResourcePermissionLocalServiceUtil.setResourcePermissions(companyId, name, scope, primKey, role.getRoleId(), permissions.toArray(new String[0]));
 		}
 	}
 
@@ -339,21 +344,21 @@ public class PermissionUtilsLocalServiceImpl
 		Map<Long, String[]> mapPermissionFile = new HashMap<>();
 
 		for (int i = 0; i < permissions.length(); i++) {
-			JSONObject jobj = permissions.getJSONObject(i);
+			JSONObject jsonObject = permissions.getJSONObject(i);
 
-			roleId = jobj.getLong("roleId");
+			roleId = jsonObject.getLong("roleId");
 
 			name = type.equals("folder") ? DLFolder.class.getName() : DLFileEntry.class.getName();
 
 			String[] permissionList;
 			if (type.equals("folder")) {
-				permissionList = extractFolderPermissionFromJson(jobj);
+				permissionList = extractFolderPermissionFromJson(jsonObject);
 				mapPermissionFolder.put(roleId, permissionList);
 				isFolder = true;
 
 
 			} else if (type.equals("file")) {
-				permissionList = extractFilePermissionFromJson(jobj);
+				permissionList = extractFilePermissionFromJson(jsonObject);
 				mapPermissionFile.put(roleId, permissionList);
 			}
 		}
@@ -566,7 +571,7 @@ public class PermissionUtilsLocalServiceImpl
 		return permissionsMap;
 	}
 
-	public static final String[] PERMISSION_ROLES = {
+	protected static final String[] PERMISSION_ROLES = {
 			NeroRoleConstants.STUDENT, NeroRoleConstants.TEACHER, NeroRoleConstants.RELATIVE, NeroRoleConstants.DIRECTION,
 			NeroRoleConstants.SCHOOL_ADMIN,
 			NeroRoleConstants.ASSISTANT_TECHNIQUE, NeroRoleConstants.CAISSIER_COMPTABLE, NeroRoleConstants.CONSEILLER_ORIENTATION,

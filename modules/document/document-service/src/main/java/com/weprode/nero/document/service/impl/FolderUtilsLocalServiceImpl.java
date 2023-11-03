@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.ResourceConstants;
-import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
@@ -55,7 +54,6 @@ import com.weprode.nero.document.utils.FileNameUtil;
 import com.weprode.nero.document.utils.ZipUtil;
 import com.weprode.nero.group.constants.ActivityConstants;
 import com.weprode.nero.organization.service.OrgUtilsLocalServiceUtil;
-import com.weprode.nero.role.constants.NeroRoleConstants;
 import com.weprode.nero.role.service.RoleUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
@@ -132,7 +130,6 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					"PJs de messagerie",
 					new ServiceContext());
 			hideDLFolder(folder.getFolderId());
-			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(folder);
 		}
 
 		return folder;
@@ -182,11 +179,11 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		final long companyId = UserLocalServiceUtil.getUser(userId).getCompanyId();
 		Organization rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(companyId);
 
-		Folder tumbnailFolder;
+		Folder thumbnailFolder;
 		try {
-			tumbnailFolder = DLAppServiceUtil.getFolder(rootOrg.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.THUMBNAILS_FOLDER_NAME);
+			thumbnailFolder = DLAppServiceUtil.getFolder(rootOrg.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.THUMBNAILS_FOLDER_NAME);
 		} catch (NoSuchFolderException e) {
-			tumbnailFolder = DLAppLocalServiceUtil.addFolder(
+			thumbnailFolder = DLAppLocalServiceUtil.addFolder(
 					UUID.randomUUID().toString(),
 					UserLocalServiceUtil.getDefaultUser(companyId).getUserId(),
 					rootOrg.getGroupId(),
@@ -194,35 +191,13 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					DocumentConstants.THUMBNAILS_FOLDER_NAME,
 					"Dossier global contenant des thumbnails visibles par tous",
 					new ServiceContext());
-			hideDLFolder(tumbnailFolder.getFolderId());
+			hideDLFolder(thumbnailFolder.getFolderId());
 
-			// Set View permission to all
-			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(tumbnailFolder);
-
-			// Set Update permission for roles that can create news  /!\ Assume isUserDelegate have one of the following roles
-			List<Role> updateThumbnailsRoles = new ArrayList<>();
-			// Direction members
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getDirectionRole());
-			// Secretariat
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getSecretariatRole());
-			// Personals
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.DIRECTION));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.DOYEN));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CONSEILLER_ORIENTATION));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CONSEILLER_SOCIAL));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.INFIRMIERE));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.PSYCHOLOGUE));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.ASSISTANT_TECHNIQUE));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.CAISSIER_COMPTABLE));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.BIBLIOTHECAIRE));
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getRole(NeroRoleConstants.SECRETAIRE));
-			// Teachers
-			updateThumbnailsRoles.add(RoleUtilsLocalServiceUtil.getTeacherRole());
-			PermissionUtilsLocalServiceUtil.setUpdatePermissionForRolesOnResource(tumbnailFolder, updateThumbnailsRoles);
-
+			// Set permissions
+			PermissionUtilsLocalServiceUtil.setThumbnailFolderPermissions(thumbnailFolder.getFolderId());
 		}
 
-		return tumbnailFolder;
+		return thumbnailFolder;
 	}
 
 	/**
