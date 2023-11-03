@@ -339,15 +339,19 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
             List<User> allUsers = UserLocalServiceUtil.getUsers(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
             for (User user : allUsers) {
-                UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
-                if (userProperties.getManualAccount()) {
-                    continue;
-                }
-                if (!user.isActive() && userProperties.getLastSynchroDate() != null
-                        && userProperties.getLastSynchroDate().before(threeMonthInPast)) {
-                    logger.info("Purging user account " + user.getFullName() + " - " + user.getUserId());
-                    UserLocalServiceUtil.deleteUser(user);
-                    count ++;
+                try {
+                    UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
+                    if (userProperties.getManualAccount()) {
+                        continue;
+                    }
+                    if (!user.isActive() && userProperties.getLastSynchroDate() != null
+                            && userProperties.getLastSynchroDate().before(threeMonthInPast)) {
+                        logger.info("Purging user account " + user.getFullName() + " - " + user.getUserId());
+                        UserLocalServiceUtil.deleteUser(user);
+                        count++;
+                    }
+                } catch (Exception e) {
+                    logger.error("An error happened when purging deactivated users, on user " + user.getFullName());
                 }
             }
         } catch (Exception e) {
