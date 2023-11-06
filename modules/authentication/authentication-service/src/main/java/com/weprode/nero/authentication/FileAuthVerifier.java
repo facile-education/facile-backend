@@ -43,7 +43,7 @@ public class FileAuthVerifier implements AuthVerifier {
 
             HttpServletRequest httpServletRequest =
                     accessControlContext.getRequest();
-            logger.error("FileAuthVerifier requestUri = " + httpServletRequest.getRequestURI());
+            logger.debug("FileAuthVerifier requestUri = " + httpServletRequest.getRequestURI());
 
             User user = portal.getUser(httpServletRequest);
 
