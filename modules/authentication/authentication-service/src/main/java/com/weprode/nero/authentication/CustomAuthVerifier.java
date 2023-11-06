@@ -515,6 +515,10 @@ public class CustomAuthVerifier implements AuthVerifier {
             }
 
             if (user != null) {
+                if (!user.isActive()) {
+                    logger.info("User authenticated by Shibboleth but is inactive : " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
+                    return null;
+                }
                 logger.info("User authenticated with Shibboleth : " + user.getScreenName() + " (" + user.getEmailAddress() + "), uri=" + request.getRequestURI());
                 String[] credentials = new String[3];
                 credentials[0] = String.valueOf(user.getUserId());
@@ -533,7 +537,7 @@ public class CustomAuthVerifier implements AuthVerifier {
             throw new AutoLoginException(e);
         }
 
-        logger.info("ShibAutoLogin returns null for uri=" + request.getRequestURI());
+        logger.debug("ShibAutoLogin returns null for uri=" + request.getRequestURI());
         return null;
     }
 
@@ -564,6 +568,10 @@ public class CustomAuthVerifier implements AuthVerifier {
 
                 if (userMobileToken != null) {
                     User user = UserLocalServiceUtil.getUserById(userMobileToken.getUserId());
+                    if (!user.isActive()) {
+                        logger.info("User authenticated by mobileApp token but is inactive : " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
+                        return null;
+                    }
 
                     credentials = new String[3];
                     credentials[0] = String.valueOf(user.getUserId());
