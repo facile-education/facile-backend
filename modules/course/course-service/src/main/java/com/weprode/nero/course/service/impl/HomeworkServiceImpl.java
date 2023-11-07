@@ -306,6 +306,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 				homeworks.put(homeworkJson);
 			}
 
+			result.put(JSONConstants.NB_STUDENTS, studentIds.size());
 			result.put(JSONConstants.HOMEWORKS, homeworks);
 			result.put(JSONConstants.SUCCESS, true);
 
