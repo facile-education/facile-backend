@@ -79,7 +79,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
             return OrganizationLocalServiceUtil.getOrganization(companyId, orgRootName);
         } catch (NoSuchOrganizationException e) {
             // Do not create org root ?
-            long defUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
+            long defUserId = UserLocalServiceUtil.getGuestUserId(companyId);
             return OrganizationLocalServiceUtil.addOrganization(UUID.randomUUID().toString(),
                     defUserId, OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
                     orgRootName, OrganizationConstants.TYPE_ORGANIZATION,
@@ -102,7 +102,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
         try {
             schoolOrg = OrganizationLocalServiceUtil.getOrganization(companyId, formattedSchoolName);
         } catch (NoSuchOrganizationException e) {
-            long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
+            long defaultUserId = UserLocalServiceUtil.getGuestUserId(companyId);
             schoolOrg = OrganizationLocalServiceUtil.addOrganization(UUID.randomUUID().toString(),
                     defaultUserId, getOrCreateRootOrg(companyId).getOrganizationId(),
                     formattedSchoolName, OrganizationConstants.TYPE_ORGANIZATION,
@@ -128,7 +128,7 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
         try {
             org = OrganizationLocalServiceUtil.getOrganization(companyId, orgName);
         } catch (NoSuchOrganizationException e) {
-            long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
+            long defaultUserId = UserLocalServiceUtil.getGuestUserId(companyId);
             org = OrganizationLocalServiceUtil.addOrganization(UUID.randomUUID().toString(),
                     defaultUserId, schoolId, orgName, OrganizationConstants.TYPE_ORGANIZATION,
                     RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,

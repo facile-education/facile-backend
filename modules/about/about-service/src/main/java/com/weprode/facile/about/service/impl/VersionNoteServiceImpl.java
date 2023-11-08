@@ -59,7 +59,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 
 		try {
 			User user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			JSONArray versionsNotesJson = new JSONArray();
@@ -94,7 +94,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 
 		try {
 			User user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 
@@ -122,7 +122,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 		try {
 			User user = getGuestOrUser();
 
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
@@ -152,7 +152,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 		try {
 			User user = getGuestOrUser();
 
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
@@ -179,7 +179,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 		try {
 			User user = getGuestOrUser();
 
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {

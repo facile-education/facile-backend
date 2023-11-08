@@ -753,7 +753,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                     logger.info("Creating news folder for newsId " + newsId + " and groupId " + groupId);
                     newsIdFolder = DLAppLocalServiceUtil.addFolder(
                             UUID.randomUUID().toString(),
-                            UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+                            UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()),
                             groupId,
                             groupNewsFolder.getFolderId(),
                             "" + newsId,

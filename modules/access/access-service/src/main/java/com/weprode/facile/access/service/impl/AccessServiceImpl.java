@@ -55,7 +55,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
@@ -86,7 +86,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
@@ -125,7 +125,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
@@ -173,7 +173,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
@@ -203,7 +203,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
@@ -234,7 +234,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -261,7 +261,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		try {
 			user = getGuestOrUser();
 
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&

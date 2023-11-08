@@ -523,7 +523,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 				logger.info("Creating root folder for group " + group.getName(LocaleUtil.getDefault()));
 				Folder createdFolder = DLAppLocalServiceUtil.addFolder(
 						UUID.randomUUID().toString(),
-						UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+						UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()),
 						groupId,
 						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 						DocumentConstants.GROUP_FOLDER_NAME,
@@ -549,7 +549,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		} catch (NoSuchFolderException e) {
 			folder = DLAppLocalServiceUtil.addFolder(
 					UUID.randomUUID().toString(),
-					UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+					UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()),
 					groupId,
 					groupRootFolder.getFolderId(),
 					DocumentConstants.NEWS_FOLDER_NAME,
@@ -579,7 +579,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		} catch (NoSuchFolderException e) {
 			folder = DLAppLocalServiceUtil.addFolder(
 					UUID.randomUUID().toString(),
-					UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+					UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()),
 					groupId,
 					groupRootFolder.getFolderId(),
 					DocumentConstants.COURSE_FOLDER_NAME,

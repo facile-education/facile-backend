@@ -123,7 +123,7 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
             }
 
             // Skip default user (news attached files)
-            dynamicQuery.add(PropertyFactoryUtil.forName("userId").ne(UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())));
+            dynamicQuery.add(PropertyFactoryUtil.forName("userId").ne(UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())));
 
             Long[] groupIds = groupIdList.toArray(new Long[0]);
             dynamicQuery.add(PropertyFactoryUtil.forName("groupId").in(groupIds));

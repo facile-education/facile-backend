@@ -83,7 +83,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		User userToFetchCourses;
 		try {
 			currentUser = getGuestOrUser();
-			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (currentUser.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (userId != currentUser.getUserId() && !UserRelationshipLocalServiceUtil.isChild(currentUser.getUserId(), userId)) {
@@ -175,7 +175,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				throw new AuthException();
 			}
 			if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
@@ -204,7 +204,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				throw new AuthException();
 			}
 		} catch (Exception e) {
@@ -292,7 +292,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				throw new AuthException();
 			}
 		} catch (Exception e) {
@@ -372,7 +372,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				throw new AuthException();
 			}
 		} catch (Exception e) {
@@ -414,7 +414,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
