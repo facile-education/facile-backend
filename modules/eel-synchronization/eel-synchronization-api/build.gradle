@@ -1,4 +1,0 @@
-dependencies {
-	compileOnly group: "com.liferay.portal", name: "release.portal.api"
-	implementation group: 'org.json', name: 'json', version: '20230227'
-}
