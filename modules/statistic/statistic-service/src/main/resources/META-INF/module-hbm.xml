@@ -2,9 +2,9 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.statistic.model.LoolStat" />
-	<import class="com.weprode.nero.statistic.model.UserLogin" />
-	<class name="com.weprode.nero.statistic.model.impl.LoolStatImpl" table="Statistics_LoolStat">
+	<import class="com.weprode.facile.statistic.model.LoolStat" />
+	<import class="com.weprode.facile.statistic.model.UserLogin" />
+	<class name="com.weprode.facile.statistic.model.impl.LoolStatImpl" table="Statistics_LoolStat">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="statId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -14,7 +14,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="actionDate" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" column="type_" name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
-	<class name="com.weprode.nero.statistic.model.impl.UserLoginImpl" table="Statistics_UserLogin">
+	<class name="com.weprode.facile.statistic.model.impl.UserLoginImpl" table="Statistics_UserLogin">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userLoginId" type="long">
 			<generator class="assigned" />
 		</id>

@@ -1,10 +1,10 @@
 Bundle-Name: agenda-api
-Bundle-SymbolicName: com.weprode.nero.agenda.api
+Bundle-SymbolicName: com.weprode.facile.agenda.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.nero.agenda.exception,\
-	com.weprode.nero.agenda.model,\
-	com.weprode.nero.agenda.service,\
-	com.weprode.nero.agenda.service.persistence
+	com.weprode.facile.agenda.exception,\
+	com.weprode.facile.agenda.model,\
+	com.weprode.facile.agenda.service,\
+	com.weprode.facile.agenda.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../agenda-service/service.xml

@@ -1,10 +1,10 @@
 Bundle-Name: mobile-api
-Bundle-SymbolicName: com.weprode.nero.mobile.api
+Bundle-SymbolicName: com.weprode.facile.mobile.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.nero.mobile.exception,\
-	com.weprode.nero.mobile.model,\
-	com.weprode.nero.mobile.service,\
-	com.weprode.nero.mobile.service.persistence
+	com.weprode.facile.mobile.exception,\
+	com.weprode.facile.mobile.model,\
+	com.weprode.facile.mobile.service,\
+	com.weprode.facile.mobile.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../mobile-service/service.xml

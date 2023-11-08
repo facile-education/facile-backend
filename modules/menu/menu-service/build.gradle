@@ -14,4 +14,4 @@ buildService {
 	apiDir = "../menu-api/src/main/java"
 }
 
-group = "com.weprode.nero.menu"
+group = "com.weprode.facile.menu"

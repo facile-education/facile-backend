@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.weprode.nero.user.model.Affectation">
+	<model name="Affectation">
 		<field name="affectationId" type="long" />
 		<field name="userId" type="long" />
 		<field name="orgId" type="long" />
@@ -11,19 +11,19 @@
 		<field name="affectationDate" type="Date" />
 		<field name="expirationDate" type="Date" />
 	</model>
-	<model name="com.weprode.nero.user.model.LDAPMapping">
+	<model name="LDAPMapping">
 		<field name="UserId" type="long" />
 		<field name="EntPersonJointure" type="String" />
 		<field name="UID" type="String" />
 		<field name="INE" type="String" />
 		<field name="EntEleveStructRattachId" type="String" />
 	</model>
-	<model name="com.weprode.nero.user.model.NewsAdmin">
+	<model name="NewsAdmin">
 		<field name="newsAdminId" type="long" />
 		<field name="userId" type="long" />
 		<field name="schoolId" type="long" />
 	</model>
-	<model name="com.weprode.nero.user.model.UserContact">
+	<model name="UserContact">
 		<field name="contactId" type="long" />
 		<field name="userId" type="long" />
 		<field name="middleNames" type="String" />
@@ -42,7 +42,48 @@
 		<field name="proPhone" type="String" />
 		<field name="familyLink" type="String" />
 	</model>
-	<model name="com.weprode.nero.user.model.UserRelationship">
+	<model name="UserRelationship">
+		<field name="childUserId" type="long" />
+		<field name="parentUserId" type="long" />
+	</model>
+	<model name="com.weprode.facile.user.model.Affectation">
+		<field name="affectationId" type="long" />
+		<field name="userId" type="long" />
+		<field name="orgId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="type" type="int" />
+		<field name="adminUserId" type="long" />
+		<field name="affectationDate" type="Date" />
+		<field name="expirationDate" type="Date" />
+	</model>
+	<model name="com.weprode.facile.user.model.LDAPMapping">
+		<field name="UserId" type="long" />
+		<field name="EntPersonJointure" type="String" />
+		<field name="UID" type="String" />
+		<field name="INE" type="String" />
+		<field name="EntEleveStructRattachId" type="String" />
+	</model>
+	<model name="com.weprode.facile.user.model.NewsAdmin">
+		<field name="newsAdminId" type="long" />
+		<field name="userId" type="long" />
+		<field name="schoolId" type="long" />
+	</model>
+	<model name="com.weprode.facile.user.model.UserContact">
+		<field name="contactId" type="long" />
+		<field name="userId" type="long" />
+		<field name="middleNames" type="String" />
+		<field name="birthName" type="String" />
+		<field name="address" type="String" />
+		<field name="isAddressAuthorized" type="boolean" />
+		<field name="mail" type="String" />
+		<field name="isMailAuthorized" type="boolean" />
+		<field name="mobilePhone" type="String" />
+		<field name="mobilePhoneSMS" type="String" />
+		<field name="homePhone" type="String" />
+		<field name="proPhone" type="String" />
+		<field name="familyLink" type="String" />
+	</model>
+	<model name="com.weprode.facile.user.model.UserRelationship">
 		<field name="childUserId" type="long" />
 		<field name="parentUserId" type="long" />
 	</model>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="com.weprode.nero.agenda.service.persistence.EventFinder.getUserEvents">
+    <sql id="com.weprode.facile.agenda.service.persistence.EventFinder.getUserEvents">
         <![CDATA[
             SELECT event.*
             FROM Agenda_Event event
@@ -13,7 +13,7 @@
             LIMIT ?,?
         ]]>
     </sql>
-    <sql id="com.weprode.nero.agenda.service.persistence.EventFinder.countUserEvents">
+    <sql id="com.weprode.facile.agenda.service.persistence.EventFinder.countUserEvents">
         <![CDATA[
             SELECT count(DISTINCT event.eventId)
             FROM Agenda_Event event

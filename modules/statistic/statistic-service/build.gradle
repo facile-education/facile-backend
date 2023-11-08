@@ -14,4 +14,4 @@ buildService {
 	apiDir = "../statistic-api/src/main/java"
 }
 
-group = "com.weprode.nero.statistic"
+group = "com.weprode.facile.statistic"

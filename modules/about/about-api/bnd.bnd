@@ -1,10 +1,10 @@
 Bundle-Name: about-api
-Bundle-SymbolicName: com.weprode.nero.about.api
+Bundle-SymbolicName: com.weprode.facile.about.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.nero.about.exception,\
-	com.weprode.nero.about.model,\
-	com.weprode.nero.about.service,\
-	com.weprode.nero.about.service.persistence
+	com.weprode.facile.about.exception,\
+	com.weprode.facile.about.model,\
+	com.weprode.facile.about.service,\
+	com.weprode.facile.about.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../about-service/service.xml

@@ -1,5 +1,5 @@
 Bundle-Name: agenda-service
-Bundle-SymbolicName: com.weprode.nero.agenda.service
+Bundle-SymbolicName: com.weprode.facile.agenda.service
 Bundle-Version: 1.0.0
 Liferay-Require-SchemaVersion: 1.0.0
 Liferay-Service: true

@@ -17,4 +17,4 @@ buildService {
 	apiDir = "../messaging-api/src/main/java"
 }
 
-group = "com.weprode.nero.messaging"
+group = "com.weprode.facile.messaging"

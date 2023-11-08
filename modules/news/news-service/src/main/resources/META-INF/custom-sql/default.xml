@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="com.weprode.nero.news.service.persistence.NewsFinder.getNews">
+    <sql id="com.weprode.facile.news.service.persistence.NewsFinder.getNews">
         <![CDATA[
 	        SELECT DISTINCT news.*
         	FROM News_News news
@@ -14,7 +14,7 @@
             LIMIT ?
         ]]>
     </sql>
-    <sql id="com.weprode.nero.news.service.persistence.NewsFinder.getNewsCount">
+    <sql id="com.weprode.facile.news.service.persistence.NewsFinder.getNewsCount">
         <![CDATA[
 	        SELECT count(DISTINCT news.newsId) as totalCount
         	FROM News_News news
@@ -25,7 +25,7 @@
 			[$OTHER$]
         ]]>
     </sql>
-    <sql id="com.weprode.nero.news.service.persistence.NewsFinder.getNewsActivities">
+    <sql id="com.weprode.facile.news.service.persistence.NewsFinder.getNewsActivities">
         <![CDATA[
 	        SELECT DISTINCT news.*
         	FROM News_News news
@@ -38,7 +38,7 @@
             LIMIT ?
         ]]>
     </sql>
-    <sql id="com.weprode.nero.news.service.persistence.NewsFinder.getGroupActivities">
+    <sql id="com.weprode.facile.news.service.persistence.NewsFinder.getGroupActivities">
         <![CDATA[
 	        SELECT DISTINCT news.*
         	FROM News_News news

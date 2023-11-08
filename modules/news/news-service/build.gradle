@@ -17,4 +17,4 @@ buildService {
 	apiDir = "../news-api/src/main/java"
 }
 
-group = "com.weprode.nero.news"
+group = "com.weprode.facile.news"

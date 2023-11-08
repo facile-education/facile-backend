@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findUserOrganizations">
+    <sql id="com.weprode.facile.organization.service.persistence.OrgUtilsFinder.findUserOrganizations">
         <![CDATA[
 			SELECT o.*
 			FROM Organization_ o
@@ -9,7 +9,7 @@
 			WHERE uo.userId = ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findOrganizationsByParentId">
+    <sql id="com.weprode.facile.organization.service.persistence.OrgUtilsFinder.findOrganizationsByParentId">
         <![CDATA[
 			SELECT o.*
 			FROM Organization_ o
@@ -17,7 +17,7 @@
 			WHERE o.parentOrganizationId = ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.organization.service.persistence.OrgUtilsFinder.findOrganizationsByType">
+    <sql id="com.weprode.facile.organization.service.persistence.OrgUtilsFinder.findOrganizationsByType">
         <![CDATA[
 			SELECT o.*
 			FROM Organization_ o

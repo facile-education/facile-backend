@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <!--sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countActiveUsers">
+    <!--sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countActiveUsers">
         <![CDATA[
             SELECT count(*)
             FROM User_ u
@@ -10,14 +10,14 @@
             AND uo.organizationId = ?
         ]]>
     </sql-->
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllActiveUsers">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllActiveUsers">
         <![CDATA[
 			SELECT COUNT(DISTINCT(ul.userId))
 			FROM Statistics_UserLogin ul
 			WHERE ul.loginDate BETWEEN ? AND ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolActiveUsers">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolActiveUsers">
         <![CDATA[
 			SELECT COUNT(DISTINCT(ul.userId))
 			FROM Statistics_UserLogin ul
@@ -25,7 +25,7 @@
 			AND ul.schoolId = ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllFiles">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllFiles">
         <![CDATA[
 			SELECT fe.extension, count(*)
 			FROM DLFileEntry fe
@@ -33,7 +33,7 @@
 			GROUP BY fe.extension
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolFiles">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolFiles">
         <![CDATA[
 			SELECT fe.extension, count(*)
 			FROM DLFileEntry fe
@@ -43,7 +43,7 @@
 			GROUP BY fe.extension
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllNews">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllNews">
         <![CDATA[
 			SELECT count(*)
 			FROM News_News n
@@ -51,7 +51,7 @@
 			AND n.isSchoolNews = ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolNews">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolNews">
         <![CDATA[
 			SELECT count(*)
 			FROM News_News n
@@ -61,7 +61,7 @@
 			AND n.isSchoolNews = ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllMessages">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllMessages">
         <![CDATA[
 			SELECT count(*)
 			FROM Messaging_Message m
@@ -70,7 +70,7 @@
 			AND m.type_ != 3
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolMessages">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolMessages">
         <![CDATA[
 			SELECT count(*)
 			FROM Messaging_Message m
@@ -81,7 +81,7 @@
 			AND uo.organizationId = ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countAllHomeworks">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllHomeworks">
         <![CDATA[
 			SELECT ch.homeworkType, COUNT(*)
 			FROM Course_Homework ch
@@ -89,7 +89,7 @@
 			GROUP BY ch.homeworkType
 		]]>
     </sql>
-    <sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolHomeworks">
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolHomeworks">
         <![CDATA[
 			SELECT ch.homeworkType, COUNT(*)
 			FROM Course_Homework ch
@@ -99,7 +99,7 @@
 			GROUP BY ch.homeworkType
 		]]>
     </sql>
-    <!-- sql id="com.weprode.nero.statistic.service.persistence.GeneralStatFinder.countSchoolCDTSessionContent">
+    <!-- sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolCDTSessionContent">
         <![CDATA[
             SELECT count(*)
             FROM BlogsEntry

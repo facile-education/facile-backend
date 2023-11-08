@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="com.weprode.nero.schedule.service.persistence.CDTSessionFinder.findByTeacherId_RangeDate">
+    <sql id="com.weprode.facile.schedule.service.persistence.CDTSessionFinder.findByTeacherId_RangeDate">
         <![CDATA[
             SELECT cdtSession.*
             FROM Schedule_CDTSession cdtSession
@@ -10,7 +10,7 @@
             AND sessionTeacher.teacherId = ?
         ]]>
     </sql>
-    <sql id="com.weprode.nero.schedule.service.persistence.CDTSessionFinder.findByStudentId_RangeDate">
+    <sql id="com.weprode.facile.schedule.service.persistence.CDTSessionFinder.findByStudentId_RangeDate">
         <![CDATA[
             SELECT cdtSession.*
             FROM Schedule_CDTSession cdtSession
@@ -20,7 +20,7 @@
             AND sessionStudent.studentId = ?
         ]]>
     </sql>
-    <sql id="com.weprode.nero.schedule.service.persistence.CDTSessionFinder.getSessionActivity">
+    <sql id="com.weprode.facile.schedule.service.persistence.CDTSessionFinder.getSessionActivity">
         <![CDATA[
             SELECT cdtSession.*
             FROM Schedule_CDTSession cdtSession

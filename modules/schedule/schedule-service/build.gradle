@@ -16,4 +16,4 @@ buildService {
 	apiDir = "../schedule-api/src/main/java"
 }
 
-group = "com.weprode.nero.schedule"
+group = "com.weprode.facile.schedule"

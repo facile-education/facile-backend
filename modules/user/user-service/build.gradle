@@ -17,4 +17,4 @@ buildService {
 	apiDir = "../user-api/src/main/java"
 }
 
-group = "com.weprode.nero.user"
+group = "com.weprode.facile.user"

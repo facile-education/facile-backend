@@ -2,10 +2,10 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.group.model.CommunityInfos" />
-	<import class="com.weprode.nero.group.model.GroupMembership" />
-	<import class="com.weprode.nero.group.model.MembershipActivity" />
-	<class name="com.weprode.nero.group.model.impl.CommunityInfosImpl" table="Group_CommunityInfos">
+	<import class="com.weprode.facile.group.model.CommunityInfos" />
+	<import class="com.weprode.facile.group.model.GroupMembership" />
+	<import class="com.weprode.facile.group.model.MembershipActivity" />
+	<class name="com.weprode.facile.group.model.impl.CommunityInfosImpl" table="Group_CommunityInfos">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="communityInfosId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -18,7 +18,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isContactList" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="color" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
-	<class name="com.weprode.nero.group.model.impl.GroupMembershipImpl" table="Group_GroupMembership">
+	<class name="com.weprode.facile.group.model.impl.GroupMembershipImpl" table="Group_GroupMembership">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="membershipId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -28,7 +28,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="endDate" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fullYear" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
-	<class name="com.weprode.nero.group.model.impl.MembershipActivityImpl" table="Group_MembershipActivity">
+	<class name="com.weprode.facile.group.model.impl.MembershipActivityImpl" table="Group_MembershipActivity">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="membershipActivityId" type="long">
 			<generator class="assigned" />
 		</id>

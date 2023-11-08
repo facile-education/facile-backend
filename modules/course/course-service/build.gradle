@@ -16,4 +16,4 @@ buildService {
 	apiDir = "../course-api/src/main/java"
 }
 
-group = "com.weprode.nero.course"
+group = "com.weprode.facile.course"

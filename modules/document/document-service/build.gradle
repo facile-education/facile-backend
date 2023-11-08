@@ -15,4 +15,4 @@ buildService {
 	apiDir = "../document-api/src/main/java"
 }
 
-group = "com.weprode.nero.document"
+group = "com.weprode.facile.document"

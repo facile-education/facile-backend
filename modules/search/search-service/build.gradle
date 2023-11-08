@@ -13,4 +13,4 @@ buildService {
 	apiDir = "../search-api/src/main/java"
 }
 
-group = "com.weprode.nero.search"
+group = "com.weprode.facile.search"

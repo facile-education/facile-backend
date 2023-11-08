@@ -15,5 +15,5 @@ buildService {
 	apiDir = "../agenda-api/src/main/java"
 }
 
-group = "com.weprode.nero.agenda"
+group = "com.weprode.facile.agenda"
 

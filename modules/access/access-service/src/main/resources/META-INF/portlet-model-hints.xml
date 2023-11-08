@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.weprode.nero.access.model.Access">
+	<model name="Access">
 		<field name="uuid" type="String" />
 		<field name="accessId" type="long" />
 		<field name="categoryId" type="long" />
@@ -15,14 +15,38 @@
 		<field name="thumbnailId" type="long" />
 		<field name="position" type="int" />
 	</model>
-	<model name="com.weprode.nero.access.model.AccessCategory">
+	<model name="AccessCategory">
 		<field name="uuid" type="String" />
 		<field name="categoryId" type="long" />
 		<field name="schoolId" type="long" />
 		<field name="categoryName" type="String" />
 		<field name="position" type="int" />
 	</model>
-	<model name="com.weprode.nero.access.model.AccessProfile">
+	<model name="AccessProfile">
+		<field name="uuid" type="String" />
+		<field name="accessId" type="long" />
+		<field name="roleId" type="long" />
+	</model>
+	<model name="com.weprode.facile.access.model.Access">
+		<field name="uuid" type="String" />
+		<field name="accessId" type="long" />
+		<field name="categoryId" type="long" />
+		<field name="title" type="String" />
+		<field name="type" type="int" />
+		<field name="externalUrl" type="String" />
+		<field name="folderId" type="long" />
+		<field name="fileId" type="long" />
+		<field name="thumbnailId" type="long" />
+		<field name="position" type="int" />
+	</model>
+	<model name="com.weprode.facile.access.model.AccessCategory">
+		<field name="uuid" type="String" />
+		<field name="categoryId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="categoryName" type="String" />
+		<field name="position" type="int" />
+	</model>
+	<model name="com.weprode.facile.access.model.AccessProfile">
 		<field name="uuid" type="String" />
 		<field name="accessId" type="long" />
 		<field name="roleId" type="long" />

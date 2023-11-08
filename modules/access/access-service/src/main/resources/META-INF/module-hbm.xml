@@ -2,10 +2,10 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.access.model.Access" />
-	<import class="com.weprode.nero.access.model.AccessCategory" />
-	<import class="com.weprode.nero.access.model.AccessProfile" />
-	<class name="com.weprode.nero.access.model.impl.AccessImpl" table="Access_Access">
+	<import class="com.weprode.facile.access.model.Access" />
+	<import class="com.weprode.facile.access.model.AccessCategory" />
+	<import class="com.weprode.facile.access.model.AccessProfile" />
+	<class name="com.weprode.facile.access.model.impl.AccessImpl" table="Access_Access">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="accessId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -19,7 +19,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="thumbnailId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="position" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
-	<class name="com.weprode.nero.access.model.impl.AccessCategoryImpl" table="Access_AccessCategory">
+	<class name="com.weprode.facile.access.model.impl.AccessCategoryImpl" table="Access_AccessCategory">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="categoryId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -28,8 +28,8 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="categoryName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="position" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
-	<class name="com.weprode.nero.access.model.impl.AccessProfileImpl" table="Access_AccessProfile">
-		<composite-id class="com.weprode.nero.access.service.persistence.AccessProfilePK" name="primaryKey">
+	<class name="com.weprode.facile.access.model.impl.AccessProfileImpl" table="Access_AccessProfile">
+		<composite-id class="com.weprode.facile.access.service.persistence.AccessProfilePK" name="primaryKey">
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="accessId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="roleId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		</composite-id>

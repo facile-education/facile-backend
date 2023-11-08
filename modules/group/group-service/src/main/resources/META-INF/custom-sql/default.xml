@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="com.weprode.nero.group.service.persistence.GroupUtilsFinder.findUserGroups">
+    <sql id="com.weprode.facile.group.service.persistence.GroupUtilsFinder.findUserGroups">
         <![CDATA[
 			SELECT g.*
 			FROM Group_ g
@@ -9,7 +9,7 @@
 			WHERE ug.userId = ?
 		]]>
     </sql>
-    <sql id="com.weprode.nero.group.service.persistence.GroupUtilsFinder.findSchoolGroups">
+    <sql id="com.weprode.facile.group.service.persistence.GroupUtilsFinder.findSchoolGroups">
         <![CDATA[
 			SELECT g.*
 			FROM Group_ g

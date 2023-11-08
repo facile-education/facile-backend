@@ -2,9 +2,9 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.preference.model.NotifyConfig" />
-	<import class="com.weprode.nero.preference.model.UserProperties" />
-	<class name="com.weprode.nero.preference.model.impl.NotifyConfigImpl" table="Preference_NotifyConfig">
+	<import class="com.weprode.facile.preference.model.NotifyConfig" />
+	<import class="com.weprode.facile.preference.model.UserProperties" />
+	<class name="com.weprode.facile.preference.model.impl.NotifyConfigImpl" table="Preference_NotifyConfig">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="notifyConfigId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -17,7 +17,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="notifySync" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="digestPeriod" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
-	<class name="com.weprode.nero.preference.model.impl.UserPropertiesImpl" table="Preference_UserProperties">
+	<class name="com.weprode.facile.preference.model.impl.UserPropertiesImpl" table="Preference_UserProperties">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="long">
 			<generator class="assigned" />
 		</id>

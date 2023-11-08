@@ -4,7 +4,7 @@ create table Agenda_Event (
 	startDate DATE null,
 	endDate DATE null,
 	title VARCHAR(75) null,
-	description STRING null,
+	description VARCHAR(75) null,
 	location VARCHAR(75) null,
 	authorId LONG
 );
