@@ -2,11 +2,11 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.course.model.ContentBlock" />
-	<import class="com.weprode.nero.course.model.Homework" />
-	<import class="com.weprode.nero.course.model.SessionContent" />
-	<import class="com.weprode.nero.course.model.StudentHomework" />
-	<class name="com.weprode.nero.course.model.impl.ContentBlockImpl" table="Course_ContentBlock">
+	<import class="com.weprode.facile.course.model.ContentBlock" />
+	<import class="com.weprode.facile.course.model.Homework" />
+	<import class="com.weprode.facile.course.model.SessionContent" />
+	<import class="com.weprode.facile.course.model.StudentHomework" />
+	<class name="com.weprode.facile.course.model.impl.ContentBlockImpl" table="Course_ContentBlock">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="blockId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -18,7 +18,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="blockType" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" column="order_" name="order" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
-	<class name="com.weprode.nero.course.model.impl.HomeworkImpl" table="Course_Homework">
+	<class name="com.weprode.facile.course.model.impl.HomeworkImpl" table="Course_Homework">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="homeworkId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -36,7 +36,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isDraft" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isCorrectionSent" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
-	<class name="com.weprode.nero.course.model.impl.SessionContentImpl" table="Course_SessionContent">
+	<class name="com.weprode.facile.course.model.impl.SessionContentImpl" table="Course_SessionContent">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -47,7 +47,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="publicationDate" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isDraft" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
-	<class name="com.weprode.nero.course.model.impl.StudentHomeworkImpl" table="Course_StudentHomework">
+	<class name="com.weprode.facile.course.model.impl.StudentHomeworkImpl" table="Course_StudentHomework">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="studentHomeworkId" type="long">
 			<generator class="assigned" />
 		</id>

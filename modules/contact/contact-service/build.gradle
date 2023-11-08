@@ -16,4 +16,4 @@ buildService {
 	apiDir = "../contact-api/src/main/java"
 }
 
-group = "com.weprode.nero.contact"
+group = "com.weprode.facile.contact"

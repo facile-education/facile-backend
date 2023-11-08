@@ -18,4 +18,4 @@ buildService {
 	apiDir = "../eel-synchronization-api/src/main/java"
 }
 
-group = "com.weprode.nero.eel.synchronization"
+group = "com.weprode.facile.eel.synchronization"

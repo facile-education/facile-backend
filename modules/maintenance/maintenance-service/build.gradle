@@ -16,4 +16,4 @@ buildService {
 	apiDir = "../maintenance-api/src/main/java"
 }
 
-group = "com.weprode.nero.maintenance"
+group = "com.weprode.facile.maintenance"

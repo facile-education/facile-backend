@@ -26,6 +26,6 @@ create table About_UserReadVersionNote (
 create table About_VersionNote (
 	versionNoteId LONG not null primary key,
 	title VARCHAR(75) null,
-	content STRING null,
+	content VARCHAR(75) null,
 	versionNoteDate DATE null
 );

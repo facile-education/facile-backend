@@ -10,4 +10,4 @@ buildService {
 	apiDir = "../mobile-api/src/main/java"
 }
 
-group = "com.weprode.nero.mobile"
+group = "com.weprode.facile.mobile"

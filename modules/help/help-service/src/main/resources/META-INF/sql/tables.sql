@@ -9,9 +9,9 @@ create table Help_HelpItem (
 	itemId LONG not null primary key,
 	categoryId LONG,
 	itemName VARCHAR(75) null,
-	videoURL VARCHAR(200) null,
-	videoDescription STRING null,
-	manual STRING null,
+	videoURL VARCHAR(75) null,
+	videoDescription VARCHAR(75) null,
+	manual VARCHAR(75) null,
 	position INTEGER,
 	language VARCHAR(75) null,
 	isManagement BOOLEAN
@@ -33,8 +33,8 @@ create table Help_HelpLink (
 create table Help_HelpQuestion (
 	questionId LONG not null primary key,
 	itemId LONG,
-	question VARCHAR(200) null,
-	answer STRING null
+	question VARCHAR(75) null,
+	answer VARCHAR(75) null
 );
 
 create table Help_HelpRelation (

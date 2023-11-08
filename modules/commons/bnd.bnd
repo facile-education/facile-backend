@@ -1,8 +1,8 @@
 Bundle-Name: commons
-Bundle-SymbolicName: com.weprode.nero.commons
+Bundle-SymbolicName: com.weprode.facile.commons
 Bundle-Version: 0.1.0
 Export-Package:\
-    com.weprode.nero.commons,\
-    com.weprode.nero.commons.constants,\
-	com.weprode.nero.commons.properties
+    com.weprode.facile.commons,\
+    com.weprode.facile.commons.constants,\
+	com.weprode.facile.commons.properties
 -check: EXPORTS

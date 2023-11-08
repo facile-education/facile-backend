@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.weprode.nero.statistic.model.LoolStat">
+	<model name="LoolStat">
 		<field name="statId" type="long" />
 		<field name="objectId" type="long" />
 		<field name="userId" type="long" />
@@ -9,7 +9,23 @@
 		<field name="actionDate" type="Date" />
 		<field name="type" type="int" />
 	</model>
-	<model name="com.weprode.nero.statistic.model.UserLogin">
+	<model name="UserLogin">
+		<field name="userLoginId" type="long" />
+		<field name="userId" type="long" />
+		<field name="loginDate" type="Date" />
+		<field name="role" type="int" />
+		<field name="schoolId" type="long" />
+		<field name="isMobileApp" type="boolean" />
+	</model>
+	<model name="com.weprode.facile.statistic.model.LoolStat">
+		<field name="statId" type="long" />
+		<field name="objectId" type="long" />
+		<field name="userId" type="long" />
+		<field name="saveAction" type="boolean" />
+		<field name="actionDate" type="Date" />
+		<field name="type" type="int" />
+	</model>
+	<model name="com.weprode.facile.statistic.model.UserLogin">
 		<field name="userLoginId" type="long" />
 		<field name="userId" type="long" />
 		<field name="loginDate" type="Date" />

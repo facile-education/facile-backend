@@ -18,4 +18,4 @@ buildService {
 	apiDir = "../dashboard-api/src/main/java"
 }
 
-group = "com.weprode.nero.dashboard"
+group = "com.weprode.facile.dashboard"

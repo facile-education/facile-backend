@@ -1,10 +1,10 @@
 Bundle-Name: statistic-api
-Bundle-SymbolicName: com.weprode.nero.statistic.api
+Bundle-SymbolicName: com.weprode.facile.statistic.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.nero.statistic.exception,\
-	com.weprode.nero.statistic.model,\
-	com.weprode.nero.statistic.service,\
-	com.weprode.nero.statistic.service.persistence
+	com.weprode.facile.statistic.exception,\
+	com.weprode.facile.statistic.model,\
+	com.weprode.facile.statistic.service,\
+	com.weprode.facile.statistic.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../statistic-service/service.xml

@@ -1,10 +1,10 @@
 Bundle-Name: help-api
-Bundle-SymbolicName: com.weprode.nero.help.api
+Bundle-SymbolicName: com.weprode.facile.help.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.nero.help.exception,\
-	com.weprode.nero.help.model,\
-	com.weprode.nero.help.service,\
-	com.weprode.nero.help.service.persistence
+	com.weprode.facile.help.exception,\
+	com.weprode.facile.help.model,\
+	com.weprode.facile.help.service,\
+	com.weprode.facile.help.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../help-service/service.xml

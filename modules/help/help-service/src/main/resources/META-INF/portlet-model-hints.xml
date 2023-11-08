@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.weprode.nero.help.model.HelpCategory">
+	<model name="HelpCategory">
 		<field name="categoryId" type="long" />
 		<field name="categoryName" type="String" />
 		<field name="serviceId" type="long" />
 		<field name="position" type="int" />
 	</model>
-	<model name="com.weprode.nero.help.model.HelpItem">
+	<model name="HelpItem">
 		<field name="itemId" type="long" />
 		<field name="categoryId" type="long" />
 		<field name="itemName" type="String" />
@@ -24,18 +24,18 @@
 		<field name="language" type="String" />
 		<field name="isManagement" type="boolean" />
 	</model>
-	<model name="com.weprode.nero.help.model.HelpItemRole">
+	<model name="HelpItemRole">
 		<field name="helpItemRoleId" type="long" />
 		<field name="itemId" type="long" />
 		<field name="roleId" type="long" />
 	</model>
-	<model name="com.weprode.nero.help.model.HelpLink">
+	<model name="HelpLink">
 		<field name="linkId" type="long" />
 		<field name="itemId" type="long" />
 		<field name="linkName" type="String" />
 		<field name="linkUrl" type="String" />
 	</model>
-	<model name="com.weprode.nero.help.model.HelpQuestion">
+	<model name="HelpQuestion">
 		<field name="questionId" type="long" />
 		<field name="itemId" type="long" />
 		<field name="question" type="String">
@@ -45,7 +45,46 @@
 			<hint-collection name="TEXTAREA" />
 		</field>
 	</model>
-	<model name="com.weprode.nero.help.model.HelpRelation">
+	<model name="HelpRelation">
+		<field name="relationId" type="long" />
+		<field name="itemId" type="long" />
+		<field name="relatedItemId" type="long" />
+	</model>
+	<model name="com.weprode.facile.help.model.HelpCategory">
+		<field name="categoryId" type="long" />
+		<field name="categoryName" type="String" />
+		<field name="serviceId" type="long" />
+		<field name="position" type="int" />
+	</model>
+	<model name="com.weprode.facile.help.model.HelpItem">
+		<field name="itemId" type="long" />
+		<field name="categoryId" type="long" />
+		<field name="itemName" type="String" />
+		<field name="videoURL" type="String" />
+		<field name="videoDescription" type="String" />
+		<field name="manual" type="String" />
+		<field name="position" type="int" />
+		<field name="language" type="String" />
+		<field name="isManagement" type="boolean" />
+	</model>
+	<model name="com.weprode.facile.help.model.HelpItemRole">
+		<field name="helpItemRoleId" type="long" />
+		<field name="itemId" type="long" />
+		<field name="roleId" type="long" />
+	</model>
+	<model name="com.weprode.facile.help.model.HelpLink">
+		<field name="linkId" type="long" />
+		<field name="itemId" type="long" />
+		<field name="linkName" type="String" />
+		<field name="linkUrl" type="String" />
+	</model>
+	<model name="com.weprode.facile.help.model.HelpQuestion">
+		<field name="questionId" type="long" />
+		<field name="itemId" type="long" />
+		<field name="question" type="String" />
+		<field name="answer" type="String" />
+	</model>
+	<model name="com.weprode.facile.help.model.HelpRelation">
 		<field name="relationId" type="long" />
 		<field name="itemId" type="long" />
 		<field name="relatedItemId" type="long" />

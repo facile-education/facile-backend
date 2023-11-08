@@ -1,5 +1,5 @@
 Bundle-Name: eel-synchronization-service
-Bundle-SymbolicName: com.weprode.nero.eel.synchronization.service
+Bundle-SymbolicName: com.weprode.facile.eel.synchronization.service
 Bundle-Version: 1.0.0
 Liferay-Require-SchemaVersion: 1.0.0
 Liferay-Service: true

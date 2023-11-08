@@ -7,8 +7,8 @@ create table Messaging_Message (
 	senderId LONG,
 	sendDate DATE null,
 	senderName VARCHAR(75) null,
-	messageSubject STRING null,
-	messageContent STRING null,
+	messageSubject VARCHAR(75) null,
+	messageContent VARCHAR(75) null,
 	isNew BOOLEAN,
 	readDate DATE null,
 	isAnswered BOOLEAN,
@@ -24,28 +24,28 @@ create table Messaging_MessageAttachFile (
 
 create table Messaging_MessageContent (
 	messageId LONG not null primary key,
-	messageContent STRING null
+	messageContent VARCHAR(75) null
 );
 
 create table Messaging_MessageFolder (
 	folderId LONG not null primary key,
 	userId LONG,
-	folderName VARCHAR(300) null,
+	folderName VARCHAR(75) null,
 	type_ INTEGER,
 	parentFolderId LONG
 );
 
 create table Messaging_MessageRecipients (
 	messageId LONG not null primary key,
-	recipients STRING null
+	recipients VARCHAR(75) null
 );
 
 create table Messaging_MessagingConfig (
 	userId LONG not null primary key,
 	isForwardActive BOOLEAN,
-	forwardMail VARCHAR(300) null,
+	forwardMail VARCHAR(75) null,
 	isSignatureActive BOOLEAN,
-	signature STRING null,
+	signature VARCHAR(75) null,
 	isAutoReplyActive BOOLEAN,
-	autoReplyContent STRING null
+	autoReplyContent VARCHAR(75) null
 );

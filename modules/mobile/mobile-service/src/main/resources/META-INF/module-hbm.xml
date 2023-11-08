@@ -2,9 +2,9 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.mobile.model.MobileDevice" />
-	<import class="com.weprode.nero.mobile.model.UserMobileToken" />
-	<class name="com.weprode.nero.mobile.model.impl.MobileDeviceImpl" table="Mobile_MobileDevice">
+	<import class="com.weprode.facile.mobile.model.MobileDevice" />
+	<import class="com.weprode.facile.mobile.model.UserMobileToken" />
+	<class name="com.weprode.facile.mobile.model.impl.MobileDeviceImpl" table="Mobile_MobileDevice">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="mobileDeviceId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -16,7 +16,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="operatingSystemVersion" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="browserUA" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
-	<class name="com.weprode.nero.mobile.model.impl.UserMobileTokenImpl" table="Mobile_UserMobileToken">
+	<class name="com.weprode.facile.mobile.model.impl.UserMobileTokenImpl" table="Mobile_UserMobileToken">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="long">
 			<generator class="assigned" />
 		</id>

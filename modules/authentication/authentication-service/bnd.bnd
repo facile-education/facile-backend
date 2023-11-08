@@ -1,5 +1,5 @@
 Bundle-Name: authentication-service
-Bundle-SymbolicName: com.weprode.nero.authentication.service
+Bundle-SymbolicName: com.weprode.facile.authentication.service
 Bundle-Version: 1.0.0
 Liferay-Require-SchemaVersion: 1.0.0
 Liferay-Service: true

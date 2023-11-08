@@ -2,12 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.application.model.Application" />
-	<import class="com.weprode.nero.application.model.AuthorizedSchool" />
-	<import class="com.weprode.nero.application.model.Broadcast" />
-	<import class="com.weprode.nero.application.model.BroadcastRule" />
-	<import class="com.weprode.nero.application.model.DefaultRole" />
-	<class name="com.weprode.nero.application.model.impl.ApplicationImpl" table="Application_Application">
+	<import class="com.weprode.facile.application.model.Application" />
+	<import class="com.weprode.facile.application.model.AuthorizedSchool" />
+	<import class="com.weprode.facile.application.model.Broadcast" />
+	<import class="com.weprode.facile.application.model.BroadcastRule" />
+	<import class="com.weprode.facile.application.model.DefaultRole" />
+	<class name="com.weprode.facile.application.model.impl.ApplicationImpl" table="Application_Application">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="applicationId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -25,14 +25,14 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="exportOther" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="menuEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
-	<class name="com.weprode.nero.application.model.impl.AuthorizedSchoolImpl" table="Application_AuthorizedSchool">
+	<class name="com.weprode.facile.application.model.impl.AuthorizedSchoolImpl" table="Application_AuthorizedSchool">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="authorizedSchoolId" type="long">
 			<generator class="assigned" />
 		</id>
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="applicationId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoolId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
-	<class name="com.weprode.nero.application.model.impl.BroadcastImpl" table="Application_Broadcast">
+	<class name="com.weprode.facile.application.model.impl.BroadcastImpl" table="Application_Broadcast">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="broadcastId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -41,7 +41,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isBroadcasted" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="applicationUrl" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
-	<class name="com.weprode.nero.application.model.impl.BroadcastRuleImpl" table="Application_BroadcastRule">
+	<class name="com.weprode.facile.application.model.impl.BroadcastRuleImpl" table="Application_BroadcastRule">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="broadcastRuleId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -51,7 +51,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="orgId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
-	<class name="com.weprode.nero.application.model.impl.DefaultRoleImpl" table="Application_DefaultRole">
+	<class name="com.weprode.facile.application.model.impl.DefaultRoleImpl" table="Application_DefaultRole">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="defaultRoleId" type="long">
 			<generator class="assigned" />
 		</id>

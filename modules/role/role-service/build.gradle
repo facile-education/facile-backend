@@ -10,4 +10,4 @@ buildService {
 	apiDir = "../role-api/src/main/java"
 }
 
-group = "com.weprode.nero.role"
+group = "com.weprode.facile.role"

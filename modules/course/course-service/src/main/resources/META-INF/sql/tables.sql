@@ -2,8 +2,8 @@ create table Course_ContentBlock (
 	blockId LONG not null primary key,
 	courseItemId LONG,
 	modificationDate DATE null,
-	blockName VARCHAR(255) null,
-	blockValue STRING null,
+	blockName VARCHAR(75) null,
+	blockValue VARCHAR(75) null,
 	fileEntryId LONG,
 	blockType INTEGER,
 	order_ INTEGER
@@ -14,7 +14,7 @@ create table Course_Homework (
 	homeworkType INTEGER,
 	courseId LONG,
 	teacherId LONG,
-	title VARCHAR(255) null,
+	title VARCHAR(75) null,
 	modificationDate DATE null,
 	sourceSessionId LONG,
 	targetSessionId LONG,
@@ -30,7 +30,7 @@ create table Course_SessionContent (
 	sessionId LONG not null primary key,
 	companyId LONG,
 	teacherId LONG,
-	title VARCHAR(255) null,
+	title VARCHAR(75) null,
 	modificationDate DATE null,
 	publicationDate DATE null,
 	isDraft BOOLEAN
@@ -45,6 +45,6 @@ create table Course_StudentHomework (
 	sentDate DATE null,
 	sentFileId LONG,
 	isCorrected BOOLEAN,
-	comment_ STRING null,
+	comment_ VARCHAR(75) null,
 	correctionDate DATE null
 );

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="com.weprode.nero.messaging.service.persistence.MessageFinder.getUserThreadMessages">
+    <sql id="com.weprode.facile.messaging.service.persistence.MessageFinder.getUserThreadMessages">
         <![CDATA[
             SELECT im.messageId
             FROM Messaging_Message im

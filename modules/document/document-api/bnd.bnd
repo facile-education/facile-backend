@@ -1,11 +1,11 @@
 Bundle-Name: document-api
-Bundle-SymbolicName: com.weprode.nero.document.api
+Bundle-SymbolicName: com.weprode.facile.document.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.nero.document.constants,\
-	com.weprode.nero.document.exception,\
-	com.weprode.nero.document.model,\
-	com.weprode.nero.document.service,\
-	com.weprode.nero.document.service.persistence
+	com.weprode.facile.document.constants,\
+	com.weprode.facile.document.exception,\
+	com.weprode.facile.document.model,\
+	com.weprode.facile.document.service,\
+	com.weprode.facile.document.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../document-service/service.xml

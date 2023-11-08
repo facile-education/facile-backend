@@ -2,12 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.school.life.model.Renvoi" />
-	<import class="com.weprode.nero.school.life.model.SchoollifeSession" />
-	<import class="com.weprode.nero.school.life.model.SchoollifeSlot" />
-	<import class="com.weprode.nero.school.life.model.SessionStudent" />
-	<class name="com.weprode.nero.school.life.model.impl.RenvoiImpl" table="Schoollife_Renvoi">
-		<composite-id class="com.weprode.nero.school.life.service.persistence.RenvoiPK" name="primaryKey">
+	<import class="com.weprode.facile.school.life.model.Renvoi" />
+	<import class="com.weprode.facile.school.life.model.SchoollifeSession" />
+	<import class="com.weprode.facile.school.life.model.SchoollifeSlot" />
+	<import class="com.weprode.facile.school.life.model.SessionStudent" />
+	<class name="com.weprode.facile.school.life.model.impl.RenvoiImpl" table="Schoollife_Renvoi">
+		<composite-id class="com.weprode.facile.school.life.service.persistence.RenvoiPK" name="primaryKey">
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoollifeSessionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="studentId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		</composite-id>
@@ -21,7 +21,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="reason" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="status" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
-	<class name="com.weprode.nero.school.life.model.impl.SchoollifeSessionImpl" table="Schoollife_SchoollifeSession">
+	<class name="com.weprode.facile.school.life.model.impl.SchoollifeSessionImpl" table="Schoollife_SchoollifeSession">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoollifeSessionId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -34,7 +34,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="rollCalled" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="absenceNotificationSent" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
-	<class name="com.weprode.nero.school.life.model.impl.SchoollifeSlotImpl" table="Schoollife_SchoollifeSlot">
+	<class name="com.weprode.facile.school.life.model.impl.SchoollifeSlotImpl" table="Schoollife_SchoollifeSlot">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoollifeSlotId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -47,8 +47,8 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="room" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="capacity" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
-	<class name="com.weprode.nero.school.life.model.impl.SessionStudentImpl" table="Schoollife_SessionStudent">
-		<composite-id class="com.weprode.nero.school.life.service.persistence.SessionStudentPK" name="primaryKey">
+	<class name="com.weprode.facile.school.life.model.impl.SessionStudentImpl" table="Schoollife_SessionStudent">
+		<composite-id class="com.weprode.facile.school.life.service.persistence.SessionStudentPK" name="primaryKey">
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoollifeSessionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="studentId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		</composite-id>

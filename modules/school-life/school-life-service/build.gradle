@@ -15,4 +15,4 @@ buildService {
 	apiDir = "../school-life-api/src/main/java"
 }
 
-group = "com.weprode.nero.school.life"
+group = "com.weprode.facile.school.life"

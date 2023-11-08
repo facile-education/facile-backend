@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="com.weprode.nero.user.service.persistence.UserUtilsFinder.findUsers">
+    <sql id="com.weprode.facile.user.service.persistence.UserUtilsFinder.findUsers">
         <![CDATA[
             SELECT DISTINCT u.*
             FROM User_ u
@@ -9,7 +9,7 @@
             [$WHERE$]
         ]]>
     </sql>
-    <sql id="com.weprode.nero.user.service.persistence.UserUtilsFinder.countUsers">
+    <sql id="com.weprode.facile.user.service.persistence.UserUtilsFinder.countUsers">
         <![CDATA[
             SELECT COUNT(DISTINCT(u.userId))
             FROM User_ u
@@ -18,7 +18,7 @@
             [$WHERE$]
         ]]>
     </sql>
-    <sql id="com.weprode.nero.user.service.persistence.LDAPMappingFinder.findMaxUid">
+    <sql id="com.weprode.facile.user.service.persistence.LDAPMappingFinder.findMaxUid">
         <![CDATA[
             SELECT MAX(CAST(uid as UNSIGNED))
             FROM User_LDAPMapping

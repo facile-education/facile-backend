@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.weprode.nero.mobile.model.MobileDevice">
+	<model name="MobileDevice">
 		<field name="mobileDeviceId" type="long" />
 		<field name="userId" type="long" />
 		<field name="manufacturerDeviceId" type="String" />
@@ -11,7 +11,21 @@
 		<field name="operatingSystemVersion" type="String" />
 		<field name="browserUA" type="String" />
 	</model>
-	<model name="com.weprode.nero.mobile.model.UserMobileToken">
+	<model name="UserMobileToken">
+		<field name="userId" type="long" />
+		<field name="mobileToken" type="String" />
+	</model>
+	<model name="com.weprode.facile.mobile.model.MobileDevice">
+		<field name="mobileDeviceId" type="long" />
+		<field name="userId" type="long" />
+		<field name="manufacturerDeviceId" type="String" />
+		<field name="deviceModel" type="String" />
+		<field name="manufacturer" type="String" />
+		<field name="operatingSystem" type="String" />
+		<field name="operatingSystemVersion" type="String" />
+		<field name="browserUA" type="String" />
+	</model>
+	<model name="com.weprode.facile.mobile.model.UserMobileToken">
 		<field name="userId" type="long" />
 		<field name="mobileToken" type="String" />
 	</model>

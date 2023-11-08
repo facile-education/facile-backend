@@ -2,16 +2,16 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
-	<import class="com.weprode.nero.schedule.model.CDTSession" />
-	<import class="com.weprode.nero.schedule.model.CourseDetails" />
-	<import class="com.weprode.nero.schedule.model.Holiday" />
-	<import class="com.weprode.nero.schedule.model.ScheduleConfiguration" />
-	<import class="com.weprode.nero.schedule.model.SessionStudent" />
-	<import class="com.weprode.nero.schedule.model.SessionTeacher" />
-	<import class="com.weprode.nero.schedule.model.SlotConfiguration" />
-	<import class="com.weprode.nero.schedule.model.Subject" />
-	<import class="com.weprode.nero.schedule.model.TeacherSubject" />
-	<class name="com.weprode.nero.schedule.model.impl.CDTSessionImpl" table="Schedule_CDTSession">
+	<import class="com.weprode.facile.schedule.model.CDTSession" />
+	<import class="com.weprode.facile.schedule.model.CourseDetails" />
+	<import class="com.weprode.facile.schedule.model.Holiday" />
+	<import class="com.weprode.facile.schedule.model.ScheduleConfiguration" />
+	<import class="com.weprode.facile.schedule.model.SessionStudent" />
+	<import class="com.weprode.facile.schedule.model.SessionTeacher" />
+	<import class="com.weprode.facile.schedule.model.SlotConfiguration" />
+	<import class="com.weprode.facile.schedule.model.Subject" />
+	<import class="com.weprode.facile.schedule.model.TeacherSubject" />
+	<class name="com.weprode.facile.schedule.model.impl.CDTSessionImpl" table="Schedule_CDTSession">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -24,14 +24,14 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isManual" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
-	<class name="com.weprode.nero.schedule.model.impl.CourseDetailsImpl" table="Schedule_CourseDetails">
+	<class name="com.weprode.facile.schedule.model.impl.CourseDetailsImpl" table="Schedule_CourseDetails">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="courseGroupId" type="long">
 			<generator class="assigned" />
 		</id>
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="color" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="subjectId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
-	<class name="com.weprode.nero.schedule.model.impl.HolidayImpl" table="Schedule_Holiday">
+	<class name="com.weprode.facile.schedule.model.impl.HolidayImpl" table="Schedule_Holiday">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="holidayId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -39,7 +39,7 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="startDate" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="endDate" type="org.hibernate.type.TimestampType" />
 	</class>
-	<class name="com.weprode.nero.schedule.model.impl.ScheduleConfigurationImpl" table="Schedule_ScheduleConfiguration">
+	<class name="com.weprode.facile.schedule.model.impl.ScheduleConfigurationImpl" table="Schedule_ScheduleConfiguration">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="configId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -50,14 +50,14 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="h1Weeks" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="h2Weeks" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
-	<class name="com.weprode.nero.schedule.model.impl.SessionStudentImpl" table="Schedule_SessionStudent">
+	<class name="com.weprode.facile.schedule.model.impl.SessionStudentImpl" table="Schedule_SessionStudent">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionStudentId" type="long">
 			<generator class="assigned" />
 		</id>
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="studentId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
-	<class name="com.weprode.nero.schedule.model.impl.SessionTeacherImpl" table="Schedule_SessionTeacher">
+	<class name="com.weprode.facile.schedule.model.impl.SessionTeacherImpl" table="Schedule_SessionTeacher">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionTeacherId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -68,21 +68,21 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="modificationDate" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="privateNotes" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
-	<class name="com.weprode.nero.schedule.model.impl.SlotConfigurationImpl" table="Schedule_SlotConfiguration">
-		<composite-id class="com.weprode.nero.schedule.service.persistence.SlotConfigurationPK" name="primaryKey">
+	<class name="com.weprode.facile.schedule.model.impl.SlotConfigurationImpl" table="Schedule_SlotConfiguration">
+		<composite-id class="com.weprode.facile.schedule.service.persistence.SlotConfigurationPK" name="primaryKey">
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoolId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="slotNumber" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		</composite-id>
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionStartHour" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="sessionEndHour" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
-	<class name="com.weprode.nero.schedule.model.impl.SubjectImpl" table="Schedule_Subject">
+	<class name="com.weprode.facile.schedule.model.impl.SubjectImpl" table="Schedule_Subject">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="subjectId" type="long">
 			<generator class="assigned" />
 		</id>
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
-	<class name="com.weprode.nero.schedule.model.impl.TeacherSubjectImpl" table="Schedule_TeacherSubject">
+	<class name="com.weprode.facile.schedule.model.impl.TeacherSubjectImpl" table="Schedule_TeacherSubject">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="teacherSubjectId" type="long">
 			<generator class="assigned" />
 		</id>

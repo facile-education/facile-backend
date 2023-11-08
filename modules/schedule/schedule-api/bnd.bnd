@@ -1,10 +1,10 @@
 Bundle-Name: schedule-api
-Bundle-SymbolicName: com.weprode.nero.schedule.api
+Bundle-SymbolicName: com.weprode.facile.schedule.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.nero.schedule.exception,\
-	com.weprode.nero.schedule.model,\
-	com.weprode.nero.schedule.service,\
-	com.weprode.nero.schedule.service.persistence
+	com.weprode.facile.schedule.exception,\
+	com.weprode.facile.schedule.model,\
+	com.weprode.facile.schedule.service,\
+	com.weprode.facile.schedule.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../schedule-service/service.xml

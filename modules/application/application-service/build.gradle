@@ -13,4 +13,4 @@ buildService {
 	apiDir = "../application-api/src/main/java"
 }
 
-group = "com.weprode.nero.application"
+group = "com.weprode.facile.application"

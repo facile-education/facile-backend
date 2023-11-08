@@ -1,10 +1,10 @@
 Bundle-Name: course-api
-Bundle-SymbolicName: com.weprode.nero.course.api
+Bundle-SymbolicName: com.weprode.facile.course.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.nero.course.exception,\
-	com.weprode.nero.course.model,\
-	com.weprode.nero.course.service,\
-	com.weprode.nero.course.service.persistence
+	com.weprode.facile.course.exception,\
+	com.weprode.facile.course.model,\
+	com.weprode.facile.course.service,\
+	com.weprode.facile.course.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../course-service/service.xml
