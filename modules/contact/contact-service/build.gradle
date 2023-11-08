@@ -4,7 +4,6 @@ dependencies {
 	compile project(":modules:role:role-api")
 	compile project(":modules:organization:organization-api")
 	compile project(":modules:group:group-api")
-	compile project(":modules:eel-synchronization:eel-synchronization-api")
 	compile project(":modules:schedule:schedule-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"

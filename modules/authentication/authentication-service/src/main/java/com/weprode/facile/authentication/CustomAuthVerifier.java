@@ -20,36 +20,26 @@ import com.liferay.portal.kernel.cookies.CookiesManagerUtil;
 import com.liferay.portal.kernel.cookies.constants.CookiesConstants;
 import com.liferay.portal.kernel.encryptor.EncryptorException;
 import com.liferay.portal.kernel.encryptor.EncryptorUtil;
-import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
-import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.AccessControlContext;
 import com.liferay.portal.kernel.security.auth.AuthTokenUtil;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifier;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierResult;
-import com.liferay.portal.kernel.security.auto.login.AutoLoginException;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.UnicodeFormatter;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
-import com.weprode.facile.mobile.model.UserMobileToken;
-import com.weprode.facile.mobile.service.UserMobileTokenLocalServiceUtil;
-import com.weprode.facile.statistic.service.UserLoginLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 import javax.servlet.http.Cookie;
@@ -100,37 +90,7 @@ public class CustomAuthVerifier implements AuthVerifier {
                 return portalAuthVerifierResult;
             }
 
-            String[] credentials = checkShibbolethSession(accessControlContext.getRequest(), accessControlContext.getResponse());
-            if (credentials != null) {
-                userId = Long.parseLong(credentials[0]);
-                User user = UserLocalServiceUtil.getUser(userId);
-                logger.debug("Connected user is " + user.getFullName());
-                authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
-                authVerifierResult.setPasswordBasedAuthentication(true);
-                authVerifierResult.setUserId(userId);
-                authVerifierResult.setPassword(credentials[1]);
-
-                UserLoginLocalServiceUtil.addUserLogin(user, false);
-
-                return authVerifierResult;
-            }
-
-            credentials = checkMobileAppSession(accessControlContext.getRequest(), accessControlContext.getResponse());
-            if (credentials != null) {
-                userId = Long.parseLong(credentials[0]);
-                User user = UserLocalServiceUtil.getUser(userId);
-                logger.debug("Connected user on mobile app is " + user.getFullName());
-                authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
-                authVerifierResult.setPasswordBasedAuthentication(true);
-                authVerifierResult.setUserId(userId);
-                authVerifierResult.setPassword(credentials[1]);
-
-                UserLoginLocalServiceUtil.addUserLogin(user, true);
-
-                return authVerifierResult;
-            }
-
-            credentials = checkRememberMeSession(accessControlContext.getRequest(), accessControlContext.getResponse());
+            String[] credentials = checkRememberMeSession(accessControlContext.getRequest(), accessControlContext.getResponse());
             if (credentials != null) {
                 userId = Long.parseLong(credentials[0]);
                 User user = UserLocalServiceUtil.getUser(userId);
@@ -500,168 +460,4 @@ public class CustomAuthVerifier implements AuthVerifier {
         throw new PrincipalException.MustBeAuthenticated(userId);
     }
 
-    private String[] checkShibbolethSession(
-                HttpServletRequest request, HttpServletResponse response) throws AutoLoginException {
-
-        try {
-            String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_EA);
-            long companyId = PortalUtil.getCompanyId(request);
-            User user = null;
-
-            if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
-                String login = request.getHeader(SHIBBOLETH_NAME_ID);
-                logger.debug("AuthType is SN : login=" + login);
-                if (Validator.isNull(login)) {
-                    return null;
-                }
-                logger.debug("Trying to find user with screen name: " + login);
-                user = UserLocalServiceUtil.getUserByScreenName(companyId, login);
-
-            } else if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
-
-                String emailAddress = request.getHeader(SHIBBOLETH_EMAIL);
-                logger.debug("AuthType is Email : mail=" + emailAddress);
-                if (Validator.isNull(emailAddress)) {
-                    return null;
-                }
-                logger.debug("Trying to find user with email: " + emailAddress);
-                user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
-            }
-
-            if (user != null) {
-                if (!user.isActive()) {
-                    logger.info("User authenticated by Shibboleth but is inactive : " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
-                    return null;
-                }
-                logger.info("User authenticated with Shibboleth : " + user.getScreenName() + " (" + user.getEmailAddress() + "), uri=" + request.getRequestURI());
-                String[] credentials = new String[3];
-                credentials[0] = String.valueOf(user.getUserId());
-                credentials[1] = user.getPassword();
-                credentials[2] = String.valueOf(user.isPasswordEncrypted());
-
-                boolean isMobileApp = (CookieKeys.getCookie(request, "isMobileApp") != null && CookieKeys.getCookie(request, "isMobileApp").equals("true"));
-                setSessionCookies(request, response, user, user.getScreenName(), user.getPassword(), isMobileApp);
-                return credentials;
-            }
-
-        } catch (NoSuchUserException e) {
-            logger.error("User not found in DB");
-        } catch (Exception e) {
-            logger.error("Error occurred while login", e);
-            throw new AutoLoginException(e);
-        }
-
-        logger.debug("ShibAutoLogin returns null for uri=" + request.getRequestURI());
-        return null;
-    }
-
-    public static final String SHIBBOLETH_NAME_ID = "NameID";
-    public static final String SHIBBOLETH_EMAIL = "mail";
-
-    private String[] checkMobileAppSession (
-                HttpServletRequest request,
-                HttpServletResponse response)
-            throws AutoLoginException {
-
-        String[] credentials;
-
-        try {
-            String url = request.getHeader("Referer");
-            if (url == null) {
-                url = request.getRequestURI();
-            }
-
-            String mobileToken = getTokenFromUrl(url);
-            long userId = getUserIdFromUrl(url);
-
-            String service = ParamUtil.getString(request, "service", "");
-
-            if (!mobileToken.isEmpty()) {
-                logger.info("MobileApplicationAutoLogin : mobileToken=" + mobileToken + ", userId=" + userId + ", service=" + service);
-                UserMobileToken userMobileToken = UserMobileTokenLocalServiceUtil.getTokenUser(mobileToken);
-
-                if (userMobileToken != null) {
-                    User user = UserLocalServiceUtil.getUserById(userMobileToken.getUserId());
-                    if (!user.isActive()) {
-                        logger.info("User authenticated by mobileApp token but is inactive : " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
-                        return null;
-                    }
-
-                    credentials = new String[3];
-                    credentials[0] = String.valueOf(user.getUserId());
-                    credentials[1] = user.getPassword();
-                    credentials[2] = Boolean.TRUE.toString();
-
-                    setSessionCookies(request, response, user, user.getScreenName(), user.getPassword(), true);
-                    logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") authenticated on mobile application.");
-                    logger.debug("================ User " + user.getFullName() + " (" + user.getUserId() + ") logs in =======================");
-
-                    return credentials;
-                } else {
-                    logger.debug("Mobile token not found in database");
-                    return null;
-                }
-
-            } else {
-                logger.debug("No mobile token is empty or null");
-                return null;
-            }
-
-        }
-        catch (NoSuchUserException nsue) {
-            throw new AutoLoginException(nsue);
-        }
-        catch (Exception e) {
-            logger.error("Error in MobileApplicationAutoLogin", e);
-            throw new AutoLoginException(e);
-        }
-    }
-
-    private String getTokenFromUrl(String url) {
-        try {
-            if (url != null) {
-                //logger.info("url = " + url);
-
-                String mobileTokenStr = "mobile_token=";
-                if (url.contains(mobileTokenStr)) {
-                    String mobileToken = url.substring(url.indexOf(mobileTokenStr) + mobileTokenStr.length());
-                    int maxIndex = mobileToken.length();
-                    int andIndex = mobileToken.indexOf("&");
-                    int percentIndex = mobileToken.indexOf("%");
-
-                    if (andIndex != -1) {
-                        maxIndex = andIndex;
-                    }
-                    if (percentIndex != -1 && percentIndex < maxIndex) {
-                        maxIndex = percentIndex;
-                    }
-                    mobileToken = mobileToken.substring(0, maxIndex);
-
-                    return mobileToken;
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Error while extracting mobileToken from referer url", e);
-        }
-        return "";
-    }
-
-    private long getUserIdFromUrl(String url) {
-
-        try {
-            String userIdStr = "user_id=";
-            if (url != null && url.contains(userIdStr)) {
-                String userIdValue = url.substring(url.indexOf(userIdStr) + userIdStr.length());
-
-                if (userIdValue.contains("&")) {
-                    userIdValue = userIdValue.substring(0, userIdValue.indexOf("&"));
-                }
-
-                return Long.parseLong(userIdValue);
-            }
-        } catch (Exception e) {
-            logger.error("Error while extracting userId from referer url", e);
-        }
-        return 0;
-    }
 }
