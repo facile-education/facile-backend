@@ -1,0 +1,11 @@
+Bundle-Name: messaging-api
+Bundle-SymbolicName: com.weprode.facile.messaging.api
+Bundle-Version: 1.0.0
+Export-Package:\
+    com.weprode.facile.messaging.constants,\
+	com.weprode.facile.messaging.exception,\
+	com.weprode.facile.messaging.model,\
+	com.weprode.facile.messaging.service,\
+	com.weprode.facile.messaging.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../messaging-service/service.xml

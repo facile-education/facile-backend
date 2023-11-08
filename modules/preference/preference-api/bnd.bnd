@@ -1,0 +1,10 @@
+Bundle-Name: preference-api
+Bundle-SymbolicName: com.weprode.facile.preference.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.facile.preference.exception,\
+	com.weprode.facile.preference.model,\
+	com.weprode.facile.preference.service,\
+	com.weprode.facile.preference.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../preference-service/service.xml

@@ -1,0 +1,15 @@
+dependencies {
+	compile project(":modules:authentication:authentication-api")
+	compile project(":modules:mobile:mobile-api")
+	compile project(":modules:statistic:statistic-api")
+	compile project(":modules:commons")
+
+	implementation group: 'org.json', name: 'json', version: '20230227'
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+}
+
+buildService {
+	apiDir = "../authentication-api/src/main/java"
+}
+
+group = "com.weprode.facile.authentication"

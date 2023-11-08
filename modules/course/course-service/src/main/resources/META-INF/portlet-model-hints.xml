@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="ContentBlock">
+		<field name="blockId" type="long" />
+		<field name="courseItemId" type="long" />
+		<field name="modificationDate" type="Date" />
+		<field name="blockName" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="blockValue" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="fileEntryId" type="long" />
+		<field name="blockType" type="int" />
+		<field name="order" type="int" />
+	</model>
+	<model name="Homework">
+		<field name="homeworkId" type="long" />
+		<field name="homeworkType" type="int" />
+		<field name="courseId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="title" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="modificationDate" type="Date" />
+		<field name="sourceSessionId" type="long" />
+		<field name="targetSessionId" type="long" />
+		<field name="targetDate" type="Date" />
+		<field name="isCustomStudentList" type="boolean" />
+		<field name="estimatedTime" type="int" />
+		<field name="publicationDate" type="Date" />
+		<field name="isDraft" type="boolean" />
+		<field name="isCorrectionSent" type="boolean" />
+	</model>
+	<model name="SessionContent">
+		<field name="sessionId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="title" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="modificationDate" type="Date" />
+		<field name="publicationDate" type="Date" />
+		<field name="isDraft" type="boolean" />
+	</model>
+	<model name="StudentHomework">
+		<field name="studentHomeworkId" type="long" />
+		<field name="homeworkId" type="long" />
+		<field name="studentId" type="long" />
+		<field name="isDone" type="boolean" />
+		<field name="isSent" type="boolean" />
+		<field name="sentDate" type="Date" />
+		<field name="sentFileId" type="long" />
+		<field name="isCorrected" type="boolean" />
+		<field name="comment" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="correctionDate" type="Date" />
+	</model>
+	<model name="com.weprode.facile.course.model.ContentBlock">
+		<field name="blockId" type="long" />
+		<field name="courseItemId" type="long" />
+		<field name="modificationDate" type="Date" />
+		<field name="blockName" type="String" />
+		<field name="blockValue" type="String" />
+		<field name="fileEntryId" type="long" />
+		<field name="blockType" type="int" />
+		<field name="order" type="int" />
+	</model>
+	<model name="com.weprode.facile.course.model.Homework">
+		<field name="homeworkId" type="long" />
+		<field name="homeworkType" type="int" />
+		<field name="courseId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="title" type="String" />
+		<field name="modificationDate" type="Date" />
+		<field name="sourceSessionId" type="long" />
+		<field name="targetSessionId" type="long" />
+		<field name="targetDate" type="Date" />
+		<field name="isCustomStudentList" type="boolean" />
+		<field name="estimatedTime" type="int" />
+		<field name="publicationDate" type="Date" />
+		<field name="isDraft" type="boolean" />
+		<field name="isCorrectionSent" type="boolean" />
+	</model>
+	<model name="com.weprode.facile.course.model.SessionContent">
+		<field name="sessionId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="title" type="String" />
+		<field name="modificationDate" type="Date" />
+		<field name="publicationDate" type="Date" />
+		<field name="isDraft" type="boolean" />
+	</model>
+	<model name="com.weprode.facile.course.model.StudentHomework">
+		<field name="studentHomeworkId" type="long" />
+		<field name="homeworkId" type="long" />
+		<field name="studentId" type="long" />
+		<field name="isDone" type="boolean" />
+		<field name="isSent" type="boolean" />
+		<field name="sentDate" type="Date" />
+		<field name="sentFileId" type="long" />
+		<field name="isCorrected" type="boolean" />
+		<field name="comment" type="String" />
+		<field name="correctionDate" type="Date" />
+	</model>
+</model-hints>

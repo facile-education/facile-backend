@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <sql id="getGroupsRenvois">
+        <![CDATA[
+			SELECT r.* FROM Schoollife_Renvoi r
+			JOIN Schedule_CDTSession cs on cs.sessionId = r.sourceSessionId
+			JOIN Group_ g on g.classPK = r.orgId
+			WHERE (cs.groupId IN ([$groupIds$]) OR g.groupId IN ([$groupIds$]))
+			AND r.renvoiDate BETWEEN ? AND ?
+		]]>
+    </sql>
+</custom-sql>

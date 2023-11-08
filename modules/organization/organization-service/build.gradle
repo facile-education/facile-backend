@@ -1,0 +1,16 @@
+dependencies {
+	compile project(":modules:organization:organization-api")
+	compile project(":modules:commons")
+	compile project(":modules:role:role-api")
+	compile project(":modules:preference:preference-api")
+	compile project(":modules:schedule:schedule-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	implementation group: 'org.json', name: 'json', version: '20230227'
+}
+
+buildService {
+	apiDir = "../organization-api/src/main/java"
+}
+
+group = "com.weprode.organization"

@@ -1,0 +1,10 @@
+Bundle-Name: about-api
+Bundle-SymbolicName: com.weprode.facile.about.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.facile.about.exception,\
+	com.weprode.facile.about.model,\
+	com.weprode.facile.about.service,\
+	com.weprode.facile.about.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../about-service/service.xml

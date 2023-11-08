@@ -1,0 +1,11 @@
+Bundle-Name: document-api
+Bundle-SymbolicName: com.weprode.facile.document.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.facile.document.constants,\
+	com.weprode.facile.document.exception,\
+	com.weprode.facile.document.model,\
+	com.weprode.facile.document.service,\
+	com.weprode.facile.document.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../document-service/service.xml

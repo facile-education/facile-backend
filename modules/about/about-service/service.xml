@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.facile.about">
+	<namespace>About</namespace>
+
+	<entity name="VersionNote" local-service="true" remote-service="true">
+		<column name="versionNoteId" type="long" primary="true" />
+		<column name="title" type="String" />
+		<column name="content" type="String" />
+		<column name="versionNoteDate" type="Date" />
+	</entity>
+
+	<entity name="UserReadVersionNote" local-service="true" remote-service="false">
+		<column name="userId" type="long" primary="true"  />
+		<column name="hasReadLastVersionNote" type="boolean" />
+
+		<finder return-type="Collection" name="hasReadLastVersionNote">
+			<finder-column name="hasReadLastVersionNote" />
+		</finder>
+	</entity>
+
+</service-builder>

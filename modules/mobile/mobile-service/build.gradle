@@ -1,0 +1,13 @@
+dependencies {
+	compile project(":modules:mobile:mobile-api")
+	compile project(":modules:commons")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	implementation group: 'org.json', name: 'json', version: '20230227'
+}
+
+buildService {
+	apiDir = "../mobile-api/src/main/java"
+}
+
+group = "com.weprode.facile.mobile"

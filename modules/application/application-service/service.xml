@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.facile.application">
+	<namespace>Application</namespace>
+
+	<entity name="Application" local-service="true" remote-service="true">
+		<column name="applicationId" type="long" primary="true" />
+		<column name="applicationName" type="String" />
+		<column name="applicationKey" type="String" />
+		<column name="categoryName" type="String" />
+		<column name="image" type="String" />
+		<column name="hasCustomUrl" type="boolean" />
+		<column name="hasGlobalUrl" type="boolean" />
+		<column name="globalUrl" type="String" />
+		<column name="exportUser" type="boolean" />
+		<column name="exportParent" type="boolean" />
+		<column name="exportStudent" type="boolean" />
+		<column name="exportTeacher" type="boolean" />
+		<column name="exportOther" type="boolean" />
+		<column name="menuEntryId" type="long" />
+
+		<finder return-type="Application" name="applicationKey">
+			<finder-column name="applicationKey"/>
+		</finder>
+	</entity>
+
+	<entity name="DefaultRole" local-service="true" remote-service="false">
+		<column name="defaultRoleId" type="long" primary="true" />
+		<column name="roleId" type="long" />
+		<column name="applicationId" type="long" />
+
+		<finder return-type="Collection" name="applicationId">
+			<finder-column name="applicationId"/>
+		</finder>
+
+		<finder return-type="DefaultRole" name="applicationId_roleId">
+			<finder-column name="applicationId"/>
+			<finder-column name="roleId"/>
+		</finder>
+	</entity>
+
+	<entity name="AuthorizedSchool" local-service="true" remote-service="false">
+		<column name="authorizedSchoolId" type="long" primary="true" />
+		<column name="applicationId" type="long" />
+		<column name="schoolId" type="long" />
+
+		<finder return-type="Collection" name="applicationId">
+			<finder-column name="applicationId"/>
+		</finder>
+
+		<finder return-type="AuthorizedSchool" name="applicationId_schoolId">
+			<finder-column name="applicationId"/>
+			<finder-column name="schoolId"/>
+		</finder>
+	</entity>
+
+	<entity name="Broadcast" local-service="true" remote-service="true">
+		<column name="broadcastId" type="long" primary="true" />
+		<column name="schoolId" type="long" />
+		<column name="applicationId" type="long" />
+		<column name="isBroadcasted" type="boolean" />
+		<column name="applicationUrl" type="String" />
+
+		<finder return-type="Broadcast" name="applicationId_schoolId">
+			<finder-column name="applicationId"/>
+			<finder-column name="schoolId"/>
+		</finder>
+
+		<finder return-type="Collection" name="applicationId">
+			<finder-column name="applicationId"/>
+		</finder>
+	</entity>
+
+	<entity name="BroadcastRule" local-service="true" remote-service="true">
+		<column name="broadcastRuleId" type="long" primary="true" />
+		<column name="applicationId" type="long" />
+		<column name="schoolId" type="long" />
+		<column name="roleId" type="long" />
+		<column name="orgId" type="long" />
+		<column name="groupId" type="long" />
+
+		<finder return-type="Collection" name="schoolId">
+			<finder-column name="schoolId"/>
+		</finder>
+
+		<finder return-type="Collection" name="applicationId_schoolId">
+			<finder-column name="applicationId"/>
+			<finder-column name="schoolId"/>
+		</finder>
+	</entity>
+</service-builder>

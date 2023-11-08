@@ -1,0 +1,11 @@
+Bundle-Name: organization-api
+Bundle-SymbolicName: com.weprode.facile.organization.api
+Bundle-Version: 1.0.0
+Export-Package:\
+    com.weprode.facile.organization.constants,\
+	com.weprode.facile.organization.exception,\
+	com.weprode.facile.organization.model,\
+	com.weprode.facile.organization.service,\
+	com.weprode.facile.organization.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../organization-service/service.xml

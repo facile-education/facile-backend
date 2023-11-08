@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="Event">
+		<field name="eventId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="title" type="String" />
+		<field name="description" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="location" type="String" />
+		<field name="authorId" type="long" />
+	</model>
+	<model name="EventPopulation">
+		<field name="eventId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="roleId" type="long" />
+	</model>
+	<model name="EventRead">
+		<field name="eventId" type="long" />
+		<field name="userId" type="long" />
+		<field name="readDate" type="Date" />
+	</model>
+	<model name="com.weprode.facile.agenda.model.Event">
+		<field name="eventId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="title" type="String" />
+		<field name="description" type="String" />
+		<field name="location" type="String" />
+		<field name="authorId" type="long" />
+	</model>
+	<model name="com.weprode.facile.agenda.model.EventPopulation">
+		<field name="eventId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="roleId" type="long" />
+	</model>
+	<model name="com.weprode.facile.agenda.model.EventRead">
+		<field name="eventId" type="long" />
+		<field name="userId" type="long" />
+		<field name="readDate" type="Date" />
+	</model>
+</model-hints>

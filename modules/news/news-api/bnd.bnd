@@ -1,0 +1,10 @@
+Bundle-Name: news-api
+Bundle-SymbolicName: com.weprode.facile.news.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.facile.news.exception,\
+	com.weprode.facile.news.model,\
+	com.weprode.facile.news.service,\
+	com.weprode.facile.news.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../news-service/service.xml

@@ -1,0 +1,19 @@
+dependencies {
+	compile project(":modules:agenda:agenda-api")
+	compile project(":modules:commons")
+	compile project(":modules:role:role-api")
+	compile project(":modules:user:user-api")
+	compile project(":modules:group:group-api")
+	compile project(":modules:contact:contact-api")
+	compile project(":modules:mobile:mobile-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	implementation group: 'org.json', name: 'json', version: '20230227'
+}
+
+buildService {
+	apiDir = "../agenda-api/src/main/java"
+}
+
+group = "com.weprode.facile.agenda"
+

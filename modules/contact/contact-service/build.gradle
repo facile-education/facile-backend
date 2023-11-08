@@ -1,0 +1,18 @@
+dependencies {
+	compile project(":modules:contact:contact-api")
+	compile project(":modules:commons")
+	compile project(":modules:role:role-api")
+	compile project(":modules:organization:organization-api")
+	compile project(":modules:group:group-api")
+	compile project(":modules:schedule:schedule-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	implementation group: 'org.json', name: 'json', version: '20230227'
+	compile group: 'org.ehcache', name: 'ehcache', version: '3.9.0'
+}
+
+buildService {
+	apiDir = "../contact-api/src/main/java"
+}
+
+group = "com.weprode.facile.contact"

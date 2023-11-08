@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <!--sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countActiveUsers">
+        <![CDATA[
+            SELECT count(*)
+            FROM User_ u
+            JOIN Users_Orgs uo ON uo.userId = u.userId
+            WHERE u.status = 0
+            AND u.agreedToTermsOfUse = 1
+            AND uo.organizationId = ?
+        ]]>
+    </sql-->
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllActiveUsers">
+        <![CDATA[
+			SELECT COUNT(DISTINCT(ul.userId))
+			FROM Statistics_UserLogin ul
+			WHERE ul.loginDate BETWEEN ? AND ?
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolActiveUsers">
+        <![CDATA[
+			SELECT COUNT(DISTINCT(ul.userId))
+			FROM Statistics_UserLogin ul
+			WHERE ul.loginDate BETWEEN ? AND ?
+			AND ul.schoolId = ?
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllFiles">
+        <![CDATA[
+			SELECT fe.extension, count(*)
+			FROM DLFileEntry fe
+			WHERE fe.createDate BETWEEN ? AND ?
+			GROUP BY fe.extension
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolFiles">
+        <![CDATA[
+			SELECT fe.extension, count(*)
+			FROM DLFileEntry fe
+			JOIN Users_Orgs uo ON uo.userId = fe.userId
+			WHERE fe.createDate BETWEEN ? AND ?
+			AND uo.organizationId = ?
+			GROUP BY fe.extension
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllNews">
+        <![CDATA[
+			SELECT count(*)
+			FROM News_News n
+			WHERE n.publicationDate BETWEEN ? AND ?
+			AND n.isSchoolNews = ?
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolNews">
+        <![CDATA[
+			SELECT count(*)
+			FROM News_News n
+			JOIN Users_Orgs uo ON n.authorId = uo.userId
+			WHERE n.publicationDate BETWEEN ? AND ?
+			AND uo.organizationId = ?
+			AND n.isSchoolNews = ?
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllMessages">
+        <![CDATA[
+			SELECT count(*)
+			FROM Messaging_Message m
+			WHERE m.sendMessageId = 0
+			AND m.sendDate BETWEEN ? AND ?
+			AND m.type_ != 3
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolMessages">
+        <![CDATA[
+			SELECT count(*)
+			FROM Messaging_Message m
+			JOIN Users_Orgs uo ON m.senderId = uo.userId
+			WHERE m.sendMessageId = 0
+			AND m.sendDate BETWEEN ? AND ?
+			AND m.type_ != 3
+			AND uo.organizationId = ?
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllHomeworks">
+        <![CDATA[
+			SELECT ch.homeworkType, COUNT(*)
+			FROM Course_Homework ch
+			WHERE ch.targetDate BETWEEN ? AND ?
+			GROUP BY ch.homeworkType
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolHomeworks">
+        <![CDATA[
+			SELECT ch.homeworkType, COUNT(*)
+			FROM Course_Homework ch
+			JOIN Users_Orgs uo ON ch.teacherId = uo.userId
+			WHERE ch.targetDate BETWEEN ? AND ?
+			AND uo.organizationId = ?
+			GROUP BY ch.homeworkType
+		]]>
+    </sql>
+    <!-- sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolCDTSessionContent">
+        <![CDATA[
+            SELECT count(*)
+            FROM BlogsEntry
+            WHERE createDate BETWEEN ? AND ?
+            AND organizationId = ?
+        ]]>
+    </sql -->
+</custom-sql>

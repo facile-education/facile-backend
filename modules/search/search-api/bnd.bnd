@@ -1,0 +1,10 @@
+Bundle-Name: search-api
+Bundle-SymbolicName: com.weprode.facile.search.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.facile.search.exception,\
+	com.weprode.facile.search.model,\
+	com.weprode.facile.search.service,\
+	com.weprode.facile.search.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../search-service/service.xml

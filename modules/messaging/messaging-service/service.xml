@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.facile.messaging">
+	<namespace>Messaging</namespace>
+
+	<entity name="Message" local-service="true" remote-service="true">
+		<column name="messageId" type="long" primary="true"/>
+		<column name="companyId" type="long"/>
+
+		<column name="folderId" type="long"/>
+		<column name="threadId" type="long"/>
+
+		<column name="sendMessageId" type="long" />
+		<column name="senderId" type="long"/>
+		<column name="sendDate" type="Date"/>
+		<column name="senderName" type="String"/>
+
+		<column name="messageSubject" type="String"/>
+		<column name="messageContent" type="String"/>
+
+		<column name="isNew" type="boolean"/>
+		<column name="readDate" type="Date"/>
+		<column name="isAnswered" type="boolean"/>
+		<column name="isForwarded" type="boolean"/>
+
+		<column name="type" type="int"/>
+
+		<finder name="sendMessageId" return-type="Collection">
+			<finder-column name="sendMessageId" />
+		</finder>
+
+		<finder return-type="Collection" name="folderId">
+			<finder-column name="folderId" />
+		</finder>
+
+		<finder return-type="Collection" name="threadId">
+			<finder-column name="threadId" />
+		</finder>
+
+		<finder return-type="Collection" name="folderId_threadId">
+			<finder-column name="folderId" />
+			<finder-column name="threadId" />
+		</finder>
+
+		<finder return-type="Collection" name="folderId_isNew">
+			<finder-column name="folderId" />
+			<finder-column name="isNew" />
+		</finder>
+	</entity>
+
+	<entity name="MessageFolder" local-service="true" remote-service="true">
+		<column name="folderId" type="long" primary="true"/>
+		<column name="userId" type="long"/>
+		<column name="folderName" type="String"/>
+		<column name="type" type="int"/>
+		<column name="parentFolderId" type="long"/>
+
+		<finder return-type="Collection" name="userId">
+			<finder-column name="userId" />
+		</finder>
+
+		<finder return-type="Collection" name="userId_type">
+			<finder-column name="userId" />
+			<finder-column name="type" />
+		</finder>
+
+		<finder return-type="Collection" name="userId_parentFolderId">
+			<finder-column name="userId" />
+			<finder-column name="parentFolderId" />
+		</finder>
+	</entity>
+
+	<entity name="MessageContent" local-service="true" remote-service="false">
+		<column name="messageId" type="long" primary="true"/>
+		<column name="messageContent" type="String"/>
+
+		<finder return-type="MessageContent" name="messageId">
+			<finder-column name="messageId" />
+		</finder>
+	</entity>
+
+	<entity name="MessageRecipients" local-service="true" remote-service="false">
+		<column name="messageId" type="long" primary="true"/>
+		<column name="recipients" type="String"/>
+
+		<finder return-type="MessageRecipients" name="messageId">
+			<finder-column name="messageId" />
+		</finder>
+	</entity>
+
+	<entity name="MessageAttachFile" local-service="true" remote-service="false">
+		<column name="messageId" type="long" primary="true"/>
+		<column name="fileId" type="long" primary="true"/>
+
+		<finder return-type="Collection" name="messageId">
+			<finder-column name="messageId" />
+		</finder>
+	</entity>
+
+	<entity name="MessagingConfig" local-service="true" remote-service="true">
+		<column name="userId" type="long" primary="true"/>
+
+		<column name="isForwardActive" type="boolean"/>
+		<column name="forwardMail" type="String"/>
+
+		<column name="isSignatureActive" type="boolean"/>
+		<column name="signature" type="String"/>
+
+		<column name="isAutoReplyActive" type="boolean"/>
+		<column name="autoReplyContent" type="String"/>
+	</entity>
+
+</service-builder>

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.facile.schedule">
+	<namespace>Schedule</namespace>
+
+	<entity name="CDTSession" local-service="true" remote-service="true">
+		<column name="sessionId" type="long" primary="true" />
+		<column name="start" type="Date" />
+		<column name="end" type="Date" />
+		<column name="slot" type="int" />
+		<column name="fullCoursName" type="String" />
+		<column name="room" type="String" />
+		<column name="subject" type="String" />
+		<column name="groupId" type="long" />
+		<column name="isManual" type="boolean" />
+
+		<finder return-type="Collection" name="groupId">
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+
+	<!-- Manage which teacher operates for a given session -->
+	<entity name="SessionTeacher" local-service="true" remote-service="true">
+		<column name="sessionTeacherId" type="long" primary="true"/>
+		<column name="sessionId" type="long" />
+		<column name="teacherId" type="long" />
+		<column name="status" type="int" />
+		<column name="substituteId" type="long" />
+		<column name="modificationDate" type="Date" />
+		<column name="privateNotes" type="String"/>
+
+		<finder return-type="Collection" name="teacherId">
+			<finder-column name="teacherId" />
+		</finder>
+		<finder return-type="Collection" name="sessionId">
+			<finder-column name="sessionId" />
+		</finder>
+		<finder return-type="SessionTeacher" name="sessionId_teacherId">
+			<finder-column name="sessionId" />
+			<finder-column name="teacherId" />
+		</finder>
+		<finder return-type="SessionTeacher" name="sessionId_substituteId">
+			<finder-column name="sessionId" />
+			<finder-column name="substituteId" />
+		</finder>
+	</entity>
+
+	<!-- Manage which student has a given session (subClass sessions) -->
+	<entity name="SessionStudent" local-service="true" remote-service="false">
+		<column name="sessionStudentId" type="long" primary="true"/>
+		<column name="sessionId" type="long" />
+		<column name="studentId" type="long" />
+
+		<finder return-type="Collection" name="sessionId">
+			<finder-column name="sessionId" />
+		</finder>
+		<finder return-type="Collection" name="studentId">
+			<finder-column name="studentId" />
+		</finder>
+		<finder return-type="Collection" name="sessionId_studentId">
+			<finder-column name="sessionId" />
+			<finder-column name="studentId" />
+		</finder>
+	</entity>
+
+	<entity name="Subject" local-service="true" remote-service="true">
+		<column name="subjectId" type="long" primary="true"/>
+		<column name="name" type="String" />
+
+		<finder return-type="Collection" name="name">
+			<finder-column name="name" />
+		</finder>
+	</entity>
+
+	<entity name="TeacherSubject" local-service="true" remote-service="false">
+		<column name="teacherSubjectId" type="long" primary="true" />
+		<column name="teacherId" type="long"/>
+		<column name="subjectId" type="long"/>
+		<column name="schoolId" type="long"/>
+
+		<finder return-type="Collection" name="teacherId">
+			<finder-column name="teacherId" />
+		</finder>
+
+		<finder return-type="Collection" name="schoolId">
+			<finder-column name="schoolId" />
+		</finder>
+	</entity>
+
+
+	<entity name="CourseDetails" local-service="true" remote-service="false">
+		<column name="courseGroupId" type="long" primary="true"/>
+		<column name="color" type="String" />
+		<column name="subjectId" type="long" />
+	</entity>
+
+
+	<entity name="SlotConfiguration" local-service="true" remote-service="true">
+		<column name="schoolId" type="long" primary="true" />
+		<column name="slotNumber" type="int" primary="true" />
+		<column name="sessionStartHour" type="String" />
+		<column name="sessionEndHour" type="String" />
+
+		<finder return-type="Collection" name="schoolId">
+			<finder-column name="schoolId" />
+		</finder>
+	</entity>
+
+	<!-- Global schedule -->
+	<entity name="ScheduleConfiguration" local-service="true" remote-service="true">
+		<column name="configId" type="long" primary="true"/>
+		<column name="projectStartDate" type="Date" />
+		<column name="schoolYearStartDate" type="Date" />
+		<column name="schoolYearSemesterDate" type="Date" />
+		<column name="schoolYearEndDate" type="Date" />
+		<column name="h1Weeks" type="String" />
+		<column name="h2Weeks" type="String" />
+	</entity>
+
+	<entity name="Holiday" local-service="true" remote-service="false">
+		<column name="holidayId" type="long" primary="true"/>
+		<column name="name" type="String" />
+		<column name="startDate" type="Date" />
+		<column name="endDate" type="Date" />
+	</entity>
+
+</service-builder>

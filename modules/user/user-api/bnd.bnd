@@ -1,0 +1,11 @@
+Bundle-Name: user-api
+Bundle-SymbolicName: com.weprode.facile.user.api
+Bundle-Version: 1.0.0
+Export-Package:\
+    com.weprode.facile.user.comparator,\
+	com.weprode.facile.user.exception,\
+	com.weprode.facile.user.model,\
+	com.weprode.facile.user.service,\
+	com.weprode.facile.user.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../user-service/service.xml

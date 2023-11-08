@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="Renvoi">
+		<field name="schoollifeSessionId" type="long" />
+		<field name="studentId" type="long" />
+		<field name="orgId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="renvoiDate" type="Date" />
+		<field name="teacherId" type="long" />
+		<field name="sourceSessionId" type="long" />
+		<field name="sourceSchoollifeSessionId" type="long" />
+		<field name="sourceTeacherId" type="long" />
+		<field name="reason" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="status" type="int" />
+	</model>
+	<model name="SchoollifeSession">
+		<field name="schoollifeSessionId" type="long" />
+		<field name="schoollifeSlotId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="type" type="int" />
+		<field name="weekNb" type="int" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="rollCalled" type="boolean" />
+		<field name="absenceNotificationSent" type="boolean" />
+	</model>
+	<model name="SchoollifeSlot">
+		<field name="schoollifeSlotId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="day" type="int" />
+		<field name="startHour" type="String" />
+		<field name="endHour" type="String" />
+		<field name="teacherId" type="long" />
+		<field name="type" type="int" />
+		<field name="room" type="String" />
+		<field name="capacity" type="int" />
+	</model>
+	<model name="SessionStudent">
+		<field name="schoollifeSessionId" type="long" />
+		<field name="studentId" type="long" />
+		<field name="sourceTeacherId" type="long" />
+		<field name="isPresent" type="boolean" />
+		<field name="notifyParents" type="boolean" />
+		<field name="comment" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="subject" type="String">
+			<hint name="max-length">300</hint>
+		</field>
+	</model>
+	<model name="com.weprode.facile.school.life.model.Renvoi">
+		<field name="schoollifeSessionId" type="long" />
+		<field name="studentId" type="long" />
+		<field name="orgId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="renvoiDate" type="Date" />
+		<field name="teacherId" type="long" />
+		<field name="sourceSessionId" type="long" />
+		<field name="sourceSchoollifeSessionId" type="long" />
+		<field name="sourceTeacherId" type="long" />
+		<field name="reason" type="String" />
+		<field name="status" type="int" />
+	</model>
+	<model name="com.weprode.facile.school.life.model.SchoollifeSession">
+		<field name="schoollifeSessionId" type="long" />
+		<field name="schoollifeSlotId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="type" type="int" />
+		<field name="weekNb" type="int" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="rollCalled" type="boolean" />
+		<field name="absenceNotificationSent" type="boolean" />
+	</model>
+	<model name="com.weprode.facile.school.life.model.SchoollifeSlot">
+		<field name="schoollifeSlotId" type="long" />
+		<field name="schoolId" type="long" />
+		<field name="day" type="int" />
+		<field name="startHour" type="String" />
+		<field name="endHour" type="String" />
+		<field name="teacherId" type="long" />
+		<field name="type" type="int" />
+		<field name="room" type="String" />
+		<field name="capacity" type="int" />
+	</model>
+	<model name="com.weprode.facile.school.life.model.SessionStudent">
+		<field name="schoollifeSessionId" type="long" />
+		<field name="studentId" type="long" />
+		<field name="sourceTeacherId" type="long" />
+		<field name="isPresent" type="boolean" />
+		<field name="notifyParents" type="boolean" />
+		<field name="comment" type="String" />
+		<field name="subject" type="String" />
+	</model>
+</model-hints>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.facile.menu">
+	<namespace>Menu</namespace>
+
+	<entity name="SideMenu" local-service="true" remote-service="true" />
+
+</service-builder>

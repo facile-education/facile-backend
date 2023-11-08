@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="CDTSession">
+		<field name="sessionId" type="long" />
+		<field name="start" type="Date" />
+		<field name="end" type="Date" />
+		<field name="slot" type="int" />
+		<field name="fullCoursName" type="String" />
+		<field name="room" type="String" />
+		<field name="subject" type="String" />
+		<field name="groupId" type="long" />
+		<field name="isManual" type="boolean" />
+	</model>
+	<model name="CourseDetails">
+		<field name="courseGroupId" type="long" />
+		<field name="color" type="String" />
+		<field name="subjectId" type="long" />
+	</model>
+	<model name="Holiday">
+		<field name="holidayId" type="long" />
+		<field name="name" type="String" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+	</model>
+	<model name="ScheduleConfiguration">
+		<field name="configId" type="long" />
+		<field name="projectStartDate" type="Date" />
+		<field name="schoolYearStartDate" type="Date" />
+		<field name="schoolYearSemesterDate" type="Date" />
+		<field name="schoolYearEndDate" type="Date" />
+		<field name="h1Weeks" type="String" />
+		<field name="h2Weeks" type="String" />
+	</model>
+	<model name="SessionStudent">
+		<field name="sessionStudentId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="studentId" type="long" />
+	</model>
+	<model name="SessionTeacher">
+		<field name="sessionTeacherId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="status" type="int" />
+		<field name="substituteId" type="long" />
+		<field name="modificationDate" type="Date" />
+		<field name="privateNotes" type="String" />
+	</model>
+	<model name="SlotConfiguration">
+		<field name="schoolId" type="long" />
+		<field name="slotNumber" type="int" />
+		<field name="sessionStartHour" type="String" />
+		<field name="sessionEndHour" type="String" />
+	</model>
+	<model name="Subject">
+		<field name="subjectId" type="long" />
+		<field name="name" type="String" />
+	</model>
+	<model name="TeacherSubject">
+		<field name="teacherSubjectId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="subjectId" type="long" />
+		<field name="schoolId" type="long" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.CDTSession">
+		<field name="sessionId" type="long" />
+		<field name="start" type="Date" />
+		<field name="end" type="Date" />
+		<field name="slot" type="int" />
+		<field name="fullCoursName" type="String" />
+		<field name="room" type="String" />
+		<field name="subject" type="String" />
+		<field name="groupId" type="long" />
+		<field name="isManual" type="boolean" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.CourseDetails">
+		<field name="courseGroupId" type="long" />
+		<field name="color" type="String" />
+		<field name="subjectId" type="long" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.Holiday">
+		<field name="holidayId" type="long" />
+		<field name="name" type="String" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.ScheduleConfiguration">
+		<field name="configId" type="long" />
+		<field name="projectStartDate" type="Date" />
+		<field name="schoolYearStartDate" type="Date" />
+		<field name="schoolYearSemesterDate" type="Date" />
+		<field name="schoolYearEndDate" type="Date" />
+		<field name="h1Weeks" type="String" />
+		<field name="h2Weeks" type="String" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.SessionStudent">
+		<field name="sessionStudentId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="studentId" type="long" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.SessionTeacher">
+		<field name="sessionTeacherId" type="long" />
+		<field name="sessionId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="status" type="int" />
+		<field name="substituteId" type="long" />
+		<field name="modificationDate" type="Date" />
+		<field name="privateNotes" type="String" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.SlotConfiguration">
+		<field name="schoolId" type="long" />
+		<field name="slotNumber" type="int" />
+		<field name="sessionStartHour" type="String" />
+		<field name="sessionEndHour" type="String" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.Subject">
+		<field name="subjectId" type="long" />
+		<field name="name" type="String" />
+	</model>
+	<model name="com.weprode.facile.schedule.model.TeacherSubject">
+		<field name="teacherSubjectId" type="long" />
+		<field name="teacherId" type="long" />
+		<field name="subjectId" type="long" />
+		<field name="schoolId" type="long" />
+	</model>
+</model-hints>

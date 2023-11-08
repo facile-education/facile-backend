@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="NotifyConfig">
+		<field name="notifyConfigId" type="long" />
+		<field name="userId" type="long" />
+		<field name="activate" type="boolean" />
+		<field name="notifyCasier" type="boolean" />
+		<field name="notifyActu" type="boolean" />
+		<field name="notifyGrpDoc" type="boolean" />
+		<field name="notifyAgenda" type="boolean" />
+		<field name="notifySync" type="boolean" />
+		<field name="digestPeriod" type="int" />
+	</model>
+	<model name="UserProperties">
+		<field name="userId" type="long" />
+		<field name="manualAccount" type="boolean" />
+		<field name="hideMenu" type="boolean" />
+		<field name="themeColor" type="String" />
+		<field name="etabId" type="long" />
+		<field name="preferedSchoolId" type="long" />
+		<field name="webdavActivated" type="boolean" />
+		<field name="termsOfUseAgreedDate" type="Date" />
+		<field name="lastSynchroDate" type="Date" />
+		<field name="lastDashboardAccessDate" type="Date" />
+	</model>
+	<model name="com.weprode.facile.preference.model.NotifyConfig">
+		<field name="notifyConfigId" type="long" />
+		<field name="userId" type="long" />
+		<field name="activate" type="boolean" />
+		<field name="notifyCasier" type="boolean" />
+		<field name="notifyActu" type="boolean" />
+		<field name="notifyGrpDoc" type="boolean" />
+		<field name="notifyAgenda" type="boolean" />
+		<field name="notifySync" type="boolean" />
+		<field name="digestPeriod" type="int" />
+	</model>
+	<model name="com.weprode.facile.preference.model.UserProperties">
+		<field name="userId" type="long" />
+		<field name="manualAccount" type="boolean" />
+		<field name="hideMenu" type="boolean" />
+		<field name="themeColor" type="String" />
+		<field name="etabId" type="long" />
+		<field name="preferedSchoolId" type="long" />
+		<field name="webdavActivated" type="boolean" />
+		<field name="termsOfUseAgreedDate" type="Date" />
+		<field name="lastSynchroDate" type="Date" />
+		<field name="lastDashboardAccessDate" type="Date" />
+	</model>
+</model-hints>

@@ -1,0 +1,8 @@
+Bundle-Name: role-api
+Bundle-SymbolicName: com.weprode.facile.role.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.facile.role.service,\
+	com.weprode.facile.role.constants
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../role-service/service.xml

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <sql id="com.weprode.facile.group.service.persistence.GroupUtilsFinder.findUserGroups">
+        <![CDATA[
+			SELECT g.*
+			FROM Group_ g
+			JOIN Group_CommunityInfos ci ON ci.groupId = g.groupId
+			JOIN Users_Groups ug ON ci.groupId = ug.groupId
+			WHERE ug.userId = ?
+		]]>
+    </sql>
+    <sql id="com.weprode.facile.group.service.persistence.GroupUtilsFinder.findSchoolGroups">
+        <![CDATA[
+			SELECT g.*
+			FROM Group_ g
+			JOIN Group_CommunityInfos ci ON ci.groupId = g.groupId
+			JOIN Users_Orgs uo ON uo.userId = ci.creatorId
+			WHERE uo.organizationId = ?
+		]]>
+    </sql>
+</custom-sql>

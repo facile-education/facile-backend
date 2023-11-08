@@ -1,0 +1,17 @@
+dependencies {
+	compile project(":modules:statistic:statistic-api")
+	compile project(":modules:commons")
+	compile project(":modules:organization:organization-api")
+	compile project(":modules:role:role-api")
+	compile project(":modules:menu:menu-api")
+	compile project(":modules:application:application-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	implementation group: 'org.json', name: 'json', version: '20230227'
+}
+
+buildService {
+	apiDir = "../statistic-api/src/main/java"
+}
+
+group = "com.weprode.facile.statistic"

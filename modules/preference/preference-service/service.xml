@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.weprode.facile.preference">
+	<namespace>Preference</namespace>
+
+	<entity name="UserProperties" local-service="true" remote-service="true">
+		<column name="userId" type="long" primary="true"/>
+		<column name="manualAccount" type="boolean"/>
+
+		<column name="hideMenu" type="boolean"/>
+		<column name="themeColor" type="String"/>
+
+		<column name="etabId" type="long"/>
+		<column name="preferedSchoolId" type="long"/>
+		<column name="webdavActivated" type="boolean"/>
+		<column name="termsOfUseAgreedDate" type="Date"/>
+		<column name="lastSynchroDate" type="Date"/>
+		<column name="lastDashboardAccessDate" type="Date"/>
+
+		<finder return-type="Collection" name="etabId_manualAccount">
+			<finder-column name="etabId" />
+			<finder-column name="manualAccount" />
+		</finder>
+	</entity>
+
+	<entity name="NotifyConfig" local-service="true" remote-service="false">
+		<column name="notifyConfigId" type="long" primary="true" />
+		<column name="userId" type="long" />
+		<column name="activate" type="boolean" />
+		<column name="notifyCasier" type="boolean" />
+		<column name="notifyActu" type="boolean" />
+		<column name="notifyGrpDoc" type="boolean" />
+		<column name="notifyAgenda" type="boolean" />
+		<column name="notifySync" type="boolean" />
+		<column name="digestPeriod" type="int" />
+
+		<finder return-type="NotifyConfig" name="userId">
+			<finder-column name="userId" />
+		</finder>
+
+		<finder return-type="Collection" name="activate">
+			<finder-column name="activate" />
+		</finder>
+
+		<finder return-type="Collection" name="activate_digestPeriod">
+			<finder-column name="activate" />
+			<finder-column name="digestPeriod" />
+		</finder>
+	</entity>
+
+</service-builder>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <sql id="com.weprode.facile.user.service.persistence.UserUtilsFinder.findUsers">
+        <![CDATA[
+            SELECT DISTINCT u.*
+            FROM User_ u
+            [$JOIN$]
+            WHERE
+            [$WHERE$]
+        ]]>
+    </sql>
+    <sql id="com.weprode.facile.user.service.persistence.UserUtilsFinder.countUsers">
+        <![CDATA[
+            SELECT COUNT(DISTINCT(u.userId))
+            FROM User_ u
+            [$JOIN$]
+            WHERE
+            [$WHERE$]
+        ]]>
+    </sql>
+    <sql id="com.weprode.facile.user.service.persistence.LDAPMappingFinder.findMaxUid">
+        <![CDATA[
+            SELECT MAX(CAST(uid as UNSIGNED))
+            FROM User_LDAPMapping
+            WHERE uid like '%000';
+        ]]>
+    </sql>
+</custom-sql>

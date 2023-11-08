@@ -1,0 +1,8 @@
+Bundle-Name: contact-api
+Bundle-SymbolicName: com.weprode.facile.contact.api
+Bundle-Version: 1.0.0
+Export-Package:\
+    com.weprode.facile.contact.constants,\
+	com.weprode.facile.contact.service
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../contact-service/service.xml

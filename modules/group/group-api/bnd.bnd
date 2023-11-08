@@ -1,0 +1,11 @@
+Bundle-Name: group-api
+Bundle-SymbolicName: com.weprode.facile.group.api
+Bundle-Version: 1.0.0
+Export-Package:\
+    com.weprode.facile.group.constants,\
+	com.weprode.facile.group.exception,\
+	com.weprode.facile.group.model,\
+	com.weprode.facile.group.service,\
+	com.weprode.facile.group.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../group-service/service.xml

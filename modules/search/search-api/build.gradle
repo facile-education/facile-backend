@@ -1,0 +1,9 @@
+dependencies {
+	compile project(":modules:commons")
+	compile project(":modules:messaging:messaging-api")
+	compile project(":modules:news:news-api")
+	compile project(":modules:agenda:agenda-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	implementation group: 'org.json', name: 'json', version: '20230227'
+}

@@ -1,0 +1,13 @@
+Bundle-Name: contact-service
+Bundle-SymbolicName: com.weprode.facile.contact.service
+Bundle-Version: 1.0.0
+Liferay-Require-SchemaVersion: 1.0.0
+Liferay-Service: true
+-dsannotations-options: inherit
+-includeresource:\
+META-INF/lib/ehcache-3.9.0.jar=ehcache-3.9.0.jar;lib:=true
+
+Import-Package:\
+    javax.*;resolution:="optional",\
+    org.*;resolution:="optional",\
+    *

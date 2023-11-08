@@ -1,0 +1,11 @@
+Bundle-Name: application-api
+Bundle-SymbolicName: com.weprode.facile.application.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.weprode.facile.application.constants,\
+	com.weprode.facile.application.exception,\
+	com.weprode.facile.application.model,\
+	com.weprode.facile.application.service,\
+	com.weprode.facile.application.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../application-service/service.xml

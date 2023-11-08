@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.weprode.facile.help.model.HelpCategory" />
+	<import class="com.weprode.facile.help.model.HelpItem" />
+	<import class="com.weprode.facile.help.model.HelpItemRole" />
+	<import class="com.weprode.facile.help.model.HelpLink" />
+	<import class="com.weprode.facile.help.model.HelpQuestion" />
+	<import class="com.weprode.facile.help.model.HelpRelation" />
+	<class name="com.weprode.facile.help.model.impl.HelpCategoryImpl" table="Help_HelpCategory">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="categoryId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="categoryName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="serviceId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="position" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+	</class>
+	<class name="com.weprode.facile.help.model.impl.HelpItemImpl" table="Help_HelpItem">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="itemId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="categoryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="itemName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="videoURL" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="videoDescription" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="manual" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="position" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="language" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="isManagement" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+	</class>
+	<class name="com.weprode.facile.help.model.impl.HelpItemRoleImpl" table="Help_HelpItemRole">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="helpItemRoleId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="itemId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="roleId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.weprode.facile.help.model.impl.HelpLinkImpl" table="Help_HelpLink">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="linkId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="itemId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="linkName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="linkUrl" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com.weprode.facile.help.model.impl.HelpQuestionImpl" table="Help_HelpQuestion">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="questionId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="itemId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="question" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="answer" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com.weprode.facile.help.model.impl.HelpRelationImpl" table="Help_HelpRelation">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="relationId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="itemId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="relatedItemId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+</hibernate-mapping>
