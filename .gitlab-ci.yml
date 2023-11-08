@@ -1,3 +1,12 @@
+module-compilation:
+  image: gradle:jre11-slim
+  stage: build
+  script: gradle deploy
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - bundles/osgi/modules/ 
+
 sonarqube-check:
   image: gradle:jre11-slim
   variables:
@@ -11,3 +20,4 @@ sonarqube-check:
   allow_failure: true
   only:
     - master # or the name of your main branch
+  dependencies: [] # Prevent artifacts download
