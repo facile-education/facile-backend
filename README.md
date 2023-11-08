@@ -1,13 +1,28 @@
-# Nero 4.0.0 - LFR7 upgrade
+# FACILE Back-end
 
-ENT Nero powered by Liferay7
+FACILE is powered by Liferay 7, more precisely 7.4.3.97
 
 ## Get started (dev)
 
-Pull the repository
-Install the Liferay's bundle "./gradlew initBundle"
-Update tomcat server conf to enable AJP
-Start Liferay and configure database
-Import dump or create default roles before synchronising users and orgs
-Copy (and update if needed) others/p_auth_token.jsp file to tomcat/webapps/ROOT/
-Update instance configuration (host, landing and logout)
+Install the Liferay's bundle with gradle task "initBundle":
+
+```sh
+./gradlew initBundle
+```
+
+This will download the associated version of Liferay bundle, in the 'bundle' directory.
+Update tomcat's server.conf file to enable AJP on a port different than 8080.
+Copy (and update if needed) others/p_auth_token.jsp file to tomcat-9.0.80/webapps/ROOT/
+Start Liferay
+
+```sh
+cd $LIFERAY-HOME/tomcat-9.0.80
+./bin/startup.sh
+```
+
+At first run, Liferay allows you to configure the database. All types of database can be used, but we recommend MariaDB.
+You can also import a dump prior to the first run (see the facile-frontend project).
+
+## Compile sources
+
+Run the 'deploy' task on all modules, this generates a bunch of jar files, that will be automatically deployed to the Liferay bundle.
