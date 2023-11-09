@@ -303,11 +303,10 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			// Convert to JSON
 			JSONArray homeworks = new JSONArray();
 			for (Homework homework : homeworkList) {
-				JSONObject homeworkJson = homework.convertToJSON(user, false);
+                JSONObject homeworkJson = homework.convertToJSON(user, false, false);
 				homeworks.put(homeworkJson);
 			}
 
-			result.put(JSONConstants.NB_STUDENTS, studentIds.size());
 			result.put(JSONConstants.HOMEWORKS, homeworks);
 			result.put(JSONConstants.SUCCESS, true);
 

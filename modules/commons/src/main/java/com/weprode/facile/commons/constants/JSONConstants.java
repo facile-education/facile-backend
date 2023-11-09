@@ -329,6 +329,7 @@ public class JSONConstants {
     public static final String ESTIMATED_TIME = "estimatedTime";
     public static final String TO_DATE = "toDate";
     public static final String SOURCE_SESSION_ID = "sourceSessionId";
+    public static final String SOURCE_SESSION_DATE = "sourceSessionDate";
     public static final String TARGET_SESSION_ID = "targetSessionId";
     public static final String TARGET_SLOT_NUMBER = "targetSlotNumber";
     public static final String IS_DONE = "isDone";
