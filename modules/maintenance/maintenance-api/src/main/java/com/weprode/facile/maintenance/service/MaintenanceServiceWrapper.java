@@ -60,6 +60,11 @@ public class MaintenanceServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject runDataFeed() {
+		return _maintenanceService.runDataFeed();
+	}
+
+	@Override
 	public org.json.JSONObject startFsAnalysis() {
 		return _maintenanceService.startFsAnalysis();
 	}

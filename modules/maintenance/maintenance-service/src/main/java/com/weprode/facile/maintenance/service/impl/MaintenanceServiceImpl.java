@@ -26,6 +26,7 @@ import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.eel.synchronization.service.SynchronizationLocalServiceUtil;
 import com.weprode.facile.maintenance.AnonymizationUtil;
+import com.weprode.facile.maintenance.DataFeedUtil;
 import com.weprode.facile.maintenance.FsManagement;
 import com.weprode.facile.maintenance.OneShotTools;
 import com.weprode.facile.maintenance.PermissionUtil;
@@ -246,6 +247,35 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 
 		try {
 			new OneShotTools().cleanupDropboxes();
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error cleaning up dropboxes", e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
+	@JSONWebService(value = "run-data-feed", method = "POST")
+	public JSONObject runDataFeed() {
+
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			new DataFeedUtil().runDataFeed();
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {

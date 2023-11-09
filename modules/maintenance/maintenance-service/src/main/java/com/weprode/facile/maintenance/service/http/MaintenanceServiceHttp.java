@@ -268,6 +268,35 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject runDataFeed(HttpPrincipal httpPrincipal) {
+		try {
+			MethodKey methodKey = new MethodKey(
+				MaintenanceServiceUtil.class, "runDataFeed",
+				_runDataFeedParameterTypes7);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		MaintenanceServiceHttp.class);
 
@@ -284,6 +313,8 @@ public class MaintenanceServiceHttp {
 	private static final Class<?>[] _addPermissionsParameterTypes5 =
 		new Class[] {};
 	private static final Class<?>[] _cleanupDropboxesParameterTypes6 =
+		new Class[] {};
+	private static final Class<?>[] _runDataFeedParameterTypes7 =
 		new Class[] {};
 
 }

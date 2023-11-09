@@ -6,6 +6,7 @@ dependencies {
 	compile project(":modules:news:news-api")
 	compile project(":modules:messaging:messaging-api")
 	compile project(":modules:eel-synchronization:eel-synchronization-api")
+	compile project(":modules:course:course-api")
 	compile project(":modules:commons")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
