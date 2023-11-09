@@ -65,7 +65,7 @@ public class LoginAction implements StrutsAction {
 
         } catch (AuthException e) {
             userStatus.put("success", false);
-            logger.error("Login failed", e);
+            logger.info("Authentication failed for login " + login);
             // Get nb remaining tries
             int nbRemainingTries = getNbRemainingTries(login);
             if (nbRemainingTries >= 0) {

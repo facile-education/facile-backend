@@ -517,7 +517,9 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 			// Check if the current user is the owner of the token to delete
 			if (user.getUserId() == loolToken.getUserId()) {
-				LoolTokenLocalServiceUtil.deleteLoolToken(loolToken.getLoolTokenId());
+				// Comment lool token deletion because Wopi can still perform actions with this token
+				// TODO add a date to LoolTokens and cron their deletion at night
+				//LoolTokenLocalServiceUtil.deleteLoolToken(loolToken.getLoolTokenId());
 				result.put(JSONConstants.SUCCESS, true);
 			} else {
 				logger.error("User " + user.getFullName() + " is not allowed to delete token " + loolToken.getLoolTokenId());
