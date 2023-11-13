@@ -4,9 +4,11 @@ dependencies {
 	compile project(":modules:organization:organization-api")
 	compile project(":modules:schedule:schedule-api")
 	compile project(":modules:news:news-api")
+	compile project(":modules:agenda:agenda-api")
 	compile project(":modules:messaging:messaging-api")
 	compile project(":modules:eel-synchronization:eel-synchronization-api")
 	compile project(":modules:course:course-api")
+	compile project(":modules:school-life:school-life-api")
 	compile project(":modules:commons")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
