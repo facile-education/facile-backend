@@ -58,15 +58,15 @@ public class DocumentFilter extends BaseFilter {
     protected void processFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws Exception {
 
-        long userId = PortalUtil.getUserId(httpServletRequest);
-        logger.info("DocumentFilter : userId = " + userId);
+        User user = PortalUtil.getUser(httpServletRequest);
+        long userId = user.getUserId();
+        logger.debug("DocumentFilter : userId = " + userId);
 
         if (userId != 0 && userId != UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
-            User user = UserLocalServiceUtil.getUser(userId);
 
             try {
                 // URI split : /documents/{repositoryId}/{folderId}/{fileTitle}/...
-                logger.info("URI=" + httpServletRequest.getRequestURI());
+                logger.debug("URI=" + httpServletRequest.getRequestURI());
                 String[] splitURI = httpServletRequest.getRequestURI().split("/documents/");
                 String[] splitPath = splitURI[1].split("/");
                 long groupId = Long.parseLong(splitPath[0]);
