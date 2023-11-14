@@ -39,4 +39,7 @@ public interface GeneralStatFinder {
 	public int countMessages(
 		java.util.Date startDate, java.util.Date endDate, long schoolId);
 
+	public java.util.Map<Integer, Integer> countSchoolLifeStudents(
+		java.util.Date startDate, java.util.Date endDate, long schoolId);
+
 }

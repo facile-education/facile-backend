@@ -97,6 +97,14 @@ public class GeneralStatServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getSchoolLifeStudentsCount(
+		java.util.Date startDate, java.util.Date endDate, long schoolId) {
+
+		return _generalStatService.getSchoolLifeStudentsCount(
+			startDate, endDate, schoolId);
+	}
+
+	@Override
 	public org.json.JSONObject getSessionsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId,
 		String comparator) {

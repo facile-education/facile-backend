@@ -64,6 +64,8 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
     private static final String[] BLUE_COLOR_POOL = {"#436A86", "#B8D3FF", "#25406D", "#C5DAF3", "#314D7C",
             "#A1C2F9", "#45659B", "#597AB1", "#82A7E4", "#7699D3", "#85B7DE"};
 
+    private static final String DATA_SET_DEFAULT = "{label: \"Main\"}";
+
     @JSONWebService(value = "get-sessions-count", method = "GET")
     public JSONObject getSessionsCount(Date startDate, Date endDate, long schoolId, String comparator) {
         JSONObject result = new JSONObject();
@@ -239,7 +241,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         try {
             JSONArray labels = new JSONArray();
             JSONArray datasets = new JSONArray();
-            JSONObject dataset = new JSONObject("{label: \"Main\"}");
+            JSONObject dataset = new JSONObject(DATA_SET_DEFAULT);
             JSONArray data = new JSONArray();
             JSONArray backgroundColors = new JSONArray();
             int totalCount = 0;
@@ -289,7 +291,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         try {
             JSONArray labels = new JSONArray();
             JSONArray datasets = new JSONArray();
-            JSONObject dataset = new JSONObject("{label: \"Main\"}");
+            JSONObject dataset = new JSONObject(DATA_SET_DEFAULT);
             JSONArray data = new JSONArray();
             JSONArray backgroundColors = new JSONArray();
             int totalCount = 0;
@@ -363,6 +365,56 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
         result.put(JSONConstants.COUNT, GeneralStatLocalServiceUtil.countMessages(startDate, endDate, schoolId));
         result.put(JSONConstants.SUCCESS, true);
+
+        return result;
+    }
+
+    @JSONWebService(value = "get-school-life-students-count", method = "GET")
+    public JSONObject getSchoolLifeStudentsCount(Date startDate, Date endDate, long schoolId) {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        if (!checkUserPermissions(user, schoolId)) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
+        try {
+            JSONArray labels = new JSONArray();
+            JSONArray datasets = new JSONArray();
+            JSONObject dataset = new JSONObject(DATA_SET_DEFAULT);
+            JSONArray data = new JSONArray();
+            JSONArray backgroundColors = new JSONArray();
+            int totalCount = 0;
+
+            int index = 0;
+            for (Map.Entry<Integer, Integer> entry : GeneralStatLocalServiceUtil.countSchoolLifeStudents(startDate, endDate, schoolId).entrySet()) {
+                labels.put("slot-" + entry.getKey());
+                data.put(entry.getValue());
+                backgroundColors.put(BLUE_COLOR_POOL[index++]);
+                totalCount += entry.getValue();
+            }
+
+            dataset.put(JSONConstants.DATA, data);
+            dataset.put(JSONConstants.BACKGROUND_COLOR, backgroundColors);
+            datasets.put(dataset);
+
+            result.put(JSONConstants.LABELS, labels);
+            result.put(JSONConstants.DATASETS, datasets);
+            result.put(JSONConstants.TOTAL_COUNT, totalCount);
+            result.put(JSONConstants.SUCCESS, true);
+        } catch(Exception e) {
+            result.put(JSONConstants.SUCCESS, false);
+            logger.error("Could not fetch homeworks statistics.", e);
+        }
 
         return result;
     }
