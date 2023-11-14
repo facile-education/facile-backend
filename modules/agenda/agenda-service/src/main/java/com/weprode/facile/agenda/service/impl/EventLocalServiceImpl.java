@@ -134,7 +134,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         }
 
         // Mobile push
-        if (markAsUnread) {
+        if (markAsUnread && event != null) {
             manageMobilePush(title, location, description, populations, event.getEventId());
         }
 

@@ -440,9 +440,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(homework.getTargetDate());
 				int weekNb = cal.get(Calendar.WEEK_OF_YEAR);
-				if (!nbHomeworksToCorrectMap.containsKey(weekNb)) {
-					nbHomeworksToCorrectMap.put(weekNb, 0);
-				}
+				nbHomeworksToCorrectMap.putIfAbsent(weekNb, 0);
 				nbHomeworksToCorrectMap.put(weekNb, nbHomeworksToCorrectMap.get(weekNb) + 1);
 			}
 			// Build JSONArray
@@ -479,9 +477,12 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		} catch (Exception e) {
 			logger.error("Error when fetching folder for homeworkId " + homeworkId, e);
 		}
-		// Apply default permissions so that students can VIEW
-		logger.info("Applying default permissions on homework folder " + homeworkFolder.getFolderId());
-		PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(homeworkFolder);
+
+		if (homeworkFolder != null) {
+			// Apply default permissions so that students can VIEW
+			logger.info("Applying default permissions on homework folder " + homeworkFolder.getFolderId());
+			PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(homeworkFolder);
+		}
 
 		return homeworkFolder;
 	}
