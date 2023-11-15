@@ -438,7 +438,6 @@ public class DataFeedUtil {
                 replayTestSubject = subjects.get(rand.nextInt(subjects.size())).getName();
             }
 
-            logger.info("Adding studentId " + studentId + " to " + schoollifeSessionId);
             boolean success = SessionStudentLocalServiceUtil.registerStudentToSession(
                     teacherId, studentId, schoollifeSessionId,
                     comment, replayTestSubject, notifyParents);
