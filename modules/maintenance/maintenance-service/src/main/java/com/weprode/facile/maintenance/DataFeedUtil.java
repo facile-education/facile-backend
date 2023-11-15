@@ -16,8 +16,11 @@
 package com.weprode.facile.maintenance;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -38,29 +41,54 @@ import com.weprode.facile.news.model.News;
 import com.weprode.facile.news.service.NewsAttachedFileLocalServiceUtil;
 import com.weprode.facile.news.service.NewsLocalServiceUtil;
 import com.weprode.facile.news.service.NewsPopulationLocalServiceUtil;
+import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.schedule.model.CDTSession;
 import com.weprode.facile.schedule.model.SessionTeacher;
+import com.weprode.facile.schedule.model.Subject;
 import com.weprode.facile.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.facile.schedule.service.SessionTeacherLocalServiceUtil;
+import com.weprode.facile.schedule.service.SubjectLocalServiceUtil;
+import com.weprode.facile.school.life.constants.SchoollifeConstants;
 import com.weprode.facile.school.life.model.Renvoi;
 import com.weprode.facile.school.life.model.SchoollifeSession;
+import com.weprode.facile.school.life.model.SchoollifeSlot;
 import com.weprode.facile.school.life.service.RenvoiLocalServiceUtil;
 import com.weprode.facile.school.life.service.SchoollifeSessionLocalServiceUtil;
+import com.weprode.facile.school.life.service.SchoollifeSlotLocalServiceUtil;
+import com.weprode.facile.school.life.service.SessionStudentLocalServiceUtil;
+import com.weprode.facile.user.service.UserSearchLocalServiceUtil;
 import org.json.JSONArray;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class DataFeedUtil {
 
     private static final Log logger = LogFactoryUtil.getLog(DataFeedUtil.class);
     private Date maxDate = null;
+    private final Random rand = new Random();
+
+    private final Map<Long, List<User>> schoolIdStudents = new HashMap<>();
 
     public DataFeedUtil() {
-        // Nothing
+        Role studentRole = RoleUtilsLocalServiceUtil.getStudentRole();
+        List<Long> roleIds = new ArrayList<>();
+        roleIds.add(studentRole.getRoleId());
+
+        for (Organization school : OrgUtilsLocalServiceUtil.getAllSchools()) {
+            List<Long> orgIds = new ArrayList<>();
+            orgIds.add(school.getOrganizationId());
+
+            List<User> students = UserSearchLocalServiceUtil.searchUsers("", orgIds, null, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+            schoolIdStudents.put(school.getOrganizationId(), students);
+        }
     }
 
     public void runDataFeed() {
@@ -80,6 +108,9 @@ public class DataFeedUtil {
         feedEvents();
         feedDocumentActivities();
         feedRenvois();
+        feedTravauxAFaire();
+        feedRetenues();
+        feedDepannages();
     }
 
     private void feedCourses() {
@@ -327,6 +358,95 @@ public class DataFeedUtil {
             }
         }
 
+    }
+
+    public void feedTravauxAFaire() {
+
+        logger.info("Run feedTravauxAFaire");
+
+        // Get Random student number between 10 and 20
+        List<Subject> subjects = SubjectLocalServiceUtil.getSubjects(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+        feedSchoolLifeSessions(SchoollifeConstants.TYPE_TRAVAUX, 10, 20, subjects);
+    }
+
+    public void feedRetenues() {
+
+        logger.info("Run feedRetenues");
+
+        // Get Random student number between 5 and 15
+        feedSchoolLifeSessions(SchoollifeConstants.TYPE_RETENUE, 5, 15, new ArrayList<>());
+
+    }
+
+    public void feedDepannages() {
+
+        logger.info("Run feedDepannage");
+
+        // Get Random student number between 0 and 10
+        feedSchoolLifeSessions(SchoollifeConstants.TYPE_DEPANNAGE, 0, 10, new ArrayList<>());
+    }
+
+    private void feedSchoolLifeSessions(int slotType, int minStudents, int maxStudents, List<Subject> subjects) {
+        List<SchoollifeSession> sessions = new ArrayList<>();
+
+        for (SchoollifeSlot slot : SchoollifeSlotLocalServiceUtil.getSchoollifeSlots(QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
+            if (slot.getType() == slotType) {
+                sessions.addAll(SchoollifeSessionLocalServiceUtil
+                        .getSlotSessions(slot.getSchoollifeSlotId()));
+            }
+        }
+
+        logger.info("Found " + sessions.size() + " sessions");
+        for (SchoollifeSession session : sessions) {
+
+            if (session.getStartDate().before(maxDate)) {
+
+                try {
+                    long teacherId = SchoollifeSlotLocalServiceUtil.getSchoollifeSlot(session.getSchoollifeSlotId()).getTeacherId();
+
+                    int nbStudents = getRandomIntInRange(minStudents, maxStudents);
+                    populateSchoolLifeSession(nbStudents, schoolIdStudents.get(session.getSchoolId()),
+                            teacherId, session.getSchoollifeSessionId(), subjects);
+                } catch (PortalException e) {
+                    logger.error("Could not get teacherId for schoolLifeSlotId " + session.getSchoollifeSlotId());
+                }
+            }
+        }
+    }
+
+    private int getRandomIntInRange(int min, int max) {
+        return rand.nextInt(max - min) + min;
+    }
+
+    private void populateSchoolLifeSession(int nbStudents, List<User> students, long teacherId ,
+                                          long schoollifeSessionId, List<Subject> subjects) {
+        boolean notifyParents = false;
+        String comment = "";
+        String replayTestSubject = "";
+        List<Long> addedUserIds = new ArrayList<>();
+
+        logger.info("Adding " + nbStudents + " students");
+        for (int i = 0; i < nbStudents; ++i) {
+            long studentId;
+            do {
+                studentId = students.get(rand.nextInt(students.size())).getUserId();
+            } while (addedUserIds.contains(studentId));
+
+            addedUserIds.add(studentId);
+
+            if (!subjects.isEmpty()) {
+                replayTestSubject = subjects.get(rand.nextInt(subjects.size())).getName();
+            }
+
+            logger.info("Adding studentId " + studentId + " to " + schoollifeSessionId);
+            boolean success = SessionStudentLocalServiceUtil.registerStudentToSession(
+                    teacherId, studentId, schoollifeSessionId,
+                    comment, replayTestSubject, notifyParents);
+
+            if (!success) {
+                logger.warn("Could not add student number " + i + " to sessionId");
+            }
+        }
     }
 
     private boolean isSameDayAndHour(Date date1, Date date2) {
