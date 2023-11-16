@@ -62,7 +62,9 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		result.put(JSONConstants.CONFIGURATION, ScheduleConfigurationLocalServiceUtil.getCalendarConfiguration());
+		JSONObject configuration = ScheduleConfigurationLocalServiceUtil.getCalendarConfiguration();
+		configuration.put(JSONConstants.HOLIDAYS, HolidayLocalServiceUtil.getHolidaysAsJson());
+		result.put(JSONConstants.CONFIGURATION, configuration);
 
 		result.put(JSONConstants.SUCCESS, true);
 		return result;
