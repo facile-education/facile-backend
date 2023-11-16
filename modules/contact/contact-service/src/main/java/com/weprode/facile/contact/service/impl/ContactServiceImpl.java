@@ -123,7 +123,7 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		if (roleId != 0) {
 			roleIds.add(roleId);
 		}
-		List<User> directoryUsers = ContactLocalServiceUtil.directorySearch(user, query, null, schoolIds, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+		List<User> directoryUsers = ContactLocalServiceUtil.directorySearch(user, query, schoolIds, roleIds, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
 		JSONArray jsonUsers = new JSONArray();
 		for (User directoryUser : directoryUsers) {

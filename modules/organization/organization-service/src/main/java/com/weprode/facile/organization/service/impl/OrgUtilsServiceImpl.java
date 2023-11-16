@@ -98,6 +98,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
         }
         if (!RoleUtilsLocalServiceUtil.isTeacher(user) &&
                 !RoleUtilsLocalServiceUtil.isPersonal(user) &&
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
@@ -138,6 +139,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isPersonal(user)
+                && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)
                 && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }

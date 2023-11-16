@@ -72,7 +72,7 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.info("Getting global document properties for user " + user.getUserId());
+		logger.debug("Getting global document properties for user " + user.getUserId());
 
 		// Get or create user Roots folders
 		Folder privateFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(user.getUserId());
@@ -127,7 +127,7 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.info("User " + user.getFullName() +" fetches document activity for groupId " + groupId);
+		logger.debug("User " + user.getFullName() +" fetches document activity for groupId " + groupId);
 
 		try {
 			JSONArray jsonActivities = new JSONArray();

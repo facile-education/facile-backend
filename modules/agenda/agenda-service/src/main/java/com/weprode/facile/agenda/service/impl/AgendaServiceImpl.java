@@ -65,7 +65,12 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            List<Event> events = EventLocalServiceUtil.getUserEvents(user, startIndex, nbEvents, unreadOnly);
+            List<Event> events;
+            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                events = EventLocalServiceUtil.getSchoolEvents(user, startIndex, nbEvents, unreadOnly);
+            } else {
+                events = EventLocalServiceUtil.getUserEvents(user, startIndex, nbEvents, unreadOnly);
+            }
 
             JSONArray jsonEvents = new JSONArray();
             for (Event event : events) {
@@ -73,7 +78,11 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
                 jsonEvents.put(jsonEvent);
             }
             result.put(JSONConstants.EVENTS, jsonEvents);
-            result.put(JSONConstants.NB_UNREAD_EVENTS, EventLocalServiceUtil.countEvents(user, new Date(), true));
+            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                result.put(JSONConstants.NB_UNREAD_EVENTS, EventLocalServiceUtil.countSchoolEvents(user, new Date(), true));
+            } else {
+                result.put(JSONConstants.NB_UNREAD_EVENTS, EventLocalServiceUtil.countEvents(user, new Date(), true));
+            }
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
@@ -131,7 +140,8 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.info("User " + user.getFullName() + " tries to create an event but has no permission");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -174,7 +184,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         try {
             // Only the event's creator or a direction member or a delegate is allowed to modify it
             Event event = EventLocalServiceUtil.getEvent(eventId);
-            if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+            if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
                 logger.error("User " + user.getFullName() + " tries to edit event " + eventId + " but has no permission");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }

@@ -13,6 +13,7 @@ create table Agenda_EventPopulation (
 	eventId LONG not null,
 	groupId LONG not null,
 	roleId LONG not null,
+	schoolId LONG,
 	primary key (eventId, groupId, roleId)
 );
 

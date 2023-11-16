@@ -72,8 +72,8 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 		return getRole(NeroRoleConstants.SCHOOL_ADMIN);
 	}
 
-	public Role getEntAdminRole() {
-		return getRole(NeroRoleConstants.ENT_ADMIN);
+	public Role getCollectivityAdminRole() {
+		return getRole(NeroRoleConstants.COLLECTIVITY_ADMIN);
 	}
 
 	public Role getAdministratorRole() {
@@ -221,7 +221,6 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -249,9 +248,9 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 		return false;
 	}
 
-	public boolean isENTAdmin(User user) {
+	public boolean isCollectivityAdmin(User user) {
 		try {
-			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getEntAdminRole().getRoleId());
+			return RoleLocalServiceUtil.hasUserRole(user.getUserId(), getCollectivityAdminRole().getRoleId());
 		} catch (Exception e) {
 			logger.debug(e);
 		}
@@ -428,8 +427,10 @@ public class RoleUtilsLocalServiceImpl extends RoleUtilsLocalServiceBaseImpl {
 			} else if (isParent(user)) {
 				visibleRoles.add(getParentRole());
 			} else {
-				visibleRoles.add(getStudentRole());
-				visibleRoles.add(getParentRole());
+				if (!isCollectivityAdmin(user)) {
+					visibleRoles.add(getStudentRole());
+					visibleRoles.add(getParentRole());
+				}
 				visibleRoles.add(getTeacherRole());
 				visibleRoles.add(getDirectionRole());
 				visibleRoles.add(getDoyenRole());

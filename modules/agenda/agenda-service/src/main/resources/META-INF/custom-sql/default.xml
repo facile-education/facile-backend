@@ -13,6 +13,19 @@
             LIMIT ?,?
         ]]>
     </sql>
+    <sql id="com.weprode.facile.agenda.service.persistence.EventFinder.getSchoolEvents">
+        <![CDATA[
+            SELECT event.*
+            FROM Agenda_Event event
+            JOIN Agenda_EventPopulation pop on event.eventId = pop.eventId
+            WHERE event.endDate >= ?
+            AND ((pop.schoolId IN ([$SCHOOL_IDS$])) OR event.authorId = ?)
+            [$OTHER$]
+            GROUP BY event.eventId
+            ORDER BY event.startDate ASC
+            LIMIT ?,?
+        ]]>
+    </sql>
     <sql id="com.weprode.facile.agenda.service.persistence.EventFinder.countUserEvents">
         <![CDATA[
             SELECT count(DISTINCT event.eventId)
@@ -20,6 +33,16 @@
             JOIN Agenda_EventPopulation pop on event.eventId = pop.eventId
             WHERE event.endDate >= ?
             AND ((pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$])) OR event.authorId = ?)
+            [$OTHER$]
+        ]]>
+    </sql>
+    <sql id="com.weprode.facile.agenda.service.persistence.EventFinder.countSchoolEvents">
+        <![CDATA[
+            SELECT count(DISTINCT event.eventId)
+            FROM Agenda_Event event
+            JOIN Agenda_EventPopulation pop on event.eventId = pop.eventId
+            WHERE event.endDate >= ?
+            AND (pop.schoolId IN ([$SCHOOL_IDS$]) OR event.authorId = ?)
             [$OTHER$]
         ]]>
     </sql>

@@ -57,7 +57,7 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
     public JSONObject getSideMenu() {
         JSONObject result = new JSONObject();
 
-        logger.info("User fetching side menu.");
+        logger.debug("User fetching side menu.");
 
         User user;
         try {

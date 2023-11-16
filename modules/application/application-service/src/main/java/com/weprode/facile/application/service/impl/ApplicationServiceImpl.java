@@ -166,7 +166,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)
                 && !RoleUtilsLocalServiceUtil.isAdministrator(user)
-                && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -325,7 +325,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user)
-                && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

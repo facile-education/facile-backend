@@ -78,6 +78,23 @@ public class NewsLocalServiceUtil {
 		return getService().convertNewsToJson(newsId, userId, withDetails);
 	}
 
+	public static int countAllSchoolNews(
+			com.liferay.portal.kernel.model.User user, boolean importantOnly,
+			boolean unreadOnly)
+		throws SystemException {
+
+		return getService().countAllSchoolNews(user, importantOnly, unreadOnly);
+	}
+
+	public static int countNews(
+			com.liferay.portal.kernel.model.User user, long groupId,
+			boolean groupNews, boolean importantOnly, boolean unreadOnly)
+		throws SystemException {
+
+		return getService().countNews(
+			user, groupId, groupNews, importantOnly, unreadOnly);
+	}
+
 	/**
 	 * Creates a new news with the primary key. Does not add the news to the database.
 	 *
@@ -253,6 +270,14 @@ public class NewsLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static List<News> getAllSchoolNews(
+			com.liferay.portal.kernel.model.User user, java.util.Date maxDate,
+			int nbNews, boolean unreadOnly)
+		throws SystemException {
+
+		return getService().getAllSchoolNews(user, maxDate, nbNews, unreadOnly);
+	}
+
 	public static List<News> getGroupNewsActivities(
 			com.liferay.portal.kernel.model.User user, long groupId,
 			java.util.Date minDate, java.util.Date maxDate, int nbNews)
@@ -307,15 +332,6 @@ public class NewsLocalServiceUtil {
 			user, groupIds, minDate, maxDate, nbNews, groupNewsOnly);
 	}
 
-	public static int getNewsCount(
-			com.liferay.portal.kernel.model.User user, long groupId,
-			boolean groupNews, boolean importantOnly, boolean unreadOnly)
-		throws SystemException {
-
-		return getService().getNewsCount(
-			user, groupId, groupNews, importantOnly, unreadOnly);
-	}
-
 	/**
 	 * Returns a range of all the newses.
 	 *
@@ -365,6 +381,14 @@ public class NewsLocalServiceUtil {
 		com.liferay.portal.kernel.model.User user) {
 
 		return getService().getSchoolNewsBroadcastGroups(user);
+	}
+
+	public static org.json.JSONObject
+		getSchoolNewsBroadcastGroupsForCollectivityAdmins(
+			com.liferay.portal.kernel.model.User user) {
+
+		return getService().getSchoolNewsBroadcastGroupsForCollectivityAdmins(
+			user);
 	}
 
 	public static boolean hasUserNews(long userId, long newsId) {

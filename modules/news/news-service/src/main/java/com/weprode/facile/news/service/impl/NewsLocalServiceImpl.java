@@ -216,6 +216,8 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         List<Long> groupIds = new ArrayList<>();
         if (groupId == 0) {
             groupIds.addAll(UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()));
+            // Add root org
+            groupIds.add(OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId()).getGroupId());
         } else {
             groupIds.add(groupId);
         }
@@ -223,7 +225,23 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         return newsFinder.getNews(user.getUserId(), groupIds, roleIds, maxDate, nbNews, groupNews, importantOnly, unreadOnly);
     }
 
-    public int getNewsCount(User user, long groupId, boolean groupNews, boolean importantOnly, boolean unreadOnly) throws SystemException {
+    public List<News> getAllSchoolNews(User user, Date maxDate, int nbNews, boolean unreadOnly) throws SystemException {
+
+        List<Long> schoolIds = new ArrayList<>();
+        List<Organization> schools = new ArrayList<>();
+        if (RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+            schools = UserOrgsLocalServiceUtil.getUserSchools(user);
+        } else if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            schools = OrgUtilsLocalServiceUtil.getAllSchools();
+        }
+        for (Organization school : schools) {
+            schoolIds.add(school.getOrganizationId());
+        }
+
+        return newsFinder.getAllSchoolNews(user.getUserId(), schoolIds, maxDate, nbNews, false, unreadOnly);
+    }
+
+    public int countNews(User user, long groupId, boolean groupNews, boolean importantOnly, boolean unreadOnly) throws SystemException {
 
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
@@ -238,11 +256,29 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         List<Long> groupIds = new ArrayList<>();
         if (groupId == 0) {
             groupIds.addAll(UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()));
+            // Add root org
+            groupIds.add(OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId()).getGroupId());
         } else {
             groupIds.add(groupId);
         }
 
-        return newsFinder.getNewsCount(user.getUserId(), groupIds, roleIds, groupNews, importantOnly, unreadOnly);
+        return newsFinder.countNews(user.getUserId(), groupIds, roleIds, groupNews, importantOnly, unreadOnly);
+    }
+
+    public int countAllSchoolNews(User user, boolean importantOnly, boolean unreadOnly) throws SystemException {
+
+        List<Long> schoolIds = new ArrayList<>();
+        List<Organization> schools = new ArrayList<>();
+        if (RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+            schools = UserOrgsLocalServiceUtil.getUserSchools(user);
+        } else if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            schools = OrgUtilsLocalServiceUtil.getAllSchools();
+        }
+        for (Organization school : schools) {
+            schoolIds.add(school.getOrganizationId());
+        }
+
+        return newsFinder.countAllSchoolNews(user.getUserId(), schoolIds, importantOnly, unreadOnly);
     }
 
     // Called from dashboard : either with all user's groups or with 1 filtered group
@@ -384,23 +420,61 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                     List<Integer> types = new ArrayList<>();
                     types.add(OrgConstants.VOLEE_TYPE);
                     List<Organization> schoolVolees = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false);
-                    jsonSchool.put(JSONConstants.VOLEES, getOrgTypePopulations(schoolVolees, user.getUserId(), 2));
+                    jsonSchool.put(JSONConstants.VOLEES, getOrgTypePopulations(schoolVolees, user.getUserId(), 4));
 
                     // Classes
                     types = new ArrayList<>();
                     types.add(OrgConstants.CLASS_TYPE);
                     List<Organization> schoolClasses = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false);
-                    jsonSchool.put(JSONConstants.CLASSES, getOrgTypePopulations(schoolClasses, user.getUserId(), 3));
+                    jsonSchool.put(JSONConstants.CLASSES, getOrgTypePopulations(schoolClasses, user.getUserId(), 5));
 
                     // Subjects
                     types = new ArrayList<>();
                     types.add(OrgConstants.SUBJECT_TYPE);
                     List<Organization> schoolSubjects = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false);
                     if (!schoolSubjects.isEmpty()) {
-                        jsonSchool.put(JSONConstants.SUBJECTS, getOrgTypePopulations(schoolSubjects, user.getUserId(), 4));
+                        jsonSchool.put(JSONConstants.SUBJECTS, getOrgTypePopulations(schoolSubjects, user.getUserId(), 6));
                     }
                     broadcastTree.put(jsonSchool);
                 }
+            }
+
+            result.put(JSONConstants.SCHOOLS_GROUPS, broadcastTree);
+            result.put(JSONConstants.SUCCESS, true);
+
+        } catch (Exception e) {
+            logger.error("Error when fetching group to broadcast a news", e);
+            result.put(JSONConstants.SUCCESS, false);
+        }
+
+        return result;
+    }
+
+    public JSONObject getSchoolNewsBroadcastGroupsForCollectivityAdmins(User user) {
+        JSONObject result = new JSONObject();
+
+        try {
+
+            // Global lists
+            result.put(JSONConstants.GLOBAL, getGlobalPopulations(user.getUserId()));
+
+            // Loop over schools
+            JSONArray broadcastTree = new JSONArray();
+            List<Organization> userSchools = OrgUtilsLocalServiceUtil.getAllSchools();
+            for (Organization userSchool : userSchools) {
+
+                JSONObject jsonSchool = new JSONObject();
+                jsonSchool.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
+                jsonSchool.put(JSONConstants.SCHOOL_ORG_ID, userSchool.getOrganizationId());
+                jsonSchool.put(JSONConstants.POPULATIONS, getSchoolPopulations(userSchool.getGroupId(), userSchool.getOrganizationId(), user.getUserId()));
+
+                // Volées
+                List<Integer> types = new ArrayList<>();
+                types.add(OrgConstants.VOLEE_TYPE);
+                List<Organization> schoolVolees = OrgUtilsLocalServiceUtil.getSchoolOrganizations(userSchool.getOrganizationId(), types, false);
+                jsonSchool.put(JSONConstants.VOLEES, getOrgTypePopulations(schoolVolees, user.getUserId(), 4));
+
+                broadcastTree.put(jsonSchool);
             }
 
             result.put(JSONConstants.SCHOOLS_GROUPS, broadcastTree);
@@ -476,23 +550,23 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
         try {
             // Whole school
-            rolePopulations.put(getJsonPopulation(groupId, orgId, 0, "Tout l'établissement", userId, 0));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, 0, "Tout l'établissement", userId, 2));
 
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getPersonalRole().getRoleId(), "Tous les personnels", userId, 1));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getStudentRole().getRoleId(), NeroRoleConstants.STUDENT_INCLUSIVE, userId, 1));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getParentRole().getRoleId(), NeroRoleConstants.PARENT_INCLUSIVE, userId, 1));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId(), NeroRoleConstants.TEACHER_INCLUSIVE, userId, 1));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getAssistantTechniqueRole().getRoleId(), NeroRoleConstants.ASSISTANT_TECHNIQUE_INCLUSIVE, userId, 5));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId(), NeroRoleConstants.CAISSIER_COMPTABLE_INCLUSIVE, userId, 5));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId(), NeroRoleConstants.BIBLIOTHECAIRE_INCLUSIVE, userId, 5));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId(), NeroRoleConstants.SECRETAIRE_INCLUSIVE, userId, 5));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getPersonalRole().getRoleId(), "Tous les personnels", userId, 3));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getStudentRole().getRoleId(), NeroRoleConstants.STUDENT_INCLUSIVE, userId, 3));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getParentRole().getRoleId(), NeroRoleConstants.PARENT_INCLUSIVE, userId, 3));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId(), NeroRoleConstants.TEACHER_INCLUSIVE, userId, 3));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getAssistantTechniqueRole().getRoleId(), NeroRoleConstants.ASSISTANT_TECHNIQUE_INCLUSIVE, userId, 7));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getCaissierComptableRole().getRoleId(), NeroRoleConstants.CAISSIER_COMPTABLE_INCLUSIVE, userId, 7));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getBibliothecaireRole().getRoleId(), NeroRoleConstants.BIBLIOTHECAIRE_INCLUSIVE, userId, 7));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getSecretariatRole().getRoleId(), NeroRoleConstants.SECRETAIRE_INCLUSIVE, userId, 7));
 
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId(), NeroRoleConstants.DIRECTION_INCLUSIVE, userId, 5));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId(), NeroRoleConstants.CONSEILLER_ORIENTATION_INCLUSIVE, userId, 5));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId(), NeroRoleConstants.CONSEILLER_SOCIAL, userId, 5));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId(), NeroRoleConstants.DOYEN_INCLUSIVE, userId, 5));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId(), NeroRoleConstants.INFIRMIERE_INCLUSIVE, userId, 5));
-            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId(), NeroRoleConstants.PSYCHOLOGUE_INCLUSIVE, userId, 5));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getDirectionRole().getRoleId(), NeroRoleConstants.DIRECTION_INCLUSIVE, userId, 7));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getConseillerOrientationRole().getRoleId(), NeroRoleConstants.CONSEILLER_ORIENTATION_INCLUSIVE, userId, 7));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getConseillerSocialRole().getRoleId(), NeroRoleConstants.CONSEILLER_SOCIAL, userId, 7));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId(), NeroRoleConstants.DOYEN_INCLUSIVE, userId, 7));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getInfirmiereRole().getRoleId(), NeroRoleConstants.INFIRMIERE_INCLUSIVE, userId, 7));
+            rolePopulations.put(getJsonPopulation(groupId, orgId, RoleUtilsLocalServiceUtil.getPsychologueRole().getRoleId(), NeroRoleConstants.PSYCHOLOGUE_INCLUSIVE, userId, 7));
         } catch (Exception e) {
             logger.error("Error building news populations for school", e);
         }
@@ -513,6 +587,24 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         return population;
     }
 
+    private JSONArray getGlobalPopulations(long userId) {
+        JSONArray globalPopulations = new JSONArray();
+
+        try {
+            // Root org
+            Organization rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId());
+            globalPopulations.put(getJsonPopulation(rootOrg.getGroupId(), rootOrg.getOrganizationId(), 0, "Tous les utilisateurs", userId, 0));
+            globalPopulations.put(getJsonPopulation(rootOrg.getGroupId(), rootOrg.getOrganizationId(), RoleUtilsLocalServiceUtil.getStudentRole().getRoleId(), "Tous les élèves", userId, 0));
+            globalPopulations.put(getJsonPopulation(rootOrg.getGroupId(), rootOrg.getOrganizationId(), RoleUtilsLocalServiceUtil.getParentRole().getRoleId(), "Tous les responsables d'élèves", userId, 0));
+            globalPopulations.put(getJsonPopulation(rootOrg.getGroupId(), rootOrg.getOrganizationId(), RoleUtilsLocalServiceUtil.getPersonalRole().getRoleId(), "Tous les personnels", userId, 0));
+
+        } catch (Exception e) {
+            logger.error("Error building news global populations", e);
+        }
+
+        return globalPopulations;
+    }
+
     public boolean hasUserNews(long userId, long newsId) {
         try {
             // Return true if the user is the author
@@ -521,8 +613,15 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 return true;
             }
 
-            // Get user group ids
+            // Admins can read all school news
+            User user = UserLocalServiceUtil.getUser(userId);
+            if (news.getIsSchoolNews() && (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isAdministrator(user))) {
+                return true;
+            }
+
+            // Get user group ids + root org
             List<Long> userGroupIds = UserUtilsLocalServiceUtil.getUserGroupIds(userId);
+            userGroupIds.add(OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId()).getGroupId());
 
             // Get user role ids
             List<Role> roles = RoleLocalServiceUtil.getUserRoles(userId);

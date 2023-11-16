@@ -108,7 +108,7 @@ public class JSONConstants {
     public static final String IS_PARENT = "isParent";
     public static final String IS_STUDENT = "isStudent";
     public static final String IS_ADMINISTRATOR = "isAdministrator";
-    public static final String IS_ENT_ADMIN = "isENTAdmin";
+    public static final String IS_ENT_ADMIN = "isCollectivityAdmin";
     public static final String IS_LOCAL_ADMIN = "isLocalAdmin";
     public static final String IS_PERSONAL = "isPersonal";
     public static final String IS_DOYEN = "isDoyen";
@@ -165,6 +165,9 @@ public class JSONConstants {
     public static final String ROLE_NAME = "roleName";
     public static final String ROLE_CODE = "roleCode";
     public static final String ROLES = "roles";
+
+    // Global root org
+    public static final String GLOBAL = "global";
 
     // School
     public static final String SCHOOL_ID = "schoolId";

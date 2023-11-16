@@ -89,7 +89,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             result.put(JSONConstants.HAS_DIARY_WIDGET, true);
             result.put(JSONConstants.HAS_HOMEWORK_WIDGET, isStudentOrParent && BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "cdt"));
             result.put(JSONConstants.HAS_EDT_WIDGET, isStudentOrParent || RoleUtilsLocalServiceUtil.isTeacher(user));
-            result.put(JSONConstants.HAS_STATISTIC_WIDGET, (isDirectionMember || RoleUtilsLocalServiceUtil.isENTAdmin(user)) && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) != null && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true"));
+            result.put(JSONConstants.HAS_STATISTIC_WIDGET, (isDirectionMember || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) != null && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true"));
 
             // If we are a parent, get our children list
             if (RoleUtilsLocalServiceUtil.isParent(user)) {
@@ -109,10 +109,11 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             boolean isDelegate = NewsAdminLocalServiceUtil.isUserDelegate(user);
             result.put(JSONConstants.IS_DELEGATE, isDelegate);
 
-            boolean canAddGroupNews = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isDoyen(user) || RoleUtilsLocalServiceUtil.isPsychologue(user) || RoleUtilsLocalServiceUtil.isConseillerSocial(user) || RoleUtilsLocalServiceUtil.isMainTeacher(user);
+            // All personals can add group news because they have communities
+            boolean canAddGroupNews = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user);
             result.put(JSONConstants.CAN_ADD_GROUP_NEWS, canAddGroupNews);
-            result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate);
-            result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate);
+            result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate  || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
+            result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
 
             // Set last dashboard access date
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());

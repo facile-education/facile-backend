@@ -72,19 +72,24 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
                 QueryUtil.ALL_POS, QueryUtil.ALL_POS);
     }
 
-    public Organization getOrCreateRootOrg(long companyId) throws PortalException, SystemException {
+    public Organization getOrCreateRootOrg(long companyId) {
         String orgRootName = PropsUtil.get(NeroSystemProperties.ROOT_ORGANIZATION_NAME);
 
         try {
             return OrganizationLocalServiceUtil.getOrganization(companyId, orgRootName);
         } catch (NoSuchOrganizationException e) {
-            // Do not create org root ?
+            try {
             long defUserId = UserLocalServiceUtil.getGuestUserId(companyId);
             return OrganizationLocalServiceUtil.addOrganization(UUID.randomUUID().toString(),
                     defUserId, OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
                     orgRootName, OrganizationConstants.TYPE_ORGANIZATION,
                     RegionConstants.DEFAULT_REGION_ID, 0, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
                     StringPool.BLANK, true, new ServiceContext());
+            } catch (Exception ex) {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
         }
     }
 

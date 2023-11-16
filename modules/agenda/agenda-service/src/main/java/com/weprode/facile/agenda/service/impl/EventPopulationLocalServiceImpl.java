@@ -20,12 +20,17 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.agenda.model.EventPopulation;
 import com.weprode.facile.agenda.service.base.EventPopulationLocalServiceBaseImpl;
 import com.weprode.facile.agenda.service.persistence.EventPopulationPK;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.contact.service.ContactLocalServiceUtil;
+import com.weprode.facile.organization.service.OrgDetailsLocalServiceUtil;
+import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -44,7 +49,21 @@ public class EventPopulationLocalServiceImpl extends EventPopulationLocalService
         EventPopulationPK eventPopulationPK = new EventPopulationPK(eventId, groupId, roleId);
         
         EventPopulation population = eventPopulationPersistence.create(eventPopulationPK);
-        
+        long schoolId = 0;
+        try {
+            Group group = GroupLocalServiceUtil.getGroup(groupId);
+            if (group.isOrganization()) {
+                Organization org = OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
+                if (OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId()) || org.getOrganizationId() == OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId()).getOrganizationId()) {
+                    schoolId = org.getOrganizationId();
+                } else {
+                    schoolId = org.getParentOrganizationId();
+                }
+            }
+        } catch (Exception e) {
+            // Nothing
+        }
+        population.setSchoolId(schoolId);
         return eventPopulationPersistence.update(population);
     }
 

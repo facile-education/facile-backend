@@ -65,11 +65,11 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+        if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             logger.error("User " + user.getFullName() + " tries to add a school news but has not permission");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
-        if (!isSchoolNews && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+        if (!isSchoolNews && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             logger.error("User " + user.getFullName() + " tries to add a group news but has not permission");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
@@ -111,13 +111,14 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
 
         try {
             // Who can edit a news ?
-            // School news : direction, secretary, delegate, author
+            // School news : direction, secretary, delegate, author, collectivity admin
             // Group news : only the author
             News news = NewsLocalServiceUtil.getNews(newsId);
             if (news.getIsSchoolNews()
                     && news.getAuthorId() != user.getUserId()
                     && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
-                    && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+                    && !NewsAdminLocalServiceUtil.isUserDelegate(user)
+                    && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
                 logger.error("User " + user.getFullName() + " tries to edit school news " + newsId + " but has not permission");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
@@ -165,9 +166,13 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         }
         try {
             Date maxDate = new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).parse(maxDateString);
-            logger.info("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + "school news before " + maxDate);
-            List<News> newsList = NewsLocalServiceUtil.getNews(user,0, maxDate, nbNews,false, importantOnly, unreadOnly);
-
+            logger.debug("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + "school news before " + maxDate);
+            List<News> newsList;
+            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                newsList = NewsLocalServiceUtil.getAllSchoolNews(user, maxDate, nbNews, unreadOnly);
+            } else {
+                newsList = NewsLocalServiceUtil.getNews(user,0, maxDate, nbNews,false, importantOnly, unreadOnly);
+            }
             JSONArray jsonNewsArray = new JSONArray();
             for (News news : newsList) {
                 JSONObject jsonNews = NewsLocalServiceUtil.convertNewsToJson(news.getNewsId(), user.getUserId(), false);
@@ -175,8 +180,11 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             }
             result.put(JSONConstants.NEWS, jsonNewsArray);
 
-            result.put(JSONConstants.NB_UNREAD_NEWS, NewsLocalServiceUtil.getNewsCount(user, 0, false, false, true));
-
+            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                result.put(JSONConstants.NB_UNREAD_NEWS, NewsLocalServiceUtil.countAllSchoolNews(user, importantOnly, true));
+            } else {
+                result.put(JSONConstants.NB_UNREAD_NEWS, NewsLocalServiceUtil.countNews(user, 0, false, importantOnly, true));
+            }
             result.put(JSONConstants.SUCCESS, true);
 
         } catch (Exception e) {
@@ -231,7 +239,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {
-            logger.info("User " + user.getFullName() + " fetches group news broadcast groups");
+            logger.debug("User " + user.getFullName() + " fetches group news broadcast groups");
             // Students and parents cannot write group news
             result = NewsLocalServiceUtil.getGroupNewsBroadcastGroups(user);
         } catch (Exception e) {
@@ -257,13 +265,18 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         }
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSecretariat(user)
-                && !NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+                && !NewsAdminLocalServiceUtil.isUserDelegate(user)
+                && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            logger.info("User " + user.getFullName() + " fetches school news broadcast groups");
-            result = NewsLocalServiceUtil.getSchoolNewsBroadcastGroups(user);
+            logger.debug("User " + user.getFullName() + " fetches school news broadcast groups");
+            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+                result = NewsLocalServiceUtil.getSchoolNewsBroadcastGroupsForCollectivityAdmins(user);
+            } else {
+                result = NewsLocalServiceUtil.getSchoolNewsBroadcastGroups(user);
+            }
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);
             logger.error("Error getting school news broadcast groups", e);
@@ -293,7 +306,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
                 result.put(JSONConstants.NEWS, jsonNews);
             } else {
                 result.put(JSONConstants.SUCCESS, false);
-                logger.error("User have not the right to read news");
+                logger.error("User " + user.getFullName() + " does not have the permission to read news " + newsId);
                 return result;
             }
 

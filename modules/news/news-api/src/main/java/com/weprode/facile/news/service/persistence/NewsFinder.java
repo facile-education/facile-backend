@@ -28,9 +28,17 @@ public interface NewsFinder {
 		java.util.List<Long> roleIds, java.util.Date maxDate, int nbNews,
 		boolean groupNews, boolean importantOnly, boolean unreadOnly);
 
-	public int getNewsCount(
+	public java.util.List<com.weprode.facile.news.model.News> getAllSchoolNews(
+		long userId, java.util.List<Long> schoolIds, java.util.Date maxDate,
+		int nbNews, boolean importantOnly, boolean unreadOnly);
+
+	public int countNews(
 		long userId, java.util.List<Long> groupIds,
 		java.util.List<Long> roleIds, boolean groupNews, boolean importantOnly,
+		boolean unreadOnly);
+
+	public int countAllSchoolNews(
+		long userId, java.util.List<Long> schoolIds, boolean importantOnly,
 		boolean unreadOnly);
 
 	public java.util.List<com.weprode.facile.news.model.News> getNewsActivities(

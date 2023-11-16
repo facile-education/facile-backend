@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
@@ -40,6 +41,8 @@ import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.mobile.constants.MobileConstants;
 import com.weprode.facile.mobile.service.MobileDeviceLocalServiceUtil;
+import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
 import com.weprode.facile.user.service.UserSearchLocalServiceUtil;
@@ -154,10 +157,12 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
     public List<Event> getUserEvents(User user, int startIndex, int nbEvents, boolean unreadOnly) throws SystemException {
         // Get user groups
         List<Long> groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
+        // Add root org
+        groupIds.add(OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId()).getGroupId());
 
         // Get user role ids
-        List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
         List<Long> roleIds = new ArrayList<>();
+        List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
         for (Role role : roles) {
             roleIds.add(role.getRoleId());
         }
@@ -167,9 +172,27 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         return eventFinder.getUserEvents(user.getUserId(), startIndex, nbEvents, groupIds, roleIds, unreadOnly);
     }
 
+    // Used for directors + collectivity admins + directors that need to see all school's events
+    public List<Event> getSchoolEvents(User user, int startIndex, int nbEvents, boolean unreadOnly) throws SystemException {
+
+        List<Long> schoolIds = new ArrayList<>();
+        List<Organization> schools = new ArrayList<>();
+        if (RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+            schools = UserOrgsLocalServiceUtil.getUserSchools(user);
+        } else if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            schools = OrgUtilsLocalServiceUtil.getAllSchools();
+        }
+        for (Organization school : schools) {
+            schoolIds.add(school.getOrganizationId());
+        }
+        return eventFinder.getSchoolEvents(user.getUserId(), startIndex, nbEvents, schoolIds, unreadOnly);
+    }
+
     public int countEvents(User user, Date minDate, boolean unreadOnly) throws SystemException {
         // Get user groups
         List<Long> groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
+        // Add root org
+        groupIds.add(OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId()).getGroupId());
 
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
@@ -183,11 +206,34 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         return eventFinder.countEvents(user.getUserId(), minDate, groupIds, roleIds, unreadOnly);
     }
 
+    // Used for directors + collectivity admins + directors that need to see all school's events
+    public int countSchoolEvents (User user, Date minDate, boolean unreadOnly) throws SystemException {
+
+        List<Long> schoolIds = new ArrayList<>();
+        List<Organization> schools = new ArrayList<>();
+        if (RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+            schools = UserOrgsLocalServiceUtil.getUserSchools(user);
+        } else if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            schools = OrgUtilsLocalServiceUtil.getAllSchools();
+        }
+        for (Organization school : schools) {
+            schoolIds.add(school.getOrganizationId());
+        }
+
+        return eventFinder.countSchoolEvents(user.getUserId(), minDate, schoolIds, unreadOnly);
+    }
+
     public boolean hasUserEvent(long userId, long eventId) {
         try {
             // Return true if the user is the author
             Event event = EventLocalServiceUtil.getEvent(eventId);
             if (event.getAuthorId() == userId) {
+                return true;
+            }
+
+            // Admins can read all events
+            User user = UserLocalServiceUtil.getUser(userId);
+            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 return true;
             }
 

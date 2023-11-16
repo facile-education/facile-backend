@@ -99,7 +99,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
         // Roles
         result.put(JSONConstants.IS_ADMINISTRATOR, RoleUtilsLocalServiceUtil.isAdministrator(user));
-        result.put(JSONConstants.IS_ENT_ADMIN, RoleUtilsLocalServiceUtil.isENTAdmin(user));
+        result.put(JSONConstants.IS_ENT_ADMIN, RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
         result.put(JSONConstants.IS_LOCAL_ADMIN, RoleUtilsLocalServiceUtil.isSchoolAdmin(user));
         result.put(JSONConstants.IS_STUDENT, RoleUtilsLocalServiceUtil.isStudent(user));
         result.put(JSONConstants.IS_PARENT, RoleUtilsLocalServiceUtil.isParent(user));
@@ -248,7 +248,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

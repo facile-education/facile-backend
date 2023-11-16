@@ -90,6 +90,15 @@ public interface NewsLocalService
 			long newsId, long userId, boolean withDetails)
 		throws PortalException, SystemException;
 
+	public int countAllSchoolNews(
+			User user, boolean importantOnly, boolean unreadOnly)
+		throws SystemException;
+
+	public int countNews(
+			User user, long groupId, boolean groupNews, boolean importantOnly,
+			boolean unreadOnly)
+		throws SystemException;
+
 	/**
 	 * Creates a new news with the primary key. Does not add the news to the database.
 	 *
@@ -230,6 +239,11 @@ public interface NewsLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<News> getAllSchoolNews(
+			User user, Date maxDate, int nbNews, boolean unreadOnly)
+		throws SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<News> getGroupNewsActivities(
 			User user, long groupId, Date minDate, Date maxDate, int nbNews)
 		throws SystemException;
@@ -260,12 +274,6 @@ public interface NewsLocalService
 	public List<News> getNewsActivities(
 			User user, List<Long> groupIds, Date minDate, Date maxDate,
 			int nbNews, boolean groupNewsOnly)
-		throws SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getNewsCount(
-			User user, long groupId, boolean groupNews, boolean importantOnly,
-			boolean unreadOnly)
 		throws SystemException;
 
 	/**
@@ -310,6 +318,10 @@ public interface NewsLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSchoolNewsBroadcastGroups(User user);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getSchoolNewsBroadcastGroupsForCollectivityAdmins(
+		User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasUserNews(long userId, long newsId);

@@ -44,14 +44,11 @@ public class ContactLocalServiceWrapper
 	@Override
 	public java.util.List<com.liferay.portal.kernel.model.User> directorySearch(
 		com.liferay.portal.kernel.model.User user, String query,
-		java.util.List<Long> organizationIds, java.util.List<Long> schoolIds,
-		java.util.List<Long> roleIds, java.util.List<Long> subjectIds,
-		int start, int limit,
-		com.liferay.portal.kernel.util.OrderByComparator obc) {
+		java.util.List<Long> schoolIds, java.util.List<Long> roleIds, int start,
+		int limit, com.liferay.portal.kernel.util.OrderByComparator obc) {
 
 		return _contactLocalService.directorySearch(
-			user, query, organizationIds, schoolIds, roleIds, subjectIds, start,
-			limit, obc);
+			user, query, schoolIds, roleIds, start, limit, obc);
 	}
 
 	@Override

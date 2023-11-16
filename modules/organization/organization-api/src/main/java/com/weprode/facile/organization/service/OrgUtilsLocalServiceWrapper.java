@@ -60,9 +60,7 @@ public class OrgUtilsLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.model.Organization getOrCreateRootOrg(
-			long companyId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			   com.liferay.portal.kernel.exception.SystemException {
+		long companyId) {
 
 		return _orgUtilsLocalService.getOrCreateRootOrg(companyId);
 	}

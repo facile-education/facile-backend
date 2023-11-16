@@ -26,13 +26,16 @@ import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiServic
 import com.liferay.portal.kernel.service.BaseLocalServiceImpl;
 import com.liferay.portal.kernel.util.InfrastructureUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+
 import com.weprode.facile.contact.service.ContactCompletionLocalService;
 import com.weprode.facile.contact.service.ContactCompletionLocalServiceUtil;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
+
+import java.lang.reflect.Field;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Field;
+
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * Provides the base implementation for the contact completion local service.

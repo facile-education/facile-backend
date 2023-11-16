@@ -64,7 +64,7 @@ public class EventPopulationCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{eventId=");
 		sb.append(eventId);
@@ -72,6 +72,8 @@ public class EventPopulationCacheModel
 		sb.append(groupId);
 		sb.append(", roleId=");
 		sb.append(roleId);
+		sb.append(", schoolId=");
+		sb.append(schoolId);
 		sb.append("}");
 
 		return sb.toString();
@@ -84,6 +86,7 @@ public class EventPopulationCacheModel
 		eventPopulationImpl.setEventId(eventId);
 		eventPopulationImpl.setGroupId(groupId);
 		eventPopulationImpl.setRoleId(roleId);
+		eventPopulationImpl.setSchoolId(schoolId);
 
 		eventPopulationImpl.resetOriginalValues();
 
@@ -98,6 +101,8 @@ public class EventPopulationCacheModel
 
 		roleId = objectInput.readLong();
 
+		schoolId = objectInput.readLong();
+
 		eventPopulationPK = new EventPopulationPK(eventId, groupId, roleId);
 	}
 
@@ -108,11 +113,14 @@ public class EventPopulationCacheModel
 		objectOutput.writeLong(groupId);
 
 		objectOutput.writeLong(roleId);
+
+		objectOutput.writeLong(schoolId);
 	}
 
 	public long eventId;
 	public long groupId;
 	public long roleId;
+	public long schoolId;
 	public transient EventPopulationPK eventPopulationPK;
 
 }

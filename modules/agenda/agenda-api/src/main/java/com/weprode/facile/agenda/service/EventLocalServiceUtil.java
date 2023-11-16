@@ -75,6 +75,14 @@ public class EventLocalServiceUtil {
 		return getService().countEvents(user, minDate, unreadOnly);
 	}
 
+	public static int countSchoolEvents(
+			com.liferay.portal.kernel.model.User user, java.util.Date minDate,
+			boolean unreadOnly)
+		throws SystemException {
+
+		return getService().countSchoolEvents(user, minDate, unreadOnly);
+	}
+
 	/**
 	 * Creates a new event with the primary key. Does not add the event to the database.
 	 *
@@ -305,6 +313,15 @@ public class EventLocalServiceUtil {
 		throws PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static List<Event> getSchoolEvents(
+			com.liferay.portal.kernel.model.User user, int startIndex,
+			int nbEvents, boolean unreadOnly)
+		throws SystemException {
+
+		return getService().getSchoolEvents(
+			user, startIndex, nbEvents, unreadOnly);
 	}
 
 	public static List<Event> getUserEvents(

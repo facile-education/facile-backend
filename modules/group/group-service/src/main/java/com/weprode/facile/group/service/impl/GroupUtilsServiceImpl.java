@@ -74,7 +74,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
     public JSONObject getUserGroups(long schoolId, boolean includeInstitutional, boolean includeCommunities, boolean pedagogicalOnly) {
         JSONObject result = new JSONObject();
 
-        logger.info("Get user groups for schoolId " + schoolId + ", includeInstitutional=" + includeInstitutional + ", includeCommunities=" + includeCommunities + ", pedagogicalOnly=" + pedagogicalOnly);
+        logger.debug("Get user groups for schoolId " + schoolId + ", includeInstitutional=" + includeInstitutional + ", includeCommunities=" + includeCommunities + ", pedagogicalOnly=" + pedagogicalOnly);
 
         // SchoolId = 0 means all user's schools
         User user;
@@ -145,7 +145,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
     public JSONObject getUserCollaborativeGroups(String filter, boolean allCommunities, boolean allClasses, boolean allCours) {
         JSONObject result = new JSONObject();
 
-        logger.info("Get user collaborative groups allCommunities=" + allCommunities + ", allClasses=" + allClasses + ", allCours=" + allCours);
+        logger.debug("Get user collaborative groups allCommunities=" + allCommunities + ", allClasses=" + allClasses + ", allCours=" + allCours);
 
         User user;
         try {
@@ -204,13 +204,13 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             // Organizations
             List<Integer> types = new ArrayList<>();
             List<Organization> organizations = new ArrayList<>();
-            if (allClasses && (RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
+            if (allClasses && RoleUtilsLocalServiceUtil.isPersonal(user)) {
                 types.add(OrgConstants.CLASS_TYPE);
                 types.add(OrgConstants.SUBJECT_TYPE);
                 organizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, false);
                 // Adding school org
                 organizations.add(OrganizationLocalServiceUtil.getOrganization(schoolId));
-            } else if (allCours && (RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user))) {
+            } else if (allCours && RoleUtilsLocalServiceUtil.isPersonal(user)) {
                 types.add(OrgConstants.COURS_TYPE);
                 organizations = OrgUtilsLocalServiceUtil.getSchoolOrganizations(schoolId, types, false);
             } else if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) || (!allCommunities)) {
@@ -293,7 +293,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
-        logger.info("User " + user.getFullName() + " fetches members of group " + groupId);
+        logger.debug("User " + user.getFullName() + " fetches members of group " + groupId);
 
         try {
             JSONArray jsonMembers = new JSONArray();
@@ -359,7 +359,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user) && !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
-        logger.info("User " + user.getFullName() + " fetches activity of group " + groupId);
+        logger.debug("User " + user.getFullName() + " fetches activity of group " + groupId);
 
         try {
             JSONArray jsonActivities = new JSONArray();

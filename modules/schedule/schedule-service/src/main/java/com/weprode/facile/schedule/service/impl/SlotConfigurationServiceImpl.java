@@ -56,7 +56,7 @@ public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseIm
 		}
 
 		// Authorized for direction, school admins, ent admins and global admins only
-		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isENTAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
@@ -80,7 +80,7 @@ public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseIm
 		}
 
 		// Authorized for direction, school admins, ent admins and global admins only
-		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isENTAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 

@@ -57,7 +57,7 @@ public class BroadcastServiceImpl extends BroadcastServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)
-                && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

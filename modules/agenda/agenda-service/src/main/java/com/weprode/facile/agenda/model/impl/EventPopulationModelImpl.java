@@ -66,7 +66,7 @@ public class EventPopulationModelImpl
 
 	public static final Object[][] TABLE_COLUMNS = {
 		{"eventId", Types.BIGINT}, {"groupId", Types.BIGINT},
-		{"roleId", Types.BIGINT}
+		{"roleId", Types.BIGINT}, {"schoolId", Types.BIGINT}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -76,10 +76,11 @@ public class EventPopulationModelImpl
 		TABLE_COLUMNS_MAP.put("eventId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("roleId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("schoolId", Types.BIGINT);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Agenda_EventPopulation (eventId LONG not null,groupId LONG not null,roleId LONG not null,primary key (eventId, groupId, roleId))";
+		"create table Agenda_EventPopulation (eventId LONG not null,groupId LONG not null,roleId LONG not null,schoolId LONG,primary key (eventId, groupId, roleId))";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Agenda_EventPopulation";
@@ -241,6 +242,10 @@ public class EventPopulationModelImpl
 		attributeSetterBiConsumers.put(
 			"roleId",
 			(BiConsumer<EventPopulation, Long>)EventPopulation::setRoleId);
+		attributeGetterFunctions.put("schoolId", EventPopulation::getSchoolId);
+		attributeSetterBiConsumers.put(
+			"schoolId",
+			(BiConsumer<EventPopulation, Long>)EventPopulation::setSchoolId);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -299,6 +304,20 @@ public class EventPopulationModelImpl
 		_roleId = roleId;
 	}
 
+	@Override
+	public long getSchoolId() {
+		return _schoolId;
+	}
+
+	@Override
+	public void setSchoolId(long schoolId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_schoolId = schoolId;
+	}
+
 	public long getColumnBitmask() {
 		if (_columnBitmask > 0) {
 			return _columnBitmask;
@@ -345,6 +364,7 @@ public class EventPopulationModelImpl
 		eventPopulationImpl.setEventId(getEventId());
 		eventPopulationImpl.setGroupId(getGroupId());
 		eventPopulationImpl.setRoleId(getRoleId());
+		eventPopulationImpl.setSchoolId(getSchoolId());
 
 		eventPopulationImpl.resetOriginalValues();
 
@@ -361,6 +381,8 @@ public class EventPopulationModelImpl
 			this.<Long>getColumnOriginalValue("groupId"));
 		eventPopulationImpl.setRoleId(
 			this.<Long>getColumnOriginalValue("roleId"));
+		eventPopulationImpl.setSchoolId(
+			this.<Long>getColumnOriginalValue("schoolId"));
 
 		return eventPopulationImpl;
 	}
@@ -437,6 +459,8 @@ public class EventPopulationModelImpl
 
 		eventPopulationCacheModel.roleId = getRoleId();
 
+		eventPopulationCacheModel.schoolId = getSchoolId();
+
 		return eventPopulationCacheModel;
 	}
 
@@ -501,6 +525,7 @@ public class EventPopulationModelImpl
 	private long _eventId;
 	private long _groupId;
 	private long _roleId;
+	private long _schoolId;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<EventPopulation, Object> function =
@@ -532,6 +557,7 @@ public class EventPopulationModelImpl
 		_columnOriginalValues.put("eventId", _eventId);
 		_columnOriginalValues.put("groupId", _groupId);
 		_columnOriginalValues.put("roleId", _roleId);
+		_columnOriginalValues.put("schoolId", _schoolId);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -550,6 +576,8 @@ public class EventPopulationModelImpl
 		columnBitmasks.put("groupId", 2L);
 
 		columnBitmasks.put("roleId", 4L);
+
+		columnBitmasks.put("schoolId", 8L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

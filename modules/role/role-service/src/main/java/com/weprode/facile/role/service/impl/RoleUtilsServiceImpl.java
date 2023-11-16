@@ -57,6 +57,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user) &&
                 !RoleUtilsLocalServiceUtil.isPersonal(user) &&
+				!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) &&
 				!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
@@ -94,7 +95,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
-				!RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+				!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -154,10 +155,10 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 			schoolAdminRole.put(JSONConstants.IS_FOR_CLASS, false);
 			roleList.put(schoolAdminRole);
 
-			Role entAdmin = RoleUtilsLocalServiceUtil.getEntAdminRole();
+			Role collectivityAdminRole = RoleUtilsLocalServiceUtil.getCollectivityAdminRole();
 			JSONObject entAdminRole = new JSONObject();
-			entAdminRole.put(JSONConstants.ROLE_ID, entAdmin.getRoleId());
-			entAdminRole.put(JSONConstants.DISPLAY_TEXT, "Administrateur ENT");
+			entAdminRole.put(JSONConstants.ROLE_ID, collectivityAdminRole.getRoleId());
+			entAdminRole.put(JSONConstants.DISPLAY_TEXT, "Responsable de collectivité");
 			entAdminRole.put(JSONConstants.IS_FOR_CLASS, false);
 			roleList.put(entAdminRole);
 			

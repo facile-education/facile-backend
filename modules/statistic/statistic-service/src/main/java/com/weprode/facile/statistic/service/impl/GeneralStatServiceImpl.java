@@ -420,7 +420,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
     }
 
     private boolean checkUserPermissions(User user, long schoolId) {
-        if (RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+        if (RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             return true;
         }
 
@@ -441,7 +441,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -463,7 +463,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             cal.add(Calendar.DATE, -7);
             Date startDate = cal.getTime();
 
-            logger.info("Fetch dashboard statistics from " + startDate + " to " + endDate);
+            logger.debug("Fetch dashboard statistics from " + startDate + " to " + endDate);
             JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, "", MatomoConstants.PERIOD_DAY, startDate, endDate,
                     profileIds, schoolIds, serviceIds, false);
 
@@ -493,15 +493,25 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             result.put(JSONConstants.PREVIOUS_NB_CONNEXIONS, previousNbConnexions);
 
             // Active users
-            Organization userSchool = UserOrgsLocalServiceUtil.getUserSchools(user).get(0);
-            result.put(JSONConstants.ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(startDate, endDate, userSchool.getOrganizationId()));
-            result.put(JSONConstants.PREVIOUS_ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId()));
+            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                result.put(JSONConstants.ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(startDate, endDate, 0));
+                result.put(JSONConstants.PREVIOUS_ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(previousWeekStartDate, previousWeekEndDate, 0));
+            } else {
+                Organization userSchool = UserOrgsLocalServiceUtil.getUserSchools(user).get(0);
+                result.put(JSONConstants.ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(startDate, endDate, userSchool.getOrganizationId()));
+                result.put(JSONConstants.PREVIOUS_ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId()));
+            }
 
             // Number of productions
             // For now, number of created news
-            result.put(JSONConstants.GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(startDate, endDate, userSchool.getOrganizationId(), false));
-            result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId(), false));
-
+            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                result.put(JSONConstants.GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(startDate, endDate, 0, false));
+                result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, 0, false));
+            } else {
+                Organization userSchool = UserOrgsLocalServiceUtil.getUserSchools(user).get(0);
+                result.put(JSONConstants.GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(startDate, endDate, userSchool.getOrganizationId(), false));
+                result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId(), false));
+            }
             result.put(JSONConstants.SUCCESS, true);
         } catch(Exception e) {
             result.put(JSONConstants.SUCCESS, false);
@@ -515,7 +525,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         List<Long> schoolIds = new ArrayList<>();
 
         // Do not add school filter for admins
-        if (!RoleUtilsLocalServiceUtil.isAdministrator(user) && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
                 if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user, school.getOrganizationId())) {
                     schoolIds.add(school.getOrganizationId());

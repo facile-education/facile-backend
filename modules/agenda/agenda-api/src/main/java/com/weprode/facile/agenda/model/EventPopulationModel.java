@@ -96,6 +96,20 @@ public interface EventPopulationModel extends BaseModel<EventPopulation> {
 	 */
 	public void setRoleId(long roleId);
 
+	/**
+	 * Returns the school ID of this event population.
+	 *
+	 * @return the school ID of this event population
+	 */
+	public long getSchoolId();
+
+	/**
+	 * Sets the school ID of this event population.
+	 *
+	 * @param schoolId the school ID of this event population
+	 */
+	public void setSchoolId(long schoolId);
+
 	@Override
 	public EventPopulation cloneWithOriginalValues();
 
