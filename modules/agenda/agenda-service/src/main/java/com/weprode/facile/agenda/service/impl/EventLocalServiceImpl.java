@@ -177,7 +177,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
 
         List<Long> schoolIds = new ArrayList<>();
         List<Organization> schools = new ArrayList<>();
-        if (RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+        if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)) {
             schools = UserOrgsLocalServiceUtil.getUserSchools(user);
         } else if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
             schools = OrgUtilsLocalServiceUtil.getAllSchools();
@@ -211,7 +211,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
 
         List<Long> schoolIds = new ArrayList<>();
         List<Organization> schools = new ArrayList<>();
-        if (RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+        if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)) {
             schools = UserOrgsLocalServiceUtil.getUserSchools(user);
         } else if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
             schools = OrgUtilsLocalServiceUtil.getAllSchools();

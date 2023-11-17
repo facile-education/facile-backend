@@ -67,7 +67,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         try {
             Date minDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(minDateStr);
             List<Event> events;
-            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 events = EventLocalServiceUtil.getSchoolEvents(user, minDate, nbEvents, unreadOnly);
             } else {
                 events = EventLocalServiceUtil.getUserEvents(user, minDate, nbEvents, unreadOnly);
@@ -79,7 +79,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
                 jsonEvents.put(jsonEvent);
             }
             result.put(JSONConstants.EVENTS, jsonEvents);
-            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 result.put(JSONConstants.NB_UNREAD_EVENTS, EventLocalServiceUtil.countSchoolEvents(user, new Date(), true));
             } else {
                 result.put(JSONConstants.NB_UNREAD_EVENTS, EventLocalServiceUtil.countEvents(user, new Date(), true));

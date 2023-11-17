@@ -37,6 +37,8 @@ public class NewsPopulationTable extends BaseTable<NewsPopulationTable> {
 		"groupId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<NewsPopulationTable, Long> roleId = createColumn(
 		"roleId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<NewsPopulationTable, Long> schoolId = createColumn(
+		"schoolId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 
 	private NewsPopulationTable() {
 		super("News_NewsPopulation", NewsPopulationTable::new);

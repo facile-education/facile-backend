@@ -35,6 +35,7 @@
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="roleId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		</composite-id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoolId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.weprode.facile.news.model.impl.NewsReadImpl" table="News_NewsRead">
 		<composite-id class="com.weprode.facile.news.service.persistence.NewsReadPK" name="primaryKey">

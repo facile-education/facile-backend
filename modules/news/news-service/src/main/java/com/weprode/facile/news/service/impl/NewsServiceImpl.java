@@ -168,7 +168,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             Date maxDate = new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).parse(maxDateString);
             logger.debug("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + "school news before " + maxDate);
             List<News> newsList;
-            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 newsList = NewsLocalServiceUtil.getAllSchoolNews(user, maxDate, nbNews, unreadOnly);
             } else {
                 newsList = NewsLocalServiceUtil.getNews(user,0, maxDate, nbNews,false, importantOnly, unreadOnly);
@@ -180,7 +180,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             }
             result.put(JSONConstants.NEWS, jsonNewsArray);
 
-            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 result.put(JSONConstants.NB_UNREAD_NEWS, NewsLocalServiceUtil.countAllSchoolNews(user, importantOnly, true));
             } else {
                 result.put(JSONConstants.NB_UNREAD_NEWS, NewsLocalServiceUtil.countNews(user, 0, false, importantOnly, true));
