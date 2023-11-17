@@ -33,7 +33,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
     public static final String COUNT_USER_EVENTS = EventFinder.class.getName() + ".countUserEvents";
     public static final String COUNT_SCHOOL_EVENTS = EventFinder.class.getName() + ".countSchoolEvents";
 
-    public List<Event> getUserEvents(long userId, int startIndex, int nbEvents, List<Long> groupIds, List<Long> roleIds, boolean unreadOnly) {
+    public List<Event> getUserEvents(long userId, Date minDate, int nbEvents, List<Long> groupIds, List<Long> roleIds, boolean unreadOnly) {
         Session session = null;
 
         try {
@@ -55,14 +55,13 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.addEntity("Agenda_Event", EventImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date()));
+            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(minDate));
             qPos.add(userId);
-            qPos.add(startIndex);
             qPos.add(nbEvents);
 
             return (List<Event>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
         } catch (Exception e) {
-            logger.error("Error while fetching agenda events for user " + userId + " from index " + startIndex, e);
+            logger.error("Error while fetching agenda events for user " + userId + " from minDate " + minDate, e);
         } finally {
             closeSession(session);
         }
@@ -70,7 +69,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
         return Collections.emptyList();
     }
 
-    public List<Event> getSchoolEvents(long userId, int startIndex, int nbEvents, List<Long> schoolIds, boolean unreadOnly) {
+    public List<Event> getSchoolEvents(long userId, Date minDate, int nbEvents, List<Long> schoolIds, boolean unreadOnly) {
         Session session = null;
 
         try {
@@ -91,14 +90,13 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.addEntity("Agenda_Event", EventImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date()));
+            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(minDate));
             qPos.add(userId);
-            qPos.add(startIndex);
             qPos.add(nbEvents);
 
             return (List<Event>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
         } catch (Exception e) {
-            logger.error("Error while fetching agenda events for user " + userId + " from index " + startIndex, e);
+            logger.error("Error while fetching agenda events for user " + userId + " from minDate " + minDate, e);
         } finally {
             closeSession(session);
         }

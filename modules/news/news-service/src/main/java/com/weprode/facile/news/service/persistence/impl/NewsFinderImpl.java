@@ -98,7 +98,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             String sql = customSQL.get(getClass(), GET_ALL_SCHOOL_NEWS);
             sql = StringUtil.replace(sql, "[$SCHOOL_IDS$]", buildIdList(schoolIds));
             sql = StringUtil.replace(sql, "[$OTHER$]", other);
-            logger.info("News sql = " + sql);
+            logger.debug("News sql = " + sql);
 
             SQLQuery q = session.createSQLQuery(sql);
             //q.setCacheable(false);
@@ -183,7 +183,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             String sql = customSQL.get(getClass(), COUNT_ALL_SCHOOL_NEWS);
             sql = StringUtil.replace(sql, "[$SCHOOL_IDS$]", buildIdList(schoolIds));
             sql = StringUtil.replace(sql, "[$OTHER$]", other);
-            logger.info("News count sql = " + sql);
+            logger.debug("News count sql = " + sql);
 
             SQLQuery q = session.createSQLQuery(sql);
             q.setCacheable(false);

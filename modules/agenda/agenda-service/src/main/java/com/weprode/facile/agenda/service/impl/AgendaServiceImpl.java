@@ -51,7 +51,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
     private static final Log logger = LogFactoryUtil.getLog(AgendaServiceImpl.class);
 
     @JSONWebService(value = "get-events", method = "GET")
-    public JSONObject getEvents(int startIndex, int nbEvents, boolean unreadOnly) {
+    public JSONObject getEvents(String minDateStr, int nbEvents, boolean unreadOnly) {
         JSONObject result = new JSONObject();
 
         User user;
@@ -65,11 +65,12 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
+            Date minDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(minDateStr);
             List<Event> events;
             if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-                events = EventLocalServiceUtil.getSchoolEvents(user, startIndex, nbEvents, unreadOnly);
+                events = EventLocalServiceUtil.getSchoolEvents(user, minDate, nbEvents, unreadOnly);
             } else {
-                events = EventLocalServiceUtil.getUserEvents(user, startIndex, nbEvents, unreadOnly);
+                events = EventLocalServiceUtil.getUserEvents(user, minDate, nbEvents, unreadOnly);
             }
 
             JSONArray jsonEvents = new JSONArray();

@@ -154,7 +154,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         return null;
     }
 
-    public List<Event> getUserEvents(User user, int startIndex, int nbEvents, boolean unreadOnly) throws SystemException {
+    public List<Event> getUserEvents(User user, Date minDate, int nbEvents, boolean unreadOnly) throws SystemException {
         // Get user groups
         List<Long> groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
         // Add root org
@@ -169,11 +169,11 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         // For communities and schools
         roleIds.add((long) 0);
 
-        return eventFinder.getUserEvents(user.getUserId(), startIndex, nbEvents, groupIds, roleIds, unreadOnly);
+        return eventFinder.getUserEvents(user.getUserId(), minDate, nbEvents, groupIds, roleIds, unreadOnly);
     }
 
     // Used for directors + collectivity admins + directors that need to see all school's events
-    public List<Event> getSchoolEvents(User user, int startIndex, int nbEvents, boolean unreadOnly) throws SystemException {
+    public List<Event> getSchoolEvents(User user, Date minDate, int nbEvents, boolean unreadOnly) throws SystemException {
 
         List<Long> schoolIds = new ArrayList<>();
         List<Organization> schools = new ArrayList<>();
@@ -185,7 +185,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         for (Organization school : schools) {
             schoolIds.add(school.getOrganizationId());
         }
-        return eventFinder.getSchoolEvents(user.getUserId(), startIndex, nbEvents, schoolIds, unreadOnly);
+        return eventFinder.getSchoolEvents(user.getUserId(), minDate, nbEvents, schoolIds, unreadOnly);
     }
 
     public int countEvents(User user, Date minDate, boolean unreadOnly) throws SystemException {

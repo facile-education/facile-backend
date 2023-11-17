@@ -55,9 +55,9 @@ public class AgendaServiceWrapper
 
 	@Override
 	public org.json.JSONObject getEvents(
-		int startIndex, int nbEvents, boolean unreadOnly) {
+		String minDateStr, int nbEvents, boolean unreadOnly) {
 
-		return _agendaService.getEvents(startIndex, nbEvents, unreadOnly);
+		return _agendaService.getEvents(minDateStr, nbEvents, unreadOnly);
 	}
 
 	/**
