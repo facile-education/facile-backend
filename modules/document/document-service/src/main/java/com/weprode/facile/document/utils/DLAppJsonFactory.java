@@ -188,6 +188,7 @@ public class DLAppJsonFactory {
         formattedFile.put(JSONConstants.ID, String.valueOf(fileEntry.getFileEntryId()));
         formattedFile.put(JSONConstants.NAME, fileEntry.getTitle());
         formattedFile.put(JSONConstants.TYPE, "File");
+        formattedFile.put(JSONConstants.SIZE, (int) fileEntry.getSize());
         formattedFile.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
         formattedFile.put(JSONConstants.LAST_MODIFIED_DATE,
                 new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
@@ -200,7 +201,6 @@ public class DLAppJsonFactory {
         formattedFile.put(JSONConstants.PERMISSIONS, permissions);
 
         if (withDetails) {
-            formattedFile.put(JSONConstants.SIZE, (int) fileEntry.getSize());
             formattedFile.put(JSONConstants.CREATION_DATE,
                     new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getCreateDate()));
             formattedFile.put(JSONConstants.CREATOR, fileEntry.getUserName());

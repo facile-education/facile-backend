@@ -346,6 +346,7 @@ public class MessageUtil {
 					jsonAttachment.put(JSONConstants.ID, attachedFileId);
 					jsonAttachment.put(JSONConstants.NAME, fileEntry.getTitle());
 					jsonAttachment.put(JSONConstants.TYPE, "File");
+					jsonAttachment.put(JSONConstants.SIZE, fileEntry.getSize());
 					jsonAttachment.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
 					jsonAttachment.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
 					jsonAttachments.put(jsonAttachment);
