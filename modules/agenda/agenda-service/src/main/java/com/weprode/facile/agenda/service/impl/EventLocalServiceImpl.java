@@ -267,7 +267,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         JSONObject jsonEvent = new JSONObject();
 
         try {
-            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
             Event event = EventLocalServiceUtil.getEvent(eventId);
             jsonEvent.put(JSONConstants.EVENT_ID, event.getEventId());

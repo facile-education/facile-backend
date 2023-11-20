@@ -135,7 +135,7 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
     
     public JSONArray getEventReadStatus(long eventId, long userId) throws SystemException, PortalException {
         JSONArray jsonReadStatus = new JSONArray();
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
         // Loop over populations
         List<EventPopulation> populations = EventPopulationLocalServiceUtil.getEventPopulations(eventId);

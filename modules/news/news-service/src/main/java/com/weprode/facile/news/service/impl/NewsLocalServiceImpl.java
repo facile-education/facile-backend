@@ -92,7 +92,7 @@ import java.util.UUID;
 )
 public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
-    static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:sss";
+    static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     private static final Log logger = LogFactoryUtil.getLog(NewsLocalServiceImpl.class);
 

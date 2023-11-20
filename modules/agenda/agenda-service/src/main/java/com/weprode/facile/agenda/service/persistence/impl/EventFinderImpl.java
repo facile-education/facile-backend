@@ -55,7 +55,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.addEntity("Agenda_Event", EventImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(minDate));
+            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(minDate));
             qPos.add(userId);
             qPos.add(nbEvents);
 
@@ -90,7 +90,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.addEntity("Agenda_Event", EventImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(minDate));
+            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(minDate));
             qPos.add(userId);
             qPos.add(nbEvents);
 
@@ -123,7 +123,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.setCacheable(false);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(minDate));
+            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(minDate));
             qPos.add(userId);
 
             return ((BigInteger) q.uniqueResult()).intValue();
@@ -154,7 +154,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.setCacheable(false);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(minDate));
+            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(minDate));
             qPos.add(userId);
 
             return ((BigInteger) q.uniqueResult()).intValue();

@@ -63,7 +63,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             qPos.add(userId);
             qPos.add(sdf.format(maxDate));
             qPos.add(userId);
@@ -106,7 +106,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             qPos.add(userId);
             qPos.add(sdf.format(maxDate));
             qPos.add(userId);
@@ -149,7 +149,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             q.addScalar("totalCount", Type.INTEGER);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(sdf.format(new Date()));
@@ -190,7 +190,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             q.addScalar("totalCount", Type.INTEGER);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(sdf.format(new Date()));
@@ -219,11 +219,11 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             }
 
             // If maxDate is today, we set AuthorMaxDate to the maximum, to be able to edit news published later in the future
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             Date authorMinDate = minDate;
             Date authorMaxDate = maxDate;
             if (isNow(maxDate)) {
-                authorMaxDate = sdf.parse("2030-01-01 00:00:000");
+                authorMaxDate = sdf.parse("2030-01-01 00:00:00.000"); // TODO: make something about that
             }
 
             String sql = customSQL.get(getClass(), GET_NEWS_ACTIVITIES);
@@ -264,11 +264,11 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             session = openSession();
 
             // If maxDate is today, we set AuthorMaxDate to the maximum, to be able to edit news published later in the future
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             Date authorMinDate = minDate;
             Date authorMaxDate = maxDate;
             if (isNow(maxDate)) {
-                authorMaxDate = sdf.parse("2030-01-01 00:00:000");
+                authorMaxDate = sdf.parse("2030-01-01 00:00:00.000");  // TODO: make something about that
             }
 
             String sql = customSQL.get(getClass(), GET_GROUP_ACTIVITIES);

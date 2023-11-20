@@ -65,7 +65,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            Date minDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(minDateStr);
+            Date minDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(minDateStr);
             List<Event> events;
             if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 events = EventLocalServiceUtil.getSchoolEvents(user, minDate, nbEvents, unreadOnly);
