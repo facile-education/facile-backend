@@ -237,7 +237,8 @@ public class WopiAction implements StrutsAction {
         InputStream is = null;
         try {
             DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(fileEntryId);
-            is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), version);
+            is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version);
+            //is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), version);
             response.setHeader("X-WOPI-ItemVersion", version);
             User user = UserLocalServiceUtil.getUser(userId);
             long size = fileEntry.getSize();
