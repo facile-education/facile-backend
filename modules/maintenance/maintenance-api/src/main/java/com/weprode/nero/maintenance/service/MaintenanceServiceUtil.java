@@ -54,6 +54,10 @@ public class MaintenanceServiceUtil {
 		return getService().runAnonymisation();
 	}
 
+	public static org.json.JSONObject setNewsPermissions() {
+		return getService().setNewsPermissions();
+	}
+
 	public static org.json.JSONObject startFsAnalysis() {
 		return getService().startFsAnalysis();
 	}

@@ -254,4 +254,33 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		return result;
 	}
 
+	@JSONWebService(value = "set-news-permissions", method = "POST")
+	public JSONObject setNewsPermissions() {
+
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			new OneShotTools().setNewsPermissions();
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error cleaning up dropboxes", e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
 }

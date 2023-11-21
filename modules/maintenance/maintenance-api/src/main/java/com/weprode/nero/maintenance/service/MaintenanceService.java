@@ -65,6 +65,9 @@ public interface MaintenanceService extends BaseService {
 	@JSONWebService(method = "POST", value = "run-anonymisation")
 	public JSONObject runAnonymisation();
 
+	@JSONWebService(method = "POST", value = "set-news-permissions")
+	public JSONObject setNewsPermissions();
+
 	@JSONWebService(method = "POST", value = "start-fs-analysis")
 	public JSONObject startFsAnalysis();
 
