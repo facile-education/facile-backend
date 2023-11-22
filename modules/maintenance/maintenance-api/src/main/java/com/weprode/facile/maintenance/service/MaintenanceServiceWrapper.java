@@ -65,6 +65,11 @@ public class MaintenanceServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject setNewsPermissions() {
+		return _maintenanceService.setNewsPermissions();
+	}
+
+	@Override
 	public org.json.JSONObject startFsAnalysis() {
 		return _maintenanceService.startFsAnalysis();
 	}

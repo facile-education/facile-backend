@@ -453,15 +453,16 @@ public class GVESynchronizationManager {
             if (!newClassOrgIds.contains(toRemoveOrg.getOrganizationId())) {
                 logger.info("Deleting obsolete class " + toRemoveOrg.getName() + " for school " + school.getName());
                 try {
-                    // Check if it has members
-                    long[] userIds = UserLocalServiceUtil.getOrganizationUserIds(toRemoveOrg.getOrganizationId());
-                    if (userIds != null && userIds.length > 0) {
-                        logger.info("Removing "+userIds.length+" members from organizationId "+toRemoveOrg.getOrganizationId()+"...");
-                        UserLocalServiceUtil.unsetOrganizationUsers(toRemoveOrg.getOrganizationId(), userIds);
-                    }
-
-                    logger.info("Removing obsolete organization "+toRemoveOrg.getName()+" (with oganizationId "+toRemoveOrg.getOrganizationId());
-                    OrganizationLocalServiceUtil.deleteOrganization(toRemoveOrg.getOrganizationId());
+                    // Comment this because dangerous (to be run after a real sync to have an idea of the number of obsolete organizations)
+//                     Check if it has members
+//                    long[] userIds = UserLocalServiceUtil.getOrganizationUserIds(toRemoveOrg.getOrganizationId());
+//                    if (userIds != null && userIds.length > 0) {
+//                        logger.info("Removing "+userIds.length+" members from organizationId "+toRemoveOrg.getOrganizationId()+"...");
+//                        UserLocalServiceUtil.unsetOrganizationUsers(toRemoveOrg.getOrganizationId(), userIds);
+//                    }
+//
+//                    logger.info("Removing obsolete organization "+toRemoveOrg.getName()+" (with oganizationId "+toRemoveOrg.getOrganizationId());
+//                    OrganizationLocalServiceUtil.deleteOrganization(toRemoveOrg.getOrganizationId());
 
                 } catch (Exception e) {
                     logger.error("Error when deleting obsolete orgId "+toRemoveOrg.getOrganizationId(), e);

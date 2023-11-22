@@ -58,6 +58,10 @@ public class MaintenanceServiceUtil {
 		return getService().runDataFeed();
 	}
 
+	public static org.json.JSONObject setNewsPermissions() {
+		return getService().setNewsPermissions();
+	}
+
 	public static org.json.JSONObject startFsAnalysis() {
 		return getService().startFsAnalysis();
 	}

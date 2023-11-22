@@ -862,6 +862,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 }
 
                 List<Long> agentRoleIds = RoleUtilsLocalServiceUtil.getAgentsRoleIds();
+                List<Long> allRoleIds = new ArrayList<>();
+                allRoleIds.addAll(agentRoleIds);
+                allRoleIds.add(RoleUtilsLocalServiceUtil.getStudentRole().getRoleId());
+                allRoleIds.add(RoleUtilsLocalServiceUtil.getParentRole().getRoleId());
 
                 // Delete all permissions on newsId folder
                 ResourcePermissionLocalServiceUtil.deleteResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, newsIdFolder.getFolderId());
@@ -870,11 +874,11 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                 Role ownerRole = RoleLocalServiceUtil.getRole(PortalUtil.getDefaultCompanyId(), RoleConstants.OWNER);
                 ResourcePermissionLocalServiceUtil.setOwnerResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+newsIdFolder.getFolderId(), ownerRole.getRoleId(), newsIdFolder.getUserId(), new String[]{ActionKeys.VIEW, ActionKeys.DELETE});
 
-                // Set VIEW permissions for the destination roles
-                for (long roleId : entry.getValue()) {
-                    ResourcePermissionLocalServiceUtil.setResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_GROUP, ""+newsIdFolder.getFolderId(), roleId, new String[]{ActionKeys.VIEW});
+                // Set VIEW permissions for all
+                for (long roleId : allRoleIds) {
+                    ResourcePermissionLocalServiceUtil.setResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+newsIdFolder.getFolderId(), roleId, new String[]{ActionKeys.VIEW});
                 }
-                // Set permissions to all agents
+                // Set EDIT permissions to agents
                 for (long agentRoleId : agentRoleIds) {
                     ResourcePermissionLocalServiceUtil.setResourcePermissions(newsIdFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, "" + newsIdFolder.getFolderId(), agentRoleId, new String[]{ActionKeys.VIEW, ActionKeys.ADD_DOCUMENT, ActionKeys.UPDATE, ActionKeys.DELETE});
                 }
@@ -888,14 +892,9 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
                     logger.info("Adding fileEntryId " + attachedFileId + " to folder " + newsIdFolder.getFolderId());
                     FileEntry copiedFileEntry = FileUtilsLocalServiceUtil.copyFileEntry(newsIdFolder.getUserId(), attachedFileId, newsIdFolder.getFolderId(), true);
 
-                    // Set VIEW permissions to all agents
-                    for (long agentRoleId : agentRoleIds) {
+                    // Set VIEW permissions to all
+                    for (long agentRoleId : allRoleIds) {
                         ResourcePermissionLocalServiceUtil.setResourcePermissions(copiedFileEntry.getCompanyId(), DLFileEntry.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+copiedFileEntry.getFileEntryId(), agentRoleId, new String[]{ActionKeys.VIEW});
-                    }
-
-                    // Set VIEW permissions for the destination roles
-                    for (long roleId : entry.getValue()) {
-                        ResourcePermissionLocalServiceUtil.setResourcePermissions(copiedFileEntry.getCompanyId(), DLFileEntry.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ""+copiedFileEntry.getFileEntryId(), roleId, new String[]{ActionKeys.VIEW});
                     }
 
                     // Create the NewsAttachedFiles
