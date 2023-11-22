@@ -615,7 +615,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
             // Admins can read all school news
             User user = UserLocalServiceUtil.getUser(userId);
-            if (news.getIsSchoolNews() && (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isAdministrator(user))) {
+            if (news.getIsSchoolNews() && (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isAdministrator(user) || NewsAdminLocalServiceUtil.isUserDelegate(user))) {
                 return true;
             }
 
