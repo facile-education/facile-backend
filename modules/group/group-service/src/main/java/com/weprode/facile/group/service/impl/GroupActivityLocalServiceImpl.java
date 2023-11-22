@@ -354,7 +354,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_DOCUMENT) {
 
                 Activity activity = ActivityLocalServiceUtil.getActivity(groupActivity.getActivityId());
-                jsonActivity = ActivityLocalServiceUtil.convertActivityToJson(activity);
+                jsonActivity = ActivityLocalServiceUtil.convertActivityToJson(activity, userId);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_MEMBERSHIP) {
                 MembershipActivity membershipActivity = MembershipActivityLocalServiceUtil.getMembershipActivity(groupActivity.getActivityId());

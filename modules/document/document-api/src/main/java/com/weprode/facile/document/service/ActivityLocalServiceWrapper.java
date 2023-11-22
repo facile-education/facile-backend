@@ -64,9 +64,9 @@ public class ActivityLocalServiceWrapper
 
 	@Override
 	public org.json.JSONObject convertActivityToJson(
-		com.weprode.facile.document.model.Activity activity) {
+		com.weprode.facile.document.model.Activity activity, long userId) {
 
-		return _activityLocalService.convertActivityToJson(activity);
+		return _activityLocalService.convertActivityToJson(activity, userId);
 	}
 
 	/**

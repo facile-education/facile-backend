@@ -68,8 +68,10 @@ public class ActivityLocalServiceUtil {
 			fileEntryId, folderId, userId, groupId, fileName, folderName, type);
 	}
 
-	public static org.json.JSONObject convertActivityToJson(Activity activity) {
-		return getService().convertActivityToJson(activity);
+	public static org.json.JSONObject convertActivityToJson(
+		Activity activity, long userId) {
+
+		return getService().convertActivityToJson(activity, userId);
 	}
 
 	/**

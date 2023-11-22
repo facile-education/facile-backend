@@ -29,6 +29,7 @@ import com.weprode.facile.document.model.Activity;
 import com.weprode.facile.document.service.base.ActivityLocalServiceBaseImpl;
 import com.weprode.facile.group.constants.ActivityConstants;
 import com.weprode.facile.group.service.GroupUtilsLocalServiceUtil;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -124,15 +125,16 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 		}
 	}
 
-	public JSONObject convertActivityToJson(Activity activity) {
+	public JSONObject convertActivityToJson(Activity activity, long userId) {
 		JSONObject jsonActivity = new JSONObject();
 
 		try {
+			User user = UserLocalServiceUtil.getUser(userId);
 			jsonActivity.put(JSONConstants.ACTIVITY_ID, activity.getActivityId());
 			jsonActivity.put(JSONConstants.USER_ID, activity.getUserId());
-			User user = UserLocalServiceUtil.getUser(activity.getUserId());
-			jsonActivity.put(JSONConstants.USER_NAME, user.getFullName());
-			jsonActivity.put(JSONConstants.AUTHOR, user.getFullName());
+			User activityUser = UserLocalServiceUtil.getUser(activity.getUserId());
+			jsonActivity.put(JSONConstants.USER_NAME, activityUser.getFullName());
+			jsonActivity.put(JSONConstants.AUTHOR, activityUser.getFullName());
 			jsonActivity.put(JSONConstants.FILE_NAME, activity.getFileName());
 			jsonActivity.put(JSONConstants.FOLDER_NAME, activity.getFolderName());
 			jsonActivity.put(JSONConstants.GROUP_ID, activity.getGroupId());
@@ -150,6 +152,8 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 				jsonActivity.put(JSONConstants.FOLDER_ID, activity.getFolderId());
 				jsonActivity.put(JSONConstants.PARENT_FOLDER_ID, DLAppServiceUtil.getFolder(activity.getFolderId()).getParentFolderId());
 			}
+			// Parents should not have access to groups
+			jsonActivity.put(JSONConstants.READ_ONLY, RoleUtilsLocalServiceUtil.isParent(user));
 
 		} catch (Exception e) {
 			logger.debug("Error converting activity " + activity.getActivityId() + " : " + e.getMessage());
