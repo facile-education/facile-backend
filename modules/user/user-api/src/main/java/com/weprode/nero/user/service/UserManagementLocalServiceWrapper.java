@@ -93,6 +93,11 @@ public class UserManagementLocalServiceWrapper
 			companyId, lastName, firstName, email, birthday, sendUserLogin);
 	}
 
+	@Override
+	public String generatePassword() {
+		return _userManagementLocalService.generatePassword();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

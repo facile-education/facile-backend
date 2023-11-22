@@ -1,7 +1,6 @@
 package com.weprode.nero.eel.synchronization;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.EmailAddressException;
@@ -10,22 +9,15 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
-import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.security.RandomUtil;
-import com.liferay.portal.kernel.security.SecureRandom;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
-import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.util.PropsValues;
 import com.weprode.nero.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.nero.commons.constants.JSONConstants;
 import com.weprode.nero.commons.properties.NeroSystemProperties;
@@ -68,7 +60,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Main class for GVE synchronization process
@@ -450,7 +441,7 @@ public class GVEParentSynchronizationManager {
                 String password1;
                 if (parent1 == null) {
                     logger.info("Create new parent1");
-                    password1 = generatePassword();
+                    password1 = UserManagementLocalServiceUtil.generatePassword();
 
                     parent1 = createParent(gveParent1.getLastName(), GVESynchronizationUtils.formatName(gveParent1.getFirstName()), gveParent1.getEmail(), gveParent1.getPhone(), password1, gveParent1.getLink());
                 } else {
@@ -484,7 +475,7 @@ public class GVEParentSynchronizationManager {
                 if (parent2 == null) {
                     logger.info("Create new parent2");
 
-                    password2 = generatePassword();
+                    password2 = UserManagementLocalServiceUtil.generatePassword();
                     parent2 = createParent(gveParent2.getLastName(), GVESynchronizationUtils.formatName(gveParent2.getFirstName()), gveParent2.getEmail(), gveParent2.getPhone(), password2, gveParent2.getLink());
 
                 } else {
@@ -516,7 +507,7 @@ public class GVEParentSynchronizationManager {
                 if (parent3 == null) {
                     logger.info("Create new parent3");
 
-                    password3 = generatePassword();
+                    password3 = UserManagementLocalServiceUtil.generatePassword();
                     parent3 = createParent(gveParent3.getLastName(), GVESynchronizationUtils.formatName(gveParent3.getFirstName()), gveParent3.getEmail(), gveParent3.getPhone(), password3, gveParent3.getLink());
 
                 } else {
@@ -1095,141 +1086,6 @@ public class GVEParentSynchronizationManager {
         }
 
         return new byte[0];
-    }
-
-    private static String generatePassword() {
-        PasswordPolicy passwordPolicy;
-
-        try {
-            passwordPolicy = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId());
-
-            // return PwdGenerator.getPassword(16, PwdGenerator.KEY1, PwdGenerator.KEY2, PwdGenerator.KEY3, "_.!@$*=-?");
-        } catch (Exception e) {
-            logger.debug(e);
-            return null;
-        }
-
-        final String _generatorCompleteCharset = StringBundler.concat(
-                PropsValues.
-                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_LOWERCASE,
-                PropsValues.
-                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_NUMBERS,
-                PropsValues.
-                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_SYMBOLS,
-                PropsValues.
-                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_UPPERCASE);
-
-        final char[] generatorLowerCaseCharsetArray = getSortedCharArray(
-                PropsValues.
-                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_LOWERCASE);
-
-        final char[] generatorNumbersCharsetArray = getSortedCharArray(
-                PropsValues.
-                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_NUMBERS);
-
-        final char[] generatorSymbolsCharsetArray = getSortedCharArray(
-                PropsValues.
-                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_SYMBOLS);
-
-        final char[] generatorUpperCaseCharsetArray = getSortedCharArray(
-                PropsValues.
-                        PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_UPPERCASE);
-
-        char[] generatorAlphanumericCharsetArray = ArrayUtil.append(
-                generatorLowerCaseCharsetArray, generatorUpperCaseCharsetArray,
-                generatorNumbersCharsetArray);
-
-        Arrays.sort(generatorAlphanumericCharsetArray);
-
-        int alphanumericActualMinLength =
-                passwordPolicy.getMinLowerCase() + passwordPolicy.getMinNumbers() +
-                        passwordPolicy.getMinUpperCase();
-
-        int alphanumericMinLength = Math.max(
-                passwordPolicy.getMinAlphanumeric(), alphanumericActualMinLength);
-
-        int passwordMinLength = Math.max(
-                passwordPolicy.getMinLength(),
-                alphanumericMinLength + passwordPolicy.getMinSymbols());
-
-        StringBundler sb = new StringBundler(6);
-
-        if (passwordPolicy.getMinLowerCase() > 0) {
-            sb.append(
-                    getRandomString(
-                            passwordPolicy.getMinLowerCase(),
-                            generatorLowerCaseCharsetArray));
-        }
-
-        if (passwordPolicy.getMinNumbers() > 0) {
-            sb.append(
-                    getRandomString(
-                            passwordPolicy.getMinNumbers(),
-                            generatorNumbersCharsetArray));
-        }
-
-        if (passwordPolicy.getMinSymbols() > 0) {
-            sb.append(
-                    getRandomString(
-                            passwordPolicy.getMinSymbols(),
-                            generatorSymbolsCharsetArray));
-        }
-
-        if (passwordPolicy.getMinUpperCase() > 0) {
-            sb.append(
-                    getRandomString(
-                            passwordPolicy.getMinUpperCase(),
-                            generatorUpperCaseCharsetArray));
-        }
-
-        if (alphanumericMinLength > alphanumericActualMinLength) {
-            int count = alphanumericMinLength - alphanumericActualMinLength;
-
-            sb.append(
-                    getRandomString(count, generatorAlphanumericCharsetArray));
-        }
-
-        if (passwordMinLength >
-                (alphanumericMinLength + passwordPolicy.getMinSymbols())) {
-
-            int count =
-                    passwordMinLength -
-                            (alphanumericMinLength + passwordPolicy.getMinSymbols());
-
-            sb.append(
-                    PwdGenerator.getPassword(_generatorCompleteCharset, count));
-        }
-
-        if (sb.index() == 0) {
-            sb.append(
-                    PwdGenerator.getPassword(
-                            _generatorCompleteCharset,
-                            PropsValues.PASSWORDS_DEFAULT_POLICY_MIN_LENGTH));
-        }
-
-        return RandomUtil.shuffle(new SecureRandom(), sb.toString());
-    }
-
-    private static String getRandomString(int count, char[] chars) {
-        Random random = new SecureRandom();
-
-        StringBundler sb = new StringBundler(count);
-
-        for (int i = 0; i < count; i++) {
-            int index = random.nextInt(chars.length);
-
-            sb.append(chars[index]);
-        }
-
-        return sb.toString();
-    }
-
-    private static char[] getSortedCharArray(String s) {
-        char[] chars = s.toCharArray();
-
-        Arrays.sort(chars);
-
-        return chars;
     }
 
     private static final String CSV_SEPARATOR = ",";

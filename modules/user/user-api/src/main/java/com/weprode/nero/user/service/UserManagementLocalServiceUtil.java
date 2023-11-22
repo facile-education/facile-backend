@@ -89,6 +89,10 @@ public class UserManagementLocalServiceUtil {
 			companyId, lastName, firstName, email, birthday, sendUserLogin);
 	}
 
+	public static java.lang.String generatePassword() {
+		return getService().generatePassword();
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
