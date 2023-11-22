@@ -22,7 +22,6 @@ import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil;
 import com.liferay.document.library.kernel.service.persistence.DLFileEntryUtil;
-import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -167,7 +166,7 @@ public class WopiAction implements StrutsAction {
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     return null;
                 }
-                InputStream is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), version);
+                InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version);
 
                 fileInfo.put("SHA256", getHash256(is));
                 fileInfo.put("Version", version);
@@ -238,7 +237,6 @@ public class WopiAction implements StrutsAction {
         try {
             DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(fileEntryId);
             is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version);
-            //is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), version);
             response.setHeader("X-WOPI-ItemVersion", version);
             User user = UserLocalServiceUtil.getUser(userId);
             long size = fileEntry.getSize();
