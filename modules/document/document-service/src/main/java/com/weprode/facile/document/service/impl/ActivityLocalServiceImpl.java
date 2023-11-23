@@ -152,8 +152,9 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 				jsonActivity.put(JSONConstants.FOLDER_ID, activity.getFolderId());
 				jsonActivity.put(JSONConstants.PARENT_FOLDER_ID, DLAppServiceUtil.getFolder(activity.getFolderId()).getParentFolderId());
 			}
-			// Parents should not have access to groups
-			jsonActivity.put(JSONConstants.READ_ONLY, RoleUtilsLocalServiceUtil.isParent(user));
+			// Students and parents should not have access to groups
+			// To be enhanced when we will have a proper way of managing menu entries
+			jsonActivity.put(JSONConstants.READ_ONLY, RoleUtilsLocalServiceUtil.isStudentOrParent(user));
 
 		} catch (Exception e) {
 			logger.debug("Error converting activity " + activity.getActivityId() + " : " + e.getMessage());
