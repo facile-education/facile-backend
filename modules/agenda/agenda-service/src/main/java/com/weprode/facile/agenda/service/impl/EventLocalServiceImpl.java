@@ -233,7 +233,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
 
             // Admins can read all events
             User user = UserLocalServiceUtil.getUser(userId);
-            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isAdministrator(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)) {
                 return true;
             }
 
