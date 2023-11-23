@@ -56,6 +56,7 @@
 		<field name="loolTokenId" type="long" />
 		<field name="userId" type="long" />
 		<field name="token" type="String" />
+		<field name="editionDate" type="Date" />
 	</model>
 	<model name="com.weprode.facile.document.model.Version">
 		<field name="fileVersionId" type="long" />

@@ -19,7 +19,8 @@ create table Document_EditionLock (
 create table Document_LoolToken (
 	loolTokenId LONG not null primary key,
 	userId LONG,
-	token VARCHAR(75) null
+	token VARCHAR(75) null,
+	editionDate DATE null
 );
 
 create table Document_Version (

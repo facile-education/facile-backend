@@ -17,6 +17,8 @@ package com.weprode.facile.document.model;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
 
+import java.util.Date;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -109,6 +111,20 @@ public interface LoolTokenModel extends BaseModel<LoolToken> {
 	 * @param token the token of this lool token
 	 */
 	public void setToken(String token);
+
+	/**
+	 * Returns the edition date of this lool token.
+	 *
+	 * @return the edition date of this lool token
+	 */
+	public Date getEditionDate();
+
+	/**
+	 * Sets the edition date of this lool token.
+	 *
+	 * @param editionDate the edition date of this lool token
+	 */
+	public void setEditionDate(Date editionDate);
 
 	@Override
 	public LoolToken cloneWithOriginalValues();
