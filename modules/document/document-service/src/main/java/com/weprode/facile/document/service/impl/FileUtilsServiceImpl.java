@@ -105,7 +105,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
-			Folder tmpFolder = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId());
+			Folder tmpFolder = FolderUtilsLocalServiceUtil.getUserTmpFolder(user.getUserId());
 			int mode = DocumentConstants.MODE_REPLACE;
 			logger.info("User " + user.getFullName() + " uploads tmp file " + fileName + " to folderId " + tmpFolder.getFolderId() + " in mode " + mode);
 

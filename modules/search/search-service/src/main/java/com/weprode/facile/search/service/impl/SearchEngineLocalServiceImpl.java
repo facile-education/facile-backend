@@ -140,9 +140,7 @@ public class SearchEngineLocalServiceImpl extends SearchEngineLocalServiceBaseIm
 
     private long[] getFolderIdsToNotIndex(User user) throws PortalException {
         return new long[]{
-                FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId()).getFolderId(),
-                FolderUtilsLocalServiceUtil.getThumbnailFolder(user.getUserId()).getFolderId(),
-                FolderUtilsLocalServiceUtil.getProgressionFolder(user.getUserId()).getFolderId()
+            FolderUtilsLocalServiceUtil.getUserTmpFolder(user.getUserId()).getFolderId()
         };
     }
 }

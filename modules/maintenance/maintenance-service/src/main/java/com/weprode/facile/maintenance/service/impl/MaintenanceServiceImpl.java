@@ -64,6 +64,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (synchro) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -93,6 +94,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (parent synchro) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -122,6 +124,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (fsAnalysis) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -153,6 +156,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (fsAnalysisV2) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -184,6 +188,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (runAnonymization) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -213,6 +218,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (addPermissions) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -227,8 +233,8 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "cleanup-dropboxes", method = "POST")
-	public JSONObject cleanupDropboxes() {
+	@JSONWebService(value = "cleanup-obsolete-folders", method = "POST")
+	public JSONObject cleanupObsoleteFolders() {
 
 		JSONObject result = new JSONObject();
 
@@ -242,11 +248,12 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (cleanupObsoleteFolders) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
-			new OneShotTools().cleanupDropboxes();
+			new OneShotTools().cleanupObsoleteFolders();
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -271,6 +278,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (runDataFeed) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -293,13 +301,14 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (setNewsPermission) but has no permission");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

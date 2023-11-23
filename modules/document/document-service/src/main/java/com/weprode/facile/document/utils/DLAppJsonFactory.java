@@ -15,12 +15,8 @@
 
 package com.weprode.facile.document.utils;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -49,6 +45,8 @@ import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -81,9 +79,6 @@ public class DLAppJsonFactory {
         addCommonsFields(formattedFolder, folder, user, withDetails);
 
         switch (space) {
-            case DocumentConstants.SENDING_BOX:
-                addSendingBoxFields(formattedFolder, folder, user);
-                break;
             case DocumentConstants.TRASH:
                 addTrashFields(formattedFolder, folder, user);
                 break;
@@ -120,9 +115,6 @@ public class DLAppJsonFactory {
         addCommonsFields(formattedFile, fileEntry, user, withDetails);
 
         switch (space) {
-            case DocumentConstants.SENDING_BOX:
-                addSendingBoxFields(formattedFile, fileEntry, user);
-                break;
             case DocumentConstants.TRASH:
                 addTrashFields(formattedFile, fileEntry, user);
                 break;
@@ -213,26 +205,6 @@ public class DLAppJsonFactory {
             } catch (Exception e) {
                 logger.error(e);
             }
-        }
-    }
-
-    private static void addSendingBoxFields(JSONObject formattedFolder, Folder folder, User user) {
-        try {
-            if (DocumentUtil.belongToASendingBoxSubFolder(folder, user.getUserId())) {
-                formattedFolder.put(JSONConstants.IS_SUB_ENTITY, true);
-            }
-        } catch (Exception e) {
-            logger.error(e);
-        }
-    }
-
-    private static void addSendingBoxFields(JSONObject formattedFile, FileEntry fileEntry, User user) {
-        try {
-            if (DocumentUtil.belongToASendingBoxSubFolder(fileEntry, user.getUserId())) {
-                formattedFile.put(JSONConstants.IS_SUB_ENTITY, true);
-            }
-        } catch (Exception e) {
-            logger.error(e);
         }
     }
 
@@ -348,7 +320,6 @@ public class DLAppJsonFactory {
             curr.put(JSONConstants.ID, userId);
             curr.put(JSONConstants.NAME, user.getFullName());
             curr.put(JSONConstants.PICTURE, urlImg);
-            // TODO other fields? (address, mail, etc...)
 
             return curr;
         } catch (Exception e) {
@@ -357,32 +328,4 @@ public class DLAppJsonFactory {
         }
     }
 
-    public static JSONObject quickFormatUser(long userId) {
-        try {
-            User user = UserLocalServiceUtil.getUser(userId);
-
-            JSONObject curr = new JSONObject();
-            curr.put(JSONConstants.ID, userId);
-            curr.put(JSONConstants.NAME, user.getFullName());
-
-            return curr;
-        } catch (Exception e) {
-            logger.error("Cant retrieve user with userId " + userId, e);
-            return new JSONObject();
-        }
-    }
-
-    public static JSONObject formatError(String type) throws SystemException {
-        return formatError(type, StringPool.BLANK);
-    }
-
-    public static JSONObject formatError(String type, String message) throws SystemException {
-        JSONObject error = new JSONObject();
-
-        error.put(JSONConstants.TYPE, type);
-        error.put(JSONConstants.MESSAGE, message);
-
-        return error;
-    }
-    
 }

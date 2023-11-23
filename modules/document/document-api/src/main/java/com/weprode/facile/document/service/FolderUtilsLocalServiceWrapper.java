@@ -137,15 +137,6 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.repository.model.Folder getIMBox(
-			long userId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			   com.liferay.portal.kernel.exception.SystemException {
-
-		return _folderUtilsLocalService.getIMBox(userId);
-	}
-
-	@Override
 	public com.liferay.portal.kernel.repository.model.Folder
 			getOrCreateGroupRootFolder(long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -165,38 +156,21 @@ public class FolderUtilsLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.repository.model.Folder
-			getProgressionFolder(long userId)
+			getThumbnailFolder()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _folderUtilsLocalService.getProgressionFolder(userId);
+		return _folderUtilsLocalService.getThumbnailFolder();
 	}
 
 	@Override
-	public com.liferay.portal.kernel.repository.model.Folder getSendingBox(
-			long userId)
+	public com.liferay.portal.kernel.repository.model.Folder
+			getUserMessagingAttachedFilesFolder(long userId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _folderUtilsLocalService.getSendingBox(userId);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.repository.model.Folder getThumbnailFolder(
-			long userId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			   com.liferay.portal.kernel.exception.SystemException {
-
-		return _folderUtilsLocalService.getThumbnailFolder(userId);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.repository.model.Folder getTmpFolder(
-			long userId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			   com.liferay.portal.kernel.exception.SystemException {
-
-		return _folderUtilsLocalService.getTmpFolder(userId);
+		return _folderUtilsLocalService.getUserMessagingAttachedFilesFolder(
+			userId);
 	}
 
 	@Override
@@ -206,6 +180,15 @@ public class FolderUtilsLocalServiceWrapper
 			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _folderUtilsLocalService.getUserRootFolder(userId);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.repository.model.Folder getUserTmpFolder(
+			long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _folderUtilsLocalService.getUserTmpFolder(userId);
 	}
 
 	@Override

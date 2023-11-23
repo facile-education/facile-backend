@@ -117,13 +117,6 @@ public class FolderUtilsLocalServiceUtil {
 		return getService().getGroupNewsFolder(groupId);
 	}
 
-	public static com.liferay.portal.kernel.repository.model.Folder getIMBox(
-			long userId)
-		throws PortalException, SystemException {
-
-		return getService().getIMBox(userId);
-	}
-
 	public static com.liferay.portal.kernel.repository.model.Folder
 			getOrCreateGroupRootFolder(long groupId)
 		throws PortalException {
@@ -141,31 +134,17 @@ public class FolderUtilsLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
-			getProgressionFolder(long userId)
+			getThumbnailFolder()
 		throws PortalException, SystemException {
 
-		return getService().getProgressionFolder(userId);
+		return getService().getThumbnailFolder();
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
-			getSendingBox(long userId)
+			getUserMessagingAttachedFilesFolder(long userId)
 		throws PortalException, SystemException {
 
-		return getService().getSendingBox(userId);
-	}
-
-	public static com.liferay.portal.kernel.repository.model.Folder
-			getThumbnailFolder(long userId)
-		throws PortalException, SystemException {
-
-		return getService().getThumbnailFolder(userId);
-	}
-
-	public static com.liferay.portal.kernel.repository.model.Folder
-			getTmpFolder(long userId)
-		throws PortalException, SystemException {
-
-		return getService().getTmpFolder(userId);
+		return getService().getUserMessagingAttachedFilesFolder(userId);
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
@@ -173,6 +152,13 @@ public class FolderUtilsLocalServiceUtil {
 		throws PortalException, SystemException {
 
 		return getService().getUserRootFolder(userId);
+	}
+
+	public static com.liferay.portal.kernel.repository.model.Folder
+			getUserTmpFolder(long userId)
+		throws PortalException, SystemException {
+
+		return getService().getUserTmpFolder(userId);
 	}
 
 	public static void hideDLFolder(long folderId) throws PortalException {

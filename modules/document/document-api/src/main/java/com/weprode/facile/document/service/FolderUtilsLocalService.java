@@ -93,9 +93,6 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getIMBox(long userId) throws PortalException, SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getOrCreateGroupRootFolder(long groupId)
 		throws PortalException;
 
@@ -107,23 +104,18 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 	public String getOSGiServiceIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getProgressionFolder(long userId)
-		throws PortalException, SystemException;
+	public Folder getThumbnailFolder() throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getSendingBox(long userId)
-		throws PortalException, SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getThumbnailFolder(long userId)
-		throws PortalException, SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getTmpFolder(long userId)
+	public Folder getUserMessagingAttachedFilesFolder(long userId)
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getUserRootFolder(long userId)
+		throws PortalException, SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Folder getUserTmpFolder(long userId)
 		throws PortalException, SystemException;
 
 	public void hideDLFolder(long folderId) throws PortalException;

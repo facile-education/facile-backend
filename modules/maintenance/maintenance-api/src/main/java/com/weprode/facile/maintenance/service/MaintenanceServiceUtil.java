@@ -37,8 +37,8 @@ public class MaintenanceServiceUtil {
 		return getService().addPermissions();
 	}
 
-	public static org.json.JSONObject cleanupDropboxes() {
-		return getService().cleanupDropboxes();
+	public static org.json.JSONObject cleanupObsoleteFolders() {
+		return getService().cleanupObsoleteFolders();
 	}
 
 	/**

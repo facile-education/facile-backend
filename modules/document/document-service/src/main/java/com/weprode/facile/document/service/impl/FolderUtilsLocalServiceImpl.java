@@ -87,7 +87,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					user.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.SCHOOL_BAG_FOLDER_NAME,
-					"Dossier personnel de l'utilsateur",
+					"Dossier personnel de l'utilisateur",
 					new ServiceContext()
 			);
 		}
@@ -95,28 +95,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return rootFolder;
 	}
 
-	public Folder getSendingBox(long userId) throws PortalException, SystemException {
-		final User user = UserLocalServiceUtil.getUser(userId);
-
-		Folder folder;
-		try {
-			folder = DLAppServiceUtil.getFolder(user.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SENDING_BOX_FOLDER_NAME);
-		} catch (NoSuchFolderException e) {
-			folder = DLAppServiceUtil.addFolder(
-					UUID.randomUUID().toString(),
-					user.getGroupId(),
-					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-					DocumentConstants.SENDING_BOX_FOLDER_NAME,
-					"Boite d envoi tmp",
-					new ServiceContext());
-			hideDLFolder(folder.getFolderId());
-			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(folder);
-		}
-
-		return folder;
-	}
-
-	public Folder getIMBox(long userId) throws PortalException, SystemException {
+	public Folder getUserMessagingAttachedFilesFolder(long userId) throws PortalException, SystemException {
 		final User user = UserLocalServiceUtil.getUser(userId);
 
 		Folder folder;
@@ -136,7 +115,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return folder;
 	}
 
-	public Folder getTmpFolder(long userId) throws PortalException, SystemException {
+	public Folder getUserTmpFolder(long userId) throws PortalException, SystemException {
 		final User user = UserLocalServiceUtil.getUser(userId);
 
 		Folder tmpFolder;
@@ -156,28 +135,8 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return tmpFolder;
 	}
 
-	public Folder getProgressionFolder(long userId) throws PortalException, SystemException {
-		Folder folder;
-
-		final User user = UserLocalServiceUtil.getUser(userId);
-		try {
-			folder = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.PROGRESSION_FOLDER_NAME);
-		} catch (NoSuchFolderException e) {
-			folder = DLAppServiceUtil.addFolder(
-					UUID.randomUUID().toString(),
-					user.getGroup().getGroupId(),
-					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-					DocumentConstants.PROGRESSION_FOLDER_NAME,
-					"Dossier pour les documents des progressions",
-					new ServiceContext());
-			hideDLFolder(folder.getFolderId());
-		}
-
-		return folder;
-	}
-
-	public Folder getThumbnailFolder(long userId) throws PortalException, SystemException {
-		final long companyId = UserLocalServiceUtil.getUser(userId).getCompanyId();
+	public Folder getThumbnailFolder() throws PortalException, SystemException {
+		final long companyId = PortalUtil.getDefaultCompanyId();
 		Organization rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(companyId);
 
 		Folder thumbnailFolder;
@@ -186,7 +145,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		} catch (NoSuchFolderException e) {
 			thumbnailFolder = DLAppLocalServiceUtil.addFolder(
 					UUID.randomUUID().toString(),
-					UserLocalServiceUtil.getDefaultUser(companyId).getUserId(),
+					UserLocalServiceUtil.getGuestUserId(companyId),
 					rootOrg.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.THUMBNAILS_FOLDER_NAME,
@@ -235,7 +194,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 
 		String zipName = folder.getName();
 
-		Folder temporaryFF = getTmpFolder(user.getUserId());
+		Folder temporaryFF = getUserTmpFolder(user.getUserId());
 
 		long[] fileIdArray = new long[0];
 		long[] folderIdArray = new long[1];
@@ -351,7 +310,6 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			boolean success = false;
 			int nbTry = 0;
 			String originalTitle = folder.getName();
-			String suffix = "";
 
 			// rename folder if needed
 			while (!success && nbTry < DocumentConstants.NB_RENAMED_VERSIONS) {
@@ -383,7 +341,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 							}
 						}
 					} else if (mode == DocumentConstants.MODE_RENAME) {
-						suffix = " (" + nbTry + ")";
+						String suffix = " (" + nbTry + ")";
 						DLAppServiceUtil.updateFolder(
 								folder.getFolderId(),
 								originalTitle + suffix,

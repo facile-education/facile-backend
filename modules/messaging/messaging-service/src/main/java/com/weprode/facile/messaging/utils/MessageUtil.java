@@ -191,7 +191,7 @@ public class MessageUtil {
 		try {
 			if (attachFileIds != null && !attachFileIds.isEmpty()) {
 
-				Folder imBox = FolderUtilsLocalServiceUtil.getIMBox(userId);
+				Folder imBox = FolderUtilsLocalServiceUtil.getUserMessagingAttachedFilesFolder(userId);
 
 				// Create the folder in the user's sending box
 				Folder attachedFilesFolder = DLAppLocalServiceUtil.addFolder(

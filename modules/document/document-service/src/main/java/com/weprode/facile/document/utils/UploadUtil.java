@@ -56,7 +56,7 @@ public class UploadUtil {
         try {
             // If folderId is 0, then use the tmp folder
             if (folderId == 0) {
-                folderId = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId()).getFolderId();
+                folderId = FolderUtilsLocalServiceUtil.getUserTmpFolder(user.getUserId()).getFolderId();
             }
 
             Folder folder = DLAppServiceUtil.getFolder(folderId);

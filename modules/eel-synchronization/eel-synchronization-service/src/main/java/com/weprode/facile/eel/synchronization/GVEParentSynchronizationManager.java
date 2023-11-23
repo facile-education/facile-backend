@@ -370,7 +370,7 @@ public class GVEParentSynchronizationManager {
                 InputStream is = new ByteArrayInputStream(report);
                 long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
                 User noReplyUser = UserLocalServiceUtil.getUser(noReplyUserId);
-                FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(noReplyUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(noReplyUserId).getFolderId(), "folderName", fileName, is, "html/text");
+                FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(noReplyUser.getGroupId(), FolderUtilsLocalServiceUtil.getUserTmpFolder(noReplyUserId).getFolderId(), "folderName", fileName, is, "html/text");
                 String subject = "Synchronisation des parents";
                 String content = "Bonjour,<br><br>Veuillez trouver ci-joint le rapport de synchronisation des parents pour votre établissement.<br><br>Meilleurs messages,<br>L'équipe technique";
                 List<Long> attachFileIds = new ArrayList<>();

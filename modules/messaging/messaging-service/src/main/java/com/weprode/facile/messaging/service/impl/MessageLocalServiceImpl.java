@@ -364,7 +364,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
 
                 // Add all new attached files
                 if (attachFileIds != null) {
-                    Folder imBox = FolderUtilsLocalServiceUtil.getIMBox(senderId);
+                    Folder imBox = FolderUtilsLocalServiceUtil.getUserMessagingAttachedFilesFolder(senderId);
                     Folder attachedFilesFolder = DLAppServiceUtil.addFolder(
                             UUID.randomUUID().toString(),
                             imBox.getGroupId(),

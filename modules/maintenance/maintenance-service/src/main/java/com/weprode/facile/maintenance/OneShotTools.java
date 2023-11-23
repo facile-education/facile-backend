@@ -100,13 +100,13 @@ public class OneShotTools {
         }
     }
 
-    // Delete old folders named '._CASIER_' and their content
-    public void cleanupDropboxes() {
+    // Delete old folders named '._TEMPORARY_IMG_' and '._SENDING_BOX_' + their content
+    public void cleanupObsoleteFolders() {
 
         int nbFolders = 0;
         List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getDLFolders(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
         for (DLFolder dlFolder : dlFolders) {
-            if (dlFolder.getName().equals("._CASIER_")) {
+            if (dlFolder.getName().equals("._SENDING_BOX_") || dlFolder.getName().equals("._TEMPORARY_IMG_")) {
                 nbFolders++;
                 deleteFolder(dlFolder.getFolderId());
             }

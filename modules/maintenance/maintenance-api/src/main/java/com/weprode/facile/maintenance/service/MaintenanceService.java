@@ -52,8 +52,8 @@ public interface MaintenanceService extends BaseService {
 	@JSONWebService(method = "POST", value = "add-permissions")
 	public JSONObject addPermissions();
 
-	@JSONWebService(method = "POST", value = "cleanup-dropboxes")
-	public JSONObject cleanupDropboxes();
+	@JSONWebService(method = "POST", value = "cleanup-obsolete-folders")
+	public JSONObject cleanupObsoleteFolders();
 
 	/**
 	 * Returns the OSGi service identifier.

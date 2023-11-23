@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.weprode.facile.document.constants.DocumentConstants;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -118,13 +117,6 @@ public class FsManagement {
         } else {
             logger.info("   Folder does not exist in DB -> candidate for deletion");
             return false;
-        }
-
-        if (dlFolder.getName().equals(DocumentConstants.TMP_IMG_FOLDER_NAME)) {
-            logger.info("   TMP IMG");
-        }
-        if (dlFolder.getName().equals(DocumentConstants.SENDING_BOX_FOLDER_NAME)) {
-            logger.info("   SENDING BOX");
         }
 
         // Check if the user still exists or not

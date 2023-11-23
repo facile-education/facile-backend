@@ -40,8 +40,8 @@ public class MaintenanceServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject cleanupDropboxes() {
-		return _maintenanceService.cleanupDropboxes();
+	public org.json.JSONObject cleanupObsoleteFolders() {
+		return _maintenanceService.cleanupObsoleteFolders();
 	}
 
 	/**

@@ -237,13 +237,13 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject cleanupDropboxes(
+	public static org.json.JSONObject cleanupObsoleteFolders(
 		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				MaintenanceServiceUtil.class, "cleanupDropboxes",
-				_cleanupDropboxesParameterTypes6);
+				MaintenanceServiceUtil.class, "cleanupObsoleteFolders",
+				_cleanupObsoleteFoldersParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -343,7 +343,7 @@ public class MaintenanceServiceHttp {
 		new Class[] {};
 	private static final Class<?>[] _addPermissionsParameterTypes5 =
 		new Class[] {};
-	private static final Class<?>[] _cleanupDropboxesParameterTypes6 =
+	private static final Class<?>[] _cleanupObsoleteFoldersParameterTypes6 =
 		new Class[] {};
 	private static final Class<?>[] _runDataFeedParameterTypes7 =
 		new Class[] {};
