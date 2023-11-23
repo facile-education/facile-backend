@@ -50,7 +50,6 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 
 		JSONObject result = new JSONObject();
 
-		logger.info("saveUserDevice with userId=" + userId + " and deviceId=" + deviceId);
 		User user;
 		try {
 			user = getGuestOrUser();
@@ -71,7 +70,6 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		MobileDevice mobileDevice = MobileDeviceLocalServiceUtil.getMobileDeviceByManufacturerDeviceId(deviceId);
 
 		if (mobileDevice != null) {
-			logger.info("Mobile device already exists : this is an app reload");
 			// Update device
 			if (mobileDevice.getUserId() != userId) {
 				mobileDevice.setUserId(userId);
@@ -100,7 +98,6 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 	public JSONObject saveFullUserDevice(String deviceId, long userId, String model, String manufacturer, String os, String osVersion, String browserUA) {
 
 		JSONObject result = new JSONObject();
-		logger.info("saveFullUserDevice with userId=" + userId + " and deviceId=" + deviceId);
 
 		// Parameter cannot be '0'
 		if (userId == 0) {
@@ -117,7 +114,6 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		}
 
 		if (mobileDevice != null) {
-			logger.info("Mobile device already exists : this is an app reload, update device props");
 			// Update device
 			if (mobileDevice.getUserId() != userId ||
 					!mobileDevice.getOperatingSystemVersion().equals(osVersion) ||
@@ -147,7 +143,6 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 	public JSONObject deleteUserDevice(String deviceId) {
 		JSONObject result = new JSONObject();
 
-		logger.info("deleteUserDevice with manufacturerDeviceId="+deviceId);
 		try {
 			MobileDevice mobileDevice = MobileDeviceLocalServiceUtil.getMobileDeviceByManufacturerDeviceId(deviceId);
 			MobileDeviceLocalServiceUtil.deleteMobileDevice(mobileDevice);
