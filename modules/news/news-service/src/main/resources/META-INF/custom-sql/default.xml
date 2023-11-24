@@ -6,12 +6,12 @@
         	FROM News_News news
 			JOIN News_NewsPopulation pop ON news.newsId = pop.newsId
 			LEFT JOIN News_NewsRead newsread ON news.newsId = newsread.newsId AND newsread.userId = ?
-			WHERE (news.publicationDate < ? OR news.authorId = ?)
+			WHERE (news.publicationDate <= ? OR news.authorId = ?)
 			AND ((pop.groupId IN ([$GROUP_IDS$]) AND pop.roleId IN ([$ROLE_IDS$]) AND news.expirationDate > ?) OR news.authorId = ?)
 			[$OTHER$]
 			GROUP BY news.newsId
 			ORDER BY news.publicationDate DESC, news.modificationDate DESC
-            LIMIT ?
+            LIMIT ?,?
         ]]>
     </sql>
     <sql id="com.weprode.facile.news.service.persistence.NewsFinder.getAllSchoolNews">
@@ -20,13 +20,13 @@
         	FROM News_News news
 			JOIN News_NewsPopulation pop ON news.newsId = pop.newsId
 			LEFT JOIN News_NewsRead newsread ON news.newsId = newsread.newsId AND newsread.userId = ?
-			WHERE (news.publicationDate < ? OR news.authorId = ?)
+			WHERE (news.publicationDate <= ? OR news.authorId = ?)
 			AND ((pop.schoolId IN ([$SCHOOL_IDS$]) AND news.expirationDate > ?) OR news.authorId = ?)
             AND news.isSchoolNews = 1
 			[$OTHER$]
 			GROUP BY news.newsId
 			ORDER BY news.publicationDate DESC, news.modificationDate DESC
-            LIMIT ?
+            LIMIT ?,?
         ]]>
     </sql>
     <sql id="com.weprode.facile.news.service.persistence.NewsFinder.countNews">

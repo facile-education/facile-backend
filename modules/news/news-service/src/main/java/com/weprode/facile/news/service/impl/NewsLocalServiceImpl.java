@@ -201,7 +201,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         return newsPersistence.remove(news);
     }
 
-    public List<News> getNews(User user, long groupId, Date maxDate, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) throws SystemException {
+    public List<News> getNews(User user, long groupId, Date currentDate, int startIndex, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) throws SystemException {
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
 
@@ -222,10 +222,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             groupIds.add(groupId);
         }
 
-        return newsFinder.getNews(user.getUserId(), groupIds, roleIds, maxDate, nbNews, groupNews, importantOnly, unreadOnly);
+        return newsFinder.getNews(user.getUserId(), groupIds, roleIds, currentDate, startIndex, nbNews, groupNews, importantOnly, unreadOnly);
     }
 
-    public List<News> getAllSchoolNews(User user, Date maxDate, int nbNews, boolean unreadOnly) throws SystemException {
+    public List<News> getAllSchoolNews(User user, Date currentDate, int startIndex, int nbNews, boolean unreadOnly) throws SystemException {
 
         List<Long> schoolIds = new ArrayList<>();
         List<Organization> schools = new ArrayList<>();
@@ -238,7 +238,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
             schoolIds.add(school.getOrganizationId());
         }
 
-        return newsFinder.getAllSchoolNews(user.getUserId(), schoolIds, maxDate, nbNews, false, unreadOnly);
+        return newsFinder.getAllSchoolNews(user.getUserId(), schoolIds, currentDate, startIndex, nbNews, false, unreadOnly);
     }
 
     public int countNews(User user, long groupId, boolean groupNews, boolean importantOnly, boolean unreadOnly) throws SystemException {

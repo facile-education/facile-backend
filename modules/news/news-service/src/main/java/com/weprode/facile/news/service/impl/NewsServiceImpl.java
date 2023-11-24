@@ -152,7 +152,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
     }
 
     @JSONWebService(value = "get-school-news", method = "GET")
-    public JSONObject getSchoolNews(String maxDateString, int nbNews, boolean importantOnly, boolean unreadOnly) {
+    public JSONObject getSchoolNews(String currentDateString, int startIndex, int nbNews, boolean importantOnly, boolean unreadOnly) {
         JSONObject result = new JSONObject();
 
         User user;
@@ -165,13 +165,13 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
-            Date maxDate = new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).parse(maxDateString);
-            logger.debug("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + "school news before " + maxDate);
+            Date currentDate = new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).parse(currentDateString);
+            logger.debug("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + "school news before " + currentDate);
             List<News> newsList;
             if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-                newsList = NewsLocalServiceUtil.getAllSchoolNews(user, maxDate, nbNews, unreadOnly);
+                newsList = NewsLocalServiceUtil.getAllSchoolNews(user, currentDate, startIndex, nbNews, unreadOnly);
             } else {
-                newsList = NewsLocalServiceUtil.getNews(user,0, maxDate, nbNews,false, importantOnly, unreadOnly);
+                newsList = NewsLocalServiceUtil.getNews(user,0, currentDate, startIndex, nbNews,false, importantOnly, unreadOnly);
             }
             JSONArray jsonNewsArray = new JSONArray();
             for (News news : newsList) {

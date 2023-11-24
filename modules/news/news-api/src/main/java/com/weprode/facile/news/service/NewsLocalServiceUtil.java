@@ -271,11 +271,13 @@ public class NewsLocalServiceUtil {
 	}
 
 	public static List<News> getAllSchoolNews(
-			com.liferay.portal.kernel.model.User user, java.util.Date maxDate,
-			int nbNews, boolean unreadOnly)
+			com.liferay.portal.kernel.model.User user,
+			java.util.Date currentDate, int startIndex, int nbNews,
+			boolean unreadOnly)
 		throws SystemException {
 
-		return getService().getAllSchoolNews(user, maxDate, nbNews, unreadOnly);
+		return getService().getAllSchoolNews(
+			user, currentDate, startIndex, nbNews, unreadOnly);
 	}
 
 	public static List<News> getGroupNewsActivities(
@@ -313,13 +315,13 @@ public class NewsLocalServiceUtil {
 
 	public static List<News> getNews(
 			com.liferay.portal.kernel.model.User user, long groupId,
-			java.util.Date maxDate, int nbNews, boolean groupNews,
-			boolean importantOnly, boolean unreadOnly)
+			java.util.Date currentDate, int startIndex, int nbNews,
+			boolean groupNews, boolean importantOnly, boolean unreadOnly)
 		throws SystemException {
 
 		return getService().getNews(
-			user, groupId, maxDate, nbNews, groupNews, importantOnly,
-			unreadOnly);
+			user, groupId, currentDate, startIndex, nbNews, groupNews,
+			importantOnly, unreadOnly);
 	}
 
 	public static List<News> getNewsActivities(

@@ -300,12 +300,13 @@ public class NewsLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.weprode.facile.news.model.News> getAllSchoolNews(
-			com.liferay.portal.kernel.model.User user, java.util.Date maxDate,
-			int nbNews, boolean unreadOnly)
+			com.liferay.portal.kernel.model.User user,
+			java.util.Date currentDate, int startIndex, int nbNews,
+			boolean unreadOnly)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _newsLocalService.getAllSchoolNews(
-			user, maxDate, nbNews, unreadOnly);
+			user, currentDate, startIndex, nbNews, unreadOnly);
 	}
 
 	@Override
@@ -350,13 +351,13 @@ public class NewsLocalServiceWrapper
 	@Override
 	public java.util.List<com.weprode.facile.news.model.News> getNews(
 			com.liferay.portal.kernel.model.User user, long groupId,
-			java.util.Date maxDate, int nbNews, boolean groupNews,
-			boolean importantOnly, boolean unreadOnly)
+			java.util.Date currentDate, int startIndex, int nbNews,
+			boolean groupNews, boolean importantOnly, boolean unreadOnly)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _newsLocalService.getNews(
-			user, groupId, maxDate, nbNews, groupNews, importantOnly,
-			unreadOnly);
+			user, groupId, currentDate, startIndex, nbNews, groupNews,
+			importantOnly, unreadOnly);
 	}
 
 	@Override

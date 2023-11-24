@@ -37,7 +37,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
     public static final String COUNT_NEWS = NewsFinder.class.getName() + ".countNews";
     public static final String COUNT_ALL_SCHOOL_NEWS = NewsFinder.class.getName() + ".countAllSchoolNews";
 
-    public List<News> getNews(long userId, List<Long> groupIds, List<Long> roleIds, Date maxDate, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) {
+    public List<News> getNews(long userId, List<Long> groupIds, List<Long> roleIds, Date currentDate, int startIndex, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) {
         Session session = null;
 
         try {
@@ -65,10 +65,11 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             qPos.add(userId);
-            qPos.add(sdf.format(maxDate));
+            qPos.add(sdf.format(currentDate)); // publication Date >= currentDate
             qPos.add(userId);
-            qPos.add(sdf.format(new Date()));
+            qPos.add(sdf.format(currentDate)); // expiration Date < currentDate
             qPos.add(userId);
+            qPos.add(startIndex);
             qPos.add(nbNews);
 
             return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
@@ -81,7 +82,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
         return Collections.emptyList();
     }
 
-    public List<News> getAllSchoolNews(long userId, List<Long> schoolIds, Date maxDate, int nbNews, boolean importantOnly, boolean unreadOnly) {
+    public List<News> getAllSchoolNews(long userId, List<Long> schoolIds, Date currentDate, int startIndex, int nbNews, boolean importantOnly, boolean unreadOnly) {
         Session session = null;
 
         try {
@@ -108,10 +109,11 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             qPos.add(userId);
-            qPos.add(sdf.format(maxDate));
+            qPos.add(sdf.format(currentDate));
             qPos.add(userId);
-            qPos.add(sdf.format(new Date()));
+            qPos.add(sdf.format(currentDate));
             qPos.add(userId);
+            qPos.add(startIndex);
             qPos.add(nbNews);
 
             return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);

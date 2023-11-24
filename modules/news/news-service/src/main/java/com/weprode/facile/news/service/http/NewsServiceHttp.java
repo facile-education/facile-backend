@@ -120,8 +120,8 @@ public class NewsServiceHttp {
 	}
 
 	public static org.json.JSONObject getSchoolNews(
-		HttpPrincipal httpPrincipal, String maxDateString, int nbNews,
-		boolean importantOnly, boolean unreadOnly) {
+		HttpPrincipal httpPrincipal, String currentDateString, int startIndex,
+		int nbNews, boolean importantOnly, boolean unreadOnly) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -129,7 +129,8 @@ public class NewsServiceHttp {
 				_getSchoolNewsParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, maxDateString, nbNews, importantOnly, unreadOnly);
+				methodKey, currentDateString, startIndex, nbNews, importantOnly,
+				unreadOnly);
 
 			Object returnObj = null;
 
@@ -318,7 +319,9 @@ public class NewsServiceHttp {
 		String.class, String.class, String.class, boolean.class
 	};
 	private static final Class<?>[] _getSchoolNewsParameterTypes2 =
-		new Class[] {String.class, int.class, boolean.class, boolean.class};
+		new Class[] {
+			String.class, int.class, int.class, boolean.class, boolean.class
+		};
 	private static final Class<?>[] _setNewsReadParameterTypes3 = new Class[] {
 		long.class
 	};

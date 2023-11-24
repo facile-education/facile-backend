@@ -240,7 +240,8 @@ public interface NewsLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<News> getAllSchoolNews(
-			User user, Date maxDate, int nbNews, boolean unreadOnly)
+			User user, Date currentDate, int startIndex, int nbNews,
+			boolean unreadOnly)
 		throws SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -266,8 +267,9 @@ public interface NewsLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<News> getNews(
-			User user, long groupId, Date maxDate, int nbNews,
-			boolean groupNews, boolean importantOnly, boolean unreadOnly)
+			User user, long groupId, Date currentDate, int startIndex,
+			int nbNews, boolean groupNews, boolean importantOnly,
+			boolean unreadOnly)
 		throws SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
