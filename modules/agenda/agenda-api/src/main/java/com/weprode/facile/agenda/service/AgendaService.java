@@ -65,7 +65,7 @@ public interface AgendaService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-events")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getEvents(
-		String minDateStr, int nbEvents, boolean unreadOnly);
+		String minDateStr, int startIndex, int nbEvents, boolean unreadOnly);
 
 	/**
 	 * Returns the OSGi service identifier.

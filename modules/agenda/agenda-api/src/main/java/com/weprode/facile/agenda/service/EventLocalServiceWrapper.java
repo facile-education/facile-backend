@@ -353,21 +353,22 @@ public class EventLocalServiceWrapper
 	public java.util.List<com.weprode.facile.agenda.model.Event>
 			getSchoolEvents(
 				com.liferay.portal.kernel.model.User user,
-				java.util.Date minDate, int nbEvents, boolean unreadOnly)
+				java.util.Date minDate, int startIndex, int nbEvents,
+				boolean unreadOnly)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _eventLocalService.getSchoolEvents(
-			user, minDate, nbEvents, unreadOnly);
+			user, minDate, startIndex, nbEvents, unreadOnly);
 	}
 
 	@Override
 	public java.util.List<com.weprode.facile.agenda.model.Event> getUserEvents(
 			com.liferay.portal.kernel.model.User user, java.util.Date minDate,
-			int nbEvents, boolean unreadOnly)
+			int startIndex, int nbEvents, boolean unreadOnly)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _eventLocalService.getUserEvents(
-			user, minDate, nbEvents, unreadOnly);
+			user, minDate, startIndex, nbEvents, unreadOnly);
 	}
 
 	@Override

@@ -51,9 +51,11 @@ public class AgendaServiceUtil {
 	}
 
 	public static org.json.JSONObject getEvents(
-		java.lang.String minDateStr, int nbEvents, boolean unreadOnly) {
+		java.lang.String minDateStr, int startIndex, int nbEvents,
+		boolean unreadOnly) {
 
-		return getService().getEvents(minDateStr, nbEvents, unreadOnly);
+		return getService().getEvents(
+			minDateStr, startIndex, nbEvents, unreadOnly);
 	}
 
 	/**

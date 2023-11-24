@@ -317,19 +317,20 @@ public class EventLocalServiceUtil {
 
 	public static List<Event> getSchoolEvents(
 			com.liferay.portal.kernel.model.User user, java.util.Date minDate,
-			int nbEvents, boolean unreadOnly)
+			int startIndex, int nbEvents, boolean unreadOnly)
 		throws SystemException {
 
 		return getService().getSchoolEvents(
-			user, minDate, nbEvents, unreadOnly);
+			user, minDate, startIndex, nbEvents, unreadOnly);
 	}
 
 	public static List<Event> getUserEvents(
 			com.liferay.portal.kernel.model.User user, java.util.Date minDate,
-			int nbEvents, boolean unreadOnly)
+			int startIndex, int nbEvents, boolean unreadOnly)
 		throws SystemException {
 
-		return getService().getUserEvents(user, minDate, nbEvents, unreadOnly);
+		return getService().getUserEvents(
+			user, minDate, startIndex, nbEvents, unreadOnly);
 	}
 
 	public static boolean hasUserEvent(long userId, long eventId) {

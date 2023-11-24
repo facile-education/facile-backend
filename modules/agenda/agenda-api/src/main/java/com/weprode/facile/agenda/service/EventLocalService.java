@@ -280,12 +280,14 @@ public interface EventLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Event> getSchoolEvents(
-			User user, Date minDate, int nbEvents, boolean unreadOnly)
+			User user, Date minDate, int startIndex, int nbEvents,
+			boolean unreadOnly)
 		throws SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Event> getUserEvents(
-			User user, Date minDate, int nbEvents, boolean unreadOnly)
+			User user, Date minDate, int startIndex, int nbEvents,
+			boolean unreadOnly)
 		throws SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
