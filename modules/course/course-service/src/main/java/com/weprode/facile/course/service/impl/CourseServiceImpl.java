@@ -247,7 +247,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 					}
 				}
 
-				if (sessionContent != null  || toDoHomeworks.size() > 0 || sessionHomeworks.size() > 0) {
+				if (sessionContent != null  || !toDoHomeworks.isEmpty() || !sessionHomeworks.isEmpty()) {
 					if (sessionContent != null) {
 						jsonSession.put(JSONConstants.SESSION_CONTENT, sessionContent.convertToJSON(user, true));
 					}

@@ -155,7 +155,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 if (withSessions && RoleUtilsLocalServiceUtil.isStudent(user)) {
                     List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworkActivity(user.getUserId(), minDate, maxDate);
                     for (Homework givenHomework : givenHomeworks) {
-                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
+                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
                         groupActivities.add(homeworkActivity);
                     }
                 }

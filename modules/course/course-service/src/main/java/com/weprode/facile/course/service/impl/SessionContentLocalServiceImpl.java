@@ -85,8 +85,7 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 		sessionContent.setTeacherId(teacherId);
 		sessionContent.setModificationDate(new Date());
 		sessionContent.setTitle(title);
-//		sessionContent.setPublicationDate(publicationDate); TODO: Pass on all dates to handle date shifting from UTC
-		sessionContent.setPublicationDate(new Date()); // For now set a new date to avoid shift between browser date and server date (UTC+2 and UTC)
+		sessionContent.setPublicationDate(publicationDate); // TODO: Check shift between browser date and server date (UTC+2 and UTC)
 		sessionContent.setIsDraft(isDraft);
 		sessionContent = sessionContentPersistence.update(sessionContent);
 
@@ -110,8 +109,7 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 		sessionContent.setModificationDate(new Date());
 		sessionContent.setTitle(title);
 		sessionContent.setTeacherId(teacherId);
-//		sessionContent.setPublicationDate(publicationDate); // TODO
-		sessionContent.setPublicationDate(new Date()); // For now set a new date to avoid shift between browser date and server date (UTC+2 and UTC)
+		sessionContent.setPublicationDate(publicationDate); // TODO: Check shift between browser date and server date (UTC+2 and UTC)
 		sessionContent.setIsDraft(isDraft);
 
 		// Set the modification date to the teacher for activity matching
