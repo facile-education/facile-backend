@@ -69,6 +69,8 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
+    extra_hosts:
+      - "dev-ent-gve.com:127.0.0.1"
     environment:
       JAVA_VERSION: ${LFR_JAVA_VERSION}
       LIFERAY_SETUP_PERIOD_WIZARD_PERIOD_ENABLED: "false"
