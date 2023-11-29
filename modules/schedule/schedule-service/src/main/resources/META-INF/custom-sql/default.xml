@@ -26,7 +26,11 @@
             FROM Schedule_CDTSession cdtSession
             JOIN Schedule_SessionTeacher sessionTeacher
             ON cdtSession.sessionId = sessionTeacher.sessionId
+            JOIN Course_SessionContent sessionContent
+            ON cdtSession.sessionId = sessionContent.sessionId
             WHERE cdtSession.groupId in ([$GROUP_IDS$])
+            AND sessionContent.isDraft = 0
+            AND sessionContent.publicationDate <= NOW()
             AND sessionTeacher.modificationDate > ? AND sessionTeacher.modificationDate < ?
         ]]>
     </sql>
