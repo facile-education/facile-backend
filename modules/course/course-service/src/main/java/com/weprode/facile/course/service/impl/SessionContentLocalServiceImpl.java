@@ -104,7 +104,6 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 
 	@Indexable(type = IndexableType.REINDEX)
 	public SessionContent updateSessionContent (long teacherId, long sessionId, String title, JSONArray blocks, Date publicationDate, boolean isDraft) throws SystemException, PortalException, UnauthorizedUrlException, IOException {
-
 		SessionContent sessionContent = sessionContentPersistence.findByPrimaryKey(sessionId);
 		sessionContent.setModificationDate(new Date());
 		sessionContent.setTitle(title);
@@ -122,20 +121,12 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 		if (blocks != null) {
 			for (int i = 0 ; i < blocks.length() ; i++) {
 				JSONObject jsonBlock = blocks.getJSONObject(i);
-//				if (!jsonBlock.has(JSONConstants.CONTENT_ID)) {
 				// This is a block creation
 				ContentBlockLocalServiceUtil.addBlock(teacherId, sessionId,
 						jsonBlock.getInt(JSONConstants.CONTENT_TYPE),
 						jsonBlock.getString(JSONConstants.CONTENT_NAME),
 						JSONConstants.getStringValue(jsonBlock, JSONConstants.CONTENT_VALUE, ""),
 						JSONConstants.getLongValue(jsonBlock, JSONConstants.FILE_ID, 0));
-//				} else {
-//					// This is a block update
-//					ContentBlockLocalServiceUtil.updateBlock(jsonBlock.getLong(JSONConstants.CONTENT_ID),
-//							jsonBlock.getString(JSONConstants.CONTENT_NAME),
-//							JSONConstants.getStringValue(jsonBlock, JSONConstants.CONTENT_VALUE, ""),
-//							JSONConstants.getIntValue(jsonBlock, JSONConstants.ORDER, 0));
-//				}
 			}
 		}
 
