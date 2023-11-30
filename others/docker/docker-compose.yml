@@ -81,13 +81,14 @@ services:
       - "8009:8009"
 #      - "8080:8080"
     healthcheck:
-      test: 'bash lfr_healthcheck.sh'
+      test: 'bash /tmp/lfr_healthcheck.sh'
       interval: 30s
       timeout: 10s
       retries: 5
     volumes:
       - ./liferay:/mnt/liferay
       - lfrdata:/opt/liferay/data/document_library
+      - ./lfr_healthcheck.sh:/tmp/lfr_healthcheck.sh
 volumes:
   dbdata:
   esdata:
