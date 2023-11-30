@@ -60,14 +60,6 @@ public class FolderUtilsLocalServiceUtil {
 		getService().deleteFolder(userId, folderId);
 	}
 
-	public static String downloadFolder(
-			com.liferay.portal.kernel.repository.model.Folder folder,
-			com.liferay.portal.kernel.model.User user)
-		throws java.io.IOException, PortalException, SystemException {
-
-		return getService().downloadFolder(folder, user);
-	}
-
 	public static com.liferay.portal.kernel.repository.model.Folder
 			getFolderByName(
 				com.liferay.portal.kernel.repository.model.Folder parentFolder,

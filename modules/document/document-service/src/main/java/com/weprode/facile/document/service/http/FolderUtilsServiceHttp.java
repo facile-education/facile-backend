@@ -155,45 +155,13 @@ public class FolderUtilsServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject downloadFolder(
-		HttpPrincipal httpPrincipal, long folderId) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				FolderUtilsServiceUtil.class, "downloadFolder",
-				_downloadFolderParameterTypes3);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, folderId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static org.json.JSONObject getAllEntities(
 		HttpPrincipal httpPrincipal, long folderId, boolean withDetails) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				FolderUtilsServiceUtil.class, "getAllEntities",
-				_getAllEntitiesParameterTypes4);
+				_getAllEntitiesParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, folderId, withDetails);
@@ -225,7 +193,7 @@ public class FolderUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				FolderUtilsServiceUtil.class, "getImagesEntities",
-				_getImagesEntitiesParameterTypes5);
+				_getImagesEntitiesParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, folderId, withDetails);
@@ -262,11 +230,9 @@ public class FolderUtilsServiceHttp {
 	private static final Class<?>[] _renameFolderParameterTypes2 = new Class[] {
 		long.class, String.class
 	};
-	private static final Class<?>[] _downloadFolderParameterTypes3 =
-		new Class[] {long.class};
-	private static final Class<?>[] _getAllEntitiesParameterTypes4 =
+	private static final Class<?>[] _getAllEntitiesParameterTypes3 =
 		new Class[] {long.class, boolean.class};
-	private static final Class<?>[] _getImagesEntitiesParameterTypes5 =
+	private static final Class<?>[] _getImagesEntitiesParameterTypes4 =
 		new Class[] {long.class, boolean.class};
 
 }

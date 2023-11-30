@@ -67,17 +67,6 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public String downloadFolder(
-			com.liferay.portal.kernel.repository.model.Folder folder,
-			com.liferay.portal.kernel.model.User user)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			   com.liferay.portal.kernel.exception.SystemException,
-			   java.io.IOException {
-
-		return _folderUtilsLocalService.downloadFolder(folder, user);
-	}
-
-	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getFolderByName(
 			com.liferay.portal.kernel.repository.model.Folder parentFolder,
 			String name)

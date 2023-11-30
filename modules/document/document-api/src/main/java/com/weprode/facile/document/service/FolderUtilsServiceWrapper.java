@@ -43,11 +43,6 @@ public class FolderUtilsServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject downloadFolder(long folderId) {
-		return _folderUtilsService.downloadFolder(folderId);
-	}
-
-	@Override
 	public org.json.JSONObject getAllEntities(
 		long folderId, boolean withDetails) {
 

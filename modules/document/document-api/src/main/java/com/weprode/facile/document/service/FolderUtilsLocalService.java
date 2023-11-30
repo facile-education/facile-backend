@@ -23,8 +23,6 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
-import java.io.IOException;
-
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -60,9 +58,6 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 
 	public void deleteFolder(long userId, long folderId)
 		throws PortalException, SystemException;
-
-	public String downloadFolder(Folder folder, User user)
-		throws IOException, PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getFolderByName(Folder parentFolder, String name)

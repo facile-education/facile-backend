@@ -54,9 +54,6 @@ public interface FolderUtilsService extends BaseService {
 	public JSONObject createFolder(long targetFolderId, String folderName)
 		throws SystemException;
 
-	@JSONWebService(method = "GET", value = "download-folder")
-	public JSONObject downloadFolder(long folderId);
-
 	@JSONWebService(method = "GET", value = "get-all-entities")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getAllEntities(long folderId, boolean withDetails);

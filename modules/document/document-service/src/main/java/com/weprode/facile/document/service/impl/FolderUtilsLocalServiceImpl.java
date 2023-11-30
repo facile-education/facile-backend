@@ -52,13 +52,11 @@ import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FolderUtilsLocalServiceBaseImpl;
 import com.weprode.facile.document.utils.DLAppUtil;
 import com.weprode.facile.document.utils.FileNameUtil;
-import com.weprode.facile.document.utils.ZipUtil;
 import com.weprode.facile.group.constants.ActivityConstants;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -183,47 +181,6 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 	public List<Folder> getFolderPath(long folderId) throws SystemException, PortalException {
 		Folder folder = DLAppServiceUtil.getFolder(folderId);
 		return getFolderPath(folder);
-	}
-
-	public String downloadFolder(Folder folder, User user) throws PortalException, SystemException, IOException {
-		String result = "";
-
-		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW)) {
-
-			// Set default permissions
-			ServiceContext serviceContext = new ServiceContext();
-			serviceContext.setAddGroupPermissions(true);
-
-			String zipName = folder.getName();
-
-			Folder temporaryFF = getUserTmpFolder(user.getUserId());
-
-			long[] fileIdArray = new long[0];
-			long[] folderIdArray = new long[1];
-			folderIdArray[0] = folder.getFolderId();
-
-			ByteArrayOutputStream baos = null;
-
-			try {
-				baos = ZipUtil.createZipStream(folderIdArray, fileIdArray);
-				if (zipName.toLowerCase().endsWith(".zip")) {
-					zipName = zipName.substring(0, zipName.length() - 4);
-				}
-
-				FileEntry zipFile = DLAppUtil.addFileEntry(user, temporaryFF, zipName + ".zip", baos.toByteArray(), DocumentConstants.MODE_RENAME);
-
-				assert zipFile != null;
-				result = FileUtilsLocalServiceUtil.getDownloadUrl(zipFile);
-			} finally {
-				try {
-					assert baos != null;
-					baos.close();
-				} catch (Exception e) {
-					logger.error(e);
-				}
-			}
-		}
-		return result;
 	}
 
 	public int getFolderSize(Folder folder) throws SystemException, PortalException {
