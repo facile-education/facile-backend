@@ -348,14 +348,19 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
 
                 // Add all new attached files
                 if (attachFileIds != null) {
+                    Folder attachedFilesFolder = null;
                     Folder imBox = FolderUtilsLocalServiceUtil.getIMBox(senderId);
-                    Folder attachedFilesFolder = DLAppServiceUtil.addFolder(
-                            imBox.getGroupId(),
-                            imBox.getFolderId(),
-                            "PJ du message " + message.getMessageId(),
-                            "PJ du message " + message.getMessageId(),
-                            new ServiceContext());
-                    FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
+                    if (draftMessageId > 0) {
+                        attachedFilesFolder = DLAppServiceUtil.getFolder(imBox.getRepositoryId(), imBox.getFolderId(), "PJ du message " + message.getMessageId());
+                    } else {
+                        attachedFilesFolder = DLAppServiceUtil.addFolder(
+                                imBox.getGroupId(),
+                                imBox.getFolderId(),
+                                "PJ du message " + message.getMessageId(),
+                                "PJ du message " + message.getMessageId(),
+                                new ServiceContext());
+                        FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
+                    }
 
                     for (Long attachFileId : attachFileIds) {
                         logger.info("Copying file " + attachFileId + " to sender's folder " + attachedFilesFolder.getFolderId());
