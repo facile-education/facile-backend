@@ -199,7 +199,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (FileSizeException e) {
-			result.put(JSONConstants.ERROR, "FileSizeException");
+			result.put(JSONConstants.ERROR, JSONConstants.FILE_SIZE_EXCEPTION);
 		} catch (Exception e) {
 			logger.error("Error downloading folder " + folderId, e);
 		}
