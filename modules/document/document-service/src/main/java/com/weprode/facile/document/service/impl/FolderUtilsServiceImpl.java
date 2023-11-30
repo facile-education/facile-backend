@@ -73,7 +73,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
 				logger.info("User " + user.getFullName() + " tries to get breadcrumb for folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			List<Folder> folderList = FolderUtilsLocalServiceUtil.getFolderPath(folderId);
@@ -116,7 +116,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
 				logger.info("User " + user.getFullName() + " tries to create sub-folder in folder " + targetFolderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			logger.info("User " + user.getFullName() + " creates folder " + folderName + " in folder " + targetFolderId);
 
@@ -150,7 +150,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
 				logger.info("User " + user.getFullName() + " tries to rename folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			logger.info("User " + user.getFullName() + " renames folder " + folderId + " into " + folderName);
 			Folder folderToRename = DLAppServiceUtil.getFolder(folderId);
@@ -184,7 +184,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
 				logger.info("User " + user.getFullName() + " tries to download folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			logger.info("User " + user.getFullName() + " downloads folder " + folderId);
@@ -249,7 +249,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			User user = getGuestOrUser();
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
 				logger.info("User " + user.getFullName() + " tries to get all entities of folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			logger.info("User " + user.getFullName() + " fetches documents in folder " + folderId + (withDetails ? " with details":""));

@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.WYSIWYGServiceBaseImpl;
 import org.json.JSONObject;
@@ -72,12 +73,13 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 		try {
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
-
-			// Check permissions
-			if ((FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(getGuestOrUserId(), fileEntry, ActionKeys.VIEW)) ||
-					(!FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && fileEntry.getGroupId() != user.getGroupId())) {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to fetch HTML content on fileVersionId " + fileVersionId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW)) {
+				logger.info("User " + user.getFullName() + " tries to fetch HTML content on fileVersionId " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			// Get file content
@@ -120,12 +122,13 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
-
-			// Check permissions
-			if ((FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(getGuestOrUserId(), fileEntry, ActionKeys.VIEW)) ||
-					(!FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && fileEntry.getGroupId() != user.getGroupId())) {
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to save HTML content on fileVersionId " + fileVersionId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)) {
+				logger.info("User " + user.getFullName() + " tries to save HTML content on fileVersionId " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			// Check permissions

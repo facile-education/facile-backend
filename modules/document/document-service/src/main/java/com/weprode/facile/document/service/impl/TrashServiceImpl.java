@@ -76,7 +76,7 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 				try {
 					if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
 						logger.info("User " + user.getFullName() + " tries to delete folder " + folderId + " but has no permission");
-						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 					}
 					FolderUtilsLocalServiceUtil.deleteFolder(user.getUserId(), folderId);
 				} catch (Exception e) {
@@ -91,7 +91,7 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 					FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntityId);
 					if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 						logger.info("User " + user.getFullName() + " tries to delete file " + fileEntityId + " but has no permission");
-						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 					}
 					FileUtilsLocalServiceUtil.deleteFile(user.getUserId(), fileEntityId);
 				} catch (Exception e) {

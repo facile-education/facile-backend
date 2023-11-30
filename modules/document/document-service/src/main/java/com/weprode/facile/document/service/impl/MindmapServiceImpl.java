@@ -28,12 +28,15 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.MindmapServiceBaseImpl;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -78,7 +81,11 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 			DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to get mindmap file for fileVersion " + fileVersionId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.info("User " + user.getFullName() + " tries to get mindmap file for fileVersion " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntry.getFileEntryId(), dlFileVersion.getVersion());
@@ -136,11 +143,15 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 			logger.info("saveMindFile with fileVersionId=" + fileVersionId);
 
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
-			DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
+			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
 
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to save mindmap file for fileVersion " + fileVersionId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)) {
+				logger.info("User " + user.getFullName() + " tries to save mindmap file for fileVersion " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			// Set default permissions
@@ -152,7 +163,7 @@ public class MindmapServiceImpl extends MindmapServiceBaseImpl {
 			assert content != null;
 			byteArrayContent = content.getBytes(StandardCharsets.UTF_8);
 
-			logger.info("Updating mindmap file '" + fileEntry.getName() + "' for userId " + fileEntry.getUserId());
+			logger.info("Updating mindmap file '" + fileEntry.getTitle() + "' for userId " + fileEntry.getUserId());
 
 			// Increment minor version
 			DLAppServiceUtil.updateFileEntry(

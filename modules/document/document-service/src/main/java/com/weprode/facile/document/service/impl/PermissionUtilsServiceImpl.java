@@ -80,14 +80,18 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to access permission matrix on file " + fileEntry.getFileEntryId() + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS)) {
+				logger.info("User " + user.getFullName() + " tries to access permission matrix on file " + fileEntry.getFileEntryId() + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			// Build the role list
 			List<String> roleNames = PermissionUtilsLocalServiceUtil.getPermissionRoles(fileEntry.getGroupId());
 			// Available actions for DLFileEntry
 			List<ResourceAction> dLFileEntryResourceActions = ResourceActionLocalServiceUtil.getResourceActions(DLFileEntry.class.getName());
-
 
 			for (String roleName : roleNames) {
 				Role role = RoleLocalServiceUtil.getRole(fileEntry.getCompanyId(), roleName);
@@ -139,11 +143,11 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
 				logger.info("User " + user.getFullName() + " tries to access permissions for folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS)) {
 				logger.info("User " + user.getFullName() + " tries to access permissions for folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			// Build the role list
@@ -197,10 +201,15 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
 				logger.info("User " + user.getFullName() + " tries to save permissions for folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " saves permission matrix for folderId " + folderId);
 			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS)) {
+				logger.info("User " + user.getFullName() + " tries to save permissions for folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
+			logger.info("User " + user.getFullName() + " saves permission matrix for folderId " + folderId);
 
 			// Check if the user have the right to update those permissions
 			if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS)) {
@@ -240,21 +249,20 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to save matrix permissions for file " + fileEntryId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS)) {
+				logger.info("User " + user.getFullName() + " tries to save matrix permissions for file " + fileEntryId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
 			logger.info("User " + user.getFullName() + " saves permission matrix for file  " + fileEntryId);
+			long scopeGroupId = fileEntry.getGroupId();
+			JSONArray permissions = new JSONArray(jsonPermissionMatrix);
+			PermissionUtilsLocalServiceUtil.validateFullPermission(user, fileEntryId, "file", permissions, false, scopeGroupId);
 
-			// Check if the user have the right to update those permissions
-			if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS)) {
-				long scopeGroupId = fileEntry.getGroupId();
-				JSONArray permissions = new JSONArray(jsonPermissionMatrix);
-				PermissionUtilsLocalServiceUtil.validateFullPermission(user, fileEntryId, "file", permissions, false, scopeGroupId);
+			result.put(JSONConstants.SUCCESS, true);
 
-				result.put(JSONConstants.SUCCESS, true);
-			} else {
-				logger.error("Permission error");
-				result.put(JSONConstants.ERROR, "Permission error");
-			}
 		} catch (Exception e) {
 			logger.error("Error saving file permission matrix", e);
 			result.put(JSONConstants.SUCCESS, false);

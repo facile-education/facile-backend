@@ -22,10 +22,12 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -49,7 +51,9 @@ public class ClipboardUtil {
 
         for (long folderId : folderIdList) {
             try {
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)) {
+                Folder folder = DLAppServiceUtil.getFolder(folderId);
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
+                    || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
                     logger.info("User " + userId + " tries to copy folderId " + folderId + " but has no permission");
                     continue;
                 }
@@ -81,7 +85,8 @@ public class ClipboardUtil {
         for (long fileId : fileIdList) {
             try {
                 FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())) {
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
+                    || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
                     logger.info("User " + userId + " tries to copy file " + fileId + " but has no permission");
                     continue;
                 }
@@ -128,7 +133,8 @@ public class ClipboardUtil {
         for (long folderId : folderIdList) {
             try {
                 Folder folder = DLAppServiceUtil.getFolder(folderId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)) {
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
+                        || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
                     logger.info("User " + userId + " tries to move folderId " + folderId + " but has no permission");
                     continue;
                 }
@@ -160,7 +166,8 @@ public class ClipboardUtil {
         for (long fileId : fileIdList) {
             try {
                 FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())) {
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
+                        || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
                     logger.info("User " + userId + " tries to move file " + fileId + " but has no permission");
                     continue;
                 }

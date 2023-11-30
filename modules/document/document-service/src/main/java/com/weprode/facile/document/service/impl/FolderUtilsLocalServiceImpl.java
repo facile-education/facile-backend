@@ -188,39 +188,41 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 	public String downloadFolder(Folder folder, User user) throws PortalException, SystemException, IOException {
 		String result = "";
 
-		// Set default permissions
-		ServiceContext serviceContext = new ServiceContext();
-		serviceContext.setAddGroupPermissions(true);
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW)) {
 
-		String zipName = folder.getName();
+			// Set default permissions
+			ServiceContext serviceContext = new ServiceContext();
+			serviceContext.setAddGroupPermissions(true);
 
-		Folder temporaryFF = getUserTmpFolder(user.getUserId());
+			String zipName = folder.getName();
 
-		long[] fileIdArray = new long[0];
-		long[] folderIdArray = new long[1];
-		folderIdArray[0] = folder.getFolderId();
+			Folder temporaryFF = getUserTmpFolder(user.getUserId());
 
-		ByteArrayOutputStream baos = null;
+			long[] fileIdArray = new long[0];
+			long[] folderIdArray = new long[1];
+			folderIdArray[0] = folder.getFolderId();
 
-		try {
-			baos = ZipUtil.createZipStream(folderIdArray, fileIdArray);
-			if (zipName.toLowerCase().endsWith(".zip")) {
-				zipName = zipName.substring(0, zipName.length() - 4);
-			}
+			ByteArrayOutputStream baos = null;
 
-			FileEntry zipFile = DLAppUtil.addFileEntry(user, temporaryFF, zipName + ".zip", baos.toByteArray(), DocumentConstants.MODE_RENAME);
-
-			assert zipFile != null;
-			result = FileUtilsLocalServiceUtil.getDownloadUrl(zipFile);
-		} finally {
 			try {
-				assert baos != null;
-				baos.close();
-			} catch (Exception e) {
-				logger.error(e);
+				baos = ZipUtil.createZipStream(folderIdArray, fileIdArray);
+				if (zipName.toLowerCase().endsWith(".zip")) {
+					zipName = zipName.substring(0, zipName.length() - 4);
+				}
+
+				FileEntry zipFile = DLAppUtil.addFileEntry(user, temporaryFF, zipName + ".zip", baos.toByteArray(), DocumentConstants.MODE_RENAME);
+
+				assert zipFile != null;
+				result = FileUtilsLocalServiceUtil.getDownloadUrl(zipFile);
+			} finally {
+				try {
+					assert baos != null;
+					baos.close();
+				} catch (Exception e) {
+					logger.error(e);
+				}
 			}
 		}
-
 		return result;
 	}
 

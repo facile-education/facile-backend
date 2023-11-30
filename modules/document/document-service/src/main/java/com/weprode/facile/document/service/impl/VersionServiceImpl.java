@@ -24,12 +24,12 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
-import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.VersionLocalServiceUtil;
@@ -69,12 +69,12 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(fileId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to get versions of file " + fileId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
-			if (FileUtilsLocalServiceUtil.isGroupFile(fileEntry.getFileEntryId()) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(getGuestOrUserId(), fileEntry, ActionKeys.VIEW)) {
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW)) {
 				logger.info("User " + user.getFullName() + " tries to get versions of fileEntryId " + fileId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			logger.info("User " + user.getFullName() + " fetches versions for file " + fileId);
 
@@ -104,8 +104,13 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to delete version " + version + " of file " + fileEntryId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.DELETE)) {
+				logger.info("User " + user.getFullName() + " tries to delete version " + version + " of file " + fileEntryId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
 			logger.info("User " + user.getFullName() + " deletes version " + version + " for file " + fileEntryId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.deleteVersion(user, fileEntryId, version));
 		} catch (Exception e) {
@@ -134,8 +139,14 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileVersion.getFileEntryId());
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to restore version " + fileVersionId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			Folder folder = DLAppServiceUtil.getFolder(fileEntry.getFolderId());
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.ADD_DOCUMENT)) {
+				logger.info("User " + user.getFullName() + " tries to restore version " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
 			logger.info("User " + user.getFullName() + " restores version " + fileVersionId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.restoreVersion(user.getUserId(), fileVersionId));
 		} catch (Exception e) {
@@ -164,8 +175,13 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileVersion.getFileEntryId());
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to save description for version " + fileVersionId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)) {
+				logger.info("User " + user.getFullName() + " tries to save description for version " + fileVersionId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
 			logger.info("User " + user.getFullName() + " saves description for version " + fileVersionId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.saveVersionDescription(fileVersionId, description));
 		} catch (Exception e) {
@@ -193,8 +209,13 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
 				logger.info("User " + user.getFullName() + " tries to create major version of file " + fileEntryId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)) {
+				logger.info("User " + user.getFullName() + " tries to create major version of file " + fileEntryId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
 			logger.info("User " + user.getFullName() + " creates major version for file " + fileEntryId);
 			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.createMajorVersion(user, fileEntryId));
 		} catch (Exception e) {
