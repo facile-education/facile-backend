@@ -17,6 +17,7 @@ package com.weprode.facile.mobile.model;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.wrapper.BaseModelWrapper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,8 @@ public class UserMobileTokenWrapper
 
 		attributes.put("userId", getUserId());
 		attributes.put("mobileToken", getMobileToken());
+		attributes.put("creationDate", getCreationDate());
+		attributes.put("modificationDate", getModificationDate());
 
 		return attributes;
 	}
@@ -60,11 +63,33 @@ public class UserMobileTokenWrapper
 		if (mobileToken != null) {
 			setMobileToken(mobileToken);
 		}
+
+		Date creationDate = (Date)attributes.get("creationDate");
+
+		if (creationDate != null) {
+			setCreationDate(creationDate);
+		}
+
+		Date modificationDate = (Date)attributes.get("modificationDate");
+
+		if (modificationDate != null) {
+			setModificationDate(modificationDate);
+		}
 	}
 
 	@Override
 	public UserMobileToken cloneWithOriginalValues() {
 		return wrap(model.cloneWithOriginalValues());
+	}
+
+	/**
+	 * Returns the creation date of this user mobile token.
+	 *
+	 * @return the creation date of this user mobile token
+	 */
+	@Override
+	public Date getCreationDate() {
+		return model.getCreationDate();
 	}
 
 	/**
@@ -75,6 +100,16 @@ public class UserMobileTokenWrapper
 	@Override
 	public String getMobileToken() {
 		return model.getMobileToken();
+	}
+
+	/**
+	 * Returns the modification date of this user mobile token.
+	 *
+	 * @return the modification date of this user mobile token
+	 */
+	@Override
+	public Date getModificationDate() {
+		return model.getModificationDate();
 	}
 
 	/**
@@ -113,6 +148,16 @@ public class UserMobileTokenWrapper
 	}
 
 	/**
+	 * Sets the creation date of this user mobile token.
+	 *
+	 * @param creationDate the creation date of this user mobile token
+	 */
+	@Override
+	public void setCreationDate(Date creationDate) {
+		model.setCreationDate(creationDate);
+	}
+
+	/**
 	 * Sets the mobile token of this user mobile token.
 	 *
 	 * @param mobileToken the mobile token of this user mobile token
@@ -120,6 +165,16 @@ public class UserMobileTokenWrapper
 	@Override
 	public void setMobileToken(String mobileToken) {
 		model.setMobileToken(mobileToken);
+	}
+
+	/**
+	 * Sets the modification date of this user mobile token.
+	 *
+	 * @param modificationDate the modification date of this user mobile token
+	 */
+	@Override
+	public void setModificationDate(Date modificationDate) {
+		model.setModificationDate(modificationDate);
 	}
 
 	/**

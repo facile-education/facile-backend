@@ -17,6 +17,8 @@ package com.weprode.facile.mobile.model;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
 
+import java.util.Date;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -95,6 +97,34 @@ public interface UserMobileTokenModel extends BaseModel<UserMobileToken> {
 	 * @param mobileToken the mobile token of this user mobile token
 	 */
 	public void setMobileToken(String mobileToken);
+
+	/**
+	 * Returns the creation date of this user mobile token.
+	 *
+	 * @return the creation date of this user mobile token
+	 */
+	public Date getCreationDate();
+
+	/**
+	 * Sets the creation date of this user mobile token.
+	 *
+	 * @param creationDate the creation date of this user mobile token
+	 */
+	public void setCreationDate(Date creationDate);
+
+	/**
+	 * Returns the modification date of this user mobile token.
+	 *
+	 * @return the modification date of this user mobile token
+	 */
+	public Date getModificationDate();
+
+	/**
+	 * Sets the modification date of this user mobile token.
+	 *
+	 * @param modificationDate the modification date of this user mobile token
+	 */
+	public void setModificationDate(Date modificationDate);
 
 	@Override
 	public UserMobileToken cloneWithOriginalValues();
