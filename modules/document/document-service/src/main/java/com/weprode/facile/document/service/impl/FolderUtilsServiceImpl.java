@@ -15,6 +15,7 @@
 
 package com.weprode.facile.document.service.impl;
 
+import com.liferay.document.library.kernel.exception.FileNameException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.persistence.DLFileVersionUtil;
@@ -127,6 +128,8 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			result.put(JSONConstants.CREATED_FOLDER, DLAppJsonFactory.format(user.getUserId(), createdFolder, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 
+		} catch (FileNameException e) {
+			result.put(JSONConstants.ERROR, JSONConstants.DUPLICATE_FILE_EXCEPTION);
 		} catch (Exception e) {
 			result.put(JSONConstants.ERROR, e.getMessage());
 			logger.error("Error creating folder " + folderName + " in folder " + targetFolderId, e);
