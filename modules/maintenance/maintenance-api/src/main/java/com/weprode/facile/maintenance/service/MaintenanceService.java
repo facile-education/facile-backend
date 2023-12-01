@@ -62,6 +62,9 @@ public interface MaintenanceService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
+	@JSONWebService(method = "POST", value = "run-absence-notifications")
+	public JSONObject runAbsenceNotifications();
+
 	@JSONWebService(method = "POST", value = "run-anonymisation")
 	public JSONObject runAnonymisation();
 

@@ -32,6 +32,7 @@ import com.weprode.facile.school.life.service.SchoollifeSessionLocalServiceUtil;
 import com.weprode.facile.school.life.service.SchoollifeSlotLocalServiceUtil;
 import com.weprode.facile.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.facile.school.life.service.base.SchoollifeSessionLocalServiceBaseImpl;
+import com.weprode.facile.school.life.utils.NotificationUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -355,5 +356,69 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
         }
 
         return true;
+    }
+
+    public void runAbsenceNotifications() {
+        try {
+            logger.info("Running absence notification ...");
+
+            // Fetch all passed schoollife sessions of the current day for which the 'call' has been done
+            Calendar cal = Calendar.getInstance();
+            Date now = new Date();
+            cal.setTime(now);
+            cal.set(Calendar.HOUR_OF_DAY, 7);
+            cal.set(Calendar.MINUTE, 0);
+            Date startDate = cal.getTime();
+
+            // Retenue
+            List<SchoollifeSession> retenueSessions = SchoollifeSessionLocalServiceUtil.getUnnotifiedSessions(SchoollifeConstants.TYPE_RETENUE, startDate, now);
+            for (SchoollifeSession retenueSession : retenueSessions) {
+
+                List<Long> studentIds = SessionStudentLocalServiceUtil.getAbsentStudents(retenueSession.getSchoollifeSessionId());
+                logger.info(studentIds.size() + " students absent in retenue session " + retenueSession.getSchoollifeSessionId());
+                for (Long studentId : studentIds) {
+                    NotificationUtil.notifyRetenueAbsence(studentId, retenueSession.getSchoollifeSessionId());
+                }
+
+                // Set notification sent
+                retenueSession.setAbsenceNotificationSent(true);
+                SchoollifeSessionLocalServiceUtil.updateSchoollifeSession(retenueSession);
+
+            }
+
+            // Travaux à refaire
+            List<SchoollifeSession> travauxSessions = SchoollifeSessionLocalServiceUtil.getUnnotifiedSessions(SchoollifeConstants.TYPE_TRAVAUX, startDate, now);
+            for (SchoollifeSession travauxSession : travauxSessions) {
+
+                List<Long> studentIds = SessionStudentLocalServiceUtil.getAbsentStudents(travauxSession.getSchoollifeSessionId());
+                logger.info(studentIds.size() + " students absent in travaux session " + travauxSession.getSchoollifeSessionId());
+                for (Long studentId : studentIds) {
+                    NotificationUtil.notifyTravauxAbsence(studentId, travauxSession.getSchoollifeSessionId());
+                }
+
+                // Set notification sent
+                travauxSession.setAbsenceNotificationSent(true);
+                SchoollifeSessionLocalServiceUtil.updateSchoollifeSession(travauxSession);
+            }
+
+            // Etude
+            List<SchoollifeSession> etudeSessions = SchoollifeSessionLocalServiceUtil.getUnnotifiedSessions(SchoollifeConstants.TYPE_ETUDE, startDate, now);
+            for (SchoollifeSession etudeSession : etudeSessions) {
+
+                List<Long> studentIds = SessionStudentLocalServiceUtil.getAbsentStudents(etudeSession.getSchoollifeSessionId());
+                logger.info(studentIds.size() + " students absent in etude session " + etudeSession.getSchoollifeSessionId());
+                for (Long studentId : studentIds) {
+                    NotificationUtil.notifyEtudeAbsence(studentId, etudeSession.getSchoollifeSessionId());
+                }
+
+                // Set notification sent
+                etudeSession.setAbsenceNotificationSent(true);
+                SchoollifeSessionLocalServiceUtil.updateSchoollifeSession(etudeSession);
+            }
+
+        } catch (Exception e) {
+            logger.error("Error running absence notification task", e);
+        }
+
     }
 }

@@ -25,13 +25,13 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.eel.synchronization.service.SynchronizationLocalServiceUtil;
-import com.weprode.facile.maintenance.AnonymizationUtil;
 import com.weprode.facile.maintenance.DataFeedUtil;
 import com.weprode.facile.maintenance.FsManagement;
 import com.weprode.facile.maintenance.OneShotTools;
 import com.weprode.facile.maintenance.PermissionUtil;
 import com.weprode.facile.maintenance.service.base.MaintenanceServiceBaseImpl;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.facile.school.life.service.SchoollifeSessionLocalServiceUtil;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -193,11 +193,42 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		}
 
 		try {
-			new AnonymizationUtil().anonymize();
+			// Commented for safety
+			//new AnonymizationUtil().anonymize();
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
 			logger.error("Error running file system exploration", e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
+	@JSONWebService(value = "run-absence-notifications", method = "POST")
+	public JSONObject runAbsenceNotifications() {
+
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error("User " + user.getFullName() + " tries to run a maintenance tool (runAnonymization) but has no permission");
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			SchoollifeSessionLocalServiceUtil.runAbsenceNotifications();
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error running absence notifications", e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;

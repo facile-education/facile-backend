@@ -206,13 +206,44 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject runAbsenceNotifications(
+		HttpPrincipal httpPrincipal) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				MaintenanceServiceUtil.class, "runAbsenceNotifications",
+				_runAbsenceNotificationsParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject addPermissions(
 		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				MaintenanceServiceUtil.class, "addPermissions",
-				_addPermissionsParameterTypes5);
+				_addPermissionsParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -243,7 +274,7 @@ public class MaintenanceServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				MaintenanceServiceUtil.class, "cleanupObsoleteFolders",
-				_cleanupObsoleteFoldersParameterTypes6);
+				_cleanupObsoleteFoldersParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -272,7 +303,7 @@ public class MaintenanceServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				MaintenanceServiceUtil.class, "runDataFeed",
-				_runDataFeedParameterTypes7);
+				_runDataFeedParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -303,7 +334,7 @@ public class MaintenanceServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				MaintenanceServiceUtil.class, "setNewsPermissions",
-				_setNewsPermissionsParameterTypes8);
+				_setNewsPermissionsParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -341,13 +372,15 @@ public class MaintenanceServiceHttp {
 		new Class[] {};
 	private static final Class<?>[] _runAnonymisationParameterTypes4 =
 		new Class[] {};
-	private static final Class<?>[] _addPermissionsParameterTypes5 =
+	private static final Class<?>[] _runAbsenceNotificationsParameterTypes5 =
 		new Class[] {};
-	private static final Class<?>[] _cleanupObsoleteFoldersParameterTypes6 =
+	private static final Class<?>[] _addPermissionsParameterTypes6 =
 		new Class[] {};
-	private static final Class<?>[] _runDataFeedParameterTypes7 =
+	private static final Class<?>[] _cleanupObsoleteFoldersParameterTypes7 =
 		new Class[] {};
-	private static final Class<?>[] _setNewsPermissionsParameterTypes8 =
+	private static final Class<?>[] _runDataFeedParameterTypes8 =
+		new Class[] {};
+	private static final Class<?>[] _setNewsPermissionsParameterTypes9 =
 		new Class[] {};
 
 }

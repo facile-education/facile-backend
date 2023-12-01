@@ -50,6 +50,10 @@ public class MaintenanceServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static org.json.JSONObject runAbsenceNotifications() {
+		return getService().runAbsenceNotifications();
+	}
+
 	public static org.json.JSONObject runAnonymisation() {
 		return getService().runAnonymisation();
 	}

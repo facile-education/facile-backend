@@ -55,6 +55,11 @@ public class MaintenanceServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject runAbsenceNotifications() {
+		return _maintenanceService.runAbsenceNotifications();
+	}
+
+	@Override
 	public org.json.JSONObject runAnonymisation() {
 		return _maintenanceService.runAnonymisation();
 	}
