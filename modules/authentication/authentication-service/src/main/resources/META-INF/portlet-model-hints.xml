@@ -1,3 +1,10 @@
 <?xml version="1.0"?>
 
-<model-hints></model-hints>
+<model-hints>
+	<model name="com.weprode.facile.authentication.model.LoginLock">
+		<field name="login" type="String" />
+		<field name="failedLoginAttempts" type="int" />
+		<field name="isLocked" type="boolean" />
+		<field name="lockEndDate" type="Date" />
+	</model>
+</model-hints>

@@ -7,4 +7,13 @@
 	<entity local-service="true" name="Authentication" remote-service="true">
 	</entity>
 
+	<entity name="LoginLock" local-service="true" remote-service="true">
+
+		<column name="login" type="String" primary="true" />
+		<column name="failedLoginAttempts" type="int" />
+		<column name="isLocked" type="boolean" />
+		<column name="lockEndDate" type="Date"/>
+
+	</entity>
+
 </service-builder>

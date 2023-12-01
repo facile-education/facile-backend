@@ -2,6 +2,9 @@ Bundle-Name: authentication-api
 Bundle-SymbolicName: com.weprode.facile.authentication.api
 Bundle-Version: 1.0.0
 Export-Package:\
-	com.weprode.facile.authentication.service
+	com.weprode.facile.authentication.exception,\
+	com.weprode.facile.authentication.model,\
+	com.weprode.facile.authentication.service,\
+	com.weprode.facile.authentication.service.persistence
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../authentication-service/service.xml
