@@ -182,22 +182,24 @@ public class DLAppJsonFactory {
         formattedFile.put(JSONConstants.TYPE, "File");
         formattedFile.put(JSONConstants.SIZE, (int) fileEntry.getSize());
         formattedFile.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
-        formattedFile.put(JSONConstants.LAST_MODIFIED_DATE,
-                new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
+        formattedFile.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
+        formattedFile.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
+
 
         // Permissions
-        final JSONObject permissions = new JSONObject();
-        permissions.put(ActionKeys.UPDATE, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE));
-        permissions.put(ActionKeys.DELETE, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.DELETE));
-        permissions.put(ActionKeys.PERMISSIONS, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS));
-        formattedFile.put(JSONConstants.PERMISSIONS, permissions);
+        if (user != null) { // No specific user for News attachedFiles or what (maybe we should?)
+            final JSONObject permissions = new JSONObject();
+            permissions.put(ActionKeys.UPDATE, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE));
+            permissions.put(ActionKeys.DELETE, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.DELETE));
+            permissions.put(ActionKeys.PERMISSIONS, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS));
+            formattedFile.put(JSONConstants.PERMISSIONS, permissions);
+        }
 
         if (withDetails) {
             formattedFile.put(JSONConstants.CREATION_DATE,
                     new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getCreateDate()));
             formattedFile.put(JSONConstants.CREATOR, fileEntry.getUserName());
             formattedFile.put(JSONConstants.VERSION, fileEntry.getVersion());
-            formattedFile.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
             try {
                 if (UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getWebdavActivated()) {
                     formattedFile.put(JSONConstants.URL_WEBDAV, ENTWebDAVUtil.getWebDavUrl(fileEntry.getGroupId(), fileEntry));
