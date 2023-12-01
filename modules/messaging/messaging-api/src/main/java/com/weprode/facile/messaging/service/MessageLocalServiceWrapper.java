@@ -428,6 +428,14 @@ public class MessageLocalServiceWrapper
 			addedThreadIds, folderId, fromDate, unReadOnly);
 	}
 
+	@Override
+	public com.liferay.portal.kernel.repository.model.Folder
+		getOrCreateMessageAttachedFilesFolder(long userId, long messageId) {
+
+		return _messageLocalService.getOrCreateMessageAttachedFilesFolder(
+			userId, messageId);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

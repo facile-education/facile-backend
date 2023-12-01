@@ -20,4 +20,6 @@ public class MessagingConstants {
     public static final int TYPE_REPORT = 3;
     public static final int TYPE_AUTO_REPLY = 4;
     public static final int TYPE_OTHER = 5;
+
+    public static final String ATTACHED_FILES_FOLDER_PREFIX = "PJ du message ";
 }

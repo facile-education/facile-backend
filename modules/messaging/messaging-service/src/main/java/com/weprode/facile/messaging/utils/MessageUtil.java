@@ -16,7 +16,6 @@
 package com.weprode.facile.messaging.utils;
 
 import com.liferay.document.library.kernel.model.DLFolder;
-import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -29,14 +28,12 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
-import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.contact.constants.ContactConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
-import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.messaging.constants.MessagingConstants;
 import com.weprode.facile.messaging.model.Message;
 import com.weprode.facile.messaging.model.MessageFolder;
@@ -59,7 +56,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class MessageUtil {
 
@@ -191,18 +187,8 @@ public class MessageUtil {
 		try {
 			if (attachFileIds != null && !attachFileIds.isEmpty()) {
 
-				Folder imBox = FolderUtilsLocalServiceUtil.getUserMessagingAttachedFilesFolder(userId);
-
 				// Create the folder in the user's sending box
-				Folder attachedFilesFolder = DLAppLocalServiceUtil.addFolder(
-						UUID.randomUUID().toString(),
-						userId,
-						imBox.getGroupId(),
-						imBox.getFolderId(),
-						"PJ du message " + messageId,
-						"PJ du message " + messageId,
-						new ServiceContext());
-				FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
+				Folder attachedFilesFolder = MessageLocalServiceUtil.getOrCreateMessageAttachedFilesFolder(userId, messageId);
 
 				// Set VIEW and ADD_DOCUMENT permissions for 'User' role
 				List<Role> roleList = new ArrayList<>();

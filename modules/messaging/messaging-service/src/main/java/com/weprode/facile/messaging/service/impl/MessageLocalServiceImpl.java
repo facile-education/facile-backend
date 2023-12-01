@@ -364,21 +364,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
 
                 // Add all new attached files
                 if (attachFileIds != null) {
-                    Folder attachedFilesFolder;
-                    Folder imBox = FolderUtilsLocalServiceUtil.getUserMessagingAttachedFilesFolder(senderId);
-                    if (draftMessageId > 0) {
-                        attachedFilesFolder = DLAppServiceUtil.getFolder(imBox.getRepositoryId(), imBox.getFolderId(), "PJ du message " + message.getMessageId());
-                    } else {
-                        attachedFilesFolder = DLAppServiceUtil.addFolder(
-                                UUID.randomUUID().toString(),
-                                imBox.getGroupId(),
-                                imBox.getFolderId(),
-                                "PJ du message " + message.getMessageId(),
-                                "PJ du message " + message.getMessageId(),
-                                new ServiceContext());
-                        FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
-                    }
-
+                    Folder attachedFilesFolder = getOrCreateMessageAttachedFilesFolder(senderId, message.getMessageId());
                     for (Long attachFileId : attachFileIds) {
                         logger.info("Copying file " + attachFileId + " to sender's folder " + attachedFilesFolder.getFolderId());
                         FileEntry referenceFile = FileUtilsLocalServiceUtil.copyFileEntry(senderId, attachFileId, attachedFilesFolder.getFolderId(), true);
@@ -674,5 +660,31 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         }
 
         return personalFoldersMessages;
+    }
+
+    public Folder getOrCreateMessageAttachedFilesFolder(long userId, long messageId) {
+
+        Folder attachedFilesFolder = null;
+        try {
+            Folder imBox = FolderUtilsLocalServiceUtil.getUserMessagingAttachedFilesFolder(userId);
+            try {
+                attachedFilesFolder = DLAppServiceUtil.getFolder(imBox.getRepositoryId(), imBox.getFolderId(), MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX + messageId);
+            } catch (Exception e) {
+                // Might not exist
+            }
+            if (attachedFilesFolder == null) {
+                attachedFilesFolder = DLAppServiceUtil.addFolder(
+                        UUID.randomUUID().toString(),
+                        imBox.getGroupId(),
+                        imBox.getFolderId(),
+                        MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX + messageId,
+                        MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX + messageId,
+                        new ServiceContext());
+                FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
+            }
+        } catch (Exception e) {
+            logger.error("Error while getting or creating the attached files folder for message " + messageId + " and user " + userId, e);
+        }
+        return attachedFilesFolder;
     }
 }

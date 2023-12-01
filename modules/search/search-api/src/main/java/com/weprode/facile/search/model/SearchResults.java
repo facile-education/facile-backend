@@ -25,6 +25,7 @@ import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.facile.messaging.constants.MessagingConstants;
 import com.weprode.facile.messaging.model.Message;
 import com.weprode.facile.messaging.service.MessageLocalServiceUtil;
 import com.weprode.facile.news.model.News;
@@ -145,7 +146,7 @@ public class SearchResults {
                         result.put(JSONConstants.SERVICE, SearchConstants.TYPE_NEWS_FILE);
                     } else if (path.get(0).getName().equals(DocumentConstants.IM_BOX_FOLDER_NAME)) {
                         // Message attachment
-                        long messageId = Long.parseLong(path.get(1).getName().replace("PJ du message ", ""));
+                        long messageId = Long.parseLong(path.get(1).getName().replace(MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX, ""));
 
                         Message message = MessageLocalServiceUtil.getMessage(messageId);
                         JSONObject messageJson = new JSONObject();
