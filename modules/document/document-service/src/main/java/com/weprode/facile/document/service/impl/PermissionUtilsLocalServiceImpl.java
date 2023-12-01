@@ -58,6 +58,11 @@ public class PermissionUtilsLocalServiceImpl
 	private static final Log logger = LogFactoryUtil.getLog(PermissionUtilsLocalServiceImpl.class);
 
 	public boolean hasUserFilePermission(long userId, FileEntry fileEntry, String actionId) {
+
+		// Check owner
+		if (userId == fileEntry.getUserId()) {
+			return true;
+		}
 		try {
 			long[] userRoleIds = getRolesIdsToCheckForUserPermissions(userId, fileEntry.getGroupId(), fileEntry.getUserId());
 

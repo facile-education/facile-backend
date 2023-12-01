@@ -293,23 +293,11 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 long studentId = studentJson.getLong(JSONConstants.STUDENT_ID);
                 boolean isPresent = studentJson.getBoolean(JSONConstants.IS_PRESENT);
                 SessionStudentLocalServiceUtil.markStudentPresent(schoollifeSessionId, studentId, isPresent);
-                if (!isPresent) {
-                    // If student is absent, send absence notification
-                    SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId);
-                    if (session.getType() == SchoollifeConstants.TYPE_RETENUE) {
-                        NotificationUtil.notifyRetenueAbsence(studentId, schoollifeSessionId);
-                    } else if (session.getType() == SchoollifeConstants.TYPE_TRAVAUX) {
-                        NotificationUtil.notifyTravauxAbsence(studentId, schoollifeSessionId);
-                    } else if (session.getType() == SchoollifeConstants.TYPE_ETUDE) {
-                        NotificationUtil.notifyEtudeAbsence(studentId, schoollifeSessionId);
-                    }
-                }
             }
 
             // Set roll called and absence notif sent
             SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId);
             session.setRollCalled(true);
-            session.setAbsenceNotificationSent(true);
             SchoollifeSessionLocalServiceUtil.updateSchoollifeSession(session);
 
             result.put(JSONConstants.SUCCESS, true);
