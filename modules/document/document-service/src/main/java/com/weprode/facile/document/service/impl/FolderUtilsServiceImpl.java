@@ -26,12 +26,14 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FolderUtilsServiceBaseImpl;
 import com.weprode.facile.document.utils.DLAppJsonFactory;
 import com.weprode.facile.document.utils.DocumentUtil;
@@ -186,9 +188,13 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 				logger.info("User " + user.getFullName() + " tries to download folder " + folderId + " but has no permission");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW)) {
+				logger.info("User " + user.getFullName() + " tries to download folder " + folderId + " but has no permission");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
 			logger.info("User " + user.getFullName() + " downloads folder " + folderId);
-			Folder folder = DLAppServiceUtil.getFolder(folderId);
 			result.put(JSONConstants.ZIP_URL, FolderUtilsLocalServiceUtil.downloadFolder(folder, user));
 			result.put(JSONConstants.SUCCESS, true);
 
