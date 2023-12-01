@@ -68,7 +68,7 @@ public class DocumentFilter extends BaseFilter {
                     && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, DLAppServiceUtil.getFileEntry(groupId, folderId, title), ActionKeys.VIEW)) {
                 // Check File OR folder permission because old files do not have the VIEW perm for all users
                 logger.info("Denying " + user.getFullName() + " to access document (view permission) with URI " + httpServletRequest.getRequestURI());
-                //PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
+                PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
             }
         } else {
             logger.info("UserId is 0 or default user");
