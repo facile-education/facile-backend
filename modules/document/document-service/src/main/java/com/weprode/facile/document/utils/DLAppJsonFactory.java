@@ -78,15 +78,8 @@ public class DLAppJsonFactory {
         JSONObject formattedFolder = new JSONObject();
         addCommonsFields(formattedFolder, folder, user, withDetails);
 
-        switch (space) {
-            case DocumentConstants.TRASH:
-                addTrashFields(formattedFolder, folder, user);
-                break;
-            case DocumentConstants.COLLABORATIVE:
-                addGroupFields(formattedFolder, folder, user);
-                break;
-            default:
-                break;
+        if (space == DocumentConstants.COLLABORATIVE) {
+            addGroupFields(formattedFolder, folder, user);
         }
 
         return formattedFolder;
@@ -114,15 +107,8 @@ public class DLAppJsonFactory {
 
         addCommonsFields(formattedFile, fileEntry, user, withDetails);
 
-        switch (space) {
-            case DocumentConstants.TRASH:
-                addTrashFields(formattedFile, fileEntry, user);
-                break;
-            case DocumentConstants.COLLABORATIVE:
-                addGroupFields(formattedFile, fileEntry, user);
-                break;
-            default:
-                break;
+        if (space == DocumentConstants.COLLABORATIVE) {
+            addGroupFields(formattedFile, fileEntry, user);
         }
 
         return formattedFile;
@@ -210,21 +196,6 @@ public class DLAppJsonFactory {
         }
     }
 
-    private static void addTrashFields(JSONObject formattedFolder, Folder folder, User user) {
-//        try {
-//            if (!NewDocumentUtil.belongToATrashSubFolder(folder, user.getUserId())) {    // no trash entry for trash subFolders
-//                TrashEntry trashEntry = TrashEntryLocalServiceUtil.findByEntryId(folder.getFolderId());
-//                formattedFolder.put(JSONConstants.NAME, trashEntry.getSourceName()); // Change name with the original name
-//                formattedFolder.put("sourcePath", trashEntry.getSourcePath());
-//                formattedFolder.put("deleteDate", new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(trashEntry.getDeleteDate()));
-//            } else {
-//                formattedFolder.put(JSONConstants.IS_SUB_ENTITY, true);
-//            }
-//        } catch (Exception e) {
-//            logger.error(e);
-//        }
-    }
-
     private static void addGroupFields(JSONObject formattedFolder, Folder folder, User user) {
         try {
             Group folderGroup = GroupLocalServiceUtil.getGroup(folder.getGroupId());
@@ -266,19 +237,6 @@ public class DLAppJsonFactory {
         } catch (Exception e) {
             logger.error(e);
         }
-    }
-
-    private static void addTrashFields(JSONObject formattedFile, FileEntry fileEntry, User user) {
-//        try {
-//            if (!NewDocumentUtil.belongToATrashSubFolder(fileEntry, user.getUserId())) {    // no trash entry for trash subFolders
-//                TrashEntry trashEntry = TrashEntryLocalServiceUtil.findByEntryId(fileEntry.getFileEntryId());
-//                formattedFile.put(JSONConstants.NAME, trashEntry.getSourceName()); // Change name with the original name
-//                formattedFile.put("sourcePath", trashEntry.getSourcePath());
-//                formattedFile.put("deleteDate", new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(trashEntry.getDeleteDate()));
-//            }
-//        } catch (Exception e) {
-//            logger.error(e);
-//        }
     }
 
     private static void addGroupFields(JSONObject formattedFile, FileEntry fileEntry, User user) {
