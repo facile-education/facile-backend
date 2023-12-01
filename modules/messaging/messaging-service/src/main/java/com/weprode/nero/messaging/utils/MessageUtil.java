@@ -198,7 +198,7 @@ public class MessageUtil {
 				ResourcePermissionLocalServiceUtil.setResourcePermissions(attachedFilesFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(attachedFilesFolder.getPrimaryKey()), roleIdActionIds );
 
 				for (Long attachFileId : attachFileIds) {
-					logger.info("Copying file " + attachFileId + " to IM_BOX, folder " + attachedFilesFolder.getFolderId());
+					logger.info("Copying file " + attachFileId + " to IM_BOX of user " + userId + ", folder " + attachedFilesFolder.getFolderId());
 					FileEntry referenceFile = FileUtilsLocalServiceUtil.copyFileEntry(userId, attachFileId, attachedFilesFolder.getFolderId(), true);
 					logger.info("Add attached file " + referenceFile.getFileEntryId() + " to message " + messageId);
 					MessageAttachFileLocalServiceUtil.addAttachFile(messageId, referenceFile.getFileEntryId());

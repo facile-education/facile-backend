@@ -398,6 +398,8 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 	}
 
 	public void deleteFile(long userId, long fileId) throws PortalException, SystemException {
+
+		logger.info("User " + userId + " deletes file " + fileId);
 		final FileEntry file = DLAppServiceUtil.getFileEntry(fileId);
 
 		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, file, ActionKeys.DELETE)) {

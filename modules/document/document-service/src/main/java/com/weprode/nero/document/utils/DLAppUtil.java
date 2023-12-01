@@ -9,6 +9,7 @@ import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
@@ -169,8 +170,9 @@ public class DLAppUtil {
                     //Normalize the name before adding it to DB. (Solve some issues with accented character with a form "plain char+combining accent" -- e' insteand of é)
                     name = Normalizer.normalize(name, Normalizer.Form.NFC);
 
-                    fileEntry = DLAppServiceUtil.addFileEntry(
+                    fileEntry = DLAppLocalServiceUtil.addFileEntry(
                             externalReferenceCode,
+                            user.getUserId(),
                             folder.getGroupId(),
                             folder.getFolderId(),
                             name,
