@@ -44,6 +44,11 @@ public class MaintenanceServiceWrapper
 		return _maintenanceService.cleanupObsoleteFolders();
 	}
 
+	@Override
+	public org.json.JSONObject deleteFolders(java.io.File file) {
+		return _maintenanceService.deleteFolders(file);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
+import java.io.File;
+
 import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -54,6 +56,9 @@ public interface MaintenanceService extends BaseService {
 
 	@JSONWebService(method = "POST", value = "cleanup-obsolete-folders")
 	public JSONObject cleanupObsoleteFolders();
+
+	@JSONWebService(method = "POST", value = "delete-folders")
+	public JSONObject deleteFolders(File file);
 
 	/**
 	 * Returns the OSGi service identifier.

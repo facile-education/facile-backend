@@ -140,7 +140,7 @@ public class SearchResults {
                             JSONObject news = NewsLocalServiceUtil.convertNewsToJson(newsId, userId, true);
                             result.put(JSONConstants.NEWS, news);
                         } catch (PortalException e) {
-                            logger.error("Failed to get news with id="+entityId, e);
+                            logger.error("Failed to get news with id="+newsId, e);
                         }
 
                         result.put(JSONConstants.SERVICE, SearchConstants.TYPE_NEWS_FILE);

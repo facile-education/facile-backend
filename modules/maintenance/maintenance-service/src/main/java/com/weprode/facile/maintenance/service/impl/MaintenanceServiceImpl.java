@@ -35,6 +35,8 @@ import com.weprode.facile.school.life.service.SchoollifeSessionLocalServiceUtil;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
+import java.io.File;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -354,5 +356,33 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		return result;
 	}
 
+	@JSONWebService(value = "delete-folders", method = "POST")
+	public JSONObject deleteFolders(File file) {
+
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			new OneShotTools().multipleFoldersCleanup(file);
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error deleting folders", e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
 
 }

@@ -359,6 +359,37 @@ public class MaintenanceServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject deleteFolders(
+		HttpPrincipal httpPrincipal, java.io.File file) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				MaintenanceServiceUtil.class, "deleteFolders",
+				_deleteFoldersParameterTypes10);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, file);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		MaintenanceServiceHttp.class);
 
@@ -382,5 +413,7 @@ public class MaintenanceServiceHttp {
 		new Class[] {};
 	private static final Class<?>[] _setNewsPermissionsParameterTypes9 =
 		new Class[] {};
+	private static final Class<?>[] _deleteFoldersParameterTypes10 =
+		new Class[] {java.io.File.class};
 
 }

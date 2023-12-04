@@ -37,6 +37,11 @@ import com.weprode.facile.news.model.NewsAttachedFile;
 import com.weprode.facile.news.service.NewsAttachedFileLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,4 +148,51 @@ public class OneShotTools {
             logger.error("Error deleting folder " + folderId, e);
         }
     }
+
+    public void multipleFoldersCleanup(File file) {
+
+        List<String> fileContent = getFileList(file);
+        logger.info("MultipleFoldersCleanup for "+fileContent.size()+" groups");
+        int idx = 0;
+        for (String line : fileContent) {
+            try {
+                idx++;
+                logger.info("========================================== Processing folder "+idx+"/"+fileContent.size());
+                long folderId = Long.parseLong(line);
+                deleteFolder(folderId);
+            } catch (Exception e) {
+                logger.error("Error processing folder "+line);
+            }
+        }
+    }
+
+    public List<String> getFileList(File file) {
+        List<String> fileList = new ArrayList<>();
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            String line = br.readLine();
+            while (line != null) {
+                fileList.add(line);
+                line = br.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            logger.error("File not found : "+file.getAbsolutePath());
+        } catch (IOException e) {
+            logger.error("IO Exception : "+file.getAbsolutePath());
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (Exception e) {
+                logger.error("Error closing reader", e);
+            }
+        }
+        logger.info("File has "+fileList.size()+" group ids to cleanup ...");
+        return fileList;
+    }
+
+
 }
