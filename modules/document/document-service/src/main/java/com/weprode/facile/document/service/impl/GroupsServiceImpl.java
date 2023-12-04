@@ -40,7 +40,6 @@ import com.weprode.facile.document.service.GroupsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.VersionLocalServiceUtil;
 import com.weprode.facile.document.service.base.GroupsServiceBaseImpl;
-import com.weprode.facile.document.utils.DLAppJsonFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -188,7 +187,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 				List<Folder> folders = FolderUtilsLocalServiceUtil.getFolderPath(parseLong(nodePath));
 
 				for (Folder groupFolder : folders) {
-					breadCrumb.put(DLAppJsonFactory.format(user, groupFolder, DocumentConstants.COLLABORATIVE, false));
+					breadCrumb.put(FolderUtilsLocalServiceUtil.format(user, groupFolder, DocumentConstants.COLLABORATIVE, false));
 				}
 			}
 

@@ -16,7 +16,6 @@
 package com.weprode.facile.document.service.impl;
 
 import com.liferay.document.library.kernel.exception.FileNameException;
-import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.persistence.DLFileVersionUtil;
 import com.liferay.portal.aop.AopService;
@@ -32,9 +31,9 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
+import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FolderUtilsServiceBaseImpl;
-import com.weprode.facile.document.utils.DLAppJsonFactory;
 import com.weprode.facile.document.utils.DocumentUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -84,7 +83,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			int space = DocumentUtil.getDocumentSpace(folderList.get(0));
 			for (int i = 0 ; i < folderList.size() ; i++) {
 				Folder breadcrumbFolder = folderList.get(i);
-				JSONObject jsonFolder = DLAppJsonFactory.format(user.getUserId(), breadcrumbFolder, space, false);
+				JSONObject jsonFolder = FolderUtilsLocalServiceUtil.format(user.getUserId(), breadcrumbFolder, space, false);
 				// Replace root personal folder name
 				if (i == 0) {
 					jsonFolder.put(JSONConstants.NAME, "Personnels");
@@ -123,7 +122,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 			Folder createdFolder = FolderUtilsLocalServiceUtil.createFolder(user, targetFolderId, folderName);
 
-			result.put(JSONConstants.CREATED_FOLDER, DLAppJsonFactory.format(user.getUserId(), createdFolder, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.CREATED_FOLDER, FolderUtilsLocalServiceUtil.format(user.getUserId(), createdFolder, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (FileNameException e) {
@@ -159,7 +158,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			Folder folderToRename = DLAppServiceUtil.getFolder(folderId);
 			Folder renamedFolder = FolderUtilsLocalServiceUtil.renameFolder(user.getUserId(), folderToRename, folderName);
 
-			result.put(JSONConstants.FOLDER, DLAppJsonFactory.format(user.getUserId(), renamedFolder));
+			result.put(JSONConstants.FOLDER, FolderUtilsLocalServiceUtil.format(user.getUserId(), renamedFolder));
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -234,7 +233,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			List<Folder> folderList = DLAppServiceUtil.getFolders(user.getGroupId(), folderId);
 			for (Folder subFolder : folderList) {
 				if (!subFolder.getName().startsWith(".")) {
-					JSONObject curr = DLAppJsonFactory.format(user.getUserId(), subFolder, space, withDetails);
+					JSONObject curr = FolderUtilsLocalServiceUtil.format(user.getUserId(), subFolder, space, withDetails);
 					folderItems.put(curr);
 				}
 			}
@@ -250,7 +249,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			for (FileEntry fileEntry : fileList) {
 				// If user is allowed do view the document (in group documents only)
 				if (!fileEntry.getTitle().startsWith(".")) {
-					JSONObject curr = DLAppJsonFactory.format(user.getUserId(), fileEntry, space, withDetails);
+					JSONObject curr = FileUtilsLocalServiceUtil.format(user.getUserId(), fileEntry, space, withDetails);
 					fileItems.put(curr);
 				}
 			}

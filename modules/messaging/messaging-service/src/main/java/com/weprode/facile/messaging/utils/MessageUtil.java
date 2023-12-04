@@ -327,14 +327,8 @@ public class MessageUtil {
 			List<Long> attachedFileIds = MessageAttachFileLocalServiceUtil.getMessageAttachFileIds(message.getMessageId());
 			for (Long attachedFileId : attachedFileIds) {
 				try {
-					JSONObject jsonAttachment = new JSONObject();
 					FileEntry fileEntry = DLAppServiceUtil.getFileEntry(attachedFileId);
-					jsonAttachment.put(JSONConstants.ID, attachedFileId);
-					jsonAttachment.put(JSONConstants.NAME, fileEntry.getTitle());
-					jsonAttachment.put(JSONConstants.TYPE, "File");
-					jsonAttachment.put(JSONConstants.SIZE, fileEntry.getSize());
-					jsonAttachment.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
-					jsonAttachment.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
+					JSONObject jsonAttachment = FileUtilsLocalServiceUtil.format(null, fileEntry, 0, false);
 					jsonAttachments.put(jsonAttachment);
 				} catch (Exception e) {
 					logger.error("Error converting attached file ", e);

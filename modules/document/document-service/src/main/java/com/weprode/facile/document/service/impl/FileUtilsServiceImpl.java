@@ -44,7 +44,6 @@ import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.LoolTokenLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FileUtilsServiceBaseImpl;
-import com.weprode.facile.document.utils.DLAppJsonFactory;
 import com.weprode.facile.document.utils.SupportedExtensions;
 import com.weprode.facile.document.utils.UploadUtil;
 import org.json.JSONObject;
@@ -147,7 +146,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			logger.info("User " + user.getFullName() + " renames file " + fileId + " with name " + fileName);
 			FileEntry renamedFile = FileUtilsLocalServiceUtil.renameFile(user.getUserId(), fileToRename, fileName);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), renamedFile));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), renamedFile));
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -222,7 +221,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 			FileEntry geogebraFile = FileUtilsLocalServiceUtil.createGeogebraFile(user, folderId, name);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), geogebraFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), geogebraFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error creating geogebra file " + name + " in folder " + folderId, e);
@@ -259,7 +258,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 			FileEntry mindmapFile = FileUtilsLocalServiceUtil.createMindMapFile(user, folderId, name);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), mindmapFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), mindmapFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -297,7 +296,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 			FileEntry scratchFile = FileUtilsLocalServiceUtil.createScratchFile(user, folderId, name);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), scratchFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), scratchFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -335,7 +334,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 			FileEntry loolFile = FileUtilsLocalServiceUtil.createLoolFile(user, folderId, name, type);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), loolFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), loolFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error creating lool file " + name + " in folder " + folderId + " with type " + type, e);
@@ -372,7 +371,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 
 			FileEntry htmlFile = FileUtilsLocalServiceUtil.createHtmlFile(user, folderId, name);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), htmlFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), htmlFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error creating html file " + name + " in folder " + folderId, e);

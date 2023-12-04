@@ -61,7 +61,7 @@ public class ClipboardUtil {
             } catch (FileNameException e) {
                 try {
                     Folder folderInConflict = DLAppServiceUtil.getFolder(folderId);
-                    foldersInConflict.put(DLAppJsonFactory.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
+                    foldersInConflict.put(FolderUtilsLocalServiceUtil.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
                     JSONObject failedEntity = new JSONObject();
@@ -94,7 +94,7 @@ public class ClipboardUtil {
             } catch (DuplicateFileEntryException e) {
                 try {
                     FileEntry fileEntryInConflict = DLAppServiceUtil.getFileEntry(fileId);
-                    filesInConflict.put(DLAppJsonFactory.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
+                    filesInConflict.put(FileUtilsLocalServiceUtil.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
                     JSONObject failedEntity = new JSONObject();
@@ -142,7 +142,7 @@ public class ClipboardUtil {
             } catch (FileNameException e) {
                 try {
                     Folder folderInConflict = DLAppServiceUtil.getFolder(folderId);
-                    foldersInConflict.put(DLAppJsonFactory.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
+                    foldersInConflict.put(FolderUtilsLocalServiceUtil.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
                     JSONObject failedEntity = new JSONObject();
@@ -175,7 +175,7 @@ public class ClipboardUtil {
             } catch (DuplicateFileEntryException e) {
                 try {
                     FileEntry fileEntryInConflict = DLAppServiceUtil.getFileEntry(fileId);
-                    filesInConflict.put(DLAppJsonFactory.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
+                    filesInConflict.put(FileUtilsLocalServiceUtil.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
                     JSONObject failedEntity = new JSONObject();

@@ -25,6 +25,8 @@ import com.liferay.portal.kernel.transaction.Transactional;
 
 import java.util.List;
 
+import org.json.JSONObject;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -58,6 +60,19 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 
 	public void deleteFolder(long userId, long folderId)
 		throws PortalException, SystemException;
+
+	public JSONObject format(long userId, Folder folder)
+		throws PortalException, SystemException;
+
+	public JSONObject format(long userId, Folder folder, int space)
+		throws PortalException, SystemException;
+
+	public JSONObject format(
+			long userId, Folder folder, int space, boolean withDetails)
+		throws PortalException, SystemException;
+
+	public JSONObject format(
+		User user, Folder folder, int space, boolean withDetails);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getFolderByName(Folder parentFolder, String name)

@@ -60,6 +60,39 @@ public class FolderUtilsLocalServiceUtil {
 		getService().deleteFolder(userId, folderId);
 	}
 
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder)
+		throws PortalException, SystemException {
+
+		return getService().format(userId, folder);
+	}
+
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder, int space)
+		throws PortalException, SystemException {
+
+		return getService().format(userId, folder, space);
+	}
+
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder, int space,
+			boolean withDetails)
+		throws PortalException, SystemException {
+
+		return getService().format(userId, folder, space, withDetails);
+	}
+
+	public static org.json.JSONObject format(
+		com.liferay.portal.kernel.model.User user,
+		com.liferay.portal.kernel.repository.model.Folder folder, int space,
+		boolean withDetails) {
+
+		return getService().format(user, folder, space, withDetails);
+	}
+
 	public static com.liferay.portal.kernel.repository.model.Folder
 			getFolderByName(
 				com.liferay.portal.kernel.repository.model.Folder parentFolder,

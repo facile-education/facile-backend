@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.util.HtmlParserUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.URLCodec;
+import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.constants.GeogebraConstants;
@@ -63,7 +64,12 @@ import com.weprode.facile.document.utils.DLAppUtil;
 import com.weprode.facile.document.utils.ENTDocumentConversionUtil;
 import com.weprode.facile.document.utils.FileNameUtil;
 import com.weprode.facile.document.utils.SupportedExtensions;
+import com.weprode.facile.document.utils.DocumentUtil;
+import com.weprode.facile.document.utils.ENTWebDAVUtil;
 import com.weprode.facile.group.constants.ActivityConstants;
+import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -77,6 +83,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -299,6 +306,30 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		}
 	}
 
+	public void deleteFile(long userId, long fileId) throws PortalException, SystemException {
+        logger.info("User " + userId + " deletes file " + fileId);
+
+		final FileEntry file = DLAppServiceUtil.getFileEntry(fileId);
+
+		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, file, ActionKeys.DELETE)) {
+			Folder parentFolder = file.getFolder();
+
+			// Delete file on DB and FS
+			DLAppServiceUtil.deleteFileEntry(fileId);
+
+			// Update parentFolder lastPostDate because it lost a file
+			DLFolderLocalServiceUtil.updateLastPostDate(parentFolder.getFolderId(), new Date());
+
+			// Delete previous activity
+			ActivityLocalServiceUtil.deleteFileActivity(file.getFileEntryId());
+
+			// Delete Versions (view and download counts)
+			VersionLocalServiceUtil.removeVersionByFileEntryId(file.getFileEntryId());
+		} else {
+			throw new NoSuchResourcePermissionException();
+		}
+	}
+
 	public String getDisplayUrl (FileEntry file, long versionId, long userId, boolean readOnly) throws SystemException, PortalException {
 		String documentURL;
 		boolean isCreation = false;
@@ -393,30 +424,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		parameters.put("forceConversion", "true");
 
 		return ENTDocumentConversionUtil.convert(originalTitle, is, extension, targetExtension, parameters);
-	}
-
-	public void deleteFile(long userId, long fileId) throws PortalException, SystemException {
-
-		logger.info("User " + userId + " deletes file " + fileId);
-		final FileEntry file = DLAppServiceUtil.getFileEntry(fileId);
-
-		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, file, ActionKeys.DELETE)) {
-			Folder parentFolder = file.getFolder();
-
-			// Delete file on DB and FS
-			DLAppServiceUtil.deleteFileEntry(fileId);
-
-			// Update parentFolder lastPostDate because it lost a file
-			DLFolderLocalServiceUtil.updateLastPostDate(parentFolder.getFolderId(), new Date());
-
-			// Delete previous activity
-			ActivityLocalServiceUtil.deleteFileActivity(file.getFileEntryId());
-
-			// Delete Versions (view and download counts)
-			VersionLocalServiceUtil.removeVersionByFileEntryId(file.getFileEntryId());
-		} else {
-			throw new NoSuchResourcePermissionException();
-		}
 	}
 
 	public FileEntry createGeogebraFile (User user, long folderId, String name) throws SystemException, PortalException {
@@ -575,7 +582,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		return sanitizedContent;
 	}
 
-
 	public boolean isGroupFile (long fileEntryId) {
 		try {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
@@ -589,8 +595,88 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		return false;
 	}
 
-	public long getSizeInMegaOctet(long pSize){
-		return pSize / (1024 * 1024);
+	public JSONObject format(long userId, FileEntry fileEntry) throws PortalException, SystemException {
+		int space = DocumentUtil.getSpace(fileEntry, userId);
+		return format(userId, fileEntry, space);
+	}
+
+	public JSONObject format(long userId, FileEntry fileEntry, int space) throws PortalException, SystemException {
+		return format(userId, fileEntry, space, false);
+	}
+
+	public JSONObject format(long userId, FileEntry fileEntry, int space, boolean withDetails) throws PortalException, SystemException {
+		User user = UserLocalServiceUtil.getUser(userId);
+		return format(user, fileEntry, space,withDetails);
+	}
+
+	public JSONObject format(User user, FileEntry fileEntry, int space, boolean withDetails) {
+		JSONObject formattedFile = new JSONObject();
+
+		addCommonsFields(formattedFile, fileEntry, user, withDetails);
+
+		if (space == DocumentConstants.COLLABORATIVE) {
+			addGroupFields(formattedFile, fileEntry, user);
+		}
+
+		return formattedFile;
+	}
+
+	private void addCommonsFields(JSONObject formattedFile, FileEntry fileEntry, User user, boolean withDetails) {
+		formattedFile.put(JSONConstants.ID, String.valueOf(fileEntry.getFileEntryId()));
+		formattedFile.put(JSONConstants.NAME, fileEntry.getTitle());
+		formattedFile.put(JSONConstants.TYPE, "File");
+		formattedFile.put(JSONConstants.SIZE, (int) fileEntry.getSize());
+		formattedFile.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
+		formattedFile.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
+		formattedFile.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
+
+
+		// Permissions
+		if (user != null) { // No specific user for News attachedFiles or what (maybe we should?)
+			final JSONObject permissions = new JSONObject();
+			permissions.put(ActionKeys.UPDATE, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE));
+			permissions.put(ActionKeys.DELETE, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.DELETE));
+			permissions.put(ActionKeys.PERMISSIONS, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS));
+			formattedFile.put(JSONConstants.PERMISSIONS, permissions);
+		} else {
+			final JSONObject permissions = new JSONObject();
+			permissions.put(ActionKeys.UPDATE, false);
+			permissions.put(ActionKeys.DELETE, false);
+			permissions.put(ActionKeys.PERMISSIONS, false);
+			formattedFile.put(JSONConstants.PERMISSIONS, permissions);
+		}
+
+		if (withDetails) {
+			formattedFile.put(JSONConstants.CREATION_DATE,
+					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getCreateDate()));
+			formattedFile.put(JSONConstants.CREATOR, fileEntry.getUserName());
+			formattedFile.put(JSONConstants.VERSION, fileEntry.getVersion());
+			try {
+				if (UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getWebdavActivated()) {
+					formattedFile.put(JSONConstants.URL_WEBDAV, ENTWebDAVUtil.getWebDavUrl(fileEntry.getGroupId(), fileEntry));
+				}
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
+	}
+
+	private void addGroupFields(JSONObject formattedFile, FileEntry fileEntry, User user) {
+		formattedFile.put(JSONConstants.IS_GROUP_FILE, true);
+		final JSONObject permissions = new JSONObject();
+		// Directors and school admins have all rights on institutional groups
+		boolean hasFullPermissions = false;
+		try {
+			Group group = GroupLocalServiceUtil.getGroup(fileEntry.getGroupId());
+			hasFullPermissions = group.isOrganization() && RoleUtilsLocalServiceUtil.isSchoolAdmin(user);
+		} catch (Exception e) {
+			logger.debug(e);
+		}
+
+		permissions.put(ActionKeys.UPDATE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE));
+		permissions.put(ActionKeys.DELETE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.DELETE));
+		permissions.put(ActionKeys.PERMISSIONS, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.PERMISSIONS));
+		formattedFile.put(JSONConstants.PERMISSIONS, permissions);
 	}
 
 }

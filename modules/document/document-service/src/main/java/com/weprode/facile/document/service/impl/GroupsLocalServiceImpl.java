@@ -29,10 +29,10 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.weprode.facile.document.constants.DocumentConstants;
+import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.GroupsLocalServiceBaseImpl;
-import com.weprode.facile.document.utils.DLAppJsonFactory;
 import com.weprode.facile.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.facile.organization.constants.OrgConstants;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
@@ -58,7 +58,7 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 		List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
 		for (Group userGroup : userGroups) {
 			Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(userGroup.getGroupId());
-			JSONObject jsonFolder = DLAppJsonFactory.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
+			JSONObject jsonFolder = FolderUtilsLocalServiceUtil.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
 			userGroupsArray.put(jsonFolder);
 		}
 
@@ -86,7 +86,7 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 			if (!uniqueOrgsIds.contains(userOrg.getOrganizationId())) {
 				uniqueOrgsIds.add(userOrg.getOrganizationId());
 				Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(userOrg.getGroupId());
-				JSONObject jsonFolder = DLAppJsonFactory.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
+				JSONObject jsonFolder = FolderUtilsLocalServiceUtil.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
 				userGroupsArray.put(jsonFolder);
 			}
 		}
@@ -141,7 +141,7 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 		JSONArray foldersArray = new JSONArray();
 
 		for (Folder groupFolder : groupFolders) {
-			foldersArray.put(DLAppJsonFactory.format(user, groupFolder, DocumentConstants.COLLABORATIVE, withDetails));
+			foldersArray.put(FolderUtilsLocalServiceUtil.format(user, groupFolder, DocumentConstants.COLLABORATIVE, withDetails));
 		}
 
 		return foldersArray;
@@ -151,7 +151,7 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 		JSONArray filesArray = new JSONArray();
 
 		for (FileEntry groupFile : groupFiles) {
-			filesArray.put(DLAppJsonFactory.format(user, groupFile, DocumentConstants.COLLABORATIVE, withDetails));
+			filesArray.put(FileUtilsLocalServiceUtil.format(user, groupFile, DocumentConstants.COLLABORATIVE, withDetails));
 		}
 
 		return filesArray;

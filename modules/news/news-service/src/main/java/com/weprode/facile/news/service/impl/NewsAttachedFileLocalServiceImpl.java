@@ -117,11 +117,7 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
         JSONObject jsonAttachment = new JSONObject();
         try {
             FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(newsAttachedFile.getFileId());
-            jsonAttachment.put(JSONConstants.ID, newsAttachedFile.getFileId());
-            jsonAttachment.put(JSONConstants.NAME, fileEntry.getTitle());
-            jsonAttachment.put(JSONConstants.TYPE, "File");
-            jsonAttachment.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
-            jsonAttachment.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
+            jsonAttachment = FileUtilsLocalServiceUtil.format(null, fileEntry, 0, false);
         } catch (Exception e) {
             logger.error("Error converting attached file ", e);
         }

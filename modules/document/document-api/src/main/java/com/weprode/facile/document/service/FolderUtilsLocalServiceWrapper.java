@@ -67,6 +67,48 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _folderUtilsLocalService.format(userId, folder);
+	}
+
+	@Override
+	public org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder, int space)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _folderUtilsLocalService.format(userId, folder, space);
+	}
+
+	@Override
+	public org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder, int space,
+			boolean withDetails)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _folderUtilsLocalService.format(
+			userId, folder, space, withDetails);
+	}
+
+	@Override
+	public org.json.JSONObject format(
+		com.liferay.portal.kernel.model.User user,
+		com.liferay.portal.kernel.repository.model.Folder folder, int space,
+		boolean withDetails) {
+
+		return _folderUtilsLocalService.format(
+			user, folder, space, withDetails);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getFolderByName(
 			com.liferay.portal.kernel.repository.model.Folder parentFolder,
 			String name)

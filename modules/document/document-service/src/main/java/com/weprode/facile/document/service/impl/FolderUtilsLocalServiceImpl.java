@@ -43,6 +43,8 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.constants.PermissionConstants;
 import com.weprode.facile.document.service.ActivityLocalServiceUtil;
@@ -51,13 +53,23 @@ import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FolderUtilsLocalServiceBaseImpl;
 import com.weprode.facile.document.utils.DLAppUtil;
+import com.weprode.facile.document.utils.DocumentUtil;
+import com.weprode.facile.document.utils.ENTWebDAVUtil;
 import com.weprode.facile.document.utils.FileNameUtil;
 import com.weprode.facile.group.constants.ActivityConstants;
+import com.weprode.facile.group.model.CommunityInfos;
+import com.weprode.facile.group.service.CommunityInfosLocalServiceUtil;
+import com.weprode.facile.organization.constants.OrgConstants;
+import com.weprode.facile.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -569,5 +581,117 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		DLFolder dlFolder = DLFolderLocalServiceUtil.getFolder(folderId);
 		dlFolder.setHidden(true);
 		DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
+	}
+
+	public JSONObject format(long userId, Folder folder) throws PortalException, SystemException {
+		int space = DocumentUtil.getSpace(folder, folder.getUserId());
+		return format(userId, folder, space);
+	}
+
+	public JSONObject format(long userId, Folder folder, int space) throws PortalException, SystemException {
+		return format(userId, folder, space, false);
+	}
+
+	public JSONObject format(long userId, Folder folder, int space, boolean withDetails) throws PortalException, SystemException {
+		User user = UserLocalServiceUtil.getUser(userId);
+		return format(user, folder, space, withDetails);
+	}
+
+	public JSONObject format(User user, Folder folder, int space, boolean withDetails) {
+
+		JSONObject formattedFolder = new JSONObject();
+		addCommonsFields(formattedFolder, folder, user, withDetails);
+
+		if (space == DocumentConstants.COLLABORATIVE) {
+			addGroupFields(formattedFolder, folder, user);
+		}
+
+		return formattedFolder;
+	}
+
+	private void addCommonsFields(JSONObject formattedFolder, Folder folder, User user, boolean withDetails) {
+		formattedFolder.put(JSONConstants.ID, String.valueOf(folder.getFolderId()));
+		formattedFolder.put(JSONConstants.NAME, folder.getName());
+		formattedFolder.put(JSONConstants.TYPE, "Folder");
+		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
+				.format(folder.getModifiedDate()));
+
+		try {
+			if (UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getWebdavActivated()) {
+				formattedFolder.put(JSONConstants.URL_WEBDAV, ENTWebDAVUtil.getWebDavUrl(folder.getGroupId(), folder));
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		// Permissions
+		// Directors and school admins have all rights on institutional groups
+		boolean hasFullPermissions = false;
+		try {
+			Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+			hasFullPermissions = group.isOrganization() && RoleUtilsLocalServiceUtil.isSchoolAdmin(user);
+		} catch (Exception e) {
+			logger.debug(e);
+		}
+
+		final JSONObject permissions = new JSONObject();
+		permissions.put(PermissionConstants.ADD_OBJECT, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT));
+		permissions.put(ActionKeys.DELETE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.DELETE));
+		permissions.put(ActionKeys.PERMISSIONS, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS));
+		formattedFolder.put(JSONConstants.PERMISSIONS, permissions);
+
+		if (withDetails) {
+			try {
+				formattedFolder.put(JSONConstants.SIZE, FolderUtilsLocalServiceUtil.getFolderSize(folder));
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				formattedFolder.put(JSONConstants.SIZE, "error when computing size");
+			}
+			formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(folder.getCreateDate()));
+		}
+	}
+
+
+	private void addGroupFields(JSONObject formattedFolder, Folder folder, User user) {
+		try {
+			Group folderGroup = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+			formattedFolder.put(JSONConstants.GROUP_ID, folderGroup.getGroupId());
+			// TODO: make the groupRootFolder directly have the good name
+			if (folder.getParentFolderId() == 0) { // The group root folder have a specific name that is the name of the group and not the folder.name field.
+				if (folderGroup.isOrganization()) {	// Org groups
+					Organization org = OrganizationLocalServiceUtil.getOrganization(folderGroup.getOrganizationId());
+					boolean withSchoolName = OrgDetailsLocalServiceUtil.hasType(folderGroup.getOrganizationId(), OrgConstants.SCHOOL_TYPE);
+					formattedFolder.put(JSONConstants.NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), withSchoolName));
+					formattedFolder.put(JSONConstants.NB_MEMBERS, UserOrgsLocalServiceUtil.countOrgMembers(org.getOrganizationId()));
+					formattedFolder.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(user, org));
+				} else {	// Personal groups
+					formattedFolder.put(JSONConstants.NAME, folderGroup.getName(user.getLocale()));
+					formattedFolder.put(JSONConstants.NB_MEMBERS, UserLocalServiceUtil.getGroupUsersCount(folderGroup.getGroupId(), WorkflowConstants.STATUS_APPROVED));
+					CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(folderGroup.getGroupId());
+					String color = communityInfos.getColor() != null && !communityInfos.getColor().isEmpty() ? communityInfos.getColor() : "#4353B3";
+					formattedFolder.put(JSONConstants.COLOR, color);
+				}
+				formattedFolder.put(JSONConstants.IS_GROUP_ROOT_FOLDER, true); // those folder is considered as Group on front side (group root folder)
+				final JSONObject permissions = new JSONObject();
+
+				// Directors and school admins have all rights on institutional groups
+				boolean hasFullPermissions = false;
+				try {
+					Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+					hasFullPermissions = group.isOrganization() && RoleUtilsLocalServiceUtil.isSchoolAdmin(user);
+				} catch (Exception e) {
+					logger.debug(e);
+				}
+
+				permissions.put(PermissionConstants.ADD_OBJECT, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT));
+				permissions.put(ActionKeys.UPDATE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.UPDATE));
+				permissions.put(ActionKeys.DELETE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.DELETE));
+				permissions.put(ActionKeys.PERMISSIONS, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS));
+				formattedFolder.put(JSONConstants.PERMISSIONS, permissions);
+			}
+
+		} catch (Exception e) {
+			logger.error(e);
+		}
 	}
 }
