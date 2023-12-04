@@ -162,19 +162,18 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
             try {
                 Folder groupNewsFolder = FolderUtilsLocalServiceUtil.getGroupNewsFolder(groupId);
                 // Check subFolder newsId
-                List<Folder> folderList = DLAppServiceUtil.getFolders(groupId, groupNewsFolder.getFolderId());
-                for (Folder folder : folderList) {
-                    if (folder.getName().equals(String.valueOf(newsId))) {
-                        logger.info("About to delete folder news for groupId " + groupId + " and newsId " + newsId);
-                        // Delete existing attached files
-                        List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, folder.getFolderId());
-                        for (FileEntry fileEntry : fileList) {
-                            logger.info("Deleting existing attached file " + fileEntry.getTitle());
-                            DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
-                        }
-                        logger.info("Deleting folder " + folder.getFolderId());
-                        DLAppServiceUtil.deleteFolder(folder.getFolderId());
+                Folder folder = DLAppServiceUtil.getFolder(groupId, groupNewsFolder.getFolderId(), String.valueOf(newsId));
+                if (folder != null) {
+                    logger.info("About to delete folder news for groupId " + groupId + " and newsId " + newsId);
+                    // Delete existing attached files
+                    List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, folder.getFolderId());
+                    for (FileEntry fileEntry : fileList) {
+                        logger.info("Deleting existing attached file " + fileEntry.getTitle());
+                        DLAppLocalServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
                     }
+                    logger.info("Deleting folder " + folder.getFolderId());
+                    DLAppServiceUtil.deleteFolder(folder.getFolderId());
+
                 }
 
             } catch (Exception e) {

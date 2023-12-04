@@ -41,6 +41,10 @@ public class MaintenanceServiceUtil {
 		return getService().cleanupDropboxes();
 	}
 
+	public static org.json.JSONObject deleteFolders(java.io.File file) {
+		return getService().deleteFolders(file);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
