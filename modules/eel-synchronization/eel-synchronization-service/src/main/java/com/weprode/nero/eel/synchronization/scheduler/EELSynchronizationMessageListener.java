@@ -70,7 +70,7 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
 
             logger.info("Scheduled user purge starting ...");
             try {
-                UserUtilsLocalServiceUtil.purgeExpiredUsers();
+                //UserUtilsLocalServiceUtil.purgeExpiredUsers();
             } catch (Exception e) {
                 logger.error("Error running user purge", e);
             }

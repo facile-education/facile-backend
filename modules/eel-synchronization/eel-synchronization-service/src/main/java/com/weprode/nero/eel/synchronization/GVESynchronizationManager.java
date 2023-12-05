@@ -437,7 +437,7 @@ public class GVESynchronizationManager {
         // Delete obsolete classes
         for (Organization toRemoveOrg : existingClasses) {
             if (!newClassOrgIds.contains(toRemoveOrg.getOrganizationId())) {
-                logger.info("Deleting obsolete class " + toRemoveOrg.getName() + " for school " + school.getName());
+                logger.info("Should delete obsolete class " + toRemoveOrg.getName() + " for school " + school.getName() + " but not doing it for now");
                 try {
                     // Comment this because dangerous (to be run after a real sync to have an idea of the number of obsolete organizations)
 //                     Check if it has members
