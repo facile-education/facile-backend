@@ -1,5 +1,6 @@
 package com.weprode.nero.document.filter;
 
+import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -60,14 +61,19 @@ public class DocumentFilter extends BaseFilter {
             permissionChecker = PermissionCheckerFactoryUtil.create(user);
             PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
-            if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)) {
-                logger.info("Denying " + user.getFullName() + " to access (folder access) document URI " + httpServletRequest.getRequestURI());
-                // Should be HttpServletResponse.SC_FORBIDDEN but liferay's sending 403 when session is ended so we need to differentiate it
-                PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
-            } else if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, DLAppServiceUtil.getFolder(folderId), ActionKeys.VIEW)
-                    && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, DLAppServiceUtil.getFileEntry(groupId, folderId, title), ActionKeys.VIEW)) {
-                // Check File OR folder permission because old files do not have the VIEW perm for all users
-                logger.info("Denying " + user.getFullName() + " to access document (view permission) with URI " + httpServletRequest.getRequestURI());
+            try {
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)) {
+                    logger.info("Denying " + user.getFullName() + " to access (folder access) document URI " + httpServletRequest.getRequestURI());
+                    // Should be HttpServletResponse.SC_FORBIDDEN but liferay's sending 403 when session is ended so we need to differentiate it
+                    PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
+                } else if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, DLAppServiceUtil.getFolder(folderId), ActionKeys.VIEW)
+                        && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, DLAppServiceUtil.getFileEntry(groupId, folderId, title), ActionKeys.VIEW)) {
+                    // Check File OR folder permission because old files do not have the VIEW perm for all users
+                    logger.info("Denying " + user.getFullName() + " to access document (view permission) with URI " + httpServletRequest.getRequestURI());
+                    PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
+                }
+            } catch (NoSuchFileEntryException e) {
+                logger.error("File " + title + " not found in folder " + folderId + ", or more certainly permission issue for user " + user.getFullName() + ", " + e.getMessage());
                 PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
             }
         } else {
