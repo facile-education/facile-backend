@@ -100,4 +100,4 @@ cypress-e2e:
   artifacts:
     expire_in: 1 week
     paths:
-      - tests/e2e/screenshots/
+      - ~/front/tests/e2e/screenshots/
