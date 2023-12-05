@@ -146,6 +146,12 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
     public void deleteByNewsId(long newsId) throws SystemException {
         logger.info("Deleting attached files for news " + newsId);
 
+        // Return if no attached file
+        if (newsAttachedFilePersistence.findBynewsId(newsId).isEmpty()) {
+            logger.info("No attached file to delete");
+            return;
+        }
+
         // Delete files
         List<NewsPopulation> populations = newsPopulationPersistence.findBynewsId(newsId);
 
@@ -177,7 +183,7 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
                 }
 
             } catch (Exception e) {
-                logger.error("Error adding attached files for newsId " + newsId + " and groupId " + groupId, e);
+                logger.error("Error deleting attached files for newsId " + newsId + " and groupId " + groupId, e);
             }
         }
 
