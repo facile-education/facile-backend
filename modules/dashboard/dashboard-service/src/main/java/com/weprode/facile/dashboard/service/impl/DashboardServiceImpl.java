@@ -111,6 +111,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
 
             // All personals can add group news because they have communities
             boolean canAddGroupNews = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user);
+            // TODO: Chek if user broadast polupations list is not empty to prevent open an unfillable modal
             result.put(JSONConstants.CAN_ADD_GROUP_NEWS, canAddGroupNews);
             result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate  || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
             result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
