@@ -687,4 +687,26 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         }
         return attachedFilesFolder;
     }
+
+    public List<Long> filterRecipientList(User sender, List<Long> recipientIds) {
+
+//        JSONArray jsonArray = ContactCompletionLocalServiceUtil.getCompletionResultAsJSON("", sender, false).getJSONArray(JSONConstants.RESULTS);
+//        List<Long> filteredList = new ArrayList<>();
+//        for (Long recipientId : recipientIds) {
+//            boolean isAuthorized = false;
+//            for (int idx = 0 ; idx < jsonArray.length() ; idx++) {
+//                JSONObject jsonUser = jsonArray.getJSONObject(idx);
+//                isAuthorized = jsonUser.getLong(JSONConstants.USER_ID) == recipientId;
+//                if (isAuthorized) {
+//                    break;
+//                }
+//            }
+//            if (isAuthorized) {
+//                filteredList.add(recipientId);
+//            } else {
+//                logger.error("ERROR INCORRECT RECIPIENT : user " + sender.getFullName() + " is trying to send message to " + recipientId + " but has no permission");
+//            }
+//        }
+        return recipientIds;
+    }
 }

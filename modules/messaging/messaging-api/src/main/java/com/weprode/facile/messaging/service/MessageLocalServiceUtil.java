@@ -265,6 +265,12 @@ public class MessageLocalServiceUtil {
 		return getService().fetchMessage(messageId);
 	}
 
+	public static List<Long> filterRecipientList(
+		com.liferay.portal.kernel.model.User sender, List<Long> recipientIds) {
+
+		return getService().filterRecipientList(sender, recipientIds);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
