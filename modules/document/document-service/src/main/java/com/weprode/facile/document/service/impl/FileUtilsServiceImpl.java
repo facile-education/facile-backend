@@ -517,6 +517,8 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 				versionId = fileEntry.getLatestFileVersion().getFileVersionId();
 			}
 
+			result.put(JSONConstants.FILE_NAME, fileEntry.getFileName());
+
 			boolean isReadOnly = readOnly
 					|| versionId != fileEntry.getLatestFileVersion().getFileVersionId()   // read only if there is not the latest version
 					|| (FileUtilsLocalServiceUtil.isGroupFile(fileId) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)); // Or if group file without UPDATE permission
