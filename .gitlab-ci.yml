@@ -55,7 +55,7 @@ cypress-e2e:
     - rm -Rf ~/front || true
   script:
     - mkdir ~/front
-    - git clone --branch ${CI_COMMIT_BRANCH} https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.weprode.com/nero/nero-vue.git ~/front
+    - git clone --branch ${CI_COMMIT_BRANCH} --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.weprode.com/nero/nero-vue.git ~/front
     # Filling front / Cypress environment file
     - echo "DOCKER_NAME=${DB_DOCKER_NAME}" >> ~/front/.env.local
     - echo "DB_USER=root" >> ~/front/.env.local
@@ -97,3 +97,7 @@ cypress-e2e:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: always
     - when: manual
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - tests/e2e/screenshots/
