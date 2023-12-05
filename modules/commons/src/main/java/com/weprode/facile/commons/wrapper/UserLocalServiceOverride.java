@@ -57,6 +57,7 @@ import com.weprode.facile.messaging.model.Message;
 import com.weprode.facile.messaging.model.MessageFolder;
 import com.weprode.facile.messaging.service.MessageFolderLocalServiceUtil;
 import com.weprode.facile.messaging.service.MessageLocalServiceUtil;
+import com.weprode.facile.messaging.service.MessagingConfigLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
@@ -331,6 +332,13 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			logger.error("Failed to delete user contact infos");
 		}
 
+		try {
+			logger.info("Clean up messaging config ...");
+			MessagingConfigLocalServiceUtil.deleteMessagingConfig(userId);
+		} catch (Exception e) {
+			logger.error("Failed to delete messaging config");
+		}
+
 		printUserReport(userId);
 	}
 
@@ -373,8 +381,9 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 				} catch (Exception e) {
 					logger.info("Error : could not get all messages by folderId "+folder.getFolderId());
 				}
+				MessageFolderLocalServiceUtil.deleteMessageFolder(folder.getFolderId());
 			}
-		} catch (SystemException e) {
+		} catch (Exception e) {
 			logger.error("Error cleaning internal messages for user " + userId, e);
 		}
 	}
