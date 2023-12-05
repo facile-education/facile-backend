@@ -29,6 +29,7 @@ sonarqube-check:
 cypress-e2e:
   stage: test
   variables:
+    NODE_VERSION: "16-alpine"
     HTTPD_VERSION: "2.4-alpine"
     MARIADB_VERSION: "10.6"
     MARIADB_PATH: "/var/lib/mysql"
@@ -41,6 +42,7 @@ cypress-e2e:
     LFR_VERSION: "7.4.3.97-ga97"
     LFR_JAVA_VERSION: "zulu11"
     DB_DOCKER_NAME: "docker-mariadb-1"
+    CYPRESS_DOCKER_VERSION: "2.0.0"
   needs:
     - module-compilation # Needs previous job artifacts 
     - project: nero/nero-vue # Needs front job artifacts
@@ -64,7 +66,7 @@ cypress-e2e:
     # Change group to avoid permission issues (GID 1000)
     - chmod g+w -R ~/front/ && chgrp debian -R ~/front/
     # Needed for cypress to run (dayjs dependencies)
-    - docker run --name node -v ~/front:/usr/src/app -w /usr/src/app node:16-alpine npm install --progress=false --omit=dev
+    - docker run --name node -v ~/front:/usr/src/app -w /usr/src/app node:${NODE_VERSION} npm install --progress=false --omit=dev
     - cd others/docker/
     # Filling docker-compose environment file
     - echo "HTTPD_VERSION=${HTTPD_VERSION}" >> .env
@@ -89,7 +91,7 @@ cypress-e2e:
     - docker compose up --detach --wait
     # Add network for cypress to see facile environment
     - docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 cypressnet 
-    - docker run --name cypress -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:1.0.0 cypress run --config baseUrl=https://dev-ent-gve.com
+    - docker run --name cypress -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:${CYPRESS_DOCKER_VERSION} cypress run --config baseUrl=https://dev-ent-gve.com
   tags:
     - cypress
     - e2e
