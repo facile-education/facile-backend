@@ -88,8 +88,10 @@ public class DocumentFilter extends BaseFilter {
                     logger.info("Denying " + user.getFullName() + " to access document (view permission) with URI " + httpServletRequest.getRequestURI());
                     PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
                 }
-            } catch (Exception exp) {
-                // Nothing
+            } catch (Exception e) {
+                logger.error("Error accessing a file, certainly permission issue for user " + user.getFullName() + " and URI " + httpServletRequest.getRequestURI() + ", " + e.getMessage());
+                PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
+                return;
             }
         } else {
             PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);

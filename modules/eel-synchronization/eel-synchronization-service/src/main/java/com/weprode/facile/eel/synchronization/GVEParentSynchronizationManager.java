@@ -883,7 +883,11 @@ public class GVEParentSynchronizationManager {
 
             // Skip archive and junk directory
             while (processedFile.getAbsolutePath().endsWith(ARCHIVE_DIR) || processedFile.getAbsolutePath().endsWith(JUNK_DIR)) {
-                processedFile = fileList[++index];
+                try {
+                    processedFile = fileList[++index];
+                } catch (Exception e) {
+                    // Nothing
+                }
             }
 
             String processedUai = extractUaiFromFileName(processedFile.getName());
