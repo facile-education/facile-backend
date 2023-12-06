@@ -101,6 +101,7 @@ cypress-e2e:
     - when: manual
       allow_failure: true
   artifacts:
+    when: on_failure
     expire_in: 1 week
     paths:
       - ~/front/tests/e2e/screenshots/
