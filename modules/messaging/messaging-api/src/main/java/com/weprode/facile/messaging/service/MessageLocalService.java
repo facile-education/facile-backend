@@ -233,7 +233,8 @@ public interface MessageLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Message fetchMessage(long messageId);
 
-	public List<Long> filterRecipientList(User sender, List<Long> recipientIds);
+	public List<Long> filterRecipientList(
+		User sender, List<Long> recipientIds, long originMessageId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

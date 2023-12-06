@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
+import com.weprode.facile.contact.service.ContactCompletionLocalServiceUtil;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.messaging.constants.MessagingConstants;
@@ -55,6 +56,7 @@ import com.weprode.facile.messaging.service.base.MessageLocalServiceBaseImpl;
 import com.weprode.facile.messaging.utils.MessagingUtil;
 import com.weprode.facile.messaging.utils.ThreadSendMessage;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -688,25 +690,39 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         return attachedFilesFolder;
     }
 
-    public List<Long> filterRecipientList(User sender, List<Long> recipientIds) {
+    // Check that the given recipient list is authorized for the sender
+    public List<Long> filterRecipientList(User sender, List<Long> recipientIds, long originMessageId) {
 
-//        JSONArray jsonArray = ContactCompletionLocalServiceUtil.getCompletionResultAsJSON("", sender, false).getJSONArray(JSONConstants.RESULTS);
-//        List<Long> filteredList = new ArrayList<>();
-//        for (Long recipientId : recipientIds) {
-//            boolean isAuthorized = false;
-//            for (int idx = 0 ; idx < jsonArray.length() ; idx++) {
-//                JSONObject jsonUser = jsonArray.getJSONObject(idx);
-//                isAuthorized = jsonUser.getLong(JSONConstants.USER_ID) == recipientId;
-//                if (isAuthorized) {
-//                    break;
-//                }
-//            }
-//            if (isAuthorized) {
-//                filteredList.add(recipientId);
-//            } else {
-//                logger.error("ERROR INCORRECT RECIPIENT : user " + sender.getFullName() + " is trying to send message to " + recipientId + " but has no permission");
-//            }
-//        }
+        JSONArray jsonArray = ContactCompletionLocalServiceUtil.getCompletionResultAsJSON("", sender, false).getJSONArray(JSONConstants.RESULTS);
+        List<Long> originRecipientIds = new ArrayList<>();
+        if (originMessageId != 0) {
+            try {
+                String originRecipients = MessageRecipientsLocalServiceUtil.getMessageRecipients(originMessageId).getRecipients();
+                String[] originRecipientsTab = originRecipients.split(",");
+                for (String s : originRecipientsTab) {
+                    originRecipientIds.add(Long.parseLong(s));
+                }
+            } catch (Exception e) {
+                logger.error("Error fetching origin recipients when filtering recipients for user " + sender.getFullName());
+            }
+        }
+        //List<Long> filteredList = new ArrayList<>();
+        for (Long recipientId : recipientIds) {
+            boolean isAuthorized = originRecipientIds.contains(recipientId);
+            if (!originRecipientIds.contains(recipientId)) {
+                for (int idx = 0 ; idx < jsonArray.length() ; idx++) {
+                    JSONObject jsonUser = jsonArray.getJSONObject(idx);
+                    isAuthorized = jsonUser.getLong(JSONConstants.USER_ID) == recipientId;
+                    if (isAuthorized) {
+                        break;
+                    }
+                }
+            }
+            if (!isAuthorized) {
+                logger.error("ERROR INCORRECT RECIPIENT : user " + sender.getFullName() + " is trying to send message to " + recipientId + " but has no permission");
+            }
+        }
+        // For now return the original list, we just log
         return recipientIds;
     }
 }

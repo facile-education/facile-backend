@@ -299,9 +299,10 @@ public class MessageLocalServiceWrapper
 	@Override
 	public java.util.List<Long> filterRecipientList(
 		com.liferay.portal.kernel.model.User sender,
-		java.util.List<Long> recipientIds) {
+		java.util.List<Long> recipientIds, long originMessageId) {
 
-		return _messageLocalService.filterRecipientList(sender, recipientIds);
+		return _messageLocalService.filterRecipientList(
+			sender, recipientIds, originMessageId);
 	}
 
 	@Override
