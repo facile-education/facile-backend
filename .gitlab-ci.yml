@@ -42,7 +42,7 @@ cypress-e2e:
     LFR_VERSION: "7.4.3.97-ga97"
     LFR_JAVA_VERSION: "zulu11"
     DB_DOCKER_NAME: "docker-mariadb-1"
-    CYPRESS_DOCKER_VERSION: "2.0.0"
+    CYPRESS_DOCKER_VERSION: "1.0.0"
   needs:
     - module-compilation # Needs previous job artifacts 
     - project: nero/nero-vue # Needs front job artifacts
