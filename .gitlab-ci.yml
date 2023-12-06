@@ -99,6 +99,7 @@ cypress-e2e:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: always
     - when: manual
+      allow_failure: true
   artifacts:
     expire_in: 1 week
     paths:
