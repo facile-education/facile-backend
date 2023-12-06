@@ -75,6 +75,7 @@ public class DocumentFilter extends BaseFilter {
             } catch (NoSuchFileEntryException e) {
                 logger.error("File " + title + " not found in folder " + folderId + ", or more certainly permission issue for user " + user.getFullName() + ", " + e.getMessage());
                 PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
+                return;
             }
         } else {
             logger.info("UserId is 0 or default user");
