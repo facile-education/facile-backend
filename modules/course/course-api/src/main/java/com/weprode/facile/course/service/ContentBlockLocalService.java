@@ -275,6 +275,9 @@ public interface ContentBlockLocalService
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isEmbedUrlWhitelisted(String url);
+
 	public ContentBlock updateBlock(
 			long blockId, String blockName, String blockValue, int order)
 		throws SystemException, UnauthorizedUrlException;

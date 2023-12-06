@@ -63,13 +63,6 @@ public class DocumentUtilsServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject isEmbedUrlWhitelisted(String url)
-		throws com.liferay.portal.kernel.exception.SystemException {
-
-		return _documentUtilsService.isEmbedUrlWhitelisted(url);
-	}
-
-	@Override
 	public DocumentUtilsService getWrappedService() {
 		return _documentUtilsService;
 	}

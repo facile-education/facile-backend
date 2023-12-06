@@ -312,6 +312,10 @@ public class ContentBlockLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	public static boolean isEmbedUrlWhitelisted(String url) {
+		return getService().isEmbedUrlWhitelisted(url);
+	}
+
 	public static ContentBlock updateBlock(
 			long blockId, String blockName, String blockValue, int order)
 		throws com.weprode.facile.course.exception.UnauthorizedUrlException,

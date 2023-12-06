@@ -100,16 +100,6 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "is-embed-url-whitelisted", method = "GET")
-	public JSONObject isEmbedUrlWhitelisted(String url) throws SystemException {
-		JSONObject result = new JSONObject();
-
-		result.put(JSONConstants.IS_ALLOWED, DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(url));
-		result.put(JSONConstants.SUCCESS, true);
-
-		return result;
-	}
-
 	@JSONWebService(value = "get-document-group-activity", method = "GET")
 	public JSONObject getDocumentGroupActivity(long groupId, String maxDate, int nbResults) {
 		JSONObject result = new JSONObject();

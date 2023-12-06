@@ -267,4 +267,14 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 		return result;
 	}
 
+	@JSONWebService(value = "is-embed-url-whitelisted", method = "GET")
+	public JSONObject isEmbedUrlWhitelisted(String url) {
+		JSONObject result = new JSONObject();
+
+		result.put(JSONConstants.IS_ALLOWED, ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(url));
+		result.put(JSONConstants.SUCCESS, true);
+
+		return result;
+	}
+
 }

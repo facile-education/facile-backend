@@ -67,8 +67,4 @@ public interface DocumentUtilsService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "is-embed-url-whitelisted")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject isEmbedUrlWhitelisted(String url) throws SystemException;
-
 }

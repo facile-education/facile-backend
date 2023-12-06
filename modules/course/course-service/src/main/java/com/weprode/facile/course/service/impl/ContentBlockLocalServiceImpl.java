@@ -24,9 +24,12 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.facile.commons.properties.NeroSystemProperties;
 import com.weprode.facile.course.CourseConstants;
 import com.weprode.facile.course.exception.UnauthorizedUrlException;
 import com.weprode.facile.course.model.ContentBlock;
+import com.weprode.facile.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.facile.course.service.CourseLocalServiceUtil;
 import com.weprode.facile.course.service.HomeworkLocalServiceUtil;
 import com.weprode.facile.course.service.SessionContentLocalServiceUtil;
@@ -90,7 +93,7 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 				break;
 			case CourseConstants.TYPE_VIDEO:
 			case CourseConstants.TYPE_H5P:
-				if (DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
+				if (ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
 					block.setBlockValue(blockValue);
 				} else {
 					throw new UnauthorizedUrlException("Url " + blockValue + " is not whiteListed for an embed content");
@@ -112,7 +115,7 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 
 		// Content Value (url check on embed contents)
 		if (block.getBlockType() == CourseConstants.TYPE_VIDEO || block.getBlockType() == CourseConstants.TYPE_H5P) {
-			if (DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
+			if (ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
 				block.setBlockValue(blockValue);
 			} else {
 				throw new UnauthorizedUrlException("Url " + blockValue + " is not whiteListed as an authorized embed content");
@@ -277,6 +280,18 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		}
 
 		return htmlBlock;
+	}
+
+	public boolean isEmbedUrlWhitelisted (String url) {
+		List<String> domainWhitelist = List.of(
+				PropsUtil.get(NeroSystemProperties.XSS_IFRAME_WHITELIST).split(","));
+
+		for (String domain : domainWhitelist) {
+			if (url.matches("^"+domain+".*$")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

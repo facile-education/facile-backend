@@ -46,6 +46,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
+import com.weprode.facile.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.constants.GeogebraConstants;
 import com.weprode.facile.document.constants.LoolConstants;
@@ -506,7 +507,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		// Check if iframe URL is in whitelist
 		Elements iframes = doc.select(iframeTag);
 		for (Element iframe : iframes) {
-			if (!DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(iframe.attr("src"))) {
+			if (!ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(iframe.attr("src"))) {
 				iframe.remove();
 			}
 		}
