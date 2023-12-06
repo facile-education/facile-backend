@@ -651,13 +651,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getCreateDate()));
 			formattedFile.put(JSONConstants.CREATOR, fileEntry.getUserName());
 			formattedFile.put(JSONConstants.VERSION, fileEntry.getVersion());
-			try {
-				if (UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getWebdavActivated()) {
-					formattedFile.put(JSONConstants.URL_WEBDAV, ENTWebDAVUtil.getWebDavUrl(fileEntry.getGroupId(), fileEntry));
-				}
-			} catch (Exception e) {
-				logger.error(e);
-			}
 		}
 	}
 
