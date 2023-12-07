@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
@@ -52,6 +53,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -59,6 +61,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isPersonal(user) &&
 				!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) &&
 				!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets main roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -89,6 +92,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -96,6 +100,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
 				!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets local roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -128,12 +133,14 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets broadcast roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

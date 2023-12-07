@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.messaging.constants.MessagingConstants;
@@ -60,6 +61,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -69,7 +71,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             if (parentFolderId != 0) {
                 MessageFolder parentFolder = MessageFolderLocalServiceUtil.getMessageFolder(parentFolderId);
                 if (parentFolder.getUserId() != user.getUserId()) {
-                    logger.error("User " + user.getFullName() + " tries to add folder into folderId " + parentFolderId + " but he does not own it");
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds folder into folder " + parentFolderId);
                     return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
                 }
             }
@@ -101,6 +103,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -178,6 +181,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -186,7 +190,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             // Check ownership
             MessageFolder folder = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
             if (user.getUserId() != folder.getUserId()) {
-                logger.error("User " + user.getFullName() + " tries to rename folderId " + folderId + " but he does not own it");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " renames folder" + folderId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             folder.setFolderName(newLabel);
@@ -215,6 +219,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -223,12 +228,12 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             // Check ownership
             MessageFolder folderToDelete = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
             if (folderToDelete.getUserId() != user.getUserId()) {
-                logger.error("User " + user.getFullName() + " tries to delete folderId " + folderId + " but he does not own it");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes folder" + folderId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
             if (folderToDelete.getType() != MessagingConstants.PERSONAL_FOLDER_TYPE) {
-                logger.error("User " + user.getFullName() + " is trying to delete one of the 4 mandatory messaging folders -> skipping");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes folder" + folderId);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
             }

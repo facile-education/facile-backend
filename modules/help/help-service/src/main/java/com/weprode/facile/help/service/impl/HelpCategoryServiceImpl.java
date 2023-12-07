@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.help.service.HelpCategoryLocalServiceUtil;
@@ -45,7 +46,6 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
 
     @JSONWebService(value = "get-help-menu", method = "GET")
     public JSONObject getHelpMenu(String search) {
-        logger.info("Getting help menu with search = " + search);
         JSONObject result = new JSONObject();
 
         User user;
@@ -54,6 +54,7 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -71,7 +72,6 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
 
     @JSONWebService(value = "save-category", method = "POST")
     public JSONObject saveHelpCategory(String categoryName, long serviceId) {
-        logger.info("Updating category with name = " + categoryName);
         JSONObject result = new JSONObject();
 
         User user;
@@ -80,10 +80,12 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves help category");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -102,7 +104,6 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
 
     @JSONWebService(value = "delete-category", method = "GET")
     public JSONObject deleteCategory(long categoryId) {
-        logger.info("Deleting category with id = " + categoryId);
         JSONObject result = new JSONObject();
 
         User user;
@@ -111,10 +112,12 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes category");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

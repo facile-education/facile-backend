@@ -21,6 +21,7 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import org.json.JSONArray;
 
@@ -60,6 +61,7 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -75,7 +77,7 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 			for (long folderId : folderIds) {
 				try {
 					if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-						logger.info("User " + user.getFullName() + " tries to delete folder " + folderId + " but has no permission");
+						logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes folder " + folderId);
 						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 					}
 					FolderUtilsLocalServiceUtil.deleteFolder(user.getUserId(), folderId);
@@ -90,7 +92,7 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 				try {
 					FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntityId);
 					if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-						logger.info("User " + user.getFullName() + " tries to delete file " + fileEntityId + " but has no permission");
+						logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes file " + fileEntityId);
 						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 					}
 					FileUtilsLocalServiceUtil.deleteFile(user.getUserId(), fileEntityId);

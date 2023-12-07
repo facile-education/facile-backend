@@ -49,7 +49,7 @@ public class LogFilter extends BaseFilter {
         String query = request.getQueryString();
         ThreadContext.clearAll();
         ThreadContext.put("userId", user.getFullName());
-        log.info("API " + uri + " with params " + (query == null ? "null" : query));
+        log.info("API " + uri.replace("/api/jsonws", "") + " with params " + (query == null ? "null" : query));
         super.processFilter(request, response, filterChain);
     }
 

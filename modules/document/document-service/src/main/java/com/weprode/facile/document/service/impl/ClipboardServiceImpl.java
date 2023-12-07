@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
@@ -54,6 +55,7 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -61,12 +63,12 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 		try {
 			long userId = getGuestOrUserId();
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
-				logger.info("User " + user.getFullName() + " tries to copy files and/or folders to directory " + targetFolderId + " but has no permission");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " copies files and/or folder to directory " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			Folder targetFolder = DLAppServiceUtil.getFolder(targetFolderId);
 			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), targetFolder, ActionKeys.ADD_DOCUMENT)) {
-				logger.info("User " + user.getFullName() + " tries to copy files and/or folders to directory " + targetFolderId + " but has no permission");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " copies files and/or folder to directory " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -88,18 +90,19 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
 			long userId = getGuestOrUserId();
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
-				logger.info("User " + user.getFullName() + " tries to move files and/or folders to directory " + targetFolderId + " but has no permission");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves files and/or folder to directory " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			Folder targetFolder = DLAppServiceUtil.getFolder(targetFolderId);
 			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), targetFolder, ActionKeys.ADD_DOCUMENT)) {
-				logger.info("User " + user.getFullName() + " tries to move files and/or folders to directory " + targetFolderId + " but has no permission");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves files and/or folder to directory " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 

@@ -16,7 +16,6 @@ package com.weprode.facile.authentication.model.impl;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
@@ -53,7 +52,6 @@ import java.util.function.Function;
  * @see LoginLockImpl
  * @generated
  */
-@JSON(strict = true)
 public class LoginLockModelImpl
 	extends BaseModelImpl<LoginLock> implements LoginLockModel {
 
@@ -234,7 +232,6 @@ public class LoginLockModelImpl
 			(Map)attributeSetterBiConsumers);
 	}
 
-	@JSON
 	@Override
 	public String getLogin() {
 		if (_login == null) {
@@ -254,7 +251,6 @@ public class LoginLockModelImpl
 		_login = login;
 	}
 
-	@JSON
 	@Override
 	public int getFailedLoginAttempts() {
 		return _failedLoginAttempts;
@@ -269,13 +265,11 @@ public class LoginLockModelImpl
 		_failedLoginAttempts = failedLoginAttempts;
 	}
 
-	@JSON
 	@Override
 	public boolean getIsLocked() {
 		return _isLocked;
 	}
 
-	@JSON
 	@Override
 	public boolean isIsLocked() {
 		return _isLocked;
@@ -290,7 +284,6 @@ public class LoginLockModelImpl
 		_isLocked = isLocked;
 	}
 
-	@JSON
 	@Override
 	public Date getLockEndDate() {
 		return _lockEndDate;

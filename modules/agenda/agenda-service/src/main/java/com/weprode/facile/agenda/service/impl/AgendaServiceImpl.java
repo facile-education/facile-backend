@@ -26,6 +26,7 @@ import com.weprode.facile.agenda.model.Event;
 import com.weprode.facile.agenda.service.EventLocalServiceUtil;
 import com.weprode.facile.agenda.service.EventReadLocalServiceUtil;
 import com.weprode.facile.agenda.service.base.AgendaServiceBaseImpl;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
@@ -60,6 +61,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -104,21 +106,19 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
             // Check if the user can read the event
-            if (EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
-                logger.info("User " + user.getFullName() + " fetches details for event " + eventId);
-                result = EventLocalServiceUtil.convertEventToJson(user.getUserId(), eventId, true);
-                result.put(JSONConstants.SUCCESS, true);
-            } else {
-                result.put(JSONConstants.SUCCESS, false);
-                logger.error("User tries to read eventId " + eventId + " but does not have the permission to do it");
-                return result;
+            if (!EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " read eventId " + eventId);
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
+            result = EventLocalServiceUtil.convertEventToJson(user.getUserId(), eventId, true);
+            result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             logger.error("Error while fetching groups activity for user " + user.getUserId(), e);
             result.put(JSONConstants.SUCCESS, false);
@@ -137,12 +137,13 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.info("User " + user.getFullName() + " tries to create an event but has no permission");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates an event");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -178,6 +179,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -186,11 +188,10 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             // Only the event's creator or a direction member or a delegate is allowed to modify it
             Event event = EventLocalServiceUtil.getEvent(eventId);
             if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-                logger.error("User " + user.getFullName() + " tries to edit event " + eventId + " but has no permission");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " modifies an event");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
-            logger.info("User " + user.getFullName() + " edits event " + eventId);
             DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
             Date start = df.parse(startDate);
             Date end = df.parse(endDate);
@@ -222,22 +223,22 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
             // Only the event's creator is allowed to delete it
             Event event = EventLocalServiceUtil.getEvent(eventId);
             if (event.getAuthorId() != user.getUserId()) {
-                logger.error("User " + user.getFullName() + " tries to delete event " + eventId + " but has no permission");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes an event");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
-            logger.info("User " + user.getFullName() + " deletes event " + eventId);
             EventLocalServiceUtil.deleteEventWithDependencies(eventId);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
@@ -255,26 +256,24 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
-            logger.error(e);
-            result.put(JSONConstants.ERROR, JSONConstants.AUTH_EXCEPTION);
-            result.put(JSONConstants.SUCCESS, false);
-            return result;
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
             // Check if the user can read the event
-            if (EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
-                logger.info("User " + user.getFullName() + " marks event " + eventId + " as " + (read ? "read" : "unread"));
-                if (read) {
-                    result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsRead(user.getUserId(), eventId));
-                } else  {
-                    result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsUnRead(user.getUserId(), eventId));
-                }
-            } else {
-                result.put(JSONConstants.SUCCESS, false);
-                logger.error("User tries to mark eventId " + eventId + " as read but does not have the permission to do it");
-                return result;
+            if (!EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " marks an event as read");
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+            }
+            if (read) {
+                result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsRead(user.getUserId(), eventId));
+            } else  {
+                result.put(JSONConstants.SUCCESS, EventReadLocalServiceUtil.markEventAsUnRead(user.getUserId(), eventId));
             }
         } catch (Exception e) {
             logger.error("Error while setting event " + eventId + " as read/unread", e);

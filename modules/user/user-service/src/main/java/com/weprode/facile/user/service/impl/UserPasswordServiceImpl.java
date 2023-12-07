@@ -19,6 +19,7 @@ import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -50,8 +51,7 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
 
     @JSONWebService(value = "send-password-reset-link", method = "POST")
     public JSONObject sendPasswordResetLink(String email) throws SystemException {
-        logger.info("Start sendPasswordResetLink for email="+email);
-        
+
         JSONObject result = new JSONObject();
 
         User user;
@@ -60,10 +60,12 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
+            logger.info("Start sendPasswordResetLink for email="+email);
             User targetUser = UserLocalServiceUtil.getUserByEmailAddress(PortalUtil.getDefaultCompanyId(), email);
             ServiceContext serviceContext = new ServiceContext();
             serviceContext.setPortalURL(PropsUtil.get(NeroSystemProperties.PORTAL_URL));
@@ -82,8 +84,7 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
 
     @JSONWebService(value = "send-screenname", method = "POST")
     public JSONObject sendScreenname(String email) throws SystemException {
-        logger.info("Start sendScreenname for email="+email);
-        
+
         JSONObject result = new JSONObject();
         User user;
         try {
@@ -91,10 +92,12 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
+            logger.info("Start sendScreenname for email="+email);
             User targetUser = UserLocalServiceUtil.getUserByEmailAddress(PortalUtil.getDefaultCompanyId(), email);
 
             String subject = "Envoi d'identifiant ENT";

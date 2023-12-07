@@ -615,7 +615,7 @@ public class JSONConstants {
     public static final String ERROR_CODE = "errorCode";
     public static final String AUTH_EXCEPTION = "AUTH_EXCEPTION";
     public static final String NOT_ALLOWED_EXCEPTION = "NOT_ALLOWED_EXCEPTION";
-    public static final String UNAUTHORIZED_URL_EXCEPTION = "UNAUTHORIZED_URL_EXCEPTION";
+    public static final String UNAUTHORIZED_ACCESS_LOG = "[UNAUTHORIZED_ACCESS] ";
 
     public static final String UNKNOWN = "unknown";
     public static final String FILE_SIZE_EXCEPTION = "fileSizeException";

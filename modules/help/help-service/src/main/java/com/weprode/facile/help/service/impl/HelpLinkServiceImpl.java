@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.help.service.HelpLinkLocalServiceUtil;
@@ -44,7 +45,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
 
     @JSONWebService(value = "save-link", method = "POST")
     public JSONObject saveLink(String link) {
-        logger.info("Saving link with content = " + link);
+
         JSONObject result = new JSONObject();
 
         User user;
@@ -53,10 +54,12 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves help link");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -74,7 +77,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
 
     @JSONWebService(value = "delete-link", method = "GET")
     public JSONObject deleteLink(long linkId) {
-        logger.info("Deleting link with id = " + linkId);
+
         JSONObject result = new JSONObject();
 
         User user;
@@ -83,10 +86,12 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes help link");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

@@ -27,10 +27,10 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.facile.application.service.BroadcastLocalServiceUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
-import com.weprode.facile.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.DocumentUtilsServiceBaseImpl;
 import com.weprode.facile.group.model.GroupActivity;
@@ -69,10 +69,10 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.debug("Getting global document properties for user " + user.getUserId());
 
 		// Get or create user Roots folders
 		Folder privateFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(user.getUserId());
@@ -110,14 +110,15 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		// Limited to user's groups and all groups for direction
 		if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets document group activity for group " + groupId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.debug("User " + user.getFullName() +" fetches document activity for groupId " + groupId);
 
 		try {
 			JSONArray jsonActivities = new JSONArray();

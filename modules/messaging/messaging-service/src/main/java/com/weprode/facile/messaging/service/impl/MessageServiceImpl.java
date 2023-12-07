@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.weprode.facile.application.model.Application;
 import com.weprode.facile.application.service.ApplicationLocalServiceUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
@@ -88,6 +89,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -95,7 +97,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         try {
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " tries to fetch threads from folderId " + folderId + ", but he does not own it!");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets threads of folder" + folderId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -124,6 +126,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -132,10 +135,9 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " tries to fetch thread of message " +  messageId + ", but he does not own it!");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets thread of message" + messageId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
-            logger.info("User " + user.getUserId() + " fetches thread from messageId " + messageId);
 
             result.put(JSONConstants.MESSAGE_FOLDER_ID, message.getFolderId()); // To be able to select the correct folder in front
             MessagingThread thread = MessageLocalServiceUtil.getMessagingThread(message.getThreadId());
@@ -159,6 +161,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -166,7 +169,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         try {
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " tries to fetch messages of thread " + threadId + " in folderId " + folderId + ", but he does not own it!");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets messages of thread" + threadId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             logger.info("User " + user.getUserId() + " fetches all messages of threadId " + threadId + " and from folderId " + folderId);
@@ -212,13 +215,14 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " tries to count messages in folderId " + folderId + ", but he does not own it!");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets nb messages");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -234,54 +238,6 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         return result;
     }
 
-    // TODO ?
-    /* @JSONWebService(value = "search-messages", method = "GET")
-    public JSONObject searchMessages(long folderId, String search, int startIndex, int nbResults, boolean unreadOnly) throws PrincipalException {
-        JSONObject result = new JSONObject();
-
-        long user.getUserId() = getGuestOrUserId();
-        result.put(JSONConstants.SUCCESS, false);
-
-        search = IndexerUtil.normalizeStringEscaped(search);
-
-        int endIndex = QueryUtil.ALL_POS;
-        if (nbResults > -1) {
-            endIndex = startIndex + nbResults;
-        }
-        logger.info("User " + user.getUserId() + " searches messages with query " + search + ", in folderId " + folderId);
-
-        if (!search.equals("") && folderId != -1) {
-            try {
-                final String MODIFIED_DATE_FORMATTED = "modifiedDate_sortable";
-
-                User user = UserLocalServiceUtil.getUser(user.getUserId());
-                Hits resultsSearch = MessageLocalServiceUtil.search(user.getCompanyId(), 0, folderId,
-                        user.getUserId(), 0, search, startIndex, endIndex, new Sort[] {new Sort(MODIFIED_DATE_FORMATTED, false)});
-
-                List<Document> docList = resultsSearch.toList();
-                JSONArray jsonMessages = new JSONArray();
-
-                for (Document doc : docList) {
-                    try{
-                        Message message = MessageLocalServiceUtil.getMessage(GetterUtil.getLong(doc.get("entryClassPK")));
-
-                        JSONObject jsonMessage = MessageUtil.convertMessageToJSON(message, false);
-                        jsonMessages.put(jsonMessage);
-
-                    } catch (Exception e){
-                        logger.warn("Error when converting message to json for " + user.getFullName() + " (id = "+ user.getUserId() + ")");
-                    }
-                }
-                result.put(JSONConstants.MESSAGES, jsonMessages);
-
-            } catch (Exception e) {
-                logger.error("Message search failed for user.getUserId() " + user.getUserId() + ", folderId " + folderId + ", search " + search, e);
-            }
-        }
-
-        return result;
-    }*/
-
     /**
      * Get the full recipients list for a message
      */
@@ -295,6 +251,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -303,10 +260,9 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " tries to get recipients of message " + messageId + ", but he does not own it!");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets message recipients");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
-            logger.info("User " + user.getUserId() + " fetches recipients of messageId " + messageId);
             List<User> recipients = MessageRecipientsLocalServiceUtil.getRecipients(messageId);
 
             for (User recipient : recipients) {
@@ -343,6 +299,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -353,10 +310,9 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " tries to get answer infos for message " + messageId + ", but he does not own it!");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets answer and forward infos for message " + messageId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
-            logger.info("User " + user.getUserId() + " fetches answer and forward infos of messageId " + messageId);
 
             JSONArray jsonRecipients = new JSONArray();
             List<Long> addedRecipientIds = new ArrayList<>();
@@ -436,6 +392,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -449,7 +406,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                     // Check ownership
                     Message message = MessageLocalServiceUtil.getMessage(messageId);
                     if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                        logger.error("User " + user.getUserId() + " tries to mark message " + messageId + " as " + (isRead ? "read" : "unread") + ", but he does not own it!");
+                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " sets read status for message " + messageId);
                         continue;
                     }
 
@@ -477,6 +434,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -525,6 +483,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -565,6 +524,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -573,7 +533,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         try {
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error("User " + user.getUserId() + " tries to move messages into folderId " + folderId + ", but he does not own it!");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves messages into folder " + folderId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") " + "moves messages " + messageIds + " to folder " + folderId);
@@ -590,7 +550,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                     Message message = MessageLocalServiceUtil.getMessage(messageId);
                     // Check ownership
                     if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                        logger.error("User " + user.getUserId() + " tries to move message " + message.getMessageId() + " into folderId " + folderId + ", but he does not own it!");
+                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves message " + messageId + " into folder " + folderId);
                         continue;
                     }
                     message.setFolderId(folderId);
@@ -624,6 +584,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -639,7 +600,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                 try {
                     Message messageToDelete = MessageLocalServiceUtil.getMessage(messageId);
                     if (MessageFolderLocalServiceUtil.getMessageFolder(messageToDelete.getFolderId()).getUserId() != user.getUserId()) {
-                        logger.error("User " + user.getUserId() + " tries to delete message " + messageId + ", but he does not own it!");
+                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " delete messages");
                         continue;
                     }
 
@@ -671,6 +632,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -698,6 +660,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }

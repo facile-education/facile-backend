@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.course.exception.NoSuchSessionContentException;
@@ -54,8 +55,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,14 +78,16 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	public JSONObject getUserCourses(long userId) {
 		JSONObject result = new JSONObject();
 
-		User currentUser;
+		User user;
 		User userToFetchCourses;
 		try {
-			currentUser = getGuestOrUser();
-			if (currentUser.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			if (userId != currentUser.getUserId() && !UserRelationshipLocalServiceUtil.isChild(currentUser.getUserId(), userId)) {
+			FacileLogger.registerUser(user);
+			if (userId != user.getUserId() && !UserRelationshipLocalServiceUtil.isChild(user.getUserId(), userId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets courses for user " + userId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -178,7 +179,9 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				throw new AuthException();
 			}
+			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets courses for session " + sessionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -207,6 +210,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				throw new AuthException();
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -214,9 +218,9 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		result.put(JSONConstants.SUCCESS, true);
 		try {
 			if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(courseId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets course content for course " + courseId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getUserId() + " fetches full course content for course " + courseId);
 
 			// Loop over sessions
 			List<CDTSession> courseSessions = CDTSessionLocalServiceUtil.getGroupSessions(courseId, ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate(), ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate(), true);
@@ -295,6 +299,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				throw new AuthException();
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -302,12 +307,9 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		result.put(JSONConstants.SUCCESS, true);
 		try {
 			if (!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets details of session " + sessionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-
-			DateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_FRENCH_FORMAT);
-			CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
-			logger.info("User " + user.getUserId() + " consults details of session " + sessionId + ", from " + sdf.format(session.getStart()) + " to " + sdf.format(session.getEnd()));
 
 			JSONObject jsonSession = new JSONObject();
 
@@ -375,6 +377,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				throw new AuthException();
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -382,6 +385,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		result.put(JSONConstants.SUCCESS, true);
 		try {
 			if (!RoleUtilsLocalServiceUtil.isTeacher(user) || !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(courseId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets students of course " + courseId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -417,21 +421,22 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves private notes for session " + sessionId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
 			if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves private notes for session " + sessionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
 			SessionTeacherLocalServiceUtil.saveNotes(user.getUserId(), sessionId, notes);
-
-			logger.info("Teacher "+user.getFullName()+" (id="+user.getUserId()+") has added private notes to session " + sessionId);
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {

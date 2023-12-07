@@ -26,6 +26,7 @@ import com.weprode.facile.access.AccessConstants;
 import com.weprode.facile.access.service.AccessCategoryLocalServiceUtil;
 import com.weprode.facile.access.service.AccessLocalServiceUtil;
 import com.weprode.facile.access.service.base.AccessServiceBaseImpl;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
@@ -58,9 +59,11 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " get accesses for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -85,13 +88,14 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves category for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -124,13 +128,14 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves access for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -172,13 +177,14 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes access for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -202,13 +208,14 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes category for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -233,18 +240,16 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
-			logger.info("User " + user.getUserId() + " fetches his accesses");
 			result.put("accesses", AccessLocalServiceUtil.getUserAccesses(user));
-
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error fetching accesses for user " + user.getUserId(), e);
@@ -260,13 +265,14 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
+			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " fetches accesses for school " + schoolId + " and role " + roleId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -274,9 +280,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		}
 
 		try {
-			logger.info("User " + user.getUserId() + " fetches his accesses");
 			result.put("accesses", AccessLocalServiceUtil.getRoleAccesses(schoolId, roleId));
-
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error fetching accesses for user " + user.getUserId(), e);

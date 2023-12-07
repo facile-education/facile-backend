@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.help.service.HelpItemLocalServiceUtil;
@@ -44,7 +45,6 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
 
     @JSONWebService(value = "get-help-item", method = "GET")
     public JSONObject getHelpItemDetails(long itemId) {
-        logger.info("Getting item content for id = " + itemId);
         JSONObject result = new JSONObject();
 
         User user;
@@ -53,17 +53,15 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
         try {
             JSONObject jsonHelpItem = HelpUtil.getHelpItemDetails(itemId);
-
-            if (jsonHelpItem != null) {
-                result.put(JSONConstants.HELP_ITEM, jsonHelpItem);
-                result.put(JSONConstants.SUCCESS, true);
-            }
+             result.put(JSONConstants.HELP_ITEM, jsonHelpItem);
+            result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);
         }
@@ -73,7 +71,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
 
     @JSONWebService(value = "save-help-item-position", method = "POST")
     public JSONObject saveHelpItemPosition(long categoryId, String item) {
-        logger.info("Moving item with content = " + item);
+
         JSONObject result = new JSONObject();
 
         User user;
@@ -82,10 +80,12 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves help item position");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -102,7 +102,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
 
     @JSONWebService(value = "save-help-item", method = "POST")
     public JSONObject saveHelpItem (long categoryId, String item) {
-        logger.info("Saving item with content = " + item);
+
         JSONObject result = new JSONObject();
 
         User user;
@@ -111,10 +111,12 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves help item");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -135,7 +137,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
 
     @JSONWebService(value = "delete-item", method = "POST")
     public JSONObject deleteItem(long itemId) {
-        logger.info("Deleting item with id = " + itemId);
+
         JSONObject result = new JSONObject();
 
         User user;
@@ -144,10 +146,12 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
             if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
+            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes help item");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
