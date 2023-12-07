@@ -132,7 +132,6 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
                 JSONObject userSchoolJson = new JSONObject();
                 userSchoolJson.put(JSONConstants.SCHOOL_ID, userSchool.getOrganizationId());
                 userSchoolJson.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
-                userSchoolJson.put(JSONConstants.IS_PREFERED, (userProperties.getPreferedSchoolId() == userSchool.getOrganizationId()));
                 if (RoleUtilsLocalServiceUtil.isSchoolAdmin(user, userSchool.getOrganizationId()) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                     userSchoolJson.put(JSONConstants.IS_ADMIN, true);
                 }
