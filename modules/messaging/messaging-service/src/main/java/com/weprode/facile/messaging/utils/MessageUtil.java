@@ -15,19 +15,13 @@
 
 package com.weprode.facile.messaging.utils;
 
-import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.ResourceConstants;
-import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
-import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
@@ -189,16 +183,6 @@ public class MessageUtil {
 
 				// Create the folder in the user's sending box
 				Folder attachedFilesFolder = MessageLocalServiceUtil.getOrCreateMessageAttachedFilesFolder(userId, messageId);
-
-				// Set VIEW and ADD_DOCUMENT permissions for 'User' role
-				List<Role> roleList = new ArrayList<>();
-				roleList.add(RoleLocalServiceUtil.getRole(attachedFilesFolder.getCompanyId(), "User"));
-				Map<Long, String[]> roleIdActionIds = new HashMap<>();
-				String[] actionsIds = {ActionKeys.VIEW, ActionKeys.ADD_DOCUMENT};
-				for (Role role : roleList) {
-					roleIdActionIds.put(role.getRoleId(), actionsIds);
-				}
-				ResourcePermissionLocalServiceUtil.setResourcePermissions(attachedFilesFolder.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(attachedFilesFolder.getPrimaryKey()), roleIdActionIds );
 
 				for (Long attachFileId : attachFileIds) {
 					logger.info("Copying file " + attachFileId + " to IM_BOX of user " + userId + ", folder " + attachedFilesFolder.getFolderId());

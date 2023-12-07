@@ -492,9 +492,11 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
 
             JSONArray jsonRecipients = new JSONArray(recipients);
             List<Long> recipientList = ContactLocalServiceUtil.getRecipients(jsonRecipients, user);
-            List<Long> filteredRecipientList = MessageLocalServiceUtil.filterRecipientList(user, recipientList, originMessageId);
 
-            MessageLocalServiceUtil.sendMessage(user.getUserId(), filteredRecipientList, subject, content, MessagingConstants.TYPE_MANUAL, attachedFileIds, draftMessageId, originMessageId);
+            // Takes too long -> commented
+            //List<Long> filteredRecipientList = MessageLocalServiceUtil.filterRecipientList(user, recipientList, originMessageId);
+
+            MessageLocalServiceUtil.sendMessage(user.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_MANUAL, attachedFileIds, draftMessageId, originMessageId);
 
             // Set original message as answered/forwarded
             if (isReply && originMessageId > 0) {

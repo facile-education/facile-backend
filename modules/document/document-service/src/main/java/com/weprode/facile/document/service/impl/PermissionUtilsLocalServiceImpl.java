@@ -64,6 +64,15 @@ public class PermissionUtilsLocalServiceImpl
 			return true;
 		}
 		try {
+			User user = UserLocalServiceUtil.getUser(userId);
+			if (user.getGroupId() == fileEntry.getGroupId()) {
+				return true;
+			}
+		} catch (Exception e) {
+			// Nothing
+		}
+
+		try {
 			long[] userRoleIds = getRolesIdsToCheckForUserPermissions(userId, fileEntry.getGroupId(), fileEntry.getUserId());
 
 			return ResourcePermissionLocalServiceUtil.hasResourcePermission(fileEntry.getCompanyId(), DLFileEntry.class.getName(),
@@ -78,6 +87,14 @@ public class PermissionUtilsLocalServiceImpl
 		// Check owner
 		if (userId == folder.getUserId()) {
 			return true;
+		}
+		try {
+			User user = UserLocalServiceUtil.getUser(userId);
+			if (user.getGroupId() == folder.getGroupId()) {
+				return true;
+			}
+		} catch (Exception e) {
+			// Nothing
 		}
 
 		try {

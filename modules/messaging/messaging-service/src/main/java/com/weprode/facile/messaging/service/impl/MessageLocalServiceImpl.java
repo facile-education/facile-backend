@@ -15,6 +15,7 @@
 
 package com.weprode.facile.messaging.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
@@ -666,6 +667,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
 
     public Folder getOrCreateMessageAttachedFilesFolder(long userId, long messageId) {
 
+        logger.info("User " + userId + " is about to create folder for message " + messageId);
         Folder attachedFilesFolder = null;
         try {
             Folder imBox = FolderUtilsLocalServiceUtil.getUserMessagingAttachedFilesFolder(userId);
@@ -675,8 +677,9 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
                 // Might not exist
             }
             if (attachedFilesFolder == null) {
-                attachedFilesFolder = DLAppServiceUtil.addFolder(
+                attachedFilesFolder = DLAppLocalServiceUtil.addFolder(
                         UUID.randomUUID().toString(),
+                        userId,
                         imBox.getGroupId(),
                         imBox.getFolderId(),
                         MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX + messageId,
