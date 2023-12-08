@@ -58,8 +58,11 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 		List<Group> userGroups = CommunityInfosLocalServiceUtil.getUserCommunities(user.getUserId(), false, true);
 		for (Group userGroup : userGroups) {
 			Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(userGroup.getGroupId());
-			JSONObject jsonFolder = FolderUtilsLocalServiceUtil.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
-			userGroupsArray.put(jsonFolder);
+			// We may not have VIEW access to group's root folder
+			if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), groupRootFolder, ActionKeys.VIEW)) {
+				JSONObject jsonFolder = FolderUtilsLocalServiceUtil.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
+				userGroupsArray.put(jsonFolder);
+			}
 		}
 
 		// Volees are not displayed in Collaborative
@@ -86,8 +89,11 @@ public class GroupsLocalServiceImpl extends GroupsLocalServiceBaseImpl {
 			if (!uniqueOrgsIds.contains(userOrg.getOrganizationId())) {
 				uniqueOrgsIds.add(userOrg.getOrganizationId());
 				Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(userOrg.getGroupId());
-				JSONObject jsonFolder = FolderUtilsLocalServiceUtil.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
-				userGroupsArray.put(jsonFolder);
+				// We may not have VIEW access to group's root folder
+				if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), groupRootFolder, ActionKeys.VIEW)) {
+					JSONObject jsonFolder = FolderUtilsLocalServiceUtil.format(user, groupRootFolder, DocumentConstants.COLLABORATIVE, false);
+					userGroupsArray.put(jsonFolder);
+				}
 			}
 		}
 
