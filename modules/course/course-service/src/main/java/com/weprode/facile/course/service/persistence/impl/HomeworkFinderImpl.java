@@ -82,6 +82,7 @@ public class HomeworkFinderImpl extends HomeworkFinderBaseImpl
 
             String sql = customSQL.get(getClass(), GET_STUDENT_HOMEWORKS);
             sql = StringUtil.replace(sql, "[$OTHER$]", other);
+            logger.info("sql=" + sql);
             SQLQuery q = session.createSQLQuery(sql);
             q.setCacheable(false);
             q.addEntity("Course_Homework", HomeworkImpl.class);

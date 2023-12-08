@@ -317,11 +317,16 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			minDate = schoolYearStartDate;
 		}
 		try {
-			studentHomeworkList = homeworkFinder.getStudentHomeworks(studentId, minDate, maxDate, undoneOnly);
-			// tmp for permissions, because old folders were created without permissions
-			for (Homework homework : studentHomeworkList) {
-				logger.info("TMP add permission on homework " + homework.getHomeworkId());
-				getHomeworkFolder(homework.getHomeworkId());
+			List<Homework> homeworkList = homeworkFinder.getStudentHomeworks(studentId, minDate, maxDate, undoneOnly);
+			// Check course belonging for the student, because he might have changed class and/or course
+			// We do not want him/her to access old homeworks
+			for (Homework homework : homeworkList) {
+				logger.info("fgfg");
+				if (UserUtilsLocalServiceUtil.getUserGroupIds(studentId).contains(homework.getCourseId())) {
+					studentHomeworkList.add(homework);
+				} else {
+					logger.error("Student " + studentId + " may be trying to access old classes's homework");
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Error when fetching homeworks for student " + studentId, e);
