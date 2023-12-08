@@ -65,6 +65,7 @@ import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -549,6 +550,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			if (folderGroup.isOrganization()) {
 				if ( !OrganizationLocalServiceUtil.hasUserOrganization(user.getUserId(), folderGroup.getClassPK())
 					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)
+					&& !(NewsAdminLocalServiceUtil.isUserDelegate(user) && folder.getParentFolder().getName().equals(DocumentConstants.NEWS_FOLDER_NAME))
 					&& !RoleUtilsLocalServiceUtil.isDoyen(user, folderGroup.getClassPK())
 					&& !RoleUtilsLocalServiceUtil.isPsychologue(user, folderGroup.getClassPK())
 					&& !RoleUtilsLocalServiceUtil.isConseillerSocial(user, folderGroup.getClassPK())) {

@@ -709,7 +709,10 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         List<Long> userGroupIds = UserUtilsLocalServiceUtil.getUserGroupIds(userId);
         List<NewsPopulation> populations = NewsPopulationLocalServiceUtil.getNewsPopulations(newsId);
         for (NewsPopulation population : populations) {
-            if (userId == news.getAuthorId() || (userGroupIds.contains(population.getGroupId()) && (population.getRoleId() == 0 || RoleLocalServiceUtil.hasUserRole(userId, population.getRoleId())))) {
+            if (userId == news.getAuthorId()
+                    || NewsAdminLocalServiceUtil.isUserDelegate(user)
+                    || RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                    || (userGroupIds.contains(population.getGroupId()) && (population.getRoleId() == 0 || RoleLocalServiceUtil.hasUserRole(userId, population.getRoleId())))) {
                 // Keep matching groups once
                 if (!newsGroupIds.contains(population.getGroupId())) {
                     newsGroupIds.add(population.getGroupId());

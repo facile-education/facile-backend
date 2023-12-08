@@ -26,16 +26,16 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
-import com.weprode.facile.commons.constants.JSONConstants;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.news.model.NewsAttachedFile;
 import com.weprode.facile.news.model.NewsPopulation;
 import com.weprode.facile.news.service.base.NewsAttachedFileLocalServiceBaseImpl;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
-import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
-import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -85,12 +85,13 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
                     if ((group.isOrganization() &&
                             (OrganizationLocalServiceUtil.hasUserOrganization(user.getUserId(), group.getClassPK())
                             || RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                            || NewsAdminLocalServiceUtil.isUserDelegate(user)
                             || RoleUtilsLocalServiceUtil.isDoyen(user, group.getClassPK())
                             || RoleUtilsLocalServiceUtil.isPsychologue(user, group.getClassPK())
                             || RoleUtilsLocalServiceUtil.isConseillerSocial(user, group.getClassPK())))
                         || (group.isRegularSite() &&
                             (GroupLocalServiceUtil.hasUserGroup(user.getUserId(), group.getGroupId())
-                                || RoleUtilsLocalServiceUtil.isDirectionMember(user)))) {
+                                || RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)))) {
                         groupId = newsAttachedFile.getGroupId();
                         break;
                     }
