@@ -61,7 +61,7 @@ public class EELSynchronizationMessageListener extends BaseMessageListener {
             try {
                 if (PropsUtil.get(NeroSystemProperties.SYNCHRO_PARENT_ENABLED).equals("true")) {
                     logger.info("Scheduled GVE parent synchronization starting ...");
-                    SynchronizationLocalServiceUtil.runGVEParentSynchronization(true);
+                    SynchronizationLocalServiceUtil.runGVEParentSynchronization(false);
                     logger.info("END GVE parent synchronization.");
                 }
             } catch (Exception e) {

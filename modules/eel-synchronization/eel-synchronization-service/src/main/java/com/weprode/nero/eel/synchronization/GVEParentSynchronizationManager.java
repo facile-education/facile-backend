@@ -331,7 +331,8 @@ public class GVEParentSynchronizationManager {
                 ParentSynchroLocalServiceUtil.updateParentSynchro(lastSchoolSynchro);
             }
 
-            archiveFile(parentsFile, exportDirectory);
+            // Keep file so that it is processed every day
+            //archiveFile(parentsFile, exportDirectory);
 
             if (sendReport) {
                 // Generate password file
