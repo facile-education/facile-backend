@@ -89,6 +89,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 				Folder folder = DLAppServiceUtil.getFolder(parseLong(nodePath));
 				Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
 				if (group.isUserGroup()) {
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " accesses a user group");
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 			}
@@ -110,12 +111,12 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 				long folderId = parseLong(nodePath);
 				Folder folder = DLAppServiceUtil.getFolder(folderId);
 				if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-					logger.info("User " + user.getFullName() + " tries to fetch content of folderId " + folderId + " but has no permission");
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " fetches content of folderId " + folderId);
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 				if (FolderUtilsLocalServiceUtil.isGroupFolder(folder) &&
 						!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(getGuestOrUserId(), folder, ActionKeys.VIEW)) {
-					logger.info("User " + user.getFullName() + " tries to get all group entities of folder " + folderId + " but has no permission");
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " fetches content of folderId " + folderId);
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 				List<Folder> folders = GroupsLocalServiceUtil.getFolderGroupFolders(user, folderId);
@@ -155,7 +156,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 				if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-					logger.info("User " + user.getFullName() + " tries to fetch content of folderId " + folderId + " but has no permission");
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " fetches content of folderId " + folderId);
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 			}
@@ -183,7 +184,7 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 				Folder folder = DLAppServiceUtil.getFolder(parseLong(nodePath));
 				if (FolderUtilsLocalServiceUtil.isGroupFolder(folder) &&
 						!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(getGuestOrUserId(), folder, ActionKeys.VIEW)) {
-					logger.info("User " + user.getFullName() + " tries to get breadcrumb of folder " + nodePath + " but has no permission");
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " fetches content of folderId " + nodePath);
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 
@@ -220,12 +221,12 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 		try {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.info("User " + user.getFullName() + " tries to record download activity of file " + fileEntry.getFileEntryId() + " but has no permission");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " records download activity for file " + fileEntryId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			Folder folder = DLAppServiceUtil.getFolder(fileEntry.getFolderId());
 			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW)) {
-				logger.info("User " + user.getFullName() + " tries to record download activity of file " + fileEntry.getFileEntryId() + " but has no permission");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " records download activity for file " + fileEntryId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -266,12 +267,12 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 		try {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.info("User " + user.getFullName() + " tries to record view activity of file " + fileEntry.getFileEntryId() + " but has no permission");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " records view activity for file " + fileEntryId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			Folder folder = DLAppServiceUtil.getFolder(fileEntry.getFolderId());
 			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW)) {
-				logger.info("User " + user.getFullName() + " tries to record view activity of file " + fileEntry.getFileEntryId() + " but has no permission");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " records view activity for file " + fileEntryId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 

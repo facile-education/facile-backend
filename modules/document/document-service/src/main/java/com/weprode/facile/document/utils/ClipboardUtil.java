@@ -54,7 +54,7 @@ public class ClipboardUtil {
                 Folder folder = DLAppServiceUtil.getFolder(folderId);
                 if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
                     || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
-                    logger.info("User " + userId + " tries to copy folderId " + folderId + " but has no permission");
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " copies folder " + folderId);
                     continue;
                 }
                 FolderUtilsLocalServiceUtil.copyFolder(userId, folderId, destFolderId, mode);
@@ -87,7 +87,7 @@ public class ClipboardUtil {
                 FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
                 if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
                     || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
-                    logger.info("User " + userId + " tries to copy file " + fileId + " but has no permission");
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " copies file " + fileId);
                     continue;
                 }
                 FileUtilsLocalServiceUtil.copyFileEntry(userId, fileId, destFolderId, true, mode);
@@ -135,7 +135,7 @@ public class ClipboardUtil {
                 Folder folder = DLAppServiceUtil.getFolder(folderId);
                 if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
                         || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
-                    logger.info("User " + userId + " tries to move folderId " + folderId + " but has no permission");
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
                     continue;
                 }
                 FolderUtilsLocalServiceUtil.moveFolder(userId, folder, destFolderId, mode);
@@ -168,7 +168,7 @@ public class ClipboardUtil {
                 FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
                 if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
                         || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
-                    logger.info("User " + userId + " tries to move file " + fileId + " but has no permission");
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);
                     continue;
                 }
                 FileUtilsLocalServiceUtil.moveFileEntry(userId, fileId, destFolderId, mode);

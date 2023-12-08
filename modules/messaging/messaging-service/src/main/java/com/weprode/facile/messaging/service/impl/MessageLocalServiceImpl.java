@@ -722,7 +722,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
                 }
             }
             if (!isAuthorized) {
-                logger.error("ERROR INCORRECT RECIPIENT : user " + sender.getFullName() + " is trying to send message to " + recipientId + " but has no permission");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + sender.getFullName() + " is trying to send message to " + recipientId);
             }
         }
         // For now return the original list, we just log
