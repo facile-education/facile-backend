@@ -47,7 +47,7 @@ cypress-e2e:
     - module-compilation # Needs previous job artifacts 
     - project: nero/nero-vue # Needs front job artifacts
       ref: ${CI_COMMIT_BRANCH}
-      job: build
+      job: npm-build
       artifacts: true
   after_script:
     - docker rm node --volumes || true # Clean up node docker
