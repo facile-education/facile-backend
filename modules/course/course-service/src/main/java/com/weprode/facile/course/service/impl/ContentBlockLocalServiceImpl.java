@@ -89,6 +89,8 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 			case CourseConstants.TYPE_LINK:
 				if (CommonUtils.isValidURI(blockValue)) {
 					block.setBlockValue(blockValue);
+				} else {
+					throw new UnauthorizedUrlException("Url " + blockValue + " is not valid");
 				}
 				break;
 			case CourseConstants.TYPE_VIDEO:
