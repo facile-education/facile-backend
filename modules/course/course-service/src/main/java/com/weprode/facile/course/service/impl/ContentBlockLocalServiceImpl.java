@@ -284,7 +284,11 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		return htmlBlock;
 	}
 
-	public boolean isEmbedUrlWhitelisted (String url) {
+	public boolean isEmbedUrlWhitelisted (String url) throws UnauthorizedUrlException {
+		if (!CommonUtils.isValidURI(url)) {
+			throw new UnauthorizedUrlException("Url " + url + " is not valid");
+		}
+
 		List<String> domainWhitelist = List.of(
 				PropsUtil.get(NeroSystemProperties.XSS_IFRAME_WHITELIST).split(","));
 

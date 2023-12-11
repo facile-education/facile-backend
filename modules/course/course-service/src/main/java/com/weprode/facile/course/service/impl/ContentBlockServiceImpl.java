@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.CommonUtils;
 import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
@@ -288,7 +289,21 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 	public JSONObject isEmbedUrlWhitelisted(String url) {
 		JSONObject result = new JSONObject();
 
-		result.put(JSONConstants.IS_ALLOWED, ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(url));
+		try {
+			result.put(JSONConstants.IS_ALLOWED, ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(url));
+		} catch (UnauthorizedUrlException e) {
+			result.put(JSONConstants.IS_ALLOWED, false);
+		}
+		result.put(JSONConstants.SUCCESS, true);
+
+		return result;
+	}
+
+	@JSONWebService(value = "is-valid-url", method = "GET")
+	public JSONObject isValidUrl(String url) {
+		JSONObject result = new JSONObject();
+
+		result.put(JSONConstants.IS_VALID, CommonUtils.isValidURI(url));
 		result.put(JSONConstants.SUCCESS, true);
 
 		return result;

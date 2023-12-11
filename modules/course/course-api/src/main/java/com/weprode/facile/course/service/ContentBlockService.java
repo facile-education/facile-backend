@@ -76,6 +76,10 @@ public interface ContentBlockService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject isEmbedUrlWhitelisted(String url);
 
+	@JSONWebService(method = "GET", value = "is-valid-url")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject isValidUrl(String url);
+
 	@JSONWebService(method = "POST", value = "update-block")
 	public JSONObject updateBlock(
 		long blockId, String blockName, String blockValue, int order);

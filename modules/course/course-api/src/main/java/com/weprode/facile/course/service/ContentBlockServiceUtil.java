@@ -68,6 +68,10 @@ public class ContentBlockServiceUtil {
 		return getService().isEmbedUrlWhitelisted(url);
 	}
 
+	public static org.json.JSONObject isValidUrl(java.lang.String url) {
+		return getService().isValidUrl(url);
+	}
+
 	public static org.json.JSONObject updateBlock(
 		long blockId, java.lang.String blockName, java.lang.String blockValue,
 		int order) {

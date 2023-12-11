@@ -119,6 +119,9 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 			result.put(JSONConstants.ITEM, courseItem.convertToJSON(user, true));
 			result.put(JSONConstants.SUCCESS, true);
+		} catch (UnauthorizedUrlException e) {
+			result.put(JSONConstants.ERROR, e.getClass());
+			result.put(JSONConstants.SUCCESS, false);
 		} catch (Exception e) {
 			logger.error("Error creating session content", e);
 			throw new PortalException(); // To cancel the previous content creation

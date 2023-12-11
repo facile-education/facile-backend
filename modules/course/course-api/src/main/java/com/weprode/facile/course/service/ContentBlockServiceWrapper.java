@@ -73,6 +73,11 @@ public class ContentBlockServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject isValidUrl(String url) {
+		return _contentBlockService.isValidUrl(url);
+	}
+
+	@Override
 	public org.json.JSONObject updateBlock(
 		long blockId, String blockName, String blockValue, int order) {
 
