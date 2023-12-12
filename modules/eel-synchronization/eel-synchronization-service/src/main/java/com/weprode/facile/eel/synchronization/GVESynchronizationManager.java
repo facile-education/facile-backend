@@ -268,7 +268,7 @@ public class GVESynchronizationManager {
         vacations = HolidayLocalServiceUtil.getHolidays();
     }
 
-    private Organization synchronizeSchool (String schoolId) throws NamingException {
+    private Organization synchronizeSchool (String schoolId) throws NamingException, PortalException {
 
         // Get school informations
         String schoolDn = "OU=" + schoolId + "," + PropsUtil.get(NeroSystemProperties.SYNCHRO_LDAP_BASE_DN_GROUPS);
@@ -306,6 +306,7 @@ public class GVESynchronizationManager {
             throw e;
         } catch (Exception e) {
             logger.error("Error while synchronizing school " + schoolId, e);
+            throw new PortalException();
         }
 
         return school;
