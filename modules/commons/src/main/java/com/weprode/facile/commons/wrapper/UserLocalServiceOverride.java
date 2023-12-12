@@ -62,6 +62,7 @@ import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.user.model.UserContact;
+import com.weprode.facile.user.service.AffectationLocalServiceUtil;
 import com.weprode.facile.user.service.LDAPMappingLocalServiceUtil;
 import com.weprode.facile.user.service.UserContactLocalServiceUtil;
 import com.weprode.facile.user.service.UserRelationshipLocalServiceUtil;
@@ -316,8 +317,16 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			logger.error("Could not delete ldap mapping for userId " + userId);
 		}
 
+		// Affectations
 		try {
-			logger.debug("Clean up user memberships for userId " + userId);
+			logger.info("Clean up user memberships for userId " + userId);
+			AffectationLocalServiceUtil.removeByUserId(userId);
+		} catch (Exception e) {
+			logger.error("Could not delete user memberships for userId " + userId, e);
+		}
+
+		try {
+			logger.info("Clean up user memberships for userId " + userId);
 			GroupMembershipLocalServiceUtil.removeUserMemberships(userId);
 		} catch (Exception e) {
 			logger.error("Could not delete user memberships for userId " + userId, e);
