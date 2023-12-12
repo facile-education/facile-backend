@@ -314,7 +314,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                 // Handle existing member
                 if (membersIdAdmin.containsKey(memberId)) {
                     // Check admin rights - User cannot remove himself from group admins
-                    if (membersIdAdmin.get(memberId) != isAdmin && memberId != user.getUserId()) {
+                    if (!membersIdAdmin.get(memberId).equals(isAdmin) && memberId != user.getUserId()) {
                         if (isAdmin) {
                             logger.info("User " + user.getFullName() + " adds user " + memberId + " as community admin for groupId " + group.getGroupId());
                             // Give admin users the group admin role
@@ -333,7 +333,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                     notifiedMemberIds.add(memberId);
                 }
 
-                // Add members to the group and empty their group cache so that they see the new group immediately
+                // Add members to the group
                 UserLocalServiceUtil.addGroupUsers(group.getGroupId(), new long[]{memberId});
 
                 if (isAdmin) {
@@ -349,7 +349,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             // Notify members that they have been added to a new group
             long noReplySenderId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             String subject = messages.getString("ajouter-au-groupe") + " " + group.getName(LocaleUtil.getDefault());
-            String content = "Bonjour,</br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + group.getName(LocaleUtil.getDefault())+".</br></br> L'&eacute;quipe technique";
+            String content = "Bonjour,</br></br>" + user.getFullName() + " " + messages.getString("added-to-group") + " " + group.getName(LocaleUtil.getDefault())+".</br></br>Meilleurs messages,</br> L'&eacute;quipe technique";
             MessageLocalServiceUtil.sendMessage(noReplySenderId, notifiedMemberIds, subject, content);
 
             // Remove obsolete members
@@ -404,7 +404,9 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                 }
             }
             if (!success) {
-                throw new Exception("exceed nb renamed try");
+                logger.error("Error renaming archive the community");
+                result.put(JSONConstants.SUCCESS, false);
+                return result;
             }
 
             CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(groupId);
