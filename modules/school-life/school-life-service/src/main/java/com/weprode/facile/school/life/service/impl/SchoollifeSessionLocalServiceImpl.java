@@ -360,7 +360,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
 
     public void runAbsenceNotifications() {
         try {
-            logger.info("Running absence notification ...");
+            logger.debug("Running absence notification ...");
 
             // Fetch all passed schoollife sessions of the current day for which the 'call' has been done
             Calendar cal = Calendar.getInstance();

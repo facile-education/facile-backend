@@ -217,7 +217,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         try {
             // Check if the user can read news
             if (NewsLocalServiceUtil.hasUserNews(user.getUserId(), newsId)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits school news");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " marks news as read");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             result.put(JSONConstants.SUCCESS, NewsReadLocalServiceUtil.setNewsRead(user.getUserId(), newsId));
