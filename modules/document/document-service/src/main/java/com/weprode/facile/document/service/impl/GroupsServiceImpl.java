@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
@@ -83,7 +82,6 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 
 			if (!nodePath.equals(COLLABORATIVE)) {
 				Folder folder = DLAppServiceUtil.getFolder(parseLong(nodePath));
@@ -146,7 +144,6 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 
 			if (!nodePath.equals(COLLABORATIVE)) {
 				long folderId = parseLong(nodePath);
@@ -214,7 +211,6 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -260,7 +256,6 @@ public class GroupsServiceImpl extends GroupsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}

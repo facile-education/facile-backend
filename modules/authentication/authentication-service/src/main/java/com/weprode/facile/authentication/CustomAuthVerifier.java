@@ -504,7 +504,7 @@ public class CustomAuthVerifier implements AuthVerifier {
                 HttpServletRequest request, HttpServletResponse response) throws AutoLoginException {
 
         try {
-            String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_EA);
+            String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_SN);
             long companyId = PortalUtil.getCompanyId(request);
             User user = null;
 
@@ -533,7 +533,7 @@ public class CustomAuthVerifier implements AuthVerifier {
                     logger.info("User authenticated by Shibboleth but is inactive : " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
                     return null;
                 }
-                logger.info("User authenticated with Shibboleth : " + user.getScreenName() + " (" + user.getEmailAddress() + "), uri=" + request.getRequestURI());
+                logger.debug("User authenticated with Shibboleth : " + user.getScreenName() + " (" + user.getEmailAddress() + "), uri=" + request.getRequestURI());
                 String[] credentials = new String[3];
                 credentials[0] = String.valueOf(user.getUserId());
                 credentials[1] = user.getPassword();

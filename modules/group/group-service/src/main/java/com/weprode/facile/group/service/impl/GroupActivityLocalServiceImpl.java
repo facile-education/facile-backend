@@ -70,7 +70,8 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                                                              boolean withNews, boolean withDocs, boolean withMemberships, boolean withSchoollife, boolean withSessions) {
         List<GroupActivity> groupActivities = new ArrayList<>();
 
-        logger.info("Get dashboard group activities for userId " + userId + " for " + groupIds.size() + " groups, until maxDate " + maxDate);
+        long threadId = Thread.currentThread().getId();
+        logger.info("ThreadId="+threadId+", get dashboard group activities for userId " + userId + " for " + groupIds.size() + " groups, until maxDate " + maxDate);
         if (!(withNews || withDocs || withMemberships || withSchoollife || withSessions) || groupIds.size() == 0) {
             return groupActivities;
         }

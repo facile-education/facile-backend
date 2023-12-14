@@ -19,7 +19,6 @@ import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 
-import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -60,7 +59,6 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -92,7 +90,6 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }

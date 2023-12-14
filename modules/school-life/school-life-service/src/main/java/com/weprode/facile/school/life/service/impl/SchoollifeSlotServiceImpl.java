@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
@@ -58,7 +57,6 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -99,7 +97,6 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -141,7 +138,6 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -178,7 +174,6 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            FacileLogger.registerUser(user);
             long schoollifeSlotId = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId).getSchoollifeSlotId();
             SchoollifeSession lastSlotSession = SchoollifeSessionLocalServiceUtil.getLastSession(schoollifeSlotId);
             result.put(JSONConstants.LAST_SESSION_DATE, df.format(lastSlotSession.getStartDate()));

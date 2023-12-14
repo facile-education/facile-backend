@@ -39,8 +39,7 @@ public class AuthenticationServiceImpl extends AuthenticationServiceBaseImpl {
 //	@JSONWebService(value = "auth-log", method = "GET")
 //	public JSONObject authLog(String str) {
 //		JSONObject result = new JSONObject();
-//            FacileLogger.registerUser(user);
-//
+////
 //		logger.info("authLog : " + str);
 //		result.put("success", true);
 //

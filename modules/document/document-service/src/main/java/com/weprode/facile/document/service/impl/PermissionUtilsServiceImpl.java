@@ -22,7 +22,6 @@ import com.liferay.portal.aop.AopService;
 
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import org.json.JSONArray;
@@ -73,7 +72,6 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -136,7 +134,6 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -198,7 +195,6 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
@@ -244,7 +240,6 @@ public class PermissionUtilsServiceImpl extends PermissionUtilsServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}

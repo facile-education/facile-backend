@@ -48,7 +48,8 @@ public class LogFilter extends BaseFilter {
         String uri = (String)request.getAttribute(WebKeys.INVOKER_FILTER_URI);
         String query = request.getQueryString();
         ThreadContext.clearAll();
-        ThreadContext.put("userId", user.getFullName());
+//        ThreadContext.put("userId", user.getFullName());
+        ThreadContext.push(user.getFullName());
         log.info("API " + uri.replace("/api/jsonws", "") + " with params " + (query == null ? "null" : query));
         super.processFilter(request, response, filterChain);
     }

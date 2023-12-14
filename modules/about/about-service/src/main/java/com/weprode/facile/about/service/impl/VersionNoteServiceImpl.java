@@ -28,7 +28,6 @@ import com.weprode.facile.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.facile.about.service.VersionNoteLocalServiceUtil;
 import com.weprode.facile.about.service.base.VersionNoteServiceBaseImpl;
 
-import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
@@ -63,7 +62,6 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			JSONArray versionsNotesJson = new JSONArray();
 			List<VersionNote> versionNotes = VersionNoteLocalServiceUtil.getSortedVersionNotes();
 
@@ -99,7 +97,6 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 
 			VersionNote versionNote = VersionNoteLocalServiceUtil.getVersionNote(versionNoteId);
 
@@ -128,7 +125,6 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
 				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates a version note");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
@@ -160,7 +156,6 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
 				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates version note " + versionNoteId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
@@ -189,7 +184,6 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
 				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes version note " + versionNoteId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);

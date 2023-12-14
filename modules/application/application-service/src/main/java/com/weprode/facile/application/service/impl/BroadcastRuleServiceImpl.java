@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.application.model.BroadcastRule;
 import com.weprode.facile.application.service.BroadcastRuleLocalServiceUtil;
 import com.weprode.facile.application.service.base.BroadcastRuleServiceBaseImpl;
-import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
@@ -64,7 +63,6 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
@@ -144,7 +142,6 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
             if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
-            FacileLogger.registerUser(user);
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }

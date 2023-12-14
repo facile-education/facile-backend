@@ -26,7 +26,6 @@ import com.weprode.facile.access.AccessConstants;
 import com.weprode.facile.access.service.AccessCategoryLocalServiceUtil;
 import com.weprode.facile.access.service.AccessLocalServiceUtil;
 import com.weprode.facile.access.service.base.AccessServiceBaseImpl;
-import com.weprode.facile.commons.FacileLogger;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
@@ -59,7 +58,6 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
@@ -91,7 +89,6 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
@@ -131,7 +128,6 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
@@ -180,7 +176,6 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
@@ -211,7 +206,6 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
@@ -243,7 +237,6 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
@@ -268,7 +261,6 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
-			FacileLogger.registerUser(user);
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
