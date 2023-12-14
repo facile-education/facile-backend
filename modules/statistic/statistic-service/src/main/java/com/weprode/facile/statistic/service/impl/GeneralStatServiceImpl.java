@@ -16,20 +16,19 @@
 package com.weprode.facile.statistic.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
-import com.weprode.facile.commons.JSONProxy;
-import com.weprode.facile.commons.properties.NeroSystemProperties;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
+import com.weprode.facile.commons.properties.NeroSystemProperties;
+import com.weprode.facile.course.service.SessionContentLocalServiceUtil;
+import com.weprode.facile.document.service.ActivityLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
@@ -38,9 +37,15 @@ import com.weprode.facile.statistic.service.GeneralStatLocalServiceUtil;
 import com.weprode.facile.statistic.service.MatomoLocalServiceUtil;
 import com.weprode.facile.statistic.service.base.GeneralStatServiceBaseImpl;
 import com.weprode.facile.statistic.utils.UserProfile;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component(
         property = {
@@ -510,16 +515,37 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
                 result.put(JSONConstants.PREVIOUS_ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId()));
             }
 
-            // Number of productions
-            // For now, number of created news
-            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-                result.put(JSONConstants.GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(startDate, endDate, 0, false));
-                result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, 0, false));
-            } else {
-                Organization userSchool = UserOrgsLocalServiceUtil.getUserSchools(user).get(0);
-                result.put(JSONConstants.GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(startDate, endDate, userSchool.getOrganizationId(), false));
-                result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId(), false));
+            // Number of productions : news + homeworks + activities
+            long schoolId = 0;
+            if (!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                schoolId = UserOrgsLocalServiceUtil.getUserSchools(user).get(0).getOrganizationId();
             }
+            // News
+            int nbNews = GeneralStatLocalServiceUtil.countNews(startDate, endDate, schoolId, false);
+            int nbPreviousNews = GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, schoolId, false);
+
+            // Homeworks
+            Map<Integer, Integer> homeworkMap = GeneralStatLocalServiceUtil.countHomeworks(startDate, endDate, schoolId);
+            int nbHomeworks = 0;
+            for (Map.Entry<Integer, Integer> homeworkEntry : homeworkMap.entrySet()) {
+                nbHomeworks += homeworkEntry.getValue();
+            }
+            Map<Integer, Integer> previousHomeworkMap = GeneralStatLocalServiceUtil.countHomeworks(previousWeekStartDate, previousWeekEndDate, schoolId);
+            int nbPreviousHomeworks = 0;
+            for (Map.Entry<Integer, Integer> homeworkEntry : previousHomeworkMap.entrySet()) {
+                nbPreviousHomeworks += homeworkEntry.getValue();
+            }
+            // Session contents
+            int nbSessionContents = SessionContentLocalServiceUtil.countSchoolSessionContents(schoolId, startDate, endDate);
+            int nbPreviousSessionContents = SessionContentLocalServiceUtil.countSchoolSessionContents(schoolId, previousWeekStartDate, previousWeekEndDate);
+
+            // Activities
+            int nbActivities = ActivityLocalServiceUtil.countSchoolActivities(schoolId, startDate, endDate);
+            int nbPreviousActivities = ActivityLocalServiceUtil.countSchoolActivities(schoolId, previousWeekStartDate, previousWeekEndDate);
+
+            result.put(JSONConstants.GROUP_NEWS_COUNT, nbNews + nbHomeworks + nbActivities + nbSessionContents);
+            result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, nbPreviousNews + nbPreviousHomeworks + nbPreviousActivities + nbPreviousSessionContents);
+
             result.put(JSONConstants.SUCCESS, true);
         } catch(Exception e) {
             result.put(JSONConstants.SUCCESS, false);

@@ -74,6 +74,12 @@ public class ActivityLocalServiceUtil {
 		return getService().convertActivityToJson(activity, userId);
 	}
 
+	public static int countSchoolActivities(
+		long schoolId, java.util.Date minDate, java.util.Date maxDate) {
+
+		return getService().countSchoolActivities(schoolId, minDate, maxDate);
+	}
+
 	/**
 	 * Creates a new activity with the primary key. Does not add the activity to the database.
 	 *

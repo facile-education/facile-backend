@@ -90,6 +90,9 @@ public interface SessionContentLocalService
 
 	public String convertContentAsHtml(long sessionId);
 
+	public int countSchoolSessionContents(
+		long schoolId, Date minDate, Date maxDate);
+
 	/**
 	 * @throws PortalException
 	 */

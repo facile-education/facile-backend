@@ -1,13 +1,23 @@
 package com.weprode.facile.document.service.persistence.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-import com.liferay.portal.kernel.dao.orm.*;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Order;
+import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
+import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.CalendarUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.document.model.Activity;
 import com.weprode.facile.document.service.ActivityLocalServiceUtil;
@@ -15,7 +25,9 @@ import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.persistence.ActivityFinder;
 import com.weprode.facile.group.constants.ActivityConstants;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,47 +38,39 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
 
     private static final Log logger = LogFactoryUtil.getLog(ActivityFinderImpl.class);
 
-    /*@Reference
+    @Reference
     private CustomSQL customSQL;
 
-    public static final String FIND_ACTIVITIES_BY_GROUP_IDS =
-            ActivityFinder.class.getName() + ".findActivitiesByGroupIds";
+    private static final String COUNT_SCHOOL_ACTIVITIES = ActivityFinder.class.getName() + ".countSchoolActivities";
 
-    public List<Activity> getActivity(List<Long> groupIds, int start, int end) {
+    public int countSchoolActivities(long schoolId, Date minDate, Date maxDate) {
 
         Session session = null;
 
         try {
             session = openSession();
 
-            // Build group id list
-            StringBuilder groupIdsStr = new StringBuilder();
-            for (int i = 0 ; i < groupIds.size() ; i++) {
-                groupIdsStr.append(groupIds.get(i));
-                if (i != (groupIds.size() - 1)) {
-                    groupIdsStr.append(",");
-                }
+            String sql = customSQL.get(getClass(), COUNT_SCHOOL_ACTIVITIES);
+            if (schoolId != 0) {
+                sql += " AND uo.organizationId = " + schoolId;
             }
 
-            // Here the only way to inject arrays into an 'IN' clause is to replace a given string
-            // Else hibernate embraces the given parameter with quotes and the query doesn't run
-            String sql = customSQL.get(getClass(), FIND_ACTIVITIES_BY_GROUP_IDS);
-            sql = StringUtil.replace(sql, "[$GROUP_IDS$]", groupIdsStr.toString());
-            logger.debug("ActivityFinderImpl : sql="+sql);
-
             SQLQuery query = session.createSQLQuery(sql);
-            query.addEntity("Activity", Activity.class);
+            QueryPos qPos = QueryPos.getInstance(query);
 
-            return (List<Activity>) QueryUtil.list(query, getDialect(), start, end);
+            qPos.add(CalendarUtil.getTimestamp(minDate));
+            qPos.add(CalendarUtil.getTimestamp(maxDate));
+
+            return ((BigInteger) query.uniqueResult()).intValue();
         } catch (Exception e) {
-            logger.error("Error while fetching user groups activities", e);
+            logger.error("Error while counting school activities", e);
         }
         finally {
             closeSession(session);
         }
 
-        return null;
-    }*/
+        return 0;
+    }
 
     public List<Activity> getActivities(List<Long> groupIdList, long creatorId, int start, int end) {
         List<Activity> activityList = new ArrayList<>();

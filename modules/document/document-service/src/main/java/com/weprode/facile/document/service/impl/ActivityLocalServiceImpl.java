@@ -125,6 +125,10 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 		}
 	}
 
+	public int countSchoolActivities(long schoolId, Date minDate, Date maxDate) {
+		return activityFinder.countSchoolActivities(schoolId, minDate, maxDate);
+	}
+
 	public JSONObject convertActivityToJson(Activity activity, long userId) {
 		JSONObject jsonActivity = new JSONObject();
 

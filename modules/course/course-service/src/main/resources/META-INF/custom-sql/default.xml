@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="getSessionContents">
+    <sql id="com.weprode.facile.course.service.persistence.SessionContentFinder.getSessionContents">
         <![CDATA[
             SELECT sessionContent.*
             FROM Course_SessionContent sessionContent
@@ -9,6 +9,14 @@
             WHERE sessionContent.courseId = ?
             AND cdtSession.start > ? AND cdtSession.start < ?
         ]]>
+    </sql>
+    <sql id="com.weprode.facile.course.service.persistence.SessionContentFinder.countSchoolSessionContents">
+        <![CDATA[
+			SELECT COUNT(*)
+			FROM Course_SessionContent sc
+			JOIN Users_Orgs uo ON sc.teacherId = uo.userId
+			WHERE sc.modificationDate BETWEEN ? AND ?
+		]]>
     </sql>
     <sql id="getTeacherHomeworksToCorrect">
         <![CDATA[

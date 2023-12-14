@@ -70,8 +70,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                                                              boolean withNews, boolean withDocs, boolean withMemberships, boolean withSchoollife, boolean withSessions) {
         List<GroupActivity> groupActivities = new ArrayList<>();
 
-        long threadId = Thread.currentThread().getId();
-        logger.info("ThreadId="+threadId+", get dashboard group activities for userId " + userId + " for " + groupIds.size() + " groups, until maxDate " + maxDate);
+        logger.info("Get dashboard group activities for userId " + userId + " for " + groupIds.size() + " groups, until maxDate " + maxDate);
         if (!(withNews || withDocs || withMemberships || withSchoollife || withSessions) || groupIds.size() == 0) {
             return groupActivities;
         }
@@ -359,7 +358,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_MEMBERSHIP) {
                 MembershipActivity membershipActivity = MembershipActivityLocalServiceUtil.getMembershipActivity(groupActivity.getActivityId());
-                jsonActivity = MembershipActivityLocalServiceUtil.convertMembershipActivityToJson(membershipActivity);
+                jsonActivity = MembershipActivityLocalServiceUtil.convertMembershipActivityToJson(membershipActivity, userId);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI) {
 

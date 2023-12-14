@@ -8,12 +8,14 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.CalendarUtil;
 import com.weprode.facile.course.model.SessionContent;
 import com.weprode.facile.course.model.impl.SessionContentImpl;
 import com.weprode.facile.course.service.persistence.SessionContentFinder;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +29,8 @@ public class SessionContentFinderImpl extends SessionContentFinderBaseImpl
     @Reference
     private CustomSQL customSQL;
 
-    public static final String GET_COURSE_CONTENTS = "getCourseContents";
+    private static final String GET_COURSE_CONTENTS = SessionContentFinder.class.getName() + ".getCourseContents";
+    private static final String COUNT_SCHOOL_SESSION_CONTENTS = SessionContentFinder.class.getName() + ".countSchoolSessionContents";
 
     public List<SessionContent> getCourseContents(long courseId, Date minDate, Date maxDate) throws SystemException {
 
@@ -55,5 +58,32 @@ public class SessionContentFinderImpl extends SessionContentFinderBaseImpl
         }
         return null;
     }
+
+    public int countSchoolSessionContents (long schoolId, Date minDate, Date maxDate) {
+        Session session = null;
+
+        try {
+            session = openSession();
+
+            String sql = customSQL.get(getClass(), COUNT_SCHOOL_SESSION_CONTENTS);
+            if (schoolId != 0) {
+                sql += " AND uo.organizationId = " + schoolId;
+            }
+            SQLQuery query = session.createSQLQuery(sql);
+            QueryPos qPos = QueryPos.getInstance(query);
+
+            qPos.add(CalendarUtil.getTimestamp(minDate));
+            qPos.add(CalendarUtil.getTimestamp(maxDate));
+
+            return ((BigInteger) query.uniqueResult()).intValue();
+        } catch (Exception e) {
+            logger.error("Error while counting school session contents for school " + schoolId, e);
+        } finally {
+            closeSession(session);
+        }
+
+        return 0;
+    }
+
 
 }

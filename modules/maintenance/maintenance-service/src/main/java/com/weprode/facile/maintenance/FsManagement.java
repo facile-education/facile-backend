@@ -31,7 +31,7 @@ import java.util.List;
 
 public class FsManagement {
 
-    private static final String ROOT_PATH = "/opt/liferay-7.4.3.40-ga40/data/document_library/10202/";
+    private static final String ROOT_PATH = "/opt/liferay-7.4.3.97-ga97/data/document_library/10202/";
 
     private static final Log logger = LogFactoryUtil.getLog(FsManagement.class);
 

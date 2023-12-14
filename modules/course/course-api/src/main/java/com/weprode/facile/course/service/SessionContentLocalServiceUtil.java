@@ -75,6 +75,13 @@ public class SessionContentLocalServiceUtil {
 		return getService().convertContentAsHtml(sessionId);
 	}
 
+	public static int countSchoolSessionContents(
+		long schoolId, java.util.Date minDate, java.util.Date maxDate) {
+
+		return getService().countSchoolSessionContents(
+			schoolId, minDate, maxDate);
+	}
+
 	/**
 	 * @throws PortalException
 	 */

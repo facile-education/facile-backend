@@ -69,6 +69,14 @@ public class ActivityLocalServiceWrapper
 		return _activityLocalService.convertActivityToJson(activity, userId);
 	}
 
+	@Override
+	public int countSchoolActivities(
+		long schoolId, java.util.Date minDate, java.util.Date maxDate) {
+
+		return _activityLocalService.countSchoolActivities(
+			schoolId, minDate, maxDate);
+	}
+
 	/**
 	 * Creates a new activity with the primary key. Does not add the activity to the database.
 	 *

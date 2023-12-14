@@ -43,7 +43,6 @@ import com.weprode.facile.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
 import com.weprode.facile.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.facile.user.service.UserUtilsLocalServiceUtil;
-import org.apache.logging.log4j.ThreadContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -238,8 +237,6 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         }
 
         try {
-            String user_id_str = ThreadContext.get("weprode");
-            logger.info("START weprode = " + user_id_str);
             JSONArray jsonActivities = new JSONArray();
             int nbNewActivities = 0;
             Date lastDashboardAccessDate = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getLastDashboardAccessDate();
@@ -250,8 +247,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
                 groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
             }
             Date maximumDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(maxDate);
-            user_id_str = ThreadContext.get("weprode");
-            logger.info("MIDDLE weprode = " + user_id_str);
+
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDashboardGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults,
                     withNews, withDocs, withMemberships, withSchoollife, withSessions);
             boolean isAuthorOfAllNewActivity = true;
@@ -278,9 +274,6 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             result.put(JSONConstants.LAST_DASHBOARD_ACCESS_DATE, lastDashboardAccessDate == null ? "" : sdf.format(lastDashboardAccessDate));
             result.put(JSONConstants.NB_NEW_ACTIVITIES, nbNewActivities);
             result.put(JSONConstants.SUCCESS, true);
-
-            user_id_str = ThreadContext.get("weprode");
-            logger.info("END weprode = " + user_id_str);
 
         } catch (Exception e) {
             logger.error("Error while fetching dashboard activity", e);

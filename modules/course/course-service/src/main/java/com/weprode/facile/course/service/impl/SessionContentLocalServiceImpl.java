@@ -77,6 +77,10 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 		return courseContents;
 	}
 
+	public int countSchoolSessionContents(long schoolId, Date minDate, Date maxDate) {
+		return sessionContentFinder.countSchoolSessionContents(schoolId, minDate, maxDate);
+	}
+
 	@Indexable(type = IndexableType.REINDEX)
 	public SessionContent addSessionContent(long sessionId, long teacherId, String title, Date publicationDate, boolean isDraft) throws SystemException {
 
