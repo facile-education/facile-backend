@@ -132,7 +132,9 @@ public class SearchResults {
                 Folder folder = DLAppServiceUtil.getFolder(fileEntry.getFolderId());
                 List<Folder> path = FolderUtilsLocalServiceUtil.getFolderPath(folder);
                 if (!path.isEmpty()) {
-                    if (path.size() > 1 && path.get(1).getName().equals(DocumentConstants.NEWS_FOLDER_NAME)) {
+                    if (path.size() > 1 && path.get(1).getName().equals(DocumentConstants.COURSE_FOLDER_NAME)) {
+                        // Prevent folder access. A link to course can be added here later
+                    } else if (path.size() > 1 && path.get(1).getName().equals(DocumentConstants.NEWS_FOLDER_NAME)) {
                         // News attachment
                         long newsId = Long.parseLong(path.get(2).getName());
 
