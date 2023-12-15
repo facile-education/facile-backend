@@ -58,10 +58,6 @@ public class DocumentUtilsLocalServiceUtil {
 		return getService().getWebDavUrl(user);
 	}
 
-	public static boolean isEmbedUrlWhitelisted(String url) {
-		return getService().isEmbedUrlWhitelisted(url);
-	}
-
 	public static DocumentUtilsLocalService getService() {
 		return _service;
 	}

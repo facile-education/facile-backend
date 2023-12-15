@@ -293,7 +293,7 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 				PropsUtil.get(NeroSystemProperties.XSS_IFRAME_WHITELIST).split(","));
 
 		for (String domain : domainWhitelist) {
-			if (url.matches("^"+domain+".*$")) {
+			if (url.matches("^"+domain+"/.*$")) {
 				return true;
 			}
 		}
