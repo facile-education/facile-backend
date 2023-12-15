@@ -469,7 +469,8 @@ public class JSONConstants {
     public static final String DATA = "data";
     public static final String SCHOOL_NEWS_COUNT = "schoolNewsCount";
     public static final String GROUP_NEWS_COUNT = "groupNewsCount";
-    public static final String PREVIOUS_GROUP_NEWS_COUNT = "previousGroupNewsCount";
+    public static final String NB_ACTIVITIES = "nbActivities";
+    public static final String NB_PREVIOUS_ACTIVITIES = "nbPreviousActivities";
     public static final String NB_CONNEXIONS = "nbConnexions";
     public static final String PREVIOUS_NB_CONNEXIONS = "previousNbConnexions";
     public static final String ACTIVE_USERS_COUNT = "activeUsersCount";

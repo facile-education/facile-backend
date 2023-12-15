@@ -543,8 +543,8 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             int nbActivities = ActivityLocalServiceUtil.countSchoolActivities(schoolId, startDate, endDate);
             int nbPreviousActivities = ActivityLocalServiceUtil.countSchoolActivities(schoolId, previousWeekStartDate, previousWeekEndDate);
 
-            result.put(JSONConstants.GROUP_NEWS_COUNT, nbNews + nbHomeworks + nbActivities + nbSessionContents);
-            result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, nbPreviousNews + nbPreviousHomeworks + nbPreviousActivities + nbPreviousSessionContents);
+            result.put(JSONConstants.NB_ACTIVITIES, nbNews + nbHomeworks + nbActivities + nbSessionContents);
+            result.put(JSONConstants.NB_PREVIOUS_ACTIVITIES, nbPreviousNews + nbPreviousHomeworks + nbPreviousActivities + nbPreviousSessionContents);
 
             result.put(JSONConstants.SUCCESS, true);
         } catch(Exception e) {
