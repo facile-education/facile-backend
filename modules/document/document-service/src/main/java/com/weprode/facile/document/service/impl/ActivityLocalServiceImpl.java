@@ -15,16 +15,20 @@
 
 package com.weprode.facile.document.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.weprode.facile.commons.constants.JSONConstants;
+import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.model.Activity;
 import com.weprode.facile.document.service.base.ActivityLocalServiceBaseImpl;
 import com.weprode.facile.group.constants.ActivityConstants;
@@ -53,8 +57,23 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 		try {
 			// Check if groupId is either a personal or an organization group
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
+			Folder folder = DLAppLocalServiceUtil.getFolder(folderId);
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(fileEntryId);
 
 			if (group.isRegularSite() || group.isOrganization()) {
+				if (folder.getParentFolderId() != 0) {
+					Folder parentFolder = DLAppServiceUtil.getFolder(folder.getParentFolderId());
+					if (fileEntry == null
+							|| parentFolder.getName().equals(DocumentConstants.NEWS_FOLDER_NAME)
+							|| parentFolder.getName().equals(DocumentConstants.COURSE_FOLDER_NAME)) {
+						return null;
+					}
+				} else if (fileEntry == null
+						|| folder.getName().equals(DocumentConstants.THUMBNAILS_FOLDER_NAME)
+						|| folder.getName().equals(DocumentConstants.TMP_FILE_FOLDER_NAME)) {
+					return null;
+				}
+
 				long activityId = counterLocalService.increment();
 				activity = activityPersistence.create(activityId);
 				activity.setFileEntryId(fileEntryId);
@@ -66,6 +85,7 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 				activity.setType(type);
 				activity.setModificationDate(new Date());
 				activity = activityPersistence.update(activity);
+				logger.info("Created activity for user " + userId + ", fileEntryId " + fileEntryId + " and folderId " + folderId);
 			} else {
 				logger.debug("Operation done in personal space ("+group.getName(LocaleUtil.getDefault())+") => not recorded");
 			}
