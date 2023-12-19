@@ -56,6 +56,7 @@ cypress-e2e:
     - docker network rm cypressnet || true # Clean up network
     - cd others/docker/ && docker compose down --volumes || true # Clean up compose dockers
     - rm -Rf ~/front || true
+    - rm -Rf ~/${LFR_DOCUMENT_LIBRARY} || true
   script:
     # Creating Liferay's document library folder
     - mkdir -p ~/${LFR_DOCUMENT_LIBRARY}
@@ -83,6 +84,7 @@ cypress-e2e:
     - echo "ES_JAVA_OPTS=${ES_JAVA_OPTS}" >> .env && echo "ES_PATH=${ES_PATH}" >> .env
     - echo "LFR_VERSION=${LFR_VERSION}" >> .env && echo "LFR_JAVA_VERSION=${LFR_JAVA_VERSION}" >> .env
     - echo "LFR_DOCUMENT_LIBRARY=${HOME}/${LFR_DOCUMENT_LIBRARY}" >> .env
+    - cat .env
     # Adding docker-compose dependency files
     - mkdir ./mariadb/initdb.d
     - cp ~/front/tests/e2e/scripts/tables/dump_cypress_db.sql ./mariadb/initdb.d/
