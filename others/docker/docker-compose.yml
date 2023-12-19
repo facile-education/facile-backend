@@ -87,9 +87,8 @@ services:
       retries: 5
     volumes:
       - ./liferay:/mnt/liferay
-      - lfrdata:/opt/liferay/data/document_library
+      - ${LFR_DOCUMENT_LIBRARY}:/opt/liferay/data/document_library
       - ./lfr_healthcheck.sh:/tmp/lfr_healthcheck.sh
 volumes:
   dbdata:
   esdata:
-  lfrdata:
