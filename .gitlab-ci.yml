@@ -41,6 +41,7 @@ cypress-e2e:
     ES_PATH: "./esdata"
     LFR_VERSION: "7.4.3.97-ga97"
     LFR_JAVA_VERSION: "zulu11"
+    LFR_DOCUMENT_LIBRARY: "document_library"
     DB_DOCKER_NAME: "docker-mariadb-1"
     CYPRESS_DOCKER_VERSION: "1.0.0"
   needs:
@@ -56,6 +57,10 @@ cypress-e2e:
     - cd others/docker/ && docker compose down --volumes || true # Clean up compose dockers
     - rm -Rf ~/front || true
   script:
+    # Creating Liferay's document library folder
+    - mkdir -p ~/${LFR_DOCUMENT_LIBRARY}
+    - chmod g+w -R ~/${LFR_DOCUMENT_LIBRARY} && chgrp debian -R ~/${LFR_DOCUMENT_LIBRARY}
+    # Pull front sources to get Cypress tests and SQL dumps
     - mkdir ~/front
     - git clone --branch ${CI_COMMIT_BRANCH} --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.weprode.com/nero/nero-vue.git ~/front
     # Filling front / Cypress environment file
@@ -63,6 +68,7 @@ cypress-e2e:
     - echo "DB_USER=root" >> ~/front/.env.local
     - echo "DB_PWD=${MYSQL_ROOT_PASSWORD}" >> ~/front/.env.local
     - echo "DB_NAME=${MYSQL_DATABASE}" >> ~/front/.env.local
+    - echo "PATH_TO_DOCUMENT_LIBRARY=${HOME}" >> ~/front/.env.local
     # Change group to avoid permission issues (GID 1000)
     - chmod g+w -R ~/front/ && chgrp debian -R ~/front/
     # Needed for cypress to run (dayjs dependencies)
@@ -76,6 +82,7 @@ cypress-e2e:
     - echo "ES_VERSION=${ES_VERSION}" >> .env && echo "ES_CLUSTER_NAME=${ES_CLUSTER_NAME}" >> .env
     - echo "ES_JAVA_OPTS=${ES_JAVA_OPTS}" >> .env && echo "ES_PATH=${ES_PATH}" >> .env
     - echo "LFR_VERSION=${LFR_VERSION}" >> .env && echo "LFR_JAVA_VERSION=${LFR_JAVA_VERSION}" >> .env
+    - echo "LFR_DOCUMENT_LIBRARY=${HOME}/${LFR_DOCUMENT_LIBRARY}" >> .env
     # Adding docker-compose dependency files
     - mkdir ./mariadb/initdb.d
     - cp ~/front/tests/e2e/scripts/tables/dump_cypress_db.sql ./mariadb/initdb.d/
