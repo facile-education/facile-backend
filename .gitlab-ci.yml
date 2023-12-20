@@ -41,9 +41,10 @@ cypress-e2e:
     ES_PATH: "./esdata"
     LFR_VERSION: "7.4.3.97-ga97"
     LFR_JAVA_VERSION: "zulu11"
-    LFR_DOCUMENT_LIBRARY: "document_library"
+    LFR_DATA_FOLDER: "data"
     DB_DOCKER_NAME: "docker-mariadb-1"
     CYPRESS_DOCKER_VERSION: "1.0.0"
+    CYPRESS_CMD: "--e2e"
   needs:
     - module-compilation # Needs previous job artifacts 
     - project: nero/nero-vue # Needs front job artifacts
@@ -56,20 +57,18 @@ cypress-e2e:
     - docker network rm cypressnet || true # Clean up network
     - cd others/docker/ && docker compose down --volumes || true # Clean up compose dockers
     - rm -Rf ~/front || true
-    - rm -Rf ~/${LFR_DOCUMENT_LIBRARY} || true
   script:
-    # Creating Liferay's document library folder
-    - mkdir -p ~/${LFR_DOCUMENT_LIBRARY}
-    - chmod g+w -R ~/${LFR_DOCUMENT_LIBRARY} && chgrp debian -R ~/${LFR_DOCUMENT_LIBRARY}
     # Pull front sources to get Cypress tests and SQL dumps
     - mkdir ~/front
     - git clone --branch ${CI_COMMIT_BRANCH} --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.weprode.com/nero/nero-vue.git ~/front
+    # Creating Liferay's document library folder
+    - mkdir -p ~/front/${LFR_DATA_FOLDER}
     # Filling front / Cypress environment file
     - echo "DOCKER_NAME=${DB_DOCKER_NAME}" >> ~/front/.env.local
     - echo "DB_USER=root" >> ~/front/.env.local
     - echo "DB_PWD=${MYSQL_ROOT_PASSWORD}" >> ~/front/.env.local
     - echo "DB_NAME=${MYSQL_DATABASE}" >> ~/front/.env.local
-    - echo "PATH_TO_DOCUMENT_LIBRARY=${HOME}" >> ~/front/.env.local
+    - echo "PATH_TO_DOCUMENT_LIBRARY=${LFR_DATA_FOLDER}" >> ~/front/.env.local
     # Change group to avoid permission issues (GID 1000)
     - chmod g+w -R ~/front/ && chgrp debian -R ~/front/
     # Needed for cypress to run (dayjs dependencies)
@@ -83,7 +82,7 @@ cypress-e2e:
     - echo "ES_VERSION=${ES_VERSION}" >> .env && echo "ES_CLUSTER_NAME=${ES_CLUSTER_NAME}" >> .env
     - echo "ES_JAVA_OPTS=${ES_JAVA_OPTS}" >> .env && echo "ES_PATH=${ES_PATH}" >> .env
     - echo "LFR_VERSION=${LFR_VERSION}" >> .env && echo "LFR_JAVA_VERSION=${LFR_JAVA_VERSION}" >> .env
-    - echo "LFR_DOCUMENT_LIBRARY=${HOME}/${LFR_DOCUMENT_LIBRARY}" >> .env
+    - echo "LFR_DATA=${HOME}/front/${LFR_DATA_FOLDER}" >> .env
     - cat .env
     # Adding docker-compose dependency files
     - mkdir ./mariadb/initdb.d
@@ -100,7 +99,7 @@ cypress-e2e:
     - docker compose up --detach --wait
     # Add network for cypress to see facile environment
     - docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 cypressnet 
-    - docker run --name cypress -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:${CYPRESS_DOCKER_VERSION} cypress run --config baseUrl=https://dev-ent-gve.com
+    - docker run --name cypress -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:${CYPRESS_DOCKER_VERSION} cypress run --config baseUrl=https://dev-ent-gve.com ${CYPRESS_CMD}
     # - mv ~/front/tests/e2e/screenshots ./
     # - mv ~/front/tests/e2e/videos ./
   tags:
