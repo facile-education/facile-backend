@@ -100,7 +100,7 @@ cypress-e2e:
     # Add network for cypress to see facile environment
     - docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 cypressnet 
     - docker run --name cypress -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:${CYPRESS_DOCKER_VERSION} cypress run --config baseUrl=https://dev-ent-gve.com ${CYPRESS_CMD}
-    # - mv ~/front/tests/e2e/screenshots ./
+    - mv ~/front/tests/e2e/screenshots ./
     # - mv ~/front/tests/e2e/videos ./
   tags:
     - cypress
