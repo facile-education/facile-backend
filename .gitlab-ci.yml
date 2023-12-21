@@ -111,7 +111,7 @@ cypress-e2e:
     - when: manual
       allow_failure: true
   artifacts:
-    when: on_failure
+    when: always
     expire_in: 1 week
     paths:
       - others/docker/screenshots/
