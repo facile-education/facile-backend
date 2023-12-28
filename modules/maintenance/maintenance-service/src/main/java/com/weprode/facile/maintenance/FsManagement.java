@@ -54,7 +54,7 @@ public class FsManagement {
         parseDirectory(rootFile);
 
         logger.info("On a total of " + nbFiles + " files, " + nbFilesWithDbReference + " were found in DB, whereas " + nbFilesWithoutAnyDbReference + " were not found in DB");
-        logger.info(nbErrors + "files deletion was in error");
+        logger.info(nbErrors + " files deletion was in error");
         logger.info("=======================================================================");
     }
 
@@ -110,12 +110,19 @@ public class FsManagement {
         // folderId is composed of the 2 first parts of the path
         folderIdStr = fileTab[0] + fileTab[1];
 
+        // Skip '0' folder
+        if (fileTab[0].equals("0")) {
+            return true;
+        }
+
         // Check if the folder path corresponds to an existing DLFolder in DB
         DLFolder dlFolder = getFolderByStr(folderIdStr);
-        if (dlFolder != null) {
-            logger.info("   Folder exists");
-        } else {
-            logger.info("   Folder does not exist in DB -> candidate for deletion");
+        if (dlFolder == null) {
+            logger.info("   Folder " + folderIdStr + " does not exist in DB -> candidate for deletion");
+            File folderToDelete = new File(ROOT_PATH + fileTab[0] + "/" + fileTab[1]);
+            logger.info("   Deleting folder " + folderToDelete.getAbsolutePath() + " TO DO");
+            deleteDir(folderToDelete);
+            logger.info("   DELETION DONE");
             return false;
         }
 
@@ -123,12 +130,12 @@ public class FsManagement {
         try {
             UserLocalServiceUtil.getUser(dlFolder.getUserId());
         } catch (Exception e) {
-            logger.info("   User " + dlFolder.getUserId() + " does not exist anymore -> candidate for deletion");
-            return false;
+            //logger.info("   User " + dlFolder.getUserId() + " does not exist anymore -> candidate for deletion");
+            //return false;
         }
 
 
-        // file name is the 5th ou 6th part of the path
+        // file name is the 5th or 6th part of the path
         for (String fileTabSubDir : fileTab) {
             if (fileTabSubDir.contains(".")) {
                 fileName = fileTabSubDir.substring(0, fileTabSubDir.length() - 1);
@@ -144,9 +151,12 @@ public class FsManagement {
         }
         if (dlfe == null) {
             logger.info("   File entry could not be found for folderId="+dlFolder.getFolderId()+" and groupId="+dlFolder.getGroupId()+" and fileName="+fileName);
-            logger.info("Deleting TO DO");
+            File fileToDelete = new File(ROOT_PATH + fileTab[0] + "/" + fileTab[1]+ "/" + fileTab[2]+ "/" + fileTab[3]+ "/" + fileTab[4]+ "/" + fileTab[5]);
+            logger.info("   Deleting file " + fileToDelete.getAbsolutePath() + " TO DO");
 
-            logger.info("DELETION DONE");
+            // File to delete is a directory containing all file's versions
+            deleteDir(fileToDelete);
+            logger.info("   DELETION DONE");
             return false;
         } else {
             logger.info("   FOUND");
@@ -176,6 +186,15 @@ public class FsManagement {
         return dlFolder;
     }
 
+    private void deleteDir (File file) {
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                deleteDir(f);
+            }
+        }
+        file.delete();
+    }
 
     public void exploreDB() {
 
