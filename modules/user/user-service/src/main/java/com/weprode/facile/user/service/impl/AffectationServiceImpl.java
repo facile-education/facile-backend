@@ -18,19 +18,13 @@ package com.weprode.facile.user.service.impl;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
-import com.weprode.facile.organization.constants.OrgConstants;
-import com.weprode.facile.organization.model.OrgDetails;
-import com.weprode.facile.organization.service.OrgDetailsLocalServiceUtil;
-import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.facile.user.model.Affectation;
 import com.weprode.facile.user.service.AffectationLocalServiceUtil;
 import com.weprode.facile.user.service.AffectationService;
 import com.weprode.facile.user.service.base.AffectationServiceBaseImpl;
@@ -60,7 +54,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -69,7 +63,8 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets affected users");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -82,33 +77,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
                 jsonUser.put(JSONConstants.LAST_NAME, affectedUser.getLastName());
                 jsonUser.put(JSONConstants.FIRST_NAME, affectedUser.getFirstName());
                 jsonUser.put(JSONConstants.ROLES, RoleUtilsLocalServiceUtil.displayUserRoles(affectedUser));
-
-                // Get affectations
-                List<Affectation> userAffectations = AffectationLocalServiceUtil.getUserAffectations(affectedUser.getUserId(), schoolId);
-                JSONArray jsonAffectations = new JSONArray();
-                for (Affectation userAffectation : userAffectations) {
-                    try {
-                        Organization org = OrganizationLocalServiceUtil.getOrganization(userAffectation.getOrgId());
-                        OrgDetails orgDetails = OrgDetailsLocalServiceUtil.getOrgDetails(userAffectation.getOrgId());
-
-                        // Authorized types are : school, class and cours
-                        if (orgDetails.getType() == OrgConstants.SCHOOL_TYPE || orgDetails.getType() == OrgConstants.CLASS_TYPE
-                                || orgDetails.getType() == OrgConstants.COURS_TYPE) {
-
-                            JSONObject jsonAffectation = new JSONObject();
-                            jsonAffectation.put(JSONConstants.ORG_ID, userAffectation.getOrgId());
-                            jsonAffectation.put(JSONConstants.ORG_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
-                            jsonAffectation.put(JSONConstants.TYPE, orgDetails.getType());
-                            jsonAffectation.put(JSONConstants.ADMIN_NAME, UserLocalServiceUtil.getUser(userAffectation.getAdminUserId()).getFullName());
-                            jsonAffectation.put(JSONConstants.AFFECTATION_DATE,
-                                    new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(userAffectation.getAffectationDate()));
-                            jsonAffectations.put(jsonAffectation);
-                        }
-                    } catch (Exception e) {
-                        logger.error("Error processing affectation for user " + affectedUser.getUserId(), e);
-                    }
-                }
-                jsonUser.put(JSONConstants.AFFECTATIONS, jsonAffectations);
+                jsonUser.put(JSONConstants.AFFECTATIONS, AffectationLocalServiceUtil.convertUserAffectations(affectedUser.getUserId(), schoolId));
 
                 jsonUsers.put(jsonUser);
             }
@@ -131,7 +100,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -140,7 +109,8 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds user affectation");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -151,6 +121,8 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
             }
             boolean success = AffectationLocalServiceUtil.addUserAffectation(userId, orgId, user.getUserId(), expireDate);
             result.put(JSONConstants.SUCCESS, success);
+            long schoolId = UserOrgsLocalServiceUtil.getUserSchools(user).get(0).getOrganizationId();
+            result.put(JSONConstants.AFFECTATIONS, AffectationLocalServiceUtil.convertUserAffectations(userId, schoolId));
 
         } catch (Exception e) {
             logger.error("Error adding affectation for user " + userId + " to orgId " + orgId, e);
@@ -168,7 +140,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -177,13 +149,16 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes user affectation");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
             boolean success = AffectationLocalServiceUtil.removeUserAffectation(userId, orgId);
             result.put(JSONConstants.SUCCESS, success);
+            long schoolId = UserOrgsLocalServiceUtil.getUserSchools(user).get(0).getOrganizationId();
+            result.put(JSONConstants.AFFECTATIONS, AffectationLocalServiceUtil.convertUserAffectations(userId, schoolId));
         } catch (Exception e) {
             logger.error("Error while fetching schools for manual user creation", e);
             result.put(JSONConstants.SUCCESS, false);

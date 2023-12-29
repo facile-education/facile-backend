@@ -22,10 +22,12 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -49,15 +51,17 @@ public class ClipboardUtil {
 
         for (long folderId : folderIdList) {
             try {
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)) {
-                    logger.info("User " + userId + " tries to copy folderId " + folderId + " but has no permission");
+                Folder folder = DLAppServiceUtil.getFolder(folderId);
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
+                    || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " copies folder " + folderId);
                     continue;
                 }
                 FolderUtilsLocalServiceUtil.copyFolder(userId, folderId, destFolderId, mode);
             } catch (FileNameException e) {
                 try {
                     Folder folderInConflict = DLAppServiceUtil.getFolder(folderId);
-                    foldersInConflict.put(DLAppJsonFactory.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
+                    foldersInConflict.put(FolderUtilsLocalServiceUtil.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
                     JSONObject failedEntity = new JSONObject();
@@ -81,15 +85,16 @@ public class ClipboardUtil {
         for (long fileId : fileIdList) {
             try {
                 FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())) {
-                    logger.info("User " + userId + " tries to copy file " + fileId + " but has no permission");
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
+                    || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " copies file " + fileId);
                     continue;
                 }
                 FileUtilsLocalServiceUtil.copyFileEntry(userId, fileId, destFolderId, true, mode);
             } catch (DuplicateFileEntryException e) {
                 try {
                     FileEntry fileEntryInConflict = DLAppServiceUtil.getFileEntry(fileId);
-                    filesInConflict.put(DLAppJsonFactory.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
+                    filesInConflict.put(FileUtilsLocalServiceUtil.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
                     JSONObject failedEntity = new JSONObject();
@@ -128,15 +133,16 @@ public class ClipboardUtil {
         for (long folderId : folderIdList) {
             try {
                 Folder folder = DLAppServiceUtil.getFolder(folderId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)) {
-                    logger.info("User " + userId + " tries to move folderId " + folderId + " but has no permission");
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
+                        || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
                     continue;
                 }
                 FolderUtilsLocalServiceUtil.moveFolder(userId, folder, destFolderId, mode);
             } catch (FileNameException e) {
                 try {
                     Folder folderInConflict = DLAppServiceUtil.getFolder(folderId);
-                    foldersInConflict.put(DLAppJsonFactory.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
+                    foldersInConflict.put(FolderUtilsLocalServiceUtil.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
                     JSONObject failedEntity = new JSONObject();
@@ -160,15 +166,16 @@ public class ClipboardUtil {
         for (long fileId : fileIdList) {
             try {
                 FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())) {
-                    logger.info("User " + userId + " tries to move file " + fileId + " but has no permission");
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
+                        || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);
                     continue;
                 }
                 FileUtilsLocalServiceUtil.moveFileEntry(userId, fileId, destFolderId, mode);
             } catch (DuplicateFileEntryException e) {
                 try {
                     FileEntry fileEntryInConflict = DLAppServiceUtil.getFileEntry(fileId);
-                    filesInConflict.put(DLAppJsonFactory.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
+                    filesInConflict.put(FileUtilsLocalServiceUtil.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
                 } catch (Exception ex) {
                     logger.error(ex);
                     JSONObject failedEntity = new JSONObject();

@@ -69,7 +69,7 @@ public class SchoolAdminLocalServiceImpl extends SchoolAdminLocalServiceBaseImpl
 
         // If user is not already school admin
         // OR if he is not an ENT admin
-        if (!isSchoolAdmin && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+        if (!isSchoolAdmin && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             long[] userIdTab = new long[1];
             userIdTab[0] = userId;
 

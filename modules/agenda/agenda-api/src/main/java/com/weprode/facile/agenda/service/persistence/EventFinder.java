@@ -24,12 +24,21 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface EventFinder {
 
 	public java.util.List<com.weprode.facile.agenda.model.Event> getUserEvents(
-		long userId, int startIndex, int nbEvents,
+		long userId, java.util.Date minDate, int startIndex, int nbEvents,
 		java.util.List<Long> groupIds, java.util.List<Long> roleIds,
 		boolean unreadOnly);
+
+	public java.util.List<com.weprode.facile.agenda.model.Event>
+		getSchoolEvents(
+			long userId, java.util.Date minDate, int startIndex, int nbEvents,
+			java.util.List<Long> schoolIds, boolean unreadOnly);
 
 	public int countEvents(
 		long userId, java.util.Date minDate, java.util.List<Long> groupIds,
 		java.util.List<Long> roleIds, boolean unreadOnly);
+
+	public int countSchoolEvents(
+		long userId, java.util.Date minDate, java.util.List<Long> schoolIds,
+		boolean unreadOnly);
 
 }

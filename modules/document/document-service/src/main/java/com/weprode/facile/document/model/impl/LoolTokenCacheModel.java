@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing LoolToken in entity cache.
  *
@@ -60,7 +62,7 @@ public class LoolTokenCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{loolTokenId=");
 		sb.append(loolTokenId);
@@ -68,6 +70,8 @@ public class LoolTokenCacheModel
 		sb.append(userId);
 		sb.append(", token=");
 		sb.append(token);
+		sb.append(", editionDate=");
+		sb.append(editionDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -87,6 +91,13 @@ public class LoolTokenCacheModel
 			loolTokenImpl.setToken(token);
 		}
 
+		if (editionDate == Long.MIN_VALUE) {
+			loolTokenImpl.setEditionDate(null);
+		}
+		else {
+			loolTokenImpl.setEditionDate(new Date(editionDate));
+		}
+
 		loolTokenImpl.resetOriginalValues();
 
 		return loolTokenImpl;
@@ -98,6 +109,7 @@ public class LoolTokenCacheModel
 
 		userId = objectInput.readLong();
 		token = objectInput.readUTF();
+		editionDate = objectInput.readLong();
 	}
 
 	@Override
@@ -112,10 +124,13 @@ public class LoolTokenCacheModel
 		else {
 			objectOutput.writeUTF(token);
 		}
+
+		objectOutput.writeLong(editionDate);
 	}
 
 	public long loolTokenId;
 	public long userId;
 	public String token;
+	public long editionDate;
 
 }

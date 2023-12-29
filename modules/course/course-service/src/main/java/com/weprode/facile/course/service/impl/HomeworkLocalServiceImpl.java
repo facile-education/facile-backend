@@ -317,11 +317,15 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			minDate = schoolYearStartDate;
 		}
 		try {
-			studentHomeworkList = homeworkFinder.getStudentHomeworks(studentId, minDate, maxDate, undoneOnly);
-			// tmp for permissions, because old folders were created without permissions
-			for (Homework homework : studentHomeworkList) {
-				logger.info("TMP add permission on homework " + homework.getHomeworkId());
-				getHomeworkFolder(homework.getHomeworkId());
+			List<Homework> homeworkList = homeworkFinder.getStudentHomeworks(studentId, minDate, maxDate, undoneOnly);
+			// Check course belonging for the student, because he might have changed class and/or course
+			// We do not want him/her to access old homeworks
+			for (Homework homework : homeworkList) {
+				if (UserUtilsLocalServiceUtil.getUserGroupIds(studentId).contains(homework.getCourseId())) {
+					studentHomeworkList.add(homework);
+				} else {
+					logger.error("Student " + studentId + " may be trying to access old classes's homework");
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Error when fetching homeworks for student " + studentId, e);
@@ -440,9 +444,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(homework.getTargetDate());
 				int weekNb = cal.get(Calendar.WEEK_OF_YEAR);
-				if (!nbHomeworksToCorrectMap.containsKey(weekNb)) {
-					nbHomeworksToCorrectMap.put(weekNb, 0);
-				}
+				nbHomeworksToCorrectMap.putIfAbsent(weekNb, 0);
 				nbHomeworksToCorrectMap.put(weekNb, nbHomeworksToCorrectMap.get(weekNb) + 1);
 			}
 			// Build JSONArray
@@ -479,9 +481,12 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		} catch (Exception e) {
 			logger.error("Error when fetching folder for homeworkId " + homeworkId, e);
 		}
-		// Apply default permissions so that students can VIEW
-		logger.info("Applying default permissions on homework folder " + homeworkFolder.getFolderId());
-		PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(homeworkFolder);
+
+		if (homeworkFolder != null) {
+			// Apply default permissions so that students can VIEW
+			logger.info("Applying default permissions on homework folder " + homeworkFolder.getFolderId());
+			PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(homeworkFolder);
+		}
 
 		return homeworkFolder;
 	}

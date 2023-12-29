@@ -44,6 +44,7 @@ public class NewsPopulationWrapper
 		attributes.put("newsId", getNewsId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("roleId", getRoleId());
+		attributes.put("schoolId", getSchoolId());
 
 		return attributes;
 	}
@@ -66,6 +67,12 @@ public class NewsPopulationWrapper
 
 		if (roleId != null) {
 			setRoleId(roleId);
+		}
+
+		Long schoolId = (Long)attributes.get("schoolId");
+
+		if (schoolId != null) {
+			setSchoolId(schoolId);
 		}
 	}
 
@@ -116,6 +123,16 @@ public class NewsPopulationWrapper
 		return model.getRoleId();
 	}
 
+	/**
+	 * Returns the school ID of this news population.
+	 *
+	 * @return the school ID of this news population
+	 */
+	@Override
+	public long getSchoolId() {
+		return model.getSchoolId();
+	}
+
 	@Override
 	public void persist() {
 		model.persist();
@@ -162,6 +179,16 @@ public class NewsPopulationWrapper
 	@Override
 	public void setRoleId(long roleId) {
 		model.setRoleId(roleId);
+	}
+
+	/**
+	 * Sets the school ID of this news population.
+	 *
+	 * @param schoolId the school ID of this news population
+	 */
+	@Override
+	public void setSchoolId(long schoolId) {
+		model.setSchoolId(schoolId);
 	}
 
 	@Override

@@ -283,13 +283,46 @@ public class GeneralStatServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getSchoolLifeStudentsCount(
+		HttpPrincipal httpPrincipal, java.util.Date startDate,
+		java.util.Date endDate, long schoolId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				GeneralStatServiceUtil.class, "getSchoolLifeStudentsCount",
+				_getSchoolLifeStudentsCountParameterTypes7);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, startDate, endDate, schoolId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static org.json.JSONObject getDashboardStatistics(
 		HttpPrincipal httpPrincipal) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				GeneralStatServiceUtil.class, "getDashboardStatistics",
-				_getDashboardStatisticsParameterTypes8);
+				_getDashboardStatisticsParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -337,7 +370,9 @@ public class GeneralStatServiceHttp {
 	};
 	private static final Class<?>[] _getMessagesCountParameterTypes6 =
 		new Class[] {java.util.Date.class, java.util.Date.class, long.class};
-	private static final Class<?>[] _getDashboardStatisticsParameterTypes8 =
+	private static final Class<?>[] _getSchoolLifeStudentsCountParameterTypes7 =
+		new Class[] {java.util.Date.class, java.util.Date.class, long.class};
+	private static final Class<?>[] _getDashboardStatisticsParameterTypes9 =
 		new Class[] {};
 
 }

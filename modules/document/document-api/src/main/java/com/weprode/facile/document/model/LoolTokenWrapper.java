@@ -17,6 +17,7 @@ package com.weprode.facile.document.model;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.wrapper.BaseModelWrapper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class LoolTokenWrapper
 		attributes.put("loolTokenId", getLoolTokenId());
 		attributes.put("userId", getUserId());
 		attributes.put("token", getToken());
+		attributes.put("editionDate", getEditionDate());
 
 		return attributes;
 	}
@@ -67,11 +69,27 @@ public class LoolTokenWrapper
 		if (token != null) {
 			setToken(token);
 		}
+
+		Date editionDate = (Date)attributes.get("editionDate");
+
+		if (editionDate != null) {
+			setEditionDate(editionDate);
+		}
 	}
 
 	@Override
 	public LoolToken cloneWithOriginalValues() {
 		return wrap(model.cloneWithOriginalValues());
+	}
+
+	/**
+	 * Returns the edition date of this lool token.
+	 *
+	 * @return the edition date of this lool token
+	 */
+	@Override
+	public Date getEditionDate() {
+		return model.getEditionDate();
 	}
 
 	/**
@@ -127,6 +145,16 @@ public class LoolTokenWrapper
 	@Override
 	public void persist() {
 		model.persist();
+	}
+
+	/**
+	 * Sets the edition date of this lool token.
+	 *
+	 * @param editionDate the edition date of this lool token
+	 */
+	@Override
+	public void setEditionDate(Date editionDate) {
+		model.setEditionDate(editionDate);
 	}
 
 	/**

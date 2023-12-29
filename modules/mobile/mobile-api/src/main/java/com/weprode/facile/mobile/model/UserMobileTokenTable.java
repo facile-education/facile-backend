@@ -19,6 +19,8 @@ import com.liferay.petra.sql.dsl.base.BaseTable;
 
 import java.sql.Types;
 
+import java.util.Date;
+
 /**
  * The table class for the &quot;Mobile_UserMobileToken&quot; database table.
  *
@@ -36,6 +38,12 @@ public class UserMobileTokenTable extends BaseTable<UserMobileTokenTable> {
 	public final Column<UserMobileTokenTable, String> mobileToken =
 		createColumn(
 			"mobileToken", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<UserMobileTokenTable, Date> creationDate = createColumn(
+		"creationDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
+	public final Column<UserMobileTokenTable, Date> modificationDate =
+		createColumn(
+			"modificationDate", Date.class, Types.TIMESTAMP,
+			Column.FLAG_DEFAULT);
 
 	private UserMobileTokenTable() {
 		super("Mobile_UserMobileToken", UserMobileTokenTable::new);

@@ -39,7 +39,6 @@ public class GeneralStatLocalServiceImpl extends GeneralStatLocalServiceBaseImpl
         return generalStatFinder.countHomeworks(startDate, endDate, schoolId);
     }
 
-
     public int countNews(Date startDate, Date endDate, long schoolId, boolean isSchoolNewsType) {
         return generalStatFinder.countNews(startDate, endDate, schoolId, isSchoolNewsType);
     }
@@ -47,5 +46,9 @@ public class GeneralStatLocalServiceImpl extends GeneralStatLocalServiceBaseImpl
 
     public int countMessages(Date startDate, Date endDate, long schoolId) {
         return generalStatFinder.countMessages(startDate, endDate, schoolId);
+    }
+
+    public Map<Integer, Integer> countSchoolLifeStudents(Date startDate, Date endDate, long schoolId) {
+        return generalStatFinder.countSchoolLifeStudents(startDate, endDate, schoolId);
     }
 }

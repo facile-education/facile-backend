@@ -60,7 +60,4 @@ public interface DocumentUtilsLocalService extends BaseLocalService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getWebDavUrl(User user);
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isEmbedUrlWhitelisted(String url);
-
 }

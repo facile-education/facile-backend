@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing UserMobileToken in entity cache.
  *
@@ -61,12 +63,16 @@ public class UserMobileTokenCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(5);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{userId=");
 		sb.append(userId);
 		sb.append(", mobileToken=");
 		sb.append(mobileToken);
+		sb.append(", creationDate=");
+		sb.append(creationDate);
+		sb.append(", modificationDate=");
+		sb.append(modificationDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -85,6 +91,20 @@ public class UserMobileTokenCacheModel
 			userMobileTokenImpl.setMobileToken(mobileToken);
 		}
 
+		if (creationDate == Long.MIN_VALUE) {
+			userMobileTokenImpl.setCreationDate(null);
+		}
+		else {
+			userMobileTokenImpl.setCreationDate(new Date(creationDate));
+		}
+
+		if (modificationDate == Long.MIN_VALUE) {
+			userMobileTokenImpl.setModificationDate(null);
+		}
+		else {
+			userMobileTokenImpl.setModificationDate(new Date(modificationDate));
+		}
+
 		userMobileTokenImpl.resetOriginalValues();
 
 		return userMobileTokenImpl;
@@ -94,6 +114,8 @@ public class UserMobileTokenCacheModel
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		userId = objectInput.readLong();
 		mobileToken = objectInput.readUTF();
+		creationDate = objectInput.readLong();
+		modificationDate = objectInput.readLong();
 	}
 
 	@Override
@@ -106,9 +128,14 @@ public class UserMobileTokenCacheModel
 		else {
 			objectOutput.writeUTF(mobileToken);
 		}
+
+		objectOutput.writeLong(creationDate);
+		objectOutput.writeLong(modificationDate);
 	}
 
 	public long userId;
 	public String mobileToken;
+	public long creationDate;
+	public long modificationDate;
 
 }

@@ -132,6 +132,49 @@ public class FileUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.FileEntry fileEntry)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _fileUtilsLocalService.format(userId, fileEntry);
+	}
+
+	@Override
+	public org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.FileEntry fileEntry,
+			int space)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _fileUtilsLocalService.format(userId, fileEntry, space);
+	}
+
+	@Override
+	public org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.FileEntry fileEntry,
+			int space, boolean withDetails)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _fileUtilsLocalService.format(
+			userId, fileEntry, space, withDetails);
+	}
+
+	@Override
+	public org.json.JSONObject format(
+		com.liferay.portal.kernel.model.User user,
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry,
+		int space, boolean withDetails) {
+
+		return _fileUtilsLocalService.format(
+			user, fileEntry, space, withDetails);
+	}
+
+	@Override
 	public String getDisplayUrl(
 			com.liferay.portal.kernel.repository.model.FileEntry file,
 			long versionId, long userId, boolean readOnly)
@@ -157,11 +200,6 @@ public class FileUtilsLocalServiceWrapper
 	@Override
 	public String getOSGiServiceIdentifier() {
 		return _fileUtilsLocalService.getOSGiServiceIdentifier();
-	}
-
-	@Override
-	public long getSizeInMegaOctet(long pSize) {
-		return _fileUtilsLocalService.getSizeInMegaOctet(pSize);
 	}
 
 	@Override

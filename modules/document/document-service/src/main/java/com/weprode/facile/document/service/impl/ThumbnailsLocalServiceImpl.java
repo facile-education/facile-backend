@@ -49,7 +49,7 @@ public class ThumbnailsLocalServiceImpl extends ThumbnailsLocalServiceBaseImpl {
 		FileEntry originalPicture = DLAppServiceUtil.getFileEntry(sourceFileId);
 
 		// Get or create news thumbnail folder
-		Folder thumbnailFolder = FolderUtilsLocalServiceUtil.getThumbnailFolder(userId);
+		Folder thumbnailFolder = FolderUtilsLocalServiceUtil.getThumbnailFolder();
 
 		// Copy (or move if original file belong to user tempFolder) file to thumbnail folder
 		FileEntry thumbnail;

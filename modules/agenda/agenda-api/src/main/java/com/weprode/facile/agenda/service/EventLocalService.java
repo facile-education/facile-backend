@@ -88,6 +88,9 @@ public interface EventLocalService
 	public int countEvents(User user, Date minDate, boolean unreadOnly)
 		throws SystemException;
 
+	public int countSchoolEvents(User user, Date minDate, boolean unreadOnly)
+		throws SystemException;
+
 	/**
 	 * Creates a new event with the primary key. Does not add the event to the database.
 	 *
@@ -276,8 +279,15 @@ public interface EventLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Event> getSchoolEvents(
+			User user, Date minDate, int startIndex, int nbEvents,
+			boolean unreadOnly)
+		throws SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Event> getUserEvents(
-			User user, int startIndex, int nbEvents, boolean unreadOnly)
+			User user, Date minDate, int startIndex, int nbEvents,
+			boolean unreadOnly)
 		throws SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

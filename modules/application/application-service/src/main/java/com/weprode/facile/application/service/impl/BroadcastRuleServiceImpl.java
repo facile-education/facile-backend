@@ -60,7 +60,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -69,6 +69,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets application rules");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -138,7 +139,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -147,11 +148,11 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates broadcast rules");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            logger.info("User " + user.getUserId() + " updates broadcast rules for applicationId " + applicationId + ", schoolId " + schoolId + " : rules = " + rules);
             JSONArray jsonRules = new JSONArray(rules);
 
             // First delete all application's rules

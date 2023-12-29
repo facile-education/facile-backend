@@ -65,7 +65,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -74,10 +74,10 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
-
 
         try {
             // Check if email is already used
@@ -92,6 +92,18 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 result.put(JSONConstants.SUCCESS, false);
                 result.put(JSONConstants.ERROR_CODE, JSONConstants.EMAIL);
                 return result;
+            }
+
+            // Check that the given roleId is allowed (+ parents that are not in the list)
+            boolean isRoleExisting = RoleUtilsLocalServiceUtil.getParentRole().getRoleId() == roleId;
+            for (Role role : RoleUtilsLocalServiceUtil.getAvailableRolesForLocalUser()) {
+                if (role.getRoleId() == roleId) {
+                    isRoleExisting = true;
+                }
+            }
+            if (!isRoleExisting) {
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
             User createdUser = UserManagementLocalServiceUtil.createManualUser(lastName, firstName, email, null, roleId, schoolId);
@@ -113,7 +125,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -122,7 +134,8 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -135,7 +148,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 }
             }
             if (!isRoleExisting) {
-                logger.info("User " + user.getFullName() + " tries to edit user " + userId + " with unauthorized roleId " + roleId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -205,7 +218,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -214,7 +227,8 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes manual user");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -245,7 +259,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -254,12 +268,12 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets manual users");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            logger.info("User " + user.getUserId() + " fetches all manual users for school " + schoolId);
             List<Long> organizationIds = new ArrayList<>();
             organizationIds.add(schoolId);
 
@@ -318,7 +332,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -327,7 +341,8 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates password for user " + userId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -358,7 +373,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {

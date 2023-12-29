@@ -72,6 +72,26 @@ public class NewsLocalServiceWrapper
 		return _newsLocalService.convertNewsToJson(newsId, userId, withDetails);
 	}
 
+	@Override
+	public int countAllSchoolNews(
+			com.liferay.portal.kernel.model.User user, boolean importantOnly,
+			boolean unreadOnly)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _newsLocalService.countAllSchoolNews(
+			user, importantOnly, unreadOnly);
+	}
+
+	@Override
+	public int countNews(
+			com.liferay.portal.kernel.model.User user, long groupId,
+			boolean groupNews, boolean importantOnly, boolean unreadOnly)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _newsLocalService.countNews(
+			user, groupId, groupNews, importantOnly, unreadOnly);
+	}
+
 	/**
 	 * Creates a new news with the primary key. Does not add the news to the database.
 	 *
@@ -279,6 +299,17 @@ public class NewsLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.weprode.facile.news.model.News> getAllSchoolNews(
+			com.liferay.portal.kernel.model.User user,
+			java.util.Date currentDate, int startIndex, int nbNews,
+			boolean unreadOnly)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _newsLocalService.getAllSchoolNews(
+			user, currentDate, startIndex, nbNews, unreadOnly);
+	}
+
+	@Override
 	public java.util.List<com.weprode.facile.news.model.News>
 			getGroupNewsActivities(
 				com.liferay.portal.kernel.model.User user, long groupId,
@@ -320,13 +351,13 @@ public class NewsLocalServiceWrapper
 	@Override
 	public java.util.List<com.weprode.facile.news.model.News> getNews(
 			com.liferay.portal.kernel.model.User user, long groupId,
-			java.util.Date maxDate, int nbNews, boolean groupNews,
-			boolean importantOnly, boolean unreadOnly)
+			java.util.Date currentDate, int startIndex, int nbNews,
+			boolean groupNews, boolean importantOnly, boolean unreadOnly)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _newsLocalService.getNews(
-			user, groupId, maxDate, nbNews, groupNews, importantOnly,
-			unreadOnly);
+			user, groupId, currentDate, startIndex, nbNews, groupNews,
+			importantOnly, unreadOnly);
 	}
 
 	@Override
@@ -338,16 +369,6 @@ public class NewsLocalServiceWrapper
 
 		return _newsLocalService.getNewsActivities(
 			user, groupIds, minDate, maxDate, nbNews, groupNewsOnly);
-	}
-
-	@Override
-	public int getNewsCount(
-			com.liferay.portal.kernel.model.User user, long groupId,
-			boolean groupNews, boolean importantOnly, boolean unreadOnly)
-		throws com.liferay.portal.kernel.exception.SystemException {
-
-		return _newsLocalService.getNewsCount(
-			user, groupId, groupNews, importantOnly, unreadOnly);
 	}
 
 	/**
@@ -407,6 +428,15 @@ public class NewsLocalServiceWrapper
 		com.liferay.portal.kernel.model.User user) {
 
 		return _newsLocalService.getSchoolNewsBroadcastGroups(user);
+	}
+
+	@Override
+	public org.json.JSONObject
+		getSchoolNewsBroadcastGroupsForCollectivityAdmins(
+			com.liferay.portal.kernel.model.User user) {
+
+		return _newsLocalService.
+			getSchoolNewsBroadcastGroupsForCollectivityAdmins(user);
 	}
 
 	@Override

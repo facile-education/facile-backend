@@ -98,45 +98,6 @@ public class DocumentUtilsServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject isEmbedUrlWhitelisted(
-			HttpPrincipal httpPrincipal, String url)
-		throws com.liferay.portal.kernel.exception.SystemException {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				DocumentUtilsServiceUtil.class, "isEmbedUrlWhitelisted",
-				_isEmbedUrlWhitelistedParameterTypes1);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, url);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.exception.SystemException) {
-
-					throw (com.liferay.portal.kernel.exception.SystemException)
-						exception;
-				}
-
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static org.json.JSONObject getDocumentGroupActivity(
 		HttpPrincipal httpPrincipal, long groupId, String maxDate,
 		int nbResults) {
@@ -144,7 +105,7 @@ public class DocumentUtilsServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				DocumentUtilsServiceUtil.class, "getDocumentGroupActivity",
-				_getDocumentGroupActivityParameterTypes2);
+				_getDocumentGroupActivityParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, groupId, maxDate, nbResults);
@@ -175,9 +136,7 @@ public class DocumentUtilsServiceHttp {
 
 	private static final Class<?>[]
 		_getGlobalDocumentsPropertiesParameterTypes0 = new Class[] {};
-	private static final Class<?>[] _isEmbedUrlWhitelistedParameterTypes1 =
-		new Class[] {String.class};
-	private static final Class<?>[] _getDocumentGroupActivityParameterTypes2 =
+	private static final Class<?>[] _getDocumentGroupActivityParameterTypes1 =
 		new Class[] {long.class, String.class, int.class};
 
 }

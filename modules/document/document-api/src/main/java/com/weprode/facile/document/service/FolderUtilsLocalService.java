@@ -23,9 +23,9 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
-import java.io.IOException;
-
 import java.util.List;
+
+import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -61,8 +61,18 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 	public void deleteFolder(long userId, long folderId)
 		throws PortalException, SystemException;
 
-	public String downloadFolder(Folder folder, User user)
-		throws IOException, PortalException, SystemException;
+	public JSONObject format(long userId, Folder folder)
+		throws PortalException, SystemException;
+
+	public JSONObject format(long userId, Folder folder, int space)
+		throws PortalException, SystemException;
+
+	public JSONObject format(
+			long userId, Folder folder, int space, boolean withDetails)
+		throws PortalException, SystemException;
+
+	public JSONObject format(
+		User user, Folder folder, int space, boolean withDetails);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getFolderByName(Folder parentFolder, String name)
@@ -93,9 +103,6 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getIMBox(long userId) throws PortalException, SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getOrCreateGroupRootFolder(long groupId)
 		throws PortalException;
 
@@ -107,23 +114,18 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 	public String getOSGiServiceIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getProgressionFolder(long userId)
-		throws PortalException, SystemException;
+	public Folder getThumbnailFolder() throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getSendingBox(long userId)
-		throws PortalException, SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getThumbnailFolder(long userId)
-		throws PortalException, SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getTmpFolder(long userId)
+	public Folder getUserMessagingAttachedFilesFolder(long userId)
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getUserRootFolder(long userId)
+		throws PortalException, SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Folder getUserTmpFolder(long userId)
 		throws PortalException, SystemException;
 
 	public void hideDLFolder(long folderId) throws PortalException;

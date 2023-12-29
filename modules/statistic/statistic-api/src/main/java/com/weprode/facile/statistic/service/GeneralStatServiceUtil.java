@@ -84,6 +84,13 @@ public class GeneralStatServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static org.json.JSONObject getSchoolLifeStudentsCount(
+		java.util.Date startDate, java.util.Date endDate, long schoolId) {
+
+		return getService().getSchoolLifeStudentsCount(
+			startDate, endDate, schoolId);
+	}
+
 	public static org.json.JSONObject getSessionsCount(
 		java.util.Date startDate, java.util.Date endDate, long schoolId,
 		java.lang.String comparator) {

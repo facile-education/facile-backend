@@ -62,11 +62,6 @@ public class DocumentUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public boolean isEmbedUrlWhitelisted(String url) {
-		return _documentUtilsLocalService.isEmbedUrlWhitelisted(url);
-	}
-
-	@Override
 	public DocumentUtilsLocalService getWrappedService() {
 		return _documentUtilsLocalService;
 	}

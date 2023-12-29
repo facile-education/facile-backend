@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
@@ -232,6 +233,9 @@ public interface MessageLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Message fetchMessage(long messageId);
 
+	public List<Long> filterRecipientList(
+		User sender, List<Long> recipientIds, long originMessageId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
@@ -305,6 +309,10 @@ public interface MessageLocalService
 	public MessagingThread getMostRecentThread(
 		List<Long> addedThreadIds, long folderId, Date fromDate,
 		boolean unReadOnly);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Folder getOrCreateMessageAttachedFilesFolder(
+		long userId, long messageId);
 
 	/**
 	 * Returns the OSGi service identifier.

@@ -50,6 +50,7 @@
 		<column name="loolTokenId" type="long" primary="true" />
 		<column name="userId" type="long"/>
 		<column name="token" type="String"/>
+		<column name="editionDate" type="Date" />
 
 		<finder return-type="LoolToken" name="token">
 			<finder-column name="token" />

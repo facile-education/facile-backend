@@ -48,7 +48,7 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -57,12 +57,12 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds news delegate");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            logger.info("User " + user.getUserId() + " adds user " + userId + " as news delegate for school " + schoolId);
             result.put(JSONConstants.SUCCESS, NewsAdminLocalServiceUtil.addSchoolDelegate(userId, schoolId));
         } catch (Exception e) {
             logger.error("Error while saving school admins for schoolId " + schoolId, e);
@@ -80,7 +80,7 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -89,12 +89,12 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes news delegate");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            logger.info("User " + user.getUserId() + " removes user " + userId + " as news delegate for school " + schoolId);
             result.put(JSONConstants.SUCCESS, NewsAdminLocalServiceUtil.removeSchoolDelegate(userId, schoolId));
         } catch (Exception e) {
             logger.error("Error while saving school admins for schoolId " + schoolId, e);

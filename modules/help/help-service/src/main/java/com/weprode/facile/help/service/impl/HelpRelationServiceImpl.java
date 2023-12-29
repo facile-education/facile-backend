@@ -64,13 +64,14 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves help relation");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -88,19 +89,20 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
 
     @JSONWebService(value = "delete-relation", method = "GET")
     public JSONObject deleteRelation(long relationId) {
-        logger.info("Deleting relation with id = " + relationId);
+
         JSONObject result = new JSONObject();
 
         User user;
         try {
             user = getGuestOrUser();
-            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes help relation");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

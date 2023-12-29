@@ -21,29 +21,27 @@ import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil;
-import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
-
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.weprode.facile.commons.JSONProxy;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.ScratchServiceBaseImpl;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -74,7 +72,7 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -114,7 +112,7 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -124,11 +122,15 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 			DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.info("User " + user.getFullName() + " tries to get scratch file for fileVersion " + fileVersionId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets scratch file " + fileVersionId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets scratch file " + fileVersionId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
-			InputStream is = DLStoreUtil.getFileAsStream(fileEntry.getCompanyId(), fileEntry.getDataRepositoryId(), fileEntry.getName(), dlFileVersion.getStoreFileName());
+			InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntry.getFileEntryId(), dlFileVersion.getVersion());
 
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			int nRead;
@@ -164,7 +166,7 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -204,7 +206,7 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 
 			FileEntry newFileEntry;
 
-			if(fileEntry == null) {
+			if (fileEntry == null) {
 				// Create new file
 				logger.info("Creating new scratch file '" + fileName + "' for user " + user.getFullName());
 				Folder rootFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(user.getUserId());
@@ -226,8 +228,12 @@ public class ScratchServiceImpl extends ScratchServiceBaseImpl {
 			} else {
 				fileName = fileName.isEmpty() ?  fileEntry.getTitle() : fileName;
 				if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-					logger.info("User " + user.getFullName() + " tries to update scratch file for fileVersion " + fileVersionId + " but has no permission");
-					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves scratch file " + fileVersionId);
+					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+				}
+				if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)) {
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves scratch file " + fileVersionId);
+					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 				// Update file content
 				logger.info("Updating scratch file " + fileName);

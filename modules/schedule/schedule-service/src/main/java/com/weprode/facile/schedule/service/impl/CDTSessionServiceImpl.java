@@ -69,16 +69,16 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 	public JSONObject getUserSessions(long userId, String minDateStr, String maxDateStr) {
 		JSONObject result = new JSONObject();
 
-		User currentUser;
+		User user;
 		try {
-			currentUser = getGuestOrUser();
-			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.info("User " + currentUser.getUserId() + " fetches sessions for userId " + userId + " from " + minDateStr + " to " + maxDateStr);
+		logger.info("User " + user.getUserId() + " fetches sessions for userId " + userId + " from " + minDateStr + " to " + maxDateStr);
 
 		try {
 			SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -87,11 +87,11 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			User targetUser = UserLocalServiceUtil.getUser(userId);
 
 			// Students have only the right to fetch their own schedule
-			if (RoleUtilsLocalServiceUtil.isStudent(currentUser) && currentUser.getUserId() != userId) {
+			if (RoleUtilsLocalServiceUtil.isStudent(user) && user.getUserId() != userId) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			// Parents have only the right to fetch their children's schedule
-			if (RoleUtilsLocalServiceUtil.isParent(currentUser) && !UserRelationshipLocalServiceUtil.isChild(currentUser.getUserId(), userId)) {
+			if (RoleUtilsLocalServiceUtil.isParent(user) && !UserRelationshipLocalServiceUtil.isChild(user.getUserId(), userId)) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -103,12 +103,12 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 				userSessions = CDTSessionLocalServiceUtil.getTeacherSessions(userId, minDate, maxDate);
 			}
 
-			result.put(JSONConstants.SESSIONS, CDTSessionLocalServiceUtil.convertSessions(userSessions, currentUser));
+			result.put(JSONConstants.SESSIONS, CDTSessionLocalServiceUtil.convertSessions(userSessions, user));
 
 			// 2. Schoollife sessions
 			JSONArray jsonSchoollifeSessions = new JSONArray();
 			if (RoleUtilsLocalServiceUtil.isStudent(targetUser)) {
-				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(currentUser, targetUser.getUserId(), minDate, maxDate);
+				jsonSchoollifeSessions = SessionStudentLocalServiceUtil.getStudentSessions(user, targetUser.getUserId(), minDate, maxDate);
 			} else if (RoleUtilsLocalServiceUtil.isTeacher(targetUser)) {
 				jsonSchoollifeSessions = SchoollifeSessionLocalServiceUtil.getTeacherSessions(targetUser.getUserId(), minDate, maxDate);
 			}
@@ -119,7 +119,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
-			return JSONProxy.getJSONReturnInErrorCase("Error when get sessions for agent : " + currentUser.getFullName() + " ( id: " + currentUser.getUserId() + ")");
+			return JSONProxy.getJSONReturnInErrorCase("Error when get sessions for agent : " + user.getFullName() + " ( id: " + user.getUserId() + ")");
 		}
 	}
 
@@ -127,25 +127,25 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 	public JSONObject getGroupSessions(long groupId, String minDateStr, String maxDateStr) {
 		JSONObject result = new JSONObject();
 
-		User currentUser;
+		User user;
 		try {
-			currentUser = getGuestOrUser();
-			if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			user = getGuestOrUser();
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.info("User " + currentUser.getUserId() + " fetches sessions for group " + groupId + " from " + minDateStr + " to " + maxDateStr);
+		logger.info("User " + user.getUserId() + " fetches sessions for group " + groupId + " from " + minDateStr + " to " + maxDateStr);
 
 		try {
 			SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 			Date minDate = df.parse(minDateStr);
 			Date maxDate = df.parse(maxDateStr);
 
-			if (groupId != 0 && !RoleUtilsLocalServiceUtil.isStudentOrParent(currentUser)) {
+			if (groupId != 0 && !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
 				List<CDTSession> userSessions = CDTSessionLocalServiceUtil.getGroupSessions(groupId, minDate, maxDate, true);
-				result.put(JSONConstants.SESSIONS, CDTSessionLocalServiceUtil.convertSessions(userSessions, currentUser));
+				result.put(JSONConstants.SESSIONS, CDTSessionLocalServiceUtil.convertSessions(userSessions, user));
 				result.put(JSONConstants.SCHOOLLIFE_SESSIONS, new JSONArray());
 				result.put(JSONConstants.SUCCESS, true);
 			} else {
@@ -153,7 +153,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			}
 
 		} catch (Exception e) {
-			logger.error("Error when user " + currentUser.getFullName() + " fetches sessions for group " + groupId, e);
+			logger.error("Error when user " + user.getFullName() + " fetches sessions for group " + groupId, e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
 		return result;
@@ -166,7 +166,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -201,7 +201,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -209,6 +209,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		}
 
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isPersonal(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates a session");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 		try {
@@ -276,7 +277,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -285,7 +286,8 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user) ||
 				!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
-			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets next session");
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		JSONArray jsonNextSessions = new JSONArray();

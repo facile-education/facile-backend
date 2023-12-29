@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.servlet.BaseFilter;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import org.apache.logging.log4j.ThreadContext;
 import org.osgi.service.component.annotations.Component;
 
 import javax.servlet.Filter;
@@ -46,7 +47,10 @@ public class LogFilter extends BaseFilter {
         User user = PortalUtil.getUser(request);
         String uri = (String)request.getAttribute(WebKeys.INVOKER_FILTER_URI);
         String query = request.getQueryString();
-        log.info("User " + (user != null ? user.getFullName() : "null") + " called API " + uri + " with params " + (query == null ? "null" : query));
+        ThreadContext.clearAll();
+//        ThreadContext.put("userId", user.getFullName());
+        ThreadContext.push(user.getFullName());
+        log.info("API " + uri.replace("/api/jsonws", "") + " with params " + (query == null ? "null" : query));
         super.processFilter(request, response, filterChain);
     }
 

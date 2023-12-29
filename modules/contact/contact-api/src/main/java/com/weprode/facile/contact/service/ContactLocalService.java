@@ -55,8 +55,7 @@ public interface ContactLocalService extends BaseLocalService {
 	public JSONObject convertUserToJson(User user);
 
 	public List<User> directorySearch(
-		User user, String query, List<Long> organizationIds,
-		List<Long> schoolIds, List<Long> roleIds, List<Long> subjectIds,
+		User user, String query, List<Long> schoolIds, List<Long> roleIds,
 		int start, int limit, OrderByComparator obc);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

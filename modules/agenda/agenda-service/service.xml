@@ -19,6 +19,7 @@
 		<column name="eventId" type="long" primary="true" />
 		<column name="groupId" type="long" primary="true" />
 		<column name="roleId" type="long" primary="true"/>
+		<column name="schoolId" type="long" />
 
 		<finder return-type="Collection" name="eventId">
 			<finder-column name="eventId" />

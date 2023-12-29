@@ -56,7 +56,7 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -79,7 +79,7 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -104,7 +104,7 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -123,7 +123,7 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		if (roleId != 0) {
 			roleIds.add(roleId);
 		}
-		List<User> directoryUsers = ContactLocalServiceUtil.directorySearch(user, query, null, schoolIds, roleIds, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+		List<User> directoryUsers = ContactLocalServiceUtil.directorySearch(user, query, schoolIds, roleIds, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
 		JSONArray jsonUsers = new JSONArray();
 		for (User directoryUser : directoryUsers) {
@@ -141,14 +141,13 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		logger.info("User " + user.getUserId() + " gets details of contact " + contactUserId);
 		JSONObject jsonContactDetails = ContactLocalServiceUtil.getContactDetails(user, contactUserId);
 		result.put("contactDetails", jsonContactDetails);
 		result.put(JSONConstants.SUCCESS, true);
@@ -162,14 +161,13 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		logger.info("User " + user.getUserId() + " gets his students");
 		List<User> myStudents = ContactLocalServiceUtil.getMyStudents(user);
 		JSONArray jsonUsers = new JSONArray();
 		for (User student : myStudents) {
@@ -187,14 +185,13 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		logger.info("User " + user.getUserId() + " gets his relatives");
 		List<User> myRelatives = ContactLocalServiceUtil.getMyRelatives(user);
 		JSONArray jsonUsers = new JSONArray();
 		for (User relative : myRelatives) {

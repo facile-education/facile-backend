@@ -56,7 +56,7 @@ public class UploadUtil {
         try {
             // If folderId is 0, then use the tmp folder
             if (folderId == 0) {
-                folderId = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId()).getFolderId();
+                folderId = FolderUtilsLocalServiceUtil.getUserTmpFolder(user.getUserId()).getFolderId();
             }
 
             Folder folder = DLAppServiceUtil.getFolder(folderId);
@@ -85,9 +85,9 @@ public class UploadUtil {
                 FileEntry uploadedFile = DLAppServiceUtil.getFileEntry(createdPath.get(createdPath.size() - 1));
                 if (createdPath.size() > 1) {
                     Folder firstCreatedFolder = DLAppServiceUtil.getFolder(createdPath.get(0));
-                    result.put(JSONConstants.FIRST_CREATED_FOLDER, DLAppJsonFactory.format(user.getUserId(), firstCreatedFolder, space));
+                    result.put(JSONConstants.FIRST_CREATED_FOLDER, FolderUtilsLocalServiceUtil.format(user.getUserId(), firstCreatedFolder, space));
                 }
-                JSONObject jsonFormattedFile = DLAppJsonFactory.format(user.getUserId(), uploadedFile, space);
+                JSONObject jsonFormattedFile = FileUtilsLocalServiceUtil.format(user.getUserId(), uploadedFile, space);
                 if (withDisplayUrl) {
                     String documentURL = FileUtilsLocalServiceUtil.getDisplayUrl(
                             uploadedFile,

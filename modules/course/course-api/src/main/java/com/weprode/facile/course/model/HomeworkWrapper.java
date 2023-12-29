@@ -160,6 +160,14 @@ public class HomeworkWrapper
 		return model.convertToJSON(user, includeBlocks);
 	}
 
+	@Override
+	public org.json.JSONObject convertToJSON(
+		com.liferay.portal.kernel.model.User user, boolean includeBlocks,
+		boolean withDetails) {
+
+		return model.convertToJSON(user, includeBlocks, withDetails);
+	}
+
 	/**
 	 * Returns the course ID of this homework.
 	 *

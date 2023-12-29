@@ -358,6 +358,13 @@ public class ContentBlockLocalServiceWrapper
 	}
 
 	@Override
+	public boolean isEmbedUrlWhitelisted(String url)
+		throws com.weprode.facile.course.exception.UnauthorizedUrlException {
+
+		return _contentBlockLocalService.isEmbedUrlWhitelisted(url);
+	}
+
+	@Override
 	public com.weprode.facile.course.model.ContentBlock updateBlock(
 			long blockId, String blockName, String blockValue, int order)
 		throws com.liferay.portal.kernel.exception.SystemException,

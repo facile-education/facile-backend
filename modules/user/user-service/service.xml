@@ -83,6 +83,10 @@
 		<finder return-type="Collection" name="schoolId">
 			<finder-column name="schoolId" />
 		</finder>
+		<finder return-type="Collection" name="userIdOrgId">
+			<finder-column name="userId" />
+			<finder-column name="orgId" />
+		</finder>
 	</entity>
 
 	<entity name="SchoolAdmin" local-service="true" remote-service="true" />

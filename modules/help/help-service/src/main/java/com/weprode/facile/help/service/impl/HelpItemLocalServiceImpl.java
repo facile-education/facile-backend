@@ -20,6 +20,7 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.help.model.HelpItem;
 import com.weprode.facile.help.model.HelpQuestion;
@@ -88,7 +89,7 @@ public class HelpItemLocalServiceImpl extends HelpItemLocalServiceBaseImpl {
                     if (searchTerms.equals("")
                             || helpItem.getItemName().toLowerCase().contains(searchTerms.toLowerCase())
                             || helpItem.getVideoDescription().toLowerCase().contains(searchTerms.toLowerCase())
-                            || helpItem.getManual().toLowerCase().contains(searchTerms.toLowerCase())
+                            || HtmlUtil.stripHtml(helpItem.getManual()).toLowerCase().contains(searchTerms.toLowerCase())
                             || hasMatchingQuestions(helpItem.getItemId(), searchTerms)) {
                         filteredHelpItemList.add(helpItem);
                     }

@@ -44,7 +44,6 @@ import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.LoolTokenLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FileUtilsServiceBaseImpl;
-import com.weprode.facile.document.utils.DLAppJsonFactory;
 import com.weprode.facile.document.utils.SupportedExtensions;
 import com.weprode.facile.document.utils.UploadUtil;
 import org.json.JSONObject;
@@ -70,7 +69,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -78,10 +77,15 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.info("User " + user.getFullName() + " tries to upload a file into folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " uploads file to folder " + folderId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " uploads file " + fileName + " to folderId " + folderId + " in mode " + mode);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " uploads file to folder " + folderId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
 			return UploadUtil.uploadFile(user, folderId, fileName, file, mode);
 		} catch (Exception e) {
 			logger.error("Error uploading file "+ fileName + " to folderId " + folderId + " in mode " + mode, e);
@@ -98,16 +102,15 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
-			Folder tmpFolder = FolderUtilsLocalServiceUtil.getTmpFolder(user.getUserId());
+			Folder tmpFolder = FolderUtilsLocalServiceUtil.getUserTmpFolder(user.getUserId());
 			int mode = DocumentConstants.MODE_REPLACE;
-			logger.info("User " + user.getFullName() + " uploads tmp file " + fileName + " to folderId " + tmpFolder.getFolderId() + " in mode " + mode);
 
 			return UploadUtil.uploadFile(user, tmpFolder.getFolderId(), fileName, file, mode, true);
 		} catch (Exception e) {
@@ -125,7 +128,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -134,13 +137,12 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		try {
 			FileEntry fileToRename = DLAppServiceUtil.getFileEntry(fileId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileToRename.getFolderId())) {
-				logger.info("User " + user.getFullName() + " tries to rename file " + fileId + " in folder " + fileToRename.getFolderId() + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " renames file " + fileId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " renames file " + fileId + " with name " + fileName);
-			FileEntry renamedFile = FileUtilsLocalServiceUtil.renameFile(user.getUserId(), fileToRename, fileName);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), renamedFile));
+			FileEntry renamedFile = FileUtilsLocalServiceUtil.renameFile(user.getUserId(), fileToRename, fileName);
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), renamedFile));
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -159,7 +161,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -167,12 +169,17 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.info("User " + user.getFullName() + " tries to create audio file in folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates audio file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " creates audio file " + name + ".mp3 in folder " + folderId);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates audio file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
 			return UploadUtil.uploadFile(user, folderId, name + ".mp3", file, DocumentConstants.MODE_RENAME);
+
 		} catch (Exception e) {
 			logger.error(e);
 		}
@@ -189,7 +196,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -197,14 +204,18 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.info("User " + user.getFullName() + " tries to create geogebra file in folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates geogebra file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " creates geogebra file " + name + " in folder " + folderId);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates geogebra file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
 			FileEntry geogebraFile = FileUtilsLocalServiceUtil.createGeogebraFile(user, folderId, name);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), geogebraFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), geogebraFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error creating geogebra file " + name + " in folder " + folderId, e);
@@ -221,7 +232,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -229,14 +240,18 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.info("User " + user.getFullName() + " tries to create mindmap file in folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates mindmap file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " creates mindmap file " + name + " in folder " + folderId);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates mindmap file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
 			FileEntry mindmapFile = FileUtilsLocalServiceUtil.createMindMapFile(user, folderId, name);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), mindmapFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), mindmapFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -254,7 +269,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -262,14 +277,18 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.info("User " + user.getFullName() + " tries to create scratch file in folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates scratch file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " creates scratch file " + name + " in folder " + folderId);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates scratch file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
 			FileEntry scratchFile = FileUtilsLocalServiceUtil.createScratchFile(user, folderId, name);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), scratchFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), scratchFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 
 		} catch (Exception e) {
@@ -287,7 +306,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -295,14 +314,18 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.info("User " + user.getFullName() + " tries to create lool file in folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates lool file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " creates lool file " + name + " in folder " + folderId + " with type " + type);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates lool file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
 			FileEntry loolFile = FileUtilsLocalServiceUtil.createLoolFile(user, folderId, name, type);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), loolFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), loolFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error creating lool file " + name + " in folder " + folderId + " with type " + type, e);
@@ -319,7 +342,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -327,14 +350,18 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.info("User " + user.getFullName() + " tries to create html file in folder " + folderId + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates html file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getFullName() + " creates html file " + name + " in folder " + folderId);
+			Folder folder = DLAppServiceUtil.getFolder(folderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates html file");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
 			FileEntry htmlFile = FileUtilsLocalServiceUtil.createHtmlFile(user, folderId, name);
 
-			result.put(JSONConstants.FILE, DLAppJsonFactory.format(user.getUserId(), htmlFile, DocumentConstants.PRIVATE));
+			result.put(JSONConstants.FILE, FileUtilsLocalServiceUtil.format(user.getUserId(), htmlFile, DocumentConstants.PRIVATE));
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error creating html file " + name + " in folder " + folderId, e);
@@ -351,7 +378,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -361,9 +388,14 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		try {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.info("User " + user.getFullName() + " tries to add lock on file " + fileId + " in folder " + fileEntry.getFolderId() + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a lock");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a lock");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
 			EditionLock lock = EditionLockLocalServiceUtil.isFileEdited(fileId);
 			if (lock != null) {
 				if (user.getUserId() == lock.getUserId()) {
@@ -392,8 +424,6 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 				}
 			}
 
-			// Add new lock
-			logger.info("Adding lock on fileId " + fileId + " for userId " + user.getUserId());
 			EditionLockLocalServiceUtil.addEditionLock(fileId, user.getUserId());
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
@@ -411,7 +441,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -420,9 +450,14 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		try {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.info("User " + user.getFullName() + " tries to unlock file " + fileId + " in folder " + fileEntry.getFolderId() + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes a lock");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW) && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes a lock");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+
 			EditionLock lock = EditionLockLocalServiceUtil.isFileEdited(fileId);
 			if (lock != null && lock.getUserId() == user.getUserId()) {
 				logger.info("Removing lock on fileId " + fileId + " for userId " + user.getUserId());
@@ -447,7 +482,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -456,14 +491,19 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		try {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.info("User " + user.getFullName() + " tries to get resource of fileEntryId " + fileId + " with version " + versionId + ", readOnly=" + readOnly + " but has no permission");
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets a resource");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
-			logger.info("User " + user.getUserId() + " fetches resource " + fileId + " with version " + versionId + ", readOnly=" + readOnly);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets a resource");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
 			if (versionId == 0) {   // If the version is specified to 0, get the latest version
 				versionId = fileEntry.getLatestFileVersion().getFileVersionId();
 			}
+
+			result.put(JSONConstants.FILE_NAME, fileEntry.getFileName());
 
 			boolean isReadOnly = readOnly
 					|| versionId != fileEntry.getLatestFileVersion().getFileVersionId()   // read only if there is not the latest version
@@ -505,23 +545,24 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		try {
-			logger.info("User " + user.getFullName() + " removes LOOL token " + token);
 			LoolToken loolToken = LoolTokenLocalServiceUtil.getLoolToken(token);
 
 			// Check if the current user is the owner of the token to delete
-			if (user.getUserId() == loolToken.getUserId()) {
-				LoolTokenLocalServiceUtil.deleteLoolToken(loolToken.getLoolTokenId());
-				result.put(JSONConstants.SUCCESS, true);
-			} else {
-				logger.error("User " + user.getFullName() + " is not allowed to delete token " + loolToken.getLoolTokenId());
+			if (user.getUserId() != loolToken.getUserId()) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes token");
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
+			// Comment lool token deletion because Wopi can still perform actions with this token
+			// A cron deletes them daily
+			//LoolTokenLocalServiceUtil.deleteLoolToken(loolToken.getLoolTokenId());
+			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error removing lool token " + token, e);
 			result.put(JSONConstants.SUCCESS, false);

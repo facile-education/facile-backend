@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.weprode.facile.commons.CommonUtils;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.course.CourseConstants;
@@ -68,24 +69,27 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a block");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
 			// Check ownership
 			if (CDTSessionLocalServiceUtil.isSession(itemId) && !CDTSessionLocalServiceUtil.hasUserSession(user, itemId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a block to item " + itemId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			if (!CDTSessionLocalServiceUtil.isSession(itemId)){
 				Homework homework = HomeworkLocalServiceUtil.getHomework(itemId);
 				if (homework.getTeacherId() != user.getUserId()) {
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a block to item " + itemId);
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 			}
@@ -112,24 +116,27 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a file block");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
 			// Check ownership
 			if (CDTSessionLocalServiceUtil.isSession(itemId) && !CDTSessionLocalServiceUtil.hasUserSession(user, itemId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a file block to item " + itemId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			if (!CDTSessionLocalServiceUtil.isSession(itemId)){
 				Homework homework = HomeworkLocalServiceUtil.getHomework(itemId);
 				if (homework.getTeacherId() != user.getUserId()) {
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a file block to item " + itemId);
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 			}
@@ -186,13 +193,14 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates a block");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -200,11 +208,13 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 			// Check ownership
 			ContentBlock block = ContentBlockLocalServiceUtil.getContentBlock(blockId);
 			if (CDTSessionLocalServiceUtil.isSession(block.getCourseItemId()) && !CDTSessionLocalServiceUtil.hasUserSession(user, block.getCourseItemId())) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates a block");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			if (!CDTSessionLocalServiceUtil.isSession(block.getCourseItemId())) {
 				Homework homework = HomeworkLocalServiceUtil.getHomework(block.getCourseItemId());
 				if (homework.getTeacherId() != user.getUserId()) {
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates a block");
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 			}
@@ -232,13 +242,14 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a block");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -246,11 +257,13 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 			// Check ownership
 			ContentBlock block = ContentBlockLocalServiceUtil.getContentBlock(blockId);
 			if (CDTSessionLocalServiceUtil.isSession(block.getCourseItemId()) && !CDTSessionLocalServiceUtil.hasUserSession(user, block.getCourseItemId())) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a block");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			if (!CDTSessionLocalServiceUtil.isSession(block.getCourseItemId())) {
 				Homework homework = HomeworkLocalServiceUtil.getHomework(block.getCourseItemId());
 				if (homework.getTeacherId() != user.getUserId()) {
+					logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a block");
 					return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 				}
 			}
@@ -263,6 +276,30 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 			logger.error("Could not delete blockId " + blockId + " for " + user.getFullName() + " (id="+user.getUserId()+")", e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
+
+		return result;
+	}
+
+	@JSONWebService(value = "is-embed-url-whitelisted", method = "GET")
+	public JSONObject isEmbedUrlWhitelisted(String url) {
+		JSONObject result = new JSONObject();
+
+		try {
+			result.put(JSONConstants.IS_ALLOWED, ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(url));
+		} catch (UnauthorizedUrlException e) {
+			result.put(JSONConstants.IS_ALLOWED, false);
+		}
+		result.put(JSONConstants.SUCCESS, true);
+
+		return result;
+	}
+
+	@JSONWebService(value = "is-valid-url", method = "GET")
+	public JSONObject isValidUrl(String url) {
+		JSONObject result = new JSONObject();
+
+		result.put(JSONConstants.IS_VALID, CommonUtils.isValidURI(url));
+		result.put(JSONConstants.SUCCESS, true);
 
 		return result;
 	}

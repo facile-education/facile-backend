@@ -25,6 +25,7 @@ import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.facile.messaging.constants.MessagingConstants;
 import com.weprode.facile.messaging.model.Message;
 import com.weprode.facile.messaging.service.MessageLocalServiceUtil;
 import com.weprode.facile.news.model.News;
@@ -131,7 +132,9 @@ public class SearchResults {
                 Folder folder = DLAppServiceUtil.getFolder(fileEntry.getFolderId());
                 List<Folder> path = FolderUtilsLocalServiceUtil.getFolderPath(folder);
                 if (!path.isEmpty()) {
-                    if (path.size() > 1 && path.get(1).getName().equals(DocumentConstants.NEWS_FOLDER_NAME)) {
+                    if (path.size() > 1 && path.get(1).getName().equals(DocumentConstants.COURSE_FOLDER_NAME)) {
+                        // Prevent folder access. A link to course can be added here later
+                    } else if (path.size() > 1 && path.get(1).getName().equals(DocumentConstants.NEWS_FOLDER_NAME)) {
                         // News attachment
                         long newsId = Long.parseLong(path.get(2).getName());
 
@@ -139,13 +142,13 @@ public class SearchResults {
                             JSONObject news = NewsLocalServiceUtil.convertNewsToJson(newsId, userId, true);
                             result.put(JSONConstants.NEWS, news);
                         } catch (PortalException e) {
-                            logger.error("Failed to get news with id="+entityId, e);
+                            logger.error("Failed to get news with id="+newsId, e);
                         }
 
                         result.put(JSONConstants.SERVICE, SearchConstants.TYPE_NEWS_FILE);
                     } else if (path.get(0).getName().equals(DocumentConstants.IM_BOX_FOLDER_NAME)) {
                         // Message attachment
-                        long messageId = Long.parseLong(path.get(1).getName().replace("PJ du message ", ""));
+                        long messageId = Long.parseLong(path.get(1).getName().replace(MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX, ""));
 
                         Message message = MessageLocalServiceUtil.getMessage(messageId);
                         JSONObject messageJson = new JSONObject();

@@ -71,4 +71,7 @@ public class NeroSystemProperties {
 	// Roles
 	public static final String ROLES_DOYEN_ENABLED = "roles.doyen.enabled";
 
+	// Maintenance
+	public static final String DATA_FEED_ENABLED = "data.feed.enabled";
+
 }

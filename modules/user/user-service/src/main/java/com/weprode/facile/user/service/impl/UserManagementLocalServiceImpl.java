@@ -17,17 +17,23 @@ package com.weprode.facile.user.service.impl;
 
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserConstants;
+import com.liferay.portal.kernel.security.RandomUtil;
+import com.liferay.portal.kernel.security.SecureRandom;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -41,11 +47,14 @@ import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.user.service.UserManagementLocalServiceUtil;
 import com.weprode.facile.user.service.UserUtilsLocalServiceUtil;
 import com.weprode.facile.user.service.base.UserManagementLocalServiceBaseImpl;
+import com.liferay.portal.util.PropsValues;
 import org.osgi.service.component.annotations.Component;
 
 import javax.mail.internet.InternetAddress;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 @Component(
         property = "model.class.name=com.weprode.facile.user.model.UserManagement",
@@ -82,7 +91,8 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             ServiceContext serviceContext = new ServiceContext();
 
             if (password == null) {
-                password = PwdGenerator.getPassword();
+                password = generatePassword();
+                logger.info("generated password = " + password);
             }
 
             String screenName = UserUtilsLocalServiceUtil.generateLogin(lastName, firstName);
@@ -214,4 +224,112 @@ public class UserManagementLocalServiceImpl extends UserManagementLocalServiceBa
             logger.error("Could not send email to " + recipientEmail, e);
         }
     }
+
+    public String generatePassword() {
+        PasswordPolicy passwordPolicy;
+
+        try {
+            passwordPolicy = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId());
+        } catch (Exception e) {
+            logger.debug(e);
+            return null;
+        }
+
+        final String _generatorCompleteCharset = StringBundler.concat(
+                PropsValues.PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_LOWERCASE,
+                PropsValues.PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_NUMBERS,
+                PropsValues.PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_SYMBOLS,
+                PropsValues.PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_UPPERCASE);
+
+        final char[] generatorLowerCaseCharsetArray = getSortedCharArray(PropsValues.PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_LOWERCASE);
+        final char[] generatorNumbersCharsetArray = getSortedCharArray(PropsValues.PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_NUMBERS);
+        final char[] generatorSymbolsCharsetArray = getSortedCharArray(PropsValues.PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_SYMBOLS);
+        final char[] generatorUpperCaseCharsetArray = getSortedCharArray(PropsValues.PASSWORDS_PASSWORDPOLICYTOOLKIT_GENERATOR_CHARSET_UPPERCASE);
+
+        char[] generatorAlphanumericCharsetArray = ArrayUtil.append(
+                generatorLowerCaseCharsetArray, generatorUpperCaseCharsetArray,
+                generatorNumbersCharsetArray);
+
+        Arrays.sort(generatorAlphanumericCharsetArray);
+
+        int alphanumericActualMinLength = passwordPolicy.getMinLowerCase() + passwordPolicy.getMinNumbers() + passwordPolicy.getMinUpperCase();
+        int alphanumericMinLength = Math.max(passwordPolicy.getMinAlphanumeric(), alphanumericActualMinLength);
+
+        int passwordMinLength = Math.max(
+                passwordPolicy.getMinLength(),
+                alphanumericMinLength + passwordPolicy.getMinSymbols());
+
+        StringBundler sb = new StringBundler(6);
+
+        if (passwordPolicy.getMinLowerCase() > 0) {
+            sb.append(
+                    getRandomString(passwordPolicy.getMinLowerCase(), generatorLowerCaseCharsetArray));
+        }
+
+        if (passwordPolicy.getMinNumbers() > 0) {
+            sb.append(
+                    getRandomString(passwordPolicy.getMinNumbers(), generatorNumbersCharsetArray));
+        }
+
+        if (passwordPolicy.getMinSymbols() > 0) {
+            sb.append(
+                    getRandomString(passwordPolicy.getMinSymbols(),generatorSymbolsCharsetArray));
+        }
+
+        if (passwordPolicy.getMinUpperCase() > 0) {
+            sb.append(
+                    getRandomString(passwordPolicy.getMinUpperCase(),generatorUpperCaseCharsetArray));
+        }
+
+        if (alphanumericMinLength > alphanumericActualMinLength) {
+            int count = alphanumericMinLength - alphanumericActualMinLength;
+
+            sb.append(
+                    getRandomString(count, generatorAlphanumericCharsetArray));
+        }
+
+        if (passwordMinLength >
+                (alphanumericMinLength + passwordPolicy.getMinSymbols())) {
+
+            int count =
+                    passwordMinLength -
+                            (alphanumericMinLength + passwordPolicy.getMinSymbols());
+
+            sb.append(
+                    PwdGenerator.getPassword(_generatorCompleteCharset, count));
+        }
+
+        if (sb.index() == 0) {
+            sb.append(
+                    PwdGenerator.getPassword(
+                            _generatorCompleteCharset,
+                            PropsValues.PASSWORDS_DEFAULT_POLICY_MIN_LENGTH));
+        }
+
+        return RandomUtil.shuffle(new SecureRandom(), sb.toString());
+    }
+
+    private static String getRandomString(int count, char[] chars) {
+        Random random = new SecureRandom();
+
+        StringBundler sb = new StringBundler(count);
+
+        for (int i = 0; i < count; i++) {
+            int index = random.nextInt(chars.length);
+
+            sb.append(chars[index]);
+        }
+
+        return sb.toString();
+    }
+
+    private static char[] getSortedCharArray(String s) {
+        char[] chars = s.toCharArray();
+
+        Arrays.sort(chars);
+
+        return chars;
+    }
+
+
 }

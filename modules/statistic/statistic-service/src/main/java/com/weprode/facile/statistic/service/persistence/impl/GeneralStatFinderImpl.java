@@ -59,9 +59,13 @@ public class GeneralStatFinderImpl extends GeneralStatFinderBaseImpl
             GeneralStatFinder.class.getName() +
                     ".countSchoolNews";
 
-    // private static final String QUERY_COUNT_SCHOOL_CDT_SESSION_CONTENT =
-    //      GeneralStatFinder.class.getName() +
-    //              ".countSchoolCDTSessionContent";
+    private static final String QUERY_COUNT_ALL_SCHOOL_LIFE_STUDENTS =
+            GeneralStatFinder.class.getName() +
+                    ".countAllSchoolLifeStudents";
+
+    private static final String QUERY_COUNT_SCHOOL_SCHOOL_LIFE_STUDENTS =
+            GeneralStatFinder.class.getName() +
+                    ".countSchoolSchoolLifeStudents";
 
     public int countActiveUsers(Date startDate, Date endDate, long schoolId) {
         Session session = null;
@@ -116,71 +120,7 @@ public class GeneralStatFinderImpl extends GeneralStatFinderBaseImpl
                     String extension = (String) result[0];
                     int count = ((BigInteger) result[1]).intValue();
 
-                    List<String> textExtensions = Arrays.asList("doc", "docx", "odt");
-                    List<String> tabExtensions = Arrays.asList("xls", "xlsx", "ods");
-                    List<String> presExtensions = Arrays.asList("ppt", "pptx", "odp");
-                    List<String> imageExtensions = Arrays.asList("jpg", "jpeg", "png", "gif", "bmp");
-                    List<String> htmlExtensions = Arrays.asList("html", "xml", "htm");
-                    List<String> videoExtensions = Arrays.asList("mp4", "m4a", "avi", "mov", "mpeg", "mpg");
-                    List<String> audioExtensions = Arrays.asList("mp3", "wav");
-
-                    if (extension.equals("pdf")) {
-                        resultMap.put("pdf", count);
-                    } else if (textExtensions.contains(extension)) {
-                        if (resultMap.containsKey("text")) {
-                            resultMap.put("text", resultMap.get("text") + count);
-                        } else {
-                            resultMap.put("text", count);
-                        }
-                    } else if (tabExtensions.contains(extension)) {
-                        if (resultMap.containsKey("tab")) {
-                            resultMap.put("tab", resultMap.get("tab") + count);
-                        } else {
-                            resultMap.put("tab", count);
-                        }
-                    } else if (presExtensions.contains(extension)) {
-                        if (resultMap.containsKey("pres")) {
-                            resultMap.put("pres", resultMap.get("pres") + count);
-                        } else {
-                            resultMap.put("pres", count);
-                        }
-                    } else if (imageExtensions.contains(extension)) {
-                        if (resultMap.containsKey("image")) {
-                            resultMap.put("image", resultMap.get("image") + count);
-                        } else {
-                            resultMap.put("image", count);
-                        }
-                    } else if (htmlExtensions.contains(extension)) {
-                        if (resultMap.containsKey("html")) {
-                            resultMap.put("html", resultMap.get("html") + count);
-                        } else {
-                            resultMap.put("html", count);
-                        }
-                    } else if (videoExtensions.contains(extension)) {
-                        if (resultMap.containsKey("video")) {
-                            resultMap.put("video", resultMap.get("video") + count);
-                        } else {
-                            resultMap.put("video", count);
-                        }
-                    } else if (audioExtensions.contains(extension)) {
-                        if (resultMap.containsKey("audio")) {
-                            resultMap.put("audio", resultMap.get("audio") + count);
-                        } else {
-                            resultMap.put("audio", count);
-                        }
-                    } else if (extension.equals("sldprt")) {
-                        resultMap.put("solidworks", count);
-                    } else if (extension.equals("ggb")) {
-                        resultMap.put("geogebra", count);
-                    } else if (extension.equals("ipynb")) {
-                        resultMap.put("notebook", count);
-                    } else if (extension.equals("mind")) {
-                        resultMap.put("mindmap", count);
-                    } else if (extension.equals("sb3")) {
-                        resultMap.put("scratch", count);
-                    } else {
-                        resultMap.put("other", count);
-                    }
+                    computeDocumentMap(resultMap, extension, count);
                 }
             }
 
@@ -191,6 +131,64 @@ public class GeneralStatFinderImpl extends GeneralStatFinderBaseImpl
         }
 
         return resultMap;
+    }
+
+    private void computeDocumentMap (Map<String, Integer> documentMap, String extension, int count) {
+        List<String> textExtensions = Arrays.asList("doc", "docx", "odt");
+        List<String> tabExtensions = Arrays.asList("xls", "xlsx", "ods");
+        List<String> presExtensions = Arrays.asList("ppt", "pptx", "odp");
+        List<String> imageExtensions = Arrays.asList("jpg", "jpeg", "png", "gif", "bmp");
+        List<String> htmlExtensions = Arrays.asList("html", "xml", "htm");
+        List<String> videoExtensions = Arrays.asList("mp4", "m4a", "avi", "mov", "mpeg", "mpg");
+        List<String> audioExtensions = Arrays.asList("mp3", "wav");
+
+        if (textExtensions.contains(extension)) {
+            String key = "text";
+            documentMap.put(key, documentMap.getOrDefault(key, count) + count);
+        } else if (tabExtensions.contains(extension)) {
+            String key = "tab";
+            documentMap.put(key, documentMap.getOrDefault(key, count) + count);
+        } else if (presExtensions.contains(extension)) {
+            String key = "pres";
+            documentMap.put(key, documentMap.getOrDefault(key, count) + count);
+        } else if (imageExtensions.contains(extension)) {
+            String key = "image";
+            documentMap.put(key, documentMap.getOrDefault(key, count) + count);
+        } else if (htmlExtensions.contains(extension)) {
+            String key = "html";
+            documentMap.put(key, documentMap.getOrDefault(key, count) + count);
+        } else if (videoExtensions.contains(extension)) {
+            String key = "video";
+            documentMap.put(key, documentMap.getOrDefault(key, count) + count);
+        } else if (audioExtensions.contains(extension)) {
+            String key = "audio";
+            documentMap.put(key, documentMap.getOrDefault(key, count) + count);
+        } else {
+            switch (extension) {
+                case "pdf":
+                    documentMap.put("pdf", count);
+                    break;
+                case "sldprt":
+                    documentMap.put("solidworks", count);
+                    break;
+                case "ggb":
+                    documentMap.put("geogebra", count);
+                    break;
+                case "ipynb":
+                    documentMap.put("notebook", count);
+                    break;
+                case "mind":
+                    documentMap.put("mindmap", count);
+                    break;
+                case "sb3":
+                    documentMap.put("scratch", count);
+                    break;
+                default:
+                    String key = "other";
+                    documentMap.put(key, documentMap.getOrDefault(key, count) + count);
+            }
+        }
+
     }
 
     public Map<Integer, Integer> countHomeworks(Date startDate, Date endDate, long schoolId) {
@@ -287,5 +285,43 @@ public class GeneralStatFinderImpl extends GeneralStatFinderBaseImpl
         }
 
         return 0;
+    }
+
+    public Map<Integer, Integer> countSchoolLifeStudents(Date startDate, Date endDate, long schoolId) {
+        Session session = null;
+        Map<Integer, Integer> resultMap = new HashMap<>();
+
+        try {
+            session = basePersistence.openSession();
+
+            String queryTitle = (schoolId == 0) ? QUERY_COUNT_ALL_SCHOOL_LIFE_STUDENTS : QUERY_COUNT_SCHOOL_SCHOOL_LIFE_STUDENTS;
+            String sql = customSQL.get(getClass(), queryTitle);
+            SQLQuery query = session.createSQLQuery(sql);
+            QueryPos qPos = QueryPos.getInstance(query);
+
+            qPos.add(CalendarUtil.getTimestamp(startDate));
+            qPos.add(CalendarUtil.getTimestamp(endDate));
+            if (schoolId != 0) {
+                qPos.add(schoolId);
+            }
+
+            List<Object[]> results = query.list();
+
+            if (results != null && !results.isEmpty()) {
+                for (Object[] result : results) {
+                    int type = (int) result[0];
+                    int count = ((BigInteger) result[1]).intValue();
+
+                    resultMap.put(type, count);
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("Custom query countSchoolLifeStudents failed", e);
+        } finally {
+            basePersistence.closeSession(session);
+        }
+
+        return resultMap;
     }
 }

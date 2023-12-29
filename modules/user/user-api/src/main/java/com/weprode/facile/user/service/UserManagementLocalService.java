@@ -71,6 +71,8 @@ public interface UserManagementLocalService extends BaseLocalService {
 		long companyId, String lastName, String firstName, String email,
 		Date birthday, boolean sendUserLogin);
 
+	public String generatePassword();
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

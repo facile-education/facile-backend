@@ -298,7 +298,7 @@ public class MatomoLocalServiceImpl extends MatomoLocalServiceBaseImpl {
     private String getNoCompareMetadata (List<Long> schoolIds, User user) throws SystemException {
         String metadata = " ";
 
-        if (RoleUtilsLocalServiceUtil.isENTAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+        if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
             List<Organization> schoolList = UserOrgsLocalServiceUtil.getUserSchools(user);
 
             if (schoolIds.size() == 1) {

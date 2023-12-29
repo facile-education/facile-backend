@@ -57,10 +57,12 @@ import com.weprode.facile.messaging.model.Message;
 import com.weprode.facile.messaging.model.MessageFolder;
 import com.weprode.facile.messaging.service.MessageFolderLocalServiceUtil;
 import com.weprode.facile.messaging.service.MessageLocalServiceUtil;
+import com.weprode.facile.messaging.service.MessagingConfigLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.preference.service.NotifyConfigLocalServiceUtil;
 import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.user.model.UserContact;
+import com.weprode.facile.user.service.AffectationLocalServiceUtil;
 import com.weprode.facile.user.service.LDAPMappingLocalServiceUtil;
 import com.weprode.facile.user.service.UserContactLocalServiceUtil;
 import com.weprode.facile.user.service.UserRelationshipLocalServiceUtil;
@@ -315,8 +317,16 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			logger.error("Could not delete ldap mapping for userId " + userId);
 		}
 
+		// Affectations
 		try {
-			logger.debug("Clean up user memberships for userId " + userId);
+			logger.info("Clean up user memberships for userId " + userId);
+			AffectationLocalServiceUtil.removeByUserId(userId);
+		} catch (Exception e) {
+			logger.error("Could not delete user memberships for userId " + userId, e);
+		}
+
+		try {
+			logger.info("Clean up user memberships for userId " + userId);
 			GroupMembershipLocalServiceUtil.removeUserMemberships(userId);
 		} catch (Exception e) {
 			logger.error("Could not delete user memberships for userId " + userId, e);
@@ -329,6 +339,13 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 			UserContactLocalServiceUtil.deleteUserContact(userContact);
 		} catch (Exception e) {
 			logger.error("Failed to delete user contact infos");
+		}
+
+		try {
+			logger.info("Clean up messaging config ...");
+			MessagingConfigLocalServiceUtil.deleteMessagingConfig(userId);
+		} catch (Exception e) {
+			logger.error("Failed to delete messaging config");
 		}
 
 		printUserReport(userId);
@@ -373,8 +390,9 @@ public class UserLocalServiceOverride extends UserLocalServiceWrapper {
 				} catch (Exception e) {
 					logger.info("Error : could not get all messages by folderId "+folder.getFolderId());
 				}
+				MessageFolderLocalServiceUtil.deleteMessageFolder(folder.getFolderId());
 			}
-		} catch (SystemException e) {
+		} catch (Exception e) {
 			logger.error("Error cleaning internal messages for user " + userId, e);
 		}
 	}

@@ -23,6 +23,7 @@
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 			<key-property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="roleId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		</composite-id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="schoolId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.weprode.facile.agenda.model.impl.EventReadImpl" table="Agenda_EventRead">
 		<composite-id class="com.weprode.facile.agenda.service.persistence.EventReadPK" name="primaryKey">

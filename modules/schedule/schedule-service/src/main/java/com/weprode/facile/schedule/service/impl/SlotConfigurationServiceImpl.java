@@ -17,6 +17,8 @@ package com.weprode.facile.schedule.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -41,6 +43,8 @@ import org.osgi.service.component.annotations.Component;
 )
 public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseImpl {
 
+	private static final Log logger = LogFactoryUtil.getLog(SlotConfigurationServiceImpl.class);
+
 	@JSONWebService(value = "get-school-slot-configuration", method = "GET")
 	public JSONObject getSchoolSlotConfiguration(long schoolId) {
 
@@ -48,7 +52,7 @@ public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseIm
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -56,7 +60,8 @@ public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseIm
 		}
 
 		// Authorized for direction, school admins, ent admins and global admins only
-		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isENTAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets school slot configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
@@ -72,7 +77,7 @@ public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseIm
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -80,7 +85,8 @@ public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseIm
 		}
 
 		// Authorized for direction, school admins, ent admins and global admins only
-		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isENTAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves school slot configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 

@@ -60,12 +60,37 @@ public class FolderUtilsLocalServiceUtil {
 		getService().deleteFolder(userId, folderId);
 	}
 
-	public static String downloadFolder(
-			com.liferay.portal.kernel.repository.model.Folder folder,
-			com.liferay.portal.kernel.model.User user)
-		throws java.io.IOException, PortalException, SystemException {
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder)
+		throws PortalException, SystemException {
 
-		return getService().downloadFolder(folder, user);
+		return getService().format(userId, folder);
+	}
+
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder, int space)
+		throws PortalException, SystemException {
+
+		return getService().format(userId, folder, space);
+	}
+
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.Folder folder, int space,
+			boolean withDetails)
+		throws PortalException, SystemException {
+
+		return getService().format(userId, folder, space, withDetails);
+	}
+
+	public static org.json.JSONObject format(
+		com.liferay.portal.kernel.model.User user,
+		com.liferay.portal.kernel.repository.model.Folder folder, int space,
+		boolean withDetails) {
+
+		return getService().format(user, folder, space, withDetails);
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
@@ -117,13 +142,6 @@ public class FolderUtilsLocalServiceUtil {
 		return getService().getGroupNewsFolder(groupId);
 	}
 
-	public static com.liferay.portal.kernel.repository.model.Folder getIMBox(
-			long userId)
-		throws PortalException, SystemException {
-
-		return getService().getIMBox(userId);
-	}
-
 	public static com.liferay.portal.kernel.repository.model.Folder
 			getOrCreateGroupRootFolder(long groupId)
 		throws PortalException {
@@ -141,31 +159,17 @@ public class FolderUtilsLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
-			getProgressionFolder(long userId)
+			getThumbnailFolder()
 		throws PortalException, SystemException {
 
-		return getService().getProgressionFolder(userId);
+		return getService().getThumbnailFolder();
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
-			getSendingBox(long userId)
+			getUserMessagingAttachedFilesFolder(long userId)
 		throws PortalException, SystemException {
 
-		return getService().getSendingBox(userId);
-	}
-
-	public static com.liferay.portal.kernel.repository.model.Folder
-			getThumbnailFolder(long userId)
-		throws PortalException, SystemException {
-
-		return getService().getThumbnailFolder(userId);
-	}
-
-	public static com.liferay.portal.kernel.repository.model.Folder
-			getTmpFolder(long userId)
-		throws PortalException, SystemException {
-
-		return getService().getTmpFolder(userId);
+		return getService().getUserMessagingAttachedFilesFolder(userId);
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
@@ -173,6 +177,13 @@ public class FolderUtilsLocalServiceUtil {
 		throws PortalException, SystemException {
 
 		return getService().getUserRootFolder(userId);
+	}
+
+	public static com.liferay.portal.kernel.repository.model.Folder
+			getUserTmpFolder(long userId)
+		throws PortalException, SystemException {
+
+		return getService().getUserTmpFolder(userId);
 	}
 
 	public static void hideDLFolder(long folderId) throws PortalException {

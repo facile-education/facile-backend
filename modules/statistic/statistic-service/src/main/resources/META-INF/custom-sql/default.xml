@@ -99,6 +99,27 @@
 			GROUP BY ch.homeworkType
 		]]>
     </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countAllSchoolLifeStudents">
+        <![CDATA[
+            SELECT slo.type_, COUNT(*)
+            FROM Schoollife_SessionStudent stu
+            JOIN Schoollife_SchoollifeSession ses ON stu.schoollifeSessionId = ses.schoollifeSessionId
+            JOIN Schoollife_SchoollifeSlot slo ON ses.schoollifeSlotId = slo.schoollifeSlotId
+            WHERE ses.startDate BETWEEN ? AND ? AND slo.type_ != 5
+            GROUP BY slo.type_;
+        ]]>
+    </sql>
+    <sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolSchoolLifeStudents">
+        <![CDATA[
+            SELECT slo.type_, COUNT(*)
+            FROM Schoollife_SessionStudent stu
+            JOIN Schoollife_SchoollifeSession ses ON stu.schoollifeSessionId = ses.schoollifeSessionId
+            JOIN Schoollife_SchoollifeSlot slo ON ses.schoollifeSlotId = slo.schoollifeSlotId
+            WHERE ses.startDate BETWEEN ? AND ? AND slo.type_ != 5
+            AND slo.schoolId = ?
+            GROUP BY slo.type_;
+        ]]>
+    </sql>
     <!-- sql id="com.weprode.facile.statistic.service.persistence.GeneralStatFinder.countSchoolCDTSessionContent">
         <![CDATA[
             SELECT count(*)

@@ -265,6 +265,14 @@ public class MessageLocalServiceUtil {
 		return getService().fetchMessage(messageId);
 	}
 
+	public static List<Long> filterRecipientList(
+		com.liferay.portal.kernel.model.User sender, List<Long> recipientIds,
+		long originMessageId) {
+
+		return getService().filterRecipientList(
+			sender, recipientIds, originMessageId);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
@@ -368,6 +376,13 @@ public class MessageLocalServiceUtil {
 
 		return getService().getMostRecentThread(
 			addedThreadIds, folderId, fromDate, unReadOnly);
+	}
+
+	public static com.liferay.portal.kernel.repository.model.Folder
+		getOrCreateMessageAttachedFilesFolder(long userId, long messageId) {
+
+		return getService().getOrCreateMessageAttachedFilesFolder(
+			userId, messageId);
 	}
 
 	/**

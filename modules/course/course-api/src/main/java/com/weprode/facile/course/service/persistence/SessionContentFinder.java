@@ -28,4 +28,7 @@ public interface SessionContentFinder {
 				long courseId, java.util.Date minDate, java.util.Date maxDate)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public int countSchoolSessionContents(
+		long schoolId, java.util.Date minDate, java.util.Date maxDate);
+
 }

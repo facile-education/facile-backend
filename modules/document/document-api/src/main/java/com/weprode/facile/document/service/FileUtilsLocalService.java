@@ -26,6 +26,8 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 
+import org.json.JSONObject;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -82,6 +84,19 @@ public interface FileUtilsLocalService extends BaseLocalService {
 	public void deleteFile(long userId, long fileId)
 		throws PortalException, SystemException;
 
+	public JSONObject format(long userId, FileEntry fileEntry)
+		throws PortalException, SystemException;
+
+	public JSONObject format(long userId, FileEntry fileEntry, int space)
+		throws PortalException, SystemException;
+
+	public JSONObject format(
+			long userId, FileEntry fileEntry, int space, boolean withDetails)
+		throws PortalException, SystemException;
+
+	public JSONObject format(
+		User user, FileEntry fileEntry, int space, boolean withDetails);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getDisplayUrl(
 			FileEntry file, long versionId, long userId, boolean readOnly)
@@ -96,9 +111,6 @@ public interface FileUtilsLocalService extends BaseLocalService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long getSizeInMegaOctet(long pSize);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isGroupFile(long fileEntryId);

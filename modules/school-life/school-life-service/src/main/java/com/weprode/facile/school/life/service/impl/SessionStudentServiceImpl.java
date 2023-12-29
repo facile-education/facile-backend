@@ -63,7 +63,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -73,6 +73,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets session members");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -114,7 +115,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -124,6 +125,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " registers student");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -162,7 +164,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -172,6 +174,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " registers class");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -224,7 +227,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -234,6 +237,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " unregisters student");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -273,7 +277,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -283,6 +287,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " marks student present");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -293,23 +298,11 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
                 long studentId = studentJson.getLong(JSONConstants.STUDENT_ID);
                 boolean isPresent = studentJson.getBoolean(JSONConstants.IS_PRESENT);
                 SessionStudentLocalServiceUtil.markStudentPresent(schoollifeSessionId, studentId, isPresent);
-                if (!isPresent) {
-                    // If student is absent, send absence notification
-                    SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId);
-                    if (session.getType() == SchoollifeConstants.TYPE_RETENUE) {
-                        NotificationUtil.notifyRetenueAbsence(studentId, schoollifeSessionId);
-                    } else if (session.getType() == SchoollifeConstants.TYPE_TRAVAUX) {
-                        NotificationUtil.notifyTravauxAbsence(studentId, schoollifeSessionId);
-                    } else if (session.getType() == SchoollifeConstants.TYPE_ETUDE) {
-                        NotificationUtil.notifyEtudeAbsence(studentId, schoollifeSessionId);
-                    }
-                }
             }
 
             // Set roll called and absence notif sent
             SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId);
             session.setRollCalled(true);
-            session.setAbsenceNotificationSent(true);
             SchoollifeSessionLocalServiceUtil.updateSchoollifeSession(session);
 
             result.put(JSONConstants.SUCCESS, true);

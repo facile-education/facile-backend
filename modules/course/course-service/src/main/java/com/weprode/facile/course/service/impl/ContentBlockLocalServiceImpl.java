@@ -17,22 +17,23 @@ package com.weprode.facile.course.service.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.facile.commons.properties.NeroSystemProperties;
+import com.weprode.facile.commons.CommonUtils;
 import com.weprode.facile.course.CourseConstants;
 import com.weprode.facile.course.exception.UnauthorizedUrlException;
 import com.weprode.facile.course.model.ContentBlock;
+import com.weprode.facile.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.facile.course.service.CourseLocalServiceUtil;
 import com.weprode.facile.course.service.HomeworkLocalServiceUtil;
 import com.weprode.facile.course.service.SessionContentLocalServiceUtil;
 import com.weprode.facile.course.service.base.ContentBlockLocalServiceBaseImpl;
-
-import com.weprode.facile.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
@@ -79,18 +80,22 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		// Content value is either the default one, or the provided one
 		switch (blockType) {
 			case CourseConstants.TYPE_TEXT:
-				if (blockValue.equals("")) {
+				if (blockValue.isEmpty()) {
 					block.setBlockValue(CourseConstants.DEFAULT_TEXT_NAME);
 				} else {
 					block.setBlockValue(blockValue);
 				}
 				break;
 			case CourseConstants.TYPE_LINK:
-				block.setBlockValue(blockValue);
+				if (CommonUtils.isValidURI(blockValue)) {
+					block.setBlockValue(blockValue);
+				} else {
+					throw new UnauthorizedUrlException("Url " + blockValue + " is not valid");
+				}
 				break;
 			case CourseConstants.TYPE_VIDEO:
 			case CourseConstants.TYPE_H5P:
-				if (DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
+				if (ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
 					block.setBlockValue(blockValue);
 				} else {
 					throw new UnauthorizedUrlException("Url " + blockValue + " is not whiteListed for an embed content");
@@ -111,13 +116,13 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		block.setBlockName(blockName);
 
 		// Content Value (url check on embed contents)
-		if (block.getBlockType() == CourseConstants.TYPE_VIDEO || block.getBlockType() == CourseConstants.TYPE_H5P) {
-			if (DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
-				block.setBlockValue(blockValue);
-			} else {
-				throw new UnauthorizedUrlException("Url " + blockValue + " is not whiteListed as an authorized embed content");
-			}
+		if ((block.getBlockType() == CourseConstants.TYPE_VIDEO || block.getBlockType() == CourseConstants.TYPE_H5P)
+				&& !ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
+			throw new UnauthorizedUrlException("Url " + blockValue + " is not whiteListed as an authorized embed content");
+		} else if (block.getBlockType() == CourseConstants.TYPE_LINK && !CommonUtils.isValidURI(blockValue)) {
+			throw new UnauthorizedUrlException("Url " + blockValue + " is not valid");
 		}
+
 		block.setBlockValue(blockValue);
 
 		// Order
@@ -260,7 +265,7 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 					break;
 				case CourseConstants.TYPE_VIDEO:
 				case CourseConstants.TYPE_H5P:
-					if (!content.getBlockName().equals("")) {
+					if (!content.getBlockName().isEmpty()) {
 						htmlBlock = content.getBlockName() + "<br/>";
 					}
 					htmlBlock = "<iframe src=\"" + content.getBlockValue() + "\" style=\"border:none;width:100%;\" allow=\"fullscreen\"></iframe>";
@@ -277,6 +282,22 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		}
 
 		return htmlBlock;
+	}
+
+	public boolean isEmbedUrlWhitelisted (String url) throws UnauthorizedUrlException {
+		if (!CommonUtils.isValidURI(url)) {
+			throw new UnauthorizedUrlException("Url " + url + " is not valid");
+		}
+
+		List<String> domainWhitelist = List.of(
+				PropsUtil.get(NeroSystemProperties.XSS_IFRAME_WHITELIST).split(","));
+
+		for (String domain : domainWhitelist) {
+			if (url.matches("^"+domain+"/.*$")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

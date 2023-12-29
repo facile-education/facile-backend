@@ -37,6 +37,8 @@ public class EventPopulationTable extends BaseTable<EventPopulationTable> {
 		"groupId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<EventPopulationTable, Long> roleId = createColumn(
 		"roleId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
+	public final Column<EventPopulationTable, Long> schoolId = createColumn(
+		"schoolId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 
 	private EventPopulationTable() {
 		super("Agenda_EventPopulation", EventPopulationTable::new);

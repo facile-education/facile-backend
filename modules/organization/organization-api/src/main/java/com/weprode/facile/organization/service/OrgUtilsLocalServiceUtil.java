@@ -58,8 +58,7 @@ public class OrgUtilsLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Organization
-			getOrCreateRootOrg(long companyId)
-		throws PortalException, SystemException {
+		getOrCreateRootOrg(long companyId) {
 
 		return getService().getOrCreateRootOrg(companyId);
 	}

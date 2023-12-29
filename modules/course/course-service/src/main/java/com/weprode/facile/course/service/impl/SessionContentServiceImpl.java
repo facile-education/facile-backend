@@ -76,18 +76,19 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a session content");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
-			logger.error("User " + user.getFullName() + " tries to create content for session " + sessionId +" but does not own this session");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds a session content");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 		logger.info("User " + user.getFullName() + " (id=" + user.getUserId() + ") creates content for session " + sessionId);
@@ -116,6 +117,9 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 			result.put(JSONConstants.ITEM, courseItem.convertToJSON(user, true));
 			result.put(JSONConstants.SUCCESS, true);
+		} catch (UnauthorizedUrlException e) {
+			result.put(JSONConstants.ERROR, e.getClass());
+			result.put(JSONConstants.SUCCESS, false);
 		} catch (Exception e) {
 			logger.error("Error creating session content", e);
 			throw new PortalException(); // To cancel the previous content creation
@@ -132,17 +136,19 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates a session content");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates a session content");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -176,19 +182,20 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a session content");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
 			if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a session content");
 			}
 
 			SessionContentLocalServiceUtil.deleteSessionContent(sessionId);
@@ -213,7 +220,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -222,6 +229,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 		try {
 			if (!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets session contents");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -247,7 +255,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -256,6 +264,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 		try {
 			if (!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets a session preview");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 

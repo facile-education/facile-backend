@@ -23,6 +23,7 @@ create table News_NewsPopulation (
 	newsId LONG not null,
 	groupId LONG not null,
 	roleId LONG not null,
+	schoolId LONG,
 	primary key (newsId, groupId, roleId)
 );
 

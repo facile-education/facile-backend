@@ -58,40 +58,43 @@ public class DocumentFilter extends BaseFilter {
     protected void processFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws Exception {
 
-        long userId = PortalUtil.getUserId(httpServletRequest);
-        logger.info("DocumentFilter : userId = " + userId);
+        User user = PortalUtil.getUser(httpServletRequest);
+        long userId = user.getUserId();
+        logger.debug("DocumentFilter : userId = " + userId);
 
-        if (userId != 0 && userId != UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
-            User user = UserLocalServiceUtil.getUser(userId);
+        if (userId != 0 && userId != UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 
-            // URI split : /documents/{repositoryId}/{folderId}/{fileTitle}/...
-            logger.info("URI=" + httpServletRequest.getRequestURI());
-            String[] splitURI = httpServletRequest.getRequestURI().split("/documents/");
-            String[] splitPath = splitURI[1].split("/");
-            long groupId = Long.parseLong(splitPath[0]);
-            long folderId = Long.parseLong(splitPath[1]);
-            String title = splitPath[2];
+            try {
+                // URI split : /documents/{repositoryId}/{folderId}/{fileTitle}/...
+                logger.debug("URI=" + httpServletRequest.getRequestURI());
+                String[] splitURI = httpServletRequest.getRequestURI().split("/documents/");
+                String[] splitPath = splitURI[1].split("/");
+                long groupId = Long.parseLong(splitPath[0]);
+                long folderId = Long.parseLong(splitPath[1]);
+                String title = splitPath[2];
 
-            // Permission checker initialization
-            PermissionChecker permissionChecker;
-            permissionChecker = PermissionCheckerFactoryUtil.create(user);
-            PermissionThreadLocal.setPermissionChecker(permissionChecker);
+                // Permission checker initialization
+                PermissionChecker permissionChecker;
+                permissionChecker = PermissionCheckerFactoryUtil.create(user);
+                PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
-            if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)) {
-                logger.info("Denying " + user.getFullName() + " to access (folder access) document URI " + httpServletRequest.getRequestURI());
-                // Should be HttpServletResponse.SC_FORBIDDEN but liferay's sending 403 when session is ended so we need to differentiate it
-                PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
-                return;
-            } else if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, DLAppServiceUtil.getFolder(folderId), ActionKeys.VIEW)
-                    && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, DLAppServiceUtil.getFileEntry(groupId, folderId, title), ActionKeys.VIEW)) {
-                // Check File OR folder permission because old files do not have the VIEW perm for all users
-                logger.info("Denying " + user.getFullName() + " to access document (view permission) with URI " + httpServletRequest.getRequestURI());
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)) {
+                    logger.info("Denying " + user.getFullName() + " to access (folder access) document URI " + httpServletRequest.getRequestURI());
+                    // Should be HttpServletResponse.SC_FORBIDDEN but liferay's sending 403 when session is ended so we need to differentiate it
+                    PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
+                } else if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, DLAppServiceUtil.getFolder(folderId), ActionKeys.VIEW)
+                        && !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, DLAppServiceUtil.getFileEntry(groupId, folderId, title), ActionKeys.VIEW)) {
+                    // Check File OR folder permission because old files do not have the VIEW perm for all users
+                    logger.info("Denying " + user.getFullName() + " to access document (view permission) with URI " + httpServletRequest.getRequestURI());
+                    PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
+                }
+            } catch (Exception e) {
+                logger.error("Error accessing a file, certainly permission issue for user " + user.getFullName() + " and URI " + httpServletRequest.getRequestURI() + ", " + e.getMessage());
                 PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
                 return;
             }
         } else {
             PortalUtil.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, new PrincipalException("Access denied."), httpServletRequest, httpServletResponse);
-            return;
         }
 
         super.processFilter(httpServletRequest, httpServletResponse, filterChain);

@@ -83,7 +83,9 @@ public interface ActivityLocalService
 		long fileEntryId, long folderId, long userId, long groupId,
 		String fileName, String folderName, int type);
 
-	public JSONObject convertActivityToJson(Activity activity);
+	public JSONObject convertActivityToJson(Activity activity, long userId);
+
+	public int countSchoolActivities(long schoolId, Date minDate, Date maxDate);
 
 	/**
 	 * Creates a new activity with the primary key. Does not add the activity to the database.

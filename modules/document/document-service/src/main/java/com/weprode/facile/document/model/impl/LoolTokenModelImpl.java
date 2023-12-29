@@ -70,7 +70,7 @@ public class LoolTokenModelImpl
 
 	public static final Object[][] TABLE_COLUMNS = {
 		{"loolTokenId", Types.BIGINT}, {"userId", Types.BIGINT},
-		{"token", Types.VARCHAR}
+		{"token", Types.VARCHAR}, {"editionDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -80,10 +80,11 @@ public class LoolTokenModelImpl
 		TABLE_COLUMNS_MAP.put("loolTokenId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("token", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("editionDate", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Document_LoolToken (loolTokenId LONG not null primary key,userId LONG,token VARCHAR(75) null)";
+		"create table Document_LoolToken (loolTokenId LONG not null primary key,userId LONG,token VARCHAR(75) null,editionDate DATE null)";
 
 	public static final String TABLE_SQL_DROP = "drop table Document_LoolToken";
 
@@ -231,6 +232,10 @@ public class LoolTokenModelImpl
 		attributeGetterFunctions.put("token", LoolToken::getToken);
 		attributeSetterBiConsumers.put(
 			"token", (BiConsumer<LoolToken, String>)LoolToken::setToken);
+		attributeGetterFunctions.put("editionDate", LoolToken::getEditionDate);
+		attributeSetterBiConsumers.put(
+			"editionDate",
+			(BiConsumer<LoolToken, Date>)LoolToken::setEditionDate);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -310,6 +315,20 @@ public class LoolTokenModelImpl
 		return getColumnOriginalValue("token");
 	}
 
+	@Override
+	public Date getEditionDate() {
+		return _editionDate;
+	}
+
+	@Override
+	public void setEditionDate(Date editionDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_editionDate = editionDate;
+	}
+
 	public long getColumnBitmask() {
 		if (_columnBitmask > 0) {
 			return _columnBitmask;
@@ -369,6 +388,7 @@ public class LoolTokenModelImpl
 		loolTokenImpl.setLoolTokenId(getLoolTokenId());
 		loolTokenImpl.setUserId(getUserId());
 		loolTokenImpl.setToken(getToken());
+		loolTokenImpl.setEditionDate(getEditionDate());
 
 		loolTokenImpl.resetOriginalValues();
 
@@ -383,6 +403,8 @@ public class LoolTokenModelImpl
 			this.<Long>getColumnOriginalValue("loolTokenId"));
 		loolTokenImpl.setUserId(this.<Long>getColumnOriginalValue("userId"));
 		loolTokenImpl.setToken(this.<String>getColumnOriginalValue("token"));
+		loolTokenImpl.setEditionDate(
+			this.<Date>getColumnOriginalValue("editionDate"));
 
 		return loolTokenImpl;
 	}
@@ -470,6 +492,15 @@ public class LoolTokenModelImpl
 			loolTokenCacheModel.token = null;
 		}
 
+		Date editionDate = getEditionDate();
+
+		if (editionDate != null) {
+			loolTokenCacheModel.editionDate = editionDate.getTime();
+		}
+		else {
+			loolTokenCacheModel.editionDate = Long.MIN_VALUE;
+		}
+
 		return loolTokenCacheModel;
 	}
 
@@ -534,6 +565,7 @@ public class LoolTokenModelImpl
 	private long _loolTokenId;
 	private long _userId;
 	private String _token;
+	private Date _editionDate;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<LoolToken, Object> function = _attributeGetterFunctions.get(
@@ -565,6 +597,7 @@ public class LoolTokenModelImpl
 		_columnOriginalValues.put("loolTokenId", _loolTokenId);
 		_columnOriginalValues.put("userId", _userId);
 		_columnOriginalValues.put("token", _token);
+		_columnOriginalValues.put("editionDate", _editionDate);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -583,6 +616,8 @@ public class LoolTokenModelImpl
 		columnBitmasks.put("userId", 2L);
 
 		columnBitmasks.put("token", 4L);
+
+		columnBitmasks.put("editionDate", 8L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

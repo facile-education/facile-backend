@@ -16,20 +16,19 @@
 package com.weprode.facile.statistic.service.impl;
 
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
-import com.weprode.facile.commons.JSONProxy;
-import com.weprode.facile.commons.properties.NeroSystemProperties;
-import org.json.JSONArray;
-
-import org.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
+import com.weprode.facile.commons.properties.NeroSystemProperties;
+import com.weprode.facile.course.service.SessionContentLocalServiceUtil;
+import com.weprode.facile.document.service.ActivityLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
@@ -38,9 +37,15 @@ import com.weprode.facile.statistic.service.GeneralStatLocalServiceUtil;
 import com.weprode.facile.statistic.service.MatomoLocalServiceUtil;
 import com.weprode.facile.statistic.service.base.GeneralStatServiceBaseImpl;
 import com.weprode.facile.statistic.utils.UserProfile;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component(
         property = {
@@ -64,6 +69,8 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
     private static final String[] BLUE_COLOR_POOL = {"#436A86", "#B8D3FF", "#25406D", "#C5DAF3", "#314D7C",
             "#A1C2F9", "#45659B", "#597AB1", "#82A7E4", "#7699D3", "#85B7DE"};
 
+    private static final String DATA_SET_DEFAULT = "{label: \"Main\"}";
+
     @JSONWebService(value = "get-sessions-count", method = "GET")
     public JSONObject getSessionsCount(Date startDate, Date endDate, long schoolId, String comparator) {
         JSONObject result = new JSONObject();
@@ -71,7 +78,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -79,6 +86,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         if (!checkUserPermissions(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets session count");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -135,7 +143,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -143,6 +151,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         if (!checkUserPermissions(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets action count");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -201,7 +210,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -209,6 +218,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         if (!checkUserPermissions(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets active users count");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -225,7 +235,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -233,13 +243,14 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         if (!checkUserPermissions(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets file count");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
             JSONArray labels = new JSONArray();
             JSONArray datasets = new JSONArray();
-            JSONObject dataset = new JSONObject("{label: \"Main\"}");
+            JSONObject dataset = new JSONObject(DATA_SET_DEFAULT);
             JSONArray data = new JSONArray();
             JSONArray backgroundColors = new JSONArray();
             int totalCount = 0;
@@ -275,7 +286,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -283,13 +294,14 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         if (!checkUserPermissions(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets homework count");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
             JSONArray labels = new JSONArray();
             JSONArray datasets = new JSONArray();
-            JSONObject dataset = new JSONObject("{label: \"Main\"}");
+            JSONObject dataset = new JSONObject(DATA_SET_DEFAULT);
             JSONArray data = new JSONArray();
             JSONArray backgroundColors = new JSONArray();
             int totalCount = 0;
@@ -325,7 +337,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -333,6 +345,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         }
 
         if (!checkUserPermissions(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets news count");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -350,7 +363,32 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+
+        if (!checkUserPermissions(user, schoolId)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets message count");
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+        }
+
+        result.put(JSONConstants.COUNT, GeneralStatLocalServiceUtil.countMessages(startDate, endDate, schoolId));
+        result.put(JSONConstants.SUCCESS, true);
+
+        return result;
+    }
+
+    @JSONWebService(value = "get-school-life-students-count", method = "GET")
+    public JSONObject getSchoolLifeStudentsCount(Date startDate, Date endDate, long schoolId) {
+        JSONObject result = new JSONObject();
+
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -361,14 +399,40 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
-        result.put(JSONConstants.COUNT, GeneralStatLocalServiceUtil.countMessages(startDate, endDate, schoolId));
-        result.put(JSONConstants.SUCCESS, true);
+        try {
+            JSONArray labels = new JSONArray();
+            JSONArray datasets = new JSONArray();
+            JSONObject dataset = new JSONObject(DATA_SET_DEFAULT);
+            JSONArray data = new JSONArray();
+            JSONArray backgroundColors = new JSONArray();
+            int totalCount = 0;
+
+            int index = 0;
+            for (Map.Entry<Integer, Integer> entry : GeneralStatLocalServiceUtil.countSchoolLifeStudents(startDate, endDate, schoolId).entrySet()) {
+                labels.put("slot-" + entry.getKey());
+                data.put(entry.getValue());
+                backgroundColors.put(BLUE_COLOR_POOL[index++]);
+                totalCount += entry.getValue();
+            }
+
+            dataset.put(JSONConstants.DATA, data);
+            dataset.put(JSONConstants.BACKGROUND_COLOR, backgroundColors);
+            datasets.put(dataset);
+
+            result.put(JSONConstants.LABELS, labels);
+            result.put(JSONConstants.DATASETS, datasets);
+            result.put(JSONConstants.TOTAL_COUNT, totalCount);
+            result.put(JSONConstants.SUCCESS, true);
+        } catch(Exception e) {
+            result.put(JSONConstants.SUCCESS, false);
+            logger.error("Could not fetch homeworks statistics.", e);
+        }
 
         return result;
     }
 
     private boolean checkUserPermissions(User user, long schoolId) {
-        if (RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+        if (RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             return true;
         }
 
@@ -382,14 +446,15 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
 
-        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+        if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets dashboard stats");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -411,7 +476,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             cal.add(Calendar.DATE, -7);
             Date startDate = cal.getTime();
 
-            logger.info("Fetch dashboard statistics from " + startDate + " to " + endDate);
+            logger.debug("Fetch dashboard statistics from " + startDate + " to " + endDate);
             JSONObject data = MatomoLocalServiceUtil.fetchStatistics(user, "", MatomoConstants.PERIOD_DAY, startDate, endDate,
                     profileIds, schoolIds, serviceIds, false);
 
@@ -441,14 +506,45 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             result.put(JSONConstants.PREVIOUS_NB_CONNEXIONS, previousNbConnexions);
 
             // Active users
-            Organization userSchool = UserOrgsLocalServiceUtil.getUserSchools(user).get(0);
-            result.put(JSONConstants.ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(startDate, endDate, userSchool.getOrganizationId()));
-            result.put(JSONConstants.PREVIOUS_ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId()));
+            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                result.put(JSONConstants.ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(startDate, endDate, 0));
+                result.put(JSONConstants.PREVIOUS_ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(previousWeekStartDate, previousWeekEndDate, 0));
+            } else {
+                Organization userSchool = UserOrgsLocalServiceUtil.getUserSchools(user).get(0);
+                result.put(JSONConstants.ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(startDate, endDate, userSchool.getOrganizationId()));
+                result.put(JSONConstants.PREVIOUS_ACTIVE_USERS_COUNT, GeneralStatLocalServiceUtil.countActiveUsers(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId()));
+            }
 
-            // Number of productions
-            // For now, number of created news
-            result.put(JSONConstants.GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(startDate, endDate, userSchool.getOrganizationId(), false));
-            result.put(JSONConstants.PREVIOUS_GROUP_NEWS_COUNT, GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, userSchool.getOrganizationId(), false));
+            // Number of productions : news + homeworks + activities
+            long schoolId = 0;
+            if (!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+                schoolId = UserOrgsLocalServiceUtil.getUserSchools(user).get(0).getOrganizationId();
+            }
+            // News
+            int nbNews = GeneralStatLocalServiceUtil.countNews(startDate, endDate, schoolId, false);
+            int nbPreviousNews = GeneralStatLocalServiceUtil.countNews(previousWeekStartDate, previousWeekEndDate, schoolId, false);
+
+            // Homeworks
+            Map<Integer, Integer> homeworkMap = GeneralStatLocalServiceUtil.countHomeworks(startDate, endDate, schoolId);
+            int nbHomeworks = 0;
+            for (Map.Entry<Integer, Integer> homeworkEntry : homeworkMap.entrySet()) {
+                nbHomeworks += homeworkEntry.getValue();
+            }
+            Map<Integer, Integer> previousHomeworkMap = GeneralStatLocalServiceUtil.countHomeworks(previousWeekStartDate, previousWeekEndDate, schoolId);
+            int nbPreviousHomeworks = 0;
+            for (Map.Entry<Integer, Integer> homeworkEntry : previousHomeworkMap.entrySet()) {
+                nbPreviousHomeworks += homeworkEntry.getValue();
+            }
+            // Session contents
+            int nbSessionContents = SessionContentLocalServiceUtil.countSchoolSessionContents(schoolId, startDate, endDate);
+            int nbPreviousSessionContents = SessionContentLocalServiceUtil.countSchoolSessionContents(schoolId, previousWeekStartDate, previousWeekEndDate);
+
+            // Activities
+            int nbActivities = ActivityLocalServiceUtil.countSchoolActivities(schoolId, startDate, endDate);
+            int nbPreviousActivities = ActivityLocalServiceUtil.countSchoolActivities(schoolId, previousWeekStartDate, previousWeekEndDate);
+
+            result.put(JSONConstants.NB_ACTIVITIES, nbNews + nbHomeworks + nbActivities + nbSessionContents);
+            result.put(JSONConstants.NB_PREVIOUS_ACTIVITIES, nbPreviousNews + nbPreviousHomeworks + nbPreviousActivities + nbPreviousSessionContents);
 
             result.put(JSONConstants.SUCCESS, true);
         } catch(Exception e) {
@@ -463,7 +559,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
         List<Long> schoolIds = new ArrayList<>();
 
         // Do not add school filter for admins
-        if (!RoleUtilsLocalServiceUtil.isAdministrator(user) && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+        if (!RoleUtilsLocalServiceUtil.isAdministrator(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             for (Organization school : UserOrgsLocalServiceUtil.getUserSchools(user)) {
                 if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isSchoolAdmin(user, school.getOrganizationId())) {
                     schoolIds.add(school.getOrganizationId());

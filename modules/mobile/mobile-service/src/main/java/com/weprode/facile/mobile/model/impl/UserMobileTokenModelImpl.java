@@ -71,7 +71,8 @@ public class UserMobileTokenModelImpl
 	public static final String TABLE_NAME = "Mobile_UserMobileToken";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"userId", Types.BIGINT}, {"mobileToken", Types.VARCHAR}
+		{"userId", Types.BIGINT}, {"mobileToken", Types.VARCHAR},
+		{"creationDate", Types.TIMESTAMP}, {"modificationDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -80,10 +81,12 @@ public class UserMobileTokenModelImpl
 	static {
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("mobileToken", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("creationDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("modificationDate", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Mobile_UserMobileToken (userId LONG not null primary key,mobileToken VARCHAR(75) null)";
+		"create table Mobile_UserMobileToken (userId LONG not null primary key,mobileToken VARCHAR(75) null,creationDate DATE null,modificationDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Mobile_UserMobileToken";
@@ -234,6 +237,18 @@ public class UserMobileTokenModelImpl
 			"mobileToken",
 			(BiConsumer<UserMobileToken, String>)
 				UserMobileToken::setMobileToken);
+		attributeGetterFunctions.put(
+			"creationDate", UserMobileToken::getCreationDate);
+		attributeSetterBiConsumers.put(
+			"creationDate",
+			(BiConsumer<UserMobileToken, Date>)
+				UserMobileToken::setCreationDate);
+		attributeGetterFunctions.put(
+			"modificationDate", UserMobileToken::getModificationDate);
+		attributeSetterBiConsumers.put(
+			"modificationDate",
+			(BiConsumer<UserMobileToken, Date>)
+				UserMobileToken::setModificationDate);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -301,6 +316,36 @@ public class UserMobileTokenModelImpl
 		return getColumnOriginalValue("mobileToken");
 	}
 
+	@JSON
+	@Override
+	public Date getCreationDate() {
+		return _creationDate;
+	}
+
+	@Override
+	public void setCreationDate(Date creationDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_creationDate = creationDate;
+	}
+
+	@JSON
+	@Override
+	public Date getModificationDate() {
+		return _modificationDate;
+	}
+
+	@Override
+	public void setModificationDate(Date modificationDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_modificationDate = modificationDate;
+	}
+
 	public long getColumnBitmask() {
 		if (_columnBitmask > 0) {
 			return _columnBitmask;
@@ -359,6 +404,8 @@ public class UserMobileTokenModelImpl
 
 		userMobileTokenImpl.setUserId(getUserId());
 		userMobileTokenImpl.setMobileToken(getMobileToken());
+		userMobileTokenImpl.setCreationDate(getCreationDate());
+		userMobileTokenImpl.setModificationDate(getModificationDate());
 
 		userMobileTokenImpl.resetOriginalValues();
 
@@ -373,6 +420,10 @@ public class UserMobileTokenModelImpl
 			this.<Long>getColumnOriginalValue("userId"));
 		userMobileTokenImpl.setMobileToken(
 			this.<String>getColumnOriginalValue("mobileToken"));
+		userMobileTokenImpl.setCreationDate(
+			this.<Date>getColumnOriginalValue("creationDate"));
+		userMobileTokenImpl.setModificationDate(
+			this.<Date>getColumnOriginalValue("modificationDate"));
 
 		return userMobileTokenImpl;
 	}
@@ -459,6 +510,25 @@ public class UserMobileTokenModelImpl
 			userMobileTokenCacheModel.mobileToken = null;
 		}
 
+		Date creationDate = getCreationDate();
+
+		if (creationDate != null) {
+			userMobileTokenCacheModel.creationDate = creationDate.getTime();
+		}
+		else {
+			userMobileTokenCacheModel.creationDate = Long.MIN_VALUE;
+		}
+
+		Date modificationDate = getModificationDate();
+
+		if (modificationDate != null) {
+			userMobileTokenCacheModel.modificationDate =
+				modificationDate.getTime();
+		}
+		else {
+			userMobileTokenCacheModel.modificationDate = Long.MIN_VALUE;
+		}
+
 		return userMobileTokenCacheModel;
 	}
 
@@ -522,6 +592,8 @@ public class UserMobileTokenModelImpl
 
 	private long _userId;
 	private String _mobileToken;
+	private Date _creationDate;
+	private Date _modificationDate;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<UserMobileToken, Object> function =
@@ -552,6 +624,8 @@ public class UserMobileTokenModelImpl
 
 		_columnOriginalValues.put("userId", _userId);
 		_columnOriginalValues.put("mobileToken", _mobileToken);
+		_columnOriginalValues.put("creationDate", _creationDate);
+		_columnOriginalValues.put("modificationDate", _modificationDate);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -568,6 +642,10 @@ public class UserMobileTokenModelImpl
 		columnBitmasks.put("userId", 1L);
 
 		columnBitmasks.put("mobileToken", 2L);
+
+		columnBitmasks.put("creationDate", 4L);
+
+		columnBitmasks.put("modificationDate", 8L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

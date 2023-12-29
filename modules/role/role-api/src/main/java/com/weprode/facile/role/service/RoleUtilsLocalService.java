@@ -70,6 +70,9 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public Role getCaissierComptableRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Role getCollectivityAdminRole();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getCommunityAdministratorRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -86,9 +89,6 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getDoyenRole();
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Role getEntAdminRole();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Role getInfirmiereRole();
@@ -149,6 +149,9 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 	public boolean isCaissierComptable(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isCollectivityAdmin(User user);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isCommunityAdmin(long userId, long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -171,9 +174,6 @@ public interface RoleUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isDoyen(User user, long orgId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isENTAdmin(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isForClass(Role role);

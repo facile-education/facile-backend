@@ -58,12 +58,6 @@ public class DocumentUtilsServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static org.json.JSONObject isEmbedUrlWhitelisted(String url)
-		throws SystemException {
-
-		return getService().isEmbedUrlWhitelisted(url);
-	}
-
 	public static DocumentUtilsService getService() {
 		return _service;
 	}

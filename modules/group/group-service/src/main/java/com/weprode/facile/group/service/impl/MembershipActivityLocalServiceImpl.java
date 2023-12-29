@@ -33,6 +33,7 @@ import com.weprode.facile.group.model.MembershipActivity;
 import com.weprode.facile.group.service.GroupUtilsLocalServiceUtil;
 import com.weprode.facile.group.service.MembershipActivityLocalServiceUtil;
 import com.weprode.facile.group.service.base.MembershipActivityLocalServiceBaseImpl;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -258,12 +259,13 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
         return false;
     }
 
-    public JSONObject convertMembershipActivityToJson(MembershipActivity membershipActivity) {
+    public JSONObject convertMembershipActivityToJson(MembershipActivity membershipActivity, long userId) {
         JSONObject jsonMembershipActivity = new JSONObject();
 
         DateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
 
         try {
+            User user = UserLocalServiceUtil.getUser(userId);
             jsonMembershipActivity.put(JSONConstants.ACTIVITY_ID, membershipActivity.getMembershipActivityId());
             jsonMembershipActivity.put(JSONConstants.GROUP_ID, membershipActivity.getGroupId());
             jsonMembershipActivity.put(JSONConstants.ACTION_USER_ID, membershipActivity.getActionUserId());
@@ -297,6 +299,9 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
             jsonMembershipActivity.put(JSONConstants.TYPE, membershipActivity.getIncoming() ? ActivityConstants.TYPE_ADD_MEMBERSHIP : ActivityConstants.TYPE_REMOVE_MEMBERSHIP);
             jsonMembershipActivity.put(JSONConstants.MODIFICATION_DATE, sdf.format(membershipActivity.getMovementDate()));
             jsonMembershipActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(membershipActivity.getGroupId()));
+
+            // Students and parents should not have access to groups
+            jsonMembershipActivity.put(JSONConstants.READ_ONLY, RoleUtilsLocalServiceUtil.isStudentOrParent(user));
 
             Group group = GroupLocalServiceUtil.getGroup(membershipActivity.getGroupId());
             jsonMembershipActivity.put(JSONConstants.GROUP_LINK, "#/group"+ group.getFriendlyURL());

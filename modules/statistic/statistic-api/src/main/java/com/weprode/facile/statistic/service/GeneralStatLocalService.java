@@ -60,6 +60,9 @@ public interface GeneralStatLocalService extends BaseLocalService {
 	public int countNews(
 		Date startDate, Date endDate, long schoolId, boolean isSchoolNewsType);
 
+	public Map<Integer, Integer> countSchoolLifeStudents(
+		Date startDate, Date endDate, long schoolId);
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

@@ -16,19 +16,13 @@
 package com.weprode.facile.document.service.impl;
 
 import com.liferay.portal.aop.AopService;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.util.PropsUtil;
-import com.weprode.facile.commons.properties.NeroSystemProperties;
 import com.weprode.facile.document.service.base.DocumentUtilsLocalServiceBaseImpl;
-
 import com.weprode.facile.document.utils.DocumentUtil;
 import com.weprode.facile.document.utils.ENTWebDAVUtil;
 import org.osgi.service.component.annotations.Component;
-
-import java.util.List;
 
 @Component(
 	property = "model.class.name=com.weprode.facile.document.model.DocumentUtils",
@@ -36,18 +30,6 @@ import java.util.List;
 )
 public class DocumentUtilsLocalServiceImpl
 	extends DocumentUtilsLocalServiceBaseImpl {
-
-	public boolean isEmbedUrlWhitelisted (String url) {
-		List<String> domainWhitelist = List.of(
-				PropsUtil.get(NeroSystemProperties.XSS_IFRAME_WHITELIST).split(","));
-
-		for (String domain : domainWhitelist) {
-			if (url.matches("^"+domain+".*$")) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public String getWebDavUrl (User user) {
 		return ENTWebDAVUtil.getWebDavUrl(user);

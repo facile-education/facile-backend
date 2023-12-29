@@ -48,8 +48,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(HomeworkImpl.class);
 
-    public JSONObject convertToJSON(User user, boolean includeBlocks) {
-
+    public JSONObject convertToJSON(User user, boolean includeBlocks, boolean withDetails) {
         JSONObject jsonHomework = new JSONObject();
 
         SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
@@ -59,6 +58,14 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         jsonHomework.put(JSONConstants.TYPE, this.getHomeworkType());
         jsonHomework.put(JSONConstants.MODIFICATION_DATE, sdf.format(this.getModificationDate()));
         jsonHomework.put(JSONConstants.SOURCE_SESSION_ID, this.getSourceSessionId());
+        if (!withDetails) {
+            try {
+                CDTSession sourceSession = CDTSessionLocalServiceUtil.getCDTSession(this.getSourceSessionId());
+                jsonHomework.put(JSONConstants.SOURCE_SESSION_DATE, sdf.format(sourceSession.getStart()));
+            } catch (Exception e) {
+                logger.error("Error retrieving session with Id " + this.getSourceSessionId(), e);
+            }
+        }
         jsonHomework.put(JSONConstants.TO_DATE, sdf.format(this.getTargetDate()));
         try {
             CDTSession targetSession = CDTSessionLocalServiceUtil.getCDTSession(this.getTargetSessionId());
@@ -119,56 +126,57 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         }
         else {
             // Teacher case
+            if (withDetails) {
+                // Build the student list for the associated class/group
+                List<User> targetSessionStudents = CDTSessionLocalServiceUtil.getSessionStudents(referenceSessionId);
+                List<User> sourceSessionStudents = CDTSessionLocalServiceUtil.getSessionStudents(this.getSourceSessionId());
 
-            // Build the student list for the associated class/group
-            List<User> targetSessionStudents = CDTSessionLocalServiceUtil.getSessionStudents(referenceSessionId);
-            List<User> sourceSessionStudents = CDTSessionLocalServiceUtil.getSessionStudents(this.getSourceSessionId());
+                JSONArray targetSessionStudentsJson = UserUtilsLocalServiceUtil.convertUsersToJson(targetSessionStudents);
+                jsonHomework.put(JSONConstants.GROUP_STUDENTS, targetSessionStudentsJson);
 
-            JSONArray targetSessionStudentsJson = UserUtilsLocalServiceUtil.convertUsersToJson(targetSessionStudents);
-            jsonHomework.put(JSONConstants.GROUP_STUDENTS, targetSessionStudentsJson);
+                // Get assigned students
+                List<User> assignedStudents;
+                if (this.isIsCustomStudentList()) {
+                    // Specific student assignment
+                    assignedStudents = StudentHomeworkLocalServiceUtil.getHomeworkStudents(this.getHomeworkId());
+                    jsonHomework.put(JSONConstants.SELECTED_STUDENTS, UserUtilsLocalServiceUtil.convertUsersToJson(assignedStudents));
+                    jsonHomework.put(JSONConstants.IS_WHOLE_CLASS, false);
 
-            // Get assigned students
-            List<User> assignedStudents;
-            if (this.isIsCustomStudentList()) {
-                // Specific student assignment
-                assignedStudents = StudentHomeworkLocalServiceUtil.getHomeworkStudents(this.getHomeworkId());
-                jsonHomework.put(JSONConstants.SELECTED_STUDENTS, UserUtilsLocalServiceUtil.convertUsersToJson(assignedStudents));
-                jsonHomework.put(JSONConstants.IS_WHOLE_CLASS, false);
+                } else if (this.getTargetSessionId() == 0) {
+                    // Free date this => selected students are source session students
+                    JSONArray sourceSessionStudentsJson = UserUtilsLocalServiceUtil.convertUsersToJson(sourceSessionStudents);
+                    jsonHomework.put(JSONConstants.SELECTED_STUDENTS, sourceSessionStudentsJson);
+                    jsonHomework.put(JSONConstants.IS_WHOLE_CLASS, true);
 
-            } else if (this.getTargetSessionId() == 0) {
-                // Free date this => selected students are source session students
-                JSONArray sourceSessionStudentsJson = UserUtilsLocalServiceUtil.convertUsersToJson(sourceSessionStudents);
-                jsonHomework.put(JSONConstants.SELECTED_STUDENTS, sourceSessionStudentsJson);
-                jsonHomework.put(JSONConstants.IS_WHOLE_CLASS, true);
+                } else {
+                    jsonHomework.put(JSONConstants.IS_WHOLE_CLASS, true);
 
-            } else {
-                jsonHomework.put(JSONConstants.IS_WHOLE_CLASS, true);
-
-                // Mark all students as selected for C&D
-                // Process the intersection between students of source session and students of target session
-                List<User> commonStudents = new ArrayList<>();
-                for (User sourceStudent : sourceSessionStudents) {
-                    for (User targetStudent : targetSessionStudents) {
-                        if (sourceStudent.getUserId() == targetStudent.getUserId()) {
-                            commonStudents.add(sourceStudent);
-                            break;
+                    // Mark all students as selected for C&D
+                    // Process the intersection between students of source session and students of target session
+                    List<User> commonStudents = new ArrayList<>();
+                    for (User sourceStudent : sourceSessionStudents) {
+                        for (User targetStudent : targetSessionStudents) {
+                            if (sourceStudent.getUserId() == targetStudent.getUserId()) {
+                                commonStudents.add(sourceStudent);
+                                break;
+                            }
                         }
                     }
+
+                    JSONArray commonStudentsJson = UserUtilsLocalServiceUtil.convertUsersToJson(commonStudents);
+                    jsonHomework.put(JSONConstants.SELECTED_STUDENTS, commonStudentsJson);
                 }
 
-                JSONArray commonStudentsJson = UserUtilsLocalServiceUtil.convertUsersToJson(commonStudents);
-                jsonHomework.put(JSONConstants.SELECTED_STUDENTS, commonStudentsJson);
+                // Students having done the homework
+                List<User> doneStudents = StudentHomeworkLocalServiceUtil.getStudentsHavingDoneHomework(this.getHomeworkId());
+                jsonHomework.put(JSONConstants.DONE_STUDENTS, UserUtilsLocalServiceUtil.convertUsersToJson(doneStudents));
+
+                // Number of corrected files
+                jsonHomework.put(JSONConstants.NB_CORRECTED, StudentHomeworkLocalServiceUtil.countCorrectedWorks(this.getHomeworkId()));
+
+                // Is the correction sent ?
+                jsonHomework.put(JSONConstants.IS_CORRECTION_SENT, this.isIsCorrectionSent());
             }
-
-            // Students having done the homework
-            List<User> doneStudents = StudentHomeworkLocalServiceUtil.getStudentsHavingDoneHomework(this.getHomeworkId());
-            jsonHomework.put(JSONConstants.DONE_STUDENTS, UserUtilsLocalServiceUtil.convertUsersToJson(doneStudents));
-
-            // Number of corrected files
-            jsonHomework.put(JSONConstants.NB_CORRECTED, StudentHomeworkLocalServiceUtil.countCorrectedWorks(this.getHomeworkId()));
-
-            // Is the correction sent ?
-            jsonHomework.put(JSONConstants.IS_CORRECTION_SENT, this.isIsCorrectionSent());
         }
 
         if (includeBlocks) {
@@ -191,6 +199,10 @@ public class HomeworkImpl extends HomeworkBaseImpl {
         }
 
         return jsonHomework;
+    }
+
+    public JSONObject convertToJSON(User user, boolean includeBlocks) {
+        return convertToJSON(user, includeBlocks, true);
     }
 
 }

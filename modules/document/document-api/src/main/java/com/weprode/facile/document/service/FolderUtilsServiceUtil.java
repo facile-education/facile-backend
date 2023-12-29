@@ -42,10 +42,6 @@ public class FolderUtilsServiceUtil {
 		return getService().createFolder(targetFolderId, folderName);
 	}
 
-	public static org.json.JSONObject downloadFolder(long folderId) {
-		return getService().downloadFolder(folderId);
-	}
-
 	public static org.json.JSONObject getAllEntities(
 		long folderId, boolean withDetails) {
 

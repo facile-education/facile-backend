@@ -50,20 +50,20 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
 
     @JSONWebService(value = "send-password-reset-link", method = "POST")
     public JSONObject sendPasswordResetLink(String email) throws SystemException {
-        logger.info("Start sendPasswordResetLink for email="+email);
-        
+
         JSONObject result = new JSONObject();
 
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
+            logger.info("Start sendPasswordResetLink for email="+email);
             User targetUser = UserLocalServiceUtil.getUserByEmailAddress(PortalUtil.getDefaultCompanyId(), email);
             ServiceContext serviceContext = new ServiceContext();
             serviceContext.setPortalURL(PropsUtil.get(NeroSystemProperties.PORTAL_URL));
@@ -82,19 +82,19 @@ public class UserPasswordServiceImpl extends UserPasswordServiceBaseImpl {
 
     @JSONWebService(value = "send-screenname", method = "POST")
     public JSONObject sendScreenname(String email) throws SystemException {
-        logger.info("Start sendScreenname for email="+email);
-        
+
         JSONObject result = new JSONObject();
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
+            logger.info("Start sendScreenname for email="+email);
             User targetUser = UserLocalServiceUtil.getUserByEmailAddress(PortalUtil.getDefaultCompanyId(), email);
 
             String subject = "Envoi d'identifiant ENT";

@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
@@ -40,6 +41,8 @@ import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.mobile.constants.MobileConstants;
 import com.weprode.facile.mobile.service.MobileDeviceLocalServiceUtil;
+import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
 import com.weprode.facile.user.service.UserSearchLocalServiceUtil;
@@ -134,7 +137,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         }
 
         // Mobile push
-        if (markAsUnread) {
+        if (markAsUnread && event != null) {
             manageMobilePush(title, location, description, populations, event.getEventId());
         }
 
@@ -151,25 +154,45 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         return null;
     }
 
-    public List<Event> getUserEvents(User user, int startIndex, int nbEvents, boolean unreadOnly) throws SystemException {
+    public List<Event> getUserEvents(User user, Date minDate,int startIndex, int nbEvents, boolean unreadOnly) throws SystemException {
         // Get user groups
         List<Long> groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
+        // Add root org
+        groupIds.add(OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId()).getGroupId());
 
         // Get user role ids
-        List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
         List<Long> roleIds = new ArrayList<>();
+        List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
         for (Role role : roles) {
             roleIds.add(role.getRoleId());
         }
         // For communities and schools
         roleIds.add((long) 0);
 
-        return eventFinder.getUserEvents(user.getUserId(), startIndex, nbEvents, groupIds, roleIds, unreadOnly);
+        return eventFinder.getUserEvents(user.getUserId(), minDate, startIndex, nbEvents, groupIds, roleIds, unreadOnly);
+    }
+
+    // Used for directors + collectivity admins + directors that need to see all school's events
+    public List<Event> getSchoolEvents(User user, Date minDate, int startIndex, int nbEvents, boolean unreadOnly) throws SystemException {
+
+        List<Long> schoolIds = new ArrayList<>();
+        List<Organization> schools = new ArrayList<>();
+        if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+            schools = UserOrgsLocalServiceUtil.getUserSchools(user);
+        } else if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            schools = OrgUtilsLocalServiceUtil.getAllSchools();
+        }
+        for (Organization school : schools) {
+            schoolIds.add(school.getOrganizationId());
+        }
+        return eventFinder.getSchoolEvents(user.getUserId(), minDate, startIndex, nbEvents, schoolIds, unreadOnly);
     }
 
     public int countEvents(User user, Date minDate, boolean unreadOnly) throws SystemException {
         // Get user groups
         List<Long> groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
+        // Add root org
+        groupIds.add(OrgUtilsLocalServiceUtil.getOrCreateRootOrg(PortalUtil.getDefaultCompanyId()).getGroupId());
 
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
@@ -183,11 +206,34 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         return eventFinder.countEvents(user.getUserId(), minDate, groupIds, roleIds, unreadOnly);
     }
 
+    // Used for directors + collectivity admins + directors that need to see all school's events
+    public int countSchoolEvents (User user, Date minDate, boolean unreadOnly) throws SystemException {
+
+        List<Long> schoolIds = new ArrayList<>();
+        List<Organization> schools = new ArrayList<>();
+        if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)) {
+            schools = UserOrgsLocalServiceUtil.getUserSchools(user);
+        } else if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            schools = OrgUtilsLocalServiceUtil.getAllSchools();
+        }
+        for (Organization school : schools) {
+            schoolIds.add(school.getOrganizationId());
+        }
+
+        return eventFinder.countSchoolEvents(user.getUserId(), minDate, schoolIds, unreadOnly);
+    }
+
     public boolean hasUserEvent(long userId, long eventId) {
         try {
             // Return true if the user is the author
             Event event = EventLocalServiceUtil.getEvent(eventId);
             if (event.getAuthorId() == userId) {
+                return true;
+            }
+
+            // Admins can read all events
+            User user = UserLocalServiceUtil.getUser(userId);
+            if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isAdministrator(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)) {
                 return true;
             }
 
@@ -221,7 +267,7 @@ public class EventLocalServiceImpl extends EventLocalServiceBaseImpl {
         JSONObject jsonEvent = new JSONObject();
 
         try {
-            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
             Event event = EventLocalServiceUtil.getEvent(eventId);
             jsonEvent.put(JSONConstants.EVENT_ID, event.getEventId());

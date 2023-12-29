@@ -68,6 +68,15 @@ public class EventLocalServiceWrapper
 		return _eventLocalService.countEvents(user, minDate, unreadOnly);
 	}
 
+	@Override
+	public int countSchoolEvents(
+			com.liferay.portal.kernel.model.User user, java.util.Date minDate,
+			boolean unreadOnly)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _eventLocalService.countSchoolEvents(user, minDate, unreadOnly);
+	}
+
 	/**
 	 * Creates a new event with the primary key. Does not add the event to the database.
 	 *
@@ -341,13 +350,25 @@ public class EventLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.weprode.facile.agenda.model.Event>
+			getSchoolEvents(
+				com.liferay.portal.kernel.model.User user,
+				java.util.Date minDate, int startIndex, int nbEvents,
+				boolean unreadOnly)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _eventLocalService.getSchoolEvents(
+			user, minDate, startIndex, nbEvents, unreadOnly);
+	}
+
+	@Override
 	public java.util.List<com.weprode.facile.agenda.model.Event> getUserEvents(
-			com.liferay.portal.kernel.model.User user, int startIndex,
-			int nbEvents, boolean unreadOnly)
+			com.liferay.portal.kernel.model.User user, java.util.Date minDate,
+			int startIndex, int nbEvents, boolean unreadOnly)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _eventLocalService.getUserEvents(
-			user, startIndex, nbEvents, unreadOnly);
+			user, minDate, startIndex, nbEvents, unreadOnly);
 	}
 
 	@Override

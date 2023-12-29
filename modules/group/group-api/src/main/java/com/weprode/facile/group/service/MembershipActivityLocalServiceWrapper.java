@@ -69,10 +69,11 @@ public class MembershipActivityLocalServiceWrapper
 
 	@Override
 	public org.json.JSONObject convertMembershipActivityToJson(
-		com.weprode.facile.group.model.MembershipActivity membershipActivity) {
+		com.weprode.facile.group.model.MembershipActivity membershipActivity,
+		long userId) {
 
 		return _membershipActivityLocalService.convertMembershipActivityToJson(
-			membershipActivity);
+			membershipActivity, userId);
 	}
 
 	/**

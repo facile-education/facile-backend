@@ -51,14 +51,13 @@ public class UserMobileTokenServiceImpl extends UserMobileTokenServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		logger.info("addUserMobileToken for userId=" + user.getUserId());
 		String refreshToken = UserMobileTokenLocalServiceUtil.addMobileToken(user.getUserId());
 		result.put(JSONConstants.REFRESH_TOKEN, refreshToken);
 		result.put(JSONConstants.SUCCESS, true);
@@ -73,14 +72,14 @@ public class UserMobileTokenServiceImpl extends UserMobileTokenServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		logger.info("refreshUserMobileToken for userId=" + user.getUserId() + " and token " + token);
+		logger.debug("refreshUserMobileToken for userId=" + user.getUserId() + " and token " + token);
 		String refreshToken = UserMobileTokenLocalServiceUtil.refreshMobileToken(user.getUserId(), token);
 		result.put(JSONConstants.REFRESH_TOKEN, refreshToken);
 		result.put(JSONConstants.SUCCESS, !refreshToken.equals(""));

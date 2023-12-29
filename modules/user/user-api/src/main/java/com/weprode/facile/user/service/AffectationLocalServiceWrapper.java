@@ -63,6 +63,14 @@ public class AffectationLocalServiceWrapper
 			userId, orgId, adminUserId, expirationDate);
 	}
 
+	@Override
+	public org.json.JSONArray convertUserAffectations(
+		long userId, long schoolId) {
+
+		return _affectationLocalService.convertUserAffectations(
+			userId, schoolId);
+	}
+
 	/**
 	 * Creates a new affectation with the primary key. Does not add the affectation to the database.
 	 *
@@ -338,6 +346,11 @@ public class AffectationLocalServiceWrapper
 	@Override
 	public java.util.List<Long> getUserAffectedOrgs(long userId) {
 		return _affectationLocalService.getUserAffectedOrgs(userId);
+	}
+
+	@Override
+	public void removeByUserId(long userId) {
+		_affectationLocalService.removeByUserId(userId);
 	}
 
 	@Override

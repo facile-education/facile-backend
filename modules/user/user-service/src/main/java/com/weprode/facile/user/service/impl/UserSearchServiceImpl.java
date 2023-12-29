@@ -56,7 +56,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         User currentUser;
         try {
             currentUser = getGuestOrUser();
-            if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (currentUser.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -65,6 +65,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(currentUser) &&
                 !RoleUtilsLocalServiceUtil.isPersonal(currentUser) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + currentUser.getFullName() + " gets school students and teachers");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -114,7 +115,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         User currentUser;
         try {
             currentUser = getGuestOrUser();
-            if (currentUser.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (currentUser.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -122,6 +123,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         }
         if (!RoleUtilsLocalServiceUtil.isPersonal(currentUser) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + currentUser.getFullName() + " gets school members");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -162,7 +164,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -208,7 +210,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -251,7 +253,7 @@ public class UserSearchServiceImpl extends UserSearchServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
