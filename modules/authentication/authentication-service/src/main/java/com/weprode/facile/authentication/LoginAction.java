@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.weprode.facile.authentication.model.LoginLock;
 import com.weprode.facile.authentication.service.LoginLockLocalServiceUtil;
+import org.apache.logging.log4j.ThreadContext;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -50,6 +51,7 @@ public class LoginAction implements StrutsAction {
         String login = ParamUtil.getString(request, "login");
         String password = ParamUtil.getString(request, "password");
         boolean rememberMe = ParamUtil.getBoolean(request, "rememberMe");
+        ThreadContext.clearAll();
         logger.info("Called login with screenName = " + login);
 
         String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_SN);
