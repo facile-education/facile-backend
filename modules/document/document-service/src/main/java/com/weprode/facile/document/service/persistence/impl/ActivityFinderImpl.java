@@ -1,6 +1,6 @@
 package com.weprode.facile.document.service.persistence.impl;
 
-import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -147,7 +147,7 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
                             (type == ActivityConstants.TYPE_FILE_MOVE && withFileModification)) {
 
                         // Check that the user has the READ permission on the file
-                        FileEntry fileEntry = DLAppServiceUtil.getFileEntry(activity.getFileEntryId());
+                        FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(activity.getFileEntryId());
                         if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
                             filteredActivityList.add(activity);
                         }
@@ -158,7 +158,7 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
                             (type == ActivityConstants.TYPE_FOLDER_MOVE && withFolderModification)) {
 
                         // Check that the user has the READ permission on the folder
-                        Folder folder = DLAppServiceUtil.getFolder(activity.getFolderId());
+                        Folder folder = DLAppLocalServiceUtil.getFolder(activity.getFolderId());
                         if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
                             filteredActivityList.add(activity);
                         }
