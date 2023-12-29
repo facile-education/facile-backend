@@ -91,7 +91,7 @@ public class MessageAttachFileLocalServiceImpl extends MessageAttachFileLocalSer
 
         long userId = MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId();
         User user = UserLocalServiceUtil.getUser(userId);
-        Folder messagingFolder = FolderUtilsLocalServiceUtil.getIMBox(userId);
+        Folder messagingFolder = FolderUtilsLocalServiceUtil.getUserMessagingAttachedFilesFolder(userId);
 
         Folder messageFolder = null;
         try {

@@ -138,7 +138,7 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
     public List<Organization> getUserVisibilitySchools(User user) {
         List<Organization> schools;
 
-        if (RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+        if (RoleUtilsLocalServiceUtil.isAdministrator(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
             schools = OrgUtilsLocalServiceUtil.getAllSchools();
         } else if (RoleUtilsLocalServiceUtil.isPersonal(user)) {
             schools = getAllUserSchoolsIncludingSchoolComplex(user);

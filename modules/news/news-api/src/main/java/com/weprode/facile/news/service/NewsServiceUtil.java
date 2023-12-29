@@ -76,11 +76,11 @@ public class NewsServiceUtil {
 	}
 
 	public static org.json.JSONObject getSchoolNews(
-		java.lang.String maxDateString, int nbNews, boolean importantOnly,
-		boolean unreadOnly) {
+		java.lang.String currentDateString, int startIndex, int nbNews,
+		boolean importantOnly, boolean unreadOnly) {
 
 		return getService().getSchoolNews(
-			maxDateString, nbNews, importantOnly, unreadOnly);
+			currentDateString, startIndex, nbNews, importantOnly, unreadOnly);
 	}
 
 	public static org.json.JSONObject getSchoolNewsBroadcastGroups() {

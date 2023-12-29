@@ -52,8 +52,8 @@ import com.weprode.facile.agenda.service.AgendaServiceUtil;
 public class AgendaServiceHttp {
 
 	public static org.json.JSONObject getEvents(
-		HttpPrincipal httpPrincipal, int startIndex, int nbEvents,
-		boolean unreadOnly) {
+		HttpPrincipal httpPrincipal, String minDateStr, int startIndex,
+		int nbEvents, boolean unreadOnly) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -61,7 +61,7 @@ public class AgendaServiceHttp {
 				_getEventsParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, startIndex, nbEvents, unreadOnly);
+				methodKey, minDateStr, startIndex, nbEvents, unreadOnly);
 
 			Object returnObj = null;
 
@@ -250,7 +250,7 @@ public class AgendaServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(AgendaServiceHttp.class);
 
 	private static final Class<?>[] _getEventsParameterTypes0 = new Class[] {
-		int.class, int.class, boolean.class
+		String.class, int.class, int.class, boolean.class
 	};
 	private static final Class<?>[] _getEventDetailsParameterTypes1 =
 		new Class[] {long.class};

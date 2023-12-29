@@ -15,15 +15,20 @@
 
 package com.weprode.facile.document.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
+import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
+import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.ClipboardServiceBaseImpl;
 import com.weprode.facile.document.utils.ClipboardUtil;
 import org.json.JSONObject;
@@ -46,7 +51,7 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -55,8 +60,17 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 
 		try {
 			long userId = getGuestOrUserId();
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " copies files and/or folder to directory " + targetFolderId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			Folder targetFolder = DLAppServiceUtil.getFolder(targetFolderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), targetFolder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " copies files and/or folder to directory " + targetFolderId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
-			// Permissions are checker deeper
+			// Permissions on source items are checked deeper
 			logger.info("User " + userId + " copies files " + fileIds + " and folders " + folderIds + " to targetFolderId " + targetFolderId);
 			return ClipboardUtil.copy(userId, targetFolderId, folderIds, fileIds, mode);
 		} catch (Exception e) {
@@ -71,7 +85,7 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -79,9 +93,18 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 		}
 		try {
 			long userId = getGuestOrUserId();
+			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves files and/or folder to directory " + targetFolderId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
+			Folder targetFolder = DLAppServiceUtil.getFolder(targetFolderId);
+			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), targetFolder, ActionKeys.ADD_DOCUMENT)) {
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves files and/or folder to directory " + targetFolderId);
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+			}
 
-			// Permissions are checker deeper
-			logger.info("User " + userId + " cuts files " + fileIds + " and folders " + folderIds + " to targetFolderId " + targetFolderId);
+			// Permissions on source items are checked deeper
+			logger.info("User " + userId + " moves files " + fileIds + " and folders " + folderIds + " to targetFolderId " + targetFolderId);
 			return ClipboardUtil.move(userId, targetFolderId, folderIds, fileIds, mode);
 		} catch (Exception e) {
 			result.put(JSONConstants.SUCCESS, false);

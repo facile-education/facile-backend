@@ -64,7 +64,7 @@ public class NewsPopulationCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{newsId=");
 		sb.append(newsId);
@@ -72,6 +72,8 @@ public class NewsPopulationCacheModel
 		sb.append(groupId);
 		sb.append(", roleId=");
 		sb.append(roleId);
+		sb.append(", schoolId=");
+		sb.append(schoolId);
 		sb.append("}");
 
 		return sb.toString();
@@ -84,6 +86,7 @@ public class NewsPopulationCacheModel
 		newsPopulationImpl.setNewsId(newsId);
 		newsPopulationImpl.setGroupId(groupId);
 		newsPopulationImpl.setRoleId(roleId);
+		newsPopulationImpl.setSchoolId(schoolId);
 
 		newsPopulationImpl.resetOriginalValues();
 
@@ -98,6 +101,8 @@ public class NewsPopulationCacheModel
 
 		roleId = objectInput.readLong();
 
+		schoolId = objectInput.readLong();
+
 		newsPopulationPK = new NewsPopulationPK(newsId, groupId, roleId);
 	}
 
@@ -108,11 +113,14 @@ public class NewsPopulationCacheModel
 		objectOutput.writeLong(groupId);
 
 		objectOutput.writeLong(roleId);
+
+		objectOutput.writeLong(schoolId);
 	}
 
 	public long newsId;
 	public long groupId;
 	public long roleId;
+	public long schoolId;
 	public transient NewsPopulationPK newsPopulationPK;
 
 }

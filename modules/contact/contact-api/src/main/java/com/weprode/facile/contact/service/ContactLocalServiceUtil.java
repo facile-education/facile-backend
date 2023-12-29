@@ -46,12 +46,11 @@ public class ContactLocalServiceUtil {
 
 	public static List<com.liferay.portal.kernel.model.User> directorySearch(
 		com.liferay.portal.kernel.model.User user, String query,
-		List<Long> organizationIds, List<Long> schoolIds, List<Long> roleIds,
-		List<Long> subjectIds, int start, int limit, OrderByComparator obc) {
+		List<Long> schoolIds, List<Long> roleIds, int start, int limit,
+		OrderByComparator obc) {
 
 		return getService().directorySearch(
-			user, query, organizationIds, schoolIds, roleIds, subjectIds, start,
-			limit, obc);
+			user, query, schoolIds, roleIds, start, limit, obc);
 	}
 
 	public static List<com.liferay.portal.kernel.model.User>

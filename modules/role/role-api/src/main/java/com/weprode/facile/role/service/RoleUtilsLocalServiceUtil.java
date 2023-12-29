@@ -72,6 +72,12 @@ public class RoleUtilsLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Role
+		getCollectivityAdminRole() {
+
+		return getService().getCollectivityAdminRole();
+	}
+
+	public static com.liferay.portal.kernel.model.Role
 		getCommunityAdministratorRole() {
 
 		return getService().getCommunityAdministratorRole();
@@ -99,10 +105,6 @@ public class RoleUtilsLocalServiceUtil {
 
 	public static com.liferay.portal.kernel.model.Role getDoyenRole() {
 		return getService().getDoyenRole();
-	}
-
-	public static com.liferay.portal.kernel.model.Role getEntAdminRole() {
-		return getService().getEntAdminRole();
 	}
 
 	public static com.liferay.portal.kernel.model.Role getInfirmiereRole() {
@@ -198,6 +200,12 @@ public class RoleUtilsLocalServiceUtil {
 		return getService().isCaissierComptable(user);
 	}
 
+	public static boolean isCollectivityAdmin(
+		com.liferay.portal.kernel.model.User user) {
+
+		return getService().isCollectivityAdmin(user);
+	}
+
 	public static boolean isCommunityAdmin(long userId, long groupId) {
 		return getService().isCommunityAdmin(userId, groupId);
 	}
@@ -240,12 +248,6 @@ public class RoleUtilsLocalServiceUtil {
 		com.liferay.portal.kernel.model.User user, long orgId) {
 
 		return getService().isDoyen(user, orgId);
-	}
-
-	public static boolean isENTAdmin(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().isENTAdmin(user);
 	}
 
 	public static boolean isForClass(

@@ -44,6 +44,7 @@ public class EventPopulationWrapper
 		attributes.put("eventId", getEventId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("roleId", getRoleId());
+		attributes.put("schoolId", getSchoolId());
 
 		return attributes;
 	}
@@ -66,6 +67,12 @@ public class EventPopulationWrapper
 
 		if (roleId != null) {
 			setRoleId(roleId);
+		}
+
+		Long schoolId = (Long)attributes.get("schoolId");
+
+		if (schoolId != null) {
+			setSchoolId(schoolId);
 		}
 	}
 
@@ -116,6 +123,16 @@ public class EventPopulationWrapper
 		return model.getRoleId();
 	}
 
+	/**
+	 * Returns the school ID of this event population.
+	 *
+	 * @return the school ID of this event population
+	 */
+	@Override
+	public long getSchoolId() {
+		return model.getSchoolId();
+	}
+
 	@Override
 	public void persist() {
 		model.persist();
@@ -162,6 +179,16 @@ public class EventPopulationWrapper
 	@Override
 	public void setRoleId(long roleId) {
 		model.setRoleId(roleId);
+	}
+
+	/**
+	 * Sets the school ID of this event population.
+	 *
+	 * @param schoolId the school ID of this event population
+	 */
+	@Override
+	public void setSchoolId(long schoolId) {
+		model.setSchoolId(schoolId);
 	}
 
 	@Override

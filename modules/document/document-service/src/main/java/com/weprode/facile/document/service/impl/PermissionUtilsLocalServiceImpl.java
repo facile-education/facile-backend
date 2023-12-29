@@ -58,6 +58,20 @@ public class PermissionUtilsLocalServiceImpl
 	private static final Log logger = LogFactoryUtil.getLog(PermissionUtilsLocalServiceImpl.class);
 
 	public boolean hasUserFilePermission(long userId, FileEntry fileEntry, String actionId) {
+
+		// Check owner
+		if (userId == fileEntry.getUserId()) {
+			return true;
+		}
+		try {
+			User user = UserLocalServiceUtil.getUser(userId);
+			if (user.getGroupId() == fileEntry.getGroupId()) {
+				return true;
+			}
+		} catch (Exception e) {
+			// Nothing
+		}
+
 		try {
 			long[] userRoleIds = getRolesIdsToCheckForUserPermissions(userId, fileEntry.getGroupId(), fileEntry.getUserId());
 
@@ -73,6 +87,14 @@ public class PermissionUtilsLocalServiceImpl
 		// Check owner
 		if (userId == folder.getUserId()) {
 			return true;
+		}
+		try {
+			User user = UserLocalServiceUtil.getUser(userId);
+			if (user.getGroupId() == folder.getGroupId()) {
+				return true;
+			}
+		} catch (Exception e) {
+			// Nothing
 		}
 
 		try {
@@ -197,13 +219,11 @@ public class PermissionUtilsLocalServiceImpl
 		// Read permissions
 		List<String> viewPermissions = new ArrayList<>();
 		viewPermissions.add(ActionKeys.VIEW);
-		viewPermissions.add(ActionKeys.ACCESS);
 
 		// Update / add content permissions
 		List<String> viewUpdatePermissions = new ArrayList<>();
 		viewUpdatePermissions.add(ActionKeys.VIEW);
 		viewUpdatePermissions.add(ActionKeys.UPDATE);
-		viewUpdatePermissions.add(ActionKeys.ACCESS);
 		if (isFolder) {
 			viewUpdatePermissions.add(PermissionConstants.ADD_OBJECT);
 			viewUpdatePermissions.add(ActionKeys.ADD_DOCUMENT);
@@ -213,7 +233,6 @@ public class PermissionUtilsLocalServiceImpl
 		// All permissions list
 		List<String> allPermissions = new ArrayList<>();
 		allPermissions.add(ActionKeys.VIEW);
-		allPermissions.add(ActionKeys.ACCESS);
 		allPermissions.add(ActionKeys.UPDATE);
 		if (isFolder) {
 			allPermissions.add(PermissionConstants.ADD_OBJECT);
@@ -286,7 +305,6 @@ public class PermissionUtilsLocalServiceImpl
 		// Read permissions
 		List<String> viewPermissions = new ArrayList<>();
 		viewPermissions.add(ActionKeys.VIEW);
-		viewPermissions.add(ActionKeys.ACCESS);
 
 		// Add content permissions
 		List<String> viewUpdatePermissions = new ArrayList<>();

@@ -182,6 +182,68 @@ public class ContentBlockServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject isEmbedUrlWhitelisted(
+		HttpPrincipal httpPrincipal, String url) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				ContentBlockServiceUtil.class, "isEmbedUrlWhitelisted",
+				_isEmbedUrlWhitelistedParameterTypes4);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, url);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static org.json.JSONObject isValidUrl(
+		HttpPrincipal httpPrincipal, String url) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				ContentBlockServiceUtil.class, "isValidUrl",
+				_isValidUrlParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, url);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		ContentBlockServiceHttp.class);
 
@@ -196,6 +258,11 @@ public class ContentBlockServiceHttp {
 	};
 	private static final Class<?>[] _deleteBlockParameterTypes3 = new Class[] {
 		long.class
+	};
+	private static final Class<?>[] _isEmbedUrlWhitelistedParameterTypes4 =
+		new Class[] {String.class};
+	private static final Class<?>[] _isValidUrlParameterTypes5 = new Class[] {
+		String.class
 	};
 
 }

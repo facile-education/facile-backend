@@ -54,7 +54,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -63,12 +63,12 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets school delegates");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            logger.info("User " + user.getUserId() + " fetches all admins and delegates for school " + schoolId);
             List<User> allAdmins = new ArrayList<>(SchoolAdminLocalServiceUtil.getSchoolAdmins(schoolId));
 
             List<User> schoolDelegates = NewsAdminLocalServiceUtil.getSchoolDelegates(schoolId);
@@ -108,7 +108,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -117,12 +117,12 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets delegation candidates");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            logger.info("User " + user.getUserId() + " fetches all delegation candidates for school " + schoolId);
             // Returned list of the school delegation candidates
             // minus the existing school delegates
             // minus the school's admins
@@ -158,7 +158,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -167,11 +167,11 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds school admin");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {
-            logger.info("User " + user.getUserId() + " adds user " + userId + " as school admin for school " + schoolId);
             SchoolAdminLocalServiceUtil.addSchoolAdmin(schoolId, userId);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
@@ -189,7 +189,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -198,11 +198,11 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes school admin");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {
-            logger.info("User " + user.getUserId() + " removes user " + userId + " from school admin for school " + schoolId);
             SchoolAdminLocalServiceUtil.removeSchoolAdmin(schoolId, userId);
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

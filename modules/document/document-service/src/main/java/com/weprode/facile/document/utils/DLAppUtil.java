@@ -24,6 +24,7 @@ import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
@@ -185,8 +186,9 @@ public class DLAppUtil {
                     //Normalize the name before adding it to DB. (Solve some issues with accented character with a form "plain char+combining accent" -- e' insteand of é)
                     name = Normalizer.normalize(name, Normalizer.Form.NFC);
 
-                    fileEntry = DLAppServiceUtil.addFileEntry(
+                    fileEntry = DLAppLocalServiceUtil.addFileEntry(
                             externalReferenceCode,
+                            user.getUserId(),
                             folder.getGroupId(),
                             folder.getFolderId(),
                             name,
@@ -263,17 +265,9 @@ public class DLAppUtil {
                 }
             }
 
-            // Register activity except for ._NEWS_ and ._COURSE_ folders
-            if (folder.getParentFolderId() != 0) {
-                Folder parentFolder = DLAppServiceUtil.getFolder(folder.getParentFolderId());
-                if (fileEntry != null && !parentFolder.getName().equals(DocumentConstants.NEWS_FOLDER_NAME) && !parentFolder.getName().equals(DocumentConstants.COURSE_FOLDER_NAME)) {
-                    ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_CREATION);
-                }
-            } else if (fileEntry != null) {
-                // File is added in a group or personal root folder
+            if (fileEntry != null) {
                 ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_CREATION);
             }
-
             return fileEntry;
         } else {
             throw new NoSuchResourcePermissionException();

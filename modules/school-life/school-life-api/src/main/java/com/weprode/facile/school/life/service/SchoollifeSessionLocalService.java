@@ -299,6 +299,8 @@ public interface SchoollifeSessionLocalService
 	public List<SchoollifeSession> getWeekSessions(
 		long schoolId, int type, Date fromDate);
 
+	public void runAbsenceNotifications();
+
 	public boolean setRollCalled(long schoollifeSessionId);
 
 	/**

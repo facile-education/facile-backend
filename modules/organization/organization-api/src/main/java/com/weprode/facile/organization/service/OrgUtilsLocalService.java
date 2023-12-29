@@ -60,8 +60,7 @@ public interface OrgUtilsLocalService extends BaseLocalService {
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Organization getOrCreateRootOrg(long companyId)
-		throws PortalException, SystemException;
+	public Organization getOrCreateRootOrg(long companyId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Organization getOrCreateSchool(long companyId, String name)

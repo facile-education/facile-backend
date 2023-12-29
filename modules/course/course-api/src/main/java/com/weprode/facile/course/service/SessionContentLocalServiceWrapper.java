@@ -69,6 +69,14 @@ public class SessionContentLocalServiceWrapper
 		return _sessionContentLocalService.convertContentAsHtml(sessionId);
 	}
 
+	@Override
+	public int countSchoolSessionContents(
+		long schoolId, java.util.Date minDate, java.util.Date maxDate) {
+
+		return _sessionContentLocalService.countSchoolSessionContents(
+			schoolId, minDate, maxDate);
+	}
+
 	/**
 	 * @throws PortalException
 	 */

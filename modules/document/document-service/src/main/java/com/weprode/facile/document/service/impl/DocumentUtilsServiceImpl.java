@@ -30,7 +30,6 @@ import com.weprode.facile.application.service.BroadcastLocalServiceUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
-import com.weprode.facile.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.DocumentUtilsServiceBaseImpl;
 import com.weprode.facile.group.model.GroupActivity;
@@ -66,13 +65,12 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.info("Getting global document properties for user " + user.getUserId());
 
 		// Get or create user Roots folders
 		Folder privateFolder = FolderUtilsLocalServiceUtil.getUserRootFolder(user.getUserId());
@@ -100,16 +98,6 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "is-embed-url-whitelisted", method = "GET")
-	public JSONObject isEmbedUrlWhitelisted(String url) throws SystemException {
-		JSONObject result = new JSONObject();
-
-		result.put(JSONConstants.IS_ALLOWED, DocumentUtilsLocalServiceUtil.isEmbedUrlWhitelisted(url));
-		result.put(JSONConstants.SUCCESS, true);
-
-		return result;
-	}
-
 	@JSONWebService(value = "get-document-group-activity", method = "GET")
 	public JSONObject getDocumentGroupActivity(long groupId, String maxDate, int nbResults) {
 		JSONObject result = new JSONObject();
@@ -117,7 +105,7 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -125,9 +113,9 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		}
 		// Limited to user's groups and all groups for direction
 		if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets document group activity for group " + groupId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
-		logger.info("User " + user.getFullName() +" fetches document activity for groupId " + groupId);
 
 		try {
 			JSONArray jsonActivities = new JSONArray();

@@ -70,9 +70,10 @@ public class MembershipActivityLocalServiceUtil {
 	}
 
 	public static org.json.JSONObject convertMembershipActivityToJson(
-		MembershipActivity membershipActivity) {
+		MembershipActivity membershipActivity, long userId) {
 
-		return getService().convertMembershipActivityToJson(membershipActivity);
+		return getService().convertMembershipActivityToJson(
+			membershipActivity, userId);
 	}
 
 	/**

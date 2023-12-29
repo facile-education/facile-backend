@@ -68,6 +68,12 @@ public class AffectationLocalServiceUtil {
 			userId, orgId, adminUserId, expirationDate);
 	}
 
+	public static org.json.JSONArray convertUserAffectations(
+		long userId, long schoolId) {
+
+		return getService().convertUserAffectations(userId, schoolId);
+	}
+
 	/**
 	 * Creates a new affectation with the primary key. Does not add the affectation to the database.
 	 *
@@ -300,6 +306,10 @@ public class AffectationLocalServiceUtil {
 
 	public static List<Long> getUserAffectedOrgs(long userId) {
 		return getService().getUserAffectedOrgs(userId);
+	}
+
+	public static void removeByUserId(long userId) {
+		getService().removeByUserId(userId);
 	}
 
 	public static boolean removeUserAffectation(long userId, long orgId) {

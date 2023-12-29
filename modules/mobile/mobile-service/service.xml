@@ -27,6 +27,8 @@
 
 		<column name="userId" type="long" primary="true"/>
 		<column name="mobileToken" type="String"/>
+		<column name="creationDate" type="Date"/>
+		<column name="modificationDate" type="Date"/>
 
 		<finder return-type="UserMobileToken" name="mobileToken">
 			<finder-column name="mobileToken" />

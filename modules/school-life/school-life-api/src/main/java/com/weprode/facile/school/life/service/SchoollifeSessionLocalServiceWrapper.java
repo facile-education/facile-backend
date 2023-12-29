@@ -416,6 +416,11 @@ public class SchoollifeSessionLocalServiceWrapper
 	}
 
 	@Override
+	public void runAbsenceNotifications() {
+		_schoollifeSessionLocalService.runAbsenceNotifications();
+	}
+
+	@Override
 	public boolean setRollCalled(long schoollifeSessionId) {
 		return _schoollifeSessionLocalService.setRollCalled(
 			schoollifeSessionId);

@@ -71,7 +71,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         List<GroupActivity> groupActivities = new ArrayList<>();
 
         logger.info("Get dashboard group activities for userId " + userId + " for " + groupIds.size() + " groups, until maxDate " + maxDate);
-        if (!(withNews || withDocs || withMemberships || withSchoollife || withSessions)) {
+        if (!(withNews || withDocs || withMemberships || withSchoollife || withSessions) || groupIds.size() == 0) {
             return groupActivities;
         }
 
@@ -155,7 +155,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
                 if (withSessions && RoleUtilsLocalServiceUtil.isStudent(user)) {
                     List<Homework> givenHomeworks = HomeworkLocalServiceUtil.getStudentHomeworkActivity(user.getUserId(), minDate, maxDate);
                     for (Homework givenHomework : givenHomeworks) {
-                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getModificationDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
+                        GroupActivity homeworkActivity = new GroupActivity(givenHomework.getHomeworkId(), 0, givenHomework.getPublicationDate(), ActivityConstants.ACTIVITY_TYPE_HOMEWORK);
                         groupActivities.add(homeworkActivity);
                     }
                 }
@@ -354,11 +354,11 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_DOCUMENT) {
 
                 Activity activity = ActivityLocalServiceUtil.getActivity(groupActivity.getActivityId());
-                jsonActivity = ActivityLocalServiceUtil.convertActivityToJson(activity);
+                jsonActivity = ActivityLocalServiceUtil.convertActivityToJson(activity, userId);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_MEMBERSHIP) {
                 MembershipActivity membershipActivity = MembershipActivityLocalServiceUtil.getMembershipActivity(groupActivity.getActivityId());
-                jsonActivity = MembershipActivityLocalServiceUtil.convertMembershipActivityToJson(membershipActivity);
+                jsonActivity = MembershipActivityLocalServiceUtil.convertMembershipActivityToJson(membershipActivity, userId);
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_PENDING_RENVOI) {
 

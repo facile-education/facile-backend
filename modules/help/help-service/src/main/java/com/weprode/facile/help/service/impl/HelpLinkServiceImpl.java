@@ -44,19 +44,20 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
 
     @JSONWebService(value = "save-link", method = "POST")
     public JSONObject saveLink(String link) {
-        logger.info("Saving link with content = " + link);
+
         JSONObject result = new JSONObject();
 
         User user;
         try {
             user = getGuestOrUser();
-            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves help link");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -74,19 +75,20 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
 
     @JSONWebService(value = "delete-link", method = "GET")
     public JSONObject deleteLink(long linkId) {
-        logger.info("Deleting link with id = " + linkId);
+
         JSONObject result = new JSONObject();
 
         User user;
         try {
             user = getGuestOrUser();
-            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes help link");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

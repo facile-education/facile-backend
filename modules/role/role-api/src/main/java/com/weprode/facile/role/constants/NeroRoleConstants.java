@@ -51,7 +51,7 @@ public class NeroRoleConstants {
 	public static final String SECRETAIRE_INCLUSIVE = "Secr\u00e9taires";
 
 	public static final String SCHOOL_ADMIN = "School_admin";
-	public static final String ENT_ADMIN = "ENT_admin";
+	public static final String COLLECTIVITY_ADMIN = "Collectivity_admin";
 
 	// Used for manual affectation
 	public static final String ORGANIZATION_USER = "Organization User";
@@ -59,7 +59,7 @@ public class NeroRoleConstants {
 	public static final String[] PERSONAL_ROLES = {
 			DIRECTION, DOYEN, CONSEILLER_ORIENTATION, CONSEILLER_SOCIAL,
 		INFIRMIERE, PSYCHOLOGUE, ASSISTANT_TECHNIQUE, CAISSIER_COMPTABLE, 
-		BIBLIOTHECAIRE, SECRETAIRE
+		BIBLIOTHECAIRE, SECRETAIRE, COLLECTIVITY_ADMIN
 	};
 	
 }

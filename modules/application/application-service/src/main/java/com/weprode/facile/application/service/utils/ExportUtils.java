@@ -85,7 +85,7 @@ public class ExportUtils {
 
         try {
             InputStream is = new ByteArrayInputStream(file.getBytes(StandardCharsets.UTF_8));
-            FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(currUser.getGroupId(), FolderUtilsLocalServiceUtil.getTmpFolder(userId).getFolderId(), "folderName", fileName, is, "html/text");
+            FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(currUser.getGroupId(), FolderUtilsLocalServiceUtil.getUserTmpFolder(userId).getFolderId(), "folderName", fileName, is, "html/text");
             long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             String subject = "Export " + typeExport;
             String content = "Bonjour,<br><br>Veuillez trouver ci-joint l'export " + typeExport + " pour votre établissement.<br><br>Meilleurs messages,<br>L'équipe technique";

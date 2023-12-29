@@ -48,7 +48,7 @@ public class BroadcastServiceImpl extends BroadcastServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -57,7 +57,8 @@ public class BroadcastServiceImpl extends BroadcastServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)
-                && !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates broadcast");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

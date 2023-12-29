@@ -64,9 +64,17 @@ public class ActivityLocalServiceWrapper
 
 	@Override
 	public org.json.JSONObject convertActivityToJson(
-		com.weprode.facile.document.model.Activity activity) {
+		com.weprode.facile.document.model.Activity activity, long userId) {
 
-		return _activityLocalService.convertActivityToJson(activity);
+		return _activityLocalService.convertActivityToJson(activity, userId);
+	}
+
+	@Override
+	public int countSchoolActivities(
+		long schoolId, java.util.Date minDate, java.util.Date maxDate) {
+
+		return _activityLocalService.countSchoolActivities(
+			schoolId, minDate, maxDate);
 	}
 
 	/**

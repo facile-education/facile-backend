@@ -37,6 +37,7 @@
 		<field name="eventId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="roleId" type="long" />
+		<field name="schoolId" type="long" />
 	</model>
 	<model name="com.weprode.facile.agenda.model.EventRead">
 		<field name="eventId" type="long" />

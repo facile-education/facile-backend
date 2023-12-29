@@ -114,6 +114,40 @@ public class FileUtilsLocalServiceUtil {
 		getService().deleteFile(userId, fileId);
 	}
 
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.FileEntry fileEntry)
+		throws PortalException, SystemException {
+
+		return getService().format(userId, fileEntry);
+	}
+
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.FileEntry fileEntry,
+			int space)
+		throws PortalException, SystemException {
+
+		return getService().format(userId, fileEntry, space);
+	}
+
+	public static org.json.JSONObject format(
+			long userId,
+			com.liferay.portal.kernel.repository.model.FileEntry fileEntry,
+			int space, boolean withDetails)
+		throws PortalException, SystemException {
+
+		return getService().format(userId, fileEntry, space, withDetails);
+	}
+
+	public static org.json.JSONObject format(
+		com.liferay.portal.kernel.model.User user,
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry,
+		int space, boolean withDetails) {
+
+		return getService().format(user, fileEntry, space, withDetails);
+	}
+
 	public static String getDisplayUrl(
 			com.liferay.portal.kernel.repository.model.FileEntry file,
 			long versionId, long userId, boolean readOnly)
@@ -135,10 +169,6 @@ public class FileUtilsLocalServiceUtil {
 	 */
 	public static String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
-	}
-
-	public static long getSizeInMegaOctet(long pSize) {
-		return getService().getSizeInMegaOctet(pSize);
 	}
 
 	public static boolean isGroupFile(long fileEntryId) {

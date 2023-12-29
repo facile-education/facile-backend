@@ -1,0 +1,100 @@
+services:
+  apache:
+    image: httpd:${HTTPD_VERSION}
+#    build: ./apache
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./apache/certs:/usr/local/apache2/certs
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf
+      - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+      - ./apache/html/facile:/usr/local/apache2/htdocs/facile
+  mariadb:
+    image: yobasystems/alpine-mariadb:${MARIADB_VERSION}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: mysql --user=root --password=$$MYSQL_ROOT_PASSWORD --execute="SELECT COUNT(*) FROM lportal_ent.WorkflowInstanceLink;"
+      interval: 10s
+      timeout: 20s
+      retries: 10
+    volumes:
+      - ./mariadb/conf.d:/etc/mysql/conf.d
+      - ./mariadb/initdb.d:/docker-entrypoint-initdb.d/:ro
+      - dbdata:/var/lib/mysql
+  elasticsearch:
+    image: elasticsearch:${ES_VERSION}
+    environment:
+      - discovery.type=single-node
+      - cluster.name=${ES_CLUSTER_NAME}
+      - xpack.security.enabled=false
+      - network.bind_host=0.0.0.0
+      - "ES_JAVA_OPTS=${ES_JAVA_OPTS}"
+    command: >
+      /bin/sh -c "./bin/elasticsearch-plugin list | grep -q analysis-icu || ./bin/elasticsearch-plugin install analysis-icu && 
+      ./bin/elasticsearch-plugin list | grep -q analysis-kuromoji || ./bin/elasticsearch-plugin install analysis-kuromoji && 
+      ./bin/elasticsearch-plugin list | grep -q analysis-smartcn || ./bin/elasticsearch-plugin install analysis-smartcn && 
+      ./bin/elasticsearch-plugin list | grep -q analysis-stempel || ./bin/elasticsearch-plugin install analysis-stempel;
+      /usr/local/bin/docker-entrypoint.sh"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    healthcheck:
+      test: curl -u elastic:elastic -s -f elasticsearch:9200/_cat/health >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+#  openldap:
+#    image: mlan/openldap
+#    command: --root-cn ${LDAPROOT_CN-manager} --root-pw ${LDAPROOT_PW-nero}
+#    environment:
+#      - LDAP_BASE=${LDAPBASE-dc=weprode,dc=com}
+#    expose:
+#      - "389:389"
+#    volumes:
+#      - "openldap:/srv"
+  liferay:
+    image: liferay/portal:${LFR_VERSION}
+    depends_on: 
+      mariadb:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    extra_hosts:
+      - "dev-ent-gve.com:127.0.0.1"
+    environment:
+      JAVA_VERSION: ${LFR_JAVA_VERSION}
+      LIFERAY_SETUP_PERIOD_WIZARD_PERIOD_ENABLED: "false"
+#      LIFERAY_TERMS_PERIOD_OF_PERIOD_USE_PERIOD_REQUIRED: "false"
+      LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_ENABLED: "false"
+      LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_CUSTOM_PERIOD_QUESTION_PERIOD_ENABLED: "false"
+    ports:
+      - "8009:8009"
+#      - "8080:8080"
+    healthcheck:
+      test: 'bash /tmp/lfr_healthcheck.sh'
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ./liferay:/mnt/liferay
+      - lfrdata:/opt/liferay/data
+      - ./lfr_healthcheck.sh:/tmp/lfr_healthcheck.sh
+volumes:
+  dbdata:
+  esdata:
+  lfrdata:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${LFR_DATA}

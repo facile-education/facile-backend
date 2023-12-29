@@ -55,14 +55,16 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		result.put(JSONConstants.CONFIGURATION, ScheduleConfigurationLocalServiceUtil.getCalendarConfiguration());
+		JSONObject configuration = ScheduleConfigurationLocalServiceUtil.getCalendarConfiguration();
+		configuration.put(JSONConstants.HOLIDAYS, HolidayLocalServiceUtil.getHolidaysAsJson());
+		result.put(JSONConstants.CONFIGURATION, configuration);
 
 		result.put(JSONConstants.SUCCESS, true);
 		return result;
@@ -75,7 +77,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -84,6 +86,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 		// Authorized for global admins only
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets global configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -102,7 +105,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -111,6 +114,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 		// Authorized for global admins only
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves global schedule configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

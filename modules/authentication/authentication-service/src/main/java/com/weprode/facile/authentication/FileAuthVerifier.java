@@ -33,8 +33,7 @@ import java.util.Properties;
 @Component(
         immediate = true,
         property = {
-                "auth.verifier.FileAuthVerifier.urls.includes=*",
-                "auth.verifier.FileAuthVerifier.urls.excludes=/api/jsonws/mobile.mobiledevice/*"
+                "auth.verifier.FileAuthVerifier.urls.includes=*"
         },
         service = AuthVerifier.class
 )
@@ -54,14 +53,23 @@ public class FileAuthVerifier implements AuthVerifier {
 
         try {
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();
-
-            HttpServletRequest httpServletRequest =
-                    accessControlContext.getRequest();
-            logger.debug("FileAuthVerifier requestUri = " + httpServletRequest.getRequestURI());
+            HttpServletRequest httpServletRequest = accessControlContext.getRequest();
+            logger.info("FileAuthVerifier requestUri = " + httpServletRequest.getRequestURI());
 
             User user = portal.getUser(httpServletRequest);
 
-            if ((user == null) || user.isDefaultUser()) {
+            if (httpServletRequest.getRequestURI().contains("/api/jsonws/mobile.mobiledevice/")) {
+                String uri = httpServletRequest.getRequestURI();
+                int userIdIndex = httpServletRequest.getRequestURI().indexOf("user-id") + 8;
+                String [] uriTab = uri.substring(userIdIndex).split("/");
+                long userId = Long.parseLong(uriTab[0]);
+                logger.info("File auth verifier : ignoring token for uri " + httpServletRequest.getRequestURI() + " and userId " + userId);
+                authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
+                authVerifierResult.setUserId(userId);
+                return authVerifierResult;
+            }
+
+            if ((user == null) || user.isGuestUser()) {
                 return authVerifierResult;
             }
 

@@ -28,5 +28,7 @@
 	<model name="com.weprode.facile.mobile.model.UserMobileToken">
 		<field name="userId" type="long" />
 		<field name="mobileToken" type="String" />
+		<field name="creationDate" type="Date" />
+		<field name="modificationDate" type="Date" />
 	</model>
 </model-hints>

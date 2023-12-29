@@ -23,6 +23,9 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface ActivityFinder {
 
+	public int countSchoolActivities(
+		long schoolId, java.util.Date minDate, java.util.Date maxDate);
+
 	public java.util.List<com.weprode.facile.document.model.Activity>
 		getActivities(
 			java.util.List<Long> groupIdList, long creatorId, int start,

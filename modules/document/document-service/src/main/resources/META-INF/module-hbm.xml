@@ -32,6 +32,7 @@
 		</id>
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="token" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="editionDate" type="org.hibernate.type.TimestampType" />
 	</class>
 	<class name="com.weprode.facile.document.model.impl.VersionImpl" table="Document_Version">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileVersionId" type="long">

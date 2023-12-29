@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.model.User;
 import com.weprode.facile.application.model.Application;
 import com.weprode.facile.application.service.ApplicationLocalServiceUtil;
 import com.weprode.facile.application.service.BroadcastLocalServiceUtil;
+import com.weprode.facile.commons.CommonUtils;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.help.model.HelpCategory;
@@ -41,6 +42,7 @@ import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 public class HelpUtil {
@@ -280,12 +282,16 @@ public class HelpUtil {
         return convertRelationToJson(helpRelation);
     }
 
-    public static JSONObject saveLink(JSONObject link) throws PortalException, SystemException {
+    public static JSONObject saveLink(JSONObject link) throws PortalException, SystemException, MalformedURLException {
         int linkId = JSONConstants.getIntValue(link, JSONConstants.RELATION_ID, 0);
         int itemId = link.getInt(JSONConstants.ITEM_ID);
         String linkUrl = link.getString(JSONConstants.LINK_URL);
         String linkName = link.getString(JSONConstants.LINK_NAME);
         HelpLink helpLink;
+
+        if (!CommonUtils.isValidURI(linkUrl)) {
+            throw new MalformedURLException("Url " + linkUrl + " is not valid");
+        }
 
         if (linkId == 0) {
             helpLink = HelpLinkLocalServiceUtil.addHelpLink(itemId, linkUrl, linkName);

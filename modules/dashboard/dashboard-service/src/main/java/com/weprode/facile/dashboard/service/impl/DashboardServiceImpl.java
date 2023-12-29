@@ -73,7 +73,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             result.put(JSONConstants.HAS_DIARY_WIDGET, true);
             result.put(JSONConstants.HAS_HOMEWORK_WIDGET, isStudentOrParent && BroadcastLocalServiceUtil.isApplicationBroadcastedToUser(user.getUserId(), "cdt"));
             result.put(JSONConstants.HAS_EDT_WIDGET, isStudentOrParent || RoleUtilsLocalServiceUtil.isTeacher(user));
-            result.put(JSONConstants.HAS_STATISTIC_WIDGET, (isDirectionMember || RoleUtilsLocalServiceUtil.isENTAdmin(user)) && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) != null && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true"));
+            result.put(JSONConstants.HAS_STATISTIC_WIDGET, (isDirectionMember || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED) != null && PropsUtil.get(NeroSystemProperties.MATOMO_ENABLED).equals("true"));
 
             // If we are a parent, get our children list
             if (RoleUtilsLocalServiceUtil.isParent(user)) {
@@ -109,10 +109,12 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             boolean isDelegate = NewsAdminLocalServiceUtil.isUserDelegate(user);
             result.put(JSONConstants.IS_DELEGATE, isDelegate);
 
-            boolean canAddGroupNews = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isDoyen(user) || RoleUtilsLocalServiceUtil.isPsychologue(user) || RoleUtilsLocalServiceUtil.isConseillerSocial(user) || RoleUtilsLocalServiceUtil.isMainTeacher(user);
+            // All personals can add group news because they have communities
+            boolean canAddGroupNews = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user);
+            // TODO: Chek if user broadast polupations list is not empty to prevent open an unfillable modal
             result.put(JSONConstants.CAN_ADD_GROUP_NEWS, canAddGroupNews);
-            result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate);
-            result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate);
+            result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate  || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
+            result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
 
             // Set last dashboard access date
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
@@ -136,7 +138,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -144,6 +146,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         }
         // Students, parents and teachers only
         if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets scheduler for user " + userId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -226,7 +229,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -244,6 +247,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
                 groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
             }
             Date maximumDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(maxDate);
+
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDashboardGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults,
                     withNews, withDocs, withMemberships, withSchoollife, withSessions);
             boolean isAuthorOfAllNewActivity = true;
@@ -285,7 +289,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {

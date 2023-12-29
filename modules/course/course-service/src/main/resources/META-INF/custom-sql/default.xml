@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <custom-sql>
-    <sql id="getSessionContents">
+    <sql id="com.weprode.facile.course.service.persistence.SessionContentFinder.getSessionContents">
         <![CDATA[
             SELECT sessionContent.*
             FROM Course_SessionContent sessionContent
@@ -9,6 +9,14 @@
             WHERE sessionContent.courseId = ?
             AND cdtSession.start > ? AND cdtSession.start < ?
         ]]>
+    </sql>
+    <sql id="com.weprode.facile.course.service.persistence.SessionContentFinder.countSchoolSessionContents">
+        <![CDATA[
+			SELECT COUNT(*)
+			FROM Course_SessionContent sc
+			JOIN Users_Orgs uo ON sc.teacherId = uo.userId
+			WHERE sc.modificationDate BETWEEN ? AND ?
+		]]>
     </sql>
     <sql id="getTeacherHomeworksToCorrect">
         <![CDATA[
@@ -29,6 +37,7 @@
             JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
             WHERE homework.targetDate BETWEEN ? AND ?
             AND homework.isDraft = 0
+            AND homework.publicationDate < NOW()
             AND studentHomework.studentId = ?
 			[$OTHER$]
         ]]>
@@ -40,6 +49,7 @@
             JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
             WHERE homework.targetDate BETWEEN ? AND ?
             AND homework.isDraft = 0
+            AND homework.publicationDate < NOW()
             AND studentHomework.studentId IN ([$STUDENT_IDS$])
         ]]>
     </sql>
@@ -50,6 +60,7 @@
             JOIN Course_StudentHomework studentHomework ON studentHomework.homeworkId = homework.homeworkId
             WHERE studentHomework.studentId = ? AND studentHomework.isDone = 0
             AND homework.isDraft = 0
+            AND homework.publicationDate < NOW()
             AND homework.targetDate BETWEEN ? AND ?
         ]]>
     </sql>
@@ -61,6 +72,7 @@
             WHERE homework.modificationDate > ? AND homework.modificationDate < ?
             AND homework.isDraft = 0
             AND studentHomework.studentId = ?
+            AND homework.publicationDate < NOW()
             AND homework.courseId IN ([$GROUP_IDS$])
         ]]>
     </sql>

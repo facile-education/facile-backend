@@ -96,6 +96,20 @@ public interface NewsPopulationModel extends BaseModel<NewsPopulation> {
 	 */
 	public void setRoleId(long roleId);
 
+	/**
+	 * Returns the school ID of this news population.
+	 *
+	 * @return the school ID of this news population
+	 */
+	public long getSchoolId();
+
+	/**
+	 * Sets the school ID of this news population.
+	 *
+	 * @param schoolId the school ID of this news population
+	 */
+	public void setSchoolId(long schoolId);
+
 	@Override
 	public NewsPopulation cloneWithOriginalValues();
 

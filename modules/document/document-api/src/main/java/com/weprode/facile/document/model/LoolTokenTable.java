@@ -19,6 +19,8 @@ import com.liferay.petra.sql.dsl.base.BaseTable;
 
 import java.sql.Types;
 
+import java.util.Date;
+
 /**
  * The table class for the &quot;Document_LoolToken&quot; database table.
  *
@@ -36,6 +38,8 @@ public class LoolTokenTable extends BaseTable<LoolTokenTable> {
 		"userId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<LoolTokenTable, String> token = createColumn(
 		"token", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<LoolTokenTable, Date> editionDate = createColumn(
+		"editionDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 
 	private LoolTokenTable() {
 		super("Document_LoolToken", LoolTokenTable::new);

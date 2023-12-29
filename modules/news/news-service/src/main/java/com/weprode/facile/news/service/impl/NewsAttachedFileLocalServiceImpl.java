@@ -22,14 +22,20 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
-import com.weprode.facile.commons.constants.JSONConstants;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.news.model.NewsAttachedFile;
 import com.weprode.facile.news.model.NewsPopulation;
 import com.weprode.facile.news.service.base.NewsAttachedFileLocalServiceBaseImpl;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -68,26 +74,35 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
         JSONArray jsonFiles = new JSONArray();
 
         try {
+            User user = UserLocalServiceUtil.getUser(userId);
             List<NewsAttachedFile> newsAttachedFiles = newsAttachedFilePersistence.findBynewsId(newsId);
             if (newsAttachedFiles != null && !newsAttachedFiles.isEmpty()) {
-                // Pick 1 random groupId - hope no big deal with permissions
-                long groupId = newsAttachedFiles.get(0).getGroupId();
 
-                // Get all attached files for this pair newsId / groupId
-                List<NewsAttachedFile> attachedFiles = newsAttachedFilePersistence.findBynewsId_groupId(newsId, groupId);
-
-                for (NewsAttachedFile newsAttachedFile : attachedFiles) {
-                    try {
-                        JSONObject jsonAttachment = new JSONObject();
-                        FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(newsAttachedFile.getFileId());
-                        jsonAttachment.put(JSONConstants.ID, newsAttachedFile.getFileId());
-                        jsonAttachment.put(JSONConstants.NAME, fileEntry.getTitle());
-                        jsonAttachment.put(JSONConstants.TYPE, "File");
-                        jsonAttachment.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
-                        jsonAttachment.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
-                        jsonFiles.put(jsonAttachment);
-                    } catch (Exception e) {
-                        logger.error("Error converting attached file ", e);
+                // First find a group to which belongs the user
+                long groupId = 0;
+                for (NewsAttachedFile newsAttachedFile : newsAttachedFiles) {
+                    Group group = GroupLocalServiceUtil.getGroup(newsAttachedFile.getGroupId());
+                    if ((group.isOrganization() &&
+                            (OrganizationLocalServiceUtil.hasUserOrganization(user.getUserId(), group.getClassPK())
+                            || RoleUtilsLocalServiceUtil.isDirectionMember(user)
+                            || NewsAdminLocalServiceUtil.isUserDelegate(user)
+                            || RoleUtilsLocalServiceUtil.isDoyen(user, group.getClassPK())
+                            || RoleUtilsLocalServiceUtil.isPsychologue(user, group.getClassPK())
+                            || RoleUtilsLocalServiceUtil.isConseillerSocial(user, group.getClassPK())))
+                        || (group.isRegularSite() &&
+                            (GroupLocalServiceUtil.hasUserGroup(user.getUserId(), group.getGroupId())
+                                || RoleUtilsLocalServiceUtil.isDirectionMember(user) || NewsAdminLocalServiceUtil.isUserDelegate(user)))) {
+                        groupId = newsAttachedFile.getGroupId();
+                        break;
+                    }
+                }
+                // Then pick all files for this groupId, to build accessible urls
+                if (groupId == 0) {
+                    logger.error("Error converting attached file for news " + newsId + " and user " + userId);
+                } else {
+                    List<NewsAttachedFile> userAttachedFiles = newsAttachedFilePersistence.findBynewsId_groupId(newsId, groupId);
+                    for (NewsAttachedFile userAttachedFile : userAttachedFiles) {
+                        jsonFiles.put(convertNewsFile(userAttachedFile));
                     }
                 }
             }
@@ -98,9 +113,21 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
         return jsonFiles;
     }
 
+    private JSONObject convertNewsFile(NewsAttachedFile newsAttachedFile) {
+
+        JSONObject jsonAttachment = new JSONObject();
+        try {
+            FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(newsAttachedFile.getFileId());
+            jsonAttachment = FileUtilsLocalServiceUtil.format(null, fileEntry, 0, false);
+        } catch (Exception e) {
+            logger.error("Error converting attached file ", e);
+        }
+        return jsonAttachment;
+    }
+
     public boolean hasAttachedFiles (long newsId) {
         try {
-            return newsAttachedFilePersistence.findBynewsId(newsId).size() > 0;
+            return !newsAttachedFilePersistence.findBynewsId(newsId).isEmpty();
         } catch (Exception e) {
             logger.error("Error while fetching attached files for news " + newsId, e);
             return false;
@@ -131,6 +158,12 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
     public void deleteByNewsId(long newsId) throws SystemException {
         logger.info("Deleting attached files for news " + newsId);
 
+        // Return if no attached file
+        if (newsAttachedFilePersistence.findBynewsId(newsId).isEmpty()) {
+            logger.info("No attached file to delete");
+            return;
+        }
+
         // Delete files
         List<NewsPopulation> populations = newsPopulationPersistence.findBynewsId(newsId);
 
@@ -147,23 +180,22 @@ public class NewsAttachedFileLocalServiceImpl extends NewsAttachedFileLocalServi
             try {
                 Folder groupNewsFolder = FolderUtilsLocalServiceUtil.getGroupNewsFolder(groupId);
                 // Check subFolder newsId
-                List<Folder> folderList = DLAppServiceUtil.getFolders(groupId, groupNewsFolder.getFolderId());
-                for (Folder folder : folderList) {
-                    if (folder.getName().equals(String.valueOf(newsId))) {
-                        logger.info("About to delete folder news for groupId " + groupId + " and newsId " + newsId);
-                        // Delete existing attached files
-                        List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, folder.getFolderId());
-                        for (FileEntry fileEntry : fileList) {
-                            logger.info("Deleting existing attached file " + fileEntry.getTitle());
-                            DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
-                        }
-                        logger.info("Deleting folder " + folder.getFolderId());
-                        DLAppServiceUtil.deleteFolder(folder.getFolderId());
+                Folder folder = DLAppServiceUtil.getFolder(groupId, groupNewsFolder.getFolderId(), String.valueOf(newsId));
+                if (folder != null) {
+                    logger.info("About to delete folder news for groupId " + groupId + " and newsId " + newsId);
+                    // Delete existing attached files
+                    List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(groupId, folder.getFolderId());
+                    for (FileEntry fileEntry : fileList) {
+                        logger.info("Deleting existing attached file " + fileEntry.getTitle());
+                        DLAppLocalServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
                     }
+                    logger.info("Deleting folder " + folder.getFolderId());
+                    DLAppServiceUtil.deleteFolder(folder.getFolderId());
+
                 }
 
             } catch (Exception e) {
-                logger.error("Error adding attached files for newsId " + newsId + " and groupId " + groupId, e);
+                logger.error("Error deleting attached files for newsId " + newsId + " and groupId " + groupId, e);
             }
         }
 

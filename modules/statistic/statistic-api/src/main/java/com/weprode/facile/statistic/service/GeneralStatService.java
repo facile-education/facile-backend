@@ -94,6 +94,11 @@ public interface GeneralStatService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
+	@JSONWebService(method = "GET", value = "get-school-life-students-count")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getSchoolLifeStudentsCount(
+		java.util.Date startDate, java.util.Date endDate, long schoolId);
+
 	@JSONWebService(method = "GET", value = "get-sessions-count")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSessionsCount(

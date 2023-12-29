@@ -28,6 +28,9 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.weprode.facile.authentication.model.LoginLock;
+import com.weprode.facile.authentication.service.LoginLockLocalServiceUtil;
+import org.apache.logging.log4j.ThreadContext;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -48,36 +51,66 @@ public class LoginAction implements StrutsAction {
         String login = ParamUtil.getString(request, "login");
         String password = ParamUtil.getString(request, "password");
         boolean rememberMe = ParamUtil.getBoolean(request, "rememberMe");
+        ThreadContext.clearAll();
         logger.info("Called login with screenName = " + login);
 
         String authType = PrefsPropsUtil.getString(PropsKeys.COMPANY_SECURITY_AUTH_TYPE, CompanyConstants.AUTH_TYPE_SN);
 
         JSONObject userStatus = new JSONObject();
-        try {
-            AuthenticatedSessionManagerUtil.login(request, response, login, password, rememberMe, authType);
-            userStatus.put("success", true);
-        } catch (UserLockoutException ule) {
-            userStatus.put("success", false);
-            logger.error("User is locked");
-            userStatus.put("isLocked", true);
-            long lockoutDuration = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getLockoutDuration();
-            userStatus.put("lockoutDuration", lockoutDuration);
 
-        } catch (AuthException e) {
-            userStatus.put("success", false);
-            logger.error("Login failed", e);
-            // Get nb remaining tries
-            int nbRemainingTries = getNbRemainingTries(login);
-            if (nbRemainingTries >= 0) {
-                userStatus.put("nbRemainingTries", nbRemainingTries);
-                if (nbRemainingTries == 0) {
-                    logger.error("User is locked");
-                    userStatus.put("isLocked", true);
-                    long lockoutDuration = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getLockoutDuration();
-                    userStatus.put("lockoutDuration", lockoutDuration);
+        // First check if login exists or not
+        boolean loginExists = false;
+        try {
+            UserLocalServiceUtil.getUserByScreenName(PortalUtil.getDefaultCompanyId(), login);
+            loginExists = true;
+        } catch (Exception e) {
+            // Login does not exist
+        }
+
+        if (loginExists) {
+
+            try {
+                AuthenticatedSessionManagerUtil.login(request, response, login, password, rememberMe, authType);
+                userStatus.put("success", true);
+            } catch (UserLockoutException ule) {
+                userStatus.put("success", false);
+                logger.error("User is locked");
+                userStatus.put("isLocked", true);
+                long lockoutDuration = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getLockoutDuration();
+                userStatus.put("lockoutDuration", lockoutDuration);
+
+            } catch (AuthException e) {
+                userStatus.put("success", false);
+                logger.info("Authentication failed for login " + login);
+                // Get nb remaining tries
+                int nbRemainingTries = getNbRemainingTries(login);
+                if (nbRemainingTries >= 0) {
+                    userStatus.put("nbRemainingTries", nbRemainingTries);
+                    if (nbRemainingTries == 0) {
+                        logger.error("User is locked");
+                        userStatus.put("isLocked", true);
+                        long lockoutDuration = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getLockoutDuration();
+                        userStatus.put("lockoutDuration", lockoutDuration);
+                    }
                 }
             }
+        } else {
+            // Manage non-existing logins by ourselves
+            // In order to not give any indication of login existence or not
+            LoginLockLocalServiceUtil.addLoginAttempt(login);
+
+            LoginLock loginLock = LoginLockLocalServiceUtil.getLoginLock(login);
+            int nbRemainingTries = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getMaxFailure() - loginLock.getFailedLoginAttempts();
+            userStatus.put("nbRemainingTries", nbRemainingTries);
+            if (nbRemainingTries <= 0) {
+                logger.error("False user is locked");
+                userStatus.put("isLocked", true);
+                long lockoutDuration = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getLockoutDuration();
+                userStatus.put("lockoutDuration", lockoutDuration);
+            }
+            userStatus.put("success", false);
         }
+
 
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);

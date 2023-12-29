@@ -51,12 +51,11 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
     public JSONObject getWeekSessions(long schoolId, int type, String currentDateStr) {
         JSONObject result = new JSONObject();
 
-        logger.info("Get schoollife week sessions for schoolId = " + schoolId  + ", type = " + type + " and date " + currentDateStr);
         JSONArray jsonSessions = new JSONArray();
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -67,6 +66,7 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets week sessions");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

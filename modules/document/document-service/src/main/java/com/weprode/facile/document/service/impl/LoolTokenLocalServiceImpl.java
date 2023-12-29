@@ -24,6 +24,8 @@ import com.weprode.facile.document.service.base.LoolTokenLocalServiceBaseImpl;
 
 import org.osgi.service.component.annotations.Component;
 
+import java.util.Date;
+
 @Component(
 	property = "model.class.name=com.weprode.facile.document.model.LoolToken",
 	service = AopService.class
@@ -41,6 +43,7 @@ public class LoolTokenLocalServiceImpl extends LoolTokenLocalServiceBaseImpl {
 			LoolToken loolToken = loolTokenPersistence.create(loolTokenId);
 			loolToken.setToken(token);
 			loolToken.setUserId(userId);
+			loolToken.setEditionDate(new Date());
 			logger.info("Created LoolToken with userId "+userId+" and token "+token);
 
 			return loolTokenPersistence.update(loolToken);

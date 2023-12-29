@@ -49,7 +49,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -57,7 +57,9 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user) &&
                 !RoleUtilsLocalServiceUtil.isPersonal(user) &&
+				!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) &&
 				!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets main roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -85,7 +87,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -94,7 +96,8 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
-				!RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+				!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets local roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -124,7 +127,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		User user;
 		try {
 			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId())) {
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -133,6 +136,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets broadcast roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -154,10 +158,10 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 			schoolAdminRole.put(JSONConstants.IS_FOR_CLASS, false);
 			roleList.put(schoolAdminRole);
 
-			Role entAdmin = RoleUtilsLocalServiceUtil.getEntAdminRole();
+			Role collectivityAdminRole = RoleUtilsLocalServiceUtil.getCollectivityAdminRole();
 			JSONObject entAdminRole = new JSONObject();
-			entAdminRole.put(JSONConstants.ROLE_ID, entAdmin.getRoleId());
-			entAdminRole.put(JSONConstants.DISPLAY_TEXT, "Administrateur ENT");
+			entAdminRole.put(JSONConstants.ROLE_ID, collectivityAdminRole.getRoleId());
+			entAdminRole.put(JSONConstants.DISPLAY_TEXT, "Responsable de collectivité");
 			entAdminRole.put(JSONConstants.IS_FOR_CLASS, false);
 			roleList.put(entAdminRole);
 			

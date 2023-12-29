@@ -324,6 +324,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 	public String getPopulationName(long orgId, long roleId, long userId) {
 		String populationName = "";
 		try {
+			User user = UserLocalServiceUtil.getUser(userId);
 			Organization org = OrganizationLocalServiceUtil.getOrganization(orgId);
 			String orgName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false);
 			// Subject orgs already have the role inside
@@ -331,29 +332,64 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				populationName = orgName;
 			} else {
 				if (roleId == 0) {
-					// Whole school
-					populationName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), true);
+					if (org.getParentOrganizationId() == 0) {
+						// Root org - all users
+						populationName = "Tous les utilisateurs";
+					} else {
+						// Whole school
+						populationName = OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), true);
+					}
 				} else if (roleId == RoleUtilsLocalServiceUtil.getPersonalRole().getRoleId()) {
-					populationName = "Tous les personnels";
+					if (org.getParentOrganizationId() == 0) {
+						// Root org
+						populationName = "Tous les personnels";
+					} else if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+						if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+							populationName = NeroRoleConstants.PERSONAL_INCLUSIVE + ContactConstants.OF + OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), true);
+						} else {
+							populationName = "Tous les personnels";
+						}
+					}
 				} else if (roleId == RoleUtilsLocalServiceUtil.getStudentRole().getRoleId()) {
-					if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+					if (org.getParentOrganizationId() == 0) {
+						// Root org
 						populationName = "Tous les élèves";
+					} else if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+						if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+							populationName = NeroRoleConstants.STUDENT_INCLUSIVE + ContactConstants.OF + OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), true);
+						} else {
+							populationName = "Tous les élèves";
+						}
 					} else if (OrgDetailsLocalServiceUtil.isVolee(orgId)) {
 						populationName = "Elèves de la volée " + orgName;
 					} else {
 						populationName = NeroRoleConstants.STUDENT_INCLUSIVE + ContactConstants.OF + orgName;
 					}
 				} else if (roleId == RoleUtilsLocalServiceUtil.getParentRole().getRoleId()) {
-					if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+					if (org.getParentOrganizationId() == 0) {
+						// Root org
 						populationName = "Tous les responsables légaux";
+					} else if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+						if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+							populationName = NeroRoleConstants.PARENT_INCLUSIVE + ContactConstants.OF + OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), true);
+						} else {
+							populationName = "Tous les responsables légaux";
+						}
 					} else if (OrgDetailsLocalServiceUtil.isVolee(orgId)) {
 						populationName = "Responsables légaux  de la volée " + orgName;
 					} else {
 						populationName = NeroRoleConstants.PARENT_INCLUSIVE + ContactConstants.OF + orgName;
 					}
 				} else if (roleId == RoleUtilsLocalServiceUtil.getTeacherRole().getRoleId()) {
-					if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+					if (org.getParentOrganizationId() == 0) {
+						// Root org
 						populationName = "Tous les enseignants";
+					} else if (OrgDetailsLocalServiceUtil.isSchool(orgId)) {
+						if (RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+							populationName = NeroRoleConstants.TEACHER_INCLUSIVE + ContactConstants.OF + OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), true);
+						} else {
+							populationName = "Tous les enseignants";
+						}
 					} else if (OrgDetailsLocalServiceUtil.isVolee(orgId)) {
 						populationName = "Enseignants de la volée " + orgName;
 					} else {
@@ -390,8 +426,9 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				}
 			}
 			// If user is multi-school, and if the org is not a school, suffix each population by the school's name
-			User user = UserLocalServiceUtil.getUser(userId);
-			if (UserOrgsLocalServiceUtil.getUserSchools(user).size() > 1 && !OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId())) {
+			if ((RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || UserOrgsLocalServiceUtil.getUserSchools(user).size() > 1)
+				&& !OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId())
+				&& org.getParentOrganizationId() != 0) {
 				populationName += ContactConstants.OF + OrgUtilsLocalServiceUtil.formatOrgName(org.getParentOrganization().getName(), true);
 			}
 		} catch (Exception e) {
@@ -462,24 +499,24 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 	}
 
 
-	public List<User> directorySearch(User user, String query, List<Long> organizationIds, List<Long> schoolIds,
-									  List<Long> roleIds, List<Long> subjectIds, int start, int limit, OrderByComparator obc) {
+	public List<User> directorySearch(User user, String query, List<Long> schoolIds, List<Long> roleIds, int start, int limit, OrderByComparator obc) {
 
-		List<Long> studentAndParentOrgIds = getStudentAndParentUsersOrgIds(schoolIds, organizationIds, user);
-		List<Long> agentOrgIds = getAgentUsersOrgIds(schoolIds, organizationIds);
+		List<Long> studentAndParentOrgIds = getStudentAndParentUsersOrgIds(schoolIds, user);
+		List<Long> agentOrgIds = getAgentUsersOrgIds(schoolIds);
 		List<Long> studentAndParentRoleIds = getStudentAndParentRoles(roleIds);
 		List<Long> agentRoleIds = getAgentRoles(roleIds);
 
 		List<User> studentAndParentContacts = new ArrayList<>();
 		List<User> agentContacts = new ArrayList<>();
 		try {
-			if (!studentAndParentOrgIds.isEmpty() && !studentAndParentRoleIds.isEmpty()) {
+			// Collectivity admins cannot search over students and parents, only personals
+			if (!studentAndParentOrgIds.isEmpty() && !studentAndParentRoleIds.isEmpty() && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
 				studentAndParentContacts = UserSearchLocalServiceUtil.searchUsers(query, studentAndParentOrgIds, null, studentAndParentRoleIds, null, start, limit, obc);
 				studentAndParentContacts = userListFilter(studentAndParentContacts);
 			}
 
 			if (!agentRoleIds.isEmpty()) {
-				agentContacts = UserSearchLocalServiceUtil.searchUsers(query, agentOrgIds, null, agentRoleIds, subjectIds, start, limit, obc);
+				agentContacts = UserSearchLocalServiceUtil.searchUsers(query, agentOrgIds, null, agentRoleIds, null, start, limit, obc);
 				agentContacts = userListFilter(agentContacts);
 			}
 		} catch (Exception e) {
@@ -620,22 +657,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		return longRoleIds;
 	}
 
-	private List<Long> getStudentAndParentUsersOrgIds(List<Long> schoolIds, List<Long> organizationIds, User user) {
-
-		// If classes or groups are given, return them
-		List<Long> longOrgIds = new ArrayList<>();
-		if (organizationIds != null) {
-			for (Long organizationId : organizationIds) {
-				if (organizationId != 0) {
-					longOrgIds.add(organizationId);
-				}
-			}
-		}
-		if (!longOrgIds.isEmpty())  {
-			return longOrgIds;
-		}
-
-		// Else, process schools
+	private List<Long> getStudentAndParentUsersOrgIds(List<Long> schoolIds, User user) {
 
 		// Build the authorized school list
 		List<Long> authorizedSchoolIds = new ArrayList<>();
@@ -666,7 +688,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		// or in all schools of the list (after removing first empty value)
 		if (longSchoolIds.isEmpty() && !schoolIds.isEmpty()) {
 			// We have selected one or more school filters but none is authorized
-			// for student and parent : return null to cancel search on this profiles
+			// for student and parent : return empty list to cancel search on this profiles
 			return Collections.emptyList();
 		} else if (!longSchoolIds.isEmpty()) {
 			return longSchoolIds;
@@ -726,20 +748,10 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		return singleUserIds;
 	}
 
-	private List<Long> getAgentUsersOrgIds(List<Long> schoolIds, List<Long> organizationIds) {
-
-		// If classes or groups are given, return them
-		List<Long> longOrgIds = new ArrayList<>();
-		if (organizationIds != null) {
-			longOrgIds.addAll(organizationIds);
-		}
-		if (!longOrgIds.isEmpty())  {
-			return longOrgIds;
-		}
-
-		// Else, process schools
+	private List<Long> getAgentUsersOrgIds(List<Long> schoolIds) {
 
 		// The authorized schoolId list is all schools because only agents can come here
+		// This is also an access control check to prevent from searching in non authorized schoolIds
 		List<Long> authorizedSchoolIds = new ArrayList<>();
 		try {
 			List<Organization> userSchools = OrgUtilsLocalServiceUtil.getAllSchools();
@@ -762,11 +774,11 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		}
 
 		// Check organizations : We search in the one selected, or in the restricted one,
-		// or in all schools of the list (after removing first empty value)
+		// or no school (to get collectivity admins)
 		if (!longSchoolIds.isEmpty()) {
 			return longSchoolIds;
 		} else {
-			return authorizedSchoolIds;
+			return new ArrayList<>();
 		}
 	}
 

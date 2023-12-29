@@ -21,6 +21,7 @@ import com.weprode.facile.mobile.model.UserMobileToken;
 import com.weprode.facile.mobile.service.base.UserMobileTokenLocalServiceBaseImpl;
 import org.osgi.service.component.annotations.Component;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -45,6 +46,8 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 		}
 		String newToken = UUID.randomUUID().toString();
 		userMobileToken.setMobileToken(newToken);
+		userMobileToken.setCreationDate(new Date());
+		userMobileToken.setModificationDate(new Date());
 		userMobileTokenPersistence.update(userMobileToken);
 		return newToken;
 	}
@@ -55,6 +58,8 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 		try {
 			userMobileToken = userMobileTokenPersistence.create(userId);
 			userMobileToken.setMobileToken(token);
+			userMobileToken.setCreationDate(new Date());
+			userMobileToken.setModificationDate(new Date());
 			userMobileToken = userMobileTokenPersistence.update(userMobileToken);
 			return userMobileToken;
 		} catch (Exception e) {
@@ -74,6 +79,7 @@ public class UserMobileTokenLocalServiceImpl extends UserMobileTokenLocalService
 		if (userMobileToken != null && userMobileToken.getMobileToken().equals(mobileToken)) {
 			String newToken = UUID.randomUUID().toString();
 			userMobileToken.setMobileToken(newToken);
+			userMobileToken.setModificationDate(new Date());
 			userMobileTokenPersistence.update(userMobileToken);
 			return newToken;
 		}

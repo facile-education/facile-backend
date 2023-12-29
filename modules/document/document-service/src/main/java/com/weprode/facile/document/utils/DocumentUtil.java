@@ -32,54 +32,10 @@ public class DocumentUtil {
         throw new IllegalStateException("Utility class");
     }
 
-    // recursive search if parent folder is sendingBox root folder
-    public static boolean belongToSendingBox(Folder folder, long userId) throws SystemException, PortalException {
-        Folder sendingBoxFolder = FolderUtilsLocalServiceUtil.getSendingBox(userId);
-        return isSubEntityOf(folder, sendingBoxFolder);
-    }
-
-    public static boolean belongToSendingBox(FileEntry file, long userId) throws SystemException, PortalException {
-        Folder sendingBoxFolder = FolderUtilsLocalServiceUtil.getSendingBox(userId);
-        return isSubEntityOf(file, sendingBoxFolder);
-    }
-
     public static boolean belongToTmpFolder(FileEntry file, long userId) throws SystemException, PortalException {
-        Folder tmpFolder = FolderUtilsLocalServiceUtil.getTmpFolder(userId);
+        Folder tmpFolder = FolderUtilsLocalServiceUtil.getUserTmpFolder(userId);
         return isSubEntityOf(file, tmpFolder);
     }
-
-//    // recursive search if parent folder is trash root folder
-//    public static boolean belongToTrash(Folder folder, long userId) throws SystemException, PortalException {
-//        Folder trashFolder = FoldersUtil.getTrash(userId);
-//        return isSubEntityOf(folder, trashFolder);
-//    }
-//
-//    public static boolean belongToTrash(FileEntry file, long userId) throws SystemException, PortalException {
-//        Folder trashFolder = FoldersUtil.getTrash(userId);
-//        return isSubEntityOf(file, trashFolder);
-//    }
-
-    // return true if the document is in a subFolder
-    public static boolean belongToASendingBoxSubFolder(Folder folder, long userId) throws SystemException, PortalException {
-        Folder sendingBoxFolder = FolderUtilsLocalServiceUtil.getSendingBox(userId);
-        return folder.getParentFolderId() != sendingBoxFolder.getFolderId();
-    }
-
-    public static boolean belongToASendingBoxSubFolder(FileEntry file, long userId) throws SystemException, PortalException {
-        Folder sendingBoxFolder = FolderUtilsLocalServiceUtil.getSendingBox(userId);
-        return file.getFolder().getFolderId() != sendingBoxFolder.getFolderId();
-    }
-
-//    // return true if the document is in a subFolder of trash
-//    public static boolean belongToATrashSubFolder(Folder folder, long userId) throws SystemException, PortalException {
-//        Folder trashFolder = FoldersUtil.getTrash(userId);
-//        return folder.getParentFolderId() != trashFolder.getFolderId();
-//    }
-//
-//    public static boolean belongToATrashSubFolder(FileEntry file, long userId) throws SystemException, PortalException {
-//        Folder trashFolder = FoldersUtil.getTrash(userId);
-//        return file.getFolder().getFolderId() != trashFolder.getFolderId();
-//    }
 
     public static boolean isSubEntityOf(Folder entity, Folder potentialAncestor) throws PortalException, SystemException {
         if (entity.getParentFolderId() == potentialAncestor.getFolderId()){
@@ -110,11 +66,7 @@ public class DocumentUtil {
     }
 
     public static int getSpace(Folder folder, long userId) throws SystemException, PortalException {
-        if (belongToSendingBox(folder, userId)){
-            return DocumentConstants.SENDING_BOX;
-//        } else if (belongToTrash(folder, userId)){
-//            return DocumentConstants.TRASH;
-        } else if (FolderUtilsLocalServiceUtil.isGroupFolder(folder)){
+        if (FolderUtilsLocalServiceUtil.isGroupFolder(folder)){
             return DocumentConstants.COLLABORATIVE;
         } else {
             return DocumentConstants.PRIVATE;

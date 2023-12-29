@@ -26,6 +26,7 @@
 		<column name="newsId" type="long" primary="true" />
 		<column name="groupId" type="long" primary="true" />
 		<column name="roleId" type="long" primary="true"/>
+		<column name="schoolId" type="long" />
 
 		<finder return-type="Collection" name="groupId_roleId">
 			<finder-column name="groupId" />

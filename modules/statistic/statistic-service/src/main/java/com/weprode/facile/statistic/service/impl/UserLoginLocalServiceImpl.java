@@ -64,7 +64,7 @@ public class UserLoginLocalServiceImpl extends UserLoginLocalServiceBaseImpl {
 
                 // Rattach school
                 Organization rattachSchool = UserOrgsLocalServiceUtil.getEtabRatachement(user);
-                userLogin.setSchoolId(rattachSchool.getOrganizationId());
+                userLogin.setSchoolId(rattachSchool != null ? rattachSchool.getOrganizationId() : 0);
                 UserLoginLocalServiceUtil.updateUserLogin(userLogin);
             }
 

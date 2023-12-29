@@ -43,6 +43,8 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.constants.PermissionConstants;
 import com.weprode.facile.document.service.ActivityLocalServiceUtil;
@@ -51,15 +53,24 @@ import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FolderUtilsLocalServiceBaseImpl;
 import com.weprode.facile.document.utils.DLAppUtil;
+import com.weprode.facile.document.utils.DocumentUtil;
+import com.weprode.facile.document.utils.ENTWebDAVUtil;
 import com.weprode.facile.document.utils.FileNameUtil;
-import com.weprode.facile.document.utils.ZipUtil;
 import com.weprode.facile.group.constants.ActivityConstants;
+import com.weprode.facile.group.model.CommunityInfos;
+import com.weprode.facile.group.service.CommunityInfosLocalServiceUtil;
+import com.weprode.facile.organization.constants.OrgConstants;
+import com.weprode.facile.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
+import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
+import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -87,7 +98,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					user.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.SCHOOL_BAG_FOLDER_NAME,
-					"Dossier personnel de l'utilsateur",
+					"Dossier personnel de l'utilisateur",
 					new ServiceContext()
 			);
 		}
@@ -95,28 +106,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return rootFolder;
 	}
 
-	public Folder getSendingBox(long userId) throws PortalException, SystemException {
-		final User user = UserLocalServiceUtil.getUser(userId);
-
-		Folder folder;
-		try {
-			folder = DLAppServiceUtil.getFolder(user.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.SENDING_BOX_FOLDER_NAME);
-		} catch (NoSuchFolderException e) {
-			folder = DLAppServiceUtil.addFolder(
-					UUID.randomUUID().toString(),
-					user.getGroupId(),
-					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-					DocumentConstants.SENDING_BOX_FOLDER_NAME,
-					"Boite d envoi tmp",
-					new ServiceContext());
-			hideDLFolder(folder.getFolderId());
-			PermissionUtilsLocalServiceUtil.setViewPermissionOnResource(folder);
-		}
-
-		return folder;
-	}
-
-	public Folder getIMBox(long userId) throws PortalException, SystemException {
+	public Folder getUserMessagingAttachedFilesFolder(long userId) throws PortalException, SystemException {
 		final User user = UserLocalServiceUtil.getUser(userId);
 
 		Folder folder;
@@ -136,7 +126,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return folder;
 	}
 
-	public Folder getTmpFolder(long userId) throws PortalException, SystemException {
+	public Folder getUserTmpFolder(long userId) throws PortalException, SystemException {
 		final User user = UserLocalServiceUtil.getUser(userId);
 
 		Folder tmpFolder;
@@ -156,28 +146,8 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return tmpFolder;
 	}
 
-	public Folder getProgressionFolder(long userId) throws PortalException, SystemException {
-		Folder folder;
-
-		final User user = UserLocalServiceUtil.getUser(userId);
-		try {
-			folder = DLAppServiceUtil.getFolder(user.getGroup().getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DocumentConstants.PROGRESSION_FOLDER_NAME);
-		} catch (NoSuchFolderException e) {
-			folder = DLAppServiceUtil.addFolder(
-					UUID.randomUUID().toString(),
-					user.getGroup().getGroupId(),
-					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-					DocumentConstants.PROGRESSION_FOLDER_NAME,
-					"Dossier pour les documents des progressions",
-					new ServiceContext());
-			hideDLFolder(folder.getFolderId());
-		}
-
-		return folder;
-	}
-
-	public Folder getThumbnailFolder(long userId) throws PortalException, SystemException {
-		final long companyId = UserLocalServiceUtil.getUser(userId).getCompanyId();
+	public Folder getThumbnailFolder() throws PortalException, SystemException {
+		final long companyId = PortalUtil.getDefaultCompanyId();
 		Organization rootOrg = OrgUtilsLocalServiceUtil.getOrCreateRootOrg(companyId);
 
 		Folder thumbnailFolder;
@@ -186,7 +156,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		} catch (NoSuchFolderException e) {
 			thumbnailFolder = DLAppLocalServiceUtil.addFolder(
 					UUID.randomUUID().toString(),
-					UserLocalServiceUtil.getDefaultUser(companyId).getUserId(),
+					UserLocalServiceUtil.getGuestUserId(companyId),
 					rootOrg.getGroupId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 					DocumentConstants.THUMBNAILS_FOLDER_NAME,
@@ -224,45 +194,6 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 	public List<Folder> getFolderPath(long folderId) throws SystemException, PortalException {
 		Folder folder = DLAppServiceUtil.getFolder(folderId);
 		return getFolderPath(folder);
-	}
-
-	public String downloadFolder(Folder folder, User user) throws PortalException, SystemException, IOException {
-		String result = "";
-
-		// Set default permissions
-		ServiceContext serviceContext = new ServiceContext();
-		serviceContext.setAddGroupPermissions(true);
-
-		String zipName = folder.getName();
-
-		Folder temporaryFF = getTmpFolder(user.getUserId());
-
-		long[] fileIdArray = new long[0];
-		long[] folderIdArray = new long[1];
-		folderIdArray[0] = folder.getFolderId();
-
-		ByteArrayOutputStream baos = null;
-
-		try {
-			baos = ZipUtil.createZipStream(folderIdArray, fileIdArray);
-			if (zipName.toLowerCase().endsWith(".zip")) {
-				zipName = zipName.substring(0, zipName.length() - 4);
-			}
-
-			FileEntry zipFile = DLAppUtil.addFileEntry(user, temporaryFF, zipName + ".zip", baos.toByteArray(), DocumentConstants.MODE_RENAME);
-
-			assert zipFile != null;
-			result = FileUtilsLocalServiceUtil.getDownloadUrl(zipFile);
-		} finally {
-			try {
-				assert baos != null;
-				baos.close();
-			} catch (Exception e) {
-				logger.error(e);
-			}
-		}
-
-		return result;
 	}
 
 	public int getFolderSize(Folder folder) throws SystemException, PortalException {
@@ -351,7 +282,6 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			boolean success = false;
 			int nbTry = 0;
 			String originalTitle = folder.getName();
-			String suffix = "";
 
 			// rename folder if needed
 			while (!success && nbTry < DocumentConstants.NB_RENAMED_VERSIONS) {
@@ -383,7 +313,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 							}
 						}
 					} else if (mode == DocumentConstants.MODE_RENAME) {
-						suffix = " (" + nbTry + ")";
+						String suffix = " (" + nbTry + ")";
 						DLAppServiceUtil.updateFolder(
 								folder.getFolderId(),
 								originalTitle + suffix,
@@ -523,7 +453,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 				logger.info("Creating root folder for group " + group.getName(LocaleUtil.getDefault()));
 				Folder createdFolder = DLAppLocalServiceUtil.addFolder(
 						UUID.randomUUID().toString(),
-						UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+						UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()),
 						groupId,
 						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 						DocumentConstants.GROUP_FOLDER_NAME,
@@ -549,7 +479,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		} catch (NoSuchFolderException e) {
 			folder = DLAppLocalServiceUtil.addFolder(
 					UUID.randomUUID().toString(),
-					UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+					UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()),
 					groupId,
 					groupRootFolder.getFolderId(),
 					DocumentConstants.NEWS_FOLDER_NAME,
@@ -579,7 +509,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		} catch (NoSuchFolderException e) {
 			folder = DLAppLocalServiceUtil.addFolder(
 					UUID.randomUUID().toString(),
-					UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()),
+					UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()),
 					groupId,
 					groupRootFolder.getFolderId(),
 					DocumentConstants.COURSE_FOLDER_NAME,
@@ -620,6 +550,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 			if (folderGroup.isOrganization()) {
 				if ( !OrganizationLocalServiceUtil.hasUserOrganization(user.getUserId(), folderGroup.getClassPK())
 					&& !RoleUtilsLocalServiceUtil.isDirectionMember(user)
+					&& !(NewsAdminLocalServiceUtil.isUserDelegate(user) && folder.getParentFolder().getName().equals(DocumentConstants.NEWS_FOLDER_NAME))
 					&& !RoleUtilsLocalServiceUtil.isDoyen(user, folderGroup.getClassPK())
 					&& !RoleUtilsLocalServiceUtil.isPsychologue(user, folderGroup.getClassPK())
 					&& !RoleUtilsLocalServiceUtil.isConseillerSocial(user, folderGroup.getClassPK())) {
@@ -652,5 +583,117 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		DLFolder dlFolder = DLFolderLocalServiceUtil.getFolder(folderId);
 		dlFolder.setHidden(true);
 		DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
+	}
+
+	public JSONObject format(long userId, Folder folder) throws PortalException, SystemException {
+		int space = DocumentUtil.getSpace(folder, folder.getUserId());
+		return format(userId, folder, space);
+	}
+
+	public JSONObject format(long userId, Folder folder, int space) throws PortalException, SystemException {
+		return format(userId, folder, space, false);
+	}
+
+	public JSONObject format(long userId, Folder folder, int space, boolean withDetails) throws PortalException, SystemException {
+		User user = UserLocalServiceUtil.getUser(userId);
+		return format(user, folder, space, withDetails);
+	}
+
+	public JSONObject format(User user, Folder folder, int space, boolean withDetails) {
+
+		JSONObject formattedFolder = new JSONObject();
+		addCommonsFields(formattedFolder, folder, user, withDetails);
+
+		if (space == DocumentConstants.COLLABORATIVE) {
+			addGroupFields(formattedFolder, folder, user);
+		}
+
+		return formattedFolder;
+	}
+
+	private void addCommonsFields(JSONObject formattedFolder, Folder folder, User user, boolean withDetails) {
+		formattedFolder.put(JSONConstants.ID, String.valueOf(folder.getFolderId()));
+		formattedFolder.put(JSONConstants.NAME, folder.getName());
+		formattedFolder.put(JSONConstants.TYPE, "Folder");
+		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
+				.format(folder.getModifiedDate()));
+
+		try {
+			if (UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getWebdavActivated()) {
+				formattedFolder.put(JSONConstants.URL_WEBDAV, ENTWebDAVUtil.getWebDavUrl(folder.getGroupId(), folder));
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		// Permissions
+		// Directors and school admins have all rights on institutional groups
+		boolean hasFullPermissions = false;
+		try {
+			Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+			hasFullPermissions = group.isOrganization() && RoleUtilsLocalServiceUtil.isSchoolAdmin(user);
+		} catch (Exception e) {
+			logger.debug(e);
+		}
+
+		final JSONObject permissions = new JSONObject();
+		permissions.put(PermissionConstants.ADD_OBJECT, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT));
+		permissions.put(ActionKeys.DELETE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.DELETE));
+		permissions.put(ActionKeys.PERMISSIONS, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS));
+		formattedFolder.put(JSONConstants.PERMISSIONS, permissions);
+
+		if (withDetails) {
+			try {
+				formattedFolder.put(JSONConstants.SIZE, FolderUtilsLocalServiceUtil.getFolderSize(folder));
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				formattedFolder.put(JSONConstants.SIZE, "error when computing size");
+			}
+			formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(folder.getCreateDate()));
+		}
+	}
+
+
+	private void addGroupFields(JSONObject formattedFolder, Folder folder, User user) {
+		try {
+			Group folderGroup = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+			formattedFolder.put(JSONConstants.GROUP_ID, folderGroup.getGroupId());
+			// TODO: make the groupRootFolder directly have the good name
+			if (folder.getParentFolderId() == 0) { // The group root folder have a specific name that is the name of the group and not the folder.name field.
+				if (folderGroup.isOrganization()) {	// Org groups
+					Organization org = OrganizationLocalServiceUtil.getOrganization(folderGroup.getOrganizationId());
+					boolean withSchoolName = OrgDetailsLocalServiceUtil.hasType(folderGroup.getOrganizationId(), OrgConstants.SCHOOL_TYPE);
+					formattedFolder.put(JSONConstants.NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), withSchoolName));
+					formattedFolder.put(JSONConstants.NB_MEMBERS, UserOrgsLocalServiceUtil.countOrgMembers(org.getOrganizationId()));
+					formattedFolder.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(user, org));
+				} else {	// Personal groups
+					formattedFolder.put(JSONConstants.NAME, folderGroup.getName(user.getLocale()));
+					formattedFolder.put(JSONConstants.NB_MEMBERS, UserLocalServiceUtil.getGroupUsersCount(folderGroup.getGroupId(), WorkflowConstants.STATUS_APPROVED));
+					CommunityInfos communityInfos = CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(folderGroup.getGroupId());
+					String color = communityInfos.getColor() != null && !communityInfos.getColor().isEmpty() ? communityInfos.getColor() : "#4353B3";
+					formattedFolder.put(JSONConstants.COLOR, color);
+				}
+				formattedFolder.put(JSONConstants.IS_GROUP_ROOT_FOLDER, true); // those folder is considered as Group on front side (group root folder)
+				final JSONObject permissions = new JSONObject();
+
+				// Directors and school admins have all rights on institutional groups
+				boolean hasFullPermissions = false;
+				try {
+					Group group = GroupLocalServiceUtil.getGroup(folder.getGroupId());
+					hasFullPermissions = group.isOrganization() && RoleUtilsLocalServiceUtil.isSchoolAdmin(user);
+				} catch (Exception e) {
+					logger.debug(e);
+				}
+
+				permissions.put(PermissionConstants.ADD_OBJECT, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT));
+				permissions.put(ActionKeys.UPDATE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.UPDATE));
+				permissions.put(ActionKeys.DELETE, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.DELETE));
+				permissions.put(ActionKeys.PERMISSIONS, hasFullPermissions || PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, ActionKeys.PERMISSIONS));
+				formattedFolder.put(JSONConstants.PERMISSIONS, permissions);
+			}
+
+		} catch (Exception e) {
+			logger.error(e);
+		}
 	}
 }

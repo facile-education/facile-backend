@@ -83,8 +83,8 @@ public interface NewsService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-school-news")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSchoolNews(
-		String maxDateString, int nbNews, boolean importantOnly,
-		boolean unreadOnly);
+		String currentDateString, int startIndex, int nbNews,
+		boolean importantOnly, boolean unreadOnly);
 
 	@JSONWebService(method = "GET", value = "get-school-news-broadcast-groups")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

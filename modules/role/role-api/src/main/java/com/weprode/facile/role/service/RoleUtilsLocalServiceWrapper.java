@@ -74,6 +74,11 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.model.Role getCollectivityAdminRole() {
+		return _roleUtilsLocalService.getCollectivityAdminRole();
+	}
+
+	@Override
 	public com.liferay.portal.kernel.model.Role
 		getCommunityAdministratorRole() {
 
@@ -103,11 +108,6 @@ public class RoleUtilsLocalServiceWrapper
 	@Override
 	public com.liferay.portal.kernel.model.Role getDoyenRole() {
 		return _roleUtilsLocalService.getDoyenRole();
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.Role getEntAdminRole() {
-		return _roleUtilsLocalService.getEntAdminRole();
 	}
 
 	@Override
@@ -214,6 +214,13 @@ public class RoleUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public boolean isCollectivityAdmin(
+		com.liferay.portal.kernel.model.User user) {
+
+		return _roleUtilsLocalService.isCollectivityAdmin(user);
+	}
+
+	@Override
 	public boolean isCommunityAdmin(long userId, long groupId) {
 		return _roleUtilsLocalService.isCommunityAdmin(userId, groupId);
 	}
@@ -263,11 +270,6 @@ public class RoleUtilsLocalServiceWrapper
 		com.liferay.portal.kernel.model.User user, long orgId) {
 
 		return _roleUtilsLocalService.isDoyen(user, orgId);
-	}
-
-	@Override
-	public boolean isENTAdmin(com.liferay.portal.kernel.model.User user) {
-		return _roleUtilsLocalService.isENTAdmin(user);
 	}
 
 	@Override

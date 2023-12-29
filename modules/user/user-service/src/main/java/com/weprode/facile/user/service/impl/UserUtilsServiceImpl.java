@@ -69,7 +69,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
         // Roles
         result.put(JSONConstants.IS_ADMINISTRATOR, RoleUtilsLocalServiceUtil.isAdministrator(user));
-        result.put(JSONConstants.IS_ENT_ADMIN, RoleUtilsLocalServiceUtil.isENTAdmin(user));
+        result.put(JSONConstants.IS_ENT_ADMIN, RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
         result.put(JSONConstants.IS_LOCAL_ADMIN, RoleUtilsLocalServiceUtil.isSchoolAdmin(user));
         result.put(JSONConstants.IS_STUDENT, RoleUtilsLocalServiceUtil.isStudent(user));
         result.put(JSONConstants.IS_PARENT, RoleUtilsLocalServiceUtil.isParent(user));
@@ -132,7 +132,6 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
                 JSONObject userSchoolJson = new JSONObject();
                 userSchoolJson.put(JSONConstants.SCHOOL_ID, userSchool.getOrganizationId());
                 userSchoolJson.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchool.getName(), true));
-                userSchoolJson.put(JSONConstants.IS_PREFERED, (userProperties.getPreferedSchoolId() == userSchool.getOrganizationId()));
                 if (RoleUtilsLocalServiceUtil.isSchoolAdmin(user, userSchool.getOrganizationId()) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                     userSchoolJson.put(JSONConstants.IS_ADMIN, true);
                 }
@@ -166,7 +165,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -208,7 +207,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -238,7 +237,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {
@@ -248,7 +247,8 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
-                !RoleUtilsLocalServiceUtil.isENTAdmin(user)) {
+                !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets parent infos");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -278,7 +278,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         User user;
         try {
             user = getGuestOrUser();
-            if (user.getUserId() == UserLocalServiceUtil.getDefaultUserId(PortalUtil.getDefaultCompanyId()) ) {
+            if (user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId()) ) {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
             }
         } catch (Exception e) {

@@ -354,6 +354,10 @@ public class SchoollifeSessionLocalServiceUtil {
 		return getService().getWeekSessions(schoolId, type, fromDate);
 	}
 
+	public static void runAbsenceNotifications() {
+		getService().runAbsenceNotifications();
+	}
+
 	public static boolean setRollCalled(long schoollifeSessionId) {
 		return getService().setRollCalled(schoollifeSessionId);
 	}

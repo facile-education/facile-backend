@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 
 import com.weprode.facile.authentication.service.AuthenticationLocalService;
 import com.weprode.facile.authentication.service.AuthenticationLocalServiceUtil;
+import com.weprode.facile.authentication.service.persistence.LoginLockPersistence;
 
 import java.lang.reflect.Field;
 
@@ -127,6 +128,9 @@ public abstract class AuthenticationLocalServiceBaseImpl
 	}
 
 	protected AuthenticationLocalService authenticationLocalService;
+
+	@Reference
+	protected LoginLockPersistence loginLockPersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

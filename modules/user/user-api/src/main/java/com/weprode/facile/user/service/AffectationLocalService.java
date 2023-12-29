@@ -39,6 +39,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -80,6 +82,8 @@ public interface AffectationLocalService
 
 	public boolean addUserAffectation(
 		long userId, long orgId, long adminUserId, Date expirationDate);
+
+	public JSONArray convertUserAffectations(long userId, long schoolId);
 
 	/**
 	 * Creates a new affectation with the primary key. Does not add the affectation to the database.
@@ -268,6 +272,8 @@ public interface AffectationLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Long> getUserAffectedOrgs(long userId);
+
+	public void removeByUserId(long userId);
 
 	public boolean removeUserAffectation(long userId, long orgId);
 

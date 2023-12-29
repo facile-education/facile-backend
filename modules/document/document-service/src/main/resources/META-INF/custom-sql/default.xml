@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<custom-sql>
+    <sql id="com.weprode.facile.document.service.persistence.ActivityFinder.countSchoolActivities">
+        <![CDATA[
+			SELECT COUNT(*)
+			FROM Document_Activity a
+			JOIN Users_Orgs uo ON a.userId = uo.userId
+			WHERE a.modificationDate BETWEEN ? AND ?
+		]]>
+    </sql>
+</custom-sql>

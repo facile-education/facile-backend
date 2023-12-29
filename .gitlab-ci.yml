@@ -1,3 +1,16 @@
+stages:
+  - build
+  - test
+
+module-compilation:
+  image: gradle:jre11-slim
+  stage: build
+  script: gradle deploy
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - bundles/osgi/modules/ 
+
 sonarqube-check:
   image: gradle:jre11-slim
   variables:
@@ -9,5 +22,97 @@ sonarqube-check:
       - .sonar/cache
   script: gradle sonar
   allow_failure: true
-  only:
-    - master # or the name of your main branch
+  dependencies: [] # Prevent artifacts download
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE != "schedule"' # or the name of your main branch
+
+cypress-e2e:
+  stage: test
+  variables:
+    NODE_VERSION: "16-alpine"
+    HTTPD_VERSION: "2.4-alpine"
+    MARIADB_VERSION: "10.6"
+    MARIADB_PATH: "/var/lib/mysql"
+    MYSQL_DATABASE: "lportal_ent"
+    MYSQL_USER: "ent"
+    ES_VERSION: "7.17.10"
+    ES_CLUSTER_NAME: "LiferayElasticsearchCluster"
+    ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ES_PATH: "./esdata"
+    LFR_VERSION: "7.4.3.97-ga97"
+    LFR_JAVA_VERSION: "zulu11"
+    LFR_DATA_FOLDER: "data"
+    DB_DOCKER_NAME: "docker-mariadb-1"
+    CYPRESS_DOCKER_VERSION: "3.0.0"
+    CYPRESS_CMD: "--e2e"
+  needs:
+    - module-compilation # Needs previous job artifacts 
+    - project: nero/nero-vue # Needs front job artifacts
+      ref: ${CI_COMMIT_BRANCH}
+      job: npm-build
+      artifacts: true
+  after_script:
+    - docker rm node --volumes || true # Clean up node docker
+    - docker rm cypress --volumes || true # Clean up cypress docker
+    - docker network rm cypressnet || true # Clean up network
+    - cd others/docker/ && docker compose down --volumes || true # Clean up compose dockers
+    - rm -Rf ~/front || true
+  script:
+    # Pull front sources to get Cypress tests and SQL dumps
+    - mkdir ~/front
+    - git clone --branch ${CI_COMMIT_BRANCH} --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.weprode.com/nero/nero-vue.git ~/front
+    # Creating Liferay's document library folder
+    - mkdir -p ~/front/${LFR_DATA_FOLDER}
+    # Filling front / Cypress environment file
+    - echo "DOCKER_NAME=${DB_DOCKER_NAME}" >> ~/front/.env.local
+    - echo "DB_USER=root" >> ~/front/.env.local
+    - echo "DB_PWD=${MYSQL_ROOT_PASSWORD}" >> ~/front/.env.local
+    - echo "DB_NAME=${MYSQL_DATABASE}" >> ~/front/.env.local
+    - echo "PATH_TO_DOCUMENT_LIBRARY=/e2e/${LFR_DATA_FOLDER}" >> ~/front/.env.local
+    # Change group to avoid permission issues (GID 1000)
+    - chmod g+w -R ~/front/ && chgrp debian -R ~/front/
+    # Needed for cypress to run (dayjs dependencies)
+    - docker run --name node -v ~/front:/usr/src/app -w /usr/src/app node:${NODE_VERSION} npm install --progress=false --omit=dev
+    - cd others/docker/
+    # Filling docker-compose environment file
+    - echo "HTTPD_VERSION=${HTTPD_VERSION}" >> .env
+    - echo "MARIADB_VERSION=${MARIADB_VERSION}" >> .env && echo "MARIADB_PATH=${MARIADB_PATH}" >> .env
+    - echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env && echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
+    - echo "MYSQL_USER=${MYSQL_USER}" >> .env && echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> .env
+    - echo "ES_VERSION=${ES_VERSION}" >> .env && echo "ES_CLUSTER_NAME=${ES_CLUSTER_NAME}" >> .env
+    - echo "ES_JAVA_OPTS=${ES_JAVA_OPTS}" >> .env && echo "ES_PATH=${ES_PATH}" >> .env
+    - echo "LFR_VERSION=${LFR_VERSION}" >> .env && echo "LFR_JAVA_VERSION=${LFR_JAVA_VERSION}" >> .env
+    - echo "LFR_DATA=${HOME}/front/${LFR_DATA_FOLDER}" >> .env
+    - cat .env
+    # Adding docker-compose dependency files
+    - mkdir ./mariadb/initdb.d
+    - cp ~/front/tests/e2e/scripts/tables/dump_cypress_db.sql ./mariadb/initdb.d/
+    - mkdir -p ./apache/html/facile
+    # Using front built artifacts
+    - cp -R ../../dist/* ./apache/html/facile
+    - mkdir ./liferay/deploy
+    # Using back built artifacts
+    - cp ../../bundles/osgi/modules/*.jar ./liferay/deploy/
+    # Change group to avoid write permissions issue on deploy
+    - chmod g+w -R . && chgrp debian -R .
+    # Starting compose and waiting for all dockers to be up and healthy
+    - docker compose up --detach --wait
+    # Add network for cypress to see facile environment
+    - docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 cypressnet 
+    - docker run --name cypress -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:${CYPRESS_DOCKER_VERSION} cypress run --config baseUrl=https://dev-ent-gve.com ${CYPRESS_CMD}
+    - mv ~/front/tests/e2e/screenshots ./
+    # - mv ~/front/tests/e2e/videos ./
+  tags:
+    - cypress
+    - e2e
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - when: manual
+      allow_failure: true
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - others/docker/screenshots/
+      # - others/docker/videos/

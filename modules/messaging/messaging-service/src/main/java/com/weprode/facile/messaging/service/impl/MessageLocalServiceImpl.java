@@ -15,6 +15,7 @@
 
 package com.weprode.facile.messaging.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
@@ -37,6 +38,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
+import com.weprode.facile.contact.service.ContactCompletionLocalServiceUtil;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.messaging.constants.MessagingConstants;
@@ -55,6 +57,7 @@ import com.weprode.facile.messaging.service.base.MessageLocalServiceBaseImpl;
 import com.weprode.facile.messaging.utils.MessagingUtil;
 import com.weprode.facile.messaging.utils.ThreadSendMessage;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -364,16 +367,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
 
                 // Add all new attached files
                 if (attachFileIds != null) {
-                    Folder imBox = FolderUtilsLocalServiceUtil.getIMBox(senderId);
-                    Folder attachedFilesFolder = DLAppServiceUtil.addFolder(
-                            UUID.randomUUID().toString(),
-                            imBox.getGroupId(),
-                            imBox.getFolderId(),
-                            "PJ du message " + message.getMessageId(),
-                            "PJ du message " + message.getMessageId(),
-                            new ServiceContext());
-                    FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
-
+                    Folder attachedFilesFolder = getOrCreateMessageAttachedFilesFolder(senderId, message.getMessageId());
                     for (Long attachFileId : attachFileIds) {
                         logger.info("Copying file " + attachFileId + " to sender's folder " + attachedFilesFolder.getFolderId());
                         FileEntry referenceFile = FileUtilsLocalServiceUtil.copyFileEntry(senderId, attachFileId, attachedFilesFolder.getFolderId(), true);
@@ -669,5 +663,69 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         }
 
         return personalFoldersMessages;
+    }
+
+    public Folder getOrCreateMessageAttachedFilesFolder(long userId, long messageId) {
+
+        logger.info("User " + userId + " is about to create folder for message " + messageId);
+        Folder attachedFilesFolder = null;
+        try {
+            Folder imBox = FolderUtilsLocalServiceUtil.getUserMessagingAttachedFilesFolder(userId);
+            try {
+                attachedFilesFolder = DLAppServiceUtil.getFolder(imBox.getRepositoryId(), imBox.getFolderId(), MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX + messageId);
+            } catch (Exception e) {
+                // Might not exist
+            }
+            if (attachedFilesFolder == null) {
+                attachedFilesFolder = DLAppLocalServiceUtil.addFolder(
+                        UUID.randomUUID().toString(),
+                        userId,
+                        imBox.getGroupId(),
+                        imBox.getFolderId(),
+                        MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX + messageId,
+                        MessagingConstants.ATTACHED_FILES_FOLDER_PREFIX + messageId,
+                        new ServiceContext());
+                FolderUtilsLocalServiceUtil.hideDLFolder(attachedFilesFolder.getFolderId());
+            }
+        } catch (Exception e) {
+            logger.error("Error while getting or creating the attached files folder for message " + messageId + " and user " + userId, e);
+        }
+        return attachedFilesFolder;
+    }
+
+    // Check that the given recipient list is authorized for the sender
+    public List<Long> filterRecipientList(User sender, List<Long> recipientIds, long originMessageId) {
+
+        JSONArray jsonArray = ContactCompletionLocalServiceUtil.getCompletionResultAsJSON("", sender, false).getJSONArray(JSONConstants.RESULTS);
+        List<Long> originRecipientIds = new ArrayList<>();
+        if (originMessageId != 0) {
+            try {
+                String originRecipients = MessageRecipientsLocalServiceUtil.getMessageRecipients(originMessageId).getRecipients();
+                String[] originRecipientsTab = originRecipients.split(",");
+                for (String s : originRecipientsTab) {
+                    originRecipientIds.add(Long.parseLong(s));
+                }
+            } catch (Exception e) {
+                logger.error("Error fetching origin recipients when filtering recipients for user " + sender.getFullName());
+            }
+        }
+        //List<Long> filteredList = new ArrayList<>();
+        for (Long recipientId : recipientIds) {
+            boolean isAuthorized = originRecipientIds.contains(recipientId);
+            if (!originRecipientIds.contains(recipientId)) {
+                for (int idx = 0 ; idx < jsonArray.length() ; idx++) {
+                    JSONObject jsonUser = jsonArray.getJSONObject(idx);
+                    isAuthorized = jsonUser.getLong(JSONConstants.USER_ID) == recipientId;
+                    if (isAuthorized) {
+                        break;
+                    }
+                }
+            }
+            if (!isAuthorized) {
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + sender.getFullName() + " is trying to send message to " + recipientId);
+            }
+        }
+        // For now return the original list, we just log
+        return recipientIds;
     }
 }

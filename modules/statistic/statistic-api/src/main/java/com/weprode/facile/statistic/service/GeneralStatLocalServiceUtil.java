@@ -67,6 +67,13 @@ public class GeneralStatLocalServiceUtil {
 			startDate, endDate, schoolId, isSchoolNewsType);
 	}
 
+	public static Map<Integer, Integer> countSchoolLifeStudents(
+		java.util.Date startDate, java.util.Date endDate, long schoolId) {
+
+		return getService().countSchoolLifeStudents(
+			startDate, endDate, schoolId);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

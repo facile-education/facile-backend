@@ -83,11 +83,11 @@ public class NewsServiceWrapper
 
 	@Override
 	public org.json.JSONObject getSchoolNews(
-		String maxDateString, int nbNews, boolean importantOnly,
-		boolean unreadOnly) {
+		String currentDateString, int startIndex, int nbNews,
+		boolean importantOnly, boolean unreadOnly) {
 
 		return _newsService.getSchoolNews(
-			maxDateString, nbNews, importantOnly, unreadOnly);
+			currentDateString, startIndex, nbNews, importantOnly, unreadOnly);
 	}
 
 	@Override

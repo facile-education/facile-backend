@@ -62,6 +62,16 @@ public class ContentBlockServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static org.json.JSONObject isEmbedUrlWhitelisted(
+		java.lang.String url) {
+
+		return getService().isEmbedUrlWhitelisted(url);
+	}
+
+	public static org.json.JSONObject isValidUrl(java.lang.String url) {
+		return getService().isValidUrl(url);
+	}
+
 	public static org.json.JSONObject updateBlock(
 		long blockId, java.lang.String blockName, java.lang.String blockValue,
 		int order) {
