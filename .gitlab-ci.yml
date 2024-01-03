@@ -101,7 +101,7 @@ cypress-e2e:
     - docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 cypressnet 
     - docker run --name cypress -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:${CYPRESS_DOCKER_VERSION} cypress run --config baseUrl=https://dev-ent-gve.com ${CYPRESS_CMD}
     - FAILURE=$?
-    - if [ -d "~/front/tests/e2e/screenshots" ]; then mv ~/front/tests/e2e/screenshots ./; fi
+    - mv ~/front/tests/e2e/screenshots ./
     - if [ -d "~/front/tests/e2e/videos" ]; then mv ~/front/tests/e2e/videos ./; fi
     - if [ $FAILURE -ge "0" ]; then exit 1; fi
   tags:
