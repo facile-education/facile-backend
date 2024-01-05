@@ -97,6 +97,10 @@ public interface FileUtilsLocalService extends BaseLocalService {
 	public JSONObject format(
 		User user, FileEntry fileEntry, int space, boolean withDetails);
 
+	public JSONObject formatWithOnlyMandatoryFields(FileEntry fileEntry);
+
+	public JSONObject formatWithOnlyMandatoryFields(long fileId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getDisplayUrl(
 			FileEntry file, long versionId, long userId, boolean readOnly)

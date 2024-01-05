@@ -74,6 +74,10 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 	public JSONObject format(
 		User user, Folder folder, int space, boolean withDetails);
 
+	public JSONObject formatWithOnlyMandatoryFields(Folder folder);
+
+	public JSONObject formatWithOnlyMandatoryFields(long folderId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Folder getFolderByName(Folder parentFolder, String name)
 		throws PortalException;

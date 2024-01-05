@@ -109,6 +109,18 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject formatWithOnlyMandatoryFields(
+		com.liferay.portal.kernel.repository.model.Folder folder) {
+
+		return _folderUtilsLocalService.formatWithOnlyMandatoryFields(folder);
+	}
+
+	@Override
+	public org.json.JSONObject formatWithOnlyMandatoryFields(long folderId) {
+		return _folderUtilsLocalService.formatWithOnlyMandatoryFields(folderId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getFolderByName(
 			com.liferay.portal.kernel.repository.model.Folder parentFolder,
 			String name)

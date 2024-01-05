@@ -355,7 +355,9 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		final Folder folder = DLAppServiceUtil.getFolder(folderId);
 		final Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW) &&
+				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT) &&
+				isAllowedToAccessFolder(userId, folderId)) { // Don't know why the two first conditions are not sufficient...
 
 			long currFolderId = destFolder.getFolderId();
 			while (currFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
@@ -611,20 +613,32 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return formattedFolder;
 	}
 
-	private void addCommonsFields(JSONObject formattedFolder, Folder folder, User user, boolean withDetails) {
+	public JSONObject formatWithOnlyMandatoryFields (long folderId) {
+		try {
+			return formatWithOnlyMandatoryFields (DLAppServiceUtil.getFolder(folderId));
+		} catch (PortalException e) {
+			logger.error(e);
+			return new JSONObject();
+		}
+	}
+
+	public JSONObject formatWithOnlyMandatoryFields (Folder folder) {
+		JSONObject formattedFolder = new JSONObject();
+
+		addMandatoryFields(formattedFolder, folder);
+
+		return formattedFolder;
+	}
+
+	private void addMandatoryFields (JSONObject formattedFolder, Folder folder) {
 		formattedFolder.put(JSONConstants.ID, String.valueOf(folder.getFolderId()));
 		formattedFolder.put(JSONConstants.NAME, folder.getName());
 		formattedFolder.put(JSONConstants.TYPE, "Folder");
-		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
-				.format(folder.getModifiedDate()));
+		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(folder.getModifiedDate()));
+	}
 
-		try {
-			if (UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getWebdavActivated()) {
-				formattedFolder.put(JSONConstants.URL_WEBDAV, ENTWebDAVUtil.getWebDavUrl(folder.getGroupId(), folder));
-			}
-		} catch (Exception e) {
-			logger.error(e);
-		}
+	private void addCommonsFields (JSONObject formattedFolder, Folder folder, User user, boolean withDetails) {
+		addMandatoryFields(formattedFolder, folder);
 
 		// Permissions
 		// Directors and school admins have all rights on institutional groups

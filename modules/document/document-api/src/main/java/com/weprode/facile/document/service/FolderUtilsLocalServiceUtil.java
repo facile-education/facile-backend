@@ -93,6 +93,18 @@ public class FolderUtilsLocalServiceUtil {
 		return getService().format(user, folder, space, withDetails);
 	}
 
+	public static org.json.JSONObject formatWithOnlyMandatoryFields(
+		com.liferay.portal.kernel.repository.model.Folder folder) {
+
+		return getService().formatWithOnlyMandatoryFields(folder);
+	}
+
+	public static org.json.JSONObject formatWithOnlyMandatoryFields(
+		long folderId) {
+
+		return getService().formatWithOnlyMandatoryFields(folderId);
+	}
+
 	public static com.liferay.portal.kernel.repository.model.Folder
 			getFolderByName(
 				com.liferay.portal.kernel.repository.model.Folder parentFolder,

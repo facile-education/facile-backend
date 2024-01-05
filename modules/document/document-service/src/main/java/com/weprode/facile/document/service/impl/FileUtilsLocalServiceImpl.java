@@ -60,6 +60,7 @@ import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.LoolTokenLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.VersionLocalServiceUtil;
+import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FileUtilsLocalServiceBaseImpl;
 import com.weprode.facile.document.utils.DLAppUtil;
 import com.weprode.facile.document.utils.DocumentUtil;
@@ -112,7 +113,9 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		// Example : Sender (!= userId) is copying attached file to recipient folder
 		final Folder destFolder = DLAppLocalServiceUtil.getFolder(destFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
+		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, originFile, ActionKeys.VIEW) &&
+				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT) &&
+				FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, originFile.getFolderId())) { // Don't know why the two first conditions are not sufficient...
 			boolean isSignet = false;
 
 			// Ajout des permissions
@@ -627,7 +630,24 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		return formattedFile;
 	}
 
-	private void addCommonsFields(JSONObject formattedFile, FileEntry fileEntry, User user, boolean withDetails) {
+	public JSONObject formatWithOnlyMandatoryFields (long fileId) {
+		try {
+			return formatWithOnlyMandatoryFields (DLAppServiceUtil.getFileEntry(fileId));
+		} catch (PortalException e) {
+			logger.error(e);
+			return new JSONObject();
+		}
+	}
+
+	public JSONObject formatWithOnlyMandatoryFields (FileEntry fileEntry) {
+		JSONObject formattedFolder = new JSONObject();
+
+		addMandatoryFields(formattedFolder, fileEntry);
+
+		return formattedFolder;
+	}
+
+	private void addMandatoryFields (JSONObject formattedFile, FileEntry fileEntry) {
 		formattedFile.put(JSONConstants.ID, String.valueOf(fileEntry.getFileEntryId()));
 		formattedFile.put(JSONConstants.NAME, fileEntry.getTitle());
 		formattedFile.put(JSONConstants.TYPE, "File");
@@ -635,7 +655,10 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		formattedFile.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
 		formattedFile.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
 		formattedFile.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
+	}
 
+	private void addCommonsFields(JSONObject formattedFile, FileEntry fileEntry, User user, boolean withDetails) {
+		addMandatoryFields(formattedFile, fileEntry);
 
 		// Permissions
 		if (user != null) { // No specific user for News attachedFiles or what (maybe we should?)
