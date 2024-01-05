@@ -50,6 +50,7 @@ import com.liferay.portal.util.PropsValues;
 import com.weprode.facile.mobile.model.UserMobileToken;
 import com.weprode.facile.mobile.service.UserMobileTokenLocalServiceUtil;
 import com.weprode.facile.statistic.service.UserLoginLocalServiceUtil;
+import org.apache.logging.log4j.ThreadContext;
 import org.osgi.service.component.annotations.Component;
 
 import javax.servlet.http.Cookie;
@@ -82,6 +83,9 @@ public class CustomAuthVerifier implements AuthVerifier {
     @Override
     public AuthVerifierResult verify(AccessControlContext accessControlContext, Properties properties) {
         logger.debug("CustomAuthVerifier for URI " + accessControlContext.getRequest().getRequestURI());
+
+        ThreadContext.clearAll();
+        ThreadContext.push("====================");
 
         try {
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();
@@ -468,6 +472,7 @@ public class CustomAuthVerifier implements AuthVerifier {
             throws PortalException {
 
         try {
+            logger.info("decryptUserId name=" + name);
             name = EncryptorUtil.decrypt(company.getKeyObj(), name);
         }
         catch (EncryptorException encryptorException) {
@@ -475,6 +480,7 @@ public class CustomAuthVerifier implements AuthVerifier {
         }
 
         try {
+            logger.info("decryptUserId pass=" + password);
             password = EncryptorUtil.decrypt(company.getKeyObj(), password);
         }
         catch (EncryptorException encryptorException) {
