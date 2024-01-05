@@ -358,9 +358,11 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 				break;
 			case "Office":
-				String token = UUID.randomUUID().toString();
-				LoolTokenLocalServiceUtil.createLoolToken(userId, token);
-				// TODO Handle locked files?
+				String token = "";
+				if (userId != 0) {
+					token = UUID.randomUUID().toString();
+					LoolTokenLocalServiceUtil.createLoolToken(userId, token);
+				}
 
 				String versionName;
 				try {
