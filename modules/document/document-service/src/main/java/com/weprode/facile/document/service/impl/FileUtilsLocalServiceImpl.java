@@ -169,8 +169,10 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		logger.info("User " + user.getFullName() + " moves file " + fileId + " from folder " + originFile.getFolderId() + " to destination folder " + destFolderId + " in mode " + mode);
 		Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.DELETE)
-				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
+		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, originFile, ActionKeys.VIEW) &&
+				PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.DELETE) &&
+				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT) &&
+				FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, originFile.getFolderId())) {
 
 			// Ajout des permissions
 			ServiceContext serviceContext = new ServiceContext();
@@ -534,8 +536,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		try {
 			// Keep html meta info if existing
 			String header = "";
-			String bodyStartTag = bodyOpening;
-			int bodyIndex = content.indexOf(bodyStartTag);
+            int bodyIndex = content.indexOf(bodyOpening);
 
 			if (bodyIndex > -1) {
 				header = content.substring(0, bodyIndex -1);

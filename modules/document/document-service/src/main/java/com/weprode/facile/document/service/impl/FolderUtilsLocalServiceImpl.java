@@ -276,8 +276,10 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		serviceContext.setScopeGroupId(folder.getGroupId());
 		final Folder destFolder = DLAppServiceUtil.getFolder(targetFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE)
-				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW) &&
+				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE) &&
+				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT) &&
+				FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folder.getFolderId())) {
 
 			boolean success = false;
 			int nbTry = 0;

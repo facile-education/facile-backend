@@ -101,31 +101,15 @@ public class ClipboardUtil {
         for (long folderId : folderIdList) {
             try {
                 Folder folder = DLAppServiceUtil.getFolder(folderId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
-                        || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
-                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
-                    continue;
-                }
                 FolderUtilsLocalServiceUtil.moveFolder(userId, folder, destFolderId, mode);
+            } catch (NoSuchResourcePermissionException e) {
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
+                addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.NOT_ALLOWED_EXCEPTION);
             } catch (FileNameException e) {
-                try {
-                    Folder folderInConflict = DLAppServiceUtil.getFolder(folderId);
-                    foldersInConflict.put(FolderUtilsLocalServiceUtil.format(userId, folderInConflict, DocumentConstants.PRIVATE, false));
-                } catch (Exception ex) {
-                    logger.error(ex);
-                    JSONObject failedEntity = new JSONObject();
-                    failedEntity.put(JSONConstants.ID, folderId);
-                    failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
-                    failedEntitiesList.put(failedEntity);
-                    result.put(JSONConstants.FAILED_ENTITIES_LIST, failedEntitiesList);
-                }
+                foldersInConflict.put(FolderUtilsLocalServiceUtil.formatWithOnlyMandatoryFields(folderId));
             } catch (Exception e) {
                 logger.error(e);
-                JSONObject failedEntity = new JSONObject();
-                failedEntity.put(JSONConstants.ID, folderId);
-                failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
-                failedEntitiesList.put(failedEntity);
-                result.put(JSONConstants.FAILED_ENTITY_LIST, failedEntitiesList);
+                addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.UNKNOWN);
             }
         }
 
@@ -133,35 +117,19 @@ public class ClipboardUtil {
 
         for (long fileId : fileIdList) {
             try {
-                FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
-                        || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
-                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);
-                    continue;
-                }
                 FileUtilsLocalServiceUtil.moveFileEntry(userId, fileId, destFolderId, mode);
+            } catch (NoSuchResourcePermissionException e) {
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);
+                addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.NOT_ALLOWED_EXCEPTION);
             } catch (DuplicateFileEntryException e) {
-                try {
-                    FileEntry fileEntryInConflict = DLAppServiceUtil.getFileEntry(fileId);
-                    filesInConflict.put(FileUtilsLocalServiceUtil.format(userId, fileEntryInConflict, DocumentConstants.PRIVATE, false));
-                } catch (Exception ex) {
-                    logger.error(ex);
-                    JSONObject failedEntity = new JSONObject();
-                    failedEntity.put(JSONConstants.ID, fileId);
-                    failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
-                    failedEntitiesList.put(failedEntity);
-                    result.put(JSONConstants.FAILED_ENTITIES_LIST, failedEntitiesList);
-                }
+                filesInConflict.put(FileUtilsLocalServiceUtil.formatWithOnlyMandatoryFields(fileId));
             } catch (Exception e) {
                 logger.error(e);
-                JSONObject failedEntity = new JSONObject();
-                failedEntity.put(JSONConstants.ID, fileId);
-                failedEntity.put(JSONConstants.ERROR, JSONConstants.UNKNOWN);
-                failedEntitiesList.put(failedEntity);
-                result.put(JSONConstants.FAILED_ENTITIES_LIST, failedEntitiesList);
+                addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.UNKNOWN);
             }
         }
 
+        result.put(JSONConstants.FAILED_ENTITIES_LIST, failedEntitiesList);
         result.put(JSONConstants.FOLDERS_IN_CONFLICT, foldersInConflict);
         result.put(JSONConstants.FILES_IN_CONFLICT, filesInConflict);
         result.put(JSONConstants.SUCCESS, failedEntitiesList.length() + filesInConflict.length() + foldersInConflict.length() == 0);
