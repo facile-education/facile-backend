@@ -58,7 +58,8 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 			// Check if groupId is either a personal or an organization group
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
 			Folder folder = DLAppLocalServiceUtil.getFolder(folderId);
-			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(fileEntryId);
+			// If folder activity, fileEntryId is 0
+			FileEntry fileEntry = fileEntryId == 0 ? null : DLAppLocalServiceUtil.getFileEntry(fileEntryId);
 
 			if (group.isRegularSite() || group.isOrganization()) {
 				if (folder.getParentFolderId() != 0) {
