@@ -122,7 +122,8 @@ public class FsManagement {
             File folderToDelete = new File(ROOT_PATH + fileTab[0] + "/" + fileTab[1]);
             logger.info("   Deleting folder " + folderToDelete.getAbsolutePath() + " TO DO");
             deleteDir(folderToDelete);
-            logger.info("   DELETION DONE");
+            logger.info("   DELETION TO DO");
+            //logger.info("   DELETION DONE");
             return false;
         }
 
@@ -156,7 +157,8 @@ public class FsManagement {
 
             // File to delete is a directory containing all file's versions
             deleteDir(fileToDelete);
-            logger.info("   DELETION DONE");
+            logger.info("   DELETION TO DO");
+            //logger.info("   DELETION DONE");
             return false;
         } else {
             logger.info("   FOUND");
@@ -193,7 +195,8 @@ public class FsManagement {
                 deleteDir(f);
             }
         }
-        file.delete();
+        // Uncomment to perform effective deletion
+        // file.delete();
     }
 
     public void exploreDB() {
