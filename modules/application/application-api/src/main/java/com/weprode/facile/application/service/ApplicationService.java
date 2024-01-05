@@ -97,7 +97,7 @@ public interface ApplicationService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getUserApplications();
 
-	@JSONWebService(method = "GET", value = "remove-application")
+	@JSONWebService(method = "DELETE", value = "remove-application")
 	public JSONObject removeApplication(long applicationId);
 
 }

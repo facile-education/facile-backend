@@ -47,7 +47,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
 
     private final Log logger = LogFactoryUtil.getLog(SchoollifeSlotServiceImpl.class);
 
-    @JSONWebService(value = "create-slot", method = "GET")
+    @JSONWebService(value = "create-slot", method = "POST")
     public JSONObject createSlot(long schoolId, String startDateStr, String endDateStr, int day, String startHour, String endHour, long teacherId, int type, String room, int capacity) {
         JSONObject result = new JSONObject();
 
@@ -87,7 +87,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "edit-slot", method = "GET")
+    @JSONWebService(value = "edit-slot", method = "POST")
     public JSONObject editSlot(long schoollifeSessionId, String startDateStr, String endDateStr, int newDay, String newStartHour, String newEndHour, long newTeacherId, String newRoom, int newCapacity) {
         JSONObject result = new JSONObject();
 
@@ -128,7 +128,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-slot", method = "GET")
+    @JSONWebService(value = "delete-slot", method = "DELETE")
     public JSONObject deleteSlot(long schoollifeSessionId, String startDateStr, String endDateStr) {
         JSONObject result = new JSONObject();
 

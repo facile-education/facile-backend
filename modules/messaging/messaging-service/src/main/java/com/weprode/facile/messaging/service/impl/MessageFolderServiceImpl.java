@@ -50,7 +50,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
     /**
      * Add personal folder
      */
-    @JSONWebService(method = "GET")
+    @JSONWebService(method = "POST")
     public JSONObject addFolder(long parentFolderId, String folderName) {
         JSONObject result = new JSONObject();
 
@@ -168,7 +168,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
     /**
      * Add a folder
      */
-    @JSONWebService(method = "GET")
+    @JSONWebService(method = "POST")
     public JSONObject renameFolder(long folderId, String newLabel) {
         JSONObject result = new JSONObject();
 
@@ -205,7 +205,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
     /**
      * Remove a folder
      */
-    @JSONWebService(method = "GET")
+    @JSONWebService(method = "DELETE")
     public JSONObject deleteFolder(long folderId) {
         JSONObject result = new JSONObject();
 

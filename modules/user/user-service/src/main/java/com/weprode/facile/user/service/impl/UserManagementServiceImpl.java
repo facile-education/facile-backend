@@ -211,7 +211,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-manual-user", method = "GET")
+    @JSONWebService(value = "delete-manual-user", method = "DELETE")
     public JSONObject deleteManualUser(long userId) {
         JSONObject result = new JSONObject();
 
@@ -325,7 +325,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return jsonUser;
     }
 
-    @JSONWebService(value = "update-password-by-manager", method = "GET")
+    @JSONWebService(value = "update-password-by-manager", method = "POST")
     public JSONObject updatePasswordByManager(long userId, String password) {
         JSONObject result = new JSONObject();
 
@@ -366,7 +366,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "update-password-after-reinit-by-manager", method = "GET")
+    @JSONWebService(value = "update-password-after-reinit-by-manager", method = "POST")
     public JSONObject updatePasswordAfterReinitByManager(String password, String confirmPassword) {
         JSONObject result = new JSONObject();
 

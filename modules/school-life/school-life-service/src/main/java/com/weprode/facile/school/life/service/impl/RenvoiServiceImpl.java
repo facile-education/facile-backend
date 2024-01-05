@@ -125,7 +125,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "register-student-renvoi", method = "GET")
+    @JSONWebService(value = "register-student-renvoi", method = "POST")
     public JSONObject registerStudentRenvoi(long schoollifeSessionId, long sourceTeacherId, long studentId, long sourceSessionId, long sourceSchoollifeSessionId, String registrationDate) {
         JSONObject result = new JSONObject();
 
@@ -204,7 +204,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "unregister-student-renvoi", method = "GET")
+    @JSONWebService(value = "unregister-student-renvoi", method = "POST")
     public JSONObject unregisterStudentRenvoi(long schoollifeSessionId, long studentId) {
         JSONObject result = new JSONObject();
 

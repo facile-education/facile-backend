@@ -50,7 +50,7 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 
 	private final Log logger = LogFactoryUtil.getLog(TrashServiceImpl.class);
 
-	@JSONWebService(method = "POST")
+	@JSONWebService(method = "DELETE")
 	public JSONObject deleteDocuments(String folderIdArray, String fileIdArray) {
 		JSONObject result = new JSONObject();
 

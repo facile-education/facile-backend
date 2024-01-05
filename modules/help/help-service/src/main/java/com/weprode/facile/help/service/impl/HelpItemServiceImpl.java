@@ -131,7 +131,7 @@ public class HelpItemServiceImpl extends HelpItemServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-item", method = "POST")
+    @JSONWebService(value = "delete-item", method = "DELETE")
     public JSONObject deleteItem(long itemId) {
 
         JSONObject result = new JSONObject();

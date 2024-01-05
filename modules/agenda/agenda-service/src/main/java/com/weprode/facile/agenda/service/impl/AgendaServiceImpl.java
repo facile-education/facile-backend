@@ -211,7 +211,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-event", method = "GET")
+    @JSONWebService(value = "delete-event", method = "DELETE")
     public JSONObject deleteEvent(long eventId) {
         JSONObject result = new JSONObject();
 

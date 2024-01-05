@@ -49,7 +49,7 @@ public interface TrashService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.facile.document.service.impl.TrashServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the trash remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link TrashServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "POST")
+	@JSONWebService(method = "DELETE")
 	public JSONObject deleteDocuments(String folderIdArray, String fileIdArray);
 
 	/**

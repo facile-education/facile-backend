@@ -133,7 +133,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
     }
 
 
-    @JSONWebService(value = "remove-user-affectation", method = "GET")
+    @JSONWebService(value = "remove-user-affectation", method = "DELETE")
     public JSONObject removeUserAffectation(long userId, long orgId) {
         JSONObject result = new JSONObject();
 

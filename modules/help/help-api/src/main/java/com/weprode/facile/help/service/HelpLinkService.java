@@ -49,7 +49,7 @@ public interface HelpLinkService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.facile.help.service.impl.HelpLinkServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the help link remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link HelpLinkServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "delete-link")
+	@JSONWebService(method = "DELETE", value = "delete-link")
 	public JSONObject deleteLink(long linkId);
 
 	/**

@@ -123,7 +123,7 @@ public class ApplicationServiceImpl extends ApplicationServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "remove-application", method = "GET")
+    @JSONWebService(value = "remove-application", method = "DELETE")
     public JSONObject removeApplication(long applicationId) {
         JSONObject result = new JSONObject();
 

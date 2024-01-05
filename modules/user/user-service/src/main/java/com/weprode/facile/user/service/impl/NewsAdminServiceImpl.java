@@ -72,7 +72,7 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "remove-news-delegate", method = "GET")
+    @JSONWebService(value = "remove-news-delegate", method = "DELETE")
     public JSONObject removeNewsDelegate(long userId, long schoolId) {
 
         JSONObject result = new JSONObject();

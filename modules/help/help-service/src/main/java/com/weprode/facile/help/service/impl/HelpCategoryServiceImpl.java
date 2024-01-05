@@ -99,7 +99,7 @@ public class HelpCategoryServiceImpl extends HelpCategoryServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-category", method = "GET")
+    @JSONWebService(value = "delete-category", method = "DELETE")
     public JSONObject deleteCategory(long categoryId) {
         JSONObject result = new JSONObject();
 

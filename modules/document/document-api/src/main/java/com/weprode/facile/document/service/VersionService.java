@@ -54,9 +54,6 @@ public interface VersionService extends BaseService {
 	public JSONObject createMajorVersion(long fileEntryId);
 
 	@JSONWebService(method = "GET")
-	public JSONObject deleteVersion(long fileEntryId, String version);
-
-	@JSONWebService(method = "GET")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getFileVersions(long fileId);
 
@@ -70,7 +67,7 @@ public interface VersionService extends BaseService {
 	@JSONWebService(method = "GET")
 	public JSONObject restoreVersion(long fileVersionId);
 
-	@JSONWebService(method = "GET")
+	@JSONWebService(method = "POST")
 	public JSONObject saveVersionDescription(
 		long fileVersionId, String description);
 

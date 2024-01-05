@@ -87,7 +87,7 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-relation", method = "GET")
+    @JSONWebService(value = "delete-relation", method = "DELETE")
     public JSONObject deleteRelation(long relationId) {
 
         JSONObject result = new JSONObject();

@@ -182,7 +182,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
         return result;
     }
     
-    @JSONWebService(value = "remove-school-admin", method = "GET")
+    @JSONWebService(value = "remove-school-admin", method = "DELETE")
     public JSONObject removeSchoolAdmin(long userId, long schoolId) {
         JSONObject result = new JSONObject();
 

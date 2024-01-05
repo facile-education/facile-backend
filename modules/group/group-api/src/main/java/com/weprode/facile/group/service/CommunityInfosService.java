@@ -72,7 +72,7 @@ public interface CommunityInfosService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "remove-community")
+	@JSONWebService(method = "DELETE", value = "remove-community")
 	public JSONObject removeCommunity(long groupId);
 
 }

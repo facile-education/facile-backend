@@ -66,7 +66,7 @@ public interface RenvoiService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getPendingRenvois();
 
-	@JSONWebService(method = "GET", value = "register-student-renvoi")
+	@JSONWebService(method = "POST", value = "register-student-renvoi")
 	public JSONObject registerStudentRenvoi(
 		long schoollifeSessionId, long sourceTeacherId, long studentId,
 		long sourceSessionId, long sourceSchoollifeSessionId,
@@ -76,7 +76,7 @@ public interface RenvoiService extends BaseService {
 	public JSONObject setRenvoiReason(
 		long schoollifeSessionId, long studentId, String reason);
 
-	@JSONWebService(method = "GET", value = "unregister-student-renvoi")
+	@JSONWebService(method = "POST", value = "unregister-student-renvoi")
 	public JSONObject unregisterStudentRenvoi(
 		long schoollifeSessionId, long studentId);
 

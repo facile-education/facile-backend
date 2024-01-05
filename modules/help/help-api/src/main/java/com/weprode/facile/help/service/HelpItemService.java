@@ -50,7 +50,7 @@ public interface HelpItemService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.facile.help.service.impl.HelpItemServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the help item remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link HelpItemServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "POST", value = "delete-item")
+	@JSONWebService(method = "DELETE", value = "delete-item")
 	public JSONObject deleteItem(long itemId);
 
 	@JSONWebService(method = "GET", value = "get-help-item")

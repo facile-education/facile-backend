@@ -82,45 +82,13 @@ public class VersionServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject deleteVersion(
-		HttpPrincipal httpPrincipal, long fileEntryId, String version) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				VersionServiceUtil.class, "deleteVersion",
-				_deleteVersionParameterTypes1);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, fileEntryId, version);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static org.json.JSONObject restoreVersion(
 		HttpPrincipal httpPrincipal, long fileVersionId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				VersionServiceUtil.class, "restoreVersion",
-				_restoreVersionParameterTypes2);
+				_restoreVersionParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, fileVersionId);
@@ -152,7 +120,7 @@ public class VersionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				VersionServiceUtil.class, "saveVersionDescription",
-				_saveVersionDescriptionParameterTypes3);
+				_saveVersionDescriptionParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, fileVersionId, description);
@@ -184,7 +152,7 @@ public class VersionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				VersionServiceUtil.class, "createMajorVersion",
-				_createMajorVersionParameterTypes4);
+				_createMajorVersionParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, fileEntryId);
@@ -214,13 +182,11 @@ public class VersionServiceHttp {
 
 	private static final Class<?>[] _getFileVersionsParameterTypes0 =
 		new Class[] {long.class};
-	private static final Class<?>[] _deleteVersionParameterTypes1 =
-		new Class[] {long.class, String.class};
-	private static final Class<?>[] _restoreVersionParameterTypes2 =
+	private static final Class<?>[] _restoreVersionParameterTypes1 =
 		new Class[] {long.class};
-	private static final Class<?>[] _saveVersionDescriptionParameterTypes3 =
+	private static final Class<?>[] _saveVersionDescriptionParameterTypes2 =
 		new Class[] {long.class, String.class};
-	private static final Class<?>[] _createMajorVersionParameterTypes4 =
+	private static final Class<?>[] _createMajorVersionParameterTypes3 =
 		new Class[] {long.class};
 
 }

@@ -50,17 +50,17 @@ public interface SchoollifeSlotService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.facile.school.life.service.impl.SchoollifeSlotServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the schoollife slot remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link SchoollifeSlotServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "create-slot")
+	@JSONWebService(method = "POST", value = "create-slot")
 	public JSONObject createSlot(
 		long schoolId, String startDateStr, String endDateStr, int day,
 		String startHour, String endHour, long teacherId, int type, String room,
 		int capacity);
 
-	@JSONWebService(method = "GET", value = "delete-slot")
+	@JSONWebService(method = "DELETE", value = "delete-slot")
 	public JSONObject deleteSlot(
 		long schoollifeSessionId, String startDateStr, String endDateStr);
 
-	@JSONWebService(method = "GET", value = "edit-slot")
+	@JSONWebService(method = "POST", value = "edit-slot")
 	public JSONObject editSlot(
 		long schoollifeSessionId, String startDateStr, String endDateStr,
 		int newDay, String newStartHour, String newEndHour, long newTeacherId,

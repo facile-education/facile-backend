@@ -366,7 +366,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "remove-community", method = "GET")
+    @JSONWebService(value = "remove-community", method = "DELETE")
     public JSONObject removeCommunity(long groupId) {
 
         JSONObject result = new JSONObject();

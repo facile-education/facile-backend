@@ -87,39 +87,6 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 	}
 
 	@JSONWebService(method = "GET")
-	public JSONObject deleteVersion(long fileEntryId, String version) {
-		JSONObject result = new JSONObject();
-
-		User user;
-		try {
-			user = getGuestOrUser();
-			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-			}
-		} catch (Exception e) {
-			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
-		}
-		try {
-			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
-			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes version of file " + fileEntryId);
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
-			}
-			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.DELETE)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes version of file " + fileEntryId);
-				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
-			}
-
-			result.put(JSONConstants.SUCCESS, VersionLocalServiceUtil.deleteVersion(user, fileEntryId, version));
-		} catch (Exception e) {
-			logger.error("Error deleting version " + version + " for file " + fileEntryId, e);
-			result.put(JSONConstants.SUCCESS, false);
-		}
-
-		return result;
-	}
-
-	@JSONWebService(method = "GET")
 	public JSONObject restoreVersion(long fileVersionId) {
 		JSONObject result = new JSONObject();
 
@@ -154,7 +121,7 @@ public class VersionServiceImpl extends VersionServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(method = "GET")
+	@JSONWebService(method = "POST")
 	public JSONObject saveVersionDescription(long fileVersionId, String description) {
 		JSONObject result = new JSONObject();
 

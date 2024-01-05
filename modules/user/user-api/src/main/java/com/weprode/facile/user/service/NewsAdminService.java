@@ -59,7 +59,7 @@ public interface NewsAdminService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "remove-news-delegate")
+	@JSONWebService(method = "DELETE", value = "remove-news-delegate")
 	public JSONObject removeNewsDelegate(long userId, long schoolId);
 
 }

@@ -73,7 +73,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-link", method = "GET")
+    @JSONWebService(value = "delete-link", method = "DELETE")
     public JSONObject deleteLink(long linkId) {
 
         JSONObject result = new JSONObject();

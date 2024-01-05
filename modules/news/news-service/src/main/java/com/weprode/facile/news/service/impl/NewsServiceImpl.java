@@ -319,7 +319,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-news", method = "GET")
+    @JSONWebService(value = "delete-news", method = "DELETE")
     public JSONObject deleteNews(long newsId) {
         JSONObject result = new JSONObject();
 

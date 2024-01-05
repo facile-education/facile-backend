@@ -434,7 +434,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(method = "GET")
+	@JSONWebService(method = "DELETE")
 	public JSONObject removeLock(long fileId) {
 		JSONObject result = new JSONObject();
 
@@ -538,7 +538,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(method = "POST")
+	@JSONWebService(method = "DELETE")
 	public JSONObject removeLoolToken(String token) {
 		JSONObject result = new JSONObject();
 

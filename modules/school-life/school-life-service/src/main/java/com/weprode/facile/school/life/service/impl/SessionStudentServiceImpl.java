@@ -220,7 +220,7 @@ public class SessionStudentServiceImpl extends SessionStudentServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "unregister-student", method = "GET")
+    @JSONWebService(value = "unregister-student", method = "POST")
     public JSONObject unregisterStudent(long studentId, long schoollifeSessionId, boolean allSessions) {
         JSONObject result = new JSONObject();
 

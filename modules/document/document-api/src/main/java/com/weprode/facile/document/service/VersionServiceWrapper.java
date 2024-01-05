@@ -40,11 +40,6 @@ public class VersionServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject deleteVersion(long fileEntryId, String version) {
-		return _versionService.deleteVersion(fileEntryId, version);
-	}
-
-	@Override
 	public org.json.JSONObject getFileVersions(long fileId) {
 		return _versionService.getFileVersions(fileId);
 	}

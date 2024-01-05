@@ -65,7 +65,7 @@ public interface AffectationService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
-	@JSONWebService(method = "GET", value = "remove-user-affectation")
+	@JSONWebService(method = "DELETE", value = "remove-user-affectation")
 	public JSONObject removeUserAffectation(long userId, long orgId);
 
 }

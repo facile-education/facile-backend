@@ -56,7 +56,7 @@ public interface NewsService extends BaseService {
 		long imageId, String publicationDate, String population,
 		String attachFiles);
 
-	@JSONWebService(method = "GET", value = "delete-news")
+	@JSONWebService(method = "DELETE", value = "delete-news")
 	public JSONObject deleteNews(long newsId);
 
 	@JSONWebService(method = "POST", value = "edit-news")
