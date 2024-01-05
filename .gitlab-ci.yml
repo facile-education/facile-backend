@@ -95,6 +95,8 @@ cypress-e2e:
     - cp ../../bundles/osgi/modules/*.jar ./liferay/deploy/
     # Change group to avoid write permissions issue on deploy
     - chmod g+w -R . && chgrp debian -R .
+    # Set environment variable for users password
+    - export CYPRESS_USER_PASSWORD="W€Prode73"
     # Starting compose and waiting for all dockers to be up and healthy
     - docker compose up --detach --wait
     # Add network for cypress to see facile environment
