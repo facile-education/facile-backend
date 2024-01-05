@@ -45,6 +45,7 @@ cypress-e2e:
     DB_DOCKER_NAME: "docker-mariadb-1"
     CYPRESS_DOCKER_VERSION: "3.0.0"
     CYPRESS_CMD: "--e2e"
+    CYPRESS_USER_PASSWORD: "W€Prode73"
   needs:
     - module-compilation # Needs previous job artifacts 
     - project: nero/nero-vue # Needs front job artifacts
@@ -82,7 +83,7 @@ cypress-e2e:
     - echo "ES_VERSION=${ES_VERSION}" >> .env && echo "ES_CLUSTER_NAME=${ES_CLUSTER_NAME}" >> .env
     - echo "ES_JAVA_OPTS=${ES_JAVA_OPTS}" >> .env && echo "ES_PATH=${ES_PATH}" >> .env
     - echo "LFR_VERSION=${LFR_VERSION}" >> .env && echo "LFR_JAVA_VERSION=${LFR_JAVA_VERSION}" >> .env
-    - echo "LFR_DATA=${HOME}/front/${LFR_DATA_FOLDER}" >> .env
+    - echo "LFR_DATA=${HOME}/front/${LFR_DATA_FOLDER}" >> .env && echo "CYPRESS_USER_PASSWORD=${CYPRESS_USER_PASSWORD}" >> .env
     - cat .env
     # Adding docker-compose dependency files
     - mkdir ./mariadb/initdb.d
@@ -95,8 +96,6 @@ cypress-e2e:
     - cp ../../bundles/osgi/modules/*.jar ./liferay/deploy/
     # Change group to avoid write permissions issue on deploy
     - chmod g+w -R . && chgrp debian -R .
-    # Set environment variable for users password
-    - export CYPRESS_USER_PASSWORD="W€Prode73"
     # Starting compose and waiting for all dockers to be up and healthy
     - docker compose up --detach --wait
     # Add network for cypress to see facile environment
