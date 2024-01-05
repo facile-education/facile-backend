@@ -245,7 +245,7 @@ public interface HomeworkLocalService
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getHomeworkFolder(long homeworkId)
+	public Folder getHomeworkFolder(long homeworkId, boolean doCreate)
 		throws PortalException, SystemException;
 
 	/**

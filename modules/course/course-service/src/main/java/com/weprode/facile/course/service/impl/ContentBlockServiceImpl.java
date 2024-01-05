@@ -141,7 +141,7 @@ public class ContentBlockServiceImpl extends ContentBlockServiceBaseImpl {
 				}
 			}
 
-			Folder courseItemFolder = SessionContentLocalServiceUtil.getSessionFolder(itemId);
+			Folder courseItemFolder = SessionContentLocalServiceUtil.getSessionFolder(itemId, true);
 
 			if (blockType == CourseConstants.TYPE_RECORD) {
 				file = FileUtilsLocalServiceUtil.convertAudioToMP3(fileName, file);

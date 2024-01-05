@@ -321,6 +321,8 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			// Check course belonging for the student, because he might have changed class and/or course
 			// We do not want him/her to access old homeworks
 			for (Homework homework : homeworkList) {
+				logger.info("TMP add permission on homework " + homework.getHomeworkId());
+				getHomeworkFolder(homework.getHomeworkId(), false);
 				if (UserUtilsLocalServiceUtil.getUserGroupIds(studentId).contains(homework.getCourseId())) {
 					studentHomeworkList.add(homework);
 				} else {
@@ -461,7 +463,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 	}
 
 
-	public Folder getHomeworkFolder(long homeworkId) throws PortalException, SystemException {
+	public Folder getHomeworkFolder(long homeworkId, boolean doCreate) throws PortalException, SystemException {
 
 		Homework homework = getHomework(homeworkId);
 		Folder courseFolder = FolderUtilsLocalServiceUtil.getGroupCourseFolder(homework.getCourseId());
@@ -470,14 +472,16 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		try {
 			homeworkFolder = FolderUtilsLocalServiceUtil.getFolderByName(courseFolder, String.valueOf(homeworkId));
 		} catch (NoSuchFolderException e) {
-			homeworkFolder = DLAppServiceUtil.addFolder(
-					UUID.randomUUID().toString(),
-					courseFolder.getGroupId(),
-					courseFolder.getFolderId(),
-					String.valueOf(homeworkId),
-					"Dossier du devoir " + homeworkId,
-					new ServiceContext()
-			);
+			if (doCreate) {
+				homeworkFolder = DLAppServiceUtil.addFolder(
+						UUID.randomUUID().toString(),
+						courseFolder.getGroupId(),
+						courseFolder.getFolderId(),
+						String.valueOf(homeworkId),
+						"Dossier du devoir " + homeworkId,
+						new ServiceContext()
+				);
+			}
 		} catch (Exception e) {
 			logger.error("Error when fetching folder for homeworkId " + homeworkId, e);
 		}
@@ -493,7 +497,7 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 	public Folder getHomeworkDropFolder(long homeworkId) throws PortalException, SystemException {
 
-		Folder homeworkFolder = getHomeworkFolder(homeworkId);
+		Folder homeworkFolder = getHomeworkFolder(homeworkId, true);
 
 		Folder homeworkDropFolder = null;
 		try {

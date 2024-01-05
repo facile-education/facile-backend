@@ -66,9 +66,9 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		if (fileEntryId != 0) {
 			Folder parentFolder;
 			if (CourseLocalServiceUtil.isSessionItem(itemId)) {
-				parentFolder = SessionContentLocalServiceUtil.getSessionFolder(itemId);
+				parentFolder = SessionContentLocalServiceUtil.getSessionFolder(itemId, true);
 			} else {
-				parentFolder = HomeworkLocalServiceUtil.getHomeworkFolder(itemId);
+				parentFolder = HomeworkLocalServiceUtil.getHomeworkFolder(itemId, true);
 			}
 			FileEntry contentFile = FileUtilsLocalServiceUtil.copyFileEntry(userId, fileEntryId, parentFolder.getFolderId(), true);
 			block.setFileEntryId(contentFile.getFileEntryId());

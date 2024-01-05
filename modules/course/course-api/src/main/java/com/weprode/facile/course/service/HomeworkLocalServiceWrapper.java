@@ -320,11 +320,11 @@ public class HomeworkLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getHomeworkFolder(
-			long homeworkId)
+			long homeworkId, boolean doCreate)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _homeworkLocalService.getHomeworkFolder(homeworkId);
+		return _homeworkLocalService.getHomeworkFolder(homeworkId, doCreate);
 	}
 
 	/**

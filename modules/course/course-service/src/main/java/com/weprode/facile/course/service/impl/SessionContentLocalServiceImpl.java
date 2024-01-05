@@ -98,7 +98,7 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 
 		// Create folder to avoid error when adding multiple files
 		try {
-			getSessionFolder(sessionContent.getSessionId());
+			getSessionFolder(sessionContent.getSessionId(), true);
 		} catch (Exception e) {
 			logger.error("Could not create folder when initializing sessionContent document folder for sessionId " + sessionContent.getSessionId(), e);
 		}
@@ -178,23 +178,26 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 		return itemHtml.toString();
 	}
 
-	public Folder getSessionFolder(long sessionId) throws PortalException, SystemException {
+	public Folder getSessionFolder(long sessionId, boolean doCreate) throws PortalException, SystemException {
 
 		CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
 		Folder courseFolder = FolderUtilsLocalServiceUtil.getGroupCourseFolder(session.getGroupId());
+		PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(courseFolder);
 
 		Folder sessionFolder = null;
 		try {
 			sessionFolder = FolderUtilsLocalServiceUtil.getFolderByName(courseFolder, String.valueOf(sessionId));
 		} catch (NoSuchFolderException e) {
-			sessionFolder = DLAppServiceUtil.addFolder(
-					UUID.randomUUID().toString(),
-					courseFolder.getGroupId(),
-					courseFolder.getFolderId(),
-					String.valueOf(sessionId),
-					"Dossier de la séance " + sessionId,
-					new ServiceContext()
-			);
+			if (doCreate) {
+				sessionFolder = DLAppServiceUtil.addFolder(
+						UUID.randomUUID().toString(),
+						courseFolder.getGroupId(),
+						courseFolder.getFolderId(),
+						String.valueOf(sessionId),
+						"Dossier de la séance " + sessionId,
+						new ServiceContext()
+				);
+			}
 		} catch (Exception e) {
 			logger.error("Error when fetching folder for sessionId " + sessionId, e);
 		}
