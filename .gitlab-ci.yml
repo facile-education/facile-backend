@@ -45,7 +45,6 @@ cypress-e2e:
     DB_DOCKER_NAME: "docker-mariadb-1"
     CYPRESS_DOCKER_VERSION: "3.0.0"
     CYPRESS_CMD: "--e2e"
-    CYPRESS_USER_PASSWORD: "W€Prode73"
   needs:
     - module-compilation # Needs previous job artifacts 
     - project: nero/nero-vue # Needs front job artifacts
@@ -70,6 +69,8 @@ cypress-e2e:
     - echo "DB_PWD=${MYSQL_ROOT_PASSWORD}" >> ~/front/.env.local
     - echo "DB_NAME=${MYSQL_DATABASE}" >> ~/front/.env.local
     - echo "PATH_TO_DOCUMENT_LIBRARY=/e2e/${LFR_DATA_FOLDER}" >> ~/front/.env.local
+    - echo '{"USER_PASSWORD"="${CYPRESS_USER_PASSWORD}"}' >> ~/front/cypress.env.json
+    - echo ~/front/cypress.env.json
     # Change group to avoid permission issues (GID 1000)
     - chmod g+w -R ~/front/ && chgrp debian -R ~/front/
     # Needed for cypress to run (dayjs dependencies)
@@ -83,7 +84,7 @@ cypress-e2e:
     - echo "ES_VERSION=${ES_VERSION}" >> .env && echo "ES_CLUSTER_NAME=${ES_CLUSTER_NAME}" >> .env
     - echo "ES_JAVA_OPTS=${ES_JAVA_OPTS}" >> .env && echo "ES_PATH=${ES_PATH}" >> .env
     - echo "LFR_VERSION=${LFR_VERSION}" >> .env && echo "LFR_JAVA_VERSION=${LFR_JAVA_VERSION}" >> .env
-    - echo "LFR_DATA=${HOME}/front/${LFR_DATA_FOLDER}" >> .env && echo "CYPRESS_USER_PASSWORD=${CYPRESS_USER_PASSWORD}" >> .env
+    - echo "LFR_DATA=${HOME}/front/${LFR_DATA_FOLDER}" >> .env
     - cat .env
     # Adding docker-compose dependency files
     - mkdir ./mariadb/initdb.d
