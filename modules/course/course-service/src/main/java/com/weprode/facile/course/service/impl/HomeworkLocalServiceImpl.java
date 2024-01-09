@@ -39,6 +39,7 @@ import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.course.CourseConstants;
 import com.weprode.facile.course.model.Homework;
 import com.weprode.facile.course.model.StudentHomework;
+import com.weprode.facile.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.facile.course.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.facile.course.service.base.HomeworkLocalServiceBaseImpl;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
@@ -568,6 +569,9 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 
 			// Remove the homework itself
 			deleteHomework(homeworkId);
+
+			// Remove the blocks
+			ContentBlockLocalServiceUtil.deleteBlocksByItemId(homeworkId);
 
 		} catch (Exception e) {
 			logger.error("Error deleting homework " + homeworkId , e);
