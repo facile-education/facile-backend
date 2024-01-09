@@ -196,7 +196,10 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     jsonGroup.put(JSONConstants.NB_MEMBERS, UserLocalServiceUtil.getGroupUsersCount(group.getGroupId(), WorkflowConstants.STATUS_APPROVED));
                     // Return the group documentId
                     Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(group.getGroupId());
-                    jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
+                    if (groupRootFolder != null) {
+                        // User might not have VIEW permission on root folder
+                        jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
+                    }
                     groupsArray.put(jsonGroup);
                 }
             }
@@ -259,8 +262,10 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     jsonGroup.put(JSONConstants.NB_MEMBERS, UserOrgsLocalServiceUtil.countOrgMembers(org.getOrganizationId()));
                     // Return the group documentId
                     Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(org.getGroupId());
-                    jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
-
+                    if (groupRootFolder != null) {
+                        // User might not have VIEW permission on root folder
+                        jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
+                    }
                     orgIds.add(org.getOrganizationId());
                     groupsArray.put(jsonGroup);
                 }
