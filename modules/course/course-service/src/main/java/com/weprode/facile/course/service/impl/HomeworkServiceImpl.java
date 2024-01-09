@@ -377,7 +377,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			}
 
 			result.put(JSONConstants.SUCCESS, true);
-		} catch (UnauthorizedUrlException | IOException e) {
+		} catch (Exception e) {
 			logger.error("Error creating homework", e);
 			throw new PortalException(); // To cancel the previous content creation
 		}
@@ -467,6 +467,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		}
 
 		try {
+			logger.info("User " + user.getFullName() + " deletes homework " + homeworkId);
 			HomeworkLocalServiceUtil.deleteHomeworkAndDependencies(homeworkId);
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {

@@ -217,7 +217,7 @@ public class StudentHomeworkLocalServiceImpl
 			logger.info("Old dropped file deleted");
 		}
 
-		Folder homeworkDropFolder = HomeworkLocalServiceUtil.getHomeworkDropFolder(homeworkId);
+		Folder homeworkDropFolder = HomeworkLocalServiceUtil.getHomeworkDropFolder(homeworkId, false);
 		FileEntry copiedFile = FileUtilsLocalServiceUtil.copyFileEntry(studentId, fileEntryId, homeworkDropFolder.getFolderId(), true);
 		logger.info("File is dropped");
 		StudentHomeworkLocalServiceUtil.setHomeworkSent(studentId, homeworkId, copiedFile.getFileEntryId());

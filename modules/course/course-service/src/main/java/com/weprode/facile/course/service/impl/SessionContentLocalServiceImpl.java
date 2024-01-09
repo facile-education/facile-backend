@@ -189,6 +189,7 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 			sessionFolder = FolderUtilsLocalServiceUtil.getFolderByName(courseFolder, String.valueOf(sessionId));
 		} catch (NoSuchFolderException e) {
 			if (doCreate) {
+				logger.info("Creating folder for session " + sessionId);
 				sessionFolder = DLAppServiceUtil.addFolder(
 						UUID.randomUUID().toString(),
 						courseFolder.getGroupId(),
@@ -197,12 +198,15 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 						"Dossier de la séance " + sessionId,
 						new ServiceContext()
 				);
+				logger.info("Created folder for session " + sessionId);
 			}
 		} catch (Exception e) {
 			logger.error("Error when fetching folder for sessionId " + sessionId, e);
 		}
-		// Apply default permissions so that students can VIEW
-		PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(sessionFolder);
+		if (sessionFolder != null) {
+			// Apply default permissions so that students can VIEW
+			PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(sessionFolder);
+		}
 
 		return sessionFolder;
 	}
