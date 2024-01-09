@@ -198,8 +198,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a session content");
 			}
 
-			SessionContentLocalServiceUtil.deleteSessionContent(sessionId);
-			ContentBlockLocalServiceUtil.deleteBlocksByItemId(sessionId);
+			SessionContentLocalServiceUtil.deleteContent(sessionId);
 			logger.info("User "+user.getFullName()+" (id="+user.getUserId()+") has deleted content for session " + sessionId);
 			result.put(JSONConstants.SUCCESS, true);
 

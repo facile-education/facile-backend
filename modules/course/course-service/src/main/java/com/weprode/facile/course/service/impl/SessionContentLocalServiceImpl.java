@@ -140,13 +140,17 @@ public class SessionContentLocalServiceImpl extends SessionContentLocalServiceBa
 	@Indexable(type = IndexableType.DELETE)
 	public void deleteContent (long sessionId) throws PortalException, SystemException {
 
+		logger.info("Deleting content for session " + sessionId);
+
 		// Delete folder corresponding to this session
-		Folder courseFolder = FolderUtilsLocalServiceUtil.getGroupCourseFolder(sessionId);
+		CDTSession session = CDTSessionLocalServiceUtil.getCDTSession(sessionId);
+		Folder courseFolder = FolderUtilsLocalServiceUtil.getGroupCourseFolder(session.getGroupId());
 		try {
 			Folder courseItemFolder = FolderUtilsLocalServiceUtil.getFolderByName(courseFolder, String.valueOf(sessionId));
 			DLAppServiceUtil.deleteFolder(courseItemFolder.getFolderId());
+			logger.info("Deleted session folder");
 		} catch (Exception e) {
-			// logger.info("Nothing to delete, " + e.getMessage());
+			// Folder may not exist
 		}
 		sessionContentPersistence.remove(sessionId);
 
