@@ -69,7 +69,7 @@ cypress-e2e:
     - echo "DB_PWD=${MYSQL_ROOT_PASSWORD}" >> ~/front/.env.local
     - echo "DB_NAME=${MYSQL_DATABASE}" >> ~/front/.env.local
     - echo "PATH_TO_DOCUMENT_LIBRARY=/e2e/${LFR_DATA_FOLDER}" >> ~/front/.env.local
-    - echo '{"USER_PASSWORD":"${CYPRESS_USER_PASSWORD}"}' >> ~/front/cypress.env.json
+    - echo "{"'"'"USER_PASSWORD"'"'":"'"'"${CYPRESS_USER_PASSWORD}"'"'"}" >> ~/front/cypress.env.json
     - cat ~/front/cypress.env.json
     # Change group to avoid permission issues (GID 1000)
     - chmod g+w -R ~/front/ && chgrp debian -R ~/front/
@@ -85,7 +85,6 @@ cypress-e2e:
     - echo "ES_JAVA_OPTS=${ES_JAVA_OPTS}" >> .env && echo "ES_PATH=${ES_PATH}" >> .env
     - echo "LFR_VERSION=${LFR_VERSION}" >> .env && echo "LFR_JAVA_VERSION=${LFR_JAVA_VERSION}" >> .env
     - echo "LFR_DATA=${HOME}/front/${LFR_DATA_FOLDER}" >> .env
-    - cat .env
     # Adding docker-compose dependency files
     - mkdir ./mariadb/initdb.d
     - cp ~/front/tests/e2e/scripts/tables/dump_cypress_db.sql ./mariadb/initdb.d/
