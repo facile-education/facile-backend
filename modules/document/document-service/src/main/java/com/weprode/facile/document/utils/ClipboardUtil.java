@@ -52,6 +52,13 @@ public class ClipboardUtil {
 
         for (long folderId : folderIdList) {
             try {
+                Folder folder = DLAppServiceUtil.getFolder(folderId);
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
+                        || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " copies folder " + folderId);
+                    addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                    continue;
+                }
                 FolderUtilsLocalServiceUtil.copyFolder(userId, folderId, targetFolderId, mode);
             } catch (NoSuchResourcePermissionException e) {
                 logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " copies folder " + folderId);
@@ -68,6 +75,13 @@ public class ClipboardUtil {
 
         for (long fileId : fileIdList) {
             try {
+                FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
+                        || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " copies file " + fileId);
+                    addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                    continue;
+                }
                 FileUtilsLocalServiceUtil.copyFileEntry(userId, fileId, targetFolderId, true, mode);
             } catch (NoSuchResourcePermissionException e) {
                 logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " copies file " + fileId);
@@ -101,6 +115,12 @@ public class ClipboardUtil {
         for (long folderId : folderIdList) {
             try {
                 Folder folder = DLAppServiceUtil.getFolder(folderId);
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
+                        || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
+                    addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                    continue;
+                }
                 FolderUtilsLocalServiceUtil.moveFolder(userId, folder, destFolderId, mode);
             } catch (NoSuchResourcePermissionException e) {
                 logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
@@ -117,6 +137,13 @@ public class ClipboardUtil {
 
         for (long fileId : fileIdList) {
             try {
+                FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
+                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
+                        || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);
+                    addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                    continue;
+                }
                 FileUtilsLocalServiceUtil.moveFileEntry(userId, fileId, destFolderId, mode);
             } catch (NoSuchResourcePermissionException e) {
                 logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);

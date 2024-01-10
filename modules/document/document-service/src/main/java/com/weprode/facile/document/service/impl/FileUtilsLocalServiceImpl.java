@@ -110,12 +110,12 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 		final FileEntry originFile = DLAppServiceUtil.getFileEntry(fileId);
 		// Using LocalService here to avoid VIEW permission exception
-		// Example : Sender (!= userId) is copying attached file to recipient folder
+		// Example : Recipient (!= userId) is copying attached file (from sender, he have not the view permission) to its own IM box
+		// => Maybe we must change behaviour to have the sender (current user) coping his file to the recipient IM box, which must have the ADD_OBJECT permission for everybody?
 		final Folder destFolder = DLAppLocalServiceUtil.getFolder(destFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, originFile, ActionKeys.VIEW) &&
-				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT) &&
-				FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, originFile.getFolderId())) { // Don't know why the two first conditions are not sufficient...
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
+
 			boolean isSignet = false;
 
 			// Ajout des permissions
@@ -149,6 +149,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 			return newFileEntry;
 		} else {
+			logger.error("User " + user.getFullName() + " (" + user.getUserId() + ") has not the right to copy file " + fileId + " in folder " + destFolderId);
 			throw new NoSuchResourcePermissionException();
 		}
 	}
@@ -169,10 +170,8 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		logger.info("User " + user.getFullName() + " moves file " + fileId + " from folder " + originFile.getFolderId() + " to destination folder " + destFolderId + " in mode " + mode);
 		Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, originFile, ActionKeys.VIEW) &&
-				PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.DELETE) &&
-				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT) &&
-				FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, originFile.getFolderId())) {
+		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.DELETE)
+				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
 
 			// Ajout des permissions
 			ServiceContext serviceContext = new ServiceContext();

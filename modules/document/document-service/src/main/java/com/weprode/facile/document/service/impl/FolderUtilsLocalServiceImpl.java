@@ -276,10 +276,9 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		serviceContext.setScopeGroupId(folder.getGroupId());
 		final Folder destFolder = DLAppServiceUtil.getFolder(targetFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW) &&
-				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE) &&
-				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT) &&
-				FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folder.getFolderId())) {
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE)
+				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
+
 
 			boolean success = false;
 			int nbTry = 0;
@@ -357,9 +356,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		final Folder folder = DLAppServiceUtil.getFolder(folderId);
 		final Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW) &&
-				PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT) &&
-				isAllowedToAccessFolder(userId, folderId)) { // Don't know why the two first conditions are not sufficient...
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
 
 			long currFolderId = destFolder.getFolderId();
 			while (currFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
