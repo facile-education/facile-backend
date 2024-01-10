@@ -539,7 +539,7 @@ public class CustomAuthVerifier implements AuthVerifier {
                     logger.info("User authenticated by Shibboleth but is inactive : " + user.getScreenName() + " (" + user.getEmailAddress() + ")");
                     return null;
                 }
-                logger.debug("User authenticated with Shibboleth : " + user.getScreenName() + " (" + user.getEmailAddress() + "), uri=" + request.getRequestURI());
+                logger.info("User authenticated with Shibboleth : " + user.getScreenName() + " (" + user.getEmailAddress() + "), uri=" + request.getRequestURI());
                 String[] credentials = new String[3];
                 credentials[0] = String.valueOf(user.getUserId());
                 credentials[1] = user.getPassword();
