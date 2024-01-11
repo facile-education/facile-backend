@@ -100,7 +100,8 @@ public class LoginAction implements StrutsAction {
             LoginLockLocalServiceUtil.addLoginAttempt(login);
 
             LoginLock loginLock = LoginLockLocalServiceUtil.getLoginLock(login);
-            int nbRemainingTries = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getMaxFailure() - loginLock.getFailedLoginAttempts();
+            int passwordPolicyMaxFailures = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getMaxFailure();
+            int nbRemainingTries = passwordPolicyMaxFailures >= loginLock.getFailedLoginAttempts() ? passwordPolicyMaxFailures - loginLock.getFailedLoginAttempts() : 0;
             userStatus.put("nbRemainingTries", nbRemainingTries);
             if (nbRemainingTries <= 0) {
                 logger.error("False user is locked");
@@ -109,6 +110,9 @@ public class LoginAction implements StrutsAction {
                 userStatus.put("lockoutDuration", lockoutDuration);
             }
             userStatus.put("success", false);
+
+            // Wait 300 ms to have the same approximate time than real logins
+            Thread.sleep(300);
         }
 
 
