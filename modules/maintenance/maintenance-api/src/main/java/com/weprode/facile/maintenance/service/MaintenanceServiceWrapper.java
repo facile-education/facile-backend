@@ -75,6 +75,11 @@ public class MaintenanceServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject setCoursePermissions() {
+		return _maintenanceService.setCoursePermissions();
+	}
+
+	@Override
 	public org.json.JSONObject setNewsPermissions() {
 		return _maintenanceService.setNewsPermissions();
 	}
