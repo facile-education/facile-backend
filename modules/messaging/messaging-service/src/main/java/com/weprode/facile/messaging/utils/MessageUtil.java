@@ -269,7 +269,7 @@ public class MessageUtil {
 		JSONObject result = new JSONObject();
 		
 		String fullContent = "";
-		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); // For sorting
+		DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT); // For sorting
 		
 		if (fetchFullContent) {
 			fullContent = MessageContentLocalServiceUtil.getContent(message.getMessageId());

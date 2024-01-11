@@ -164,10 +164,10 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
             DateFormat dateFormat = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
 
             // Start date is in the very past
-            Date startDate = dateFormat.parse("2010-01-01");
+            Date startDate = dateFormat.parse("2010-01-01"); // TODO: make something about that
 
             // End data is in the very future
-            Date endDate = dateFormat.parse("2030-01-01");
+            Date endDate = dateFormat.parse("2030-01-01"); // TODO: make something about that
 
             List<CDTSession> sessionList = CDTSessionLocalServiceUtil.getGroupSessions(groupId, startDate, endDate, false);
             if (sessionList != null) {

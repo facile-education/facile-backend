@@ -65,7 +65,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            Date minDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(minDateStr);
+            Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(minDateStr);
             List<Event> events;
             if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 events = EventLocalServiceUtil.getSchoolEvents(user, minDate, startIndex, nbEvents, unreadOnly);
@@ -144,7 +144,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             Date start = df.parse(startDate);
             Date end = df.parse(endDate);
             JSONArray jsonPopulations = new JSONArray(populations);
@@ -187,7 +187,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             Date start = df.parse(startDate);
             Date end = df.parse(endDate);
             JSONArray jsonPopulations = new JSONArray(populations);

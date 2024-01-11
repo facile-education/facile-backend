@@ -92,8 +92,6 @@ import java.util.UUID;
 )
 public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
-    static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-
     private static final Log logger = LogFactoryUtil.getLog(NewsLocalServiceImpl.class);
 
     @Indexable(type = IndexableType.REINDEX)
@@ -668,8 +666,8 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
         jsonNews.put(JSONConstants.TYPE, ActivityConstants.TYPE_NEWS);
         jsonNews.put(JSONConstants.IS_IMPORTANT, news.isIsImportant());
-        jsonNews.put(JSONConstants.PUBLICATION_DATE, new SimpleDateFormat(DATE_FORMAT).format(news.getPublicationDate()));
-        jsonNews.put(JSONConstants.EXPIRATION_DATE, new SimpleDateFormat(DATE_FORMAT).format(news.getExpirationDate()));
+        jsonNews.put(JSONConstants.PUBLICATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(news.getPublicationDate()));
+        jsonNews.put(JSONConstants.EXPIRATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(news.getExpirationDate()));
         jsonNews.put(JSONConstants.HAS_READ, NewsReadLocalServiceUtil.hasUserReadNews(userId, newsId));
         jsonNews.put(JSONConstants.HAS_ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.hasAttachedFiles(newsId));
         jsonNews.put(JSONConstants.IS_SCHOOL_NEWS, news.getIsSchoolNews());

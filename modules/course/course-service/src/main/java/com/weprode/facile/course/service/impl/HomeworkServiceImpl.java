@@ -97,8 +97,8 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		List<Homework> homeworkList = new ArrayList<>();
 		try {
 			logger.info("User " + user.getUserId() + " fetches homeworks from " + minDateStr + " to " + maxDateStr + ((studentId != 0) ? " for student " + studentId : ""));
-			Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDateStr);
-			Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDateStr);
+			Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(minDateStr);
+			Date maxDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDateStr);
 			homeworkList = HomeworkLocalServiceUtil.getStudentHomeworks(targetUser.getUserId(), minDate, maxDate, undoneOnly);
 		} catch (Exception e) {
 			logger.error("Error fetching previous homeworks for student " + studentId);
@@ -172,8 +172,8 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			nbUndoneHomeworks = HomeworkLocalServiceUtil.countUndoneHomeworks(studentId);
 		} else {
 			try {
-				Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDateStr);
-				Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDateStr);
+				Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(minDateStr);
+				Date maxDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDateStr);
 				nbUndoneHomeworks = HomeworkLocalServiceUtil.countUndoneHomeworks(studentId, minDate, maxDate);
 			} catch (Exception e) {
 				logger.error("Error fetching previous homeworks for student " + studentId);
@@ -286,8 +286,8 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 		logger.info("Teacher " + user.getFullName() + " displays work load for " + (courseId != 0 ? "course " + courseId : "n students"));
 		try {
-			Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDate);
-			Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDate);
+			Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(startDate);
+			Date maxDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(endDate);
 
 			List<Long> studentIds = new ArrayList<>();
 			if (courseId != 0) {
@@ -347,9 +347,9 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		Date publicationDate;
 		try {
 			targetDate = targetSessionId == 0 ?
-					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) :
+					new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(targetDateStr) :
 					CDTSessionLocalServiceUtil.getCDTSession(targetSessionId).getStart();
-			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
+			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDateStr);
 		} catch (Exception e) {
 			result.put(JSONConstants.SUCCESS, false);
 			return result;
@@ -407,9 +407,9 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		Date publicationDate;
 		try {
 			targetDate = targetSessionId == 0 ?
-					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) :
+					new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(targetDateStr) :
 					CDTSessionLocalServiceUtil.getCDTSession(targetSessionId).getStart();
-			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
+			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDateStr);
 		} catch (Exception e) {
 			result.put(JSONConstants.SUCCESS, false);
 			return result;

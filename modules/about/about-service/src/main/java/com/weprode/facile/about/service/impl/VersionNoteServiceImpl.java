@@ -54,7 +54,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 
 	@JSONWebService(value = "get-version-notes", method = "GET")
 	public JSONObject getVersionNotes () {
-		SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+		SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 		JSONObject result = new JSONObject();
 
 		try {

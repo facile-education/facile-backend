@@ -225,7 +225,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                 logger.debug(e);
             }
             if (communityInfos != null && communityInfos.getStatus() == 3 && communityInfos.getCreatorId() == user.getUserId()) {
-                DateFormat dateFormat = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+                DateFormat dateFormat = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
                 result.put(JSONConstants.ERROR_CODE, 1);
                 result.put(JSONConstants.CREATION_DATE, dateFormat.format(communityInfos.getCreationDate()));
                 result.put(JSONConstants.EXPIRATION_DATE, dateFormat.format(communityInfos.getExpirationDate()));

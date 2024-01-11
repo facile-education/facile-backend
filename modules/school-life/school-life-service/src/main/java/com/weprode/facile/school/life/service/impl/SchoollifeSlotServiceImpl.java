@@ -69,8 +69,8 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         }
 
         try {
-            Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
-            Date endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDateStr);
+            Date startDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(startDateStr);
+            Date endDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(endDateStr);
             // Set 23:00 to endDate so that endDate is included
             Calendar cal = Calendar.getInstance();
             cal.setTime(endDate);
@@ -109,8 +109,8 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         }
 
         try {
-            Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
-            Date endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDateStr);
+            Date startDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(startDateStr);
+            Date endDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(endDateStr);
             // Set 23:00 to endDate so that endDate is included
             Calendar cal = Calendar.getInstance();
             cal.setTime(endDate);
@@ -150,8 +150,8 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         }
 
         try {
-            Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
-            Date endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDateStr);
+            Date startDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(startDateStr);
+            Date endDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(endDateStr);
             long schoollifeSlotId = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId).getSchoollifeSlotId();
 
             boolean success = SchoollifeSlotLocalServiceUtil.deleteSlot(schoollifeSlotId, startDate, endDate);
@@ -167,7 +167,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
     @JSONWebService(value = "get-session-limit-slot-date", method = "GET")
     public JSONObject getSessionLimitSlotDate(long schoollifeSessionId) {
         JSONObject result = new JSONObject();
-        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         try {
             User user = getGuestOrUser();

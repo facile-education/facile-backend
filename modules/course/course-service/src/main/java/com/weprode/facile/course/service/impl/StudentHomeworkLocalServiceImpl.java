@@ -260,7 +260,7 @@ public class StudentHomeworkLocalServiceImpl
 	public JSONArray getHomeworkStatus(long homeworkId) {
 
 		JSONArray jsonArray = new JSONArray();
-		SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+		SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
 		List<StudentHomework> studentHomeworks = studentHomeworkPersistence.findByhomeworkId(homeworkId);
 		if (studentHomeworks != null) {

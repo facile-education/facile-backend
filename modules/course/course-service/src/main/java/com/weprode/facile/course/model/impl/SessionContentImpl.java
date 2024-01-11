@@ -32,7 +32,7 @@ public class SessionContentImpl extends SessionContentBaseImpl {
     public JSONObject convertToJSON(User user, boolean isContentIncluded) {
 
         JSONObject jsonItem = new JSONObject();
-        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
         jsonItem.put(JSONConstants.ITEM_ID, this.getSessionId());
         jsonItem.put(JSONConstants.TITLE, this.getTitle());
         jsonItem.put(JSONConstants.IS_DRAFT, this.getIsDraft());

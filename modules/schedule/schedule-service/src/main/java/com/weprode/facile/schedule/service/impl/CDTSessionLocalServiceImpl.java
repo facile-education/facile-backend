@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.course.service.HomeworkLocalServiceUtil;
 import com.weprode.facile.group.model.GroupMembership;
 import com.weprode.facile.group.service.CommunityInfosLocalServiceUtil;
@@ -288,7 +289,7 @@ public class CDTSessionLocalServiceImpl extends CDTSessionLocalServiceBaseImpl {
 	}
 
 	public List<CDTSession> getGroupSessions(long groupId, Date minDate, Date maxDate, boolean includeSubClasses) {
-		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 		logger.info("Fetching sessions for groupId " + groupId + " from " + sdf.format(minDate) + " to " + sdf.format(maxDate) + " with subclasses " + includeSubClasses);
 
 		List<CDTSession> sessions = new ArrayList<>();

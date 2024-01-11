@@ -164,7 +164,7 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 			jsonActivity.put(JSONConstants.FOLDER_NAME, activity.getFolderName());
 			jsonActivity.put(JSONConstants.GROUP_ID, activity.getGroupId());
 			jsonActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(activity.getGroupId()));
-			jsonActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(activity.getModificationDate()));
+			jsonActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(activity.getModificationDate()));
 			jsonActivity.put(JSONConstants.TYPE, activity.getType());
 
 			boolean isFile = (activity.getType() < ActivityConstants.TYPE_FOLDER_CREATION);

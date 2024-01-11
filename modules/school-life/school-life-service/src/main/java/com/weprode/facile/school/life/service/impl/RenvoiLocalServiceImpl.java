@@ -157,7 +157,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
         JSONObject jsonPendingRenvoi = new JSONObject();
 
         try {
-            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             User student = UserLocalServiceUtil.getUser(renvoi.getStudentId());
 
             jsonPendingRenvoi.put(JSONConstants.TYPE, ActivityConstants.TYPE_PENDING_RENVOI);
@@ -260,7 +260,7 @@ public class RenvoiLocalServiceImpl extends RenvoiLocalServiceBaseImpl {
         JSONObject jsonSchoolRenvoi = new JSONObject();
 
         try {
-            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
             jsonSchoolRenvoi.put(JSONConstants.TYPE, ActivityConstants.TYPE_SCHOOL_RENVOI);
             jsonSchoolRenvoi.put(JSONConstants.MODIFICATION_DATE, df.format(schoolRenvoi.getRenvoiDate()));

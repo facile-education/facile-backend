@@ -102,7 +102,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             logger.info("User " + user.getUserId() + " fetches messages of folderId " + folderId + ", from " + fromDate + (unreadOnly ? " (unread only)" : ""));
             // If no date specified, get threads from now
             Date fromDateDate = fromDate.equals("-1") ? new Date() :
-                    new SimpleDateFormat(MessagingUtil.messagingDateFormat).parse(fromDate);
+                    new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(fromDate);
             List<MessagingThread> lastThreads = MessageLocalServiceUtil.getThreads(user.getUserId(), folderId, fromDateDate, nbDisplayed, unreadOnly);
             result.put(JSONConstants.THREADS, ThreadUtil.formatThreadList(lastThreads, false, folderId));
 

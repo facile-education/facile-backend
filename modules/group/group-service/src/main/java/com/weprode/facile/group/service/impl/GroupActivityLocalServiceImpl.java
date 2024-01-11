@@ -89,7 +89,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
             // Do not exceed 1 month back in time
             while (groupActivities.size() < nbResults && maxDate.after(limitMinDate)) {
                 // Fetch activities from minDate = maxDate minus 7 days
-                //logger.info("Fetching group activities for userId " + userId + " from " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(minDate) + " to " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(maxDate) + " : having " + groupActivities.size() + " results");
+                //logger.info("Fetching group activities for userId " + userId + " from " + new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(minDate) + " to " + new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(maxDate) + " : having " + groupActivities.size() + " results");
 
                 // Group news
                 if (withNews) {
@@ -382,7 +382,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
 
             } else if (groupActivity.getActivityType() == ActivityConstants.ACTIVITY_TYPE_EXPIRED_GROUP) {
 
-                jsonActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(groupActivity.getActivityDate()));
+                jsonActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(groupActivity.getActivityDate()));
                 jsonActivity.put(JSONConstants.GROUP_ID, groupActivity.getActivityId());
                 jsonActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(groupActivity.getActivityId()));
                 jsonActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_EXPIRED_GROUP);
@@ -414,7 +414,7 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         JSONObject homeworkActivity = new JSONObject();
 
         try {
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             homeworkActivity.put(JSONConstants.HOMEWORK_ID, homework.getHomeworkId());
             User teacher = UserLocalServiceUtil.getUser(homework.getTeacherId());
             homeworkActivity.put(JSONConstants.MODIFICATION_DATE, df.format(homework.getModificationDate()));
@@ -438,14 +438,14 @@ public class GroupActivityLocalServiceImpl extends GroupActivityLocalServiceBase
         JSONObject sessionActivity = new JSONObject();
 
         try {
-            sessionActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(activityDate));
+            sessionActivity.put(JSONConstants.MODIFICATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(activityDate));
             User lastEditor = SessionTeacherLocalServiceUtil.getLastEditor(session.getSessionId(), activityDate);
             if (lastEditor != null) {
                 sessionActivity.put(JSONConstants.AUTHOR, lastEditor.getFullName());
             }
             sessionActivity.put(JSONConstants.GROUP_ID, session.getGroupId());
             sessionActivity.put(JSONConstants.GROUP_NAME, GroupUtilsLocalServiceUtil.getGroupName(session.getGroupId()));
-            sessionActivity.put(JSONConstants.TARGET_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(session.getStart()));
+            sessionActivity.put(JSONConstants.TARGET_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(session.getStart()));
             sessionActivity.put(JSONConstants.TYPE, ActivityConstants.TYPE_SESSION);
         } catch (Exception e) {
             logger.error("Error converting session activity for session " + session.getSessionId(), e);

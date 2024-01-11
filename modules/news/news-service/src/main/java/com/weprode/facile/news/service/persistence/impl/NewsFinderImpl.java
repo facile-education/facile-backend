@@ -9,6 +9,7 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.Type;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.news.model.News;
 import com.weprode.facile.news.model.impl.NewsImpl;
 import com.weprode.facile.news.service.persistence.NewsFinder;
@@ -36,6 +37,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
     public static final String GET_ALL_SCHOOL_NEWS = NewsFinder.class.getName() + ".getAllSchoolNews";
     public static final String COUNT_NEWS = NewsFinder.class.getName() + ".countNews";
     public static final String COUNT_ALL_SCHOOL_NEWS = NewsFinder.class.getName() + ".countAllSchoolNews";
+    public static final String DATE_SEARCH_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     public List<News> getNews(long userId, List<Long> groupIds, List<Long> roleIds, Date currentDate, int startIndex, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) {
         Session session = null;
@@ -63,7 +65,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             qPos.add(userId);
             qPos.add(sdf.format(currentDate)); // publication Date >= currentDate
             qPos.add(userId);
@@ -107,7 +109,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             qPos.add(userId);
             qPos.add(sdf.format(currentDate));
             qPos.add(userId);
@@ -151,7 +153,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             q.addScalar("totalCount", Type.INTEGER);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(sdf.format(new Date()));
@@ -192,7 +194,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             q.addScalar("totalCount", Type.INTEGER);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(sdf.format(new Date()));
@@ -221,7 +223,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             }
 
             // If maxDate is today, we set AuthorMaxDate to the maximum, to be able to edit news published later in the future
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             Date authorMinDate = minDate;
             Date authorMaxDate = maxDate;
             if (isNow(maxDate)) {
@@ -266,7 +268,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             session = openSession();
 
             // If maxDate is today, we set AuthorMaxDate to the maximum, to be able to edit news published later in the future
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             Date authorMinDate = minDate;
             Date authorMaxDate = maxDate;
             if (isNow(maxDate)) {

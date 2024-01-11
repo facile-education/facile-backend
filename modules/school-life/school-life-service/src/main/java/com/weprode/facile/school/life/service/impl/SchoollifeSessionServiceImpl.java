@@ -71,7 +71,7 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
         }
 
         try {
-            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             Date currentDate = df.parse(currentDateStr);
             List<SchoollifeSession> sessions = SchoollifeSessionLocalServiceUtil.getWeekSessions(schoolId, type, currentDate);
 

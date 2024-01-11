@@ -119,7 +119,7 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 
 		try {
 			JSONArray jsonActivities = new JSONArray();
-			Date maximumDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(maxDate);
+			Date maximumDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDate);
 			List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDocumentGroupActivities(user.getUserId(), groupId, maximumDate, nbResults);
 			for (GroupActivity groupActivity : groupActivities) {
 				JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);

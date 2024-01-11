@@ -117,7 +117,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
         try {
             Date expireDate = null;
             if (!expirationDate.equals("")) {
-                expireDate = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).parse(expirationDate);
+                expireDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(expirationDate);
             }
             boolean success = AffectationLocalServiceUtil.addUserAffectation(userId, orgId, user.getUserId(), expireDate);
             result.put(JSONConstants.SUCCESS, success);

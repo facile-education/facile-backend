@@ -76,7 +76,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
 
 
         try {
-            Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
+            Date publication = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDate);
             Date expiration = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
             JSONArray populationJSONArray = new JSONArray(population);
             JSONArray attachFilesArray = new JSONArray(attachFiles);
@@ -126,7 +126,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
                 logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits group news");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
-            Date publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
+            Date publication = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDate);
             Date expiration = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
 
             JSONArray populationJSONArray = new JSONArray(population);
@@ -165,7 +165,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         try {
-            Date currentDate = new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).parse(currentDateString);
+            Date currentDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(currentDateString);
             logger.debug("User " + user.getFullName() + " fetches " + (importantOnly ? "important " : "") + (unreadOnly ? "unread " : "") + "school news before " + currentDate);
             List<News> newsList;
             if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {

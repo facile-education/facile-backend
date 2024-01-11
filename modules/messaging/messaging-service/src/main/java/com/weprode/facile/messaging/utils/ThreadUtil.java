@@ -17,6 +17,7 @@ package com.weprode.facile.messaging.utils;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.messaging.model.Message;
 import com.weprode.facile.messaging.model.MessagingThread;
 import org.json.JSONArray;
@@ -52,7 +53,7 @@ public class ThreadUtil {
 
     public static JSONObject formatThread(MessagingThread thread, boolean unreadOnly, long folderId) throws Exception {
         JSONObject jsonThread = new JSONObject();
-        DateFormat sdf = new SimpleDateFormat(MessagingUtil.messagingDateFormat);
+        DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         List<Message> displayableMessages = thread.getDisplayableMessages(unreadOnly, folderId);
 

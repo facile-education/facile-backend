@@ -25,10 +25,9 @@ public class JSONConstants {
     }
 
     // Date formats
+    public static final String DATE_EXCHANGE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String FRENCH_FORMAT = "dd/MM/yyyy";
-    public static final String FULL_FRENCH_FORMAT = "dd/MM/yyyy HH:mm";
     public static final String ENGLISH_FORMAT = "yyyy-MM-dd";
-    public static final String FULL_ENGLISH_FORMAT = "yyyy-MM-dd HH:mm";
 
     // Global
     public static final String ID = "id";

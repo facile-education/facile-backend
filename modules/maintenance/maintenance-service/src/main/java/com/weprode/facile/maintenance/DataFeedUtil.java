@@ -97,7 +97,7 @@ public class DataFeedUtil {
             return;
         }
         try {
-            maxDate = new SimpleDateFormat("yyyy-MM-dd").parse("2023-11-30");
+            maxDate = new SimpleDateFormat("yyyy-MM-dd").parse("2023-11-30"); // TODO: Another hard coded date
             // maxDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearEndDate();
         } catch (Exception e) {
             // Nothing

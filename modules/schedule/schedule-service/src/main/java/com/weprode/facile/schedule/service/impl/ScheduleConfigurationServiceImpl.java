@@ -119,7 +119,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 		}
 
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 			Date schoolYearStartDate = sdf.parse(startDateStr);
 
 			Date schoolYearEndDate = sdf.parse(endDateStr);

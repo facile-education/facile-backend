@@ -633,7 +633,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		formattedFolder.put(JSONConstants.ID, String.valueOf(folder.getFolderId()));
 		formattedFolder.put(JSONConstants.NAME, folder.getName());
 		formattedFolder.put(JSONConstants.TYPE, "Folder");
-		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(folder.getModifiedDate()));
+		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(folder.getModifiedDate()));
 	}
 
 	private void addCommonsFields (JSONObject formattedFolder, Folder folder, User user, boolean withDetails) {
@@ -662,7 +662,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 				logger.error(e.getMessage());
 				formattedFolder.put(JSONConstants.SIZE, "error when computing size");
 			}
-			formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(folder.getCreateDate()));
+			formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(folder.getCreateDate()));
 		}
 	}
 

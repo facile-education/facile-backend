@@ -95,7 +95,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 		Date publication;
 		try {
-			publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
+			publication = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDate);
 		} catch (ParseException e) {
 			result.put(JSONConstants.SUCCESS, false);
 			return result;
@@ -154,7 +154,7 @@ public class SessionContentServiceImpl extends SessionContentServiceBaseImpl {
 
 		Date publication;
 		try {
-			publication = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDate);
+			publication = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDate);
 		} catch (ParseException e) {
 			result.put(JSONConstants.SUCCESS, false);
 			return result;

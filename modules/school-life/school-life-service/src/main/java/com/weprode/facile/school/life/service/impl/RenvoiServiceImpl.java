@@ -81,7 +81,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
         JSONArray jsonRenvois = new JSONArray();
         try {
             User teacher = getGuestOrUser();
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
             List<Renvoi> pendingRenvois = RenvoiLocalServiceUtil.getTeacherPendingRenvois(teacher.getUserId());
             for (Renvoi pendingRenvoi : pendingRenvois) {
@@ -148,7 +148,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
 
         try {
             User teacher = getGuestOrUser();
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             
             logger.info("Teacher " + teacher.getUserId() + " registers student " + studentId + " in schoollifeSessionId " + schoollifeSessionId + " with sourceTeacherId " + sourceTeacherId + ", sourceSessionId=" + sourceSessionId + ", sourceSchoollifeSessionId=" + sourceSchoollifeSessionId);
             SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId);
@@ -268,7 +268,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
         }
 
         try {
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
             // minDate is 7AM of the session's day
             // maxDate is the schoollife session's end date

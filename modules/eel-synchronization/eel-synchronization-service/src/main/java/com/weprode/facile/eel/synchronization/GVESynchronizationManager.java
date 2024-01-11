@@ -1285,7 +1285,7 @@ public class GVESynchronizationManager {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                 try {
                     File latestFile = null;
-                    Date maxDate = sdf.parse("01.01.2020");
+                    Date maxDate = sdf.parse("01.01.2020"); // TODO: make something about that
 
                     // First loop to get the latest date
                     String maxDateStr = "";
@@ -1569,7 +1569,7 @@ public class GVESynchronizationManager {
     }
 
     private void createHoraires(Organization school) {
-        final DateFormat fullFormat = new SimpleDateFormat(JSONConstants.FULL_FRENCH_FORMAT);
+        final DateFormat fullFormat = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         int classIndex = 0;
         logger.info("About to build CDT sessions for " + coursMap.size() + " cours");

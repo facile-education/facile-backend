@@ -653,7 +653,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		formattedFile.put(JSONConstants.TYPE, "File");
 		formattedFile.put(JSONConstants.SIZE, (int) fileEntry.getSize());
 		formattedFile.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
-		formattedFile.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
+		formattedFile.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(fileEntry.getModifiedDate()));
 		formattedFile.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
 	}
 
@@ -677,7 +677,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 		if (withDetails) {
 			formattedFile.put(JSONConstants.CREATION_DATE,
-					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getCreateDate()));
+					new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(fileEntry.getCreateDate()));
 			formattedFile.put(JSONConstants.CREATOR, fileEntry.getUserName());
 			formattedFile.put(JSONConstants.VERSION, fileEntry.getVersion());
 		}

@@ -159,7 +159,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             logger.debug("Get user collaborative groups allCommunities=" + allCommunities + ", allClasses=" + allClasses + ", allCours=" + allCours);
 
             JSONArray groupsArray = new JSONArray();
-            DateFormat dateFormat = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat dateFormat = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             long schoolId = userProperties.getEtabId();
@@ -369,7 +369,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
 
         try {
             JSONArray jsonActivities = new JSONArray();
-            Date maximumDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDate);
+            Date maximumDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDate);
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getFullGroupActivities(user.getUserId(), groupId, maximumDate, nbResults);
             for (GroupActivity groupActivity : groupActivities) {
                 JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);

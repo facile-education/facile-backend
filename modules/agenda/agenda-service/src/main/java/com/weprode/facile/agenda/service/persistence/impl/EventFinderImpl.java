@@ -32,6 +32,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
     public static final String GET_SCHOOL_EVENTS = EventFinder.class.getName() + ".getSchoolEvents";
     public static final String COUNT_USER_EVENTS = EventFinder.class.getName() + ".countUserEvents";
     public static final String COUNT_SCHOOL_EVENTS = EventFinder.class.getName() + ".countSchoolEvents";
+    public static final String DATE_SEARCH_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     public List<Event> getUserEvents(long userId, Date minDate, int startIndex, int nbEvents, List<Long> groupIds, List<Long> roleIds, boolean unreadOnly) {
         Session session = null;
@@ -55,7 +56,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.addEntity("Agenda_Event", EventImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(minDate));
+            qPos.add(new SimpleDateFormat(DATE_SEARCH_FORMAT).format(minDate));
             qPos.add(userId);
             qPos.add(startIndex);
             qPos.add(nbEvents);
@@ -92,7 +93,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.addEntity("Agenda_Event", EventImpl.class);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(minDate));
+            qPos.add(new SimpleDateFormat(DATE_SEARCH_FORMAT).format(minDate));
             qPos.add(userId);
             qPos.add(startIndex);
             qPos.add(nbEvents);
@@ -127,7 +128,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.setCacheable(false);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(minDate));
+            qPos.add(new SimpleDateFormat(DATE_SEARCH_FORMAT).format(minDate));
             qPos.add(userId);
 
             return ((BigInteger) q.uniqueResult()).intValue();
@@ -158,7 +159,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             q.setCacheable(false);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            qPos.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(minDate));
+            qPos.add(new SimpleDateFormat(DATE_SEARCH_FORMAT).format(minDate));
             qPos.add(userId);
 
             return ((BigInteger) q.uniqueResult()).intValue();
