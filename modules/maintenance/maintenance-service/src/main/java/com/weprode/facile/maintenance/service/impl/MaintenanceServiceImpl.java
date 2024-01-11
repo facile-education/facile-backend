@@ -386,4 +386,34 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 		return result;
 	}
 
+	@JSONWebService(value = "set-course-permissions", method = "POST")
+	public JSONObject setCoursePermissions() {
+
+		JSONObject result = new JSONObject();
+
+		User user;
+		try {
+			user = getGuestOrUser();
+			if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
+				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+			}
+		} catch (Exception e) {
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+		}
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs the course permissions tool");
+			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
+		}
+
+		try {
+			PermissionUtil.applySessionContentAndHomeworkPermissions();
+			result.put(JSONConstants.SUCCESS, true);
+
+		} catch (Exception e) {
+			logger.error("Error applying course permissions", e);
+			result.put(JSONConstants.SUCCESS, false);
+		}
+		return result;
+	}
+
 }

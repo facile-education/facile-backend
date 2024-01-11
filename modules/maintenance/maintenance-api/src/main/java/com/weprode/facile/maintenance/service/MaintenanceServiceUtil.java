@@ -66,6 +66,10 @@ public class MaintenanceServiceUtil {
 		return getService().runDataFeed();
 	}
 
+	public static org.json.JSONObject setCoursePermissions() {
+		return getService().setCoursePermissions();
+	}
+
 	public static org.json.JSONObject setNewsPermissions() {
 		return getService().setNewsPermissions();
 	}

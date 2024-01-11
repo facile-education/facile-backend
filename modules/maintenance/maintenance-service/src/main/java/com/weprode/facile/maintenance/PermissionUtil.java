@@ -16,6 +16,7 @@
 package com.weprode.facile.maintenance;
 
 import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.ResourceAction;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -34,6 +36,13 @@ import com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.weprode.facile.commons.constants.JSONConstants;
+import com.weprode.facile.course.CourseConstants;
+import com.weprode.facile.course.model.ContentBlock;
+import com.weprode.facile.course.model.Homework;
+import com.weprode.facile.course.model.SessionContent;
+import com.weprode.facile.course.service.ContentBlockLocalServiceUtil;
+import com.weprode.facile.course.service.HomeworkLocalServiceUtil;
+import com.weprode.facile.course.service.SessionContentLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.group.service.CommunityInfosLocalServiceUtil;
@@ -136,6 +145,67 @@ public class PermissionUtil {
 
         PermissionUtilsLocalServiceUtil.validateFullPermission(director, folder.getFolderId(), "folder", permissionMatrix, false, folder.getGroupId());
 
+    }
+
+
+    public static void applySessionContentAndHomeworkPermissions() {
+
+        // Loop over all homeworks and session contents
+        // Apply default permissions to fix those which were created without these permissions
+        int nbHomeworkErrors = 0;
+        int count = 0;
+        List<Homework> allHomeworks = HomeworkLocalServiceUtil.getHomeworks(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+        logger.info("Looping over " + allHomeworks.size() + " homeworks ...");
+        for (Homework homework : allHomeworks) {
+            try {
+                count ++;
+                if (count % 100 == 0) {
+                    logger.info("Processed " + count + "/" + allHomeworks.size());
+                }
+                HomeworkLocalServiceUtil.getHomeworkFolder(homework.getHomeworkId(), false);
+                logger.info("Applied permissions to homework " + homework.getHomeworkId());
+                // Loop over files
+                List<ContentBlock> blocks = ContentBlockLocalServiceUtil.getContentsByItemId(homework.getHomeworkId());
+                for (ContentBlock block : blocks) {
+                    if (block.getBlockType() == CourseConstants.TYPE_FILE) {
+                        FileEntry contentFile = DLAppLocalServiceUtil.getFileEntry(block.getFileEntryId());
+                        PermissionUtilsLocalServiceUtil.addDefaultPermissionsFile(contentFile);
+                        logger.info(" > Applied to file " + contentFile.getTitle());
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Error applying default permissions to homework " + homework.getHomeworkId(), e);
+                nbHomeworkErrors++;
+            }
+        }
+        int nbSessionErrors = 0;
+        count = 0;
+        List<SessionContent> allSessionContents = SessionContentLocalServiceUtil.getSessionContents(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+        for (SessionContent sessionContent : allSessionContents) {
+            try {
+                count ++;
+                if (count % 100 == 0) {
+                    logger.info("Processed " + count + "/" + allHomeworks.size());
+                }
+                SessionContentLocalServiceUtil.getSessionFolder(sessionContent.getSessionId(), false);
+                logger.info("Applied permissions to session " + sessionContent.getSessionId());
+                // Loop over files
+                List<ContentBlock> blocks = ContentBlockLocalServiceUtil.getContentsByItemId(sessionContent.getSessionId());
+                for (ContentBlock block : blocks) {
+                    if (block.getBlockType() == CourseConstants.TYPE_FILE) {
+                        FileEntry contentFile = DLAppLocalServiceUtil.getFileEntry(block.getFileEntryId());
+                        PermissionUtilsLocalServiceUtil.addDefaultPermissionsFile(contentFile);
+                        logger.info(" > Applied to file " + contentFile.getTitle());
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Error applying default permissions to session " + sessionContent.getSessionId(), e);
+                nbSessionErrors++;
+            }
+        }
+
+        logger.info("Processed homeworks with " + nbHomeworkErrors + " errors");
+        logger.info("Processed session contents with " + nbSessionErrors + " errors");
     }
 
 }
