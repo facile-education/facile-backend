@@ -110,6 +110,9 @@ public class LoginAction implements StrutsAction {
                 userStatus.put("lockoutDuration", lockoutDuration);
             }
             userStatus.put("success", false);
+
+            // Wait 300 ms to have the same approximate time than real logins
+            Thread.sleep(300);
         }
 
 

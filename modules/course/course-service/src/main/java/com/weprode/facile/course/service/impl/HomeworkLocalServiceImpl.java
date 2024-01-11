@@ -322,8 +322,8 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			// Check course belonging for the student, because he might have changed class and/or course
 			// We do not want him/her to access old homeworks
 			for (Homework homework : homeworkList) {
-				logger.info("TMP add permission on homework " + homework.getHomeworkId());
-				getHomeworkFolder(homework.getHomeworkId(), false);
+				//logger.info("TMP add permission on homework " + homework.getHomeworkId());
+				//getHomeworkFolder(homework.getHomeworkId(), false);
 				if (UserUtilsLocalServiceUtil.getUserGroupIds(studentId).contains(homework.getCourseId())) {
 					studentHomeworkList.add(homework);
 				} else {

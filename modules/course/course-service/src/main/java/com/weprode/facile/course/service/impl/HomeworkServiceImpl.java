@@ -96,7 +96,6 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 		List<Homework> homeworkList = new ArrayList<>();
 		try {
-			logger.info("User " + user.getUserId() + " fetches homeworks from " + minDateStr + " to " + maxDateStr + ((studentId != 0) ? " for student " + studentId : ""));
 			Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(minDateStr);
 			Date maxDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDateStr);
 			homeworkList = HomeworkLocalServiceUtil.getStudentHomeworks(targetUser.getUserId(), minDate, maxDate, undoneOnly);
