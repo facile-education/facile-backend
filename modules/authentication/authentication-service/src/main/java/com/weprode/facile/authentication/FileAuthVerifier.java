@@ -34,8 +34,7 @@ import java.util.Properties;
 @Component(
         immediate = true,
         property = {
-                "auth.verifier.FileAuthVerifier.urls.includes=*",
-                "auth.verifier.FileAuthVerifier.urls.excludes=/api/jsonws/mobile.mobiledevice/*"
+                "auth.verifier.FileAuthVerifier.urls.includes=*"
         },
         service = AuthVerifier.class
 )
