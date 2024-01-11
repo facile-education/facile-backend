@@ -443,9 +443,9 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             List<Long> recipientList = ContactLocalServiceUtil.getRecipients(jsonRecipients, user);
 
             // Takes too long -> commented
-            //List<Long> filteredRecipientList = MessageLocalServiceUtil.filterRecipientList(user, recipientList, originMessageId);
+            List<Long> filteredRecipientList = MessageLocalServiceUtil.filterRecipientList(user, recipientList, originMessageId);
 
-            MessageLocalServiceUtil.sendMessage(user.getUserId(), recipientList, subject, content, MessagingConstants.TYPE_MANUAL, attachedFileIds, draftMessageId, originMessageId);
+            MessageLocalServiceUtil.sendMessage(user.getUserId(), filteredRecipientList, subject, content, MessagingConstants.TYPE_MANUAL, attachedFileIds, draftMessageId, originMessageId);
 
             // Set original message as answered/forwarded
             if (isReply && originMessageId > 0) {

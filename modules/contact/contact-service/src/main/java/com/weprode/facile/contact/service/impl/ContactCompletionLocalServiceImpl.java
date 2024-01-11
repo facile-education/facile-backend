@@ -153,6 +153,21 @@ public class ContactCompletionLocalServiceImpl
 		return allContacts;
 	}
 
+	public JSONArray getContactsForMessaging (User user) {
+
+		JSONArray allContacts;
+		String contactsCacheKey = COMPLETION_CONTACTS_CACHE_KEY + user.getUserId();
+		String cache = CacheUtil.getObjectFromCache(contactsCacheKey);
+		if (cache == null) {
+			allContacts = generateUserContactsCache(user);
+			CacheUtil.storeObjectIntoCache(contactsCacheKey, allContacts.toString());
+		} else {
+			allContacts = new JSONArray(cache);
+		}
+		return allContacts;
+	}
+
+
 	private JSONObject convertUserToCompletionJson (User user) {
 		JSONObject jsonUser = new JSONObject();
 		jsonUser.put(JSONConstants.USER_ID, user.getUserId());

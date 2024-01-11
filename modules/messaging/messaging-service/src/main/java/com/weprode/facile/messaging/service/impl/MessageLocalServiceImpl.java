@@ -696,7 +696,8 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
     // Check that the given recipient list is authorized for the sender
     public List<Long> filterRecipientList(User sender, List<Long> recipientIds, long originMessageId) {
 
-        JSONArray jsonArray = ContactCompletionLocalServiceUtil.getCompletionResultAsJSON("", sender, false).getJSONArray(JSONConstants.RESULTS);
+        long start = System.currentTimeMillis();
+        JSONArray addressBookArray = ContactCompletionLocalServiceUtil.getContactsForMessaging(sender);
         List<Long> originRecipientIds = new ArrayList<>();
         if (originMessageId != 0) {
             try {
@@ -713,8 +714,8 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         for (Long recipientId : recipientIds) {
             boolean isAuthorized = originRecipientIds.contains(recipientId);
             if (!originRecipientIds.contains(recipientId)) {
-                for (int idx = 0 ; idx < jsonArray.length() ; idx++) {
-                    JSONObject jsonUser = jsonArray.getJSONObject(idx);
+                for (int idx = 0 ; idx < addressBookArray.length() ; idx++) {
+                    JSONObject jsonUser = addressBookArray.getJSONObject(idx);
                     isAuthorized = jsonUser.getLong(JSONConstants.USER_ID) == recipientId;
                     if (isAuthorized) {
                         break;
@@ -726,6 +727,8 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
             }
         }
         // For now return the original list, we just log
+        long end = System.currentTimeMillis();
+        logger.info("Recipient checking took " + (end - start) + " ms");
         return recipientIds;
     }
 }

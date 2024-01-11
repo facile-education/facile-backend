@@ -45,6 +45,12 @@ public class ContactCompletionLocalServiceUtil {
 			query, user, includeLists);
 	}
 
+	public static org.json.JSONArray getContactsForMessaging(
+		com.liferay.portal.kernel.model.User user) {
+
+		return getService().getContactsForMessaging(user);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
