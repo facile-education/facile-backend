@@ -96,6 +96,13 @@ public class NewsServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject getUnreadGroupNews(
+		long groupId, String maxDate, int nbResults) {
+
+		return _newsService.getUnreadGroupNews(groupId, maxDate, nbResults);
+	}
+
+	@Override
 	public org.json.JSONObject setNewsRead(long newsId) {
 		return _newsService.setNewsRead(newsId);
 	}

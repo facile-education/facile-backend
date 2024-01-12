@@ -428,6 +428,7 @@ public class JSONConstants {
     public static final String CREATED_NEWS = "createdNews";
     public static final String EDITED_NEWS = "editedNews";
     public static final String NB_UNREAD_NEWS = "nbUnreadNews";
+    public static final String NB_UNREAD_GROUP_NEWS = "nbUnreadGroupNews";
 
     // Agenda
     public static final String EVENT = "event";

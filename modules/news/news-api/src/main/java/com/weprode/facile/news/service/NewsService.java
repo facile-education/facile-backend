@@ -90,6 +90,11 @@ public interface NewsService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSchoolNewsBroadcastGroups();
 
+	@JSONWebService(method = "GET", value = "get-unread-group-news")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getUnreadGroupNews(
+		long groupId, String maxDate, int nbResults);
+
 	@JSONWebService(method = "GET", value = "set-news-read")
 	public JSONObject setNewsRead(long newsId);
 

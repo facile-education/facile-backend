@@ -245,11 +245,6 @@ public interface NewsLocalService
 		throws SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<News> getGroupNewsActivities(
-			User user, long groupId, Date minDate, Date maxDate, int nbNews)
-		throws SystemException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getGroupNewsBroadcastGroups(User user);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -275,7 +270,7 @@ public interface NewsLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<News> getNewsActivities(
 			User user, List<Long> groupIds, Date minDate, Date maxDate,
-			int nbNews, boolean groupNewsOnly)
+			int nbNews, boolean withRead, boolean withUnread)
 		throws SystemException;
 
 	/**

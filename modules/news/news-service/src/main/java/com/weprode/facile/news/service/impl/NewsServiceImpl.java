@@ -31,6 +31,7 @@ import com.weprode.facile.news.service.base.NewsServiceBaseImpl;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
+import com.weprode.facile.user.service.UserUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -346,6 +347,46 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         } catch (Exception e) {
             result.put(JSONConstants.SUCCESS, false);
             logger.error("Error deleting news", e);
+        }
+
+        return result;
+    }
+
+    @JSONWebService(value = "get-unread-group-news", method = "GET")
+    public JSONObject getUnreadGroupNews(long groupId, String maxDate, int nbResults) {
+        JSONObject result = new JSONObject();
+        User user;
+        try {
+            user = getGuestOrUser();
+            if (user == null || user.getUserId() == UserLocalServiceUtil.getGuestUserId(PortalUtil.getDefaultCompanyId())) {
+                return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+            }
+        } catch (Exception e) {
+            return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
+        }
+        try {
+            Date maximumDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDate);
+            // Fetch all unread news in the past
+            Date minimumDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse("2023-01-01 00:00:00.000");
+            List<Long> groupIds = new ArrayList<>();
+            if (groupId > 0) {
+                groupIds.add(groupId);
+            } else {
+                groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
+            }
+            List<News> unreadNewsList = NewsLocalServiceUtil.getNewsActivities(user, groupIds, minimumDate, maximumDate, nbResults, false, true);
+            JSONArray jsonNewsArray = new JSONArray();
+            for (News unreadNews : unreadNewsList) {
+                JSONObject jsonNews = NewsLocalServiceUtil.convertNewsToJson(unreadNews.getNewsId(), user.getUserId(), false);
+                jsonNewsArray.put(jsonNews);
+            }
+            result.put(JSONConstants.NEWS, jsonNewsArray);
+            result.put(JSONConstants.NB_UNREAD_GROUP_NEWS, NewsLocalServiceUtil.countNews(user, groupId, true, false, true));
+            result.put(JSONConstants.SUCCESS, true);
+
+        } catch (Exception e) {
+            result.put(JSONConstants.SUCCESS, false);
+            logger.error("Error getting unread group news", e);
         }
 
         return result;
