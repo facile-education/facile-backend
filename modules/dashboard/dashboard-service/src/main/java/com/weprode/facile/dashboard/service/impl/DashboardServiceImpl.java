@@ -29,12 +29,12 @@ import com.weprode.facile.application.service.BroadcastLocalServiceUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
+import com.weprode.facile.dashboard.DashboardAccessUpdater;
 import com.weprode.facile.dashboard.service.base.DashboardServiceBaseImpl;
 import com.weprode.facile.group.model.GroupActivity;
 import com.weprode.facile.group.service.GroupActivityLocalServiceUtil;
 import com.weprode.facile.news.model.News;
 import com.weprode.facile.news.service.NewsLocalServiceUtil;
-import com.weprode.facile.preference.model.UserProperties;
 import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.schedule.model.CDTSession;
@@ -111,16 +111,14 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
 
             // All personals can add group news because they have communities
             boolean canAddGroupNews = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user);
-            // TODO: Chek if user broadast polupations list is not empty to prevent open an unfillable modal
+            // TODO: Check if user broadcast populations list is not empty
             result.put(JSONConstants.CAN_ADD_GROUP_NEWS, canAddGroupNews);
             result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate  || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
             result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
 
-            // Set last dashboard access date
-            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
-            userProperties.setLastDashboardAccessDate(new Date());
-            UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
-            logger.debug("Set last dashboard access date to " + new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(new Date()));
+            // Set last dashboard access date in a thread to postpone it a few seconds (to be able to fetch recent activities in the same login action)
+            DashboardAccessUpdater dashboardAccessUpdater = new DashboardAccessUpdater(user.getUserId());
+            dashboardAccessUpdater.start();
 
             result.put(JSONConstants.SUCCESS, true);
 
