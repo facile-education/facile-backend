@@ -47,8 +47,6 @@ public class UserPropertiesWrapper
 		attributes.put("hideMenu", isHideMenu());
 		attributes.put("themeColor", getThemeColor());
 		attributes.put("etabId", getEtabId());
-		attributes.put("preferedSchoolId", getPreferedSchoolId());
-		attributes.put("webdavActivated", isWebdavActivated());
 		attributes.put("termsOfUseAgreedDate", getTermsOfUseAgreedDate());
 		attributes.put("lastSynchroDate", getLastSynchroDate());
 		attributes.put("lastDashboardAccessDate", getLastDashboardAccessDate());
@@ -86,18 +84,6 @@ public class UserPropertiesWrapper
 
 		if (etabId != null) {
 			setEtabId(etabId);
-		}
-
-		Long preferedSchoolId = (Long)attributes.get("preferedSchoolId");
-
-		if (preferedSchoolId != null) {
-			setPreferedSchoolId(preferedSchoolId);
-		}
-
-		Boolean webdavActivated = (Boolean)attributes.get("webdavActivated");
-
-		if (webdavActivated != null) {
-			setWebdavActivated(webdavActivated);
 		}
 
 		Date termsOfUseAgreedDate = (Date)attributes.get(
@@ -177,16 +163,6 @@ public class UserPropertiesWrapper
 	}
 
 	/**
-	 * Returns the prefered school ID of this user properties.
-	 *
-	 * @return the prefered school ID of this user properties
-	 */
-	@Override
-	public long getPreferedSchoolId() {
-		return model.getPreferedSchoolId();
-	}
-
-	/**
 	 * Returns the primary key of this user properties.
 	 *
 	 * @return the primary key of this user properties
@@ -237,16 +213,6 @@ public class UserPropertiesWrapper
 	}
 
 	/**
-	 * Returns the webdav activated of this user properties.
-	 *
-	 * @return the webdav activated of this user properties
-	 */
-	@Override
-	public boolean getWebdavActivated() {
-		return model.getWebdavActivated();
-	}
-
-	/**
 	 * Returns <code>true</code> if this user properties is hide menu.
 	 *
 	 * @return <code>true</code> if this user properties is hide menu; <code>false</code> otherwise
@@ -264,16 +230,6 @@ public class UserPropertiesWrapper
 	@Override
 	public boolean isManualAccount() {
 		return model.isManualAccount();
-	}
-
-	/**
-	 * Returns <code>true</code> if this user properties is webdav activated.
-	 *
-	 * @return <code>true</code> if this user properties is webdav activated; <code>false</code> otherwise
-	 */
-	@Override
-	public boolean isWebdavActivated() {
-		return model.isWebdavActivated();
 	}
 
 	@Override
@@ -332,16 +288,6 @@ public class UserPropertiesWrapper
 	}
 
 	/**
-	 * Sets the prefered school ID of this user properties.
-	 *
-	 * @param preferedSchoolId the prefered school ID of this user properties
-	 */
-	@Override
-	public void setPreferedSchoolId(long preferedSchoolId) {
-		model.setPreferedSchoolId(preferedSchoolId);
-	}
-
-	/**
 	 * Sets the primary key of this user properties.
 	 *
 	 * @param primaryKey the primary key of this user properties
@@ -389,16 +335,6 @@ public class UserPropertiesWrapper
 	@Override
 	public void setUserUuid(String userUuid) {
 		model.setUserUuid(userUuid);
-	}
-
-	/**
-	 * Sets whether this user properties is webdav activated.
-	 *
-	 * @param webdavActivated the webdav activated of this user properties
-	 */
-	@Override
-	public void setWebdavActivated(boolean webdavActivated) {
-		model.setWebdavActivated(webdavActivated);
 	}
 
 	@Override

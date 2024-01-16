@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
-import com.weprode.facile.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
@@ -94,7 +93,6 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         result.put(JSONConstants.FIRST_NAME, user.getFirstName());
         result.put(JSONConstants.PICTURE, portraitUrl);
         result.put(JSONConstants.THEME_COLOR, userProperties.getThemeColor());
-        result.put(JSONConstants.HAS_WEBDAV_ENABLED, userProperties.getWebdavActivated());
         result.put(JSONConstants.HAS_READ_LAST_VERSION_NOTE, UserReadVersionNoteLocalServiceUtil.hasReadLastVersionNote(user.getUserId()));
 
         // Roles
@@ -188,8 +186,6 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             result.put(JSONConstants.IS_LOCAL_USER, userProperties.isManualAccount());
-            result.put(JSONConstants.IS_WEBDAV_ENABLED, userProperties.isWebdavActivated());
-            result.put(JSONConstants.WEBDAV_URL, DocumentUtilsLocalServiceUtil.getWebDavUrl(user));
 
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

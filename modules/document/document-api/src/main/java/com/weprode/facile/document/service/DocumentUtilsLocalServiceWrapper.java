@@ -57,11 +57,6 @@ public class DocumentUtilsLocalServiceWrapper
 	}
 
 	@Override
-	public String getWebDavUrl(com.liferay.portal.kernel.model.User user) {
-		return _documentUtilsLocalService.getWebDavUrl(user);
-	}
-
-	@Override
 	public DocumentUtilsLocalService getWrappedService() {
 		return _documentUtilsLocalService;
 	}

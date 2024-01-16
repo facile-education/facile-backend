@@ -31,8 +31,6 @@ public class UserPropertiesLocalServiceImpl extends UserPropertiesLocalServiceBa
         UserProperties userProperties = userPropertiesPersistence.create(userId);
 
         userProperties.setManualAccount(false);
-        userProperties.setWebdavActivated(false);
-        userProperties.setPreferedSchoolId(0);
         userProperties.setThemeColor("2982B9");
         userProperties = userPropertiesPersistence.update(userProperties);
 

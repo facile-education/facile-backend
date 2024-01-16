@@ -59,10 +59,6 @@ public class UserPropertiesServiceUtil {
 		return getService().updateUserPicture(picture);
 	}
 
-	public static org.json.JSONObject updateWebdavState(boolean isEnabled) {
-		return getService().updateWebdavState(isEnabled);
-	}
-
 	public static UserPropertiesService getService() {
 		return _service;
 	}

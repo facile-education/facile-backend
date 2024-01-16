@@ -42,8 +42,6 @@ create table Preference_UserProperties (
 	hideMenu BOOLEAN,
 	themeColor VARCHAR(75) null,
 	etabId LONG,
-	preferedSchoolId LONG,
-	webdavActivated BOOLEAN,
 	termsOfUseAgreedDate DATE null,
 	lastSynchroDate DATE null,
 	lastDashboardAccessDate DATE null

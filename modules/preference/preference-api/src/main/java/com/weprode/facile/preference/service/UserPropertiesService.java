@@ -71,7 +71,4 @@ public interface UserPropertiesService extends BaseService {
 	@JSONWebService(method = "POST", value = "update-user-picture")
 	public JSONObject updateUserPicture(File picture);
 
-	@JSONWebService(method = "POST", value = "update-webdav-state")
-	public JSONObject updateWebdavState(boolean isEnabled);
-
 }

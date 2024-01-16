@@ -17,11 +17,9 @@ package com.weprode.facile.document.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.weprode.facile.document.service.base.DocumentUtilsLocalServiceBaseImpl;
 import com.weprode.facile.document.utils.DocumentUtil;
-import com.weprode.facile.document.utils.ENTWebDAVUtil;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
@@ -30,10 +28,6 @@ import org.osgi.service.component.annotations.Component;
 )
 public class DocumentUtilsLocalServiceImpl
 	extends DocumentUtilsLocalServiceBaseImpl {
-
-	public String getWebDavUrl (User user) {
-		return ENTWebDAVUtil.getWebDavUrl(user);
-	}
 
 	// Only here to export to others modules (like News module for example)
 	public boolean belongToTmpFolder (FileEntry fileEntry, long userId) throws PortalException {

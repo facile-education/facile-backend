@@ -177,38 +177,6 @@ public class UserPropertiesServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject updateWebdavState(
-		HttpPrincipal httpPrincipal, boolean isEnabled) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				UserPropertiesServiceUtil.class, "updateWebdavState",
-				_updateWebdavStateParameterTypes4);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, isEnabled);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (org.json.JSONObject)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(
 		UserPropertiesServiceHttp.class);
 
@@ -220,7 +188,5 @@ public class UserPropertiesServiceHttp {
 		new Class[] {String.class};
 	private static final Class<?>[] _updateReportFrequencyParameterTypes3 =
 		new Class[] {int.class};
-	private static final Class<?>[] _updateWebdavStateParameterTypes4 =
-		new Class[] {boolean.class};
 
 }

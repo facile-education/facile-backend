@@ -63,7 +63,7 @@ public class UserPropertiesCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{userId=");
 		sb.append(userId);
@@ -75,10 +75,6 @@ public class UserPropertiesCacheModel
 		sb.append(themeColor);
 		sb.append(", etabId=");
 		sb.append(etabId);
-		sb.append(", preferedSchoolId=");
-		sb.append(preferedSchoolId);
-		sb.append(", webdavActivated=");
-		sb.append(webdavActivated);
 		sb.append(", termsOfUseAgreedDate=");
 		sb.append(termsOfUseAgreedDate);
 		sb.append(", lastSynchroDate=");
@@ -106,8 +102,6 @@ public class UserPropertiesCacheModel
 		}
 
 		userPropertiesImpl.setEtabId(etabId);
-		userPropertiesImpl.setPreferedSchoolId(preferedSchoolId);
-		userPropertiesImpl.setWebdavActivated(webdavActivated);
 
 		if (termsOfUseAgreedDate == Long.MIN_VALUE) {
 			userPropertiesImpl.setTermsOfUseAgreedDate(null);
@@ -147,10 +141,6 @@ public class UserPropertiesCacheModel
 		themeColor = objectInput.readUTF();
 
 		etabId = objectInput.readLong();
-
-		preferedSchoolId = objectInput.readLong();
-
-		webdavActivated = objectInput.readBoolean();
 		termsOfUseAgreedDate = objectInput.readLong();
 		lastSynchroDate = objectInput.readLong();
 		lastDashboardAccessDate = objectInput.readLong();
@@ -172,10 +162,6 @@ public class UserPropertiesCacheModel
 		}
 
 		objectOutput.writeLong(etabId);
-
-		objectOutput.writeLong(preferedSchoolId);
-
-		objectOutput.writeBoolean(webdavActivated);
 		objectOutput.writeLong(termsOfUseAgreedDate);
 		objectOutput.writeLong(lastSynchroDate);
 		objectOutput.writeLong(lastDashboardAccessDate);
@@ -186,8 +172,6 @@ public class UserPropertiesCacheModel
 	public boolean hideMenu;
 	public String themeColor;
 	public long etabId;
-	public long preferedSchoolId;
-	public boolean webdavActivated;
 	public long termsOfUseAgreedDate;
 	public long lastSynchroDate;
 	public long lastDashboardAccessDate;
