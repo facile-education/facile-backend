@@ -33,7 +33,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.util.PropsValues;
 import com.weprode.facile.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
@@ -51,10 +50,8 @@ import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import com.weprode.facile.preference.model.UserProperties;
 import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
-import com.weprode.facile.user.model.UserContact;
 import com.weprode.facile.user.service.AffectationLocalServiceUtil;
 import com.weprode.facile.user.service.LDAPMappingLocalServiceUtil;
-import com.weprode.facile.user.service.UserContactLocalServiceUtil;
 import com.weprode.facile.user.service.UserManagementLocalServiceUtil;
 import com.weprode.facile.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.facile.user.service.UserSearchLocalServiceUtil;
@@ -780,10 +777,7 @@ public class GVEParentSynchronizationManager {
                 logger.error("Error while updating user email from "+user.getEmailAddress()+" to "+mail+" (maybe duplicate account)");
             }
 
-            // Update link
-            UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(user.getUserId());
-            userContact.setFamilyLink(link);
-            UserContactLocalServiceUtil.updateUserContact(userContact);
+            // TODO add the link in the Relationship table
 
             // Send welcome message
             // List<Long> recipientList = new ArrayList<>();

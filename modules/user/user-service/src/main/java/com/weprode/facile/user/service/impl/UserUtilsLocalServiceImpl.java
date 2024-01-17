@@ -237,6 +237,21 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         return mainTeachers;
     }
 
+    public boolean isDoyenOfUser(long doyenId, long userId) {
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            User doyen = UserLocalServiceUtil.getUser(doyenId);
+            if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+                return false;
+            }
+            Organization studentOrParentClass = UserOrgsLocalServiceUtil.getUserClasses(user, false).get(0);
+            return RoleUtilsLocalServiceUtil.isDoyen(doyen, studentOrParentClass.getOrganizationId());
+        } catch (Exception e) {
+            logger.error("Error fetching if user " + doyenId + " is doyen of user " + userId, e);
+        }
+        return false;
+    }
+
     /**
      * This method a list a user based on a list of userId
      * @return List<User> the users object , empty array in case of error

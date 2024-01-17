@@ -30,36 +30,16 @@ public class UserContactTable extends BaseTable<UserContactTable> {
 
 	public static final UserContactTable INSTANCE = new UserContactTable();
 
-	public final Column<UserContactTable, Long> contactId = createColumn(
-		"contactId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<UserContactTable, Long> userId = createColumn(
-		"userId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
-	public final Column<UserContactTable, String> middleNames = createColumn(
-		"middleNames", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<UserContactTable, String> birthName = createColumn(
-		"birthName", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+		"userId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<UserContactTable, String> address = createColumn(
 		"address", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<UserContactTable, Boolean> isAddressAuthorized =
-		createColumn(
-			"isAddressAuthorized", Boolean.class, Types.BOOLEAN,
-			Column.FLAG_DEFAULT);
-	public final Column<UserContactTable, String> mail = createColumn(
-		"mail", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<UserContactTable, Boolean> isMailAuthorized =
-		createColumn(
-			"isMailAuthorized", Boolean.class, Types.BOOLEAN,
-			Column.FLAG_DEFAULT);
 	public final Column<UserContactTable, String> mobilePhone = createColumn(
 		"mobilePhone", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<UserContactTable, String> mobilePhoneSMS = createColumn(
-		"mobilePhoneSMS", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<UserContactTable, String> homePhone = createColumn(
 		"homePhone", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<UserContactTable, String> proPhone = createColumn(
 		"proPhone", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<UserContactTable, String> familyLink = createColumn(
-		"familyLink", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 
 	private UserContactTable() {
 		super("User_UserContact", UserContactTable::new);

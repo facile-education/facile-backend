@@ -62,11 +62,6 @@ public interface UserContactLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.facile.user.service.impl.UserContactLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the user contact local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link UserContactLocalServiceUtil} if injection and service tracking are not available.
 	 */
-	public UserContact addUserContact() throws SystemException;
-
-	/**
-	 * Create a UserContact, with default values
-	 */
 	public UserContact addUserContact(long userId) throws SystemException;
 
 	/**
@@ -91,11 +86,11 @@ public interface UserContactLocalService
 	/**
 	 * Creates a new user contact with the primary key. Does not add the user contact to the database.
 	 *
-	 * @param contactId the primary key for the new user contact
+	 * @param userId the primary key for the new user contact
 	 * @return the new user contact
 	 */
 	@Transactional(enabled = false)
-	public UserContact createUserContact(long contactId);
+	public UserContact createUserContact(long userId);
 
 	/**
 	 * @throws PortalException
@@ -111,12 +106,12 @@ public interface UserContactLocalService
 	 * <strong>Important:</strong> Inspect UserContactLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact that was removed
 	 * @throws PortalException if a user contact with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public UserContact deleteUserContact(long contactId) throws PortalException;
+	public UserContact deleteUserContact(long userId) throws PortalException;
 
 	/**
 	 * Deletes the user contact from the database. Also notifies the appropriate model listeners.
@@ -204,7 +199,7 @@ public interface UserContactLocalService
 		DynamicQuery dynamicQuery, Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public UserContact fetchUserContact(long contactId);
+	public UserContact fetchUserContact(long userId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -230,12 +225,12 @@ public interface UserContactLocalService
 	/**
 	 * Returns the user contact with the primary key.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact
 	 * @throws PortalException if a user contact with the primary key could not be found
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public UserContact getUserContact(long contactId) throws PortalException;
+	public UserContact getUserContact(long userId) throws PortalException;
 
 	/**
 	 * Return the user contact, given the userId

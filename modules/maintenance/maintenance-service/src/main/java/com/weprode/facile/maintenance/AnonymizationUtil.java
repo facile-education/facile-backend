@@ -126,16 +126,10 @@ public class AnonymizationUtil {
 
                     UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(user.getUserId());
                     if (userContact != null) {
-                        userContact.setMail(newEmail);
-                        userContact.setIsMailAuthorized(true);
                         userContact.setMobilePhone("06.11.22.33.44");
                         userContact.setHomePhone("04.76.55.22.88");
-                        userContact.setMobilePhoneSMS("07.99.33.66.11");
                         userContact.setProPhone("01.33.77.00.66");
                         userContact.setAddress("10 rue des écoles GENEVE");
-                        userContact.setIsAddressAuthorized(true);
-                        userContact.setMiddleNames("");
-                        userContact.setBirthName("");
                         UserContactLocalServiceUtil.updateUserContact(userContact);
                     }
 

@@ -18,8 +18,6 @@ package com.weprode.facile.contact.service.impl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -47,8 +45,6 @@ import java.util.List;
 )
 public class ContactServiceImpl extends ContactServiceBaseImpl {
 
-	private static final Log logger = LogFactoryUtil.getLog(ContactServiceImpl.class);
-
 	@JSONWebService(value = "get-contact-tree", method = "GET")
 	public JSONObject getContactTree() {
 
@@ -63,7 +59,6 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		logger.info("User " + user.getUserId() + " fetches its contact tree");
 		JSONArray jsonCategories = ContactLocalServiceUtil.getContactTree(user);
 		result.put(JSONConstants.CATEGORIES, jsonCategories);
 
@@ -86,7 +81,6 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		logger.info("User " + user.getUserId() + " gets members of org " + orgId + " with roleId " + roleId);
 		List<User> listMembers = ContactLocalServiceUtil.getListMembers(user, roleId, orgId);
 		JSONArray jsonUsers = new JSONArray();
 		for (User listMember : listMembers) {
@@ -114,7 +108,6 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
-		logger.info("User " + user.getUserId() + " searches directory with query '" + query + "', roleId " + roleId + " and schoolId " + schoolId);
 		List<Long> schoolIds = new ArrayList<>();
 		if (schoolId != 0) {
 			schoolIds.add(schoolId);
@@ -134,8 +127,8 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "get-contact-details", method = "GET")
-	public JSONObject getContactDetails(long contactUserId) {
+	@JSONWebService(value = "get-user-card", method = "GET")
+	public JSONObject getUserCard(long contactUserId) {
 
 		JSONObject result = new JSONObject();
 		User user;
@@ -148,7 +141,7 @@ public class ContactServiceImpl extends ContactServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		JSONObject jsonContactDetails = ContactLocalServiceUtil.getContactDetails(user, contactUserId);
+		JSONObject jsonContactDetails = ContactLocalServiceUtil.getUserCard(user, contactUserId);
 		result.put("contactDetails", jsonContactDetails);
 		result.put(JSONConstants.SUCCESS, true);
 		return result;

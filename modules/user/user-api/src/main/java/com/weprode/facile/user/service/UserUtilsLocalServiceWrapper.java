@@ -124,6 +124,11 @@ public class UserUtilsLocalServiceWrapper
 		return _userUtilsLocalService.getUserTeachers(user);
 	}
 
+	@Override
+	public boolean isDoyenOfUser(long doyenId, long userId) {
+		return _userUtilsLocalService.isDoyenOfUser(doyenId, userId);
+	}
+
 	/**
 	 * Purges all expired users
 	 */

@@ -114,6 +114,10 @@ public class UserUtilsLocalServiceUtil {
 		return getService().getUserTeachers(user);
 	}
 
+	public static boolean isDoyenOfUser(long doyenId, long userId) {
+		return getService().isDoyenOfUser(doyenId, userId);
+	}
+
 	/**
 	 * Purges all expired users
 	 */

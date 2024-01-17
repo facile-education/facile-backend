@@ -26,18 +26,13 @@
 	<model name="UserContact">
 		<field name="contactId" type="long" />
 		<field name="userId" type="long" />
-		<field name="middleNames" type="String" />
-		<field name="birthName" type="String" />
 		<field name="address" type="String">
 			<hint name="max-length">200</hint>
 		</field>
-		<field name="isAddressAuthorized" type="boolean" />
 		<field name="mail" type="String">
 			<hint name="max-length">150</hint>
 		</field>
-		<field name="isMailAuthorized" type="boolean" />
 		<field name="mobilePhone" type="String" />
-		<field name="mobilePhoneSMS" type="String" />
 		<field name="homePhone" type="String" />
 		<field name="proPhone" type="String" />
 		<field name="familyLink" type="String" />
@@ -57,11 +52,8 @@
 		<field name="expirationDate" type="Date" />
 	</model>
 	<model name="com.weprode.facile.user.model.LDAPMapping">
-		<field name="UserId" type="long" />
-		<field name="EntPersonJointure" type="String" />
+		<field name="userId" type="long" />
 		<field name="UID" type="String" />
-		<field name="INE" type="String" />
-		<field name="EntEleveStructRattachId" type="String" />
 	</model>
 	<model name="com.weprode.facile.user.model.NewsAdmin">
 		<field name="newsAdminId" type="long" />
@@ -69,19 +61,11 @@
 		<field name="schoolId" type="long" />
 	</model>
 	<model name="com.weprode.facile.user.model.UserContact">
-		<field name="contactId" type="long" />
 		<field name="userId" type="long" />
-		<field name="middleNames" type="String" />
-		<field name="birthName" type="String" />
 		<field name="address" type="String" />
-		<field name="isAddressAuthorized" type="boolean" />
-		<field name="mail" type="String" />
-		<field name="isMailAuthorized" type="boolean" />
 		<field name="mobilePhone" type="String" />
-		<field name="mobilePhoneSMS" type="String" />
 		<field name="homePhone" type="String" />
 		<field name="proPhone" type="String" />
-		<field name="familyLink" type="String" />
 	</model>
 	<model name="com.weprode.facile.user.model.UserRelationship">
 		<field name="childUserId" type="long" />

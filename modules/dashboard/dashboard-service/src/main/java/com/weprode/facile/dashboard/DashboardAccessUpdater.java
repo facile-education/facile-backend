@@ -40,6 +40,7 @@ public class DashboardAccessUpdater extends Thread{
 			UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
 		} catch (Exception e) {
 			logger.error("Error updating last dashboard access date", e);
+			Thread.currentThread().interrupt();
 		}
 	}
 	

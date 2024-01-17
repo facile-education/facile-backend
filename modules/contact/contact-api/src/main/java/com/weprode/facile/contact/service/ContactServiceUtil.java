@@ -33,10 +33,6 @@ public class ContactServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.facile.contact.service.impl.ContactServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static org.json.JSONObject getContactDetails(long contactUserId) {
-		return getService().getContactDetails(contactUserId);
-	}
-
 	public static org.json.JSONObject getContactTree() {
 		return getService().getContactTree();
 	}
@@ -60,6 +56,10 @@ public class ContactServiceUtil {
 	 */
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static org.json.JSONObject getUserCard(long contactUserId) {
+		return getService().getUserCard(contactUserId);
 	}
 
 	public static org.json.JSONObject searchDirectory(

@@ -173,15 +173,13 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         try {
             UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(user.getUserId());
 
-            result.put(JSONConstants.MAIL, userContact.getMail());
+            result.put(JSONConstants.MAIL, user.getEmailAddress());
             result.put(JSONConstants.MOBILE_PHONE, userContact.getMobilePhone());
-            result.put(JSONConstants.SMS_PHONE, userContact.getMobilePhoneSMS());
             result.put(JSONConstants.HOME_PHONE, userContact.getHomePhone());
             result.put(JSONConstants.PRO_PHONE, userContact.getProPhone());
             result.put(JSONConstants.ADDRESS, userContact.getAddress());
 
             NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
-            //result.put("", userNotificationConfig.setActivate(frequency != NONE);
             result.put(JSONConstants.REPORT_FREQUENCY, userNotificationConfig.getDigestPeriod());
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());

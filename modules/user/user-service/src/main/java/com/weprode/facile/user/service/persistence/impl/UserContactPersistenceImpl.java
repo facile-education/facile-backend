@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
-import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
@@ -32,8 +31,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.ProxyUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 
 import com.weprode.facile.user.exception.NoSuchContactException;
 import com.weprode.facile.user.model.UserContact;
@@ -47,9 +44,7 @@ import com.weprode.facile.user.service.persistence.impl.constants.UserPersistenc
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -92,214 +87,6 @@ public class UserContactPersistenceImpl
 	private FinderPath _finderPathWithPaginationFindAll;
 	private FinderPath _finderPathWithoutPaginationFindAll;
 	private FinderPath _finderPathCountAll;
-	private FinderPath _finderPathFetchByuserId;
-	private FinderPath _finderPathCountByuserId;
-
-	/**
-	 * Returns the user contact where userId = &#63; or throws a <code>NoSuchContactException</code> if it could not be found.
-	 *
-	 * @param userId the user ID
-	 * @return the matching user contact
-	 * @throws NoSuchContactException if a matching user contact could not be found
-	 */
-	@Override
-	public UserContact findByuserId(long userId) throws NoSuchContactException {
-		UserContact userContact = fetchByuserId(userId);
-
-		if (userContact == null) {
-			StringBundler sb = new StringBundler(4);
-
-			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-			sb.append("userId=");
-			sb.append(userId);
-
-			sb.append("}");
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(sb.toString());
-			}
-
-			throw new NoSuchContactException(sb.toString());
-		}
-
-		return userContact;
-	}
-
-	/**
-	 * Returns the user contact where userId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @return the matching user contact, or <code>null</code> if a matching user contact could not be found
-	 */
-	@Override
-	public UserContact fetchByuserId(long userId) {
-		return fetchByuserId(userId, true);
-	}
-
-	/**
-	 * Returns the user contact where userId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching user contact, or <code>null</code> if a matching user contact could not be found
-	 */
-	@Override
-	public UserContact fetchByuserId(long userId, boolean useFinderCache) {
-		Object[] finderArgs = null;
-
-		if (useFinderCache) {
-			finderArgs = new Object[] {userId};
-		}
-
-		Object result = null;
-
-		if (useFinderCache) {
-			result = finderCache.getResult(
-				_finderPathFetchByuserId, finderArgs, this);
-		}
-
-		if (result instanceof UserContact) {
-			UserContact userContact = (UserContact)result;
-
-			if (userId != userContact.getUserId()) {
-				result = null;
-			}
-		}
-
-		if (result == null) {
-			StringBundler sb = new StringBundler(3);
-
-			sb.append(_SQL_SELECT_USERCONTACT_WHERE);
-
-			sb.append(_FINDER_COLUMN_USERID_USERID_2);
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(userId);
-
-				List<UserContact> list = query.list();
-
-				if (list.isEmpty()) {
-					if (useFinderCache) {
-						finderCache.putResult(
-							_finderPathFetchByuserId, finderArgs, list);
-					}
-				}
-				else {
-					if (list.size() > 1) {
-						Collections.sort(list, Collections.reverseOrder());
-
-						if (_log.isWarnEnabled()) {
-							if (!useFinderCache) {
-								finderArgs = new Object[] {userId};
-							}
-
-							_log.warn(
-								"UserContactPersistenceImpl.fetchByuserId(long, boolean) with parameters (" +
-									StringUtil.merge(finderArgs) +
-										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
-						}
-					}
-
-					UserContact userContact = list.get(0);
-
-					result = userContact;
-
-					cacheResult(userContact);
-				}
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		if (result instanceof List<?>) {
-			return null;
-		}
-		else {
-			return (UserContact)result;
-		}
-	}
-
-	/**
-	 * Removes the user contact where userId = &#63; from the database.
-	 *
-	 * @param userId the user ID
-	 * @return the user contact that was removed
-	 */
-	@Override
-	public UserContact removeByuserId(long userId)
-		throws NoSuchContactException {
-
-		UserContact userContact = findByuserId(userId);
-
-		return remove(userContact);
-	}
-
-	/**
-	 * Returns the number of user contacts where userId = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @return the number of matching user contacts
-	 */
-	@Override
-	public int countByuserId(long userId) {
-		FinderPath finderPath = _finderPathCountByuserId;
-
-		Object[] finderArgs = new Object[] {userId};
-
-		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
-
-		if (count == null) {
-			StringBundler sb = new StringBundler(2);
-
-			sb.append(_SQL_COUNT_USERCONTACT_WHERE);
-
-			sb.append(_FINDER_COLUMN_USERID_USERID_2);
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(userId);
-
-				count = (Long)query.uniqueResult();
-
-				finderCache.putResult(finderPath, finderArgs, count);
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		return count.intValue();
-	}
-
-	private static final String _FINDER_COLUMN_USERID_USERID_2 =
-		"userContact.userId = ?";
 
 	public UserContactPersistenceImpl() {
 		setModelClass(UserContact.class);
@@ -319,10 +106,6 @@ public class UserContactPersistenceImpl
 	public void cacheResult(UserContact userContact) {
 		entityCache.putResult(
 			UserContactImpl.class, userContact.getPrimaryKey(), userContact);
-
-		finderCache.putResult(
-			_finderPathFetchByuserId, new Object[] {userContact.getUserId()},
-			userContact);
 	}
 
 	private int _valueObjectFinderCacheListThreshold;
@@ -393,28 +176,18 @@ public class UserContactPersistenceImpl
 		}
 	}
 
-	protected void cacheUniqueFindersCache(
-		UserContactModelImpl userContactModelImpl) {
-
-		Object[] args = new Object[] {userContactModelImpl.getUserId()};
-
-		finderCache.putResult(_finderPathCountByuserId, args, Long.valueOf(1));
-		finderCache.putResult(
-			_finderPathFetchByuserId, args, userContactModelImpl);
-	}
-
 	/**
 	 * Creates a new user contact with the primary key. Does not add the user contact to the database.
 	 *
-	 * @param contactId the primary key for the new user contact
+	 * @param userId the primary key for the new user contact
 	 * @return the new user contact
 	 */
 	@Override
-	public UserContact create(long contactId) {
+	public UserContact create(long userId) {
 		UserContact userContact = new UserContactImpl();
 
 		userContact.setNew(true);
-		userContact.setPrimaryKey(contactId);
+		userContact.setPrimaryKey(userId);
 
 		return userContact;
 	}
@@ -422,13 +195,13 @@ public class UserContactPersistenceImpl
 	/**
 	 * Removes the user contact with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact that was removed
 	 * @throws NoSuchContactException if a user contact with the primary key could not be found
 	 */
 	@Override
-	public UserContact remove(long contactId) throws NoSuchContactException {
-		return remove((Serializable)contactId);
+	public UserContact remove(long userId) throws NoSuchContactException {
+		return remove((Serializable)userId);
 	}
 
 	/**
@@ -506,25 +279,6 @@ public class UserContactPersistenceImpl
 	public UserContact updateImpl(UserContact userContact) {
 		boolean isNew = userContact.isNew();
 
-		if (!(userContact instanceof UserContactModelImpl)) {
-			InvocationHandler invocationHandler = null;
-
-			if (ProxyUtil.isProxyClass(userContact.getClass())) {
-				invocationHandler = ProxyUtil.getInvocationHandler(userContact);
-
-				throw new IllegalArgumentException(
-					"Implement ModelWrapper in userContact proxy " +
-						invocationHandler.getClass());
-			}
-
-			throw new IllegalArgumentException(
-				"Implement ModelWrapper in custom UserContact implementation " +
-					userContact.getClass());
-		}
-
-		UserContactModelImpl userContactModelImpl =
-			(UserContactModelImpl)userContact;
-
 		Session session = null;
 
 		try {
@@ -544,10 +298,7 @@ public class UserContactPersistenceImpl
 			closeSession(session);
 		}
 
-		entityCache.putResult(
-			UserContactImpl.class, userContactModelImpl, false, true);
-
-		cacheUniqueFindersCache(userContactModelImpl);
+		entityCache.putResult(UserContactImpl.class, userContact, false, true);
 
 		if (isNew) {
 			userContact.setNew(false);
@@ -586,26 +337,26 @@ public class UserContactPersistenceImpl
 	/**
 	 * Returns the user contact with the primary key or throws a <code>NoSuchContactException</code> if it could not be found.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact
 	 * @throws NoSuchContactException if a user contact with the primary key could not be found
 	 */
 	@Override
-	public UserContact findByPrimaryKey(long contactId)
+	public UserContact findByPrimaryKey(long userId)
 		throws NoSuchContactException {
 
-		return findByPrimaryKey((Serializable)contactId);
+		return findByPrimaryKey((Serializable)userId);
 	}
 
 	/**
 	 * Returns the user contact with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact, or <code>null</code> if a user contact with the primary key could not be found
 	 */
 	@Override
-	public UserContact fetchByPrimaryKey(long contactId) {
-		return fetchByPrimaryKey((Serializable)contactId);
+	public UserContact fetchByPrimaryKey(long userId) {
+		return fetchByPrimaryKey((Serializable)userId);
 	}
 
 	/**
@@ -794,7 +545,7 @@ public class UserContactPersistenceImpl
 
 	@Override
 	protected String getPKDBName() {
-		return "contactId";
+		return "userId";
 	}
 
 	@Override
@@ -826,15 +577,6 @@ public class UserContactPersistenceImpl
 		_finderPathCountAll = new FinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0], new String[0], false);
-
-		_finderPathFetchByuserId = new FinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByuserId",
-			new String[] {Long.class.getName()}, new String[] {"userId"}, true);
-
-		_finderPathCountByuserId = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByuserId",
-			new String[] {Long.class.getName()}, new String[] {"userId"},
-			false);
 
 		_setUserContactUtilPersistence(this);
 	}
@@ -897,22 +639,13 @@ public class UserContactPersistenceImpl
 	private static final String _SQL_SELECT_USERCONTACT =
 		"SELECT userContact FROM UserContact userContact";
 
-	private static final String _SQL_SELECT_USERCONTACT_WHERE =
-		"SELECT userContact FROM UserContact userContact WHERE ";
-
 	private static final String _SQL_COUNT_USERCONTACT =
 		"SELECT COUNT(userContact) FROM UserContact userContact";
-
-	private static final String _SQL_COUNT_USERCONTACT_WHERE =
-		"SELECT COUNT(userContact) FROM UserContact userContact WHERE ";
 
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userContact.";
 
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY =
 		"No UserContact exists with the primary key ";
-
-	private static final String _NO_SUCH_ENTITY_WITH_KEY =
-		"No UserContact exists with the key {";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		UserContactPersistenceImpl.class);

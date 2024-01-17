@@ -10,11 +10,8 @@ create table User_Affectation (
 );
 
 create table User_LDAPMapping (
-	UserId LONG not null primary key,
-	EntPersonJointure VARCHAR(75) null,
-	UID VARCHAR(75) null,
-	INE VARCHAR(75) null,
-	EntEleveStructRattachId VARCHAR(75) null
+	userId LONG not null primary key,
+	UID VARCHAR(75) null
 );
 
 create table User_NewsAdmin (
@@ -24,19 +21,11 @@ create table User_NewsAdmin (
 );
 
 create table User_UserContact (
-	contactId LONG not null primary key,
-	userId LONG,
-	middleNames VARCHAR(75) null,
-	birthName VARCHAR(75) null,
+	userId LONG not null primary key,
 	address VARCHAR(75) null,
-	isAddressAuthorized BOOLEAN,
-	mail VARCHAR(75) null,
-	isMailAuthorized BOOLEAN,
 	mobilePhone VARCHAR(75) null,
-	mobilePhoneSMS VARCHAR(75) null,
 	homePhone VARCHAR(75) null,
-	proPhone VARCHAR(75) null,
-	familyLink VARCHAR(75) null
+	proPhone VARCHAR(75) null
 );
 
 create table User_UserRelationship (

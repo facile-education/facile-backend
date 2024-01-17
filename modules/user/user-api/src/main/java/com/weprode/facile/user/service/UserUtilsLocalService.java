@@ -93,6 +93,9 @@ public interface UserUtilsLocalService extends BaseLocalService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<User> getUserTeachers(User user);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isDoyenOfUser(long doyenId, long userId);
+
 	/**
 	 * Purges all expired users
 	 */

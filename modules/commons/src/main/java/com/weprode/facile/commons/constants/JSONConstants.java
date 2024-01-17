@@ -124,7 +124,6 @@ public class JSONConstants {
     public static final String THEME_COLOR = "themeColor";
     public static final String HAS_READ_LAST_VERSION_NOTE = "hasReadLastVersionNote";
     public static final String MOBILE_PHONE = "mobilePhone";
-    public static final String SMS_PHONE = "SMSPhone";
     public static final String HOME_PHONE = "homePhone";
     public static final String PRO_PHONE = "proPhone";
     public static final String ADDRESS = "address";
@@ -132,7 +131,9 @@ public class JSONConstants {
     public static final String IS_LOCAL_USER = "isLocalUser";
     public static final String PROFILE_ID = "profileId";
     public static final String INFOS = "infos";
-
+    public static final String ALLOWED_TO_WRITE = "allowedToWrite";
+    public static final String ALLOWED_TO_WRITE_TO_PARENTS = "allowedToWriteToParents";
+    public static final String CURRENT_COURSE = "currentCourse";
 
     // Organization
     public static final String ORG_ID = "orgId";
@@ -230,7 +231,6 @@ public class JSONConstants {
     public static final String FIRST_CREATED_FOLDER = "firstCreatedFolder";
     public static final String IS_GROUP_ROOT_FOLDER = "isGroupRootFolder";
     public static final String IS_GROUP_FILE = "isGroupFile";
-    public static final String FAILED_ENTITY_LIST = "failedEntityList";
     public static final String FAILED_ENTITIES_LIST = "failedEntitiesList";
     public static final String FOLDERS_IN_CONFLICT = "foldersInConflict";
     public static final String FILES_IN_CONFLICT = "filesInConflict";
@@ -398,6 +398,7 @@ public class JSONConstants {
     public static final String SCHOOL_ORG_ID = "schoolOrgId";
     public static final String POPULATIONS = "populations";
     public static final String POPULATION_NAME = "populationName";
+    public static final String CLASS = "class";
     public static final String CLASSES = "classes";
     public static final String COURS = "cours";
     public static final String IS_EXPANDED = "isExpanded";

@@ -146,13 +146,13 @@ public class ContactServiceHttp {
 		}
 	}
 
-	public static org.json.JSONObject getContactDetails(
+	public static org.json.JSONObject getUserCard(
 		HttpPrincipal httpPrincipal, long contactUserId) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				ContactServiceUtil.class, "getContactDetails",
-				_getContactDetailsParameterTypes3);
+				ContactServiceUtil.class, "getUserCard",
+				_getUserCardParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, contactUserId);
@@ -248,8 +248,9 @@ public class ContactServiceHttp {
 		new Class[] {long.class, long.class};
 	private static final Class<?>[] _searchDirectoryParameterTypes2 =
 		new Class[] {String.class, long.class, long.class};
-	private static final Class<?>[] _getContactDetailsParameterTypes3 =
-		new Class[] {long.class};
+	private static final Class<?>[] _getUserCardParameterTypes3 = new Class[] {
+		long.class
+	};
 	private static final Class<?>[] _getMyStudentsParameterTypes4 =
 		new Class[] {};
 	private static final Class<?>[] _getMyRelativesParameterTypes5 =

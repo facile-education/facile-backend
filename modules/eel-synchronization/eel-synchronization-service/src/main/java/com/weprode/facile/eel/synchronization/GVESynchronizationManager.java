@@ -69,10 +69,8 @@ import com.weprode.facile.schedule.service.SlotConfigurationLocalServiceUtil;
 import com.weprode.facile.schedule.service.SubjectLocalServiceUtil;
 import com.weprode.facile.schedule.service.TeacherSubjectLocalServiceUtil;
 import com.weprode.facile.user.model.LDAPMapping;
-import com.weprode.facile.user.model.UserContact;
 import com.weprode.facile.user.service.AffectationLocalServiceUtil;
 import com.weprode.facile.user.service.LDAPMappingLocalServiceUtil;
-import com.weprode.facile.user.service.UserContactLocalServiceUtil;
 import com.weprode.facile.user.service.UserRelationshipLocalServiceUtil;
 import com.weprode.facile.user.service.UserSearchLocalServiceUtil;
 
@@ -1034,7 +1032,6 @@ public class GVESynchronizationManager {
                 UserLocalServiceUtil.updateUser(user);
 
                 createMessagingConfig(user);
-                createContactProperties(user);
                 createServiceNotifications(user);
 
                 // Add UId mapping
@@ -1088,26 +1085,6 @@ public class GVESynchronizationManager {
             } catch (Exception e) {
                 logger.error("Error while creating messaging config for user "+user.getFullName()+" ("+user.getUserId()+")");
             }
-        }
-    }
-
-    private void createContactProperties(User user) {
-        try {
-            String suffix = PropsUtil.get(NeroSystemProperties.MAIL_DEFAULT_SUFFIX);
-
-            boolean isMailValid = !user.getEmailAddress().equals(user.getScreenName()+suffix);
-            String mail = "";
-            if (!isMailValid) {
-                mail = "";
-            }
-
-            UserContact uc = UserContactLocalServiceUtil.getUserContactByUserId(user.getUserId());
-
-            uc.setMail(mail);
-            UserContactLocalServiceUtil.updateUserContact(uc);
-
-        } catch(Exception e) {
-            logger.error("Error while updating user contact properties for user "+user.getUserId());
         }
     }
 

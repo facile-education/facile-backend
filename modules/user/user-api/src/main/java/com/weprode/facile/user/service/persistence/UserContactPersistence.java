@@ -42,49 +42,6 @@ public interface UserContactPersistence extends BasePersistence<UserContact> {
 	 */
 
 	/**
-	 * Returns the user contact where userId = &#63; or throws a <code>NoSuchContactException</code> if it could not be found.
-	 *
-	 * @param userId the user ID
-	 * @return the matching user contact
-	 * @throws NoSuchContactException if a matching user contact could not be found
-	 */
-	public UserContact findByuserId(long userId) throws NoSuchContactException;
-
-	/**
-	 * Returns the user contact where userId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @return the matching user contact, or <code>null</code> if a matching user contact could not be found
-	 */
-	public UserContact fetchByuserId(long userId);
-
-	/**
-	 * Returns the user contact where userId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching user contact, or <code>null</code> if a matching user contact could not be found
-	 */
-	public UserContact fetchByuserId(long userId, boolean useFinderCache);
-
-	/**
-	 * Removes the user contact where userId = &#63; from the database.
-	 *
-	 * @param userId the user ID
-	 * @return the user contact that was removed
-	 */
-	public UserContact removeByuserId(long userId)
-		throws NoSuchContactException;
-
-	/**
-	 * Returns the number of user contacts where userId = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @return the number of matching user contacts
-	 */
-	public int countByuserId(long userId);
-
-	/**
 	 * Caches the user contact in the entity cache if it is enabled.
 	 *
 	 * @param userContact the user contact
@@ -101,39 +58,39 @@ public interface UserContactPersistence extends BasePersistence<UserContact> {
 	/**
 	 * Creates a new user contact with the primary key. Does not add the user contact to the database.
 	 *
-	 * @param contactId the primary key for the new user contact
+	 * @param userId the primary key for the new user contact
 	 * @return the new user contact
 	 */
-	public UserContact create(long contactId);
+	public UserContact create(long userId);
 
 	/**
 	 * Removes the user contact with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact that was removed
 	 * @throws NoSuchContactException if a user contact with the primary key could not be found
 	 */
-	public UserContact remove(long contactId) throws NoSuchContactException;
+	public UserContact remove(long userId) throws NoSuchContactException;
 
 	public UserContact updateImpl(UserContact userContact);
 
 	/**
 	 * Returns the user contact with the primary key or throws a <code>NoSuchContactException</code> if it could not be found.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact
 	 * @throws NoSuchContactException if a user contact with the primary key could not be found
 	 */
-	public UserContact findByPrimaryKey(long contactId)
+	public UserContact findByPrimaryKey(long userId)
 		throws NoSuchContactException;
 
 	/**
 	 * Returns the user contact with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact, or <code>null</code> if a user contact with the primary key could not be found
 	 */
-	public UserContact fetchByPrimaryKey(long contactId);
+	public UserContact fetchByPrimaryKey(long userId);
 
 	/**
 	 * Returns all the user contacts.

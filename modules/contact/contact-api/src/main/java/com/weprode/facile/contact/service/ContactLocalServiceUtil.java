@@ -47,7 +47,7 @@ public class ContactLocalServiceUtil {
 	public static List<com.liferay.portal.kernel.model.User> directorySearch(
 		com.liferay.portal.kernel.model.User user, String query,
 		List<Long> schoolIds, List<Long> roleIds, int start, int limit,
-		OrderByComparator obc) {
+		OrderByComparator<com.liferay.portal.kernel.model.User> obc) {
 
 		return getService().directorySearch(
 			user, query, schoolIds, roleIds, start, limit, obc);
@@ -56,16 +56,12 @@ public class ContactLocalServiceUtil {
 	public static List<com.liferay.portal.kernel.model.User>
 		getAllGroupsContacts(
 			com.liferay.portal.kernel.model.User user, String search, int start,
-			int limit, OrderByComparator comparator) {
+			int limit,
+			OrderByComparator<com.liferay.portal.kernel.model.User>
+				comparator) {
 
 		return getService().getAllGroupsContacts(
 			user, search, start, limit, comparator);
-	}
-
-	public static org.json.JSONObject getContactDetails(
-		com.liferay.portal.kernel.model.User currentUser, long contactUserId) {
-
-		return getService().getContactDetails(currentUser, contactUserId);
 	}
 
 	public static org.json.JSONArray getContactTree(
@@ -114,6 +110,12 @@ public class ContactLocalServiceUtil {
 		throws SystemException {
 
 		return getService().getRecipients(recipients, user);
+	}
+
+	public static org.json.JSONObject getUserCard(
+		com.liferay.portal.kernel.model.User currentUser, long contactUserId) {
+
+		return getService().getUserCard(currentUser, contactUserId);
 	}
 
 	public static ContactLocalService getService() {
