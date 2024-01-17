@@ -260,7 +260,8 @@ public class JSONConstants {
     public static final String VIEW_COUNT = "viewCount";
     public static final String DOWNLOAD_COUNT = "downloadCount";
     public static final String STATUS_BY_USER_NAME = "statusByUserName";
-    
+    public static final String HAS_UPDATE_PERMISSION = "hasUpdatePermission";
+
     // Session
     public static final String SESSION_ID = "sessionId";
     public static final String SESSION = "session";

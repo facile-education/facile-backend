@@ -19,12 +19,17 @@ import com.liferay.document.library.kernel.antivirus.AntivirusVirusFoundExceptio
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
+import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
+import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.PermissionConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
@@ -75,7 +80,12 @@ public class UploadUtil {
                     result.put(JSONConstants.ERROR, JSONConstants.FILE_EXTENSION_EXCEPTION);
                     return result;
                 } catch (DuplicateFileEntryException e) {
+                    logger.error(e);
                     result.put(JSONConstants.ERROR, JSONConstants.DUPLICATE_FILE_EXCEPTION);
+                    // Find the file that cause the conflict
+                    FileEntry fileThatCauseConflict = DLAppLocalServiceUtil.getFileEntry(folder.getGroupId(), folderId, fileName);
+                    // Check if this file can be replaced
+                    result.put(JSONConstants.HAS_UPDATE_PERMISSION, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileThatCauseConflict, ActionKeys.UPDATE));
                     return result;
                 } catch (AntivirusVirusFoundException e) {
                     result.put(JSONConstants.ERROR, JSONConstants.ANTIVIRUS_EXCEPTION);
