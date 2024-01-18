@@ -40,9 +40,11 @@ import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
+import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.constants.PermissionConstants;
 import com.weprode.facile.document.service.ActivityLocalServiceUtil;
@@ -95,7 +97,8 @@ public class DLAppUtil {
                         if (subFolder.getName().equals(intermediaryFolderName)) {
                             hasFound = true;
                             if (mode == DocumentConstants.MODE_NORMAL) {
-                                throw new DuplicateFileEntryException();
+                                // Return in exception the problematic folder
+                                throw new DuplicateFolderNameException(String.valueOf(subFolder.getFolderId()));
                             } else if (mode == DocumentConstants.MODE_MERGE) {
                                 folder = subFolder;
                             } else if (mode == DocumentConstants.MODE_RENAME) {

@@ -17,6 +17,7 @@ package com.weprode.facile.document.utils;
 
 import com.liferay.document.library.kernel.antivirus.AntivirusVirusFoundException;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
+import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
 import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
@@ -24,6 +25,7 @@ import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -31,6 +33,7 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.weprode.facile.commons.constants.JSONConstants;
+import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.constants.PermissionConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
@@ -80,12 +83,19 @@ public class UploadUtil {
                     result.put(JSONConstants.ERROR, JSONConstants.FILE_EXTENSION_EXCEPTION);
                     return result;
                 } catch (DuplicateFileEntryException e) {
-                    logger.error(e);
-                    result.put(JSONConstants.ERROR, JSONConstants.DUPLICATE_FILE_EXCEPTION);
-                    // Find the file that cause the conflict
+                    // Find the file that cause the conflict and check if it can be replaced
                     FileEntry fileThatCauseConflict = DLAppLocalServiceUtil.getFileEntry(folder.getGroupId(), folderId, fileName);
-                    // Check if this file can be replaced
                     result.put(JSONConstants.HAS_UPDATE_PERMISSION, PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileThatCauseConflict, ActionKeys.UPDATE));
+
+                    result.put(JSONConstants.ERROR, JSONConstants.DUPLICATE_FILE_EXCEPTION);
+                    return result;
+                } catch (DuplicateFolderNameException e) {
+                    // Get the problematic folder
+                    Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(Long.parseLong(e.getMessage()));
+                    result.put(JSONConstants.FOLDER_NAME, folderThatCauseConflict.getName());
+                    result.put(JSONConstants.HAS_UPDATE_PERMISSION, PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folderThatCauseConflict, PermissionConstants.ADD_OBJECT));
+
+                    result.put(JSONConstants.ERROR, JSONConstants.DUPLICATE_FOLDER_EXCEPTION);
                     return result;
                 } catch (AntivirusVirusFoundException e) {
                     result.put(JSONConstants.ERROR, JSONConstants.ANTIVIRUS_EXCEPTION);
@@ -95,6 +105,22 @@ public class UploadUtil {
                 FileEntry uploadedFile = DLAppServiceUtil.getFileEntry(createdPath.get(createdPath.size() - 1));
                 if (createdPath.size() > 1) {
                     Folder firstCreatedFolder = DLAppServiceUtil.getFolder(createdPath.get(0));
+                    Folder parentFolder = firstCreatedFolder.getParentFolder();
+
+                    if (mode == DocumentConstants.MODE_RENAME) {
+                        // Return the old folderName (that one is replaced by the new folder) to change it in the next concerned uploads
+                        String[] oldFileNameTab = fileName.split(StringPool.SLASH);
+
+                        List<Folder> siblingsFolders = DLAppServiceUtil.getFolders(parentFolder.getRepositoryId(), parentFolder.getFolderId());
+                        for (Folder siblingsFolder : siblingsFolders) {
+                            for (int i = 0; i < oldFileNameTab.length - 1; i++) {
+                                if (oldFileNameTab[i].equals(siblingsFolder.getName())) {
+                                    result.put(JSONConstants.OLD_FOLDER_NAME, oldFileNameTab[i]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     result.put(JSONConstants.FIRST_CREATED_FOLDER, FolderUtilsLocalServiceUtil.format(user.getUserId(), firstCreatedFolder, space));
                 }
                 JSONObject jsonFormattedFile = FileUtilsLocalServiceUtil.format(user.getUserId(), uploadedFile, space);

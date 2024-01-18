@@ -228,6 +228,7 @@ public class JSONConstants {
     public static final String VERSION = "version";
     public static final String EXTENSION = "extension";
     public static final String UPLOADED_FILE = "uploadedFile";
+    public static final String OLD_FOLDER_NAME = "oldFolderName";
     public static final String FIRST_CREATED_FOLDER = "firstCreatedFolder";
     public static final String IS_GROUP_ROOT_FOLDER = "isGroupRootFolder";
     public static final String IS_GROUP_FILE = "isGroupFile";
@@ -557,6 +558,7 @@ public class JSONConstants {
     public static final String UNKNOWN = "unknown";
     public static final String FILE_SIZE_EXCEPTION = "fileSizeException";
     public static final String DUPLICATE_FILE_EXCEPTION = "DuplicateFileException";
+    public static final String DUPLICATE_FOLDER_EXCEPTION = "DuplicateFolderException";
     public static final String FILE_EXTENSION_EXCEPTION = "FileExtensionException";
     public static final String ANTIVIRUS_EXCEPTION = "AntivirusException";
 
