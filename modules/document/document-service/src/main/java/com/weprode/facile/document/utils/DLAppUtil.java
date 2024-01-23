@@ -342,6 +342,7 @@ public class DLAppUtil {
                             }
                         }
                     } else {
+                        finished = true; // To make to loop end
                         logger.error("No mode existing with value " + mode);
                     }
                 }
