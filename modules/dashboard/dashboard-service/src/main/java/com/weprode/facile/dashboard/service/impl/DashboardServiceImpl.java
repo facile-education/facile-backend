@@ -244,7 +244,11 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             } else {
                 groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
             }
-            Date maximumDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDate);
+
+            Date maximumDate = new Date();
+            if (maxDate != null && !maxDate.isBlank()) {
+                maximumDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDate);
+            }
 
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDashboardGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults,
                     withNews, withDocs, withMemberships, withSchoollife, withSessions);
