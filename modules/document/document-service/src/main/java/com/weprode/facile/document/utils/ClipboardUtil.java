@@ -69,10 +69,13 @@ public class ClipboardUtil {
                     JSONObject conflict = new JSONObject();
                     conflict.put(JSONConstants.ID, folderId);
                     conflict.put(JSONConstants.NAME, folder.getName());
-                    // Find the file that cause the conflict and check if it can be replaced
+                    // Find the folder that cause the conflict and check if it can be replaced
                     Folder targetFolder = DLAppServiceUtil.getFolder(targetFolderId);
                     Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(targetFolder.getGroupId(), targetFolderId, folder.getName());
-                    conflict.put(JSONConstants.HAS_UPDATE_PERMISSION, PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folderThatCauseConflict, PermissionConstants.ADD_OBJECT));
+                    conflict.put(JSONConstants.HAS_UPDATE_PERMISSION,
+                            PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folderThatCauseConflict, PermissionConstants.ADD_OBJECT) &&
+                            !FolderUtilsLocalServiceUtil.isParentFolder(folderThatCauseConflict, folder) &&
+                            folderThatCauseConflict.getFolderId() != folderId);
                     foldersInConflict.put(conflict);
                 }
             } catch (Exception e) {

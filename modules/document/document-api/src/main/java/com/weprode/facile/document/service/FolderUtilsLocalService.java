@@ -140,6 +140,10 @@ public interface FolderUtilsLocalService extends BaseLocalService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isGroupFolder(Folder folder);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isParentFolder(
+		Folder potentialParentFolder, Folder potentialChildFolder);
+
 	public Folder moveFolder(
 			long userId, Folder folder, long targetFolderId, int mode)
 		throws PortalException, SystemException;

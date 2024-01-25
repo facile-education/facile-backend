@@ -212,6 +212,15 @@ public class FolderUtilsLocalServiceUtil {
 		return getService().isGroupFolder(folder);
 	}
 
+	public static boolean isParentFolder(
+		com.liferay.portal.kernel.repository.model.Folder potentialParentFolder,
+		com.liferay.portal.kernel.repository.model.Folder
+			potentialChildFolder) {
+
+		return getService().isParentFolder(
+			potentialParentFolder, potentialChildFolder);
+	}
+
 	public static com.liferay.portal.kernel.repository.model.Folder moveFolder(
 			long userId,
 			com.liferay.portal.kernel.repository.model.Folder folder,

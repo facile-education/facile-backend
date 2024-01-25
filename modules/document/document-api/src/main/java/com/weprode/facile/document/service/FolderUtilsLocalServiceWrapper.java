@@ -255,6 +255,16 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public boolean isParentFolder(
+		com.liferay.portal.kernel.repository.model.Folder potentialParentFolder,
+		com.liferay.portal.kernel.repository.model.Folder
+			potentialChildFolder) {
+
+		return _folderUtilsLocalService.isParentFolder(
+			potentialParentFolder, potentialChildFolder);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.repository.model.Folder moveFolder(
 			long userId,
 			com.liferay.portal.kernel.repository.model.Folder folder,

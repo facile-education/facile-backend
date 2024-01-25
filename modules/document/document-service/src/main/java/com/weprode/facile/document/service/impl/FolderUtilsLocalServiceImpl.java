@@ -23,6 +23,7 @@ import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
+import com.liferay.journal.exception.InvalidFolderException;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.NoSuchResourcePermissionException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -356,11 +357,16 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 
 		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
 
-			long currFolderId = destFolder.getFolderId();
-			while (currFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-				if (currFolderId == folderId)
-					return null;
-				currFolderId = DLAppServiceUtil.getFolder(currFolderId).getParentFolderId();
+			// Check if target folder is not a child of the folder to copy
+			if (isParentFolder(folder, destFolder) || destFolderId == folderId) {
+				throw new InvalidFolderException(InvalidFolderException.CANNOT_MOVE_INTO_ITSELF);
+			}
+
+			if (mode == DocumentConstants.MODE_REPLACE) { // Cannot replace a folder by it child or itself (theoretically possible but in fact we delete the folder before replace him)
+				Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), destFolderId, folder.getName());
+				if (isParentFolder(folderThatCauseConflict, folder) || folderThatCauseConflict.getFolderId() == folderId) {
+					throw new InvalidFolderException(InvalidFolderException.CANNOT_MOVE_INTO_ITSELF);
+				}
 			}
 
 			// Add permissions
@@ -425,7 +431,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		}
 	}
 
-	private boolean isParentFolder (Folder potentialParentFolder, Folder potentialChildFolder) {
+	public boolean isParentFolder (Folder potentialParentFolder, Folder potentialChildFolder) {
 		if (potentialChildFolder.getParentFolderId() == potentialParentFolder.getFolderId()) {
 			return true;
 		} else {

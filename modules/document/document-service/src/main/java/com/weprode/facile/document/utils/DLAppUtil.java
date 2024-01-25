@@ -325,13 +325,8 @@ public class DLAppUtil {
                         count++;
                         suffixe = " (" + count + ")";
                     } else if (mode == DocumentConstants.MODE_REPLACE) {
-                        List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(groupId, parentFolderId); // Search him by name
-                        for (DLFolder dlFolder : dlFolders) {
-                            Folder subFolder = DLAppServiceUtil.getFolder(dlFolder.getFolderId());
-                            if (subFolder.getName().equals(name)) {
-                                FolderUtilsLocalServiceUtil.deleteFolder(userId, subFolder.getFolderId());
-                            }
-                        }
+                        Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(parentFolder.getGroupId(), parentFolder.getFolderId(), folder.getName());
+                        FolderUtilsLocalServiceUtil.deleteFolder(userId, folderThatCauseConflict.getFolderId());
                     } else if (mode == DocumentConstants.MODE_MERGE) {
                         // Return the folder which already exist
                         List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(groupId, parentFolderId); // Search him by name
