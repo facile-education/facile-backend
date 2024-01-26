@@ -241,13 +241,43 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         try {
             User user = UserLocalServiceUtil.getUser(userId);
             User doyen = UserLocalServiceUtil.getUser(doyenId);
-            if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+            if (!RoleUtilsLocalServiceUtil.isDoyen(user) || !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
                 return false;
             }
             Organization studentOrParentClass = UserOrgsLocalServiceUtil.getUserClasses(user, false).get(0);
             return RoleUtilsLocalServiceUtil.isDoyen(doyen, studentOrParentClass.getOrganizationId());
         } catch (Exception e) {
             logger.error("Error fetching if user " + doyenId + " is doyen of user " + userId, e);
+        }
+        return false;
+    }
+
+    public boolean isPsyOfUser(long psyId, long userId) {
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            User psy = UserLocalServiceUtil.getUser(psyId);
+            if (!RoleUtilsLocalServiceUtil.isPsychologue(psy) || !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+                return false;
+            }
+            Organization studentOrParentClass = UserOrgsLocalServiceUtil.getUserClasses(user, false).get(0);
+            return RoleUtilsLocalServiceUtil.isPsychologue(psy, studentOrParentClass.getOrganizationId());
+        } catch (Exception e) {
+            logger.error("Error fetching if user " + psyId + " is psychologue of user " + userId, e);
+        }
+        return false;
+    }
+
+    public boolean isConseillerSocialOfUser(long consId, long userId) {
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            User cons = UserLocalServiceUtil.getUser(consId);
+            if (!RoleUtilsLocalServiceUtil.isConseillerSocial(cons) || !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+                return false;
+            }
+            Organization studentOrParentClass = UserOrgsLocalServiceUtil.getUserClasses(user, false).get(0);
+            return RoleUtilsLocalServiceUtil.isConseillerSocial(cons, studentOrParentClass.getOrganizationId());
+        } catch (Exception e) {
+            logger.error("Error fetching if user " + consId + " is social counselor of user " + userId, e);
         }
         return false;
     }

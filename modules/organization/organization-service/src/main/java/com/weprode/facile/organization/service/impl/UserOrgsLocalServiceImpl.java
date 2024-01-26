@@ -207,6 +207,16 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
         return "";
     }
 
+    public String getStudentVolee(User student) {
+        List<Organization> userVolees = getUserVolees(student, false, OrgConstants.ALL_SCHOOLS_ID);
+
+        if (userVolees != null && userVolees.size() == 1) {
+            return OrgUtilsLocalServiceUtil.formatOrgName(userVolees.get(0).getName(), false);
+        }
+
+        return "";
+    }
+
     // Returns the organizations where the given user has the given role
     // Used for doyen, psychologue and conseiller social
     public List<Organization> getAffectedClasses(User user, long roleId) {

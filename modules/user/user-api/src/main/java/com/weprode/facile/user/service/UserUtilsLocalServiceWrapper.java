@@ -125,8 +125,18 @@ public class UserUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public boolean isConseillerSocialOfUser(long consId, long userId) {
+		return _userUtilsLocalService.isConseillerSocialOfUser(consId, userId);
+	}
+
+	@Override
 	public boolean isDoyenOfUser(long doyenId, long userId) {
 		return _userUtilsLocalService.isDoyenOfUser(doyenId, userId);
+	}
+
+	@Override
+	public boolean isPsyOfUser(long psyId, long userId) {
+		return _userUtilsLocalService.isPsyOfUser(psyId, userId);
 	}
 
 	/**

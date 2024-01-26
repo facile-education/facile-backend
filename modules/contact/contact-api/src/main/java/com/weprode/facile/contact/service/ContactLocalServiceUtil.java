@@ -118,6 +118,10 @@ public class ContactLocalServiceUtil {
 		return getService().getUserCard(currentUser, contactUserId);
 	}
 
+	public static boolean isAllowedToContact(long userId, long contactId) {
+		return getService().isAllowedToContact(userId, contactId);
+	}
+
 	public static ContactLocalService getService() {
 		return _service;
 	}

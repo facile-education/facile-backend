@@ -92,4 +92,7 @@ public interface ContactLocalService extends BaseLocalService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getUserCard(User currentUser, long contactUserId);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isAllowedToContact(long userId, long contactId);
+
 }

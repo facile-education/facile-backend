@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
 import com.weprode.facile.contact.constants.ContactConstants;
+import com.weprode.facile.contact.service.ContactCompletionLocalServiceUtil;
 import com.weprode.facile.contact.service.base.ContactLocalServiceBaseImpl;
 import com.weprode.facile.group.service.CommunityInfosLocalServiceUtil;
 import com.weprode.facile.organization.constants.OrgConstants;
@@ -846,6 +847,21 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		return new ArrayList<>();
 	}
 
+	public boolean isAllowedToContact(long userId, long contactId) {
+		try {
+			User user = UserLocalServiceUtil.getUser(userId);
+			JSONArray addressBookArray = ContactCompletionLocalServiceUtil.getContactsForMessaging(user);
+			for (int idx = 0; idx < addressBookArray.length(); idx++) {
+				boolean isAuthorized = addressBookArray.getJSONObject(idx).getLong(JSONConstants.USER_ID) == contactId;
+				if (isAuthorized) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			// Nothing
+		}
+		return false;
+	}
 
 	public JSONObject getUserCard(User currentUser, long contactUserId) {
 
@@ -856,44 +872,25 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 			User contactUser = UserLocalServiceUtil.getUser(contactUserId);
 
 			// Get roles for current user
-			boolean isCurrentUserStudent = false;
-			boolean isCurrentUserRelative = false;
-			boolean isCurrentUserTeacher = false;
-			boolean isCurrentUserPersonal = false;
-
-			if (RoleUtilsLocalServiceUtil.isStudent(currentUser)) {
-				isCurrentUserStudent = true;
-			} else if (RoleUtilsLocalServiceUtil.isParent(currentUser)) {
-				isCurrentUserRelative = true;
-			} else if (RoleUtilsLocalServiceUtil.isTeacher(currentUser)) {
-				isCurrentUserTeacher = true;
-			} else if (RoleUtilsLocalServiceUtil.isPersonal(currentUser)) {
-				isCurrentUserPersonal = true;
-			}
+			boolean isCurrentUserStudent = RoleUtilsLocalServiceUtil.isStudent(currentUser);
+			boolean isCurrentUserRelative = RoleUtilsLocalServiceUtil.isParent(currentUser);
+			boolean isCurrentUserTeacher = RoleUtilsLocalServiceUtil.isTeacher(currentUser);
+			boolean isCurrentUserPersonal = RoleUtilsLocalServiceUtil.isPersonal(currentUser);
 
 			// Get roles for watched contact
-			boolean isContactUserStudent = false;
-			boolean isContactUserRelative = false;
-			boolean isContactUserTeacher = false;
-			boolean isContactUserPersonal = false;
+			boolean isContactUserStudent = RoleUtilsLocalServiceUtil.isStudent(contactUser);
+			boolean isContactUserRelative = RoleUtilsLocalServiceUtil.isParent(contactUser);
+			boolean isContactUserTeacher = RoleUtilsLocalServiceUtil.isTeacher(contactUser);
+			boolean isContactUserPersonal = RoleUtilsLocalServiceUtil.isPersonal(contactUser);
 
-			if (RoleUtilsLocalServiceUtil.isStudent(contactUser)) {
-				isContactUserStudent = true;
-			} else if (RoleUtilsLocalServiceUtil.isParent(contactUser)) {
-				isContactUserRelative = true;
-			} else if (RoleUtilsLocalServiceUtil.isTeacher(contactUser)) {
-				isContactUserTeacher = true;
-			} else {
-				isContactUserPersonal = true;
-			}
-
-			boolean isOwnChild = UserRelationshipLocalServiceUtil.isChild(currentUser.getUserId(), contactUserId);
-			boolean isOwnRelative = UserRelationshipLocalServiceUtil.isChild(contactUserId, currentUser.getUserId());
-			boolean isCurrentUserDoyenOfContact = UserUtilsLocalServiceUtil.isDoyenOfUser(currentUser.getUserId(), contactUserId);
-			boolean isContactUserDoyenOfCurrent = UserUtilsLocalServiceUtil.isDoyenOfUser(contactUserId, currentUser.getUserId());
+			boolean isContactUserChildOfCurrent = UserRelationshipLocalServiceUtil.isChild(currentUser.getUserId(), contactUserId);
+			boolean isContactUserRelativeOfCurrent = UserRelationshipLocalServiceUtil.isChild(contactUserId, currentUser.getUserId());
+			boolean isCurrentUserAssignedToContact = UserUtilsLocalServiceUtil.isDoyenOfUser(currentUser.getUserId(), contactUserId) || UserUtilsLocalServiceUtil.isPsyOfUser(currentUser.getUserId(), contactUserId) || UserUtilsLocalServiceUtil.isConseillerSocialOfUser(currentUser.getUserId(), contactUserId);
 
 			jsonContactDetails.put(JSONConstants.LAST_NAME, contactUser.getLastName());
 			jsonContactDetails.put(JSONConstants.FIRST_NAME, contactUser.getFirstName());
+			String portraitUrl = UserUtilsLocalServiceUtil.getUserPicture(contactUser);
+			jsonContactDetails.put(JSONConstants.PICTURE, portraitUrl);
 
 			// Role
 			String roles = RoleUtilsLocalServiceUtil.displayUserRoles(contactUser);
@@ -903,22 +900,10 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 			jsonContactDetails.put(JSONConstants.IS_TEACHER, isContactUserTeacher);
 			jsonContactDetails.put(JSONConstants.IS_PERSONAL, isContactUserPersonal);
 
-			// School and class (student only)
-			if (isContactUserStudent) {
-				jsonContactDetails.put(JSONConstants.CLASS, UserOrgsLocalServiceUtil.getStudentClassName(contactUser));
-				List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserSchools(contactUser);
-				jsonContactDetails.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchools.get(0).getName(), true));
-			}
-
-			// Email : all teachers and personals
-			if (isCurrentUserTeacher || isCurrentUserPersonal) {
-				jsonContactDetails.put(JSONConstants.EMAIL, contactUser.getEmailAddress());
-			}
-
 			// Are there classes or groups in common between current user and contact user ?
 			boolean areGroupsInCommon = false;
 			if ((isCurrentUserTeacher && (isContactUserStudent || isContactUserRelative))
-				|| ((isCurrentUserStudent || isCurrentUserRelative) && isContactUserTeacher)) {
+					|| ((isCurrentUserStudent || isCurrentUserRelative) && isContactUserTeacher)) {
 				List<Organization> currentUserClassesAndCours = UserOrgsLocalServiceUtil.getUserClassesAndCours(currentUser, false);
 				List<Organization> contactUserClassesAndCours = UserOrgsLocalServiceUtil.getUserClassesAndCours(contactUser, false);
 				for (Organization currentUserClass : currentUserClassesAndCours) {
@@ -930,8 +915,24 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				}
 			}
 
-			// Coordinates : all personals, teachers for students and parents only (of their classes)
-			if (isCurrentUserPersonal || (isCurrentUserTeacher && (isContactUserStudent || isContactUserRelative) && areGroupsInCommon)) {
+			// School level, school and class (student only)
+			if (isContactUserStudent) {
+				jsonContactDetails.put(JSONConstants.VOLEE, UserOrgsLocalServiceUtil.getStudentVolee(currentUser));
+				jsonContactDetails.put(JSONConstants.CLASS, UserOrgsLocalServiceUtil.getStudentClassName(contactUser));
+				List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserSchools(contactUser);
+				jsonContactDetails.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchools.get(0).getName(), true));
+			}
+
+			// Email
+			if ((isContactUserStudent && (isContactUserChildOfCurrent || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserAssignedToContact || isCurrentUserPersonal))
+				|| (isContactUserRelative && (isContactUserRelativeOfCurrent || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserAssignedToContact || isCurrentUserPersonal))
+				|| ((isContactUserTeacher || isContactUserPersonal) && (isCurrentUserTeacher || isCurrentUserPersonal))) {
+				jsonContactDetails.put(JSONConstants.EMAIL, contactUser.getEmailAddress());
+			}
+
+			// Coordinates of a parent : his children, his teachers, doyen, psy and social counselor, all personals
+			if (isContactUserRelative
+				&& (isContactUserRelativeOfCurrent || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserAssignedToContact || isCurrentUserPersonal)) {
 				UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(contactUserId);
 				jsonContactDetails.put(JSONConstants.HOME_PHONE, userContact.getHomePhone());
 				jsonContactDetails.put(JSONConstants.MOBILE_PHONE, userContact.getMobilePhone());
@@ -940,13 +941,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 			}
 
 			// Contact user by messaging
-			boolean isAllowedToWrite =
-					   (isContactUserStudent && (isOwnChild || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserDoyenOfContact))
-					|| (isContactUserRelative && (isOwnRelative || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserDoyenOfContact))
-					|| (isContactUserTeacher && (isCurrentUserTeacher || isCurrentUserPersonal || ((isCurrentUserStudent || isCurrentUserRelative) && areGroupsInCommon)))
-					|| isContactUserDoyenOfCurrent
-					|| (isContactUserPersonal && (isCurrentUserTeacher || isCurrentUserPersonal));
-			jsonContactDetails.put(JSONConstants.ALLOWED_TO_WRITE, isAllowedToWrite);
+			jsonContactDetails.put(JSONConstants.ALLOWED_TO_WRITE, isAllowedToContact(currentUser.getUserId(), contactUserId));
 
 			// Subjects (teacher only)
 			if (isContactUserTeacher) {
@@ -967,9 +962,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					JSONArray jsonUserClasses = new JSONArray();
 					List<Organization> userSchoolClasses = UserOrgsLocalServiceUtil.getUserClasses(contactUser, false, school.getOrganizationId());
 					for (Organization userClass : userSchoolClasses) {
-						if (userClass.getParentOrganizationId() == school.getOrganizationId()) {
-							jsonUserClasses.put(OrgUtilsLocalServiceUtil.formatOrgName(userClass.getName(), false));
-						}
+						jsonUserClasses.put(OrgUtilsLocalServiceUtil.formatOrgName(userClass.getName(), false));
 					}
 					jsonUserSchool.put(JSONConstants.CLASSES, jsonUserClasses);
 
@@ -977,9 +970,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					JSONArray jsonUserCours = new JSONArray();
 					List<Organization> userCourses  = UserOrgsLocalServiceUtil.getUserCours(contactUser, false, school.getOrganizationId());
 					for (Organization userCours : userCourses) {
-						if (userCours.getParentOrganizationId() == school.getOrganizationId()) {
-							jsonUserCours.put(OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
-						}
+						jsonUserCours.put(OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
 					}
 					jsonUserSchool.put(JSONConstants.COURS, jsonUserCours);
 
@@ -988,7 +979,19 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				jsonContactDetails.put(JSONConstants.SCHOOLS, jsonUserSchools);
 			}
 
-			// Parents
+			// Psychologues and social counselors affected classes
+			if ((RoleUtilsLocalServiceUtil.isPsychologue(contactUser) || RoleUtilsLocalServiceUtil.isConseillerSocial(contactUser))
+					&& (isCurrentUserTeacher || isCurrentUserPersonal)) {
+				List<Organization> affectedClasses = UserOrgsLocalServiceUtil.getRoleAffectedClasses(contactUser);
+				// Loop over classes
+				JSONArray jsonUserClasses = new JSONArray();
+				for (Organization userClass : affectedClasses) {
+					jsonUserClasses.put(OrgUtilsLocalServiceUtil.formatOrgName(userClass.getName(), false));
+				}
+				jsonContactDetails.put(JSONConstants.CLASSES, jsonUserClasses);
+			}
+
+			// Relatives
 			if (isContactUserStudent && (isCurrentUserTeacher || isCurrentUserPersonal)) {
 				List<User> parents = UserRelationshipLocalServiceUtil.getParents(contactUserId);
 				if (parents != null && !parents.isEmpty()) {
@@ -999,6 +1002,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 						jsonParent.put(JSONConstants.LAST_NAME, parent.getLastName());
 						jsonParent.put(JSONConstants.USER_ID, parent.getUserId());
 						if (isCurrentUserTeacher && areGroupsInCommon) {
+							jsonParent.put(JSONConstants.EMAIL, parent.getEmailAddress());
 							UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(contactUserId);
 							jsonParent.put(JSONConstants.HOME_PHONE, userContact.getHomePhone());
 							jsonParent.put(JSONConstants.MOBILE_PHONE, userContact.getMobilePhone());
@@ -1023,6 +1027,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 							jsonChild.put(JSONConstants.FIRST_NAME, child.getFirstName());
 							jsonChild.put(JSONConstants.LAST_NAME, child.getLastName());
 							jsonChild.put(JSONConstants.USER_ID, child.getUserId());
+							jsonChild.put(JSONConstants.CLASS, UserOrgsLocalServiceUtil.getStudentClassName(child));
 							jsonChildren.put(jsonChild);
 						}
 						jsonContactDetails.put(JSONConstants.CHILDREN, jsonChildren);
@@ -1055,6 +1060,5 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 		return jsonContactDetails;
 	}
-
 
 }

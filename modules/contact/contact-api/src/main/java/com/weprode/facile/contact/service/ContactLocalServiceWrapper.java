@@ -126,6 +126,11 @@ public class ContactLocalServiceWrapper
 	}
 
 	@Override
+	public boolean isAllowedToContact(long userId, long contactId) {
+		return _contactLocalService.isAllowedToContact(userId, contactId);
+	}
+
+	@Override
 	public ContactLocalService getWrappedService() {
 		return _contactLocalService;
 	}

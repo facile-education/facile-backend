@@ -408,6 +408,7 @@ public class JSONConstants {
     public static final String IS_COMMUNITY = "isCommunity";
     public static final String CATEGORIES = "categories";
     public static final String PERSONALS = "Personnels";
+    public static final String VOLEE = "volee";
 
     // News
     public static final String SCHOOLS_GROUPS = "schoolsGroups";
