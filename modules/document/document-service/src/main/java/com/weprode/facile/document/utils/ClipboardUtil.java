@@ -137,18 +137,30 @@ public class ClipboardUtil {
         for (long folderId : folderIdList) {
             try {
                 Folder folder = DLAppServiceUtil.getFolder(folderId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
-                        || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
+                try {
+                    if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, folderId)
+                            || !PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
+                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
+                        addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                        continue;
+                    }
+                    FolderUtilsLocalServiceUtil.moveFolder(userId, folder, destFolderId, mode);
+                } catch (NoSuchResourcePermissionException e) {
                     logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
                     addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                    continue;
+                } catch (FileNameException e) {
+                    JSONObject conflict = new JSONObject();
+                    conflict.put(JSONConstants.ID, folderId);
+                    conflict.put(JSONConstants.NAME, folder.getName());
+                    // Find the folder that cause the conflict and check if it can be replaced
+                    Folder targetFolder = DLAppServiceUtil.getFolder(destFolderId);
+                    Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(targetFolder.getGroupId(), destFolderId, folder.getName());
+                    conflict.put(JSONConstants.HAS_UPDATE_PERMISSION,
+                            PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folderThatCauseConflict, PermissionConstants.ADD_OBJECT) &&
+                                    !FolderUtilsLocalServiceUtil.isParentFolder(folderThatCauseConflict, folder) &&
+                                    folderThatCauseConflict.getFolderId() != folderId);
+                    foldersInConflict.put(conflict);
                 }
-                FolderUtilsLocalServiceUtil.moveFolder(userId, folder, destFolderId, mode);
-            } catch (NoSuchResourcePermissionException e) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves folder " + folderId);
-                addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            } catch (FileNameException e) {
-                foldersInConflict.put(FolderUtilsLocalServiceUtil.formatWithOnlyMandatoryFields(folderId));
             } catch (Exception e) {
                 logger.error(e);
                 addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.UNKNOWN);
@@ -160,18 +172,27 @@ public class ClipboardUtil {
         for (long fileId : fileIdList) {
             try {
                 FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileId);
-                if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
-                        || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
+                try {
+                    if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(userId, fileEntry.getFolderId())
+                            || !PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
+                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);
+                        addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.NOT_ALLOWED_EXCEPTION);
+                        continue;
+                    }
+                    FileUtilsLocalServiceUtil.moveFileEntry(userId, fileId, destFolderId, mode);
+                } catch (NoSuchResourcePermissionException e) {
                     logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);
                     addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.NOT_ALLOWED_EXCEPTION);
-                    continue;
+                } catch (DuplicateFileEntryException e) {
+                    JSONObject conflict = new JSONObject();
+                    conflict.put(JSONConstants.ID, fileId);
+                    conflict.put(JSONConstants.NAME, fileEntry.getFileName());
+                    // Find the file that cause the conflict and check if it can be replaced
+                    Folder targetFolder = DLAppServiceUtil.getFolder(destFolderId);
+                    FileEntry fileThatCauseConflict = DLAppLocalServiceUtil.getFileEntry(targetFolder.getGroupId(), destFolderId, fileEntry.getFileName());
+                    conflict.put(JSONConstants.HAS_UPDATE_PERMISSION, PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileThatCauseConflict, ActionKeys.UPDATE));
+                    filesInConflict.put(conflict);
                 }
-                FileUtilsLocalServiceUtil.moveFileEntry(userId, fileId, destFolderId, mode);
-            } catch (NoSuchResourcePermissionException e) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + userId + " moves file " + fileId);
-                addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.NOT_ALLOWED_EXCEPTION);
-            } catch (DuplicateFileEntryException e) {
-                filesInConflict.put(FileUtilsLocalServiceUtil.formatWithOnlyMandatoryFields(fileId));
             } catch (Exception e) {
                 logger.error(e);
                 addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.UNKNOWN);

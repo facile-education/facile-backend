@@ -278,6 +278,17 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE)
 				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
 
+			// Check if target folder is not a child of the folder to move
+			if (isParentFolder(folder, destFolder) || targetFolderId == folder.getFolderId()) {
+				throw new InvalidFolderException(InvalidFolderException.CANNOT_MOVE_INTO_ITSELF);
+			}
+
+			if (mode == DocumentConstants.MODE_REPLACE) { // Cannot replace a folder by it child or itself (theoretically possible but in fact we delete the folder before replace him)
+				Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), targetFolderId, folder.getName());
+				if (isParentFolder(folderThatCauseConflict, folder) || folderThatCauseConflict.getFolderId() == folder.getFolderId()) {
+					throw new InvalidFolderException(InvalidFolderException.CANNOT_MOVE_INTO_ITSELF);
+				}
+			}
 
 			boolean success = false;
 			int nbTry = 0;
@@ -321,13 +332,8 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 								serviceContext
 						);
 					} else if (mode == DocumentConstants.MODE_REPLACE) {
-						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
-						for (DLFolder dlFolder : dlFolders) {
-							Folder subFolder = DLAppServiceUtil.getFolder(dlFolder.getFolderId());
-							if (subFolder.getName().equals(folder.getName())) {
-								FolderUtilsLocalServiceUtil.deleteFolder(userId, subFolder.getFolderId());
-							}
-						}
+						Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), destFolder.getFolderId(), folder.getName());
+						FolderUtilsLocalServiceUtil.deleteFolder(userId, folderThatCauseConflict.getFolderId());
 					} else if (mode == DocumentConstants.MODE_MERGE) {
 						// Return the folder which already exist
 						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
