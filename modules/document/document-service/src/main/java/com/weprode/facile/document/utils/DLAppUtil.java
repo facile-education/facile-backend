@@ -325,7 +325,7 @@ public class DLAppUtil {
                         count++;
                         suffixe = " (" + count + ")";
                     } else if (mode == DocumentConstants.MODE_REPLACE) {
-                        Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(parentFolder.getGroupId(), parentFolder.getFolderId(), folder.getName());
+                        Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(parentFolder.getGroupId(), parentFolder.getFolderId(), title);
                         FolderUtilsLocalServiceUtil.deleteFolder(userId, folderThatCauseConflict.getFolderId());
                     } else if (mode == DocumentConstants.MODE_MERGE) {
                         // Return the folder which already exist
