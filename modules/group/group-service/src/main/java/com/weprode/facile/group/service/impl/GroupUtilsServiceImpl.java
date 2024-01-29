@@ -90,7 +90,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isPersonal(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets groups");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets groups");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {
@@ -296,7 +296,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
         // Limited to user's groups and all groups for direction
         if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets members of group " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets members of group " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         logger.debug("User " + user.getFullName() + " fetches members of group " + groupId);
@@ -363,7 +363,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
         // Limited to user's groups for students and parents, else authorized
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user) && !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets activity of group " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets activity of group " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

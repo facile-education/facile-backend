@@ -85,7 +85,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (userId != user.getUserId() && !UserRelationshipLocalServiceUtil.isChild(user.getUserId(), userId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets courses for user " + userId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets courses for user " + userId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -178,7 +178,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 				throw new AuthException();
 			}
 			if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets courses for session " + sessionId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets courses for session " + sessionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -214,7 +214,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		result.put(JSONConstants.SUCCESS, true);
 		try {
 			if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(courseId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets course content for course " + courseId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets course content for course " + courseId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -283,7 +283,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			result.put(JSONConstants.SESSIONS, jsonSessions);
 
 		} catch (Exception e) {
-			logger.error("Could not get course content for course " + courseId + " for "+user.getFullName()+" (id="+user.getUserId()+")", e);
+			logger.error("Could not get course content for course " + courseId + " for " + user.getUserId()+")", e);
 			result.put(JSONConstants.SUCCESS, false);
 		}
 
@@ -308,7 +308,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		result.put(JSONConstants.SUCCESS, true);
 		try {
 			if (!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets details of session " + sessionId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets details of session " + sessionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -385,7 +385,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		result.put(JSONConstants.SUCCESS, true);
 		try {
 			if (!RoleUtilsLocalServiceUtil.isTeacher(user) || !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(courseId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets students of course " + courseId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets students of course " + courseId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -425,13 +425,13 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves private notes for session " + sessionId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves private notes for session " + sessionId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
 			if (RoleUtilsLocalServiceUtil.isTeacher(user) && !SessionTeacherLocalServiceUtil.hasTeacherSession(user.getUserId(), sessionId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves private notes for session " + sessionId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves private notes for session " + sessionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 

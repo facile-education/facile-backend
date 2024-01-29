@@ -209,7 +209,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		}
 
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isPersonal(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates a session");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates a session");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 		try {
@@ -286,7 +286,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user) ||
 				!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets next session");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets next session");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

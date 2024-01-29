@@ -87,7 +87,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates community");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates community");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -204,7 +204,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         }
 
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " checks community name");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " checks community name");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         logger.info("User " + user.getFullName() + " is about to create community " + communityName);
@@ -254,7 +254,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits community " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits community " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -380,7 +380,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes community " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " removes community " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -429,7 +429,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " extends community " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " extends community " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

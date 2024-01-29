@@ -94,7 +94,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         try {
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets threads of folder" + folderId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets threads of folder" + folderId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -131,7 +131,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets thread of message " + messageId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets thread of message " + messageId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -164,7 +164,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         try {
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets messages of thread" + threadId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets messages of thread" + threadId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             logger.info("User " + user.getUserId() + " fetches all messages of threadId " + threadId + " and from folderId " + folderId);
@@ -216,7 +216,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         try {
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets nb messages");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets nb messages");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -253,7 +253,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets message recipients");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets message recipients");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             List<User> recipients = MessageRecipientsLocalServiceUtil.getRecipients(messageId);
@@ -302,7 +302,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets answer and forward infos for message " + messageId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets answer and forward infos for message " + messageId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -397,7 +397,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                     // Check ownership
                     Message message = MessageLocalServiceUtil.getMessage(messageId);
                     if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " sets read status for message " + messageId);
+                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " sets read status for message " + messageId);
                         continue;
                     }
 
@@ -521,7 +521,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
         try {
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(folderId).getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves messages into folder " + folderId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " moves messages into folder " + folderId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             logger.info("User " + user.getFullName() + " (" + user.getUserId() + ") " + "moves messages " + messageIds + " to folder " + folderId);
@@ -538,7 +538,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                     Message message = MessageLocalServiceUtil.getMessage(messageId);
                     // Check ownership
                     if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves message " + messageId + " into folder " + folderId);
+                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " moves message " + messageId + " into folder " + folderId);
                         continue;
                     }
                     message.setFolderId(folderId);
@@ -587,7 +587,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
                 try {
                     Message messageToDelete = MessageLocalServiceUtil.getMessage(messageId);
                     if (MessageFolderLocalServiceUtil.getMessageFolder(messageToDelete.getFolderId()).getUserId() != user.getUserId()) {
-                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " delete messages");
+                        logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " delete messages");
                         continue;
                     }
 

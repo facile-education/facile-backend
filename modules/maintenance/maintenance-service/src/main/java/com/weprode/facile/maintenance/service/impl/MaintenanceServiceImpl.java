@@ -66,7 +66,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs synchro");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs synchro");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -96,7 +96,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs parent synchro");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs parent synchro");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -126,7 +126,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs FsAnalysis");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs FsAnalysis");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -158,7 +158,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs FsAnalysis V2");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs FsAnalysis V2");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -190,7 +190,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs anonymization");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs anonymization");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -221,7 +221,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs absence notification");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs absence notification");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -251,7 +251,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs add permission tool");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs add permission tool");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -281,7 +281,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs the cleanup obsolete folders tool");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs the cleanup obsolete folders tool");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -311,7 +311,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs data feed");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs data feed");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -341,7 +341,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs set news permissions");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs set news permissions");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -371,7 +371,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs the delete folder tool");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs the delete folder tool");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -401,7 +401,7 @@ public class MaintenanceServiceImpl extends MaintenanceServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " runs the course permissions tool");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " runs the course permissions tool");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

@@ -64,7 +64,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets school delegates");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets school delegates");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -118,7 +118,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets delegation candidates");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets delegation candidates");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -168,7 +168,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds school admin");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " adds school admin");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {
@@ -199,7 +199,7 @@ public class SchoolAdminServiceImpl extends SchoolAdminServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes school admin");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " removes school admin");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {

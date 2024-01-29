@@ -536,6 +536,9 @@ public class JSONConstants {
     public static final String SLOT_START_HOUR = "slotStartHour";
     public static final String SLOT_END_HOUR = "slotEndHour";
 
+    // Accesses
+    public static final String ACCESSES = "accesses";
+
     // Session
     public static final String SESSION_TIMEOUT = "sessionTimeout";
     public static final String SESSION_TIMEOUT_WARNING = "sessionTimeoutWarning";

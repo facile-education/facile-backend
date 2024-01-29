@@ -126,7 +126,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates a version note");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates a version note");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -157,7 +157,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates version note " + versionNoteId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " updates version note " + versionNoteId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -185,7 +185,7 @@ public class VersionNoteServiceImpl extends VersionNoteServiceBaseImpl {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 			}
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes version note " + versionNoteId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes version note " + versionNoteId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 

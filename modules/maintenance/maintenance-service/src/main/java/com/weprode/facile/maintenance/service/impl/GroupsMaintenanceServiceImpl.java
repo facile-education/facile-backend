@@ -80,7 +80,7 @@ public class GroupsMaintenanceServiceImpl
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " archives groups");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " archives groups");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -173,7 +173,7 @@ public class GroupsMaintenanceServiceImpl
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes group " + groupId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes group " + groupId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -200,7 +200,7 @@ public class GroupsMaintenanceServiceImpl
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes groups");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes groups");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

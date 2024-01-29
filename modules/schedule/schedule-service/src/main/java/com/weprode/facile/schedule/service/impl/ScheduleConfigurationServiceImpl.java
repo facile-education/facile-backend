@@ -86,7 +86,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 		// Authorized for global admins or direction (called from stats)
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets global configuration");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets global configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -114,7 +114,7 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 		// Authorized for global admins only
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves global schedule configuration");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves global schedule configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

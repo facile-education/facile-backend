@@ -111,7 +111,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         try {
             // Check if the user can read the event
             if (!EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " read eventId " + eventId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " read eventId " + eventId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             result = EventLocalServiceUtil.convertEventToJson(user.getUserId(), eventId, true);
@@ -139,7 +139,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates an event");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates an event");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -183,7 +183,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             // Only the event's creator or a direction member or a delegate is allowed to modify it
             Event event = EventLocalServiceUtil.getEvent(eventId);
             if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " modifies an event");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " modifies an event");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -229,7 +229,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             // Only the event's creator is allowed to delete it
             Event event = EventLocalServiceUtil.getEvent(eventId);
             if (event.getAuthorId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes an event");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes an event");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -260,7 +260,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         try {
             // Check if the user can read the event
             if (!EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " marks an event as read");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " marks an event as read");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             if (read) {

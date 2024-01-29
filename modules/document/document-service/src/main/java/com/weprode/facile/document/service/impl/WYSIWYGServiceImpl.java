@@ -74,11 +74,11 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " fetches HTML for " + fileVersionId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " fetches HTML for " + fileVersionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.VIEW)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " fetches HTML for " + fileVersionId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " fetches HTML for " + fileVersionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -121,11 +121,11 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), fileEntry.getFolderId())) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves HTML for " + fileVersionId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves HTML for " + fileVersionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			if (!PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), fileEntry, ActionKeys.UPDATE)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves HTML for " + fileVersionId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves HTML for " + fileVersionId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 

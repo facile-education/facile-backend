@@ -67,11 +67,11 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         }
 
         if (isSchoolNews && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds school news");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " adds school news");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         if (!isSchoolNews && !RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds group news");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " adds group news");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -120,11 +120,11 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
                     && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                     && !NewsAdminLocalServiceUtil.isUserDelegate(user)
                     && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits school news");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits school news");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             if (!news.getIsSchoolNews() && news.getAuthorId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits group news");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits group news");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             Date publication = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDate);
@@ -213,7 +213,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         try {
             // Check if the user can read news
             if (!NewsLocalServiceUtil.hasUserNews(user.getUserId(), newsId)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " marks news as read");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " marks news as read");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             result.put(JSONConstants.SUCCESS, NewsReadLocalServiceUtil.setNewsRead(user.getUserId(), newsId));
@@ -239,7 +239,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets group news broadcast groups");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets group news broadcast groups");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {
@@ -271,7 +271,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
                 && !RoleUtilsLocalServiceUtil.isSecretariat(user)
                 && !NewsAdminLocalServiceUtil.isUserDelegate(user)
                 && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets school news broadcast groups");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets school news broadcast groups");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -306,7 +306,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
         try {
             // Check if the user can read news
             if (!NewsLocalServiceUtil.hasUserNews(user.getUserId(), newsId)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets news details for " + newsId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets news details for " + newsId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             JSONObject jsonNews = NewsLocalServiceUtil.convertNewsToJson(newsId, user.getUserId(), true);
@@ -337,7 +337,7 @@ public class NewsServiceImpl extends NewsServiceBaseImpl {
             // Only the author of a news
             News news = NewsLocalServiceUtil.getNews(newsId);
             if (user.getUserId() != news.getAuthorId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes news");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes news");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             logger.info("User " + user.getFullName() + " deletes news " + newsId);

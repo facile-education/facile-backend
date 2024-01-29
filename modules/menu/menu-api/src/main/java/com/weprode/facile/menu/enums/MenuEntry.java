@@ -85,8 +85,8 @@ public class MenuEntry {
         menu.add(CDT);
         menu.add(HORAIRES);
         menu.add(HHC);
-        menu.add(RESOURCES.clone());
-        menu.add(ADMINISTRATION.clone());
+        menu.add(RESOURCES.create());
+        menu.add(ADMINISTRATION.create());
 
         return menu;
     }
@@ -127,7 +127,7 @@ public class MenuEntry {
         this.entries = entries;
     }
 
-    protected MenuEntry clone() {
+    protected MenuEntry create() {
         return new MenuEntry(this.icon, this.key, this.position, this.entries);
     }
 }

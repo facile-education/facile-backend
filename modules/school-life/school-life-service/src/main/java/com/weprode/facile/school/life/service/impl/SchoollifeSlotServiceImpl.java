@@ -64,7 +64,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates a slot");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates a slot");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -104,7 +104,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits slot " + schoollifeSessionId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits slot " + schoollifeSessionId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -145,7 +145,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes slot " + schoollifeSessionId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes slot " + schoollifeSessionId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

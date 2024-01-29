@@ -144,7 +144,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         }
         // Students, parents and teachers only
         if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets scheduler for user " + userId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets scheduler for user " + userId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

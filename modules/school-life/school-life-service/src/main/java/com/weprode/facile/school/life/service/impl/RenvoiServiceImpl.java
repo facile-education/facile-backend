@@ -74,7 +74,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets pending renvois");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets pending renvois");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -142,7 +142,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " registers student renvoi");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " registers student renvoi");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -186,7 +186,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " sets renvoi reason");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " sets renvoi reason");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -221,7 +221,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " unregisters student renvoi");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " unregisters student renvoi");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -263,7 +263,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets candidate sessions");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets candidate sessions");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

@@ -195,7 +195,7 @@ public class ContactCompletionLocalServiceImpl
 
 		// Normalize the query
 		String normalizedQuery = Normalizer.normalize(query, Normalizer.Form.NFD).toLowerCase();
-		normalizedQuery = normalizedQuery.replaceAll("[^\\p{ASCII}]", "");
+		normalizedQuery = normalizedQuery.replaceAll(NORMALIZATION_REGEXP, "");
 
 		for (int schoolIdx = 0 ; schoolIdx < userContactTree.length() ; schoolIdx++) {
 			JSONObject jsonSchool = userContactTree.getJSONObject(schoolIdx);
@@ -544,9 +544,10 @@ public class ContactCompletionLocalServiceImpl
 
 	private boolean stringMatches(String source, String query) {
 		String name = Normalizer.normalize(source, Normalizer.Form.NFKD).toLowerCase();
-		name = name.replaceAll("[^\\p{ASCII}]", "");
-		String newQuery = query.replaceAll("[^\\p{ASCII}]", "");
+		name = name.replaceAll(NORMALIZATION_REGEXP, "");
+		String newQuery = query.replaceAll(NORMALIZATION_REGEXP, "");
 		return name.length() >= newQuery.length() && name.contains(newQuery);
 	}
 
+	private static final String NORMALIZATION_REGEXP = "[^\\p{ASCII}]";
 }

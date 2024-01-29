@@ -64,7 +64,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets affected users");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets affected users");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -110,7 +110,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds user affectation");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " adds user affectation");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -150,7 +150,7 @@ public class AffectationServiceImpl extends AffectationServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes user affectation");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " removes user affectation");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

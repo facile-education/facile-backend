@@ -75,7 +75,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -102,7 +102,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 }
             }
             if (!isRoleExisting) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -135,7 +135,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -148,7 +148,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 }
             }
             if (!isRoleExisting) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -228,7 +228,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes manual user");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes manual user");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -269,7 +269,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets manual users");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets manual users");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -342,7 +342,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates password for user " + userId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " updates password for user " + userId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

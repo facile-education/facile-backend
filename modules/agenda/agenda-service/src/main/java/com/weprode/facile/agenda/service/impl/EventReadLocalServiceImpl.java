@@ -118,7 +118,7 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
         } catch (NoSuchEventReadException e) {
             return false;
         } catch (Exception e) {
-            logger.error("Error fetching if user " + userId + " has read eventId " + eventId, e);
+            logger.error("Error fetching if user " + userId + " read eventId " + eventId, e);
             return false;
         }
     }
@@ -127,7 +127,7 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
         try {
             return eventReadPersistence.findByPrimaryKey(new EventReadPK(eventId, userId));
         } catch (Exception e) {
-            logger.error("Error fetching if user " + userId + " has read eventId " + eventId, e);
+            logger.error("Error getting if user " + userId + " read event " + eventId, e);
         }
         
         return null;

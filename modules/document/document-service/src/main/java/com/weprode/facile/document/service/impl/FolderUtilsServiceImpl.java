@@ -65,7 +65,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			}
 
 			if (DLAppServiceUtil.getFolder(folderId).getUserId() != user.getUserId()) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets breadcrumb for folder " + folderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets breadcrumb for folder " + folderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -73,7 +73,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets breadcrumb for folder " + folderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets breadcrumb for folder " + folderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -116,7 +116,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates folder in folder " + targetFolderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates folder in folder " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -151,7 +151,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 		}
 		try {
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " renames folder " + folderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " renames folder " + folderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -180,7 +180,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			}
 
 			if (DLAppServiceUtil.getFolder(folderId).getUserId() != user.getUserId()) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets all entities of folder " + folderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets all entities of folder " + folderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -200,7 +200,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 			}
 
 			if (DLAppServiceUtil.getFolder(folderId).getUserId() != user.getUserId()) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets image entities of folder " + folderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets image entities of folder " + folderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -219,7 +219,7 @@ public class FolderUtilsServiceImpl extends FolderUtilsServiceBaseImpl {
 
 			User user = getGuestOrUser();
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), folderId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets all entities of folder " + folderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets all entities of folder " + folderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 

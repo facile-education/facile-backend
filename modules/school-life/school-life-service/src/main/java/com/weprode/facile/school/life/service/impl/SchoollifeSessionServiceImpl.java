@@ -66,7 +66,7 @@ public class SchoollifeSessionServiceImpl extends SchoollifeSessionServiceBaseIm
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets week sessions");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets week sessions");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

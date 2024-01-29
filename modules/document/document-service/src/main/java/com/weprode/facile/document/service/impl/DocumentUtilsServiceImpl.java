@@ -113,7 +113,7 @@ public class DocumentUtilsServiceImpl extends DocumentUtilsServiceBaseImpl {
 		}
 		// Limited to user's groups and all groups for direction
 		if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets document group activity for group " + groupId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets document group activity for group " + groupId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 

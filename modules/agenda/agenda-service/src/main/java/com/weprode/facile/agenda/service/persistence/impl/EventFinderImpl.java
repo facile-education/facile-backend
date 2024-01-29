@@ -33,6 +33,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
     public static final String COUNT_USER_EVENTS = EventFinder.class.getName() + ".countUserEvents";
     public static final String COUNT_SCHOOL_EVENTS = EventFinder.class.getName() + ".countSchoolEvents";
     public static final String DATE_SEARCH_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    private static final String OTHER = "[$OTHER$]";
 
     public List<Event> getUserEvents(long userId, Date minDate, int startIndex, int nbEvents, List<Long> groupIds, List<Long> roleIds, boolean unreadOnly) {
         Session session = null;
@@ -48,7 +49,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             if (unreadOnly) {
                 other = " AND event.eventId NOT IN (SELECT read_.eventId FROM Agenda_EventRead read_ WHERE userId = " + userId + ")";
             }
-            sql = StringUtil.replace(sql, "[$OTHER$]", other);
+            sql = StringUtil.replace(sql, OTHER, other);
 
             logger.debug("Agenda events sql = " + sql);
             SQLQuery q = session.createSQLQuery(sql);
@@ -85,7 +86,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             if (unreadOnly) {
                 other = " AND event.eventId NOT IN (SELECT read_.eventId FROM Agenda_EventRead read_ WHERE userId = " + userId + ")";
             }
-            sql = StringUtil.replace(sql, "[$OTHER$]", other);
+            sql = StringUtil.replace(sql, OTHER, other);
 
             logger.debug("Agenda events sql = " + sql);
             SQLQuery q = session.createSQLQuery(sql);
@@ -100,7 +101,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
 
             return (List<Event>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
         } catch (Exception e) {
-            logger.error("Error while fetching agenda events for user " + userId + " from minDate " + minDate +
+            logger.error("Error while fetching school events for user " + userId + " from minDate " + minDate +
                     " current index = " + startIndex + " and nb element to fetch = " + nbEvents, e);
         } finally {
             closeSession(session);
@@ -123,7 +124,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             if (unreadOnly) {
                 other = " AND event.eventId NOT IN (SELECT read_.eventId FROM Agenda_EventRead read_ WHERE userId = " + userId + ")";
             }
-            sql = StringUtil.replace(sql, "[$OTHER$]", other);
+            sql = StringUtil.replace(sql, OTHER, other);
             SQLQuery q = session.createSQLQuery(sql);
             q.setCacheable(false);
 
@@ -133,7 +134,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
 
             return ((BigInteger) q.uniqueResult()).intValue();
         } catch (Exception e) {
-            logger.error("Error while fetching agenda events for user " + userId + " from " + minDate, e);
+            logger.error("Error while counting agenda events for user " + userId + " from " + minDate, e);
         } finally {
             closeSession(session);
         }
@@ -154,7 +155,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
             if (unreadOnly) {
                 other = " AND event.eventId NOT IN (SELECT read_.eventId FROM Agenda_EventRead read_ WHERE userId = " + userId + ")";
             }
-            sql = StringUtil.replace(sql, "[$OTHER$]", other);
+            sql = StringUtil.replace(sql, OTHER, other);
             SQLQuery q = session.createSQLQuery(sql);
             q.setCacheable(false);
 
@@ -164,7 +165,7 @@ public class EventFinderImpl extends EventFinderBaseImpl
 
             return ((BigInteger) q.uniqueResult()).intValue();
         } catch (Exception e) {
-            logger.error("Error while fetching agenda events for user " + userId + " from " + minDate, e);
+            logger.error("Error while counting school events for user " + userId + " from " + minDate, e);
         } finally {
             closeSession(session);
         }

@@ -61,7 +61,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " get accesses for school " + schoolId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " get accesses for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -69,9 +69,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		}
 
 		try {
-			logger.info("User " + user.getUserId() + " fetches accesses for school " + schoolId);
-			result.put("accesses", AccessLocalServiceUtil.getSchoolAccesses(schoolId));
-
+			result.put(JSONConstants.ACCESSES, AccessLocalServiceUtil.getSchoolAccesses(schoolId));
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error fetching accesses for user " + user.getUserId(), e);
@@ -92,7 +90,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves category for school " + schoolId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves category for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -100,7 +98,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		}
 
 		try {
-			logger.info("User " + user.getUserId() + " save category for school " + schoolId);
+			logger.info("User " + user.getUserId() + " saves category for school " + schoolId);
 			JSONObject jsonCategory = new JSONObject(category);
 			if (jsonCategory.has(AccessConstants.CATEGORY_ID)) {
 				AccessCategoryLocalServiceUtil.updateCategory(jsonCategory.getLong(AccessConstants.CATEGORY_ID), jsonCategory.getString(AccessConstants.CATEGORY_NAME));
@@ -131,7 +129,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves access for school " + schoolId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves access for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -179,7 +177,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes access for school " + schoolId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " removes access for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -209,7 +207,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes category for school " + schoolId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " removes category for school " + schoolId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
@@ -242,7 +240,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 		}
 
 		try {
-			result.put("accesses", AccessLocalServiceUtil.getUserAccesses(user));
+			result.put(JSONConstants.ACCESSES, AccessLocalServiceUtil.getUserAccesses(user));
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error fetching accesses for user " + user.getUserId(), e);
@@ -264,7 +262,7 @@ public class AccessServiceImpl extends AccessServiceBaseImpl {
 			if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 					!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 					!RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " fetches accesses for school " + schoolId + " and role " + roleId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " fetches accesses for school " + schoolId + " and role " + roleId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 		} catch (Exception e) {
