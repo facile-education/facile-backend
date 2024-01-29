@@ -60,7 +60,12 @@ public class SlotConfigurationServiceImpl extends SlotConfigurationServiceBaseIm
 		}
 
 		// Authorized for direction, school admins, ent admins and global admins only + secretary
-		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) && !RoleUtilsLocalServiceUtil.isAdministrator(user) && !RoleUtilsLocalServiceUtil.isSecretariat(user)) {
+		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user)
+				&& !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)
+				&& !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)
+				&& !RoleUtilsLocalServiceUtil.isAdministrator(user)
+				&& !RoleUtilsLocalServiceUtil.isSecretariat(user)
+				&& !RoleUtilsLocalServiceUtil.isDoyen(user)) {
 			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets school slot configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}

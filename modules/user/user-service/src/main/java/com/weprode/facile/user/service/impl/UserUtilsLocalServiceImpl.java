@@ -105,14 +105,12 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
             groupIds.add(userOrg.getGroupId());
         }
 
-        // Add doyen classes
+        // Add affected classes for doyens, psys and social counselors
         try {
             User user = UserLocalServiceUtil.getUser(userId);
-            if (RoleUtilsLocalServiceUtil.isDoyen(user)) {
-                List<Organization> affectedClasses = UserOrgsLocalServiceUtil.getAffectedClasses(user, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
-                for (Organization affectedClass : affectedClasses) {
-                    groupIds.add(affectedClass.getGroupId());
-                }
+            List<Organization> affectedClasses = UserOrgsLocalServiceUtil.getRoleAffectedClasses(user);
+            for (Organization affectedClass : affectedClasses) {
+                groupIds.add(affectedClass.getGroupId());
             }
         } catch (Exception e) {
             // Nothing

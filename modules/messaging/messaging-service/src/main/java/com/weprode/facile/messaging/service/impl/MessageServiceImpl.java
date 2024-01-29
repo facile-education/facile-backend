@@ -47,7 +47,6 @@ import com.weprode.facile.messaging.service.MessageLocalServiceUtil;
 import com.weprode.facile.messaging.service.MessageRecipientsLocalServiceUtil;
 import com.weprode.facile.messaging.service.base.MessageServiceBaseImpl;
 import com.weprode.facile.messaging.utils.MessageUtil;
-import com.weprode.facile.messaging.utils.MessagingUtil;
 import com.weprode.facile.messaging.utils.ThreadUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
@@ -132,7 +131,7 @@ public class MessageServiceImpl extends MessageServiceBaseImpl {
             Message message = MessageLocalServiceUtil.getMessage(messageId);
             // Check ownership
             if (MessageFolderLocalServiceUtil.getMessageFolder(message.getFolderId()).getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets thread of message" + messageId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets thread of message " + messageId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 

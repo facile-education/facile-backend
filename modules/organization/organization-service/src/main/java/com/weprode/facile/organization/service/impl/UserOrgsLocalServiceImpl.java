@@ -252,25 +252,25 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
         List<Organization> orgs = new ArrayList<>();
 
         try {
-            List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId());
-            Role doyenRole = RoleUtilsLocalServiceUtil.getDoyenRole();
-            Role psychologueRole = RoleUtilsLocalServiceUtil.getPsychologueRole();
-            Role conseillerSocialRole = RoleUtilsLocalServiceUtil.getConseillerSocialRole();
+            if (RoleUtilsLocalServiceUtil.isDoyen(user) || RoleUtilsLocalServiceUtil.isPsychologue(user) || RoleUtilsLocalServiceUtil.isConseillerSocial(user)) {
+                List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId());
+                Role doyenRole = RoleUtilsLocalServiceUtil.getDoyenRole();
+                Role psychologueRole = RoleUtilsLocalServiceUtil.getPsychologueRole();
+                Role conseillerSocialRole = RoleUtilsLocalServiceUtil.getConseillerSocialRole();
 
-            if (userGroupRoles != null) {
-                for (UserGroupRole userGroupRole : userGroupRoles) {
-                    if (userGroupRole.getRoleId() == doyenRole.getRoleId()
-                            || userGroupRole.getRoleId() == psychologueRole.getRoleId()
-                            || userGroupRole.getRoleId() == conseillerSocialRole.getRoleId()) {
-                        try {
-                            Organization org = OrganizationLocalServiceUtil.getOrganization(
-                                    GroupLocalServiceUtil.getGroup(userGroupRole.getGroupId()).getClassPK());
-
-                            if (!OrgDetailsLocalServiceUtil.isArchived(org.getOrganizationId())) {
-                                orgs.add(org);
+                if (userGroupRoles != null) {
+                    for (UserGroupRole userGroupRole : userGroupRoles) {
+                        if (userGroupRole.getRoleId() == doyenRole.getRoleId()
+                                || userGroupRole.getRoleId() == psychologueRole.getRoleId()
+                                || userGroupRole.getRoleId() == conseillerSocialRole.getRoleId()) {
+                            try {
+                                Organization org = OrganizationLocalServiceUtil.getOrganization(GroupLocalServiceUtil.getGroup(userGroupRole.getGroupId()).getClassPK());
+                                if (!OrgDetailsLocalServiceUtil.isArchived(org.getOrganizationId())) {
+                                    orgs.add(org);
+                                }
+                            } catch (Exception e) {
+                                logger.error("Error fetching organization where user " + user.getFullName() + " has special role");
                             }
-                        } catch (Exception e) {
-                            logger.error("Error fetching organization where user " + user.getFullName() + " has special role");
                         }
                     }
                 }
