@@ -308,9 +308,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					// Register activity
 					ActivityLocalServiceUtil.addActivity(0, folder.getFolderId(), userId, folder.getGroupId(), "", folder.getName(), ActivityConstants.TYPE_FOLDER_MOVE);
 
-				} catch (Exception e) {
-					logger.error("An error happened during folder move at nbTry=" + nbTry, e);
-
+				} catch (DuplicateFolderNameException e) {
 					if (mode == DocumentConstants.MODE_NORMAL) {
 						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
 						for (DLFolder dlFolder : dlFolders) {
@@ -325,7 +323,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 						}
 					} else if (mode == DocumentConstants.MODE_RENAME) {
 						String suffix = " (" + nbTry + ")";
-						DLAppServiceUtil.updateFolder(
+						folder = DLAppServiceUtil.updateFolder(
 								folder.getFolderId(),
 								originalTitle + suffix,
 								folder.getDescription(),
@@ -347,7 +345,10 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					} else {
 						logger.error("No mode existing with value " + mode);
 					}
-				}
+				} catch (Exception e) {
+                    logger.error("An error happened during folder move at nbTry=" + nbTry, e);
+                    return null;
+                }
 			}
 
 			return null;
