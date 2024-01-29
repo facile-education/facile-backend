@@ -53,7 +53,7 @@ cypress-e2e:
       artifacts: true
   after_script:
     - docker rm node --volumes || true # Clean up node docker
-    - docker rm cypress --volumes || true # Clean up cypress docker
+    - docker rm -f cypress --volumes || true # Clean up cypress docker
     - docker network rm cypressnet || true # Clean up network
     - cd others/docker/ && docker compose down --volumes || true # Clean up compose dockers
     - rm -Rf ~/front || true
