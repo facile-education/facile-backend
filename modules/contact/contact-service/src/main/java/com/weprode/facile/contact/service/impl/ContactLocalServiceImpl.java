@@ -917,7 +917,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 			// School level, school and class (student only)
 			if (isContactUserStudent) {
-				jsonContactDetails.put(JSONConstants.VOLEE, UserOrgsLocalServiceUtil.getStudentVolee(currentUser));
+				jsonContactDetails.put(JSONConstants.VOLEE, UserOrgsLocalServiceUtil.getStudentVolee(contactUser));
 				jsonContactDetails.put(JSONConstants.CLASS, UserOrgsLocalServiceUtil.getStudentClassName(contactUser));
 				List<Organization> userSchools = UserOrgsLocalServiceUtil.getUserSchools(contactUser);
 				jsonContactDetails.put(JSONConstants.SCHOOL_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userSchools.get(0).getName(), true));
