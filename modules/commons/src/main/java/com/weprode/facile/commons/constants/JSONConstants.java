@@ -409,6 +409,8 @@ public class JSONConstants {
     public static final String CATEGORIES = "categories";
     public static final String PERSONALS = "Personnels";
     public static final String VOLEE = "volee";
+    public static final String MAIN_TEACHER_CLASSES = "mainTeacherClasses";
+    public static final String DOYEN_CLASSES = "doyenClasses";
 
     // News
     public static final String SCHOOLS_GROUPS = "schoolsGroups";

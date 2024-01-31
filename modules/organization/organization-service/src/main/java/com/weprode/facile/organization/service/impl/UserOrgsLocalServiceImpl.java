@@ -218,7 +218,7 @@ public class UserOrgsLocalServiceImpl extends UserOrgsLocalServiceBaseImpl {
     }
 
     // Returns the organizations where the given user has the given role
-    // Used for doyen, psychologue and conseiller social
+    // Used for doyen, psychologue, conseiller social and main teacher
     public List<Organization> getAffectedClasses(User user, long roleId) {
         List<Organization> orgs = new ArrayList<>();
 

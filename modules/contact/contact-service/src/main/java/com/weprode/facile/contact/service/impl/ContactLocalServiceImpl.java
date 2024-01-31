@@ -974,6 +974,26 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					}
 					jsonUserSchool.put(JSONConstants.COURS, jsonUserCours);
 
+					// Main teacher classes
+					JSONArray jsonUserMainClasses = new JSONArray();
+					List<Organization> mainClasses = UserOrgsLocalServiceUtil.getAffectedClasses(contactUser, RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId());
+					for (Organization mainClass : mainClasses) {
+						if (mainClass.getParentOrganizationId() == school.getOrganizationId()) {
+							jsonUserCours.put(OrgUtilsLocalServiceUtil.formatOrgName(mainClass.getName(), false));
+						}
+					}
+					jsonUserSchool.put(JSONConstants.MAIN_TEACHER_CLASSES, jsonUserMainClasses);
+
+					// Doyen classes
+					JSONArray jsonUserDoyenClasses = new JSONArray();
+					List<Organization> doyenClasses = UserOrgsLocalServiceUtil.getAffectedClasses(contactUser, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
+					for (Organization doyenClass : doyenClasses) {
+						if (doyenClass.getParentOrganizationId() == school.getOrganizationId()) {
+							jsonUserCours.put(OrgUtilsLocalServiceUtil.formatOrgName(doyenClass.getName(), false));
+						}
+					}
+					jsonUserSchool.put(JSONConstants.DOYEN_CLASSES, jsonUserDoyenClasses);
+
 					jsonUserSchools.put(jsonUserSchool);
 				}
 				jsonContactDetails.put(JSONConstants.SCHOOLS, jsonUserSchools);
