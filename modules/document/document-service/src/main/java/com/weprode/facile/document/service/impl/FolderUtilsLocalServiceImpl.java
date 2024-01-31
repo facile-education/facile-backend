@@ -382,14 +382,22 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 
 			Folder newFolder = DLAppUtil.addFolder(userId, destFolder.getGroupId(), destFolder.getFolderId(), folder.getName(), mode);
 
-			List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(folder.getGroupId(), folderId);
-			for (DLFolder dlFolder : dlFolders) {
-				copyFolder(userId, dlFolder.getFolderId(), newFolder.getFolderId(), DocumentConstants.MODE_RENAME);
+			List<Folder> subFolders = DLAppServiceUtil.getFolders(folder.getGroupId(), folderId);
+			for (Folder subFolder : subFolders) {
+				if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, subFolder, ActionKeys.VIEW)) {
+					copyFolder(userId, subFolder.getFolderId(), newFolder.getFolderId(), DocumentConstants.MODE_RENAME);
+				} else {
+					logger.warn("User " + userId + " try to copy subFolder "  + subFolder.getFolderId() + " without the required view permission");
+				}
 			}
 			List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(folder.getGroupId(), folderId);
 			for (FileEntry fileEntry : fileEntries) {
 				try {
-					FileUtilsLocalServiceUtil.copyFileEntry(userId, fileEntry.getFileEntryId(), newFolder.getFolderId(), true, DocumentConstants.MODE_RENAME);
+					if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
+						FileUtilsLocalServiceUtil.copyFileEntry(userId, fileEntry.getFileEntryId(), newFolder.getFolderId(), true, DocumentConstants.MODE_RENAME);
+					} else {
+						logger.warn("User " + userId + " try to copy subFile "  + fileEntry.getFileEntryId() + " without the required view permission");
+					}
 				} catch (IOException e) {
 					logger.error(e);
 				}
