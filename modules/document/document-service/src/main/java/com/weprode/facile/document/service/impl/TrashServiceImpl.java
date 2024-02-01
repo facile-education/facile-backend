@@ -15,13 +15,18 @@
 
 package com.weprode.facile.document.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.exception.NoSuchResourcePermissionException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
+import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -79,6 +84,39 @@ public class TrashServiceImpl extends TrashServiceBaseImpl {
 						return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 					}
 					FolderUtilsLocalServiceUtil.deleteFolder(user.getUserId(), folderId);
+				} catch (NoSuchResourcePermissionException e) {
+					JSONObject failedEntity = new JSONObject();
+					failedEntity.put(JSONConstants.ID, folderId);
+
+					boolean isThereSubEntityInFailure = e.getMessage() != null;
+					if (isThereSubEntityInFailure) {
+						JSONObject subEntityInFailure = new JSONObject();
+						long entityInFailureId = Long.parseLong(e.getMessage());
+						boolean hasViewPermissionOnSubEntityInFailure = entityInFailureId != -1;
+						if (!hasViewPermissionOnSubEntityInFailure) {
+							subEntityInFailure.put(JSONConstants.ID, -1);
+						} else {
+							subEntityInFailure.put(JSONConstants.ID, entityInFailureId);
+							try {
+								Folder failedSubFolder = DLAppServiceUtil.getFolder(entityInFailureId);
+								subEntityInFailure.put(JSONConstants.NAME, failedSubFolder.getName());
+								subEntityInFailure.put(JSONConstants.TYPE, JSONConstants.FOLDER_TYPE);
+							} catch (Exception getFolderException) {
+								try {
+									DLAppServiceUtil.getFileEntry(entityInFailureId);
+									FileEntry failedSubFile = DLAppServiceUtil.getFileEntry(entityInFailureId);
+									subEntityInFailure.put(JSONConstants.NAME, failedSubFile.getFileName());
+									subEntityInFailure.put(JSONConstants.TYPE, JSONConstants.FILE_TYPE);
+								} catch (Exception getFileException) {
+									logger.error(e);
+								}
+							}
+						}
+						failedEntity.put(JSONConstants.SUB_ENTITY_IN_FAILURE, subEntityInFailure);
+					}
+
+					failedEntitiesList.put(failedEntity);
+
 				} catch (Exception e) {
 					JSONObject failedEntity = new JSONObject();
 					failedEntity.put(JSONConstants.ID, folderId);

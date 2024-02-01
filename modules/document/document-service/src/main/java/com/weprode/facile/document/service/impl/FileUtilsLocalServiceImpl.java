@@ -650,7 +650,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 	private void addMandatoryFields (JSONObject formattedFile, FileEntry fileEntry) {
 		formattedFile.put(JSONConstants.ID, String.valueOf(fileEntry.getFileEntryId()));
 		formattedFile.put(JSONConstants.NAME, fileEntry.getTitle());
-		formattedFile.put(JSONConstants.TYPE, "File");
+		formattedFile.put(JSONConstants.TYPE, JSONConstants.FILE_TYPE);
 		formattedFile.put(JSONConstants.SIZE, (int) fileEntry.getSize());
 		formattedFile.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
 		formattedFile.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(fileEntry.getModifiedDate()));

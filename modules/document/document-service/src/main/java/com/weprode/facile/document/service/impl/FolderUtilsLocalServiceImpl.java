@@ -420,12 +420,32 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 
 			List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(folder.getGroupId(), folderId);
 			for (FileEntry file : fileList) {
-				FileUtilsLocalServiceUtil.deleteFile(userId, file.getFileEntryId());
+				try {
+					FileUtilsLocalServiceUtil.deleteFile(userId, file.getFileEntryId());
+				} catch (NoSuchResourcePermissionException e) {
+					String fileIdThatCauseProblem;
+					if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, file, ActionKeys.VIEW)) {
+						fileIdThatCauseProblem = String.valueOf(file.getFileEntryId());
+					} else {
+						fileIdThatCauseProblem = "-1";
+					}
+					throw new NoSuchResourcePermissionException(fileIdThatCauseProblem, e);
+				}
 			}
 
 			List<Folder> subFolders = DLAppServiceUtil.getFolders(folder.getGroupId(), folderId);
 			for (Folder subFolder : subFolders) {
-				deleteFolder(userId, subFolder.getFolderId());
+				try {
+					deleteFolder(userId, subFolder.getFolderId());
+				} catch (NoSuchResourcePermissionException e) {
+					String folderIdThatCauseProblem;
+					if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
+						folderIdThatCauseProblem = String.valueOf(folder.getFolderId());
+					} else {
+						folderIdThatCauseProblem = "-1";
+					}
+					throw new NoSuchResourcePermissionException(folderIdThatCauseProblem, e);
+				}
 			}
 
 			Folder parentFolder = folder.getParentFolder();
@@ -651,7 +671,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 	private void addMandatoryFields (JSONObject formattedFolder, Folder folder) {
 		formattedFolder.put(JSONConstants.ID, String.valueOf(folder.getFolderId()));
 		formattedFolder.put(JSONConstants.NAME, folder.getName());
-		formattedFolder.put(JSONConstants.TYPE, "Folder");
+		formattedFolder.put(JSONConstants.TYPE, JSONConstants.FOLDER_TYPE);
 		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(folder.getModifiedDate()));
 	}
 
