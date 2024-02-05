@@ -79,7 +79,7 @@ public class ClipboardUtil {
                     foldersInConflict.put(conflict);
                 }
             } catch (Exception e) {
-                logger.error(e);
+                logger.error("Error copying folder " + folderId, e);
                 addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.UNKNOWN);
             }
         }
@@ -111,7 +111,7 @@ public class ClipboardUtil {
                     filesInConflict.put(conflict);
                 }
             } catch (Exception e) {
-                logger.error(e);
+                logger.error("Error copying file " + fileId, e);
                 addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.UNKNOWN);
             }
         }
@@ -162,7 +162,7 @@ public class ClipboardUtil {
                     foldersInConflict.put(conflict);
                 }
             } catch (Exception e) {
-                logger.error(e);
+                logger.error("Error moving folder " + folderId, e);
                 addFailedEntityToList(failedEntitiesList, folderId, JSONConstants.UNKNOWN);
             }
         }
@@ -194,7 +194,7 @@ public class ClipboardUtil {
                     filesInConflict.put(conflict);
                 }
             } catch (Exception e) {
-                logger.error(e);
+                logger.error("Error moving file " + fileId, e);
                 addFailedEntityToList(failedEntitiesList, fileId, JSONConstants.UNKNOWN);
             }
         }

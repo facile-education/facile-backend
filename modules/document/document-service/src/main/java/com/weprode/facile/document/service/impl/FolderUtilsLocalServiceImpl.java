@@ -23,7 +23,6 @@ import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
-import com.liferay.journal.exception.InvalidFolderException;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.NoSuchResourcePermissionException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -273,20 +272,27 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		logger.info("User " + userId + " moves folder " + folder.getName() + " from folder " + folder.getParentFolderId() + " to destination folder " + targetFolderId + " in mode " + mode);
 		ServiceContext serviceContext = new ServiceContext();
 		serviceContext.setScopeGroupId(folder.getGroupId());
+		serviceContext.setUserId(userId);
 		final Folder destFolder = DLAppServiceUtil.getFolder(targetFolderId);
+
+		// Check that the moved folder is not a group root folder or a user root folder
+		if (folder.getParentFolderId() == 0) {
+			logger.info("Trying to move a root folder -> forbidden");
+			throw new PortalException();
+		}
 
 		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE)
 				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
 
 			// Check if target folder is not a child of the folder to move
 			if (isParentFolder(folder, destFolder) || targetFolderId == folder.getFolderId()) {
-				throw new InvalidFolderException(InvalidFolderException.CANNOT_MOVE_INTO_ITSELF);
+				throw new PortalException();
 			}
 
 			if (mode == DocumentConstants.MODE_REPLACE) { // Cannot replace a folder by it child or itself (theoretically possible but in fact we delete the folder before replace him)
 				Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), targetFolderId, folder.getName());
 				if (isParentFolder(folderThatCauseConflict, folder) || folderThatCauseConflict.getFolderId() == folder.getFolderId()) {
-					throw new InvalidFolderException(InvalidFolderException.CANNOT_MOVE_INTO_ITSELF);
+					throw new PortalException();
 				}
 			}
 
@@ -323,12 +329,16 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 						}
 					} else if (mode == DocumentConstants.MODE_RENAME) {
 						String suffix = " (" + nbTry + ")";
-						folder = DLAppServiceUtil.updateFolder(
+						// Perform both renaming and move in the same operation, to avoid OptimisticLockException
+						folder = DLAppLocalServiceUtil.updateFolder(
 								folder.getFolderId(),
+								targetFolderId,
 								originalTitle + suffix,
 								folder.getDescription(),
 								serviceContext
 						);
+						success = true;
+						logger.info("Successfully moved (and renamed) folder " + folder.getName() + " (id " + folder.getFolderId() + ")");
 					} else if (mode == DocumentConstants.MODE_REPLACE) {
 						Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), destFolder.getFolderId(), folder.getName());
 						FolderUtilsLocalServiceUtil.deleteFolder(userId, folderThatCauseConflict.getFolderId());
@@ -362,17 +372,23 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		final Folder folder = DLAppServiceUtil.getFolder(folderId);
 		final Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
+		// Check that the moved folder is not a group root folder or a user root folder
+		if (folder.getParentFolderId() == 0) {
+			logger.info("Trying to copy a root folder -> forbidden");
+			throw new PortalException();
+		}
+
 		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
 
 			// Check if target folder is not a child of the folder to copy
 			if (isParentFolder(folder, destFolder) || destFolderId == folderId) {
-				throw new InvalidFolderException(InvalidFolderException.CANNOT_MOVE_INTO_ITSELF);
+				throw new PortalException();
 			}
 
 			if (mode == DocumentConstants.MODE_REPLACE) { // Cannot replace a folder by it child or itself (theoretically possible but in fact we delete the folder before replace him)
 				Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), destFolderId, folder.getName());
 				if (isParentFolder(folderThatCauseConflict, folder) || folderThatCauseConflict.getFolderId() == folderId) {
-					throw new InvalidFolderException(InvalidFolderException.CANNOT_MOVE_INTO_ITSELF);
+					throw new PortalException();
 				}
 			}
 
