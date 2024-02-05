@@ -38,6 +38,7 @@ import com.weprode.facile.messaging.service.MessageLocalServiceUtil;
 import com.weprode.facile.messaging.service.MessageRecipientsLocalServiceUtil;
 import com.weprode.facile.mobile.constants.MobileConstants;
 import com.weprode.facile.mobile.service.MobileDeviceLocalServiceUtil;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -186,7 +187,9 @@ public class MessageUtil {
 
 				for (Long attachFileId : attachFileIds) {
 					logger.info("Copying file " + attachFileId + " to IM_BOX of user " + userId + ", folder " + attachedFilesFolder.getFolderId());
-					FileEntry referenceFile = FileUtilsLocalServiceUtil.copyFileEntry(userId, attachFileId, attachedFilesFolder.getFolderId(), true);
+					// Use the administrator user to perform the copy
+					List<User> adminUsers = UserLocalServiceUtil.getRoleUsers(RoleUtilsLocalServiceUtil.getAdministratorRole().getRoleId());
+					FileEntry referenceFile = FileUtilsLocalServiceUtil.copyFileEntry(adminUsers.get(0).getUserId(), attachFileId, attachedFilesFolder.getFolderId(), true);
 					logger.info("Add attached file " + referenceFile.getFileEntryId() + " to message " + messageId);
 					MessageAttachFileLocalServiceUtil.addAttachFile(messageId, referenceFile.getFileEntryId());
 				}

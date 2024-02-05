@@ -40,11 +40,9 @@ import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
-import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.constants.DocumentConstants;
 import com.weprode.facile.document.constants.PermissionConstants;
 import com.weprode.facile.document.service.ActivityLocalServiceUtil;
@@ -52,6 +50,7 @@ import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.group.constants.ActivityConstants;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -158,7 +157,8 @@ public class DLAppUtil {
      */
     public static FileEntry addFileEntry(User user, Folder folder, String fileName, byte[] bytes, int mode) throws PortalException, SystemException {
 
-        if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT)) {
+        if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT)
+            || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
             // Set default permissions
             ServiceContext serviceContext = new ServiceContext();
             serviceContext.setAddGroupPermissions(true);

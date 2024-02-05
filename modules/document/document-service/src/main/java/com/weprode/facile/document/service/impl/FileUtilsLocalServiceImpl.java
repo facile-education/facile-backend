@@ -60,7 +60,6 @@ import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.LoolTokenLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.VersionLocalServiceUtil;
-import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FileUtilsLocalServiceBaseImpl;
 import com.weprode.facile.document.utils.DLAppUtil;
 import com.weprode.facile.document.utils.DocumentUtil;
@@ -109,29 +108,22 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		final User user = UserLocalServiceUtil.getUser(userId);
 
 		final FileEntry originFile = DLAppServiceUtil.getFileEntry(fileId);
-		// Using LocalService here to avoid VIEW permission exception
-		// Example : Recipient (!= userId) is copying attached file (from sender, he have not the view permission) to its own IM box
-		// => Maybe we must change behaviour to have the sender (current user) coping his file to the recipient IM box, which must have the ADD_OBJECT permission for everybody?
 		final Folder destFolder = DLAppLocalServiceUtil.getFolder(destFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)
+			|| RoleUtilsLocalServiceUtil.isAdministrator(user)) {
 
 			boolean isSignet = false;
-
-			// Ajout des permissions
 			ServiceContext serviceContext = new ServiceContext();
 			serviceContext.setAddGroupPermissions(true);
-
 			FileEntry newFileEntry;
 			InputStream is;
 
 			if (copyFileContent) {
-				// Use the getContentStream from FileEntryUtil because the same methods on
-				// FileEntry check the permission, in some case this throw and error
 				isSignet = originFile.getExtension().equals("html") && originFile.getMimeType().equals("text/bmk");
 				is = DLFileEntryLocalServiceUtil.getFileAsStream(originFile.getFileEntryId(), originFile.getVersion());
 			} else {
-				// on sauve un fichier vide!!!
+				// Save empty file
 				is = new ByteArrayInputStream("".getBytes());
 			}
 
