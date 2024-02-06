@@ -970,7 +970,10 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					JSONArray jsonUserCours = new JSONArray();
 					List<Organization> userCourses  = UserOrgsLocalServiceUtil.getUserCours(contactUser, false, school.getOrganizationId());
 					for (Organization userCours : userCourses) {
-						jsonUserCours.put(OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
+						JSONObject jsonCours = new JSONObject();
+						jsonCours.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
+						jsonCours.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(contactUser, userCours));
+						jsonUserCours.put(jsonCours);
 					}
 					jsonUserSchool.put(JSONConstants.COURS, jsonUserCours);
 
