@@ -29,7 +29,7 @@ sonarqube-check:
 cypress-e2e:
   stage: test
   variables:
-    NODE_VERSION: "16-alpine"
+    NODE_VERSION: "18-alpine"
     HTTPD_VERSION: "2.4-alpine"
     MARIADB_VERSION: "10.6"
     MARIADB_PATH: "/var/lib/mysql"
