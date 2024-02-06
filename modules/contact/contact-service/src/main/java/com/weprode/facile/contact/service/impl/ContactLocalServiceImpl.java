@@ -1021,7 +1021,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 						jsonParent.put(JSONConstants.FIRST_NAME, parent.getFirstName());
 						jsonParent.put(JSONConstants.LAST_NAME, parent.getLastName());
 						jsonParent.put(JSONConstants.USER_ID, parent.getUserId());
-						if (isCurrentUserTeacher && areGroupsInCommon) {
+						if (isCurrentUserPersonal || (isCurrentUserTeacher && areGroupsInCommon)) {
 							jsonParent.put(JSONConstants.EMAIL, parent.getEmailAddress());
 							UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(contactUserId);
 							jsonParent.put(JSONConstants.HOME_PHONE, userContact.getHomePhone());
@@ -1031,7 +1031,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 						}
 						jsonParents.put(jsonParent);
 					}
-					jsonContactDetails.put(JSONConstants.ALLOWED_TO_WRITE_TO_PARENTS, isCurrentUserTeacher && areGroupsInCommon);
+					jsonContactDetails.put(JSONConstants.ALLOWED_TO_WRITE_TO_PARENTS, isCurrentUserPersonal || (isCurrentUserTeacher && areGroupsInCommon));
 					jsonContactDetails.put(JSONConstants.PARENTS, jsonParents);
 				}
 			}
@@ -1057,8 +1057,8 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				}
 			}
 
-			// Schedule
-			if (isContactUserStudent && (isCurrentUserTeacher || isCurrentUserPersonal)) {
+			// Schedule for all users
+			if (isCurrentUserTeacher || isCurrentUserPersonal) {
 				// Search in a -4 +4 hour range
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.HOUR, -4);
