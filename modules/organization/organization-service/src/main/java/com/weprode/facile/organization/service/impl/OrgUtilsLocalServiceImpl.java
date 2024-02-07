@@ -215,15 +215,16 @@ public class OrgUtilsLocalServiceImpl extends OrgUtilsLocalServiceBaseImpl {
     }
 
     public String getOrgColor(User user, Organization org) {
+        // User parameter is not used but might be in the future
 
         String color = "";
         try {
             if (OrgDetailsLocalServiceUtil.isClass(org.getOrganizationId())) {
-                color = "#D20113";
+                color = OrgConstants.CLASS_COLOR;
             } else if (OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId())) {
-                color = "#3CB57D";
+                color = OrgConstants.SCHOOL_COLOR;
             }  else if (OrgDetailsLocalServiceUtil.isSubject(org.getOrganizationId())) {
-                color = "#7F00FF";
+                color = OrgConstants.SUBJECT_COLOR;
             } else {
                 // Org is a course
                 color = CourseDetailsLocalServiceUtil.getCourseColor(org.getGroupId());

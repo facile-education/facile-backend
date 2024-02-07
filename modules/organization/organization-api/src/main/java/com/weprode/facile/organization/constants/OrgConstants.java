@@ -18,4 +18,8 @@ public class OrgConstants {
     public static final long ALL_SCHOOLS_ID = -1;
 
     public static final String SUBJECT_ORG_TEACHERS   = " - Enseignants\u00B7tes";
+
+    public static final String SCHOOL_COLOR = "#3CB57D";
+    public static final String CLASS_COLOR = "#D20113";
+    public static final String SUBJECT_COLOR = "#7F00FF";
 }
