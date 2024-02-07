@@ -41,7 +41,6 @@ import com.weprode.facile.document.service.base.WYSIWYGServiceBaseImpl;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -83,13 +82,9 @@ public class WYSIWYGServiceImpl extends WYSIWYGServiceBaseImpl {
 			}
 
 			// Get file content
-			InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntry.getFileEntryId(), dlFileVersion.getVersion());
-			String content = StringUtil.read(is);
-
-			try {
-				is.close();
-			} catch (IOException e) {
-				logger.error("Error closing input stream", e);
+			String content;
+			try (InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntry.getFileEntryId(), dlFileVersion.getVersion())) {
+				content = StringUtil.read(is);
 			}
 
 			result.put(JSONConstants.CONTENT, content);

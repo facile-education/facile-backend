@@ -76,7 +76,7 @@ public interface FileUtilsLocalService extends BaseLocalService {
 		throws Exception;
 
 	public FileEntry createMindMapFile(User user, long folderId, String name)
-		throws IOException, PortalException, SystemException;
+		throws PortalException, SystemException;
 
 	public FileEntry createScratchFile(User user, long folderId, String name)
 		throws PortalException, SystemException;
@@ -108,6 +108,9 @@ public interface FileUtilsLocalService extends BaseLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getDownloadUrl(FileEntry file);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String getFileContent(long fileEntryId, String version);
 
 	/**
 	 * Returns the OSGi service identifier.

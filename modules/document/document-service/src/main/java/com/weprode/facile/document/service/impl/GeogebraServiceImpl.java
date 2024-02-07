@@ -18,7 +18,6 @@ package com.weprode.facile.document.service.impl;
 import com.liferay.document.library.kernel.model.DLFileVersion;
 import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
@@ -34,14 +33,12 @@ import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
+import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.GeogebraServiceBaseImpl;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 
 @Component(
 	property = {
@@ -69,7 +66,6 @@ public class GeogebraServiceImpl extends GeogebraServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		// Get file content
 		try {
 			DLFileVersion dlFileVersion = DLFileVersionLocalServiceUtil.getDLFileVersion(fileVersionId);
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(dlFileVersion.getFileEntryId());
@@ -82,20 +78,9 @@ public class GeogebraServiceImpl extends GeogebraServiceBaseImpl {
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
-			InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntry.getFileEntryId(), dlFileVersion.getVersion());
-
-			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-			int nRead;
-			byte[] data = new byte[16384];
-			while ((nRead = is.read(data, 0, data.length)) != -1) {
-				buffer.write(data, 0, nRead);
-				buffer.flush();
-				byte[] byteArray = buffer.toByteArray();
-				String content = Base64.encode(byteArray);
-
-				result.put(JSONConstants.CONTENT, content);
-				result.put(JSONConstants.NAME, fileEntry.getTitle());
-			}
+			// Get file content
+			result.put(JSONConstants.CONTENT, FileUtilsLocalServiceUtil.getFileContent(fileEntry.getFileEntryId(), dlFileVersion.getVersion()));
+			result.put(JSONConstants.NAME, fileEntry.getTitle());
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
 			logger.error("Error while getting geogebra file with fileVersionId " + fileVersionId, e);

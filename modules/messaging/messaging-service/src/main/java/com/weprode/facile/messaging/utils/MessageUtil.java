@@ -211,11 +211,11 @@ public class MessageUtil {
 				try {
 					// File
 					FileEntry dlFile = DLAppServiceUtil.getFileEntry(attachFileId);
-					InputStream fileStream = DLFileEntryLocalServiceUtil.getFileAsStream(dlFile.getFileEntryId(), dlFile.getVersion());
-					File finalFile = FileUtil.createTempFile(dlFile.getTitle());
-					FileUtil.write(finalFile, fileStream);
-					attachmentFileList.add(finalFile);
-					fileStream.close();
+					try (InputStream fileStream = DLFileEntryLocalServiceUtil.getFileAsStream(dlFile.getFileEntryId(), dlFile.getVersion())) {
+						File finalFile = FileUtil.createTempFile(dlFile.getTitle());
+						FileUtil.write(finalFile, fileStream);
+						attachmentFileList.add(finalFile);
+					}
 				} catch (Exception e) {
 					logger.error("Error when creating mail attachment for id= " + attachFileId, e);
 				}

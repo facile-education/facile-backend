@@ -82,9 +82,7 @@ public class ExportUtils {
         }
         String type = roleName.equals("other") ? "ressource" : roleName;
         String fileName = "Export_" + typeExport + "_" + type + "_" + nameFileDateFormat.format(today.getTime()) + fileExtension;
-
-        try {
-            InputStream is = new ByteArrayInputStream(file.getBytes(StandardCharsets.UTF_8));
+        try (InputStream is = new ByteArrayInputStream(file.getBytes(StandardCharsets.UTF_8))) {
             FileEntry fileEntry = DLAppServiceUtil.addTempFileEntry(currUser.getGroupId(), FolderUtilsLocalServiceUtil.getUserTmpFolder(userId).getFolderId(), "folderName", fileName, is, "html/text");
             long noReplyUserId = Long.parseLong(PropsUtil.get(NeroSystemProperties.MESSAGING_NOREPLY_USER_ID));
             String subject = "Export " + typeExport;
@@ -102,7 +100,6 @@ public class ExportUtils {
         } catch (Exception e) {
             logger.error("Error when sending message with export file", e);
         }
-
 
         resultExport.put(JSONConstants.SUCCESS, false);
         return resultExport.toString();

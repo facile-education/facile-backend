@@ -77,6 +77,7 @@ import org.jsoup.select.Elements;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -117,18 +118,24 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 			ServiceContext serviceContext = new ServiceContext();
 			serviceContext.setAddGroupPermissions(true);
 			FileEntry newFileEntry;
-			InputStream is;
+			InputStream is = null;
 
-			if (copyFileContent) {
-				isSignet = originFile.getExtension().equals("html") && originFile.getMimeType().equals("text/bmk");
-				is = DLFileEntryLocalServiceUtil.getFileAsStream(originFile.getFileEntryId(), originFile.getVersion());
-			} else {
-				// Save empty file
-				is = new ByteArrayInputStream("".getBytes());
+			try {
+				if (copyFileContent) {
+					isSignet = originFile.getExtension().equals("html") && originFile.getMimeType().equals("text/bmk");
+					is = DLFileEntryLocalServiceUtil.getFileAsStream(originFile.getFileEntryId(), originFile.getVersion());
+				} else {
+					// Save empty file
+					is = new ByteArrayInputStream("".getBytes());
+				}
+
+				newFileEntry = DLAppUtil.addFileEntry(user, destFolder, originFile.getTitle(), is, mode);
+
+			} finally {
+				if (is != null) {
+					is.close();
+				}
 			}
-
-			newFileEntry = DLAppUtil.addFileEntry(user, destFolder, originFile.getTitle(), is, mode);
-
 			if (isSignet) {
 				DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getDLFileEntry(newFileEntry.getFileEntryId());
 				dlFileEntry.setMimeType("text/bmk");
@@ -408,19 +415,43 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 				+ "version=" + file.getVersion();
 	}
 
+	public String getFileContent (long fileEntryId, String version) {
+
+		// Properly closes the stream
+		try (InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version); ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+
+			int nRead;
+			byte[] data = new byte[16384];
+			String content = "";
+			while ((nRead = is.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+				buffer.flush();
+				content = Base64.encode(buffer.toByteArray());
+			}
+			return content;
+		} catch (Exception e) {
+			logger.error("Error fetching content for file " + fileEntryId + " and version " + version);
+		}
+		// Nothing
+		return null;
+	}
+
 	public File convertAudioToMP3 (String fileName, File audioFile) throws SystemException, IOException {
-		InputStream is = new FileInputStream(audioFile);
 
-		String[] splitFN = FileNameUtil.splitFileName(fileName);
-		String originalTitle = splitFN[0];
-		String extension = splitFN[1];
-		String targetExtension = "mp3";
+		// Properly closes the stream
+		try (InputStream is = new FileInputStream(audioFile)) {
 
-		// Do not use cache
-		Map<String, String> parameters = new HashMap<>();
-		parameters.put("forceConversion", "true");
+			String[] splitFN = FileNameUtil.splitFileName(fileName);
+			String originalTitle = splitFN[0];
+			String extension = splitFN[1];
+			String targetExtension = "mp3";
 
-		return ENTDocumentConversionUtil.convert(originalTitle, is, extension, targetExtension, parameters);
+			// Do not use cache
+			Map<String, String> parameters = new HashMap<>();
+			parameters.put("forceConversion", "true");
+
+			return ENTDocumentConversionUtil.convert(originalTitle, is, extension, targetExtension, parameters);
+		}
 	}
 
 	public FileEntry createGeogebraFile (User user, long folderId, String name) throws SystemException, PortalException {
@@ -431,14 +462,14 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		return DLAppUtil.addFileEntry(user, folder, name + ".ggb", byteArray, DocumentConstants.MODE_RENAME);
 	}
 
-	public FileEntry createMindMapFile (User user, long folderId, String name) throws SystemException, PortalException, IOException {
+	public FileEntry createMindMapFile (User user, long folderId, String name) throws SystemException, PortalException {
 
 		// Create file
 		Folder folder = DLAppServiceUtil.getFolder(folderId);
 		String initFileContent = MindMapConstants.MINDMAP_NEW_FILE_START + name + MindMapConstants.MINDMAP_NEW_FILE_END;
-		InputStream stream = new ByteArrayInputStream(initFileContent.getBytes(StandardCharsets.UTF_8));
 
-		return DLAppUtil.addFileEntry(user, folder, name + ".mind", stream, DocumentConstants.MODE_RENAME);
+		byte[] byteArray = initFileContent.getBytes(StandardCharsets.UTF_8);
+		return DLAppUtil.addFileEntry(user, folder, name + ".mind", byteArray, DocumentConstants.MODE_RENAME);
 	}
 
 	public FileEntry createScratchFile (User user, long folderId, String name) throws PortalException, SystemException {
