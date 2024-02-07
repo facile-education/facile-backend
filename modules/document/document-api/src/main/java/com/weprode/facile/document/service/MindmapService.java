@@ -50,12 +50,6 @@ public interface MindmapService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.facile.document.service.impl.MindmapServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the mindmap remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link MindmapServiceUtil} if injection and service tracking are not available.
 	 */
-
-	/**
-	 * Returns the content of the given mindmap file
-	 *
-	 * @return JSONObject - the mindmap file name and content
-	 */
 	@JSONWebService(method = "GET", value = "get-mind-file")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getMindFile(long fileVersionId);

@@ -94,7 +94,7 @@ public class FileUtilsLocalServiceUtil {
 			createMindMapFile(
 				com.liferay.portal.kernel.model.User user, long folderId,
 				String name)
-		throws PortalException, SystemException {
+		throws java.io.IOException, PortalException, SystemException {
 
 		return getService().createMindMapFile(user, folderId, name);
 	}
@@ -172,10 +172,6 @@ public class FileUtilsLocalServiceUtil {
 		com.liferay.portal.kernel.repository.model.FileEntry file) {
 
 		return getService().getDownloadUrl(file);
-	}
-
-	public static String getFileContent(long fileEntryId, String version) {
-		return getService().getFileContent(fileEntryId, version);
 	}
 
 	/**

@@ -106,7 +106,8 @@ public class FileUtilsLocalServiceWrapper
 				com.liferay.portal.kernel.model.User user, long folderId,
 				String name)
 		throws com.liferay.portal.kernel.exception.PortalException,
-			   com.liferay.portal.kernel.exception.SystemException {
+			   com.liferay.portal.kernel.exception.SystemException,
+			   java.io.IOException {
 
 		return _fileUtilsLocalService.createMindMapFile(user, folderId, name);
 	}
@@ -201,11 +202,6 @@ public class FileUtilsLocalServiceWrapper
 		com.liferay.portal.kernel.repository.model.FileEntry file) {
 
 		return _fileUtilsLocalService.getDownloadUrl(file);
-	}
-
-	@Override
-	public String getFileContent(long fileEntryId, String version) {
-		return _fileUtilsLocalService.getFileContent(fileEntryId, version);
 	}
 
 	/**

@@ -77,7 +77,6 @@ import org.jsoup.select.Elements;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -415,27 +414,6 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 				+ "version=" + file.getVersion();
 	}
 
-	public String getFileContent (long fileEntryId, String version) {
-
-		// Properly closes the stream
-		try (InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version); ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-
-			int nRead;
-			byte[] data = new byte[16384];
-			String content = "";
-			while ((nRead = is.read(data, 0, data.length)) != -1) {
-				buffer.write(data, 0, nRead);
-				buffer.flush();
-				content = Base64.encode(buffer.toByteArray());
-			}
-			return content;
-		} catch (Exception e) {
-			logger.error("Error fetching content for file " + fileEntryId + " and version " + version);
-		}
-		// Nothing
-		return null;
-	}
-
 	public File convertAudioToMP3 (String fileName, File audioFile) throws SystemException, IOException {
 
 		// Properly closes the stream
@@ -462,14 +440,16 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		return DLAppUtil.addFileEntry(user, folder, name + ".ggb", byteArray, DocumentConstants.MODE_RENAME);
 	}
 
-	public FileEntry createMindMapFile (User user, long folderId, String name) throws SystemException, PortalException {
+	public FileEntry createMindMapFile (User user, long folderId, String name) throws SystemException, PortalException, IOException {
 
 		// Create file
 		Folder folder = DLAppServiceUtil.getFolder(folderId);
 		String initFileContent = MindMapConstants.MINDMAP_NEW_FILE_START + name + MindMapConstants.MINDMAP_NEW_FILE_END;
 
-		byte[] byteArray = initFileContent.getBytes(StandardCharsets.UTF_8);
-		return DLAppUtil.addFileEntry(user, folder, name + ".mind", byteArray, DocumentConstants.MODE_RENAME);
+		InputStream stream = new ByteArrayInputStream(initFileContent.getBytes(StandardCharsets.UTF_8));
+		return DLAppUtil.addFileEntry(user, folder, name + ".mind", stream, DocumentConstants.MODE_RENAME);
+//		byte[] byteArray = initFileContent.getBytes(StandardCharsets.UTF_8);
+//		return DLAppUtil.addFileEntry(user, folder, name + ".mind", byteArray, DocumentConstants.MODE_RENAME);
 	}
 
 	public FileEntry createScratchFile (User user, long folderId, String name) throws PortalException, SystemException {
