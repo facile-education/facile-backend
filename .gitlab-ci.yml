@@ -71,6 +71,9 @@ cypress-e2e:
     - echo "PATH_TO_DOCUMENT_LIBRARY=/e2e/${LFR_DATA_FOLDER}" >> ~/front/.env.local
     - echo "{"'"'"USER_PASSWORD"'"'":"'"'"${CYPRESS_USER_PASSWORD}"'"'"}" >> ~/front/cypress.env.json
     - cat ~/front/cypress.env.json
+    # Use greater sign to avoid yaml syntax issue with colon
+    - >
+      [ ! -z $CYPRESS_VIDEO ] && if [ $CYPRESS_VIDEO = "true" ]; then sed -i '/video:/c\  video: true,' cypress.config.cjs; fi
     # Change group to avoid permission issues (GID 1000)
     - chmod g+w -R ~/front/ && chgrp debian -R ~/front/
     # Needed for cypress to run (dayjs dependencies)
