@@ -967,10 +967,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					JSONArray jsonUserClasses = new JSONArray();
 					List<Organization> userSchoolClasses = UserOrgsLocalServiceUtil.getUserClasses(contactUser, false, school.getOrganizationId());
 					for (Organization userClass : userSchoolClasses) {
-						JSONObject jsonClass = new JSONObject();
-						jsonClass.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userClass.getName(), false));
-						jsonClass.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(contactUser, userClass));
-						jsonUserClasses.put(jsonClass);
+						jsonUserClasses.put(formatOrg(userClass));
 					}
 					jsonUserSchool.put(JSONConstants.CLASSES, jsonUserClasses);
 
@@ -978,10 +975,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					JSONArray jsonUserCours = new JSONArray();
 					List<Organization> userCourses  = UserOrgsLocalServiceUtil.getUserCours(contactUser, false, school.getOrganizationId());
 					for (Organization userCours : userCourses) {
-						JSONObject jsonCours = new JSONObject();
-						jsonCours.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(userCours.getName(), false));
-						jsonCours.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(contactUser, userCours));
-						jsonUserCours.put(jsonCours);
+						jsonUserCours.put(formatOrg(userCours));
 					}
 					jsonUserSchool.put(JSONConstants.COURS, jsonUserCours);
 
@@ -990,10 +984,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					List<Organization> mainClasses = UserOrgsLocalServiceUtil.getAffectedClasses(contactUser, RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId());
 					for (Organization mainClass : mainClasses) {
 						if (mainClass.getParentOrganizationId() == school.getOrganizationId()) {
-							JSONObject jsonMainClass = new JSONObject();
-							jsonMainClass.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(mainClass.getName(), false));
-							jsonMainClass.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(contactUser, mainClass));
-							jsonUserMainClasses.put(jsonMainClass);
+							jsonUserMainClasses.put(formatOrg(mainClass));
 						}
 					}
 					jsonUserSchool.put(JSONConstants.MAIN_TEACHER_CLASSES, jsonUserMainClasses);
@@ -1003,10 +994,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					List<Organization> doyenClasses = UserOrgsLocalServiceUtil.getAffectedClasses(contactUser, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
 					for (Organization doyenClass : doyenClasses) {
 						if (doyenClass.getParentOrganizationId() == school.getOrganizationId()) {
-							JSONObject jsonDoyenClass = new JSONObject();
-							jsonDoyenClass.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(doyenClass.getName(), false));
-							jsonDoyenClass.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(contactUser, doyenClass));
-							jsonUserDoyenClasses.put(jsonDoyenClass);
+							jsonUserDoyenClasses.put(formatOrg(doyenClass));
 						}
 					}
 					jsonUserSchool.put(JSONConstants.DOYEN_CLASSES, jsonUserDoyenClasses);
@@ -1023,7 +1011,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				// Loop over classes
 				JSONArray jsonUserClasses = new JSONArray();
 				for (Organization userClass : affectedClasses) {
-					jsonUserClasses.put(OrgUtilsLocalServiceUtil.formatOrgName(userClass.getName(), false));
+					jsonUserClasses.put(formatOrg(userClass));
 				}
 				jsonContactDetails.put(JSONConstants.CLASSES, jsonUserClasses);
 			}
@@ -1098,4 +1086,10 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 		return jsonContactDetails;
 	}
 
+	private static JSONObject formatOrg(Organization org) {
+		JSONObject jonOrg = new JSONObject();
+		jonOrg.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
+		jonOrg.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(null, org));
+		return jonOrg;
+	}
 }
