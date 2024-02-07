@@ -73,7 +73,7 @@ cypress-e2e:
     - cat ~/front/cypress.env.json
     # Use greater sign to avoid yaml syntax issue with colon
     - >
-      [ ! -z $CYPRESS_VIDEO ] && if [ $CYPRESS_VIDEO = "true" ]; then sed -i '/video:/c\  video: true,' cypress.config.cjs; fi
+      [ ! -z $CYPRESS_VIDEO ] && if [ $CYPRESS_VIDEO = "true" ]; then sed -i '/video:/c\  video: true,' ~/front/cypress.config.cjs; fi
     # Change group to avoid permission issues (GID 1000)
     - chmod g+w -R ~/front/ && chgrp debian -R ~/front/
     # Needed for cypress to run (dayjs dependencies)
