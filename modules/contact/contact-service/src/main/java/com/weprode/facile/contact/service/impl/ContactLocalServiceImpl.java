@@ -1038,7 +1038,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 						jsonParent.put(JSONConstants.FIRST_NAME, parent.getFirstName());
 						jsonParent.put(JSONConstants.LAST_NAME, parent.getLastName());
 						jsonParent.put(JSONConstants.USER_ID, parent.getUserId());
-						if (isCurrentUserPersonal || (isCurrentUserTeacher && areGroupsInCommon)) {
+						if ((isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserPersonal) {
 							jsonParent.put(JSONConstants.EMAIL, parent.getEmailAddress());
 							UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(contactUserId);
 							jsonParent.put(JSONConstants.HOME_PHONE, userContact.getHomePhone());
@@ -1048,7 +1048,7 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 						}
 						jsonParents.put(jsonParent);
 					}
-					jsonContactDetails.put(JSONConstants.ALLOWED_TO_WRITE_TO_PARENTS, isCurrentUserPersonal || (isCurrentUserTeacher && areGroupsInCommon));
+					jsonContactDetails.put(JSONConstants.ALLOWED_TO_WRITE_TO_PARENTS, (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserPersonal);
 					jsonContactDetails.put(JSONConstants.PARENTS, jsonParents);
 				}
 			}
