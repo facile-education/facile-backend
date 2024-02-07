@@ -66,8 +66,8 @@ import java.util.Map;
  * @author Brian Wing Shun Chan
  */
 @Component(
-	property = "model.class.name=com.weprode.facile.contact.model.Contact",
-	service = AopService.class
+		property = "model.class.name=com.weprode.facile.contact.model.Contact",
+		service = AopService.class
 )
 public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
@@ -432,8 +432,8 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 			}
 			// If user is multi-school, and if the org is not a school, suffix each population by the school's name
 			if ((RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || UserOrgsLocalServiceUtil.getUserSchools(user).size() > 1)
-				&& !OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId())
-				&& org.getParentOrganizationId() != 0) {
+					&& !OrgDetailsLocalServiceUtil.isSchool(org.getOrganizationId())
+					&& org.getParentOrganizationId() != 0) {
 				populationName += ContactConstants.OF + OrgUtilsLocalServiceUtil.formatOrgName(org.getParentOrganization().getName(), true);
 			}
 		} catch (Exception e) {
@@ -925,14 +925,14 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 			// Email
 			if ((isContactUserStudent && (isContactUserChildOfCurrent || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserAssignedToContact || isCurrentUserPersonal))
-				|| (isContactUserRelative && (isContactUserRelativeOfCurrent || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserAssignedToContact || isCurrentUserPersonal))
-				|| ((isContactUserTeacher || isContactUserPersonal) && (isCurrentUserTeacher || isCurrentUserPersonal))) {
+					|| (isContactUserRelative && (isContactUserRelativeOfCurrent || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserAssignedToContact || isCurrentUserPersonal))
+					|| ((isContactUserTeacher || isContactUserPersonal) && (isCurrentUserTeacher || isCurrentUserPersonal))) {
 				jsonContactDetails.put(JSONConstants.EMAIL, contactUser.getEmailAddress());
 			}
 
 			// Coordinates of a parent : his children, his teachers, doyen, psy and social counselor, all personals
 			if (isContactUserRelative
-				&& (isContactUserRelativeOfCurrent || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserAssignedToContact || isCurrentUserPersonal)) {
+					&& (isContactUserRelativeOfCurrent || (isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserAssignedToContact || isCurrentUserPersonal)) {
 				UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(contactUserId);
 				jsonContactDetails.put(JSONConstants.HOME_PHONE, userContact.getHomePhone());
 				jsonContactDetails.put(JSONConstants.MOBILE_PHONE, userContact.getMobilePhone());
@@ -945,7 +945,12 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 			// Subjects (teacher only)
 			if (isContactUserTeacher) {
-				jsonContactDetails.put(JSONConstants.SUBJECTS, TeacherSubjectLocalServiceUtil.getTeacherSubjectList(contactUser));
+				List<String> teacherSubjects = TeacherSubjectLocalServiceUtil.getTeacherSubjects(contactUserId);
+				JSONArray jsonTeacherSubjects = new JSONArray();
+				for (String subject : teacherSubjects) {
+					jsonTeacherSubjects.put(subject);
+				}
+				jsonContactDetails.put(JSONConstants.SUBJECTS, jsonTeacherSubjects);
 			}
 
 			// Teacher schools, classes and courses : teachers and personals only can see
@@ -985,7 +990,10 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					List<Organization> mainClasses = UserOrgsLocalServiceUtil.getAffectedClasses(contactUser, RoleUtilsLocalServiceUtil.getMainTeacherRole().getRoleId());
 					for (Organization mainClass : mainClasses) {
 						if (mainClass.getParentOrganizationId() == school.getOrganizationId()) {
-							jsonUserMainClasses.put(OrgUtilsLocalServiceUtil.formatOrgName(mainClass.getName(), false));
+							JSONObject jsonMainClass = new JSONObject();
+							jsonMainClass.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(mainClass.getName(), false));
+							jsonMainClass.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(contactUser, mainClass));
+							jsonUserMainClasses.put(jsonMainClass);
 						}
 					}
 					jsonUserSchool.put(JSONConstants.MAIN_TEACHER_CLASSES, jsonUserMainClasses);
@@ -995,7 +1003,10 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 					List<Organization> doyenClasses = UserOrgsLocalServiceUtil.getAffectedClasses(contactUser, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
 					for (Organization doyenClass : doyenClasses) {
 						if (doyenClass.getParentOrganizationId() == school.getOrganizationId()) {
-							jsonUserDoyenClasses.put(OrgUtilsLocalServiceUtil.formatOrgName(doyenClass.getName(), false));
+							JSONObject jsonDoyenClass = new JSONObject();
+							jsonDoyenClass.put(JSONConstants.GROUP_NAME, OrgUtilsLocalServiceUtil.formatOrgName(doyenClass.getName(), false));
+							jsonDoyenClass.put(JSONConstants.COLOR, OrgUtilsLocalServiceUtil.getOrgColor(contactUser, doyenClass));
+							jsonUserDoyenClasses.put(jsonDoyenClass);
 						}
 					}
 					jsonUserSchool.put(JSONConstants.DOYEN_CLASSES, jsonUserDoyenClasses);
