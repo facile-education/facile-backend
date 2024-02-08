@@ -1028,11 +1028,11 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 						jsonParent.put(JSONConstants.USER_ID, parent.getUserId());
 						if ((isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserPersonal) {
 							jsonParent.put(JSONConstants.EMAIL, parent.getEmailAddress());
-							UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(contactUserId);
-							jsonParent.put(JSONConstants.HOME_PHONE, userContact.getHomePhone());
-							jsonParent.put(JSONConstants.MOBILE_PHONE, userContact.getMobilePhone());
-							jsonParent.put(JSONConstants.PRO_PHONE, userContact.getProPhone());
-							jsonParent.put(JSONConstants.ADDRESS, userContact.getAddress());
+							UserContact parentContact = UserContactLocalServiceUtil.getUserContactByUserId(parent.getUserId());
+							jsonParent.put(JSONConstants.HOME_PHONE, parentContact.getHomePhone());
+							jsonParent.put(JSONConstants.MOBILE_PHONE, parentContact.getMobilePhone());
+							jsonParent.put(JSONConstants.PRO_PHONE, parentContact.getProPhone());
+							jsonParent.put(JSONConstants.ADDRESS, parentContact.getAddress());
 						}
 						jsonParents.put(jsonParent);
 					}
