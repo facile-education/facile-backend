@@ -320,7 +320,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		jsonAccess.put(AccessConstants.FILE_ID, access.getFileId());
 		if (access.getFileId() > 0) {
 			try {
-				jsonAccess.put(AccessConstants.FOLDER_NAME, DLAppServiceUtil.getFileEntry(access.getFileId()).getFileName());
+				jsonAccess.put(AccessConstants.FILE_NAME, DLAppServiceUtil.getFileEntry(access.getFileId()).getFileName());
 			} catch (Exception e) {
 				// File is not accessible anymore -> return null to skip the access
 				logger.error("File " + access.getFileId() + " may have been deleted -> skipping this access");
