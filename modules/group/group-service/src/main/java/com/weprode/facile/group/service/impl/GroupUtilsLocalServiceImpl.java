@@ -112,7 +112,7 @@ public class GroupUtilsLocalServiceImpl extends GroupUtilsLocalServiceBaseImpl {
                 OrganizationLocalServiceUtil.deleteOrganization(orgId);
 
             } else {
-                CommunityInfosLocalServiceUtil.deleteCommunityInfos(groupId);
+                CommunityInfosLocalServiceUtil.deleteCommunityInfos(CommunityInfosLocalServiceUtil.getCommunityInfosByGroupId(groupId));
                 GroupMembershipLocalServiceUtil.removeGroupMemberships(groupId);
                 logger.info("Deleting group itself ...");
                 GroupLocalServiceUtil.deleteGroup(groupId);
