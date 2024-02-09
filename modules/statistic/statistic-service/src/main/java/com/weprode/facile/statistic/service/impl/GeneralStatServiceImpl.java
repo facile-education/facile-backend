@@ -58,16 +58,9 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
 
     private static final Log logger = LogFactoryUtil.getLog(GeneralStatServiceImpl.class);
 
-    private static final String[] COLOR_POOL = {"#FF7F72", "#B9A1FF", "#6190E0", "#1F51A7", "#27ae60"};
+    private static final String[] CHART_COLOR_POOL = {"#FF7F72", "#B9A1FF", "#6190E0", "#1F51A7", "#27ae60"};
 
-    // For files types
-    private static final String[] VIOLET_COLOR_POOL = {"#D7AAE6", "#F7DBFF", "#DEC7E5", "#F3CBFF",
-            "#21133F", "#E4B9F3", "#332158", "#D09CE1", "#4A3080",
-            "#533E7F", "#C28BD5", "#685590", "#AD77C0"};
-
-    // For homework types
-    private static final String[] BLUE_COLOR_POOL = {"#436A86", "#B8D3FF", "#25406D", "#C5DAF3", "#314D7C",
-            "#A1C2F9", "#45659B", "#597AB1", "#82A7E4", "#7699D3", "#85B7DE"};
+    private static final String[] COLOR_POOL = new String[]{"#3CB57D","#E37C75","#259CE2","#4353B3","#F0512A","#7B87C9","#8D29A8","#177F45","#616161","#F3BE39","#D20113"};
 
     private static final String DATA_SET_DEFAULT = "{label: \"Main\"}";
 
@@ -120,9 +113,9 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             for (int i = 0 ; i < datasets.length() ; ++i) {
                 JSONObject dataset = datasets.getJSONObject(i);
                 dataset.put(JSONConstants.POINT_BORDER_COLOR, "white");
-                dataset.put(JSONConstants.POINT_BACKGROUND_COLOR, COLOR_POOL[i]);
-                dataset.put(JSONConstants.BORDER_COLOR, COLOR_POOL[i]);
-                dataset.put(JSONConstants.BACKGROUND_COLOR, COLOR_POOL[i] + "75");
+                dataset.put(JSONConstants.POINT_BACKGROUND_COLOR, CHART_COLOR_POOL[i]);
+                dataset.put(JSONConstants.BORDER_COLOR, CHART_COLOR_POOL[i]);
+                dataset.put(JSONConstants.BACKGROUND_COLOR, CHART_COLOR_POOL[i] + "75");
             }
 
             result.put(JSONConstants.DATASETS, datasets);
@@ -187,9 +180,9 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             for (int i = 0 ; i < datasets.length() ; ++i) {
                 JSONObject dataset = datasets.getJSONObject(i);
                 dataset.put(JSONConstants.POINT_BORDER_COLOR, "white");
-                dataset.put(JSONConstants.POINT_BACKGROUND_COLOR, COLOR_POOL[i]);
-                dataset.put(JSONConstants.BORDER_COLOR, COLOR_POOL[i]);
-                dataset.put(JSONConstants.BACKGROUND_COLOR, COLOR_POOL[i] + "75");
+                dataset.put(JSONConstants.POINT_BACKGROUND_COLOR, CHART_COLOR_POOL[i]);
+                dataset.put(JSONConstants.BORDER_COLOR, CHART_COLOR_POOL[i]);
+                dataset.put(JSONConstants.BACKGROUND_COLOR, CHART_COLOR_POOL[i] + "75");
             }
 
             result.put(JSONConstants.DATASETS, datasets);
@@ -259,7 +252,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             for (Map.Entry<String, Integer> entry : GeneralStatLocalServiceUtil.countFiles(startDate, endDate, schoolId).entrySet()) {
                 labels.put(entry.getKey());
                 data.put(entry.getValue());
-                backgroundColors.put(VIOLET_COLOR_POOL[index++]);
+                backgroundColors.put(COLOR_POOL[index++]);
                 totalCount += entry.getValue();
             }
 
@@ -310,7 +303,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             for (Map.Entry<Integer, Integer> entry : GeneralStatLocalServiceUtil.countHomeworks(startDate, endDate, schoolId).entrySet()) {
                 labels.put(entry.getKey());
                 data.put(entry.getValue());
-                backgroundColors.put(BLUE_COLOR_POOL[index++]);
+                backgroundColors.put(COLOR_POOL[index++]);
                 totalCount += entry.getValue();
             }
 
@@ -411,7 +404,7 @@ public class GeneralStatServiceImpl extends GeneralStatServiceBaseImpl {
             for (Map.Entry<Integer, Integer> entry : GeneralStatLocalServiceUtil.countSchoolLifeStudents(startDate, endDate, schoolId).entrySet()) {
                 labels.put("slot-" + entry.getKey());
                 data.put(entry.getValue());
-                backgroundColors.put(BLUE_COLOR_POOL[index++]);
+                backgroundColors.put(COLOR_POOL[index++]);
                 totalCount += entry.getValue();
             }
 
