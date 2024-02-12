@@ -107,7 +107,8 @@ cypress-e2e:
     - FAILURE=$?
     - if [ -d ~/front/tests/e2e/screenshots ]; then mv ~/front/tests/e2e/screenshots ./; fi
     - if [ -d ~/front/tests/e2e/videos ]; then mv ~/front/tests/e2e/videos ./; fi
-    - if [ $FAILURE -ge "0" ]; then exit 1; fi
+    - echo "Failure count = $FAILURE"
+    - if [ $FAILURE -ge "0" ]; then docker compose logs liferay > lfr-docker.log; exit 1; fi
   tags:
     - cypress
     - e2e
@@ -122,3 +123,4 @@ cypress-e2e:
     paths:
       - others/docker/screenshots/
       - others/docker/videos/
+      - others/docker/lfr-docker.log
