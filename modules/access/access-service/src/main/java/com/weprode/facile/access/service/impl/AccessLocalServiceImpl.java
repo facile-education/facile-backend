@@ -338,7 +338,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 				logger.error("Cannot retrieve thumbnail for access " + access.getAccessId() + ", thumbnail fileId = " + access.getThumbnailId(), e);
 			}
 		} else {
-			jsonAccess.put(AccessConstants.THUMBNAIL_URL, JSONConstants.ACCESS_DEFAULT_THUMBNAIL);
+			jsonAccess.put(AccessConstants.THUMBNAIL_URL, "");
 		}
 		jsonAccess.put(AccessConstants.THUMBNAIL_ID, access.getThumbnailId());
 		return jsonAccess;
