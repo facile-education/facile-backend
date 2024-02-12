@@ -108,7 +108,7 @@ cypress-e2e:
     - if [ -d ~/front/tests/e2e/screenshots ]; then mv ~/front/tests/e2e/screenshots ./; fi
     - if [ -d ~/front/tests/e2e/videos ]; then mv ~/front/tests/e2e/videos ./; fi
     - echo "Failure count = $FAILURE"
-    - if [ $FAILURE -ge "0" ]; then docker compose logs liferay > lfr-docker.log; exit 1; fi
+    - if [ $FAILURE -gt 0 ]; then docker compose logs liferay > lfr-docker.log; exit 1; fi
   tags:
     - cypress
     - e2e
