@@ -516,7 +516,7 @@ public class FileUtilsServiceImpl extends FileUtilsServiceBaseImpl {
 			result.put(JSONConstants.TYPE_OF_VIEW, typeOfView);
 
 			// Get the file URL to display the document
-			String documentURL = FileUtilsLocalServiceUtil.getDisplayUrl(fileEntry, versionId, user.getUserId(), readOnly);
+			String documentURL = FileUtilsLocalServiceUtil.getDisplayUrl(fileEntry, versionId, user.getUserId(), isReadOnly);
 			result.put(JSONConstants.FILE_URL, documentURL);
 
 			result.put(JSONConstants.SUCCESS, true);
