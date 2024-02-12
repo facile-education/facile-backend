@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -58,19 +57,15 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 			// Check if groupId is either a personal or an organization group
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
 			Folder folder = DLAppLocalServiceUtil.getFolder(folderId);
-			// If folder activity, fileEntryId is 0
-			FileEntry fileEntry = fileEntryId == 0 ? null : DLAppLocalServiceUtil.getFileEntry(fileEntryId);
 
 			if (group.isRegularSite() || group.isOrganization()) {
 				if (folder.getParentFolderId() != 0) {
 					Folder parentFolder = DLAppServiceUtil.getFolder(folder.getParentFolderId());
-					if (fileEntry == null
-							|| parentFolder.getName().equals(DocumentConstants.NEWS_FOLDER_NAME)
+					if (parentFolder.getName().equals(DocumentConstants.NEWS_FOLDER_NAME)
 							|| parentFolder.getName().equals(DocumentConstants.COURSE_FOLDER_NAME)) {
 						return null;
 					}
-				} else if (fileEntry == null
-						|| folder.getName().equals(DocumentConstants.THUMBNAILS_FOLDER_NAME)
+				} else if (folder.getName().equals(DocumentConstants.THUMBNAILS_FOLDER_NAME)
 						|| folder.getName().equals(DocumentConstants.TMP_FILE_FOLDER_NAME)) {
 					return null;
 				}
