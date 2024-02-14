@@ -43,7 +43,7 @@ cypress-e2e:
     LFR_JAVA_VERSION: "zulu11"
     LFR_DATA_FOLDER: "data"
     DB_DOCKER_NAME: "docker-mariadb-1"
-    CYPRESS_DOCKER_VERSION: "3.0.0"
+    CYPRESS_DOCKER_VERSION: "4.0.0"
     CYPRESS_CMD: "--e2e"
   needs:
     - module-compilation # Needs previous job artifacts 
@@ -102,14 +102,13 @@ cypress-e2e:
     # Starting compose and waiting for all dockers to be up and healthy
     - docker compose up --detach --wait
     # Add network for cypress to see facile environment
-    - docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 cypressnet 
-    - docker run --name cypress  --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:${CYPRESS_DOCKER_VERSION} cypress run --config baseUrl=https://dev-ent-gve.com ${CYPRESS_CMD}
-    - FAILURE=$?
+    - docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 cypressnet
+    - FAILURE=0
+    - docker run --name cypress  --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v ~/front:/e2e -w /e2e --net=cypressnet --add-host dev-ent-gve.com:192.168.0.1 cypress-docker:${CYPRESS_DOCKER_VERSION} cypress run --config baseUrl=https://dev-ent-gve.com ${CYPRESS_CMD} || FAILURE=$?
     - if [ -d ~/front/tests/e2e/screenshots ]; then mv ~/front/tests/e2e/screenshots ./; fi
     - if [ -d ~/front/tests/e2e/videos ]; then mv ~/front/tests/e2e/videos ./; fi
-    - docker compose logs liferay > lfr-docker.log
     - echo "Failure count = $FAILURE"
-    - if [ $FAILURE -gt 0 ]; then exit 1; fi
+    - if [ $FAILURE -gt 0 ]; then docker compose logs liferay > lfr-docker.log; exit 1; fi
   tags:
     - cypress
     - e2e
@@ -119,8 +118,7 @@ cypress-e2e:
     - when: manual
       allow_failure: true
   artifacts:
-    #when: on_failure
-    when: always
+    when: on_failure
     expire_in: 1 week
     paths:
       - others/docker/screenshots/
