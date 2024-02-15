@@ -11,6 +11,7 @@ services:
       - ./apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf
       - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
       - ./apache/html/facile:/usr/local/apache2/htdocs/facile
+      - ./apache/html/resources:/usr/local/apache2/htdocs/resources
   mariadb:
     image: yobasystems/alpine-mariadb:${MARIADB_VERSION}
     environment:
