@@ -171,9 +171,13 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.DELETE)
 				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
 
-			// Ajout des permissions
+			// Add permissions
 			ServiceContext serviceContext = new ServiceContext();
 			serviceContext.setAddGroupPermissions(true);
+
+			// Check the activity type before moving the file
+			FileEntry fileToMove = DLAppServiceUtil.getFileEntry(fileId);
+			int activityType = fileToMove.getGroupId() != destFolder.getGroupId() ? ActivityConstants.TYPE_FILE_CREATION : ActivityConstants.TYPE_FILE_MOVE;
 
 			boolean finished = false;
 			int count = 0;
@@ -201,9 +205,17 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 					finished = true;
 
-					// Register activity
+					// Register activity in target group
 					DLFolder folder = DLFolderLocalServiceUtil.getFolder(fileEntry.getFolderId());
-					ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_MOVE);
+					ActivityLocalServiceUtil.addActivity(
+							fileEntry.getFileEntryId(),
+							fileEntry.getFolderId(),
+							user.getUserId(),
+							fileEntry.getGroupId(),
+							fileEntry.getTitle(),
+							folder.getName(),
+							activityType
+					);
 
 				} catch (DuplicateFileEntryException e) {
 					logger.error("File " + originFile.getTitle() + " (" + fileId + ") already exists in target folder " + destFolderId);

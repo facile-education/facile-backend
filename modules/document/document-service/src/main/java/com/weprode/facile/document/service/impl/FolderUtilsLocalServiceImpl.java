@@ -296,6 +296,10 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 				}
 			}
 
+			// Check the activity type before moving the folder
+			int activityType = folder.getGroupId() != destFolder.getGroupId() ? ActivityConstants.TYPE_FOLDER_CREATION : ActivityConstants.TYPE_FOLDER_MOVE;
+
+
 			boolean success = false;
 			int nbTry = 0;
 			String originalTitle = folder.getName();
@@ -312,7 +316,15 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					PermissionUtilsLocalServiceUtil.setParentPermissionToFolder(folder);
 
 					// Register activity
-					ActivityLocalServiceUtil.addActivity(0, folder.getFolderId(), userId, folder.getGroupId(), "", folder.getName(), ActivityConstants.TYPE_FOLDER_MOVE);
+					ActivityLocalServiceUtil.addActivity(
+							0,
+							folder.getFolderId(),
+							userId,
+							folder.getGroupId(),
+							"",
+							folder.getName(),
+							activityType
+					);
 
 				} catch (DuplicateFolderNameException e) {
 					if (mode == DocumentConstants.MODE_NORMAL) {
