@@ -67,6 +67,11 @@ public class SessionStudentLocalServiceWrapper
 			notifyParents);
 	}
 
+	@Override
+	public org.json.JSONObject countStudentSessions(long studentId) {
+		return _sessionStudentLocalService.countStudentSessions(studentId);
+	}
+
 	/**
 	 * @throws PortalException
 	 */

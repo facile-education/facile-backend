@@ -45,6 +45,7 @@ import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.schedule.model.CDTSession;
 import com.weprode.facile.schedule.service.CDTSessionLocalServiceUtil;
 import com.weprode.facile.schedule.service.TeacherSubjectLocalServiceUtil;
+import com.weprode.facile.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.facile.user.model.UserContact;
 import com.weprode.facile.user.service.UserContactLocalServiceUtil;
 import com.weprode.facile.user.service.UserRelationshipLocalServiceUtil;
@@ -1079,7 +1080,12 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 				}
 			}
 
-		} catch (Exception e) {
+			// HHC for students
+			if (isContactUserStudent && ((isCurrentUserTeacher && areGroupsInCommon) || isCurrentUserPersonal)) {
+				jsonContactDetails.put(JSONConstants.SCHOOLLIFE, SessionStudentLocalServiceUtil.countStudentSessions(contactUserId));
+			}
+
+			} catch (Exception e) {
 			logger.error("Error when fetching contact details for user", e);
 		}
 

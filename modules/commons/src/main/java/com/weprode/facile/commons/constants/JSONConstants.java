@@ -363,6 +363,11 @@ public class JSONConstants {
     public static final String NB_REGISTERED = "nbRegistered";
     public static final String REGISTERER_ID = "registererId";
     public static final String SESSION_NAME = "sessionName";
+    public static final String NB_RETENUES = "nbRetenues";
+    public static final String NB_RENVOIS = "nbRenvois";
+    public static final String NB_DEPANNAGES = "nbDepannages";
+    public static final String NB_TRAVAUX = "nbTravaux";
+    public static final String NB_ETUDES = "nbEtudes";
 
     // Messaging
     public static final String RECIPIENTS = "recipients";

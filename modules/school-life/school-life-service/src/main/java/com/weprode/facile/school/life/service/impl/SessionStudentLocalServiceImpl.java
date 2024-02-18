@@ -19,6 +19,8 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.weprode.facile.commons.constants.JSONConstants;
+import com.weprode.facile.schedule.service.ScheduleConfigurationLocalServiceUtil;
 import com.weprode.facile.school.life.constants.SchoollifeConstants;
 import com.weprode.facile.school.life.model.SchoollifeSession;
 import com.weprode.facile.school.life.model.SchoollifeSlot;
@@ -29,6 +31,7 @@ import com.weprode.facile.school.life.service.SessionStudentLocalServiceUtil;
 import com.weprode.facile.school.life.service.base.SessionStudentLocalServiceBaseImpl;
 import com.weprode.facile.school.life.service.persistence.SessionStudentPK;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.ArrayList;
@@ -240,5 +243,55 @@ public class SessionStudentLocalServiceImpl extends SessionStudentLocalServiceBa
         }
         
         return absentStudentIds;
+    }
+
+    // Returns a JSONObject with the count for a given student and for the 5 schoollife types
+    // Count since current schoolyear's start date
+    public JSONObject countStudentSessions(long studentId) {
+        JSONObject json = new JSONObject();
+        Date minDate = ScheduleConfigurationLocalServiceUtil.getSchoolYearStartDate();
+        int nbRenvois = 0;
+        int nbRetenues = 0;
+        int nbTravaux = 0;
+        int nbDepannages = 0;
+        int nbEtudes = 0;
+
+        List<SessionStudent> sessionStudentList = sessionStudentPersistence.findBystudentId(studentId);
+        if (sessionStudentList != null) {
+            for (SessionStudent sessionStudent : sessionStudentList) {
+                try {
+                    SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(sessionStudent.getSchoollifeSessionId());
+                    if (session.getStartDate().after(minDate)) {
+                        switch (session.getType()) {
+                            case SchoollifeConstants.TYPE_RENVOI:
+                                nbRenvois++;
+                                break;
+                            case SchoollifeConstants.TYPE_RETENUE:
+                                nbRetenues++;
+                                break;
+                            case SchoollifeConstants.TYPE_TRAVAUX:
+                                nbTravaux++;
+                                break;
+                            case SchoollifeConstants.TYPE_DEPANNAGE:
+                                nbDepannages++;
+                                break;
+                            case SchoollifeConstants.TYPE_ETUDE:
+                                nbEtudes++;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Error processing HHC session for student " + studentId, e);
+                }
+            }
+        }
+        json.put(JSONConstants.NB_RENVOIS, nbRenvois);
+        json.put(JSONConstants.NB_RETENUES, nbRetenues);
+        json.put(JSONConstants.NB_TRAVAUX, nbTravaux);
+        json.put(JSONConstants.NB_DEPANNAGES, nbDepannages);
+        json.put(JSONConstants.NB_ETUDES, nbEtudes);
+        return json;
     }
 }
