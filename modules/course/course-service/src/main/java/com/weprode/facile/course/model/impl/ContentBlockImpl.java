@@ -37,7 +37,7 @@ public class ContentBlockImpl extends ContentBlockBaseImpl {
 
         JSONObject jsonBlock = new JSONObject();
 
-        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         jsonBlock.put(JSONConstants.CONTENT_ID, this.getBlockId());
         jsonBlock.put(JSONConstants.MODIFIED_DATE, df.format(this.getModificationDate()));

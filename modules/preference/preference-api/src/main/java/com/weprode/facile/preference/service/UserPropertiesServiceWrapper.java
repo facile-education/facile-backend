@@ -67,11 +67,6 @@ public class UserPropertiesServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject updateWebdavState(boolean isEnabled) {
-		return _userPropertiesService.updateWebdavState(isEnabled);
-	}
-
-	@Override
 	public UserPropertiesService getWrappedService() {
 		return _userPropertiesService;
 	}

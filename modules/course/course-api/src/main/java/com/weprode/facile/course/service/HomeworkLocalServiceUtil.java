@@ -275,17 +275,17 @@ public class HomeworkLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
-			getHomeworkDropFolder(long homeworkId)
+			getHomeworkDropFolder(long homeworkId, boolean doCreate)
 		throws PortalException, SystemException {
 
-		return getService().getHomeworkDropFolder(homeworkId);
+		return getService().getHomeworkDropFolder(homeworkId, doCreate);
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
-			getHomeworkFolder(long homeworkId)
+			getHomeworkFolder(long homeworkId, boolean doCreate)
 		throws PortalException, SystemException {
 
-		return getService().getHomeworkFolder(homeworkId);
+		return getService().getHomeworkFolder(homeworkId, doCreate);
 	}
 
 	/**

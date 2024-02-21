@@ -34,7 +34,7 @@ public class CDTSessionImpl extends CDTSessionBaseImpl {
     public JSONObject convertToJSON(User user) {
         JSONObject jsonSession = new JSONObject();
 
-        SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
         // Global infos
         jsonSession.put(JSONConstants.SESSION_ID, this.getSessionId());
         jsonSession.put(JSONConstants.START_DATE, sdf.format(this.getStart()));

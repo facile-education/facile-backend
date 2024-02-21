@@ -74,9 +74,7 @@ public class UserPropertiesModelImpl
 	public static final Object[][] TABLE_COLUMNS = {
 		{"userId", Types.BIGINT}, {"manualAccount", Types.BOOLEAN},
 		{"hideMenu", Types.BOOLEAN}, {"themeColor", Types.VARCHAR},
-		{"etabId", Types.BIGINT}, {"preferedSchoolId", Types.BIGINT},
-		{"webdavActivated", Types.BOOLEAN},
-		{"termsOfUseAgreedDate", Types.TIMESTAMP},
+		{"etabId", Types.BIGINT}, {"termsOfUseAgreedDate", Types.TIMESTAMP},
 		{"lastSynchroDate", Types.TIMESTAMP},
 		{"lastDashboardAccessDate", Types.TIMESTAMP}
 	};
@@ -90,15 +88,13 @@ public class UserPropertiesModelImpl
 		TABLE_COLUMNS_MAP.put("hideMenu", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("themeColor", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("etabId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("preferedSchoolId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("webdavActivated", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("termsOfUseAgreedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("lastSynchroDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("lastDashboardAccessDate", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Preference_UserProperties (userId LONG not null primary key,manualAccount BOOLEAN,hideMenu BOOLEAN,themeColor VARCHAR(75) null,etabId LONG,preferedSchoolId LONG,webdavActivated BOOLEAN,termsOfUseAgreedDate DATE null,lastSynchroDate DATE null,lastDashboardAccessDate DATE null)";
+		"create table Preference_UserProperties (userId LONG not null primary key,manualAccount BOOLEAN,hideMenu BOOLEAN,themeColor VARCHAR(75) null,etabId LONG,termsOfUseAgreedDate DATE null,lastSynchroDate DATE null,lastDashboardAccessDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table Preference_UserProperties";
@@ -268,18 +264,6 @@ public class UserPropertiesModelImpl
 			"etabId",
 			(BiConsumer<UserProperties, Long>)UserProperties::setEtabId);
 		attributeGetterFunctions.put(
-			"preferedSchoolId", UserProperties::getPreferedSchoolId);
-		attributeSetterBiConsumers.put(
-			"preferedSchoolId",
-			(BiConsumer<UserProperties, Long>)
-				UserProperties::setPreferedSchoolId);
-		attributeGetterFunctions.put(
-			"webdavActivated", UserProperties::getWebdavActivated);
-		attributeSetterBiConsumers.put(
-			"webdavActivated",
-			(BiConsumer<UserProperties, Boolean>)
-				UserProperties::setWebdavActivated);
-		attributeGetterFunctions.put(
 			"termsOfUseAgreedDate", UserProperties::getTermsOfUseAgreedDate);
 		attributeSetterBiConsumers.put(
 			"termsOfUseAgreedDate",
@@ -434,42 +418,6 @@ public class UserPropertiesModelImpl
 
 	@JSON
 	@Override
-	public long getPreferedSchoolId() {
-		return _preferedSchoolId;
-	}
-
-	@Override
-	public void setPreferedSchoolId(long preferedSchoolId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_preferedSchoolId = preferedSchoolId;
-	}
-
-	@JSON
-	@Override
-	public boolean getWebdavActivated() {
-		return _webdavActivated;
-	}
-
-	@JSON
-	@Override
-	public boolean isWebdavActivated() {
-		return _webdavActivated;
-	}
-
-	@Override
-	public void setWebdavActivated(boolean webdavActivated) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_webdavActivated = webdavActivated;
-	}
-
-	@JSON
-	@Override
 	public Date getTermsOfUseAgreedDate() {
 		return _termsOfUseAgreedDate;
 	}
@@ -574,8 +522,6 @@ public class UserPropertiesModelImpl
 		userPropertiesImpl.setHideMenu(isHideMenu());
 		userPropertiesImpl.setThemeColor(getThemeColor());
 		userPropertiesImpl.setEtabId(getEtabId());
-		userPropertiesImpl.setPreferedSchoolId(getPreferedSchoolId());
-		userPropertiesImpl.setWebdavActivated(isWebdavActivated());
 		userPropertiesImpl.setTermsOfUseAgreedDate(getTermsOfUseAgreedDate());
 		userPropertiesImpl.setLastSynchroDate(getLastSynchroDate());
 		userPropertiesImpl.setLastDashboardAccessDate(
@@ -600,10 +546,6 @@ public class UserPropertiesModelImpl
 			this.<String>getColumnOriginalValue("themeColor"));
 		userPropertiesImpl.setEtabId(
 			this.<Long>getColumnOriginalValue("etabId"));
-		userPropertiesImpl.setPreferedSchoolId(
-			this.<Long>getColumnOriginalValue("preferedSchoolId"));
-		userPropertiesImpl.setWebdavActivated(
-			this.<Boolean>getColumnOriginalValue("webdavActivated"));
 		userPropertiesImpl.setTermsOfUseAgreedDate(
 			this.<Date>getColumnOriginalValue("termsOfUseAgreedDate"));
 		userPropertiesImpl.setLastSynchroDate(
@@ -702,10 +644,6 @@ public class UserPropertiesModelImpl
 
 		userPropertiesCacheModel.etabId = getEtabId();
 
-		userPropertiesCacheModel.preferedSchoolId = getPreferedSchoolId();
-
-		userPropertiesCacheModel.webdavActivated = isWebdavActivated();
-
 		Date termsOfUseAgreedDate = getTermsOfUseAgreedDate();
 
 		if (termsOfUseAgreedDate != null) {
@@ -802,8 +740,6 @@ public class UserPropertiesModelImpl
 	private boolean _hideMenu;
 	private String _themeColor;
 	private long _etabId;
-	private long _preferedSchoolId;
-	private boolean _webdavActivated;
 	private Date _termsOfUseAgreedDate;
 	private Date _lastSynchroDate;
 	private Date _lastDashboardAccessDate;
@@ -840,8 +776,6 @@ public class UserPropertiesModelImpl
 		_columnOriginalValues.put("hideMenu", _hideMenu);
 		_columnOriginalValues.put("themeColor", _themeColor);
 		_columnOriginalValues.put("etabId", _etabId);
-		_columnOriginalValues.put("preferedSchoolId", _preferedSchoolId);
-		_columnOriginalValues.put("webdavActivated", _webdavActivated);
 		_columnOriginalValues.put(
 			"termsOfUseAgreedDate", _termsOfUseAgreedDate);
 		_columnOriginalValues.put("lastSynchroDate", _lastSynchroDate);
@@ -870,15 +804,11 @@ public class UserPropertiesModelImpl
 
 		columnBitmasks.put("etabId", 16L);
 
-		columnBitmasks.put("preferedSchoolId", 32L);
+		columnBitmasks.put("termsOfUseAgreedDate", 32L);
 
-		columnBitmasks.put("webdavActivated", 64L);
+		columnBitmasks.put("lastSynchroDate", 64L);
 
-		columnBitmasks.put("termsOfUseAgreedDate", 128L);
-
-		columnBitmasks.put("lastSynchroDate", 256L);
-
-		columnBitmasks.put("lastDashboardAccessDate", 512L);
+		columnBitmasks.put("lastDashboardAccessDate", 128L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

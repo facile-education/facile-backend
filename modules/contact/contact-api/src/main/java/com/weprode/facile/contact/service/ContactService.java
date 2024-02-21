@@ -50,10 +50,6 @@ public interface ContactService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.facile.contact.service.impl.ContactServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the contact remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link ContactServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "get-contact-details")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getContactDetails(long contactUserId);
-
 	@JSONWebService(method = "GET", value = "get-contact-tree")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getContactTree();
@@ -76,6 +72,10 @@ public interface ContactService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
+
+	@JSONWebService(method = "GET", value = "get-user-card")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getUserCard(long contactUserId);
 
 	@JSONWebService(method = "GET", value = "search-directory")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

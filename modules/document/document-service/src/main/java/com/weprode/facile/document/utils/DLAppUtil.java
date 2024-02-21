@@ -50,6 +50,7 @@ import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.group.constants.ActivityConstants;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +96,8 @@ public class DLAppUtil {
                         if (subFolder.getName().equals(intermediaryFolderName)) {
                             hasFound = true;
                             if (mode == DocumentConstants.MODE_NORMAL) {
-                                throw new DuplicateFileEntryException();
+                                // Return in exception the problematic folder
+                                throw new DuplicateFolderNameException(String.valueOf(subFolder.getFolderId()));
                             } else if (mode == DocumentConstants.MODE_MERGE) {
                                 folder = subFolder;
                             } else if (mode == DocumentConstants.MODE_RENAME) {
@@ -155,7 +157,8 @@ public class DLAppUtil {
      */
     public static FileEntry addFileEntry(User user, Folder folder, String fileName, byte[] bytes, int mode) throws PortalException, SystemException {
 
-        if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT)) {
+        if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), folder, PermissionConstants.ADD_OBJECT)
+            || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
             // Set default permissions
             ServiceContext serviceContext = new ServiceContext();
             serviceContext.setAddGroupPermissions(true);
@@ -322,13 +325,8 @@ public class DLAppUtil {
                         count++;
                         suffixe = " (" + count + ")";
                     } else if (mode == DocumentConstants.MODE_REPLACE) {
-                        List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(groupId, parentFolderId); // Search him by name
-                        for (DLFolder dlFolder : dlFolders) {
-                            Folder subFolder = DLAppServiceUtil.getFolder(dlFolder.getFolderId());
-                            if (subFolder.getName().equals(name)) {
-                                FolderUtilsLocalServiceUtil.deleteFolder(userId, subFolder.getFolderId());
-                            }
-                        }
+                        Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(parentFolder.getGroupId(), parentFolder.getFolderId(), title);
+                        FolderUtilsLocalServiceUtil.deleteFolder(userId, folderThatCauseConflict.getFolderId());
                     } else if (mode == DocumentConstants.MODE_MERGE) {
                         // Return the folder which already exist
                         List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(groupId, parentFolderId); // Search him by name
@@ -339,6 +337,7 @@ public class DLAppUtil {
                             }
                         }
                     } else {
+                        finished = true; // To make to loop end
                         logger.error("No mode existing with value " + mode);
                     }
                 }

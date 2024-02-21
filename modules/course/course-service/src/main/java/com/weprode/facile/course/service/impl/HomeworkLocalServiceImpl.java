@@ -39,6 +39,7 @@ import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.course.CourseConstants;
 import com.weprode.facile.course.model.Homework;
 import com.weprode.facile.course.model.StudentHomework;
+import com.weprode.facile.course.service.ContentBlockLocalServiceUtil;
 import com.weprode.facile.course.service.StudentHomeworkLocalServiceUtil;
 import com.weprode.facile.course.service.base.HomeworkLocalServiceBaseImpl;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
@@ -321,6 +322,8 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			// Check course belonging for the student, because he might have changed class and/or course
 			// We do not want him/her to access old homeworks
 			for (Homework homework : homeworkList) {
+				//logger.info("TMP add permission on homework " + homework.getHomeworkId());
+				//getHomeworkFolder(homework.getHomeworkId(), false);
 				if (UserUtilsLocalServiceUtil.getUserGroupIds(studentId).contains(homework.getCourseId())) {
 					studentHomeworkList.add(homework);
 				} else {
@@ -461,23 +464,28 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 	}
 
 
-	public Folder getHomeworkFolder(long homeworkId) throws PortalException, SystemException {
+	public Folder getHomeworkFolder(long homeworkId, boolean doCreate) throws PortalException, SystemException {
 
 		Homework homework = getHomework(homeworkId);
 		Folder courseFolder = FolderUtilsLocalServiceUtil.getGroupCourseFolder(homework.getCourseId());
+		PermissionUtilsLocalServiceUtil.addDefaultPermissionsFolder(courseFolder);
 
 		Folder homeworkFolder = null;
 		try {
 			homeworkFolder = FolderUtilsLocalServiceUtil.getFolderByName(courseFolder, String.valueOf(homeworkId));
 		} catch (NoSuchFolderException e) {
-			homeworkFolder = DLAppServiceUtil.addFolder(
-					UUID.randomUUID().toString(),
-					courseFolder.getGroupId(),
-					courseFolder.getFolderId(),
-					String.valueOf(homeworkId),
-					"Dossier du devoir " + homeworkId,
-					new ServiceContext()
-			);
+			if (doCreate) {
+				logger.info("Creating folder for homework " + homeworkId);
+				homeworkFolder = DLAppServiceUtil.addFolder(
+						UUID.randomUUID().toString(),
+						courseFolder.getGroupId(),
+						courseFolder.getFolderId(),
+						String.valueOf(homeworkId),
+						"Dossier du devoir " + homeworkId,
+						new ServiceContext()
+				);
+				logger.info("Created drop folder for homework " + homeworkId);
+			}
 		} catch (Exception e) {
 			logger.error("Error when fetching folder for homeworkId " + homeworkId, e);
 		}
@@ -491,24 +499,29 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 		return homeworkFolder;
 	}
 
-	public Folder getHomeworkDropFolder(long homeworkId) throws PortalException, SystemException {
-
-		Folder homeworkFolder = getHomeworkFolder(homeworkId);
+	public Folder getHomeworkDropFolder(long homeworkId, boolean doCreate) throws PortalException, SystemException {
 
 		Folder homeworkDropFolder = null;
-		try {
-			homeworkDropFolder = FolderUtilsLocalServiceUtil.getFolderByName(homeworkFolder, CourseConstants.DROP_FOLDER);
-		} catch (NoSuchFolderException e) {
-			homeworkDropFolder = DLAppServiceUtil.addFolder(
-					UUID.randomUUID().toString(),
-					homeworkFolder.getGroupId(),
-					homeworkFolder.getFolderId(),
-					CourseConstants.DROP_FOLDER,
-					"",
-					new ServiceContext()
-			);
-		} catch (Exception e) {
-			logger.error("Error when fetching folder for homeworkId " + homeworkId, e);
+		Folder homeworkFolder = getHomeworkFolder(homeworkId, doCreate);
+
+		if (homeworkFolder != null) {
+			try {
+				homeworkDropFolder = FolderUtilsLocalServiceUtil.getFolderByName(homeworkFolder, CourseConstants.DROP_FOLDER);
+			} catch (NoSuchFolderException e) {
+				if (doCreate) {
+					logger.info("Creating drop folder for homework " + homeworkId);
+					homeworkDropFolder = DLAppServiceUtil.addFolder(
+							UUID.randomUUID().toString(),
+							homeworkFolder.getGroupId(),
+							homeworkFolder.getFolderId(),
+							CourseConstants.DROP_FOLDER,
+							"",
+							new ServiceContext()
+					);
+					logger.info("Created drop folder for homework " + homeworkId);
+				}
+			}
+
 		}
 
 		return homeworkDropFolder;
@@ -543,11 +556,22 @@ public class HomeworkLocalServiceImpl extends HomeworkLocalServiceBaseImpl {
 			StudentHomeworkLocalServiceUtil.removeHomework(homeworkId);
 
 			// Delete drop folder
-			Folder homeworkDropFolder = getHomeworkDropFolder(homeworkId);
-			DLAppServiceUtil.deleteFolder(homeworkDropFolder.getFolderId());
+			Folder homeworkDropFolder = getHomeworkDropFolder(homeworkId, false);
+			if (homeworkDropFolder != null) {
+				DLAppServiceUtil.deleteFolder(homeworkDropFolder.getFolderId());
+			}
+
+			// Delete homework folder
+			Folder homeworkFolder = getHomeworkFolder(homeworkId, false);
+			if (homeworkFolder != null) {
+				DLAppServiceUtil.deleteFolder(homeworkFolder.getFolderId());
+			}
 
 			// Remove the homework itself
 			deleteHomework(homeworkId);
+
+			// Remove the blocks
+			ContentBlockLocalServiceUtil.deleteBlocksByItemId(homeworkId);
 
 		} catch (Exception e) {
 			logger.error("Error deleting homework " + homeworkId , e);

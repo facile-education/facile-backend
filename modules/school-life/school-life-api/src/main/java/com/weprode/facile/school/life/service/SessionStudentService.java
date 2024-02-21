@@ -76,7 +76,7 @@ public interface SessionStudentService extends BaseService {
 		long studentId, long schoollifeSessionId, String comment,
 		String replayTestSubject, boolean notifyParents);
 
-	@JSONWebService(method = "GET", value = "unregister-student")
+	@JSONWebService(method = "POST", value = "unregister-student")
 	public JSONObject unregisterStudent(
 		long studentId, long schoollifeSessionId, boolean allSessions);
 

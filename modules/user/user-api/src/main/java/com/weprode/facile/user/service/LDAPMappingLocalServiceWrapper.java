@@ -57,14 +57,14 @@ public class LDAPMappingLocalServiceWrapper
 	/**
 	 * Creates a new ldap mapping with the primary key. Does not add the ldap mapping to the database.
 	 *
-	 * @param UserId the primary key for the new ldap mapping
+	 * @param userId the primary key for the new ldap mapping
 	 * @return the new ldap mapping
 	 */
 	@Override
 	public com.weprode.facile.user.model.LDAPMapping createLDAPMapping(
-		long UserId) {
+		long userId) {
 
-		return _ldapMappingLocalService.createLDAPMapping(UserId);
+		return _ldapMappingLocalService.createLDAPMapping(userId);
 	}
 
 	/**
@@ -102,16 +102,16 @@ public class LDAPMappingLocalServiceWrapper
 	 * <strong>Important:</strong> Inspect LDAPMappingLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping that was removed
 	 * @throws PortalException if a ldap mapping with the primary key could not be found
 	 */
 	@Override
 	public com.weprode.facile.user.model.LDAPMapping deleteLDAPMapping(
-			long UserId)
+			long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _ldapMappingLocalService.deleteLDAPMapping(UserId);
+		return _ldapMappingLocalService.deleteLDAPMapping(userId);
 	}
 
 	/**
@@ -229,9 +229,9 @@ public class LDAPMappingLocalServiceWrapper
 
 	@Override
 	public com.weprode.facile.user.model.LDAPMapping fetchLDAPMapping(
-		long UserId) {
+		long userId) {
 
-		return _ldapMappingLocalService.fetchLDAPMapping(UserId);
+		return _ldapMappingLocalService.fetchLDAPMapping(userId);
 	}
 
 	@Override
@@ -251,15 +251,15 @@ public class LDAPMappingLocalServiceWrapper
 	/**
 	 * Returns the ldap mapping with the primary key.
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping
 	 * @throws PortalException if a ldap mapping with the primary key could not be found
 	 */
 	@Override
-	public com.weprode.facile.user.model.LDAPMapping getLDAPMapping(long UserId)
+	public com.weprode.facile.user.model.LDAPMapping getLDAPMapping(long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _ldapMappingLocalService.getLDAPMapping(UserId);
+		return _ldapMappingLocalService.getLDAPMapping(userId);
 	}
 
 	/**
@@ -290,11 +290,6 @@ public class LDAPMappingLocalServiceWrapper
 		return _ldapMappingLocalService.getLDAPMappingsCount();
 	}
 
-	@Override
-	public Long getMaxUid() {
-		return _ldapMappingLocalService.getMaxUid();
-	}
-
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -317,39 +312,8 @@ public class LDAPMappingLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.model.User
-		getUserByEntEleveStructRattachId(String entEleveStructRattachId) {
-
-		return _ldapMappingLocalService.getUserByEntEleveStructRattachId(
-			entEleveStructRattachId);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.model.User getUserByEntPersonJointure(
-		String entPersonJointure) {
-
-		return _ldapMappingLocalService.getUserByEntPersonJointure(
-			entPersonJointure);
-	}
-
-	@Override
 	public com.liferay.portal.kernel.model.User getUserFromUID(String uid) {
 		return _ldapMappingLocalService.getUserFromUID(uid);
-	}
-
-	@Override
-	public String getUserJointure(long userId) {
-		return _ldapMappingLocalService.getUserJointure(userId);
-	}
-
-	@Override
-	public String getUserStructRattachId(long userId) {
-		return _ldapMappingLocalService.getUserStructRattachId(userId);
-	}
-
-	@Override
-	public String getUserUid(long userId) {
-		return _ldapMappingLocalService.getUserUid(userId);
 	}
 
 	/**

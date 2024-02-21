@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -70,44 +69,32 @@ public class UserContactModelImpl
 	public static final String TABLE_NAME = "User_UserContact";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"contactId", Types.BIGINT}, {"userId", Types.BIGINT},
-		{"middleNames", Types.VARCHAR}, {"birthName", Types.VARCHAR},
-		{"address", Types.VARCHAR}, {"isAddressAuthorized", Types.BOOLEAN},
-		{"mail", Types.VARCHAR}, {"isMailAuthorized", Types.BOOLEAN},
-		{"mobilePhone", Types.VARCHAR}, {"mobilePhoneSMS", Types.VARCHAR},
-		{"homePhone", Types.VARCHAR}, {"proPhone", Types.VARCHAR},
-		{"familyLink", Types.VARCHAR}
+		{"userId", Types.BIGINT}, {"address", Types.VARCHAR},
+		{"mobilePhone", Types.VARCHAR}, {"homePhone", Types.VARCHAR},
+		{"proPhone", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
 		new HashMap<String, Integer>();
 
 	static {
-		TABLE_COLUMNS_MAP.put("contactId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("middleNames", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("birthName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("address", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("isAddressAuthorized", Types.BOOLEAN);
-		TABLE_COLUMNS_MAP.put("mail", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("isMailAuthorized", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("mobilePhone", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("mobilePhoneSMS", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("homePhone", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("proPhone", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("familyLink", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table User_UserContact (contactId LONG not null primary key,userId LONG,middleNames VARCHAR(75) null,birthName VARCHAR(75) null,address VARCHAR(75) null,isAddressAuthorized BOOLEAN,mail VARCHAR(75) null,isMailAuthorized BOOLEAN,mobilePhone VARCHAR(75) null,mobilePhoneSMS VARCHAR(75) null,homePhone VARCHAR(75) null,proPhone VARCHAR(75) null,familyLink VARCHAR(75) null)";
+		"create table User_UserContact (userId LONG not null primary key,address VARCHAR(75) null,mobilePhone VARCHAR(75) null,homePhone VARCHAR(75) null,proPhone VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table User_UserContact";
 
 	public static final String ORDER_BY_JPQL =
-		" ORDER BY userContact.contactId ASC";
+		" ORDER BY userContact.userId ASC";
 
 	public static final String ORDER_BY_SQL =
-		" ORDER BY User_UserContact.contactId ASC";
+		" ORDER BY User_UserContact.userId ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -116,17 +103,11 @@ public class UserContactModelImpl
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
-	 */
-	@Deprecated
-	public static final long USERID_COLUMN_BITMASK = 1L;
-
-	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long CONTACTID_COLUMN_BITMASK = 2L;
+	public static final long USERID_COLUMN_BITMASK = 1L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -147,17 +128,17 @@ public class UserContactModelImpl
 
 	@Override
 	public long getPrimaryKey() {
-		return _contactId;
+		return _userId;
 	}
 
 	@Override
 	public void setPrimaryKey(long primaryKey) {
-		setContactId(primaryKey);
+		setUserId(primaryKey);
 	}
 
 	@Override
 	public Serializable getPrimaryKeyObj() {
-		return _contactId;
+		return _userId;
 	}
 
 	@Override
@@ -238,50 +219,18 @@ public class UserContactModelImpl
 		Map<String, BiConsumer<UserContact, ?>> attributeSetterBiConsumers =
 			new LinkedHashMap<String, BiConsumer<UserContact, ?>>();
 
-		attributeGetterFunctions.put("contactId", UserContact::getContactId);
-		attributeSetterBiConsumers.put(
-			"contactId",
-			(BiConsumer<UserContact, Long>)UserContact::setContactId);
 		attributeGetterFunctions.put("userId", UserContact::getUserId);
 		attributeSetterBiConsumers.put(
 			"userId", (BiConsumer<UserContact, Long>)UserContact::setUserId);
-		attributeGetterFunctions.put(
-			"middleNames", UserContact::getMiddleNames);
-		attributeSetterBiConsumers.put(
-			"middleNames",
-			(BiConsumer<UserContact, String>)UserContact::setMiddleNames);
-		attributeGetterFunctions.put("birthName", UserContact::getBirthName);
-		attributeSetterBiConsumers.put(
-			"birthName",
-			(BiConsumer<UserContact, String>)UserContact::setBirthName);
 		attributeGetterFunctions.put("address", UserContact::getAddress);
 		attributeSetterBiConsumers.put(
 			"address",
 			(BiConsumer<UserContact, String>)UserContact::setAddress);
 		attributeGetterFunctions.put(
-			"isAddressAuthorized", UserContact::getIsAddressAuthorized);
-		attributeSetterBiConsumers.put(
-			"isAddressAuthorized",
-			(BiConsumer<UserContact, Boolean>)
-				UserContact::setIsAddressAuthorized);
-		attributeGetterFunctions.put("mail", UserContact::getMail);
-		attributeSetterBiConsumers.put(
-			"mail", (BiConsumer<UserContact, String>)UserContact::setMail);
-		attributeGetterFunctions.put(
-			"isMailAuthorized", UserContact::getIsMailAuthorized);
-		attributeSetterBiConsumers.put(
-			"isMailAuthorized",
-			(BiConsumer<UserContact, Boolean>)UserContact::setIsMailAuthorized);
-		attributeGetterFunctions.put(
 			"mobilePhone", UserContact::getMobilePhone);
 		attributeSetterBiConsumers.put(
 			"mobilePhone",
 			(BiConsumer<UserContact, String>)UserContact::setMobilePhone);
-		attributeGetterFunctions.put(
-			"mobilePhoneSMS", UserContact::getMobilePhoneSMS);
-		attributeSetterBiConsumers.put(
-			"mobilePhoneSMS",
-			(BiConsumer<UserContact, String>)UserContact::setMobilePhoneSMS);
 		attributeGetterFunctions.put("homePhone", UserContact::getHomePhone);
 		attributeSetterBiConsumers.put(
 			"homePhone",
@@ -290,29 +239,11 @@ public class UserContactModelImpl
 		attributeSetterBiConsumers.put(
 			"proPhone",
 			(BiConsumer<UserContact, String>)UserContact::setProPhone);
-		attributeGetterFunctions.put("familyLink", UserContact::getFamilyLink);
-		attributeSetterBiConsumers.put(
-			"familyLink",
-			(BiConsumer<UserContact, String>)UserContact::setFamilyLink);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
 		_attributeSetterBiConsumers = Collections.unmodifiableMap(
 			(Map)attributeSetterBiConsumers);
-	}
-
-	@Override
-	public long getContactId() {
-		return _contactId;
-	}
-
-	@Override
-	public void setContactId(long contactId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_contactId = contactId;
 	}
 
 	@Override
@@ -345,53 +276,6 @@ public class UserContactModelImpl
 	public void setUserUuid(String userUuid) {
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public long getOriginalUserId() {
-		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("userId"));
-	}
-
-	@Override
-	public String getMiddleNames() {
-		if (_middleNames == null) {
-			return "";
-		}
-		else {
-			return _middleNames;
-		}
-	}
-
-	@Override
-	public void setMiddleNames(String middleNames) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_middleNames = middleNames;
-	}
-
-	@Override
-	public String getBirthName() {
-		if (_birthName == null) {
-			return "";
-		}
-		else {
-			return _birthName;
-		}
-	}
-
-	@Override
-	public void setBirthName(String birthName) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_birthName = birthName;
-	}
-
 	@Override
 	public String getAddress() {
 		if (_address == null) {
@@ -412,63 +296,6 @@ public class UserContactModelImpl
 	}
 
 	@Override
-	public boolean getIsAddressAuthorized() {
-		return _isAddressAuthorized;
-	}
-
-	@Override
-	public boolean isIsAddressAuthorized() {
-		return _isAddressAuthorized;
-	}
-
-	@Override
-	public void setIsAddressAuthorized(boolean isAddressAuthorized) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_isAddressAuthorized = isAddressAuthorized;
-	}
-
-	@Override
-	public String getMail() {
-		if (_mail == null) {
-			return "";
-		}
-		else {
-			return _mail;
-		}
-	}
-
-	@Override
-	public void setMail(String mail) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_mail = mail;
-	}
-
-	@Override
-	public boolean getIsMailAuthorized() {
-		return _isMailAuthorized;
-	}
-
-	@Override
-	public boolean isIsMailAuthorized() {
-		return _isMailAuthorized;
-	}
-
-	@Override
-	public void setIsMailAuthorized(boolean isMailAuthorized) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_isMailAuthorized = isMailAuthorized;
-	}
-
-	@Override
 	public String getMobilePhone() {
 		if (_mobilePhone == null) {
 			return "";
@@ -485,25 +312,6 @@ public class UserContactModelImpl
 		}
 
 		_mobilePhone = mobilePhone;
-	}
-
-	@Override
-	public String getMobilePhoneSMS() {
-		if (_mobilePhoneSMS == null) {
-			return "";
-		}
-		else {
-			return _mobilePhoneSMS;
-		}
-	}
-
-	@Override
-	public void setMobilePhoneSMS(String mobilePhoneSMS) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_mobilePhoneSMS = mobilePhoneSMS;
 	}
 
 	@Override
@@ -542,25 +350,6 @@ public class UserContactModelImpl
 		}
 
 		_proPhone = proPhone;
-	}
-
-	@Override
-	public String getFamilyLink() {
-		if (_familyLink == null) {
-			return "";
-		}
-		else {
-			return _familyLink;
-		}
-	}
-
-	@Override
-	public void setFamilyLink(String familyLink) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_familyLink = familyLink;
 	}
 
 	public long getColumnBitmask() {
@@ -619,19 +408,11 @@ public class UserContactModelImpl
 	public Object clone() {
 		UserContactImpl userContactImpl = new UserContactImpl();
 
-		userContactImpl.setContactId(getContactId());
 		userContactImpl.setUserId(getUserId());
-		userContactImpl.setMiddleNames(getMiddleNames());
-		userContactImpl.setBirthName(getBirthName());
 		userContactImpl.setAddress(getAddress());
-		userContactImpl.setIsAddressAuthorized(isIsAddressAuthorized());
-		userContactImpl.setMail(getMail());
-		userContactImpl.setIsMailAuthorized(isIsMailAuthorized());
 		userContactImpl.setMobilePhone(getMobilePhone());
-		userContactImpl.setMobilePhoneSMS(getMobilePhoneSMS());
 		userContactImpl.setHomePhone(getHomePhone());
 		userContactImpl.setProPhone(getProPhone());
-		userContactImpl.setFamilyLink(getFamilyLink());
 
 		userContactImpl.resetOriginalValues();
 
@@ -642,30 +423,15 @@ public class UserContactModelImpl
 	public UserContact cloneWithOriginalValues() {
 		UserContactImpl userContactImpl = new UserContactImpl();
 
-		userContactImpl.setContactId(
-			this.<Long>getColumnOriginalValue("contactId"));
 		userContactImpl.setUserId(this.<Long>getColumnOriginalValue("userId"));
-		userContactImpl.setMiddleNames(
-			this.<String>getColumnOriginalValue("middleNames"));
-		userContactImpl.setBirthName(
-			this.<String>getColumnOriginalValue("birthName"));
 		userContactImpl.setAddress(
 			this.<String>getColumnOriginalValue("address"));
-		userContactImpl.setIsAddressAuthorized(
-			this.<Boolean>getColumnOriginalValue("isAddressAuthorized"));
-		userContactImpl.setMail(this.<String>getColumnOriginalValue("mail"));
-		userContactImpl.setIsMailAuthorized(
-			this.<Boolean>getColumnOriginalValue("isMailAuthorized"));
 		userContactImpl.setMobilePhone(
 			this.<String>getColumnOriginalValue("mobilePhone"));
-		userContactImpl.setMobilePhoneSMS(
-			this.<String>getColumnOriginalValue("mobilePhoneSMS"));
 		userContactImpl.setHomePhone(
 			this.<String>getColumnOriginalValue("homePhone"));
 		userContactImpl.setProPhone(
 			this.<String>getColumnOriginalValue("proPhone"));
-		userContactImpl.setFamilyLink(
-			this.<String>getColumnOriginalValue("familyLink"));
 
 		return userContactImpl;
 	}
@@ -742,25 +508,7 @@ public class UserContactModelImpl
 		UserContactCacheModel userContactCacheModel =
 			new UserContactCacheModel();
 
-		userContactCacheModel.contactId = getContactId();
-
 		userContactCacheModel.userId = getUserId();
-
-		userContactCacheModel.middleNames = getMiddleNames();
-
-		String middleNames = userContactCacheModel.middleNames;
-
-		if ((middleNames != null) && (middleNames.length() == 0)) {
-			userContactCacheModel.middleNames = null;
-		}
-
-		userContactCacheModel.birthName = getBirthName();
-
-		String birthName = userContactCacheModel.birthName;
-
-		if ((birthName != null) && (birthName.length() == 0)) {
-			userContactCacheModel.birthName = null;
-		}
 
 		userContactCacheModel.address = getAddress();
 
@@ -770,32 +518,12 @@ public class UserContactModelImpl
 			userContactCacheModel.address = null;
 		}
 
-		userContactCacheModel.isAddressAuthorized = isIsAddressAuthorized();
-
-		userContactCacheModel.mail = getMail();
-
-		String mail = userContactCacheModel.mail;
-
-		if ((mail != null) && (mail.length() == 0)) {
-			userContactCacheModel.mail = null;
-		}
-
-		userContactCacheModel.isMailAuthorized = isIsMailAuthorized();
-
 		userContactCacheModel.mobilePhone = getMobilePhone();
 
 		String mobilePhone = userContactCacheModel.mobilePhone;
 
 		if ((mobilePhone != null) && (mobilePhone.length() == 0)) {
 			userContactCacheModel.mobilePhone = null;
-		}
-
-		userContactCacheModel.mobilePhoneSMS = getMobilePhoneSMS();
-
-		String mobilePhoneSMS = userContactCacheModel.mobilePhoneSMS;
-
-		if ((mobilePhoneSMS != null) && (mobilePhoneSMS.length() == 0)) {
-			userContactCacheModel.mobilePhoneSMS = null;
 		}
 
 		userContactCacheModel.homePhone = getHomePhone();
@@ -812,14 +540,6 @@ public class UserContactModelImpl
 
 		if ((proPhone != null) && (proPhone.length() == 0)) {
 			userContactCacheModel.proPhone = null;
-		}
-
-		userContactCacheModel.familyLink = getFamilyLink();
-
-		String familyLink = userContactCacheModel.familyLink;
-
-		if ((familyLink != null) && (familyLink.length() == 0)) {
-			userContactCacheModel.familyLink = null;
 		}
 
 		return userContactCacheModel;
@@ -883,19 +603,11 @@ public class UserContactModelImpl
 
 	}
 
-	private long _contactId;
 	private long _userId;
-	private String _middleNames;
-	private String _birthName;
 	private String _address;
-	private boolean _isAddressAuthorized;
-	private String _mail;
-	private boolean _isMailAuthorized;
 	private String _mobilePhone;
-	private String _mobilePhoneSMS;
 	private String _homePhone;
 	private String _proPhone;
-	private String _familyLink;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<UserContact, Object> function = _attributeGetterFunctions.get(
@@ -924,19 +636,11 @@ public class UserContactModelImpl
 	private void _setColumnOriginalValues() {
 		_columnOriginalValues = new HashMap<String, Object>();
 
-		_columnOriginalValues.put("contactId", _contactId);
 		_columnOriginalValues.put("userId", _userId);
-		_columnOriginalValues.put("middleNames", _middleNames);
-		_columnOriginalValues.put("birthName", _birthName);
 		_columnOriginalValues.put("address", _address);
-		_columnOriginalValues.put("isAddressAuthorized", _isAddressAuthorized);
-		_columnOriginalValues.put("mail", _mail);
-		_columnOriginalValues.put("isMailAuthorized", _isMailAuthorized);
 		_columnOriginalValues.put("mobilePhone", _mobilePhone);
-		_columnOriginalValues.put("mobilePhoneSMS", _mobilePhoneSMS);
 		_columnOriginalValues.put("homePhone", _homePhone);
 		_columnOriginalValues.put("proPhone", _proPhone);
-		_columnOriginalValues.put("familyLink", _familyLink);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -950,31 +654,15 @@ public class UserContactModelImpl
 	static {
 		Map<String, Long> columnBitmasks = new HashMap<>();
 
-		columnBitmasks.put("contactId", 1L);
+		columnBitmasks.put("userId", 1L);
 
-		columnBitmasks.put("userId", 2L);
+		columnBitmasks.put("address", 2L);
 
-		columnBitmasks.put("middleNames", 4L);
+		columnBitmasks.put("mobilePhone", 4L);
 
-		columnBitmasks.put("birthName", 8L);
+		columnBitmasks.put("homePhone", 8L);
 
-		columnBitmasks.put("address", 16L);
-
-		columnBitmasks.put("isAddressAuthorized", 32L);
-
-		columnBitmasks.put("mail", 64L);
-
-		columnBitmasks.put("isMailAuthorized", 128L);
-
-		columnBitmasks.put("mobilePhone", 256L);
-
-		columnBitmasks.put("mobilePhoneSMS", 512L);
-
-		columnBitmasks.put("homePhone", 1024L);
-
-		columnBitmasks.put("proPhone", 2048L);
-
-		columnBitmasks.put("familyLink", 4096L);
+		columnBitmasks.put("proPhone", 16L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

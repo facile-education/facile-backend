@@ -217,7 +217,7 @@ public class StudentHomeworkLocalServiceImpl
 			logger.info("Old dropped file deleted");
 		}
 
-		Folder homeworkDropFolder = HomeworkLocalServiceUtil.getHomeworkDropFolder(homeworkId);
+		Folder homeworkDropFolder = HomeworkLocalServiceUtil.getHomeworkDropFolder(homeworkId, false);
 		FileEntry copiedFile = FileUtilsLocalServiceUtil.copyFileEntry(studentId, fileEntryId, homeworkDropFolder.getFolderId(), true);
 		logger.info("File is dropped");
 		StudentHomeworkLocalServiceUtil.setHomeworkSent(studentId, homeworkId, copiedFile.getFileEntryId());
@@ -260,7 +260,7 @@ public class StudentHomeworkLocalServiceImpl
 	public JSONArray getHomeworkStatus(long homeworkId) {
 
 		JSONArray jsonArray = new JSONArray();
-		SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+		SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
 		List<StudentHomework> studentHomeworks = studentHomeworkPersistence.findByhomeworkId(homeworkId);
 		if (studentHomeworks != null) {

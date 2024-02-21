@@ -75,7 +75,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -102,7 +102,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 }
             }
             if (!isRoleExisting) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates manual user " + lastName + " " + firstName + " " + email);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -135,7 +135,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -148,7 +148,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 }
             }
             if (!isRoleExisting) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits manual user " + lastName + " " + firstName + " " + email);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -211,7 +211,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-manual-user", method = "GET")
+    @JSONWebService(value = "delete-manual-user", method = "DELETE")
     public JSONObject deleteManualUser(long userId) {
         JSONObject result = new JSONObject();
 
@@ -228,7 +228,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes manual user");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes manual user");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -269,7 +269,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets manual users");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets manual users");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -325,7 +325,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return jsonUser;
     }
 
-    @JSONWebService(value = "update-password-by-manager", method = "GET")
+    @JSONWebService(value = "update-password-by-manager", method = "POST")
     public JSONObject updatePasswordByManager(long userId, String password) {
         JSONObject result = new JSONObject();
 
@@ -342,7 +342,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates password for user " + userId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " updates password for user " + userId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -366,7 +366,7 @@ public class UserManagementServiceImpl extends UserManagementServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "update-password-after-reinit-by-manager", method = "GET")
+    @JSONWebService(value = "update-password-after-reinit-by-manager", method = "POST")
     public JSONObject updatePasswordAfterReinitByManager(String password, String confirmPassword) {
         JSONObject result = new JSONObject();
 

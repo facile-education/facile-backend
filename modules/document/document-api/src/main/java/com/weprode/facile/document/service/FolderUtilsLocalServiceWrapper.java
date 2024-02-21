@@ -109,6 +109,18 @@ public class FolderUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject formatWithOnlyMandatoryFields(
+		com.liferay.portal.kernel.repository.model.Folder folder) {
+
+		return _folderUtilsLocalService.formatWithOnlyMandatoryFields(folder);
+	}
+
+	@Override
+	public org.json.JSONObject formatWithOnlyMandatoryFields(long folderId) {
+		return _folderUtilsLocalService.formatWithOnlyMandatoryFields(folderId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getFolderByName(
 			com.liferay.portal.kernel.repository.model.Folder parentFolder,
 			String name)
@@ -240,6 +252,16 @@ public class FolderUtilsLocalServiceWrapper
 		com.liferay.portal.kernel.repository.model.Folder folder) {
 
 		return _folderUtilsLocalService.isGroupFolder(folder);
+	}
+
+	@Override
+	public boolean isParentFolder(
+		com.liferay.portal.kernel.repository.model.Folder potentialParentFolder,
+		com.liferay.portal.kernel.repository.model.Folder
+			potentialChildFolder) {
+
+		return _folderUtilsLocalService.isParentFolder(
+			potentialParentFolder, potentialChildFolder);
 	}
 
 	@Override

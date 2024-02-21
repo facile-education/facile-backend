@@ -41,27 +41,18 @@ public class LDAPMappingWrapper
 	public Map<String, Object> getModelAttributes() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
-		attributes.put("UserId", getUserId());
-		attributes.put("EntPersonJointure", getEntPersonJointure());
+		attributes.put("userId", getUserId());
 		attributes.put("UID", getUID());
-		attributes.put("INE", getINE());
-		attributes.put("EntEleveStructRattachId", getEntEleveStructRattachId());
 
 		return attributes;
 	}
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long UserId = (Long)attributes.get("UserId");
+		Long userId = (Long)attributes.get("userId");
 
-		if (UserId != null) {
-			setUserId(UserId);
-		}
-
-		String EntPersonJointure = (String)attributes.get("EntPersonJointure");
-
-		if (EntPersonJointure != null) {
-			setEntPersonJointure(EntPersonJointure);
+		if (userId != null) {
+			setUserId(userId);
 		}
 
 		String UID = (String)attributes.get("UID");
@@ -69,54 +60,11 @@ public class LDAPMappingWrapper
 		if (UID != null) {
 			setUID(UID);
 		}
-
-		String INE = (String)attributes.get("INE");
-
-		if (INE != null) {
-			setINE(INE);
-		}
-
-		String EntEleveStructRattachId = (String)attributes.get(
-			"EntEleveStructRattachId");
-
-		if (EntEleveStructRattachId != null) {
-			setEntEleveStructRattachId(EntEleveStructRattachId);
-		}
 	}
 
 	@Override
 	public LDAPMapping cloneWithOriginalValues() {
 		return wrap(model.cloneWithOriginalValues());
-	}
-
-	/**
-	 * Returns the ent eleve struct rattach ID of this ldap mapping.
-	 *
-	 * @return the ent eleve struct rattach ID of this ldap mapping
-	 */
-	@Override
-	public String getEntEleveStructRattachId() {
-		return model.getEntEleveStructRattachId();
-	}
-
-	/**
-	 * Returns the ent person jointure of this ldap mapping.
-	 *
-	 * @return the ent person jointure of this ldap mapping
-	 */
-	@Override
-	public String getEntPersonJointure() {
-		return model.getEntPersonJointure();
-	}
-
-	/**
-	 * Returns the ine of this ldap mapping.
-	 *
-	 * @return the ine of this ldap mapping
-	 */
-	@Override
-	public String getINE() {
-		return model.getINE();
 	}
 
 	/**
@@ -165,36 +113,6 @@ public class LDAPMappingWrapper
 	}
 
 	/**
-	 * Sets the ent eleve struct rattach ID of this ldap mapping.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID of this ldap mapping
-	 */
-	@Override
-	public void setEntEleveStructRattachId(String EntEleveStructRattachId) {
-		model.setEntEleveStructRattachId(EntEleveStructRattachId);
-	}
-
-	/**
-	 * Sets the ent person jointure of this ldap mapping.
-	 *
-	 * @param EntPersonJointure the ent person jointure of this ldap mapping
-	 */
-	@Override
-	public void setEntPersonJointure(String EntPersonJointure) {
-		model.setEntPersonJointure(EntPersonJointure);
-	}
-
-	/**
-	 * Sets the ine of this ldap mapping.
-	 *
-	 * @param INE the ine of this ldap mapping
-	 */
-	@Override
-	public void setINE(String INE) {
-		model.setINE(INE);
-	}
-
-	/**
 	 * Sets the primary key of this ldap mapping.
 	 *
 	 * @param primaryKey the primary key of this ldap mapping
@@ -217,21 +135,21 @@ public class LDAPMappingWrapper
 	/**
 	 * Sets the user ID of this ldap mapping.
 	 *
-	 * @param UserId the user ID of this ldap mapping
+	 * @param userId the user ID of this ldap mapping
 	 */
 	@Override
-	public void setUserId(long UserId) {
-		model.setUserId(UserId);
+	public void setUserId(long userId) {
+		model.setUserId(userId);
 	}
 
 	/**
 	 * Sets the user uuid of this ldap mapping.
 	 *
-	 * @param UserUuid the user uuid of this ldap mapping
+	 * @param userUuid the user uuid of this ldap mapping
 	 */
 	@Override
-	public void setUserUuid(String UserUuid) {
-		model.setUserUuid(UserUuid);
+	public void setUserUuid(String userUuid) {
+		model.setUserUuid(userUuid);
 	}
 
 	@Override

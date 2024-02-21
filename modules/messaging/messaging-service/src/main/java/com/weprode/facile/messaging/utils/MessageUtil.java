@@ -38,6 +38,7 @@ import com.weprode.facile.messaging.service.MessageLocalServiceUtil;
 import com.weprode.facile.messaging.service.MessageRecipientsLocalServiceUtil;
 import com.weprode.facile.mobile.constants.MobileConstants;
 import com.weprode.facile.mobile.service.MobileDeviceLocalServiceUtil;
+import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -186,7 +187,9 @@ public class MessageUtil {
 
 				for (Long attachFileId : attachFileIds) {
 					logger.info("Copying file " + attachFileId + " to IM_BOX of user " + userId + ", folder " + attachedFilesFolder.getFolderId());
-					FileEntry referenceFile = FileUtilsLocalServiceUtil.copyFileEntry(userId, attachFileId, attachedFilesFolder.getFolderId(), true);
+					// Use the administrator user to perform the copy
+					List<User> adminUsers = UserLocalServiceUtil.getRoleUsers(RoleUtilsLocalServiceUtil.getAdministratorRole().getRoleId());
+					FileEntry referenceFile = FileUtilsLocalServiceUtil.copyFileEntry(adminUsers.get(0).getUserId(), attachFileId, attachedFilesFolder.getFolderId(), true);
 					logger.info("Add attached file " + referenceFile.getFileEntryId() + " to message " + messageId);
 					MessageAttachFileLocalServiceUtil.addAttachFile(messageId, referenceFile.getFileEntryId());
 				}
@@ -208,11 +211,11 @@ public class MessageUtil {
 				try {
 					// File
 					FileEntry dlFile = DLAppServiceUtil.getFileEntry(attachFileId);
-					InputStream fileStream = DLFileEntryLocalServiceUtil.getFileAsStream(dlFile.getFileEntryId(), dlFile.getVersion());
-					File finalFile = FileUtil.createTempFile(dlFile.getTitle());
-					FileUtil.write(finalFile, fileStream);
-					attachmentFileList.add(finalFile);
-					fileStream.close();
+					try (InputStream fileStream = DLFileEntryLocalServiceUtil.getFileAsStream(dlFile.getFileEntryId(), dlFile.getVersion())) {
+						File finalFile = FileUtil.createTempFile(dlFile.getTitle());
+						FileUtil.write(finalFile, fileStream);
+						attachmentFileList.add(finalFile);
+					}
 				} catch (Exception e) {
 					logger.error("Error when creating mail attachment for id= " + attachFileId, e);
 				}
@@ -269,7 +272,7 @@ public class MessageUtil {
 		JSONObject result = new JSONObject();
 		
 		String fullContent = "";
-		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); // For sorting
+		DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT); // For sorting
 		
 		if (fetchFullContent) {
 			fullContent = MessageContentLocalServiceUtil.getContent(message.getMessageId());

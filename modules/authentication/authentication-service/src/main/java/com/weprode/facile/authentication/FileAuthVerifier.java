@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifier;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierResult;
 import com.liferay.portal.kernel.util.Portal;
+import org.apache.logging.log4j.ThreadContext;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -51,10 +52,13 @@ public class FileAuthVerifier implements AuthVerifier {
             AccessControlContext accessControlContext, Properties properties)
             throws AuthException {
 
+        ThreadContext.clearAll();
+        ThreadContext.push("====================");
+
         try {
             AuthVerifierResult authVerifierResult = new AuthVerifierResult();
             HttpServletRequest httpServletRequest = accessControlContext.getRequest();
-            logger.info("FileAuthVerifier requestUri = " + httpServletRequest.getRequestURI());
+            logger.debug("FileAuthVerifier requestUri = " + httpServletRequest.getRequestURI());
 
             User user = portal.getUser(httpServletRequest);
 
@@ -63,7 +67,7 @@ public class FileAuthVerifier implements AuthVerifier {
                 int userIdIndex = httpServletRequest.getRequestURI().indexOf("user-id") + 8;
                 String [] uriTab = uri.substring(userIdIndex).split("/");
                 long userId = Long.parseLong(uriTab[0]);
-                logger.info("File auth verifier : ignoring token for uri " + httpServletRequest.getRequestURI() + " and userId " + userId);
+                logger.debug("File auth verifier : ignoring token for uri " + httpServletRequest.getRequestURI() + " and userId " + userId);
                 authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
                 authVerifierResult.setUserId(userId);
                 return authVerifierResult;

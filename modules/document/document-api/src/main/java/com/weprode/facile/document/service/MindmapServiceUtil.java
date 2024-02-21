@@ -35,12 +35,6 @@ public class MindmapServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.facile.document.service.impl.MindmapServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-
-	/**
-	 * Returns the content of the given mindmap file
-	 *
-	 * @return JSONObject - the mindmap file name and content
-	 */
 	public static org.json.JSONObject getMindFile(long fileVersionId) {
 		return getService().getMindFile(fileVersionId);
 	}

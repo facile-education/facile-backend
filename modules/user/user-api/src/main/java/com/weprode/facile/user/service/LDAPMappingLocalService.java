@@ -80,11 +80,11 @@ public interface LDAPMappingLocalService
 	/**
 	 * Creates a new ldap mapping with the primary key. Does not add the ldap mapping to the database.
 	 *
-	 * @param UserId the primary key for the new ldap mapping
+	 * @param userId the primary key for the new ldap mapping
 	 * @return the new ldap mapping
 	 */
 	@Transactional(enabled = false)
-	public LDAPMapping createLDAPMapping(long UserId);
+	public LDAPMapping createLDAPMapping(long userId);
 
 	/**
 	 * @throws PortalException
@@ -112,12 +112,12 @@ public interface LDAPMappingLocalService
 	 * <strong>Important:</strong> Inspect LDAPMappingLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping that was removed
 	 * @throws PortalException if a ldap mapping with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public LDAPMapping deleteLDAPMapping(long UserId) throws PortalException;
+	public LDAPMapping deleteLDAPMapping(long userId) throws PortalException;
 
 	/**
 	 * @throws PortalException
@@ -199,7 +199,7 @@ public interface LDAPMappingLocalService
 		DynamicQuery dynamicQuery, Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public LDAPMapping fetchLDAPMapping(long UserId);
+	public LDAPMapping fetchLDAPMapping(long userId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -210,12 +210,12 @@ public interface LDAPMappingLocalService
 	/**
 	 * Returns the ldap mapping with the primary key.
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping
 	 * @throws PortalException if a ldap mapping with the primary key could not be found
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public LDAPMapping getLDAPMapping(long UserId) throws PortalException;
+	public LDAPMapping getLDAPMapping(long userId) throws PortalException;
 
 	/**
 	 * Returns a range of all the ldap mappings.
@@ -239,9 +239,6 @@ public interface LDAPMappingLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getLDAPMappingsCount();
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Long getMaxUid();
-
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -258,23 +255,7 @@ public interface LDAPMappingLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public User getUserByEntEleveStructRattachId(
-		String entEleveStructRattachId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public User getUserByEntPersonJointure(String entPersonJointure);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public User getUserFromUID(String uid);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getUserJointure(long userId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getUserStructRattachId(long userId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getUserUid(long userId);
 
 	/**
 	 * Updates the ldap mapping in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

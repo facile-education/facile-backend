@@ -50,7 +50,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
     /**
      * Add personal folder
      */
-    @JSONWebService(method = "GET")
+    @JSONWebService(method = "POST")
     public JSONObject addFolder(long parentFolderId, String folderName) {
         JSONObject result = new JSONObject();
 
@@ -69,7 +69,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             if (parentFolderId != 0) {
                 MessageFolder parentFolder = MessageFolderLocalServiceUtil.getMessageFolder(parentFolderId);
                 if (parentFolder.getUserId() != user.getUserId()) {
-                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds folder into folder " + parentFolderId);
+                    logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " adds folder into folder " + parentFolderId);
                     return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
                 }
             }
@@ -168,7 +168,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
     /**
      * Add a folder
      */
-    @JSONWebService(method = "GET")
+    @JSONWebService(method = "POST")
     public JSONObject renameFolder(long folderId, String newLabel) {
         JSONObject result = new JSONObject();
 
@@ -186,7 +186,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             // Check ownership
             MessageFolder folder = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
             if (user.getUserId() != folder.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " renames folder" + folderId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " renames folder" + folderId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             folder.setFolderName(newLabel);
@@ -205,7 +205,7 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
     /**
      * Remove a folder
      */
-    @JSONWebService(method = "GET")
+    @JSONWebService(method = "DELETE")
     public JSONObject deleteFolder(long folderId) {
         JSONObject result = new JSONObject();
 
@@ -223,12 +223,12 @@ public class MessageFolderServiceImpl extends MessageFolderServiceBaseImpl {
             // Check ownership
             MessageFolder folderToDelete = MessageFolderLocalServiceUtil.getMessageFolder(folderId);
             if (folderToDelete.getUserId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes folder" + folderId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes folder" + folderId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
             if (folderToDelete.getType() != MessagingConstants.PERSONAL_FOLDER_TYPE) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes folder" + folderId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes folder" + folderId);
                 result.put(JSONConstants.SUCCESS, false);
                 return result;
             }

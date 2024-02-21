@@ -87,6 +87,12 @@ public class NewsServiceUtil {
 		return getService().getSchoolNewsBroadcastGroups();
 	}
 
+	public static org.json.JSONObject getUnreadGroupNews(
+		long groupId, java.lang.String maxDate, int nbResults) {
+
+		return getService().getUnreadGroupNews(groupId, maxDate, nbResults);
+	}
+
 	public static org.json.JSONObject setNewsRead(long newsId) {
 		return getService().setNewsRead(newsId);
 	}

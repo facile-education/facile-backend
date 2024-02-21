@@ -29,12 +29,12 @@ import com.weprode.facile.application.service.BroadcastLocalServiceUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
+import com.weprode.facile.dashboard.DashboardAccessUpdater;
 import com.weprode.facile.dashboard.service.base.DashboardServiceBaseImpl;
 import com.weprode.facile.group.model.GroupActivity;
 import com.weprode.facile.group.service.GroupActivityLocalServiceUtil;
 import com.weprode.facile.news.model.News;
 import com.weprode.facile.news.service.NewsLocalServiceUtil;
-import com.weprode.facile.preference.model.UserProperties;
 import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.schedule.model.CDTSession;
@@ -111,16 +111,14 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
 
             // All personals can add group news because they have communities
             boolean canAddGroupNews = RoleUtilsLocalServiceUtil.isTeacher(user) || RoleUtilsLocalServiceUtil.isPersonal(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user);
-            // TODO: Chek if user broadast polupations list is not empty to prevent open an unfillable modal
+            // TODO: Check if user broadcast populations list is not empty
             result.put(JSONConstants.CAN_ADD_GROUP_NEWS, canAddGroupNews);
             result.put(JSONConstants.CAN_ADD_SCHOOL_NEWS, isDirectionMember || isDelegate  || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
             result.put(JSONConstants.CAN_ADD_EVENTS, isDirectionMember || isDelegate || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user));
 
-            // Set last dashboard access date
-            UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
-            userProperties.setLastDashboardAccessDate(new Date());
-            UserPropertiesLocalServiceUtil.updateUserProperties(userProperties);
-            logger.debug("Set last dashboard access date to " + new SimpleDateFormat(JSONConstants.FULL_FRENCH_FORMAT).format(new Date()));
+            // Set last dashboard access date in a thread to postpone it a few seconds (to be able to fetch recent activities in the same login action)
+            DashboardAccessUpdater dashboardAccessUpdater = new DashboardAccessUpdater(user.getUserId());
+            dashboardAccessUpdater.start();
 
             result.put(JSONConstants.SUCCESS, true);
 
@@ -146,12 +144,12 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
         }
         // Students, parents and teachers only
         if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets scheduler for user " + userId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets scheduler for user " + userId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             Date scheduleDate = df.parse(date);
             User targetUser = user;
 
@@ -203,7 +201,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
                 jsonSchoollifeSession.put(JSONConstants.TEACHERS, jsonSchoollifeSession.getJSONArray(JSONConstants.TEACHERS));
                 try {
                     Calendar sessionCal = Calendar.getInstance(Locale.FRANCE);
-                    sessionCal.setTime(new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(jsonSchoollifeSession.getString("startDate")));
+                    sessionCal.setTime(new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(jsonSchoollifeSession.getString("startDate")));
                     int weekNb = sessionCal.get(Calendar.WEEK_OF_YEAR);
                     jsonSchoollifeSession.put(JSONConstants.SESSION_URL, "#/horaires" + "?weekNb=" + weekNb);
                 } catch (Exception e) {
@@ -246,7 +244,11 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
             } else {
                 groupIds = UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId());
             }
-            Date maximumDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(maxDate);
+
+            Date maximumDate = new Date();
+            if (maxDate != null && !maxDate.isBlank()) {
+                maximumDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDate);
+            }
 
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getDashboardGroupsActivities(user.getUserId(), groupIds, maximumDate, nbResults,
                     withNews, withDocs, withMemberships, withSchoollife, withSessions);
@@ -269,7 +271,7 @@ public class DashboardServiceImpl extends DashboardServiceBaseImpl {
 
             result.put(JSONConstants.ACTIVITIES, jsonActivities);
             // Last dashboard access date is store in UTC, convert it with user's timezone
-            DateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             sdf.setTimeZone(user.getTimeZone());
             result.put(JSONConstants.LAST_DASHBOARD_ACCESS_DATE, lastDashboardAccessDate == null ? "" : sdf.format(lastDashboardAccessDate));
             result.put(JSONConstants.NB_NEW_ACTIVITIES, nbNewActivities);

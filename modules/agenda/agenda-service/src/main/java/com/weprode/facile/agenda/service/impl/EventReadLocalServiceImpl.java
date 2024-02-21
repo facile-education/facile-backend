@@ -118,7 +118,7 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
         } catch (NoSuchEventReadException e) {
             return false;
         } catch (Exception e) {
-            logger.error("Error fetching if user " + userId + " has read eventId " + eventId, e);
+            logger.error("Error fetching if user " + userId + " read eventId " + eventId, e);
             return false;
         }
     }
@@ -127,7 +127,7 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
         try {
             return eventReadPersistence.findByPrimaryKey(new EventReadPK(eventId, userId));
         } catch (Exception e) {
-            logger.error("Error fetching if user " + userId + " has read eventId " + eventId, e);
+            logger.error("Error getting if user " + userId + " read event " + eventId, e);
         }
         
         return null;
@@ -135,7 +135,7 @@ public class EventReadLocalServiceImpl extends EventReadLocalServiceBaseImpl {
     
     public JSONArray getEventReadStatus(long eventId, long userId) throws SystemException, PortalException {
         JSONArray jsonReadStatus = new JSONArray();
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         // Loop over populations
         List<EventPopulation> populations = EventPopulationLocalServiceUtil.getEventPopulations(eventId);

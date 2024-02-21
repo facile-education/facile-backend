@@ -38,7 +38,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
-import com.weprode.facile.contact.service.ContactCompletionLocalServiceUtil;
+import com.weprode.facile.contact.service.ContactLocalServiceUtil;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.FolderUtilsLocalServiceUtil;
 import com.weprode.facile.messaging.constants.MessagingConstants;
@@ -57,7 +57,6 @@ import com.weprode.facile.messaging.service.base.MessageLocalServiceBaseImpl;
 import com.weprode.facile.messaging.utils.MessagingUtil;
 import com.weprode.facile.messaging.utils.ThreadSendMessage;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 
@@ -696,7 +695,7 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
     // Check that the given recipient list is authorized for the sender
     public List<Long> filterRecipientList(User sender, List<Long> recipientIds, long originMessageId) {
 
-        JSONArray jsonArray = ContactCompletionLocalServiceUtil.getCompletionResultAsJSON("", sender, false).getJSONArray(JSONConstants.RESULTS);
+        long start = System.currentTimeMillis();
         List<Long> originRecipientIds = new ArrayList<>();
         if (originMessageId != 0) {
             try {
@@ -711,21 +710,14 @@ public class MessageLocalServiceImpl extends MessageLocalServiceBaseImpl {
         }
         //List<Long> filteredList = new ArrayList<>();
         for (Long recipientId : recipientIds) {
-            boolean isAuthorized = originRecipientIds.contains(recipientId);
-            if (!originRecipientIds.contains(recipientId)) {
-                for (int idx = 0 ; idx < jsonArray.length() ; idx++) {
-                    JSONObject jsonUser = jsonArray.getJSONObject(idx);
-                    isAuthorized = jsonUser.getLong(JSONConstants.USER_ID) == recipientId;
-                    if (isAuthorized) {
-                        break;
-                    }
-                }
-            }
+            boolean isAuthorized = originRecipientIds.contains(recipientId) || ContactLocalServiceUtil.isAllowedToContact(sender.getUserId(), recipientId);
             if (!isAuthorized) {
                 logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + sender.getFullName() + " is trying to send message to " + recipientId);
             }
         }
         // For now return the original list, we just log
+        long end = System.currentTimeMillis();
+        logger.info("Recipient checking took " + (end - start) + " ms");
         return recipientIds;
     }
 }

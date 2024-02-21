@@ -59,7 +59,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isPersonal(user) &&
 				!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) &&
 				!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets main roles");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets main roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -97,7 +97,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
 				!RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets local roles");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets local roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -136,7 +136,7 @@ public class RoleUtilsServiceImpl extends RoleUtilsServiceBaseImpl {
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
 				!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 				!RoleUtilsLocalServiceUtil.isSchoolAdmin(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets broadcast roles");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets broadcast roles");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

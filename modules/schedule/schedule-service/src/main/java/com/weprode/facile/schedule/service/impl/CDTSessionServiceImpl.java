@@ -81,7 +81,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		logger.info("User " + user.getUserId() + " fetches sessions for userId " + userId + " from " + minDateStr + " to " + maxDateStr);
 
 		try {
-			SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+			SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 			Date minDate = df.parse(minDateStr);
 			Date maxDate = df.parse(maxDateStr);
 			User targetUser = UserLocalServiceUtil.getUser(userId);
@@ -139,7 +139,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		logger.info("User " + user.getUserId() + " fetches sessions for group " + groupId + " from " + minDateStr + " to " + maxDateStr);
 
 		try {
-			SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+			SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 			Date minDate = df.parse(minDateStr);
 			Date maxDate = df.parse(maxDateStr);
 
@@ -209,7 +209,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 		}
 
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user) && !RoleUtilsLocalServiceUtil.isPersonal(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates a session");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates a session");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 		try {
@@ -256,7 +256,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 			if (isRecurrent) {
 				CDTSessionLocalServiceUtil.createRecurrentSessions(groupId, subject, room, startDate, endDate, slot, teacherIdList);
 			} else {
-				DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 				logger.info("Creating manual session for group " + groupId + ", subject=" + subject + ", startDate= " + sdf.format(startDate) + ", endDate=" + sdf.format(endDate) + ", slot=" + slot + ", teacherIds=" + teacherIds + ", isRecurrent is " + isRecurrent);
 				CDTSessionLocalServiceUtil.createSession(groupId, subject, startDate, endDate, slot, teacherIdList, room, fullCoursName, true);
 			}
@@ -286,7 +286,7 @@ public class CDTSessionServiceImpl extends CDTSessionServiceBaseImpl {
 
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user) ||
 				!CDTSessionLocalServiceUtil.hasUserSession(user, sessionId)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets next session");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets next session");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

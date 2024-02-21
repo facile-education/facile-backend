@@ -60,7 +60,6 @@ public class SearchResults {
         return count;
     }
 
-    // une icône illustrant le type de la ressource
     public static JSONObject convertHitToJson(SearchHit hit, long userId) {
         JSONObject result = new JSONObject();
 
@@ -79,8 +78,8 @@ public class SearchResults {
         result.put(JSONConstants.CONTENT, highlightedContent.isBlank() ? doc.getString(Field.CONTENT) : highlightedContent);
         result.put(JSONConstants.DATE, doc.getDate(Field.DISPLAY_DATE));
         result.put(JSONConstants.AUTHOR, doc.getString(Field.USER_NAME));
-        // Round score to units
-        result.put(JSONConstants.SCORE, Math.round(hit.getScore()));
+        // Round score to units - observed that it can be 101, then min to 100
+        result.put(JSONConstants.SCORE, Math.min(100, Math.round(hit.getScore())));
 
         // Message
         if (doc.getString(Field.ENTRY_CLASS_NAME).equals(Message.class.getName())) {

@@ -35,7 +35,7 @@ public class StudentHomeworkImpl extends StudentHomeworkBaseImpl {
         JSONObject jsonHomework = new JSONObject();
 
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             jsonHomework.put(JSONConstants.HOMEWORK_ID, this.getHomeworkId());
             User student = UserLocalServiceUtil.getUser(this.getStudentId());
             jsonHomework.put(JSONConstants.USER_ID, this.getStudentId());

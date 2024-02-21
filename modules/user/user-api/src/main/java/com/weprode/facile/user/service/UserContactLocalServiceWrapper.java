@@ -38,16 +38,6 @@ public class UserContactLocalServiceWrapper
 	}
 
 	@Override
-	public com.weprode.facile.user.model.UserContact addUserContact()
-		throws com.liferay.portal.kernel.exception.SystemException {
-
-		return _userContactLocalService.addUserContact();
-	}
-
-	/**
-	 * Create a UserContact, with default values
-	 */
-	@Override
 	public com.weprode.facile.user.model.UserContact addUserContact(long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
@@ -85,14 +75,14 @@ public class UserContactLocalServiceWrapper
 	/**
 	 * Creates a new user contact with the primary key. Does not add the user contact to the database.
 	 *
-	 * @param contactId the primary key for the new user contact
+	 * @param userId the primary key for the new user contact
 	 * @return the new user contact
 	 */
 	@Override
 	public com.weprode.facile.user.model.UserContact createUserContact(
-		long contactId) {
+		long userId) {
 
-		return _userContactLocalService.createUserContact(contactId);
+		return _userContactLocalService.createUserContact(userId);
 	}
 
 	/**
@@ -113,16 +103,16 @@ public class UserContactLocalServiceWrapper
 	 * <strong>Important:</strong> Inspect UserContactLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact that was removed
 	 * @throws PortalException if a user contact with the primary key could not be found
 	 */
 	@Override
 	public com.weprode.facile.user.model.UserContact deleteUserContact(
-			long contactId)
+			long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _userContactLocalService.deleteUserContact(contactId);
+		return _userContactLocalService.deleteUserContact(userId);
 	}
 
 	/**
@@ -246,9 +236,9 @@ public class UserContactLocalServiceWrapper
 
 	@Override
 	public com.weprode.facile.user.model.UserContact fetchUserContact(
-		long contactId) {
+		long userId) {
 
-		return _userContactLocalService.fetchUserContact(contactId);
+		return _userContactLocalService.fetchUserContact(userId);
 	}
 
 	@Override
@@ -289,16 +279,15 @@ public class UserContactLocalServiceWrapper
 	/**
 	 * Returns the user contact with the primary key.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact
 	 * @throws PortalException if a user contact with the primary key could not be found
 	 */
 	@Override
-	public com.weprode.facile.user.model.UserContact getUserContact(
-			long contactId)
+	public com.weprode.facile.user.model.UserContact getUserContact(long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _userContactLocalService.getUserContact(contactId);
+		return _userContactLocalService.getUserContact(userId);
 	}
 
 	/**

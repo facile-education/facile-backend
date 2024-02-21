@@ -155,41 +155,6 @@ public interface UserPropertiesModel extends BaseModel<UserProperties> {
 	public void setEtabId(long etabId);
 
 	/**
-	 * Returns the prefered school ID of this user properties.
-	 *
-	 * @return the prefered school ID of this user properties
-	 */
-	public long getPreferedSchoolId();
-
-	/**
-	 * Sets the prefered school ID of this user properties.
-	 *
-	 * @param preferedSchoolId the prefered school ID of this user properties
-	 */
-	public void setPreferedSchoolId(long preferedSchoolId);
-
-	/**
-	 * Returns the webdav activated of this user properties.
-	 *
-	 * @return the webdav activated of this user properties
-	 */
-	public boolean getWebdavActivated();
-
-	/**
-	 * Returns <code>true</code> if this user properties is webdav activated.
-	 *
-	 * @return <code>true</code> if this user properties is webdav activated; <code>false</code> otherwise
-	 */
-	public boolean isWebdavActivated();
-
-	/**
-	 * Sets whether this user properties is webdav activated.
-	 *
-	 * @param webdavActivated the webdav activated of this user properties
-	 */
-	public void setWebdavActivated(boolean webdavActivated);
-
-	/**
 	 * Returns the terms of use agreed date of this user properties.
 	 *
 	 * @return the terms of use agreed date of this user properties

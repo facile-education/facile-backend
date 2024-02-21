@@ -35,11 +35,6 @@ public class ContactServiceWrapper
 	}
 
 	@Override
-	public org.json.JSONObject getContactDetails(long contactUserId) {
-		return _contactService.getContactDetails(contactUserId);
-	}
-
-	@Override
 	public org.json.JSONObject getContactTree() {
 		return _contactService.getContactTree();
 	}
@@ -67,6 +62,11 @@ public class ContactServiceWrapper
 	@Override
 	public String getOSGiServiceIdentifier() {
 		return _contactService.getOSGiServiceIdentifier();
+	}
+
+	@Override
+	public org.json.JSONObject getUserCard(long contactUserId) {
+		return _contactService.getUserCard(contactUserId);
 	}
 
 	@Override

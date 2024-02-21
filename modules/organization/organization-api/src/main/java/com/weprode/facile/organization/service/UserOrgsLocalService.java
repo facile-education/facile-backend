@@ -83,6 +83,9 @@ public interface UserOrgsLocalService extends BaseLocalService {
 	public String getStudentClassName(User student);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String getStudentVolee(User student);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> getUserClasses(User user, boolean withArchive);
 
 	/**

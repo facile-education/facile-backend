@@ -84,9 +84,9 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 
-		// Authorized for global admins only
-		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets global configuration");
+		// Authorized for global admins or direction (called from stats)
+		if (!RoleUtilsLocalServiceUtil.isAdministrator(user) && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user)) {
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets global configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -114,12 +114,12 @@ public class ScheduleConfigurationServiceImpl extends ScheduleConfigurationServi
 
 		// Authorized for global admins only
 		if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves global schedule configuration");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves global schedule configuration");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 			Date schoolYearStartDate = sdf.parse(startDateStr);
 
 			Date schoolYearEndDate = sdf.parse(endDateStr);

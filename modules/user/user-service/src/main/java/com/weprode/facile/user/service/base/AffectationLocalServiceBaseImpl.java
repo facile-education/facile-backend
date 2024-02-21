@@ -45,7 +45,6 @@ import com.weprode.facile.user.model.Affectation;
 import com.weprode.facile.user.service.AffectationLocalService;
 import com.weprode.facile.user.service.AffectationLocalServiceUtil;
 import com.weprode.facile.user.service.persistence.AffectationPersistence;
-import com.weprode.facile.user.service.persistence.LDAPMappingFinder;
 import com.weprode.facile.user.service.persistence.LDAPMappingPersistence;
 import com.weprode.facile.user.service.persistence.NewsAdminPersistence;
 import com.weprode.facile.user.service.persistence.UserContactPersistence;
@@ -477,9 +476,6 @@ public abstract class AffectationLocalServiceBaseImpl
 
 	@Reference
 	protected LDAPMappingPersistence ldapMappingPersistence;
-
-	@Reference
-	protected LDAPMappingFinder ldapMappingFinder;
 
 	@Reference
 	protected NewsAdminPersistence newsAdminPersistence;

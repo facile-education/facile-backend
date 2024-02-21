@@ -47,7 +47,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
 
     private final Log logger = LogFactoryUtil.getLog(SchoollifeSlotServiceImpl.class);
 
-    @JSONWebService(value = "create-slot", method = "GET")
+    @JSONWebService(value = "create-slot", method = "POST")
     public JSONObject createSlot(long schoolId, String startDateStr, String endDateStr, int day, String startHour, String endHour, long teacherId, int type, String room, int capacity) {
         JSONObject result = new JSONObject();
 
@@ -64,13 +64,13 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates a slot");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates a slot");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
-            Date endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDateStr);
+            Date startDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(startDateStr);
+            Date endDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(endDateStr);
             // Set 23:00 to endDate so that endDate is included
             Calendar cal = Calendar.getInstance();
             cal.setTime(endDate);
@@ -87,7 +87,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "edit-slot", method = "GET")
+    @JSONWebService(value = "edit-slot", method = "POST")
     public JSONObject editSlot(long schoollifeSessionId, String startDateStr, String endDateStr, int newDay, String newStartHour, String newEndHour, long newTeacherId, String newRoom, int newCapacity) {
         JSONObject result = new JSONObject();
 
@@ -104,13 +104,13 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits slot " + schoollifeSessionId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits slot " + schoollifeSessionId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
-            Date endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDateStr);
+            Date startDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(startDateStr);
+            Date endDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(endDateStr);
             // Set 23:00 to endDate so that endDate is included
             Calendar cal = Calendar.getInstance();
             cal.setTime(endDate);
@@ -128,7 +128,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-slot", method = "GET")
+    @JSONWebService(value = "delete-slot", method = "DELETE")
     public JSONObject deleteSlot(long schoollifeSessionId, String startDateStr, String endDateStr) {
         JSONObject result = new JSONObject();
 
@@ -145,13 +145,13 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes slot " + schoollifeSessionId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes slot " + schoollifeSessionId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            Date startDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDateStr);
-            Date endDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDateStr);
+            Date startDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(startDateStr);
+            Date endDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(endDateStr);
             long schoollifeSlotId = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId).getSchoollifeSlotId();
 
             boolean success = SchoollifeSlotLocalServiceUtil.deleteSlot(schoollifeSlotId, startDate, endDate);
@@ -167,7 +167,7 @@ public class SchoollifeSlotServiceImpl extends SchoollifeSlotServiceBaseImpl {
     @JSONWebService(value = "get-session-limit-slot-date", method = "GET")
     public JSONObject getSessionLimitSlotDate(long schoollifeSessionId) {
         JSONObject result = new JSONObject();
-        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         try {
             User user = getGuestOrUser();

@@ -56,15 +56,12 @@ public interface ContactLocalService extends BaseLocalService {
 
 	public List<User> directorySearch(
 		User user, String query, List<Long> schoolIds, List<Long> roleIds,
-		int start, int limit, OrderByComparator obc);
+		int start, int limit, OrderByComparator<User> obc);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<User> getAllGroupsContacts(
 		User user, String search, int start, int limit,
-		OrderByComparator comparator);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getContactDetails(User currentUser, long contactUserId);
+		OrderByComparator<User> comparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray getContactTree(User user);
@@ -91,5 +88,11 @@ public interface ContactLocalService extends BaseLocalService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Long> getRecipients(JSONArray recipients, User user)
 		throws SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getUserCard(User currentUser, long contactUserId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isAllowedToContact(long userId, long contactId);
 
 }

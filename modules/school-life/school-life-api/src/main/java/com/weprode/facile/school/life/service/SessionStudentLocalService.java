@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -84,6 +85,8 @@ public interface SessionStudentLocalService
 	public SessionStudent addStudentToSession(
 		long teacherId, long studentId, long schoollifeSessionId,
 		String comment, String subject, boolean notifyParents);
+
+	public JSONObject countStudentSessions(long studentId);
 
 	/**
 	 * @throws PortalException

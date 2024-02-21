@@ -90,7 +90,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isPersonal(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets groups");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets groups");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         try {
@@ -159,7 +159,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
             logger.debug("Get user collaborative groups allCommunities=" + allCommunities + ", allClasses=" + allClasses + ", allCours=" + allCours);
 
             JSONArray groupsArray = new JSONArray();
-            DateFormat dateFormat = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat dateFormat = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             long schoolId = userProperties.getEtabId();
@@ -196,7 +196,10 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     jsonGroup.put(JSONConstants.NB_MEMBERS, UserLocalServiceUtil.getGroupUsersCount(group.getGroupId(), WorkflowConstants.STATUS_APPROVED));
                     // Return the group documentId
                     Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(group.getGroupId());
-                    jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
+                    if (groupRootFolder != null) {
+                        // User might not have VIEW permission on root folder
+                        jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
+                    }
                     groupsArray.put(jsonGroup);
                 }
             }
@@ -259,8 +262,10 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
                     jsonGroup.put(JSONConstants.NB_MEMBERS, UserOrgsLocalServiceUtil.countOrgMembers(org.getOrganizationId()));
                     // Return the group documentId
                     Folder groupRootFolder = FolderUtilsLocalServiceUtil.getOrCreateGroupRootFolder(org.getGroupId());
-                    jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
-
+                    if (groupRootFolder != null) {
+                        // User might not have VIEW permission on root folder
+                        jsonGroup.put(JSONConstants.ROOT_FOLDER_ID, groupRootFolder.getFolderId());
+                    }
                     orgIds.add(org.getOrganizationId());
                     groupsArray.put(jsonGroup);
                 }
@@ -291,7 +296,7 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
         // Limited to user's groups and all groups for direction
         if (!UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId) && !RoleUtilsLocalServiceUtil.isDirectionMember(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets members of group " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets members of group " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         logger.debug("User " + user.getFullName() + " fetches members of group " + groupId);
@@ -358,13 +363,13 @@ public class GroupUtilsServiceImpl extends GroupUtilsServiceBaseImpl {
         }
         // Limited to user's groups for students and parents, else authorized
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user) && !UserUtilsLocalServiceUtil.getUserGroupIds(user.getUserId()).contains(groupId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets activity of group " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets activity of group " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
             JSONArray jsonActivities = new JSONArray();
-            Date maximumDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDate);
+            Date maximumDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDate);
             List<GroupActivity> groupActivities = GroupActivityLocalServiceUtil.getFullGroupActivities(user.getUserId(), groupId, maximumDate, nbResults);
             for (GroupActivity groupActivity : groupActivities) {
                 JSONObject jsonActivity = GroupActivityLocalServiceUtil.convertGroupActivity(user.getUserId(), groupActivity);

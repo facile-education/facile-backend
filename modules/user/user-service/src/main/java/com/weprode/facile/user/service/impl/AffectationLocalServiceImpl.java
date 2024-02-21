@@ -230,7 +230,7 @@ public class AffectationLocalServiceImpl extends AffectationLocalServiceBaseImpl
                     jsonAffectation.put(JSONConstants.ORG_NAME, OrgUtilsLocalServiceUtil.formatOrgName(org.getName(), false));
                     jsonAffectation.put(JSONConstants.TYPE, orgDetails.getType());
                     jsonAffectation.put(JSONConstants.ADMIN_NAME, UserLocalServiceUtil.getUser(userAffectation.getAdminUserId()).getFullName());
-                    jsonAffectation.put(JSONConstants.AFFECTATION_DATE, new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT).format(userAffectation.getAffectationDate()));
+                    jsonAffectation.put(JSONConstants.AFFECTATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(userAffectation.getAffectationDate()));
                     jsonAffectations.put(jsonAffectation);
                 }
             } catch (Exception e) {

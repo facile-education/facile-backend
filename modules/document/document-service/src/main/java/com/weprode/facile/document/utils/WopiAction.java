@@ -166,9 +166,9 @@ public class WopiAction implements StrutsAction {
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     return null;
                 }
-                InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version);
-
-                fileInfo.put("SHA256", getHash256(is));
+                try (InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version)) {
+                    fileInfo.put("SHA256", getHash256(is));
+                }
                 fileInfo.put("Version", version);
 
             } catch (Exception e) {
@@ -184,20 +184,19 @@ public class WopiAction implements StrutsAction {
         return null;
     }
 
-    public String getHash256(InputStream fis) {
+    public String getHash256(InputStream is) {
         String value = "";
         try {
             byte[] buffer = new byte[1024];
             int numRead;
             MessageDigest complete = MessageDigest.getInstance("SHA-256");
             do {
-                numRead = fis.read(buffer);
+                numRead = is.read(buffer);
                 if (numRead > 0) {
                     complete.update(buffer, 0, numRead);
                 }
             } while (numRead != -1);
 
-            fis.close();
             value = Base64.encode(complete.digest());
         } catch (Exception e) {
             logger.error("Error getting hash", e);
@@ -233,10 +232,8 @@ public class WopiAction implements StrutsAction {
 
     protected void getFile(Long fileEntryId, String version, Long userId, HttpServletRequest request, HttpServletResponse response)	{
 
-        InputStream is = null;
-        try {
+        try (InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version)) {
             DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(fileEntryId);
-            is = DLFileEntryLocalServiceUtil.getFileAsStream(fileEntryId, version);
             response.setHeader("X-WOPI-ItemVersion", version);
             User user = UserLocalServiceUtil.getUser(userId);
             long size = fileEntry.getSize();
@@ -245,14 +242,6 @@ public class WopiAction implements StrutsAction {
             ServletResponseUtil.sendFile(request, response, fileEntry.getTitle(), is, (int) size, fileEntry.getMimeType(), "");
         } catch (Exception e) {
             logger.error("Error when opening schoolbag file for fileEntryId="+fileEntryId+ " and version="+version, e);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception e) {
-                    logger.error("Error closing input stream");
-                }
-            }
         }
     }
 
@@ -260,12 +249,10 @@ public class WopiAction implements StrutsAction {
 
         logger.info("Start file saving : " + fileEntryId  + " with version " + version  + " for user : " + userId);
 
-        try {
-            // Convert to byte array for easier saving
-            InputStream is = request.getInputStream();
+        try (InputStream is = request.getInputStream(); ByteArrayOutputStream bao = new ByteArrayOutputStream()) {
+
             byte[] buff = new byte[8000];
             int bytesRead;
-            ByteArrayOutputStream bao = new ByteArrayOutputStream();
             while ((bytesRead = is.read(buff)) != -1) {
                 bao.write(buff, 0, bytesRead);
             }
@@ -278,6 +265,7 @@ public class WopiAction implements StrutsAction {
 
             logger.info("End file saving : " + fileEntryId + " to " + feUpdate.getVersion() + " for user : " + userId);
             LoolStatLocalServiceUtil.addLoolStat(fileEntryId, userId, true, 0);
+
         } catch (Exception e) {
             logger.error("Error when saving wopi content for fileEntryId="+fileEntryId+ " and version="+version);
         }

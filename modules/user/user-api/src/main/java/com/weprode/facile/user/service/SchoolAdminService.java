@@ -68,7 +68,7 @@ public interface SchoolAdminService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSchoolDelegates(long schoolId);
 
-	@JSONWebService(method = "GET", value = "remove-school-admin")
+	@JSONWebService(method = "DELETE", value = "remove-school-admin")
 	public JSONObject removeSchoolAdmin(long userId, long schoolId);
 
 }

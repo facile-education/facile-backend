@@ -57,7 +57,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves help link");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves help link");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -73,7 +73,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-link", method = "GET")
+    @JSONWebService(value = "delete-link", method = "DELETE")
     public JSONObject deleteLink(long linkId) {
 
         JSONObject result = new JSONObject();
@@ -88,7 +88,7 @@ public class HelpLinkServiceImpl extends HelpLinkServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes help link");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes help link");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

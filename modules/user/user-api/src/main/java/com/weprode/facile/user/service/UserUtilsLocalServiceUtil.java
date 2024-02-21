@@ -114,6 +114,18 @@ public class UserUtilsLocalServiceUtil {
 		return getService().getUserTeachers(user);
 	}
 
+	public static boolean isConseillerSocialOfUser(long consId, long userId) {
+		return getService().isConseillerSocialOfUser(consId, userId);
+	}
+
+	public static boolean isDoyenOfUser(long doyenId, long userId) {
+		return getService().isDoyenOfUser(doyenId, userId);
+	}
+
+	public static boolean isPsyOfUser(long psyId, long userId) {
+		return getService().isPsyOfUser(psyId, userId);
+	}
+
 	/**
 	 * Purges all expired users
 	 */

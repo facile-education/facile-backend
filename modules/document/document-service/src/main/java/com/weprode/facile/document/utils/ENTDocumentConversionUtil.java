@@ -19,21 +19,22 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.*;
+import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.SystemProperties;
 
-import java.io.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ENTDocumentConversionUtil {
 
     private ENTDocumentConversionUtil() {}
-    private static final Log logger = LogFactoryUtil.getLog(ENTDocumentConversionUtil.class);
 
-    private static final Map<String, String> convertState = new HashMap<>();
+    private static final Log logger = LogFactoryUtil.getLog(ENTDocumentConversionUtil.class);
     private static final Map<String, Process> convertProcess = new HashMap<>();
 
     /**
@@ -56,7 +57,6 @@ public class ENTDocumentConversionUtil {
         // If the file is in cache then don't convert it again
         if (fileResult.exists() && !forceConversion) {
             logger.warn("File already converted, directly return file in cache");
-            convertState.put(id, "done");
             return fileResult;
         }
 
@@ -72,11 +72,9 @@ public class ENTDocumentConversionUtil {
             // Check if the conversion has ended correctly (the new file is created)
             if(fileResult.exists()){
                 logger.warn("Conversion process successfully done");
-                convertState.put(id, "done");
                 return fileResult;
             } else {
                 logger.error("Conversion process failed");
-                convertState.put(id, "error");
                 return null;
             }
         }
@@ -111,31 +109,13 @@ public class ENTDocumentConversionUtil {
             convertProcess.put(id+"getInfos", p);
             new Thread(() -> {
                 try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-                    String line = "";
-                    try {
+                    String line;
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
                         while((line = reader.readLine()) != null) {
-                            if (line.contains("Duration")) {
-                                //Duration: 01:38:16.28,     We take the hour, minute and seconds values
-                                Pattern pattern = Pattern.compile("Duration: (.*?)[.]");
-                                Matcher matcher = pattern.matcher(line);
-                                if (matcher.find())
-                                {
-                                    // Get value in seconds
-                                    String durationStr = matcher.group(1);
-
-                                    String[] timeValues = durationStr.split(":");
-                                    if (timeValues.length == 3) {
-                                        mediaDuration = Integer.parseInt(timeValues[0]) * 3600 + Integer.parseInt(timeValues[1]) * 60 + Integer.parseInt(timeValues[2]);
-                                    }
-                                }
-                            }
                             if (line.contains("Video: h264") && line.contains("kb/s")) {
                                 isH264 = true;
                             }
                         }
-                    } finally {
-                        reader.close();
                     }
                 } catch(IOException ioe) {
                     logger.error(ioe);
@@ -178,27 +158,6 @@ public class ENTDocumentConversionUtil {
             command = "ffmpeg -i " + fileSourceTmp.getPath() + " -movflags +faststart " + fileName;
         }
         else if(targetExtension.equals("mp4")) {
-			/* If we have more args -> need a command update
-			String sampleRate = parameters.containsKey("sampleRate") ? parameters.get("sampleRate") : "22050";
-			String avSync = parameters.containsKey("avSync") ? parameters.get("avSync") : "-mc 0";
-			String frameRate = parameters.containsKey("frameRate") ? parameters.get("frameRate") : ""; // frameRate doit contenir "-ofps 25" par exemple
-			String bitrateAudio = parameters.containsKey("bitrateAudio") ? parameters.get("bitrateAudio") : "56";
-			String bitrateVideo = parameters.containsKey("bitrateVideo") ? parameters.get("bitrateVideo") : "250"; // frameRate doit contenir "-ofps 25" par exemple
-
-			String videoSize = parameters.containsKey("videoSize") ? parameters.get("videoSize") : "360x240";
-			String[] size = videoSize.split("x");
-			String videoWidth = size[0];
-			String videoHeight = size[1];
-			String videoScale = "-vf scale=";
-			boolean keepAspect = Boolean.getBoolean(parameters.containsKey("keepAspect") ? parameters.get("keepAspect") : "true");
-			if (keepAspect) {
-				videoScale += videoWidth + ":-2,expand=:" + videoHeight + ":::,crop=" + videoWidth + ":" + videoHeight + ",harddup";
-			}
-			else {
-				videoScale += videoWidth + ":" + videoHeight + ",harddup";
-			}
-			*/
-
             //-movflags +faststart   thanks to this option the video will start before file is entirely loaded
             if (isH264) {
                 //If we can detect if video encoding is h264 use copy only to optimize (using ffprobe ?) :
@@ -226,20 +185,17 @@ public class ENTDocumentConversionUtil {
      */
     private static File runMediaConversion(String command, File fileResult, String fileName, String id) {
         logger.warn("Media conversion");
-        final String secureId = id;
         String [] cmd = command.split(" ");
 
         try {
             final Process p = Runtime.getRuntime().exec(cmd);
-            convertProcess.put(secureId, p);
-            convertState.put(secureId+"duration", String.valueOf(mediaDuration));
+            convertProcess.put(id, p);
             // Write convert process state informations
             new Thread(() -> {
                 try {
                     try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
-                        String line = "";
+                        String line;
                         while ((line = reader.readLine()) != null) {
-                            convertState.put(secureId, line);
                             logger.debug(line);
                         }
                     }
@@ -263,8 +219,4 @@ public class ENTDocumentConversionUtil {
 
     // If video has the right encoding we can handle faster conversion
     private static boolean isH264 = false;
-
-    // Media duration on seconds (Use for the progress bar)
-    private static int mediaDuration = 0;
-
 }

@@ -41,47 +41,21 @@ public class UserContactWrapper
 	public Map<String, Object> getModelAttributes() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
-		attributes.put("contactId", getContactId());
 		attributes.put("userId", getUserId());
-		attributes.put("middleNames", getMiddleNames());
-		attributes.put("birthName", getBirthName());
 		attributes.put("address", getAddress());
-		attributes.put("isAddressAuthorized", isIsAddressAuthorized());
-		attributes.put("mail", getMail());
-		attributes.put("isMailAuthorized", isIsMailAuthorized());
 		attributes.put("mobilePhone", getMobilePhone());
-		attributes.put("mobilePhoneSMS", getMobilePhoneSMS());
 		attributes.put("homePhone", getHomePhone());
 		attributes.put("proPhone", getProPhone());
-		attributes.put("familyLink", getFamilyLink());
 
 		return attributes;
 	}
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long contactId = (Long)attributes.get("contactId");
-
-		if (contactId != null) {
-			setContactId(contactId);
-		}
-
 		Long userId = (Long)attributes.get("userId");
 
 		if (userId != null) {
 			setUserId(userId);
-		}
-
-		String middleNames = (String)attributes.get("middleNames");
-
-		if (middleNames != null) {
-			setMiddleNames(middleNames);
-		}
-
-		String birthName = (String)attributes.get("birthName");
-
-		if (birthName != null) {
-			setBirthName(birthName);
 		}
 
 		String address = (String)attributes.get("address");
@@ -90,35 +64,10 @@ public class UserContactWrapper
 			setAddress(address);
 		}
 
-		Boolean isAddressAuthorized = (Boolean)attributes.get(
-			"isAddressAuthorized");
-
-		if (isAddressAuthorized != null) {
-			setIsAddressAuthorized(isAddressAuthorized);
-		}
-
-		String mail = (String)attributes.get("mail");
-
-		if (mail != null) {
-			setMail(mail);
-		}
-
-		Boolean isMailAuthorized = (Boolean)attributes.get("isMailAuthorized");
-
-		if (isMailAuthorized != null) {
-			setIsMailAuthorized(isMailAuthorized);
-		}
-
 		String mobilePhone = (String)attributes.get("mobilePhone");
 
 		if (mobilePhone != null) {
 			setMobilePhone(mobilePhone);
-		}
-
-		String mobilePhoneSMS = (String)attributes.get("mobilePhoneSMS");
-
-		if (mobilePhoneSMS != null) {
-			setMobilePhoneSMS(mobilePhoneSMS);
 		}
 
 		String homePhone = (String)attributes.get("homePhone");
@@ -131,12 +80,6 @@ public class UserContactWrapper
 
 		if (proPhone != null) {
 			setProPhone(proPhone);
-		}
-
-		String familyLink = (String)attributes.get("familyLink");
-
-		if (familyLink != null) {
-			setFamilyLink(familyLink);
 		}
 	}
 
@@ -156,36 +99,6 @@ public class UserContactWrapper
 	}
 
 	/**
-	 * Returns the birth name of this user contact.
-	 *
-	 * @return the birth name of this user contact
-	 */
-	@Override
-	public String getBirthName() {
-		return model.getBirthName();
-	}
-
-	/**
-	 * Returns the contact ID of this user contact.
-	 *
-	 * @return the contact ID of this user contact
-	 */
-	@Override
-	public long getContactId() {
-		return model.getContactId();
-	}
-
-	/**
-	 * Returns the family link of this user contact.
-	 *
-	 * @return the family link of this user contact
-	 */
-	@Override
-	public String getFamilyLink() {
-		return model.getFamilyLink();
-	}
-
-	/**
 	 * Returns the home phone of this user contact.
 	 *
 	 * @return the home phone of this user contact
@@ -196,46 +109,6 @@ public class UserContactWrapper
 	}
 
 	/**
-	 * Returns the is address authorized of this user contact.
-	 *
-	 * @return the is address authorized of this user contact
-	 */
-	@Override
-	public boolean getIsAddressAuthorized() {
-		return model.getIsAddressAuthorized();
-	}
-
-	/**
-	 * Returns the is mail authorized of this user contact.
-	 *
-	 * @return the is mail authorized of this user contact
-	 */
-	@Override
-	public boolean getIsMailAuthorized() {
-		return model.getIsMailAuthorized();
-	}
-
-	/**
-	 * Returns the mail of this user contact.
-	 *
-	 * @return the mail of this user contact
-	 */
-	@Override
-	public String getMail() {
-		return model.getMail();
-	}
-
-	/**
-	 * Returns the middle names of this user contact.
-	 *
-	 * @return the middle names of this user contact
-	 */
-	@Override
-	public String getMiddleNames() {
-		return model.getMiddleNames();
-	}
-
-	/**
 	 * Returns the mobile phone of this user contact.
 	 *
 	 * @return the mobile phone of this user contact
@@ -243,16 +116,6 @@ public class UserContactWrapper
 	@Override
 	public String getMobilePhone() {
 		return model.getMobilePhone();
-	}
-
-	/**
-	 * Returns the mobile phone sms of this user contact.
-	 *
-	 * @return the mobile phone sms of this user contact
-	 */
-	@Override
-	public String getMobilePhoneSMS() {
-		return model.getMobilePhoneSMS();
 	}
 
 	/**
@@ -295,26 +158,6 @@ public class UserContactWrapper
 		return model.getUserUuid();
 	}
 
-	/**
-	 * Returns <code>true</code> if this user contact is is address authorized.
-	 *
-	 * @return <code>true</code> if this user contact is is address authorized; <code>false</code> otherwise
-	 */
-	@Override
-	public boolean isIsAddressAuthorized() {
-		return model.isIsAddressAuthorized();
-	}
-
-	/**
-	 * Returns <code>true</code> if this user contact is is mail authorized.
-	 *
-	 * @return <code>true</code> if this user contact is is mail authorized; <code>false</code> otherwise
-	 */
-	@Override
-	public boolean isIsMailAuthorized() {
-		return model.isIsMailAuthorized();
-	}
-
 	@Override
 	public void persist() {
 		model.persist();
@@ -331,36 +174,6 @@ public class UserContactWrapper
 	}
 
 	/**
-	 * Sets the birth name of this user contact.
-	 *
-	 * @param birthName the birth name of this user contact
-	 */
-	@Override
-	public void setBirthName(String birthName) {
-		model.setBirthName(birthName);
-	}
-
-	/**
-	 * Sets the contact ID of this user contact.
-	 *
-	 * @param contactId the contact ID of this user contact
-	 */
-	@Override
-	public void setContactId(long contactId) {
-		model.setContactId(contactId);
-	}
-
-	/**
-	 * Sets the family link of this user contact.
-	 *
-	 * @param familyLink the family link of this user contact
-	 */
-	@Override
-	public void setFamilyLink(String familyLink) {
-		model.setFamilyLink(familyLink);
-	}
-
-	/**
 	 * Sets the home phone of this user contact.
 	 *
 	 * @param homePhone the home phone of this user contact
@@ -371,46 +184,6 @@ public class UserContactWrapper
 	}
 
 	/**
-	 * Sets whether this user contact is is address authorized.
-	 *
-	 * @param isAddressAuthorized the is address authorized of this user contact
-	 */
-	@Override
-	public void setIsAddressAuthorized(boolean isAddressAuthorized) {
-		model.setIsAddressAuthorized(isAddressAuthorized);
-	}
-
-	/**
-	 * Sets whether this user contact is is mail authorized.
-	 *
-	 * @param isMailAuthorized the is mail authorized of this user contact
-	 */
-	@Override
-	public void setIsMailAuthorized(boolean isMailAuthorized) {
-		model.setIsMailAuthorized(isMailAuthorized);
-	}
-
-	/**
-	 * Sets the mail of this user contact.
-	 *
-	 * @param mail the mail of this user contact
-	 */
-	@Override
-	public void setMail(String mail) {
-		model.setMail(mail);
-	}
-
-	/**
-	 * Sets the middle names of this user contact.
-	 *
-	 * @param middleNames the middle names of this user contact
-	 */
-	@Override
-	public void setMiddleNames(String middleNames) {
-		model.setMiddleNames(middleNames);
-	}
-
-	/**
 	 * Sets the mobile phone of this user contact.
 	 *
 	 * @param mobilePhone the mobile phone of this user contact
@@ -418,16 +191,6 @@ public class UserContactWrapper
 	@Override
 	public void setMobilePhone(String mobilePhone) {
 		model.setMobilePhone(mobilePhone);
-	}
-
-	/**
-	 * Sets the mobile phone sms of this user contact.
-	 *
-	 * @param mobilePhoneSMS the mobile phone sms of this user contact
-	 */
-	@Override
-	public void setMobilePhoneSMS(String mobilePhoneSMS) {
-		model.setMobilePhoneSMS(mobilePhoneSMS);
 	}
 
 	/**

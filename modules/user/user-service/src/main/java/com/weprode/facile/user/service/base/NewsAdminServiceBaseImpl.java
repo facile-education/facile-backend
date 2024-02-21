@@ -30,7 +30,6 @@ import com.weprode.facile.user.model.NewsAdmin;
 import com.weprode.facile.user.service.NewsAdminService;
 import com.weprode.facile.user.service.NewsAdminServiceUtil;
 import com.weprode.facile.user.service.persistence.AffectationPersistence;
-import com.weprode.facile.user.service.persistence.LDAPMappingFinder;
 import com.weprode.facile.user.service.persistence.LDAPMappingPersistence;
 import com.weprode.facile.user.service.persistence.NewsAdminPersistence;
 import com.weprode.facile.user.service.persistence.UserContactPersistence;
@@ -144,9 +143,6 @@ public abstract class NewsAdminServiceBaseImpl
 
 	@Reference
 	protected LDAPMappingPersistence ldapMappingPersistence;
-
-	@Reference
-	protected LDAPMappingFinder ldapMappingFinder;
 
 	@Reference
 	protected com.weprode.facile.user.service.NewsAdminLocalService

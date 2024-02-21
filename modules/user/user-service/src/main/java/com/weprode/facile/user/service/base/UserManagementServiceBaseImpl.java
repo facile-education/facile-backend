@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.user.service.UserManagementService;
 import com.weprode.facile.user.service.UserManagementServiceUtil;
 import com.weprode.facile.user.service.persistence.AffectationPersistence;
-import com.weprode.facile.user.service.persistence.LDAPMappingFinder;
 import com.weprode.facile.user.service.persistence.LDAPMappingPersistence;
 import com.weprode.facile.user.service.persistence.NewsAdminPersistence;
 import com.weprode.facile.user.service.persistence.UserContactPersistence;
@@ -138,9 +137,6 @@ public abstract class UserManagementServiceBaseImpl
 
 	@Reference
 	protected LDAPMappingPersistence ldapMappingPersistence;
-
-	@Reference
-	protected LDAPMappingFinder ldapMappingFinder;
 
 	@Reference
 	protected NewsAdminPersistence newsAdminPersistence;

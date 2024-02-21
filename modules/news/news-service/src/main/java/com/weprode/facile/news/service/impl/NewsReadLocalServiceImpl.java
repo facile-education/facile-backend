@@ -183,7 +183,7 @@ public class NewsReadLocalServiceImpl extends NewsReadLocalServiceBaseImpl {
                     try {
                         NewsRead newsRead = newsReadPersistence.fetchByPrimaryKey(new NewsReadPK(newsId, member.getUserId()));
                         jsonMember.put(JSONConstants.HAS_READ, true);
-                        jsonMember.put(JSONConstants.READ_DATE, new SimpleDateFormat(NewsLocalServiceImpl.DATE_FORMAT).format(newsRead.getReadDate()));
+                        jsonMember.put(JSONConstants.READ_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(newsRead.getReadDate()));
                     } catch (Exception e) {
                         jsonMember.put(JSONConstants.HAS_READ, false);
                     }

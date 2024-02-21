@@ -79,7 +79,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
             schoollifeSession.setType(type);
             schoollifeSession = schoollifeSessionPersistence.update(schoollifeSession);
 
-            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             logger.info("Created schoollife session for slotId " + schoollifeSlotId + ", type="+type + " from " + df.format(startDate) + " to " + df.format(endDate));
 
             return schoollifeSession;
@@ -141,7 +141,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
                 }
             }
         } catch (Exception e) {
-            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             logger.error("Error getting unnotified schoollife sessions from " + df.format(startDate) + " to " + df.format(endDate), e);
         }
 
@@ -228,7 +228,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
         JSONArray jsonSessions = new JSONArray();
 
         try {
-            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             List<SchoollifeSlot> teacherSlots = schoollifeSlotPersistence.findByteacherId(teacherId);
 
             if (teacherSlots != null) {
@@ -261,7 +261,7 @@ public class SchoollifeSessionLocalServiceImpl extends SchoollifeSessionLocalSer
     }
 
     public JSONObject formatSchoollifeSession(SchoollifeSession session, User user) throws PortalException {
-        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+        SimpleDateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         JSONObject jsonSession = new JSONObject();
         SchoollifeSlot slot = SchoollifeSlotLocalServiceUtil.getSchoollifeSlot(session.getSchoollifeSlotId());

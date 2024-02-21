@@ -36,6 +36,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
     public static final String GET_ALL_SCHOOL_NEWS = NewsFinder.class.getName() + ".getAllSchoolNews";
     public static final String COUNT_NEWS = NewsFinder.class.getName() + ".countNews";
     public static final String COUNT_ALL_SCHOOL_NEWS = NewsFinder.class.getName() + ".countAllSchoolNews";
+    public static final String DATE_SEARCH_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     public List<News> getNews(long userId, List<Long> groupIds, List<Long> roleIds, Date currentDate, int startIndex, int nbNews, boolean groupNews, boolean importantOnly, boolean unreadOnly) {
         Session session = null;
@@ -63,7 +64,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             qPos.add(userId);
             qPos.add(sdf.format(currentDate)); // publication Date >= currentDate
             qPos.add(userId);
@@ -107,7 +108,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             qPos.add(userId);
             qPos.add(sdf.format(currentDate));
             qPos.add(userId);
@@ -151,7 +152,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             q.addScalar("totalCount", Type.INTEGER);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(sdf.format(new Date()));
@@ -192,7 +193,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             q.addScalar("totalCount", Type.INTEGER);
 
             QueryPos qPos = QueryPos.getInstance(q);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
             qPos.add(sdf.format(new Date()));
@@ -209,23 +210,26 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
         return 0;
     }
 
-    public List<News> getNewsActivities(long userId, List<Long> groupIds, List<Long> roleIds, Date minDate, Date maxDate, int nbNews, boolean groupNewsOnly) {
+    public List<News> getNewsActivities(long userId, List<Long> groupIds, List<Long> roleIds, Date minDate, Date maxDate, int nbNews, boolean withRead, boolean withUnread) {
         Session session = null;
 
         try {
             session = openSession();
 
             String other = "";
-            if (groupNewsOnly) {
-                other += " AND news.isSchoolNews = 0";
+            if (withRead && !withUnread) {
+                other += " AND newsread.userId IS NOT NULL";
+            }
+            if (!withRead && withUnread) {
+                other += " AND newsread.userId IS NULL";
             }
 
             // If maxDate is today, we set AuthorMaxDate to the maximum, to be able to edit news published later in the future
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_SEARCH_FORMAT);
             Date authorMinDate = minDate;
             Date authorMaxDate = maxDate;
             if (isNow(maxDate)) {
-                authorMaxDate = sdf.parse("2030-01-01 00:00:00.000"); // TODO: make something about that
+                authorMaxDate = sdf.parse("2030-01-01 00:00:00.000");
             }
 
             String sql = customSQL.get(getClass(), GET_NEWS_ACTIVITIES);
@@ -239,6 +243,7 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
 
             QueryPos qPos = QueryPos.getInstance(q);
 
+            qPos.add(userId);
             qPos.add(sdf.format(minDate));
             qPos.add(sdf.format(maxDate));
             qPos.add(userId);
@@ -246,49 +251,6 @@ public class NewsFinderImpl extends NewsFinderBaseImpl
             qPos.add(sdf.format(authorMaxDate));
             qPos.add(userId);
             qPos.add(sdf.format(new Date()));
-            qPos.add(nbNews);
-
-            return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-
-        } catch (Exception e) {
-            logger.error("Error while fetching news", e);
-        } finally {
-            closeSession(session);
-        }
-
-        return Collections.emptyList();
-    }
-
-    public List<News> getGroupActivities(long userId, long groupId, List<Long> roleIds, Date minDate, Date maxDate, int nbNews) {
-        Session session = null;
-
-        try {
-            session = openSession();
-
-            // If maxDate is today, we set AuthorMaxDate to the maximum, to be able to edit news published later in the future
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            Date authorMinDate = minDate;
-            Date authorMaxDate = maxDate;
-            if (isNow(maxDate)) {
-                authorMaxDate = sdf.parse("2030-01-01 00:00:00.000");  // TODO: make something about that
-            }
-
-            String sql = customSQL.get(getClass(), GET_GROUP_ACTIVITIES);
-            sql = StringUtil.replace(sql, "[$ROLE_IDS$]", buildIdList(roleIds));
-            logger.debug("getGroupActivities = " + sql);
-
-            SQLQuery q = session.createSQLQuery(sql);
-            q.addEntity("News_News", NewsImpl.class);
-
-            QueryPos qPos = QueryPos.getInstance(q);
-
-            qPos.add(sdf.format(minDate));
-            qPos.add(sdf.format(maxDate));
-            qPos.add(userId);
-            qPos.add(sdf.format(authorMinDate));
-            qPos.add(sdf.format(authorMaxDate));
-            qPos.add(groupId);
-            qPos.add(userId);
             qPos.add(nbNews);
 
             return (List<News>) QueryUtil.list(q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);

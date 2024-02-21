@@ -479,6 +479,10 @@ public class PermissionUtilsLocalServiceImpl
 				permissionForCurrentRole.remove(PermissionConstants.ADD_OBJECT);
 				permissionForCurrentRole.add(ActionKeys.UPDATE);
 			}
+			if (permissionForCurrentRole.contains(ActionKeys.ADD_DOCUMENT)) {
+				permissionForCurrentRole.remove(ActionKeys.ADD_DOCUMENT);
+				permissionForCurrentRole.add(ActionKeys.UPDATE);
+			}
 			filePermissionMap.put(permissionForARole.getKey(), permissionForCurrentRole.toArray(new String[0]));
 		}
 

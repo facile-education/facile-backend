@@ -51,7 +51,7 @@ public class HomeworkImpl extends HomeworkBaseImpl {
     public JSONObject convertToJSON(User user, boolean includeBlocks, boolean withDetails) {
         JSONObject jsonHomework = new JSONObject();
 
-        SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
         jsonHomework.put(JSONConstants.GROUP_ID, this.getCourseId());
         jsonHomework.put(JSONConstants.HOMEWORK_ID, this.getHomeworkId());
         jsonHomework.put(JSONConstants.TITLE, this.getTitle());

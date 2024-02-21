@@ -148,6 +148,18 @@ public class FileUtilsLocalServiceUtil {
 		return getService().format(user, fileEntry, space, withDetails);
 	}
 
+	public static org.json.JSONObject formatWithOnlyMandatoryFields(
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry) {
+
+		return getService().formatWithOnlyMandatoryFields(fileEntry);
+	}
+
+	public static org.json.JSONObject formatWithOnlyMandatoryFields(
+		long fileId) {
+
+		return getService().formatWithOnlyMandatoryFields(fileId);
+	}
+
 	public static String getDisplayUrl(
 			com.liferay.portal.kernel.repository.model.FileEntry file,
 			long versionId, long userId, boolean readOnly)

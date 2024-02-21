@@ -121,64 +121,6 @@ public class UserContactUtil {
 	}
 
 	/**
-	 * Returns the user contact where userId = &#63; or throws a <code>NoSuchContactException</code> if it could not be found.
-	 *
-	 * @param userId the user ID
-	 * @return the matching user contact
-	 * @throws NoSuchContactException if a matching user contact could not be found
-	 */
-	public static UserContact findByuserId(long userId)
-		throws com.weprode.facile.user.exception.NoSuchContactException {
-
-		return getPersistence().findByuserId(userId);
-	}
-
-	/**
-	 * Returns the user contact where userId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @return the matching user contact, or <code>null</code> if a matching user contact could not be found
-	 */
-	public static UserContact fetchByuserId(long userId) {
-		return getPersistence().fetchByuserId(userId);
-	}
-
-	/**
-	 * Returns the user contact where userId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param userId the user ID
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching user contact, or <code>null</code> if a matching user contact could not be found
-	 */
-	public static UserContact fetchByuserId(
-		long userId, boolean useFinderCache) {
-
-		return getPersistence().fetchByuserId(userId, useFinderCache);
-	}
-
-	/**
-	 * Removes the user contact where userId = &#63; from the database.
-	 *
-	 * @param userId the user ID
-	 * @return the user contact that was removed
-	 */
-	public static UserContact removeByuserId(long userId)
-		throws com.weprode.facile.user.exception.NoSuchContactException {
-
-		return getPersistence().removeByuserId(userId);
-	}
-
-	/**
-	 * Returns the number of user contacts where userId = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @return the number of matching user contacts
-	 */
-	public static int countByuserId(long userId) {
-		return getPersistence().countByuserId(userId);
-	}
-
-	/**
 	 * Caches the user contact in the entity cache if it is enabled.
 	 *
 	 * @param userContact the user contact
@@ -199,24 +141,24 @@ public class UserContactUtil {
 	/**
 	 * Creates a new user contact with the primary key. Does not add the user contact to the database.
 	 *
-	 * @param contactId the primary key for the new user contact
+	 * @param userId the primary key for the new user contact
 	 * @return the new user contact
 	 */
-	public static UserContact create(long contactId) {
-		return getPersistence().create(contactId);
+	public static UserContact create(long userId) {
+		return getPersistence().create(userId);
 	}
 
 	/**
 	 * Removes the user contact with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact that was removed
 	 * @throws NoSuchContactException if a user contact with the primary key could not be found
 	 */
-	public static UserContact remove(long contactId)
+	public static UserContact remove(long userId)
 		throws com.weprode.facile.user.exception.NoSuchContactException {
 
-		return getPersistence().remove(contactId);
+		return getPersistence().remove(userId);
 	}
 
 	public static UserContact updateImpl(UserContact userContact) {
@@ -226,24 +168,24 @@ public class UserContactUtil {
 	/**
 	 * Returns the user contact with the primary key or throws a <code>NoSuchContactException</code> if it could not be found.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact
 	 * @throws NoSuchContactException if a user contact with the primary key could not be found
 	 */
-	public static UserContact findByPrimaryKey(long contactId)
+	public static UserContact findByPrimaryKey(long userId)
 		throws com.weprode.facile.user.exception.NoSuchContactException {
 
-		return getPersistence().findByPrimaryKey(contactId);
+		return getPersistence().findByPrimaryKey(userId);
 	}
 
 	/**
 	 * Returns the user contact with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact, or <code>null</code> if a user contact with the primary key could not be found
 	 */
-	public static UserContact fetchByPrimaryKey(long contactId) {
-		return getPersistence().fetchByPrimaryKey(contactId);
+	public static UserContact fetchByPrimaryKey(long userId) {
+		return getPersistence().fetchByPrimaryKey(userId);
 	}
 
 	/**

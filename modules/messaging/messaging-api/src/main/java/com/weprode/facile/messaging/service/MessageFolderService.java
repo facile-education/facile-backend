@@ -54,13 +54,13 @@ public interface MessageFolderService extends BaseService {
 	/**
 	 * Add personal folder
 	 */
-	@JSONWebService(method = "GET")
+	@JSONWebService(method = "POST")
 	public JSONObject addFolder(long parentFolderId, String folderName);
 
 	/**
 	 * Remove a folder
 	 */
-	@JSONWebService(method = "GET")
+	@JSONWebService(method = "DELETE")
 	public JSONObject deleteFolder(long folderId);
 
 	/**
@@ -80,7 +80,7 @@ public interface MessageFolderService extends BaseService {
 	/**
 	 * Add a folder
 	 */
-	@JSONWebService(method = "GET")
+	@JSONWebService(method = "POST")
 	public JSONObject renameFolder(long folderId, String newLabel);
 
 }

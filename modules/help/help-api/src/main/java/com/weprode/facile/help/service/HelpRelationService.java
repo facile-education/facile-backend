@@ -49,7 +49,7 @@ public interface HelpRelationService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.weprode.facile.help.service.impl.HelpRelationServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the help relation remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link HelpRelationServiceUtil} if injection and service tracking are not available.
 	 */
-	@JSONWebService(method = "GET", value = "delete-relation")
+	@JSONWebService(method = "DELETE", value = "delete-relation")
 	public JSONObject deleteRelation(long relationId);
 
 	/**

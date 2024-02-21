@@ -149,7 +149,7 @@ public class ScheduleConfigurationLocalServiceImpl
 
 		try {
 			ScheduleConfiguration config = scheduleConfigurationPersistence.findAll().get(0);
-			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_START_DATE, sdf.format(config.getSchoolYearStartDate()));
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_END_DATE, sdf.format(config.getSchoolYearEndDate()));
@@ -173,7 +173,7 @@ public class ScheduleConfigurationLocalServiceImpl
 
 		try {
 			ScheduleConfiguration config = scheduleConfigurationPersistence.findAll().get(0);
-			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 			jsonConfig.put(JSONConstants.START_DATE_PROJECT, sdf.format(config.getProjectStartDate()));
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_START_DATE, sdf.format(config.getSchoolYearStartDate()));
 			jsonConfig.put(JSONConstants.SCHOOL_YEAR_SEMESTER_DATE, sdf.format(config.getSchoolYearSemesterDate()));
@@ -198,7 +198,7 @@ public class ScheduleConfigurationLocalServiceImpl
 		} else {
 			cal.set(cal.get(Calendar.YEAR), Calendar.JULY, 4);
 		}
-		logger.info("Calculated default school year end date to " + new SimpleDateFormat(JSONConstants.FRENCH_FORMAT).format(cal.getTime()));
+		logger.info("Calculated default school year end date to " + new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(cal.getTime()));
 
 		return cal.getTime();
 	}

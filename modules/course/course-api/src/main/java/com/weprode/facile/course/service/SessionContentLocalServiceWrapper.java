@@ -356,11 +356,12 @@ public class SessionContentLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.repository.model.Folder getSessionFolder(
-			long sessionId)
+			long sessionId, boolean doCreate)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _sessionContentLocalService.getSessionFolder(sessionId);
+		return _sessionContentLocalService.getSessionFolder(
+			sessionId, doCreate);
 	}
 
 	@Override

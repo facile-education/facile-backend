@@ -92,8 +92,6 @@ import java.util.UUID;
 )
 public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
 
-    static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-
     private static final Log logger = LogFactoryUtil.getLog(NewsLocalServiceImpl.class);
 
     @Indexable(type = IndexableType.REINDEX)
@@ -282,7 +280,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
     }
 
     // Called from dashboard : either with all user's groups or with 1 filtered group
-    public List<News> getNewsActivities(User user, List<Long> groupIds, Date minDate, Date maxDate, int nbNews, boolean groupNewsOnly) throws SystemException {
+    public List<News> getNewsActivities(User user, List<Long> groupIds, Date minDate, Date maxDate, int nbNews, boolean withRead, boolean withUnread) throws SystemException {
         // Get user role ids
         List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
 
@@ -293,23 +291,7 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         // For communities and one role school level orgs (Enseignants, Personnels...)
         roleIds.add((long) 0);
 
-        return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews, groupNewsOnly);
-    }
-
-    // Called from Group service, with 1 groupId
-    public List<News> getGroupNewsActivities(User user, long groupId, Date minDate, Date maxDate, int nbNews) throws SystemException {
-        // Get user role ids
-        List<Role> roles = RoleLocalServiceUtil.getUserRoles(user.getUserId());
-
-        List<Long> roleIds = new ArrayList<>();
-        for (Role role : roles) {
-            roleIds.add(role.getRoleId());
-        }
-        // For communities and one role school level orgs (Enseignants, Personnels...)
-        roleIds.add((long) 0);
-
-        // Get user groupIds
-        return newsFinder.getGroupActivities(user.getUserId(), groupId, roleIds, minDate, maxDate, nbNews);
+        return newsFinder.getNewsActivities(user.getUserId(), groupIds, roleIds, minDate, maxDate, nbNews, withRead, withUnread);
     }
 
 
@@ -668,8 +650,8 @@ public class NewsLocalServiceImpl extends NewsLocalServiceBaseImpl {
         }
         jsonNews.put(JSONConstants.TYPE, ActivityConstants.TYPE_NEWS);
         jsonNews.put(JSONConstants.IS_IMPORTANT, news.isIsImportant());
-        jsonNews.put(JSONConstants.PUBLICATION_DATE, new SimpleDateFormat(DATE_FORMAT).format(news.getPublicationDate()));
-        jsonNews.put(JSONConstants.EXPIRATION_DATE, new SimpleDateFormat(DATE_FORMAT).format(news.getExpirationDate()));
+        jsonNews.put(JSONConstants.PUBLICATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(news.getPublicationDate()));
+        jsonNews.put(JSONConstants.EXPIRATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(news.getExpirationDate()));
         jsonNews.put(JSONConstants.HAS_READ, NewsReadLocalServiceUtil.hasUserReadNews(userId, newsId));
         jsonNews.put(JSONConstants.HAS_ATTACHED_FILES, NewsAttachedFileLocalServiceUtil.hasAttachedFiles(newsId));
         jsonNews.put(JSONConstants.IS_SCHOOL_NEWS, news.getIsSchoolNews());

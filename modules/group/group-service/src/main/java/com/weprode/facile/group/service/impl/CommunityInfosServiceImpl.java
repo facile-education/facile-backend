@@ -87,7 +87,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates community");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates community");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -204,7 +204,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         }
 
         if (RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " checks community name");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " checks community name");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
         logger.info("User " + user.getFullName() + " is about to create community " + communityName);
@@ -225,7 +225,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
                 logger.debug(e);
             }
             if (communityInfos != null && communityInfos.getStatus() == 3 && communityInfos.getCreatorId() == user.getUserId()) {
-                DateFormat dateFormat = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+                DateFormat dateFormat = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
                 result.put(JSONConstants.ERROR_CODE, 1);
                 result.put(JSONConstants.CREATION_DATE, dateFormat.format(communityInfos.getCreationDate()));
                 result.put(JSONConstants.EXPIRATION_DATE, dateFormat.format(communityInfos.getExpirationDate()));
@@ -254,7 +254,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " edits community " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " edits community " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -366,7 +366,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "remove-community", method = "GET")
+    @JSONWebService(value = "remove-community", method = "DELETE")
     public JSONObject removeCommunity(long groupId) {
 
         JSONObject result = new JSONObject();
@@ -380,7 +380,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes community " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " removes community " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -429,7 +429,7 @@ public class CommunityInfosServiceImpl extends CommunityInfosServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isCommunityAdmin(user.getUserId(), groupId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " extends community " + groupId);
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " extends community " + groupId);
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

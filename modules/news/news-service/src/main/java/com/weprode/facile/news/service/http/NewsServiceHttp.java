@@ -308,6 +308,39 @@ public class NewsServiceHttp {
 		}
 	}
 
+	public static org.json.JSONObject getUnreadGroupNews(
+		HttpPrincipal httpPrincipal, long groupId, String maxDate,
+		int nbResults) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				NewsServiceUtil.class, "getUnreadGroupNews",
+				_getUnreadGroupNewsParameterTypes8);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, groupId, maxDate, nbResults);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (org.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(NewsServiceHttp.class);
 
 	private static final Class<?>[] _addNewsParameterTypes0 = new Class[] {
@@ -334,5 +367,7 @@ public class NewsServiceHttp {
 	private static final Class<?>[] _deleteNewsParameterTypes7 = new Class[] {
 		long.class
 	};
+	private static final Class<?>[] _getUnreadGroupNewsParameterTypes8 =
+		new Class[] {long.class, String.class, int.class};
 
 }

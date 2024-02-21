@@ -18,8 +18,6 @@
 		<field name="hideMenu" type="boolean" />
 		<field name="themeColor" type="String" />
 		<field name="etabId" type="long" />
-		<field name="preferedSchoolId" type="long" />
-		<field name="webdavActivated" type="boolean" />
 		<field name="termsOfUseAgreedDate" type="Date" />
 		<field name="lastSynchroDate" type="Date" />
 		<field name="lastDashboardAccessDate" type="Date" />
@@ -41,8 +39,6 @@
 		<field name="hideMenu" type="boolean" />
 		<field name="themeColor" type="String" />
 		<field name="etabId" type="long" />
-		<field name="preferedSchoolId" type="long" />
-		<field name="webdavActivated" type="boolean" />
 		<field name="termsOfUseAgreedDate" type="Date" />
 		<field name="lastSynchroDate" type="Date" />
 		<field name="lastDashboardAccessDate" type="Date" />

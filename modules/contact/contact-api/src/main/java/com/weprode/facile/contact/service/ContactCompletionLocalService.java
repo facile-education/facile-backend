@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -55,6 +56,9 @@ public interface ContactCompletionLocalService extends BaseLocalService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getCompletionResultAsJSON(
 		String query, User user, boolean includeLists);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getContactsForMessaging(User user);
 
 	/**
 	 * Returns the OSGi service identifier.

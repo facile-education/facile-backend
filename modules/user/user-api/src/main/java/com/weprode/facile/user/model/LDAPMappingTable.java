@@ -30,23 +30,11 @@ public class LDAPMappingTable extends BaseTable<LDAPMappingTable> {
 
 	public static final LDAPMappingTable INSTANCE = new LDAPMappingTable();
 
-	public final Column<LDAPMappingTable, Long> UserId = createColumn(
-		"UserId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
-	public final Column<LDAPMappingTable, String> EntPersonJointure =
-		createColumn(
-			"EntPersonJointure", String.class, Types.VARCHAR,
-			Column.FLAG_DEFAULT);
+	public final Column<LDAPMappingTable, Long> userId = createColumn(
+		"userId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 
 	public final Column<LDAPMappingTable, String> UID = createColumn(
 		"UID", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-
-	public final Column<LDAPMappingTable, String> INE = createColumn(
-		"INE", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-
-	public final Column<LDAPMappingTable, String> EntEleveStructRattachId =
-		createColumn(
-			"EntEleveStructRattachId", String.class, Types.VARCHAR,
-			Column.FLAG_DEFAULT);
 
 	private LDAPMappingTable() {
 		super("User_LDAPMapping", LDAPMappingTable::new);

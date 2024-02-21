@@ -66,9 +66,9 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		if (fileEntryId != 0) {
 			Folder parentFolder;
 			if (CourseLocalServiceUtil.isSessionItem(itemId)) {
-				parentFolder = SessionContentLocalServiceUtil.getSessionFolder(itemId);
+				parentFolder = SessionContentLocalServiceUtil.getSessionFolder(itemId, true);
 			} else {
-				parentFolder = HomeworkLocalServiceUtil.getHomeworkFolder(itemId);
+				parentFolder = HomeworkLocalServiceUtil.getHomeworkFolder(itemId, true);
 			}
 			FileEntry contentFile = FileUtilsLocalServiceUtil.copyFileEntry(userId, fileEntryId, parentFolder.getFolderId(), true);
 			block.setFileEntryId(contentFile.getFileEntryId());
@@ -90,7 +90,7 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 				if (CommonUtils.isValidURI(blockValue)) {
 					block.setBlockValue(blockValue);
 				} else {
-					throw new UnauthorizedUrlException("Url " + blockValue + " is not valid");
+					throw new UnauthorizedUrlException("Url " + blockValue + INVALID);
 				}
 				break;
 			case CourseConstants.TYPE_VIDEO:
@@ -120,7 +120,7 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 				&& !ContentBlockLocalServiceUtil.isEmbedUrlWhitelisted(blockValue)) {
 			throw new UnauthorizedUrlException("Url " + blockValue + " is not whiteListed as an authorized embed content");
 		} else if (block.getBlockType() == CourseConstants.TYPE_LINK && !CommonUtils.isValidURI(blockValue)) {
-			throw new UnauthorizedUrlException("Url " + blockValue + " is not valid");
+			throw new UnauthorizedUrlException("Url " + blockValue + INVALID);
 		}
 
 		block.setBlockValue(blockValue);
@@ -286,7 +286,7 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 
 	public boolean isEmbedUrlWhitelisted (String url) throws UnauthorizedUrlException {
 		if (!CommonUtils.isValidURI(url)) {
-			throw new UnauthorizedUrlException("Url " + url + " is not valid");
+			throw new UnauthorizedUrlException("Url " + url + INVALID);
 		}
 
 		List<String> domainWhitelist = List.of(
@@ -300,4 +300,5 @@ public class ContentBlockLocalServiceImpl extends ContentBlockLocalServiceBaseIm
 		return false;
 	}
 
+	private static final String INVALID = " is not valid";
 }

@@ -131,7 +131,9 @@ public class ActivityFinderImpl extends ActivityFinderBaseImpl
 
             Long[] groupIds = groupIdList.toArray(new Long[0]);
             dynamicQuery.add(PropertyFactoryUtil.forName("groupId").in(groupIds));
-            dynamicQuery.add(RestrictionsFactoryUtil.between("modificationDate", minDate, maxDate));
+            // Replace between by strict date checking 'gt' and 'lt' in order to avoid duplicates
+            dynamicQuery.add(RestrictionsFactoryUtil.gt("modificationDate", minDate));
+            dynamicQuery.add(RestrictionsFactoryUtil.lt("modificationDate", maxDate));
 
             // Execute the query
             activityList = ActivityLocalServiceUtil.dynamicQuery(dynamicQuery);

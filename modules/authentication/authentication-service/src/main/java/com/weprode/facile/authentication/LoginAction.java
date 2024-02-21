@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.weprode.facile.authentication.model.LoginLock;
 import com.weprode.facile.authentication.service.LoginLockLocalServiceUtil;
+import com.weprode.facile.commons.constants.JSONConstants;
 import org.apache.logging.log4j.ThreadContext;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
@@ -71,26 +72,26 @@ public class LoginAction implements StrutsAction {
 
             try {
                 AuthenticatedSessionManagerUtil.login(request, response, login, password, rememberMe, authType);
-                userStatus.put("success", true);
+                userStatus.put(JSONConstants.SUCCESS, true);
             } catch (UserLockoutException ule) {
-                userStatus.put("success", false);
+                userStatus.put(JSONConstants.SUCCESS, false);
                 logger.error("User is locked");
-                userStatus.put("isLocked", true);
+                userStatus.put(IS_LOCKED, true);
                 long lockoutDuration = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getLockoutDuration();
-                userStatus.put("lockoutDuration", lockoutDuration);
+                userStatus.put(LOCKOUT_DURATION, lockoutDuration);
 
             } catch (AuthException e) {
-                userStatus.put("success", false);
+                userStatus.put(JSONConstants.SUCCESS, false);
                 logger.info("Authentication failed for login " + login);
                 // Get nb remaining tries
                 int nbRemainingTries = getNbRemainingTries(login);
                 if (nbRemainingTries >= 0) {
-                    userStatus.put("nbRemainingTries", nbRemainingTries);
+                    userStatus.put(NB_REMAINING_TRIES, nbRemainingTries);
                     if (nbRemainingTries == 0) {
                         logger.error("User is locked");
-                        userStatus.put("isLocked", true);
+                        userStatus.put(IS_LOCKED, true);
                         long lockoutDuration = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getLockoutDuration();
-                        userStatus.put("lockoutDuration", lockoutDuration);
+                        userStatus.put(LOCKOUT_DURATION, lockoutDuration);
                     }
                 }
             }
@@ -100,15 +101,19 @@ public class LoginAction implements StrutsAction {
             LoginLockLocalServiceUtil.addLoginAttempt(login);
 
             LoginLock loginLock = LoginLockLocalServiceUtil.getLoginLock(login);
-            int nbRemainingTries = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getMaxFailure() - loginLock.getFailedLoginAttempts();
-            userStatus.put("nbRemainingTries", nbRemainingTries);
+            int passwordPolicyMaxFailures = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getMaxFailure();
+            int nbRemainingTries = passwordPolicyMaxFailures >= loginLock.getFailedLoginAttempts() ? passwordPolicyMaxFailures - loginLock.getFailedLoginAttempts() : 0;
+            userStatus.put(NB_REMAINING_TRIES, nbRemainingTries);
             if (nbRemainingTries <= 0) {
                 logger.error("False user is locked");
-                userStatus.put("isLocked", true);
+                userStatus.put(IS_LOCKED, true);
                 long lockoutDuration = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(PortalUtil.getDefaultCompanyId()).getLockoutDuration();
-                userStatus.put("lockoutDuration", lockoutDuration);
+                userStatus.put(LOCKOUT_DURATION, lockoutDuration);
             }
-            userStatus.put("success", false);
+            userStatus.put(JSONConstants.SUCCESS, false);
+
+            // Wait 300 ms to have the same approximate time than real logins
+            Thread.sleep(300);
         }
 
 
@@ -133,5 +138,9 @@ public class LoginAction implements StrutsAction {
         }
         return 0;
     }
+
+    private static final String IS_LOCKED = "isLocked";
+    private static final String LOCKOUT_DURATION = "lockoutDuration";
+    private static final String NB_REMAINING_TRIES = "nbRemainingTries";
 
 }

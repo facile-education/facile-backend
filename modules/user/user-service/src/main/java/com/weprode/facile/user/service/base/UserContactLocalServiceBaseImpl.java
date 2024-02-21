@@ -45,7 +45,6 @@ import com.weprode.facile.user.model.UserContact;
 import com.weprode.facile.user.service.UserContactLocalService;
 import com.weprode.facile.user.service.UserContactLocalServiceUtil;
 import com.weprode.facile.user.service.persistence.AffectationPersistence;
-import com.weprode.facile.user.service.persistence.LDAPMappingFinder;
 import com.weprode.facile.user.service.persistence.LDAPMappingPersistence;
 import com.weprode.facile.user.service.persistence.NewsAdminPersistence;
 import com.weprode.facile.user.service.persistence.UserContactPersistence;
@@ -105,13 +104,13 @@ public abstract class UserContactLocalServiceBaseImpl
 	/**
 	 * Creates a new user contact with the primary key. Does not add the user contact to the database.
 	 *
-	 * @param contactId the primary key for the new user contact
+	 * @param userId the primary key for the new user contact
 	 * @return the new user contact
 	 */
 	@Override
 	@Transactional(enabled = false)
-	public UserContact createUserContact(long contactId) {
-		return userContactPersistence.create(contactId);
+	public UserContact createUserContact(long userId) {
+		return userContactPersistence.create(userId);
 	}
 
 	/**
@@ -121,16 +120,14 @@ public abstract class UserContactLocalServiceBaseImpl
 	 * <strong>Important:</strong> Inspect UserContactLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact that was removed
 	 * @throws PortalException if a user contact with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public UserContact deleteUserContact(long contactId)
-		throws PortalException {
-
-		return userContactPersistence.remove(contactId);
+	public UserContact deleteUserContact(long userId) throws PortalException {
+		return userContactPersistence.remove(userId);
 	}
 
 	/**
@@ -249,20 +246,20 @@ public abstract class UserContactLocalServiceBaseImpl
 	}
 
 	@Override
-	public UserContact fetchUserContact(long contactId) {
-		return userContactPersistence.fetchByPrimaryKey(contactId);
+	public UserContact fetchUserContact(long userId) {
+		return userContactPersistence.fetchByPrimaryKey(userId);
 	}
 
 	/**
 	 * Returns the user contact with the primary key.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact
 	 * @throws PortalException if a user contact with the primary key could not be found
 	 */
 	@Override
-	public UserContact getUserContact(long contactId) throws PortalException {
-		return userContactPersistence.findByPrimaryKey(contactId);
+	public UserContact getUserContact(long userId) throws PortalException {
+		return userContactPersistence.findByPrimaryKey(userId);
 	}
 
 	@Override
@@ -274,7 +271,7 @@ public abstract class UserContactLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(UserContact.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("contactId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 
 		return actionableDynamicQuery;
 	}
@@ -291,7 +288,7 @@ public abstract class UserContactLocalServiceBaseImpl
 		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
 		indexableActionableDynamicQuery.setModelClass(UserContact.class);
 
-		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("contactId");
+		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 
 		return indexableActionableDynamicQuery;
 	}
@@ -303,7 +300,7 @@ public abstract class UserContactLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(UserContact.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("contactId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 	}
 
 	/**
@@ -472,9 +469,6 @@ public abstract class UserContactLocalServiceBaseImpl
 
 	@Reference
 	protected LDAPMappingPersistence ldapMappingPersistence;
-
-	@Reference
-	protected LDAPMappingFinder ldapMappingFinder;
 
 	@Reference
 	protected NewsAdminPersistence newsAdminPersistence;

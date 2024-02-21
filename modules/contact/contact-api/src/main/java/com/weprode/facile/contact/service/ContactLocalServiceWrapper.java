@@ -45,7 +45,9 @@ public class ContactLocalServiceWrapper
 	public java.util.List<com.liferay.portal.kernel.model.User> directorySearch(
 		com.liferay.portal.kernel.model.User user, String query,
 		java.util.List<Long> schoolIds, java.util.List<Long> roleIds, int start,
-		int limit, com.liferay.portal.kernel.util.OrderByComparator obc) {
+		int limit,
+		com.liferay.portal.kernel.util.OrderByComparator
+			<com.liferay.portal.kernel.model.User> obc) {
 
 		return _contactLocalService.directorySearch(
 			user, query, schoolIds, roleIds, start, limit, obc);
@@ -56,18 +58,11 @@ public class ContactLocalServiceWrapper
 		getAllGroupsContacts(
 			com.liferay.portal.kernel.model.User user, String search, int start,
 			int limit,
-			com.liferay.portal.kernel.util.OrderByComparator comparator) {
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.portal.kernel.model.User> comparator) {
 
 		return _contactLocalService.getAllGroupsContacts(
 			user, search, start, limit, comparator);
-	}
-
-	@Override
-	public org.json.JSONObject getContactDetails(
-		com.liferay.portal.kernel.model.User currentUser, long contactUserId) {
-
-		return _contactLocalService.getContactDetails(
-			currentUser, contactUserId);
 	}
 
 	@Override
@@ -121,6 +116,18 @@ public class ContactLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _contactLocalService.getRecipients(recipients, user);
+	}
+
+	@Override
+	public org.json.JSONObject getUserCard(
+		com.liferay.portal.kernel.model.User currentUser, long contactUserId) {
+
+		return _contactLocalService.getUserCard(currentUser, contactUserId);
+	}
+
+	@Override
+	public boolean isAllowedToContact(long userId, long contactId) {
+		return _contactLocalService.isAllowedToContact(userId, contactId);
 	}
 
 	@Override

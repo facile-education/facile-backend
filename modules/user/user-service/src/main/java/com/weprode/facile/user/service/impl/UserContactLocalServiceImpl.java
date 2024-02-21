@@ -28,27 +28,14 @@ import org.osgi.service.component.annotations.Component;
 )
 public class UserContactLocalServiceImpl extends UserContactLocalServiceBaseImpl {
 
-    public UserContact addUserContact() throws SystemException {
-        final long userContactId = counterLocalService.increment();
-
-        return userContactPersistence.create(userContactId);
-    }
-
-    /**
-     * Create a UserContact, with default values
-     */
     public UserContact addUserContact(long userId) throws SystemException {
-        final UserContact userContact = addUserContact();
 
-        userContact.setUserId(userId);
+        UserContact userContact = userContactPersistence.create(userId);
         userContact.setAddress("");
-        userContact.setIsAddressAuthorized(false);
-        userContact.setMail("");
-        userContact.setIsMailAuthorized(false);
         userContact.setHomePhone("");
         userContact.setProPhone("");
         userContact.setMobilePhone("");
-        userContact.setMobilePhoneSMS("");
+        userContact = userContactPersistence.update(userContact);
 
         return userContact;
     }
@@ -60,7 +47,7 @@ public class UserContactLocalServiceImpl extends UserContactLocalServiceBaseImpl
      */
     public UserContact getUserContactByUserId(long userId) throws SystemException {
         try {
-            return userContactPersistence.findByuserId(userId);
+            return userContactPersistence.findByPrimaryKey(userId);
         }
         catch (NoSuchContactException e) {
             return addUserContact(userId);

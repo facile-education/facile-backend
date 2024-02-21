@@ -47,7 +47,7 @@ public class LDAPMappingCacheModel
 		LDAPMappingCacheModel ldapMappingCacheModel =
 			(LDAPMappingCacheModel)object;
 
-		if (UserId == ldapMappingCacheModel.UserId) {
+		if (userId == ldapMappingCacheModel.userId) {
 			return true;
 		}
 
@@ -56,23 +56,17 @@ public class LDAPMappingCacheModel
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, UserId);
+		return HashUtil.hash(0, userId);
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(5);
 
-		sb.append("{UserId=");
-		sb.append(UserId);
-		sb.append(", EntPersonJointure=");
-		sb.append(EntPersonJointure);
+		sb.append("{userId=");
+		sb.append(userId);
 		sb.append(", UID=");
 		sb.append(UID);
-		sb.append(", INE=");
-		sb.append(INE);
-		sb.append(", EntEleveStructRattachId=");
-		sb.append(EntEleveStructRattachId);
 		sb.append("}");
 
 		return sb.toString();
@@ -82,34 +76,13 @@ public class LDAPMappingCacheModel
 	public LDAPMapping toEntityModel() {
 		LDAPMappingImpl ldapMappingImpl = new LDAPMappingImpl();
 
-		ldapMappingImpl.setUserId(UserId);
-
-		if (EntPersonJointure == null) {
-			ldapMappingImpl.setEntPersonJointure("");
-		}
-		else {
-			ldapMappingImpl.setEntPersonJointure(EntPersonJointure);
-		}
+		ldapMappingImpl.setUserId(userId);
 
 		if (UID == null) {
 			ldapMappingImpl.setUID("");
 		}
 		else {
 			ldapMappingImpl.setUID(UID);
-		}
-
-		if (INE == null) {
-			ldapMappingImpl.setINE("");
-		}
-		else {
-			ldapMappingImpl.setINE(INE);
-		}
-
-		if (EntEleveStructRattachId == null) {
-			ldapMappingImpl.setEntEleveStructRattachId("");
-		}
-		else {
-			ldapMappingImpl.setEntEleveStructRattachId(EntEleveStructRattachId);
 		}
 
 		ldapMappingImpl.resetOriginalValues();
@@ -119,23 +92,13 @@ public class LDAPMappingCacheModel
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
-		UserId = objectInput.readLong();
-		EntPersonJointure = objectInput.readUTF();
+		userId = objectInput.readLong();
 		UID = objectInput.readUTF();
-		INE = objectInput.readUTF();
-		EntEleveStructRattachId = objectInput.readUTF();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
-		objectOutput.writeLong(UserId);
-
-		if (EntPersonJointure == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(EntPersonJointure);
-		}
+		objectOutput.writeLong(userId);
 
 		if (UID == null) {
 			objectOutput.writeUTF("");
@@ -143,29 +106,10 @@ public class LDAPMappingCacheModel
 		else {
 			objectOutput.writeUTF(UID);
 		}
-
-		if (INE == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(INE);
-		}
-
-		if (EntEleveStructRattachId == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(EntEleveStructRattachId);
-		}
 	}
 
-	public long UserId;
-	public String EntPersonJointure;
+	public long userId;
 
 	public String UID;
-
-	public String INE;
-
-	public String EntEleveStructRattachId;
 
 }

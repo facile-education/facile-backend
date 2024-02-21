@@ -69,6 +69,7 @@ public class FileNameUtil {
             return "objet";
         }
         else {
+            str = str.trim();
             char[] wordCharArray = str.toCharArray();
 
             boolean invalidFlag;

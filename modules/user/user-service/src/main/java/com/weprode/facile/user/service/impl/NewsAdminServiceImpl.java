@@ -58,7 +58,7 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " adds news delegate");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " adds news delegate");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -72,7 +72,7 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "remove-news-delegate", method = "GET")
+    @JSONWebService(value = "remove-news-delegate", method = "DELETE")
     public JSONObject removeNewsDelegate(long userId, long schoolId) {
 
         JSONObject result = new JSONObject();
@@ -90,7 +90,7 @@ public class NewsAdminServiceImpl extends NewsAdminServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " removes news delegate");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " removes news delegate");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

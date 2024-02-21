@@ -44,13 +44,6 @@ public class UserPropertiesTable extends BaseTable<UserPropertiesTable> {
 		"themeColor", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<UserPropertiesTable, Long> etabId = createColumn(
 		"etabId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
-	public final Column<UserPropertiesTable, Long> preferedSchoolId =
-		createColumn(
-			"preferedSchoolId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
-	public final Column<UserPropertiesTable, Boolean> webdavActivated =
-		createColumn(
-			"webdavActivated", Boolean.class, Types.BOOLEAN,
-			Column.FLAG_DEFAULT);
 	public final Column<UserPropertiesTable, Date> termsOfUseAgreedDate =
 		createColumn(
 			"termsOfUseAgreedDate", Date.class, Types.TIMESTAMP,

@@ -17,7 +17,6 @@ package com.weprode.facile.mobile.utils;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.weprode.facile.commons.properties.NeroSystemProperties;
 import org.json.JSONObject;
@@ -27,16 +26,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 public class FCMNotification {
     // Method to send Notifications from server to client end.
 
     private static final Log logger = LogFactoryUtil.getLog(FCMNotification.class);
-
-    public static JSONObject pushFCMNotification(String deviceIdKey, String title, String body) throws Exception {
-        return pushFCMNotification(deviceIdKey, title, "", body, "");
-    }
 
     public static JSONObject pushFCMNotification(String deviceIdKey, String title, String subtitle, String body, String redirectUrl) throws Exception {
 
@@ -54,7 +48,7 @@ public class FCMNotification {
         conn.setRequestProperty("Authorization", "key=" + authKey);
         conn.setRequestProperty("Content-Type", "application/json");
 
-        // Push JSON oject
+        // Push JSON object
         JSONObject message = new JSONObject();
         message.put("to", deviceIdKey.trim());
         JSONObject notification = new JSONObject();
@@ -68,31 +62,24 @@ public class FCMNotification {
         data.put("service", redirectUrl);
         message.put("data", data);
 
-        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-        wr.write(message.toString());
-        wr.flush();
-        wr.close();
-
+        try (OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())) {
+            wr.write(message.toString());
+            wr.flush();
+        }
         int responseCode = conn.getResponseCode();
-        logger.info("Sending push : responseCode = " + responseCode);
+        if (responseCode != 200) {
+            logger.error("Error sending push to device " + deviceIdKey + " : responseCode = " + responseCode);
+        }
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String inputLine;
         StringBuilder response = new StringBuilder();
 
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
         }
-        in.close();
-
         return new JSONObject(response.toString());
     }
 
-    private static String sanitizeContent(String content, int maxSize) {
-        String sanitized = new String(HtmlUtil.stripHtml(content).getBytes(), StandardCharsets.UTF_8).trim();
-        if (sanitized.length() > maxSize) {
-            sanitized = sanitized.substring(0, maxSize) + "...";
-        }
-        return sanitized;
-    }
 }

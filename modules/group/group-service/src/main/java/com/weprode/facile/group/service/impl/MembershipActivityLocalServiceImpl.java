@@ -262,7 +262,7 @@ public class MembershipActivityLocalServiceImpl extends MembershipActivityLocalS
     public JSONObject convertMembershipActivityToJson(MembershipActivity membershipActivity, long userId) {
         JSONObject jsonMembershipActivity = new JSONObject();
 
-        DateFormat sdf = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+        DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         try {
             User user = UserLocalServiceUtil.getUser(userId);

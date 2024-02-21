@@ -79,11 +79,11 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets homeworks for student " + studentId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets homeworks for student " + studentId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 		if (RoleUtilsLocalServiceUtil.isParent(user) && !UserRelationshipLocalServiceUtil.isChild(user.getUserId(), studentId)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets homeworks for student " + studentId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets homeworks for student " + studentId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -96,9 +96,8 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 
 		List<Homework> homeworkList = new ArrayList<>();
 		try {
-			logger.info("User " + user.getUserId() + " fetches homeworks from " + minDateStr + " to " + maxDateStr + ((studentId != 0) ? " for student " + studentId : ""));
-			Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDateStr);
-			Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDateStr);
+			Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(minDateStr);
+			Date maxDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDateStr);
 			homeworkList = HomeworkLocalServiceUtil.getStudentHomeworks(targetUser.getUserId(), minDate, maxDate, undoneOnly);
 		} catch (Exception e) {
 			logger.error("Error fetching previous homeworks for student " + studentId);
@@ -129,7 +128,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets homeworks to correct for course " + courseId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets homeworks to correct for course " + courseId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -159,11 +158,11 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " counts undone homeworks for student  " + studentId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " counts undone homeworks for student  " + studentId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 		if (RoleUtilsLocalServiceUtil.isParent(user) && !UserRelationshipLocalServiceUtil.isChild(user.getUserId(), studentId)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " counts undone homeworks for student  " + studentId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " counts undone homeworks for student  " + studentId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -172,8 +171,8 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			nbUndoneHomeworks = HomeworkLocalServiceUtil.countUndoneHomeworks(studentId);
 		} else {
 			try {
-				Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(minDateStr);
-				Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(maxDateStr);
+				Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(minDateStr);
+				Date maxDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(maxDateStr);
 				nbUndoneHomeworks = HomeworkLocalServiceUtil.countUndoneHomeworks(studentId, minDate, maxDate);
 			} catch (Exception e) {
 				logger.error("Error fetching previous homeworks for student " + studentId);
@@ -198,7 +197,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " counts homeworks to correct");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " counts homeworks to correct");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -222,7 +221,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isStudent(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " sets homework done for " + homeworkId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " sets homework done for " + homeworkId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -245,7 +244,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets homework done status for " + homeworkId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets homework done status for " + homeworkId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -280,14 +279,14 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets workload for course " + courseId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets workload for course " + courseId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		logger.info("Teacher " + user.getFullName() + " displays work load for " + (courseId != 0 ? "course " + courseId : "n students"));
 		try {
-			Date minDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(startDate);
-			Date maxDate = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(endDate);
+			Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(startDate);
+			Date maxDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(endDate);
 
 			List<Long> studentIds = new ArrayList<>();
 			if (courseId != 0) {
@@ -339,7 +338,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates homework for course " + courseId);
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates homework for course " + courseId);
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -347,9 +346,9 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		Date publicationDate;
 		try {
 			targetDate = targetSessionId == 0 ?
-					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) :
+					new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(targetDateStr) :
 					CDTSessionLocalServiceUtil.getCDTSession(targetSessionId).getStart();
-			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
+			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDateStr);
 		} catch (Exception e) {
 			result.put(JSONConstants.SUCCESS, false);
 			return result;
@@ -377,7 +376,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			}
 
 			result.put(JSONConstants.SUCCESS, true);
-		} catch (UnauthorizedUrlException | IOException e) {
+		} catch (Exception e) {
 			logger.error("Error creating homework", e);
 			throw new PortalException(); // To cancel the previous content creation
 		}
@@ -398,7 +397,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates a homework");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " updates a homework");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -407,9 +406,9 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 		Date publicationDate;
 		try {
 			targetDate = targetSessionId == 0 ?
-					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(targetDateStr) :
+					new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(targetDateStr) :
 					CDTSessionLocalServiceUtil.getCDTSession(targetSessionId).getStart();
-			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).parse(publicationDateStr);
+			publicationDate = publicationDateStr.equals("") ? new Date() : new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(publicationDateStr);
 		} catch (Exception e) {
 			result.put(JSONConstants.SUCCESS, false);
 			return result;
@@ -462,11 +461,12 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes homework");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes homework");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
 		try {
+			logger.info("User " + user.getFullName() + " deletes homework " + homeworkId);
 			HomeworkLocalServiceUtil.deleteHomeworkAndDependencies(homeworkId);
 			result.put(JSONConstants.SUCCESS, true);
 		} catch (Exception e) {
@@ -489,11 +489,11 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isStudent(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " drops a homework file");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " drops a homework file");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 		if (!StudentHomeworkLocalServiceUtil.hasStudentHomework(user.getUserId(), homeworkId)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " drops a homework file");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " drops a homework file");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -522,12 +522,12 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isStudent(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a dropped file for homework");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes a dropped file for homework");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 		// Check that the student drops one of his files
 		if (!StudentHomeworkLocalServiceUtil.hasStudentSentFile(user.getUserId(), homeworkId, fileEntryId)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a dropped file for homework");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes a dropped file for homework");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -557,7 +557,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets homework status");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets homework status");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -565,7 +565,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			// Check that the teacher owns the homework
 			Homework homework = HomeworkLocalServiceUtil.getHomework(homeworkId);
 			if (homework.getTeacherId() != user.getUserId()) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes a dropped file for homework");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes a dropped file for homework");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			result.put(JSONConstants.HOMEWORK_STATUS, StudentHomeworkLocalServiceUtil.getHomeworkStatus(homeworkId));
@@ -592,7 +592,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " corrects a file");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " corrects a file");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -600,7 +600,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			// Check that the teacher owns the homework
 			Homework homework = HomeworkLocalServiceUtil.getHomework(homeworkId);
 			if (homework.getTeacherId() != user.getUserId()) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " corrects a file");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " corrects a file");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			StudentHomeworkLocalServiceUtil.correctFile(homeworkId, studentId, comment);
@@ -627,7 +627,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " sends corrections");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " sends corrections");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -635,7 +635,7 @@ public class HomeworkServiceImpl extends HomeworkServiceBaseImpl {
 			// Check that the teacher owns the homework
 			Homework homework = HomeworkLocalServiceUtil.getHomework(homeworkId);
 			if (homework.getTeacherId() != user.getUserId()) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " sends corrections");
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " sends corrections");
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			HomeworkLocalServiceUtil.sendCorrections(user.getUserId(), homeworkId);

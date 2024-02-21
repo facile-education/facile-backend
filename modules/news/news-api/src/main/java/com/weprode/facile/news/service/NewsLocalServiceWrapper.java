@@ -310,17 +310,6 @@ public class NewsLocalServiceWrapper
 	}
 
 	@Override
-	public java.util.List<com.weprode.facile.news.model.News>
-			getGroupNewsActivities(
-				com.liferay.portal.kernel.model.User user, long groupId,
-				java.util.Date minDate, java.util.Date maxDate, int nbNews)
-		throws com.liferay.portal.kernel.exception.SystemException {
-
-		return _newsLocalService.getGroupNewsActivities(
-			user, groupId, minDate, maxDate, nbNews);
-	}
-
-	@Override
 	public org.json.JSONObject getGroupNewsBroadcastGroups(
 		com.liferay.portal.kernel.model.User user) {
 
@@ -364,11 +353,12 @@ public class NewsLocalServiceWrapper
 	public java.util.List<com.weprode.facile.news.model.News> getNewsActivities(
 			com.liferay.portal.kernel.model.User user,
 			java.util.List<Long> groupIds, java.util.Date minDate,
-			java.util.Date maxDate, int nbNews, boolean groupNewsOnly)
+			java.util.Date maxDate, int nbNews, boolean withRead,
+			boolean withUnread)
 		throws com.liferay.portal.kernel.exception.SystemException {
 
 		return _newsLocalService.getNewsActivities(
-			user, groupIds, minDate, maxDate, nbNews, groupNewsOnly);
+			user, groupIds, minDate, maxDate, nbNews, withRead, withUnread);
 	}
 
 	/**

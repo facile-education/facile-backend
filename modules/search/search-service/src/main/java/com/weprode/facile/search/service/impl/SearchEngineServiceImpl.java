@@ -165,7 +165,7 @@ public class SearchEngineServiceImpl extends SearchEngineServiceBaseImpl {
                 JSONObject jsonResult = new JSONObject();
                 jsonResult.put(JSONConstants.HISTORY_ID, searchQuery.getSearchHistoryId());
                 jsonResult.put(JSONConstants.QUERY, searchQuery.getQuery());
-                jsonResult.put(JSONConstants.DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(searchQuery.getQueryDate()));
+                jsonResult.put(JSONConstants.DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(searchQuery.getQueryDate()));
                 jsonResults.put(jsonResult);
             }
 

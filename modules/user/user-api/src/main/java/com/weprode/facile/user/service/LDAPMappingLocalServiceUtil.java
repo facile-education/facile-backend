@@ -63,11 +63,11 @@ public class LDAPMappingLocalServiceUtil {
 	/**
 	 * Creates a new ldap mapping with the primary key. Does not add the ldap mapping to the database.
 	 *
-	 * @param UserId the primary key for the new ldap mapping
+	 * @param userId the primary key for the new ldap mapping
 	 * @return the new ldap mapping
 	 */
-	public static LDAPMapping createLDAPMapping(long UserId) {
-		return getService().createLDAPMapping(UserId);
+	public static LDAPMapping createLDAPMapping(long userId) {
+		return getService().createLDAPMapping(userId);
 	}
 
 	/**
@@ -101,14 +101,14 @@ public class LDAPMappingLocalServiceUtil {
 	 * <strong>Important:</strong> Inspect LDAPMappingLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping that was removed
 	 * @throws PortalException if a ldap mapping with the primary key could not be found
 	 */
-	public static LDAPMapping deleteLDAPMapping(long UserId)
+	public static LDAPMapping deleteLDAPMapping(long userId)
 		throws PortalException {
 
-		return getService().deleteLDAPMapping(UserId);
+		return getService().deleteLDAPMapping(userId);
 	}
 
 	/**
@@ -206,8 +206,8 @@ public class LDAPMappingLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static LDAPMapping fetchLDAPMapping(long UserId) {
-		return getService().fetchLDAPMapping(UserId);
+	public static LDAPMapping fetchLDAPMapping(long userId) {
+		return getService().fetchLDAPMapping(userId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
@@ -226,14 +226,14 @@ public class LDAPMappingLocalServiceUtil {
 	/**
 	 * Returns the ldap mapping with the primary key.
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping
 	 * @throws PortalException if a ldap mapping with the primary key could not be found
 	 */
-	public static LDAPMapping getLDAPMapping(long UserId)
+	public static LDAPMapping getLDAPMapping(long userId)
 		throws PortalException {
 
-		return getService().getLDAPMapping(UserId);
+		return getService().getLDAPMapping(userId);
 	}
 
 	/**
@@ -260,10 +260,6 @@ public class LDAPMappingLocalServiceUtil {
 		return getService().getLDAPMappingsCount();
 	}
 
-	public static Long getMaxUid() {
-		return getService().getMaxUid();
-	}
-
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -282,35 +278,10 @@ public class LDAPMappingLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
-	public static com.liferay.portal.kernel.model.User
-		getUserByEntEleveStructRattachId(String entEleveStructRattachId) {
-
-		return getService().getUserByEntEleveStructRattachId(
-			entEleveStructRattachId);
-	}
-
-	public static com.liferay.portal.kernel.model.User
-		getUserByEntPersonJointure(String entPersonJointure) {
-
-		return getService().getUserByEntPersonJointure(entPersonJointure);
-	}
-
 	public static com.liferay.portal.kernel.model.User getUserFromUID(
 		String uid) {
 
 		return getService().getUserFromUID(uid);
-	}
-
-	public static String getUserJointure(long userId) {
-		return getService().getUserJointure(userId);
-	}
-
-	public static String getUserStructRattachId(long userId) {
-		return getService().getUserStructRattachId(userId);
-	}
-
-	public static String getUserUid(long userId) {
-		return getService().getUserUid(userId);
 	}
 
 	/**

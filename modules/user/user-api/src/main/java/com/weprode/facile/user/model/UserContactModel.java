@@ -54,20 +54,6 @@ public interface UserContactModel extends BaseModel<UserContact> {
 	public void setPrimaryKey(long primaryKey);
 
 	/**
-	 * Returns the contact ID of this user contact.
-	 *
-	 * @return the contact ID of this user contact
-	 */
-	public long getContactId();
-
-	/**
-	 * Sets the contact ID of this user contact.
-	 *
-	 * @param contactId the contact ID of this user contact
-	 */
-	public void setContactId(long contactId);
-
-	/**
 	 * Returns the user ID of this user contact.
 	 *
 	 * @return the user ID of this user contact
@@ -96,36 +82,6 @@ public interface UserContactModel extends BaseModel<UserContact> {
 	public void setUserUuid(String userUuid);
 
 	/**
-	 * Returns the middle names of this user contact.
-	 *
-	 * @return the middle names of this user contact
-	 */
-	@AutoEscape
-	public String getMiddleNames();
-
-	/**
-	 * Sets the middle names of this user contact.
-	 *
-	 * @param middleNames the middle names of this user contact
-	 */
-	public void setMiddleNames(String middleNames);
-
-	/**
-	 * Returns the birth name of this user contact.
-	 *
-	 * @return the birth name of this user contact
-	 */
-	@AutoEscape
-	public String getBirthName();
-
-	/**
-	 * Sets the birth name of this user contact.
-	 *
-	 * @param birthName the birth name of this user contact
-	 */
-	public void setBirthName(String birthName);
-
-	/**
 	 * Returns the address of this user contact.
 	 *
 	 * @return the address of this user contact
@@ -141,63 +97,6 @@ public interface UserContactModel extends BaseModel<UserContact> {
 	public void setAddress(String address);
 
 	/**
-	 * Returns the is address authorized of this user contact.
-	 *
-	 * @return the is address authorized of this user contact
-	 */
-	public boolean getIsAddressAuthorized();
-
-	/**
-	 * Returns <code>true</code> if this user contact is is address authorized.
-	 *
-	 * @return <code>true</code> if this user contact is is address authorized; <code>false</code> otherwise
-	 */
-	public boolean isIsAddressAuthorized();
-
-	/**
-	 * Sets whether this user contact is is address authorized.
-	 *
-	 * @param isAddressAuthorized the is address authorized of this user contact
-	 */
-	public void setIsAddressAuthorized(boolean isAddressAuthorized);
-
-	/**
-	 * Returns the mail of this user contact.
-	 *
-	 * @return the mail of this user contact
-	 */
-	@AutoEscape
-	public String getMail();
-
-	/**
-	 * Sets the mail of this user contact.
-	 *
-	 * @param mail the mail of this user contact
-	 */
-	public void setMail(String mail);
-
-	/**
-	 * Returns the is mail authorized of this user contact.
-	 *
-	 * @return the is mail authorized of this user contact
-	 */
-	public boolean getIsMailAuthorized();
-
-	/**
-	 * Returns <code>true</code> if this user contact is is mail authorized.
-	 *
-	 * @return <code>true</code> if this user contact is is mail authorized; <code>false</code> otherwise
-	 */
-	public boolean isIsMailAuthorized();
-
-	/**
-	 * Sets whether this user contact is is mail authorized.
-	 *
-	 * @param isMailAuthorized the is mail authorized of this user contact
-	 */
-	public void setIsMailAuthorized(boolean isMailAuthorized);
-
-	/**
 	 * Returns the mobile phone of this user contact.
 	 *
 	 * @return the mobile phone of this user contact
@@ -211,21 +110,6 @@ public interface UserContactModel extends BaseModel<UserContact> {
 	 * @param mobilePhone the mobile phone of this user contact
 	 */
 	public void setMobilePhone(String mobilePhone);
-
-	/**
-	 * Returns the mobile phone sms of this user contact.
-	 *
-	 * @return the mobile phone sms of this user contact
-	 */
-	@AutoEscape
-	public String getMobilePhoneSMS();
-
-	/**
-	 * Sets the mobile phone sms of this user contact.
-	 *
-	 * @param mobilePhoneSMS the mobile phone sms of this user contact
-	 */
-	public void setMobilePhoneSMS(String mobilePhoneSMS);
 
 	/**
 	 * Returns the home phone of this user contact.
@@ -256,21 +140,6 @@ public interface UserContactModel extends BaseModel<UserContact> {
 	 * @param proPhone the pro phone of this user contact
 	 */
 	public void setProPhone(String proPhone);
-
-	/**
-	 * Returns the family link of this user contact.
-	 *
-	 * @return the family link of this user contact
-	 */
-	@AutoEscape
-	public String getFamilyLink();
-
-	/**
-	 * Sets the family link of this user contact.
-	 *
-	 * @param familyLink the family link of this user contact
-	 */
-	public void setFamilyLink(String familyLink);
 
 	@Override
 	public UserContact cloneWithOriginalValues();

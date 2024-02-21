@@ -61,12 +61,12 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 		try {
 			long userId = getGuestOrUserId();
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " copies files and/or folder to directory " + targetFolderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " copies files and/or folder to directory " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			Folder targetFolder = DLAppServiceUtil.getFolder(targetFolderId);
 			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), targetFolder, ActionKeys.ADD_DOCUMENT)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " copies files and/or folder to directory " + targetFolderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " copies files and/or folder to directory " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 
@@ -94,12 +94,12 @@ public class ClipboardServiceImpl extends ClipboardServiceBaseImpl {
 		try {
 			long userId = getGuestOrUserId();
 			if (!FolderUtilsLocalServiceUtil.isAllowedToAccessFolder(user.getUserId(), targetFolderId)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves files and/or folder to directory " + targetFolderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " moves files and/or folder to directory " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 			Folder targetFolder = DLAppServiceUtil.getFolder(targetFolderId);
 			if (!PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), targetFolder, ActionKeys.ADD_DOCUMENT)) {
-				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " moves files and/or folder to directory " + targetFolderId);
+				logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " moves files and/or folder to directory " + targetFolderId);
 				return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 			}
 

@@ -45,7 +45,6 @@ import com.weprode.facile.user.model.LDAPMapping;
 import com.weprode.facile.user.service.LDAPMappingLocalService;
 import com.weprode.facile.user.service.LDAPMappingLocalServiceUtil;
 import com.weprode.facile.user.service.persistence.AffectationPersistence;
-import com.weprode.facile.user.service.persistence.LDAPMappingFinder;
 import com.weprode.facile.user.service.persistence.LDAPMappingPersistence;
 import com.weprode.facile.user.service.persistence.NewsAdminPersistence;
 import com.weprode.facile.user.service.persistence.UserContactPersistence;
@@ -105,13 +104,13 @@ public abstract class LDAPMappingLocalServiceBaseImpl
 	/**
 	 * Creates a new ldap mapping with the primary key. Does not add the ldap mapping to the database.
 	 *
-	 * @param UserId the primary key for the new ldap mapping
+	 * @param userId the primary key for the new ldap mapping
 	 * @return the new ldap mapping
 	 */
 	@Override
 	@Transactional(enabled = false)
-	public LDAPMapping createLDAPMapping(long UserId) {
-		return ldapMappingPersistence.create(UserId);
+	public LDAPMapping createLDAPMapping(long userId) {
+		return ldapMappingPersistence.create(userId);
 	}
 
 	/**
@@ -121,14 +120,14 @@ public abstract class LDAPMappingLocalServiceBaseImpl
 	 * <strong>Important:</strong> Inspect LDAPMappingLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping that was removed
 	 * @throws PortalException if a ldap mapping with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public LDAPMapping deleteLDAPMapping(long UserId) throws PortalException {
-		return ldapMappingPersistence.remove(UserId);
+	public LDAPMapping deleteLDAPMapping(long userId) throws PortalException {
+		return ldapMappingPersistence.remove(userId);
 	}
 
 	/**
@@ -247,20 +246,20 @@ public abstract class LDAPMappingLocalServiceBaseImpl
 	}
 
 	@Override
-	public LDAPMapping fetchLDAPMapping(long UserId) {
-		return ldapMappingPersistence.fetchByPrimaryKey(UserId);
+	public LDAPMapping fetchLDAPMapping(long userId) {
+		return ldapMappingPersistence.fetchByPrimaryKey(userId);
 	}
 
 	/**
 	 * Returns the ldap mapping with the primary key.
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping
 	 * @throws PortalException if a ldap mapping with the primary key could not be found
 	 */
 	@Override
-	public LDAPMapping getLDAPMapping(long UserId) throws PortalException {
-		return ldapMappingPersistence.findByPrimaryKey(UserId);
+	public LDAPMapping getLDAPMapping(long userId) throws PortalException {
+		return ldapMappingPersistence.findByPrimaryKey(userId);
 	}
 
 	@Override
@@ -272,7 +271,7 @@ public abstract class LDAPMappingLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(LDAPMapping.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("UserId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 
 		return actionableDynamicQuery;
 	}
@@ -289,7 +288,7 @@ public abstract class LDAPMappingLocalServiceBaseImpl
 		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
 		indexableActionableDynamicQuery.setModelClass(LDAPMapping.class);
 
-		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("UserId");
+		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 
 		return indexableActionableDynamicQuery;
 	}
@@ -301,7 +300,7 @@ public abstract class LDAPMappingLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(LDAPMapping.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("UserId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 	}
 
 	/**
@@ -472,9 +471,6 @@ public abstract class LDAPMappingLocalServiceBaseImpl
 
 	@Reference
 	protected LDAPMappingPersistence ldapMappingPersistence;
-
-	@Reference
-	protected LDAPMappingFinder ldapMappingFinder;
 
 	@Reference
 	protected NewsAdminPersistence newsAdminPersistence;

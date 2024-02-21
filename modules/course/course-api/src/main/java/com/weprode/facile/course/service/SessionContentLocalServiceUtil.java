@@ -316,10 +316,10 @@ public class SessionContentLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.repository.model.Folder
-			getSessionFolder(long sessionId)
+			getSessionFolder(long sessionId, boolean doCreate)
 		throws PortalException, SystemException {
 
-		return getService().getSessionFolder(sessionId);
+		return getService().getSessionFolder(sessionId, doCreate);
 	}
 
 	public static boolean hasSessionContent(long sessionId) {

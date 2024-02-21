@@ -7,13 +7,11 @@
 	<entity name="UserProperties" local-service="true" remote-service="true">
 		<column name="userId" type="long" primary="true"/>
 		<column name="manualAccount" type="boolean"/>
+		<column name="etabId" type="long"/>
 
 		<column name="hideMenu" type="boolean"/>
 		<column name="themeColor" type="String"/>
 
-		<column name="etabId" type="long"/>
-		<column name="preferedSchoolId" type="long"/>
-		<column name="webdavActivated" type="boolean"/>
 		<column name="termsOfUseAgreedDate" type="Date"/>
 		<column name="lastSynchroDate" type="Date"/>
 		<column name="lastDashboardAccessDate" type="Date"/>

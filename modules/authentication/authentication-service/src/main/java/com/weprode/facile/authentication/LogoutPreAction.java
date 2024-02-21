@@ -44,7 +44,9 @@ public class LogoutPreAction implements LifecycleAction {
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
                     // Preserve agreement cookie
-                    if (!cookie.getName().equals("cookiesAgreement")) {
+                    // Do not remove shibsession cookie : the logout will not be propagated to IDP
+                    if (!cookie.getName().equals("cookiesAgreement")
+                            && !cookie.getName().contains("shibsession")) {
                         cookie.setValue("");
                         cookie.setPath("/");
                         cookie.setMaxAge(0);

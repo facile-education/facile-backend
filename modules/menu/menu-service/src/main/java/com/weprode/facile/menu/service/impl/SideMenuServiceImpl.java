@@ -93,8 +93,8 @@ public class SideMenuServiceImpl extends SideMenuServiceBaseImpl {
             result.put(JSONConstants.EXPANDED, isMenuExpanded);
 
             // Timeouts
-            result.put(JSONConstants.SESSION_TIMEOUT, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT) * 60000);
-            result.put(JSONConstants.SESSION_TIMEOUT_WARNING, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT_WARNING) * 60000);
+            result.put(JSONConstants.SESSION_TIMEOUT, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT) * 60000); // From tomcat/conf/web.xml or tomcat/lfr/WEB-INF/web.xml
+            result.put(JSONConstants.SESSION_TIMEOUT_WARNING, PrefsPropsUtil.getInteger(PropsKeys.SESSION_TIMEOUT_WARNING) * 60000); // From portal-ext.properties
 
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {

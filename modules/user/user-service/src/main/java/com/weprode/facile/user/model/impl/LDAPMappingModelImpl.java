@@ -69,32 +69,27 @@ public class LDAPMappingModelImpl
 	public static final String TABLE_NAME = "User_LDAPMapping";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"UserId", Types.BIGINT}, {"EntPersonJointure", Types.VARCHAR},
-		{"UID", Types.VARCHAR}, {"INE", Types.VARCHAR},
-		{"EntEleveStructRattachId", Types.VARCHAR}
+		{"userId", Types.BIGINT}, {"UID", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
 		new HashMap<String, Integer>();
 
 	static {
-		TABLE_COLUMNS_MAP.put("UserId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("EntPersonJointure", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("UID", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("INE", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("EntEleveStructRattachId", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table User_LDAPMapping (UserId LONG not null primary key,EntPersonJointure VARCHAR(75) null,UID VARCHAR(75) null,INE VARCHAR(75) null,EntEleveStructRattachId VARCHAR(75) null)";
+		"create table User_LDAPMapping (userId LONG not null primary key,UID VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table User_LDAPMapping";
 
 	public static final String ORDER_BY_JPQL =
-		" ORDER BY ldapMapping.UserId ASC";
+		" ORDER BY ldapMapping.userId ASC";
 
 	public static final String ORDER_BY_SQL =
-		" ORDER BY User_LDAPMapping.UserId ASC";
+		" ORDER BY User_LDAPMapping.userId ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -106,26 +101,14 @@ public class LDAPMappingModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long ENTELEVESTRUCTRATTACHID_COLUMN_BITMASK = 1L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
-	 */
-	@Deprecated
-	public static final long ENTPERSONJOINTURE_COLUMN_BITMASK = 2L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
-	 */
-	@Deprecated
-	public static final long UID_COLUMN_BITMASK = 4L;
+	public static final long UID_COLUMN_BITMASK = 1L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long USERID_COLUMN_BITMASK = 8L;
+	public static final long USERID_COLUMN_BITMASK = 2L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -146,7 +129,7 @@ public class LDAPMappingModelImpl
 
 	@Override
 	public long getPrimaryKey() {
-		return _UserId;
+		return _userId;
 	}
 
 	@Override
@@ -156,7 +139,7 @@ public class LDAPMappingModelImpl
 
 	@Override
 	public Serializable getPrimaryKeyObj() {
-		return _UserId;
+		return _userId;
 	}
 
 	@Override
@@ -237,26 +220,12 @@ public class LDAPMappingModelImpl
 		Map<String, BiConsumer<LDAPMapping, ?>> attributeSetterBiConsumers =
 			new LinkedHashMap<String, BiConsumer<LDAPMapping, ?>>();
 
-		attributeGetterFunctions.put("UserId", LDAPMapping::getUserId);
+		attributeGetterFunctions.put("userId", LDAPMapping::getUserId);
 		attributeSetterBiConsumers.put(
-			"UserId", (BiConsumer<LDAPMapping, Long>)LDAPMapping::setUserId);
-		attributeGetterFunctions.put(
-			"EntPersonJointure", LDAPMapping::getEntPersonJointure);
-		attributeSetterBiConsumers.put(
-			"EntPersonJointure",
-			(BiConsumer<LDAPMapping, String>)LDAPMapping::setEntPersonJointure);
+			"userId", (BiConsumer<LDAPMapping, Long>)LDAPMapping::setUserId);
 		attributeGetterFunctions.put("UID", LDAPMapping::getUID);
 		attributeSetterBiConsumers.put(
 			"UID", (BiConsumer<LDAPMapping, String>)LDAPMapping::setUID);
-		attributeGetterFunctions.put("INE", LDAPMapping::getINE);
-		attributeSetterBiConsumers.put(
-			"INE", (BiConsumer<LDAPMapping, String>)LDAPMapping::setINE);
-		attributeGetterFunctions.put(
-			"EntEleveStructRattachId", LDAPMapping::getEntEleveStructRattachId);
-		attributeSetterBiConsumers.put(
-			"EntEleveStructRattachId",
-			(BiConsumer<LDAPMapping, String>)
-				LDAPMapping::setEntEleveStructRattachId);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -266,16 +235,16 @@ public class LDAPMappingModelImpl
 
 	@Override
 	public long getUserId() {
-		return _UserId;
+		return _userId;
 	}
 
 	@Override
-	public void setUserId(long UserId) {
+	public void setUserId(long userId) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_UserId = UserId;
+		_userId = userId;
 	}
 
 	@Override
@@ -291,35 +260,7 @@ public class LDAPMappingModelImpl
 	}
 
 	@Override
-	public void setUserUuid(String UserUuid) {
-	}
-
-	@Override
-	public String getEntPersonJointure() {
-		if (_EntPersonJointure == null) {
-			return "";
-		}
-		else {
-			return _EntPersonJointure;
-		}
-	}
-
-	@Override
-	public void setEntPersonJointure(String EntPersonJointure) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_EntPersonJointure = EntPersonJointure;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public String getOriginalEntPersonJointure() {
-		return getColumnOriginalValue("EntPersonJointure");
+	public void setUserUuid(String userUuid) {
 	}
 
 	@Override
@@ -348,53 +289,6 @@ public class LDAPMappingModelImpl
 	@Deprecated
 	public String getOriginalUID() {
 		return getColumnOriginalValue("UID");
-	}
-
-	@Override
-	public String getINE() {
-		if (_INE == null) {
-			return "";
-		}
-		else {
-			return _INE;
-		}
-	}
-
-	@Override
-	public void setINE(String INE) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_INE = INE;
-	}
-
-	@Override
-	public String getEntEleveStructRattachId() {
-		if (_EntEleveStructRattachId == null) {
-			return "";
-		}
-		else {
-			return _EntEleveStructRattachId;
-		}
-	}
-
-	@Override
-	public void setEntEleveStructRattachId(String EntEleveStructRattachId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_EntEleveStructRattachId = EntEleveStructRattachId;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public String getOriginalEntEleveStructRattachId() {
-		return getColumnOriginalValue("EntEleveStructRattachId");
 	}
 
 	public long getColumnBitmask() {
@@ -454,11 +348,7 @@ public class LDAPMappingModelImpl
 		LDAPMappingImpl ldapMappingImpl = new LDAPMappingImpl();
 
 		ldapMappingImpl.setUserId(getUserId());
-		ldapMappingImpl.setEntPersonJointure(getEntPersonJointure());
 		ldapMappingImpl.setUID(getUID());
-		ldapMappingImpl.setINE(getINE());
-		ldapMappingImpl.setEntEleveStructRattachId(
-			getEntEleveStructRattachId());
 
 		ldapMappingImpl.resetOriginalValues();
 
@@ -469,13 +359,8 @@ public class LDAPMappingModelImpl
 	public LDAPMapping cloneWithOriginalValues() {
 		LDAPMappingImpl ldapMappingImpl = new LDAPMappingImpl();
 
-		ldapMappingImpl.setUserId(this.<Long>getColumnOriginalValue("UserId"));
-		ldapMappingImpl.setEntPersonJointure(
-			this.<String>getColumnOriginalValue("EntPersonJointure"));
+		ldapMappingImpl.setUserId(this.<Long>getColumnOriginalValue("userId"));
 		ldapMappingImpl.setUID(this.<String>getColumnOriginalValue("UID"));
-		ldapMappingImpl.setINE(this.<String>getColumnOriginalValue("INE"));
-		ldapMappingImpl.setEntEleveStructRattachId(
-			this.<String>getColumnOriginalValue("EntEleveStructRattachId"));
 
 		return ldapMappingImpl;
 	}
@@ -552,15 +437,7 @@ public class LDAPMappingModelImpl
 		LDAPMappingCacheModel ldapMappingCacheModel =
 			new LDAPMappingCacheModel();
 
-		ldapMappingCacheModel.UserId = getUserId();
-
-		ldapMappingCacheModel.EntPersonJointure = getEntPersonJointure();
-
-		String EntPersonJointure = ldapMappingCacheModel.EntPersonJointure;
-
-		if ((EntPersonJointure != null) && (EntPersonJointure.length() == 0)) {
-			ldapMappingCacheModel.EntPersonJointure = null;
-		}
+		ldapMappingCacheModel.userId = getUserId();
 
 		ldapMappingCacheModel.UID = getUID();
 
@@ -568,26 +445,6 @@ public class LDAPMappingModelImpl
 
 		if ((UID != null) && (UID.length() == 0)) {
 			ldapMappingCacheModel.UID = null;
-		}
-
-		ldapMappingCacheModel.INE = getINE();
-
-		String INE = ldapMappingCacheModel.INE;
-
-		if ((INE != null) && (INE.length() == 0)) {
-			ldapMappingCacheModel.INE = null;
-		}
-
-		ldapMappingCacheModel.EntEleveStructRattachId =
-			getEntEleveStructRattachId();
-
-		String EntEleveStructRattachId =
-			ldapMappingCacheModel.EntEleveStructRattachId;
-
-		if ((EntEleveStructRattachId != null) &&
-			(EntEleveStructRattachId.length() == 0)) {
-
-			ldapMappingCacheModel.EntEleveStructRattachId = null;
 		}
 
 		return ldapMappingCacheModel;
@@ -651,14 +508,9 @@ public class LDAPMappingModelImpl
 
 	}
 
-	private long _UserId;
-	private String _EntPersonJointure;
+	private long _userId;
 
 	private String _UID;
-
-	private String _INE;
-
-	private String _EntEleveStructRattachId;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<LDAPMapping, Object> function = _attributeGetterFunctions.get(
@@ -687,12 +539,8 @@ public class LDAPMappingModelImpl
 	private void _setColumnOriginalValues() {
 		_columnOriginalValues = new HashMap<String, Object>();
 
-		_columnOriginalValues.put("UserId", _UserId);
-		_columnOriginalValues.put("EntPersonJointure", _EntPersonJointure);
+		_columnOriginalValues.put("userId", _userId);
 		_columnOriginalValues.put("UID", _UID);
-		_columnOriginalValues.put("INE", _INE);
-		_columnOriginalValues.put(
-			"EntEleveStructRattachId", _EntEleveStructRattachId);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -706,15 +554,9 @@ public class LDAPMappingModelImpl
 	static {
 		Map<String, Long> columnBitmasks = new HashMap<>();
 
-		columnBitmasks.put("UserId", 1L);
+		columnBitmasks.put("userId", 1L);
 
-		columnBitmasks.put("EntPersonJointure", 2L);
-
-		columnBitmasks.put("UID", 4L);
-
-		columnBitmasks.put("INE", 8L);
-
-		columnBitmasks.put("EntEleveStructRattachId", 16L);
+		columnBitmasks.put("UID", 2L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

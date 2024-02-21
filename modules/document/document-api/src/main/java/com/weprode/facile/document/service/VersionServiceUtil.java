@@ -37,12 +37,6 @@ public class VersionServiceUtil {
 		return getService().createMajorVersion(fileEntryId);
 	}
 
-	public static org.json.JSONObject deleteVersion(
-		long fileEntryId, java.lang.String version) {
-
-		return getService().deleteVersion(fileEntryId, version);
-	}
-
 	public static org.json.JSONObject getFileVersions(long fileId) {
 		return getService().getFileVersions(fileId);
 	}

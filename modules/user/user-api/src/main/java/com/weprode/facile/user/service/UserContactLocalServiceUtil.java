@@ -46,13 +46,6 @@ public class UserContactLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.weprode.facile.user.service.impl.UserContactLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static UserContact addUserContact() throws SystemException {
-		return getService().addUserContact();
-	}
-
-	/**
-	 * Create a UserContact, with default values
-	 */
 	public static UserContact addUserContact(long userId)
 		throws SystemException {
 
@@ -86,11 +79,11 @@ public class UserContactLocalServiceUtil {
 	/**
 	 * Creates a new user contact with the primary key. Does not add the user contact to the database.
 	 *
-	 * @param contactId the primary key for the new user contact
+	 * @param userId the primary key for the new user contact
 	 * @return the new user contact
 	 */
-	public static UserContact createUserContact(long contactId) {
-		return getService().createUserContact(contactId);
+	public static UserContact createUserContact(long userId) {
+		return getService().createUserContact(userId);
 	}
 
 	/**
@@ -110,14 +103,14 @@ public class UserContactLocalServiceUtil {
 	 * <strong>Important:</strong> Inspect UserContactLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact that was removed
 	 * @throws PortalException if a user contact with the primary key could not be found
 	 */
-	public static UserContact deleteUserContact(long contactId)
+	public static UserContact deleteUserContact(long userId)
 		throws PortalException {
 
-		return getService().deleteUserContact(contactId);
+		return getService().deleteUserContact(userId);
 	}
 
 	/**
@@ -219,8 +212,8 @@ public class UserContactLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static UserContact fetchUserContact(long contactId) {
-		return getService().fetchUserContact(contactId);
+	public static UserContact fetchUserContact(long userId) {
+		return getService().fetchUserContact(userId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
@@ -257,14 +250,14 @@ public class UserContactLocalServiceUtil {
 	/**
 	 * Returns the user contact with the primary key.
 	 *
-	 * @param contactId the primary key of the user contact
+	 * @param userId the primary key of the user contact
 	 * @return the user contact
 	 * @throws PortalException if a user contact with the primary key could not be found
 	 */
-	public static UserContact getUserContact(long contactId)
+	public static UserContact getUserContact(long userId)
 		throws PortalException {
 
-		return getService().getUserContact(contactId);
+		return getService().getUserContact(userId);
 	}
 
 	/**

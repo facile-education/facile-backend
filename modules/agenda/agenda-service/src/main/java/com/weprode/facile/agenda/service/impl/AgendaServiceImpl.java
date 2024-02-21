@@ -65,7 +65,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         try {
-            Date minDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(minDateStr);
+            Date minDate = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).parse(minDateStr);
             List<Event> events;
             if (RoleUtilsLocalServiceUtil.isDirectionMember(user) || RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) || NewsAdminLocalServiceUtil.isUserDelegate(user) || RoleUtilsLocalServiceUtil.isAdministrator(user)) {
                 events = EventLocalServiceUtil.getSchoolEvents(user, minDate, startIndex, nbEvents, unreadOnly);
@@ -111,7 +111,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         try {
             // Check if the user can read the event
             if (!EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " read eventId " + eventId);
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " read eventId " + eventId);
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             result = EventLocalServiceUtil.convertEventToJson(user.getUserId(), eventId, true);
@@ -139,12 +139,12 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         }
 
         if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " creates an event");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " creates an event");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             Date start = df.parse(startDate);
             Date end = df.parse(endDate);
             JSONArray jsonPopulations = new JSONArray(populations);
@@ -183,11 +183,11 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             // Only the event's creator or a direction member or a delegate is allowed to modify it
             Event event = EventLocalServiceUtil.getEvent(eventId);
             if (event.getAuthorId() != user.getUserId() && !RoleUtilsLocalServiceUtil.isDirectionMember(user) && !NewsAdminLocalServiceUtil.isUserDelegate(user) && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " modifies an event");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " modifies an event");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             Date start = df.parse(startDate);
             Date end = df.parse(endDate);
             JSONArray jsonPopulations = new JSONArray(populations);
@@ -211,7 +211,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-event", method = "GET")
+    @JSONWebService(value = "delete-event", method = "DELETE")
     public JSONObject deleteEvent(long eventId) {
         JSONObject result = new JSONObject();
 
@@ -229,7 +229,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
             // Only the event's creator is allowed to delete it
             Event event = EventLocalServiceUtil.getEvent(eventId);
             if (event.getAuthorId() != user.getUserId()) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes an event");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes an event");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
 
@@ -260,7 +260,7 @@ public class AgendaServiceImpl extends AgendaServiceBaseImpl {
         try {
             // Check if the user can read the event
             if (!EventLocalServiceUtil.hasUserEvent(user.getUserId(), eventId)) {
-                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " marks an event as read");
+                logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " marks an event as read");
                 return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
             }
             if (read) {

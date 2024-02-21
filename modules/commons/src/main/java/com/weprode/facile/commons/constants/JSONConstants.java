@@ -25,10 +25,9 @@ public class JSONConstants {
     }
 
     // Date formats
+    public static final String DATE_EXCHANGE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String FRENCH_FORMAT = "dd/MM/yyyy";
-    public static final String FULL_FRENCH_FORMAT = "dd/MM/yyyy HH:mm";
     public static final String ENGLISH_FORMAT = "yyyy-MM-dd";
-    public static final String FULL_ENGLISH_FORMAT = "yyyy-MM-dd HH:mm";
 
     // Global
     public static final String ID = "id";
@@ -123,20 +122,18 @@ public class JSONConstants {
     public static final String PARENTS = "parents";
     public static final String PICTURE = "picture";
     public static final String THEME_COLOR = "themeColor";
-    public static final String HAS_WEBDAV_ENABLED = "hasWebdavEnabled";
     public static final String HAS_READ_LAST_VERSION_NOTE = "hasReadLastVersionNote";
     public static final String MOBILE_PHONE = "mobilePhone";
-    public static final String SMS_PHONE = "SMSPhone";
     public static final String HOME_PHONE = "homePhone";
     public static final String PRO_PHONE = "proPhone";
     public static final String ADDRESS = "address";
     public static final String REPORT_FREQUENCY = "reportFrequency";
     public static final String IS_LOCAL_USER = "isLocalUser";
-    public static final String IS_WEBDAV_ENABLED = "isWebdavEnabled";
-    public static final String WEBDAV_URL = "webdavUrl";
     public static final String PROFILE_ID = "profileId";
     public static final String INFOS = "infos";
-
+    public static final String ALLOWED_TO_WRITE = "allowedToWrite";
+    public static final String ALLOWED_TO_WRITE_TO_PARENTS = "allowedToWriteToParents";
+    public static final String CURRENT_COURSE = "currentCourse";
 
     // Organization
     public static final String ORG_ID = "orgId";
@@ -231,24 +228,26 @@ public class JSONConstants {
     public static final String VERSION = "version";
     public static final String EXTENSION = "extension";
     public static final String UPLOADED_FILE = "uploadedFile";
+    public static final String OLD_FOLDER_NAME = "oldFolderName";
     public static final String FIRST_CREATED_FOLDER = "firstCreatedFolder";
     public static final String IS_GROUP_ROOT_FOLDER = "isGroupRootFolder";
     public static final String IS_GROUP_FILE = "isGroupFile";
-    public static final String URL_WEBDAV = "urlWebdav";
-    public static final String FAILED_ENTITY_LIST = "failedEntityList";
     public static final String FAILED_ENTITIES_LIST = "failedEntitiesList";
+    public static final String SUB_ENTITY_IN_FAILURE = "subEntityInFailure";
     public static final String FOLDERS_IN_CONFLICT = "foldersInConflict";
     public static final String FILES_IN_CONFLICT = "filesInConflict";
     public static final String ROOT_FOLDER_ID = "rootFolderId";
     public static final String BREADCRUMB = "breadcrumb";
     public static final String BREAD_CRUMB = "breadCrumb";
     public static final String FILE = "file";
+    public static final String FILE_TYPE = "File";
     public static final String FILES = "files";
     public static final String FILE_ENTRY_ID = "fileEntryId";
     public static final String FILE_VERSIONS = "fileVersions";
     public static final String FILE_VERSION_ID = "fileVersionId";
     public static final String IS_CURRENT_VERSION = "isCurrentVersion";
     public static final String FOLDER = "folder";
+    public static final String FOLDER_TYPE = "Folder";
     public static final String FOLDERS = "folders";
     public static final String CREATED_FOLDER = "createdFolder";
     public static final String SUB_FOLDERS = "subFolders";
@@ -265,7 +264,8 @@ public class JSONConstants {
     public static final String VIEW_COUNT = "viewCount";
     public static final String DOWNLOAD_COUNT = "downloadCount";
     public static final String STATUS_BY_USER_NAME = "statusByUserName";
-    
+    public static final String HAS_UPDATE_PERMISSION = "hasUpdatePermission";
+
     // Session
     public static final String SESSION_ID = "sessionId";
     public static final String SESSION = "session";
@@ -363,6 +363,11 @@ public class JSONConstants {
     public static final String NB_REGISTERED = "nbRegistered";
     public static final String REGISTERER_ID = "registererId";
     public static final String SESSION_NAME = "sessionName";
+    public static final String NB_RETENUES = "nbRetenues";
+    public static final String NB_RENVOIS = "nbRenvois";
+    public static final String NB_DEPANNAGES = "nbDepannages";
+    public static final String NB_TRAVAUX = "nbTravaux";
+    public static final String NB_ETUDES = "nbEtudes";
 
     // Messaging
     public static final String RECIPIENTS = "recipients";
@@ -403,6 +408,7 @@ public class JSONConstants {
     public static final String SCHOOL_ORG_ID = "schoolOrgId";
     public static final String POPULATIONS = "populations";
     public static final String POPULATION_NAME = "populationName";
+    public static final String CLASS = "class";
     public static final String CLASSES = "classes";
     public static final String COURS = "cours";
     public static final String IS_EXPANDED = "isExpanded";
@@ -410,6 +416,9 @@ public class JSONConstants {
     public static final String IS_COMMUNITY = "isCommunity";
     public static final String CATEGORIES = "categories";
     public static final String PERSONALS = "Personnels";
+    public static final String VOLEE = "volee";
+    public static final String MAIN_TEACHER_CLASSES = "mainTeacherClasses";
+    public static final String DOYEN_CLASSES = "doyenClasses";
 
     // News
     public static final String SCHOOLS_GROUPS = "schoolsGroups";
@@ -429,6 +438,7 @@ public class JSONConstants {
     public static final String CREATED_NEWS = "createdNews";
     public static final String EDITED_NEWS = "editedNews";
     public static final String NB_UNREAD_NEWS = "nbUnreadNews";
+    public static final String NB_UNREAD_GROUP_NEWS = "nbUnreadGroupNews";
 
     // Agenda
     public static final String EVENT = "event";
@@ -536,6 +546,9 @@ public class JSONConstants {
     public static final String SLOT_START_HOUR = "slotStartHour";
     public static final String SLOT_END_HOUR = "slotEndHour";
 
+    // Accesses
+    public static final String ACCESSES = "accesses";
+
     // Session
     public static final String SESSION_TIMEOUT = "sessionTimeout";
     public static final String SESSION_TIMEOUT_WARNING = "sessionTimeoutWarning";
@@ -559,6 +572,7 @@ public class JSONConstants {
     public static final String UNKNOWN = "unknown";
     public static final String FILE_SIZE_EXCEPTION = "fileSizeException";
     public static final String DUPLICATE_FILE_EXCEPTION = "DuplicateFileException";
+    public static final String DUPLICATE_FOLDER_EXCEPTION = "DuplicateFolderException";
     public static final String FILE_EXTENSION_EXCEPTION = "FileExtensionException";
     public static final String ANTIVIRUS_EXCEPTION = "AntivirusException";
 

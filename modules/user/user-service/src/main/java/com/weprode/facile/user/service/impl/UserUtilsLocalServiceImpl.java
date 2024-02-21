@@ -105,14 +105,12 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
             groupIds.add(userOrg.getGroupId());
         }
 
-        // Add doyen classes
+        // Add affected classes for doyens, psys and social counselors
         try {
             User user = UserLocalServiceUtil.getUser(userId);
-            if (RoleUtilsLocalServiceUtil.isDoyen(user)) {
-                List<Organization> affectedClasses = UserOrgsLocalServiceUtil.getAffectedClasses(user, RoleUtilsLocalServiceUtil.getDoyenRole().getRoleId());
-                for (Organization affectedClass : affectedClasses) {
-                    groupIds.add(affectedClass.getGroupId());
-                }
+            List<Organization> affectedClasses = UserOrgsLocalServiceUtil.getRoleAffectedClasses(user);
+            for (Organization affectedClass : affectedClasses) {
+                groupIds.add(affectedClass.getGroupId());
             }
         } catch (Exception e) {
             // Nothing
@@ -235,6 +233,51 @@ public class UserUtilsLocalServiceImpl extends UserUtilsLocalServiceBaseImpl {
         }
 
         return mainTeachers;
+    }
+
+    public boolean isDoyenOfUser(long doyenId, long userId) {
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            User doyen = UserLocalServiceUtil.getUser(doyenId);
+            if (!RoleUtilsLocalServiceUtil.isDoyen(user) || !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+                return false;
+            }
+            Organization studentOrParentClass = UserOrgsLocalServiceUtil.getUserClasses(user, false).get(0);
+            return RoleUtilsLocalServiceUtil.isDoyen(doyen, studentOrParentClass.getOrganizationId());
+        } catch (Exception e) {
+            logger.error("Error fetching if user " + doyenId + " is doyen of user " + userId, e);
+        }
+        return false;
+    }
+
+    public boolean isPsyOfUser(long psyId, long userId) {
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            User psy = UserLocalServiceUtil.getUser(psyId);
+            if (!RoleUtilsLocalServiceUtil.isPsychologue(psy) || !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+                return false;
+            }
+            Organization studentOrParentClass = UserOrgsLocalServiceUtil.getUserClasses(user, false).get(0);
+            return RoleUtilsLocalServiceUtil.isPsychologue(psy, studentOrParentClass.getOrganizationId());
+        } catch (Exception e) {
+            logger.error("Error fetching if user " + psyId + " is psychologue of user " + userId, e);
+        }
+        return false;
+    }
+
+    public boolean isConseillerSocialOfUser(long consId, long userId) {
+        try {
+            User user = UserLocalServiceUtil.getUser(userId);
+            User cons = UserLocalServiceUtil.getUser(consId);
+            if (!RoleUtilsLocalServiceUtil.isConseillerSocial(cons) || !RoleUtilsLocalServiceUtil.isStudentOrParent(user)) {
+                return false;
+            }
+            Organization studentOrParentClass = UserOrgsLocalServiceUtil.getUserClasses(user, false).get(0);
+            return RoleUtilsLocalServiceUtil.isConseillerSocial(cons, studentOrParentClass.getOrganizationId());
+        } catch (Exception e) {
+            logger.error("Error fetching if user " + consId + " is social counselor of user " + userId, e);
+        }
+        return false;
     }
 
     /**

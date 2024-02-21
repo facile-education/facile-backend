@@ -53,7 +53,7 @@ public class HolidayLocalServiceImpl extends HolidayLocalServiceBaseImpl {
 
 		// Rec-create all holidays
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 			for (int i = 0; i < jsonHolidays.length(); i++) {
 				JSONObject jsonHoliday = jsonHolidays.getJSONObject(i);
 				Date holidayStartDate = sdf.parse(jsonHoliday.getString(JSONConstants.START_DATE));
@@ -75,7 +75,7 @@ public class HolidayLocalServiceImpl extends HolidayLocalServiceBaseImpl {
 		JSONArray jsonHolidays = new JSONArray();
 		List<Holiday> holidays = holidayPersistence.findAll();
 		if (holidays != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.ENGLISH_FORMAT);
+			SimpleDateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 			for (Holiday holiday : holidays) {
 				JSONObject jsonHoliday = new JSONObject();
 				jsonHoliday.put(JSONConstants.ID, holiday.getHolidayId());

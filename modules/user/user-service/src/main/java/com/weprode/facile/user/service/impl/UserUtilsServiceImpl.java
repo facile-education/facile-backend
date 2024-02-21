@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.weprode.facile.about.service.UserReadVersionNoteLocalServiceUtil;
 import com.weprode.facile.commons.JSONProxy;
 import com.weprode.facile.commons.constants.JSONConstants;
-import com.weprode.facile.document.service.DocumentUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgMappingLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
@@ -94,7 +93,6 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         result.put(JSONConstants.FIRST_NAME, user.getFirstName());
         result.put(JSONConstants.PICTURE, portraitUrl);
         result.put(JSONConstants.THEME_COLOR, userProperties.getThemeColor());
-        result.put(JSONConstants.HAS_WEBDAV_ENABLED, userProperties.getWebdavActivated());
         result.put(JSONConstants.HAS_READ_LAST_VERSION_NOTE, UserReadVersionNoteLocalServiceUtil.hasReadLastVersionNote(user.getUserId()));
 
         // Roles
@@ -175,21 +173,17 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
         try {
             UserContact userContact = UserContactLocalServiceUtil.getUserContactByUserId(user.getUserId());
 
-            result.put(JSONConstants.MAIL, userContact.getMail());
+            result.put(JSONConstants.MAIL, user.getEmailAddress());
             result.put(JSONConstants.MOBILE_PHONE, userContact.getMobilePhone());
-            result.put(JSONConstants.SMS_PHONE, userContact.getMobilePhoneSMS());
             result.put(JSONConstants.HOME_PHONE, userContact.getHomePhone());
             result.put(JSONConstants.PRO_PHONE, userContact.getProPhone());
             result.put(JSONConstants.ADDRESS, userContact.getAddress());
 
             NotifyConfig userNotificationConfig = NotifyConfigLocalServiceUtil.getOrCreateNotifyConfig(user.getUserId());
-            //result.put("", userNotificationConfig.setActivate(frequency != NONE);
             result.put(JSONConstants.REPORT_FREQUENCY, userNotificationConfig.getDigestPeriod());
 
             UserProperties userProperties = UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId());
             result.put(JSONConstants.IS_LOCAL_USER, userProperties.isManualAccount());
-            result.put(JSONConstants.IS_WEBDAV_ENABLED, userProperties.isWebdavActivated());
-            result.put(JSONConstants.WEBDAV_URL, DocumentUtilsLocalServiceUtil.getWebDavUrl(user));
 
             result.put(JSONConstants.SUCCESS, true);
         } catch (Exception e) {
@@ -248,7 +242,7 @@ public class UserUtilsServiceImpl extends UserUtilsServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isSchoolAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets parent infos");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets parent infos");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

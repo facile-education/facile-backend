@@ -63,9 +63,9 @@ public interface LDAPMappingModel extends BaseModel<LDAPMapping> {
 	/**
 	 * Sets the user ID of this ldap mapping.
 	 *
-	 * @param UserId the user ID of this ldap mapping
+	 * @param userId the user ID of this ldap mapping
 	 */
-	public void setUserId(long UserId);
+	public void setUserId(long userId);
 
 	/**
 	 * Returns the user uuid of this ldap mapping.
@@ -77,24 +77,9 @@ public interface LDAPMappingModel extends BaseModel<LDAPMapping> {
 	/**
 	 * Sets the user uuid of this ldap mapping.
 	 *
-	 * @param UserUuid the user uuid of this ldap mapping
+	 * @param userUuid the user uuid of this ldap mapping
 	 */
-	public void setUserUuid(String UserUuid);
-
-	/**
-	 * Returns the ent person jointure of this ldap mapping.
-	 *
-	 * @return the ent person jointure of this ldap mapping
-	 */
-	@AutoEscape
-	public String getEntPersonJointure();
-
-	/**
-	 * Sets the ent person jointure of this ldap mapping.
-	 *
-	 * @param EntPersonJointure the ent person jointure of this ldap mapping
-	 */
-	public void setEntPersonJointure(String EntPersonJointure);
+	public void setUserUuid(String userUuid);
 
 	/**
 	 * Returns the uid of this ldap mapping.
@@ -110,36 +95,6 @@ public interface LDAPMappingModel extends BaseModel<LDAPMapping> {
 	 * @param UID the uid of this ldap mapping
 	 */
 	public void setUID(String UID);
-
-	/**
-	 * Returns the ine of this ldap mapping.
-	 *
-	 * @return the ine of this ldap mapping
-	 */
-	@AutoEscape
-	public String getINE();
-
-	/**
-	 * Sets the ine of this ldap mapping.
-	 *
-	 * @param INE the ine of this ldap mapping
-	 */
-	public void setINE(String INE);
-
-	/**
-	 * Returns the ent eleve struct rattach ID of this ldap mapping.
-	 *
-	 * @return the ent eleve struct rattach ID of this ldap mapping
-	 */
-	@AutoEscape
-	public String getEntEleveStructRattachId();
-
-	/**
-	 * Sets the ent eleve struct rattach ID of this ldap mapping.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID of this ldap mapping
-	 */
-	public void setEntEleveStructRattachId(String EntEleveStructRattachId);
 
 	@Override
 	public LDAPMapping cloneWithOriginalValues();

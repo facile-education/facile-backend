@@ -177,252 +177,6 @@ public class LDAPMappingUtil {
 	}
 
 	/**
-	 * Returns all the ldap mappings where EntEleveStructRattachId = &#63;.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @return the matching ldap mappings
-	 */
-	public static List<LDAPMapping> findByEntEleveStructRattachId(
-		String EntEleveStructRattachId) {
-
-		return getPersistence().findByEntEleveStructRattachId(
-			EntEleveStructRattachId);
-	}
-
-	/**
-	 * Returns a range of all the ldap mappings where EntEleveStructRattachId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LDAPMappingModelImpl</code>.
-	 * </p>
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @param start the lower bound of the range of ldap mappings
-	 * @param end the upper bound of the range of ldap mappings (not inclusive)
-	 * @return the range of matching ldap mappings
-	 */
-	public static List<LDAPMapping> findByEntEleveStructRattachId(
-		String EntEleveStructRattachId, int start, int end) {
-
-		return getPersistence().findByEntEleveStructRattachId(
-			EntEleveStructRattachId, start, end);
-	}
-
-	/**
-	 * Returns an ordered range of all the ldap mappings where EntEleveStructRattachId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LDAPMappingModelImpl</code>.
-	 * </p>
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @param start the lower bound of the range of ldap mappings
-	 * @param end the upper bound of the range of ldap mappings (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching ldap mappings
-	 */
-	public static List<LDAPMapping> findByEntEleveStructRattachId(
-		String EntEleveStructRattachId, int start, int end,
-		OrderByComparator<LDAPMapping> orderByComparator) {
-
-		return getPersistence().findByEntEleveStructRattachId(
-			EntEleveStructRattachId, start, end, orderByComparator);
-	}
-
-	/**
-	 * Returns an ordered range of all the ldap mappings where EntEleveStructRattachId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LDAPMappingModelImpl</code>.
-	 * </p>
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @param start the lower bound of the range of ldap mappings
-	 * @param end the upper bound of the range of ldap mappings (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the ordered range of matching ldap mappings
-	 */
-	public static List<LDAPMapping> findByEntEleveStructRattachId(
-		String EntEleveStructRattachId, int start, int end,
-		OrderByComparator<LDAPMapping> orderByComparator,
-		boolean useFinderCache) {
-
-		return getPersistence().findByEntEleveStructRattachId(
-			EntEleveStructRattachId, start, end, orderByComparator,
-			useFinderCache);
-	}
-
-	/**
-	 * Returns the first ldap mapping in the ordered set where EntEleveStructRattachId = &#63;.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching ldap mapping
-	 * @throws NoSuchLDAPMappingException if a matching ldap mapping could not be found
-	 */
-	public static LDAPMapping findByEntEleveStructRattachId_First(
-			String EntEleveStructRattachId,
-			OrderByComparator<LDAPMapping> orderByComparator)
-		throws com.weprode.facile.user.exception.NoSuchLDAPMappingException {
-
-		return getPersistence().findByEntEleveStructRattachId_First(
-			EntEleveStructRattachId, orderByComparator);
-	}
-
-	/**
-	 * Returns the first ldap mapping in the ordered set where EntEleveStructRattachId = &#63;.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching ldap mapping, or <code>null</code> if a matching ldap mapping could not be found
-	 */
-	public static LDAPMapping fetchByEntEleveStructRattachId_First(
-		String EntEleveStructRattachId,
-		OrderByComparator<LDAPMapping> orderByComparator) {
-
-		return getPersistence().fetchByEntEleveStructRattachId_First(
-			EntEleveStructRattachId, orderByComparator);
-	}
-
-	/**
-	 * Returns the last ldap mapping in the ordered set where EntEleveStructRattachId = &#63;.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching ldap mapping
-	 * @throws NoSuchLDAPMappingException if a matching ldap mapping could not be found
-	 */
-	public static LDAPMapping findByEntEleveStructRattachId_Last(
-			String EntEleveStructRattachId,
-			OrderByComparator<LDAPMapping> orderByComparator)
-		throws com.weprode.facile.user.exception.NoSuchLDAPMappingException {
-
-		return getPersistence().findByEntEleveStructRattachId_Last(
-			EntEleveStructRattachId, orderByComparator);
-	}
-
-	/**
-	 * Returns the last ldap mapping in the ordered set where EntEleveStructRattachId = &#63;.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching ldap mapping, or <code>null</code> if a matching ldap mapping could not be found
-	 */
-	public static LDAPMapping fetchByEntEleveStructRattachId_Last(
-		String EntEleveStructRattachId,
-		OrderByComparator<LDAPMapping> orderByComparator) {
-
-		return getPersistence().fetchByEntEleveStructRattachId_Last(
-			EntEleveStructRattachId, orderByComparator);
-	}
-
-	/**
-	 * Returns the ldap mappings before and after the current ldap mapping in the ordered set where EntEleveStructRattachId = &#63;.
-	 *
-	 * @param UserId the primary key of the current ldap mapping
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next ldap mapping
-	 * @throws NoSuchLDAPMappingException if a ldap mapping with the primary key could not be found
-	 */
-	public static LDAPMapping[] findByEntEleveStructRattachId_PrevAndNext(
-			long UserId, String EntEleveStructRattachId,
-			OrderByComparator<LDAPMapping> orderByComparator)
-		throws com.weprode.facile.user.exception.NoSuchLDAPMappingException {
-
-		return getPersistence().findByEntEleveStructRattachId_PrevAndNext(
-			UserId, EntEleveStructRattachId, orderByComparator);
-	}
-
-	/**
-	 * Removes all the ldap mappings where EntEleveStructRattachId = &#63; from the database.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 */
-	public static void removeByEntEleveStructRattachId(
-		String EntEleveStructRattachId) {
-
-		getPersistence().removeByEntEleveStructRattachId(
-			EntEleveStructRattachId);
-	}
-
-	/**
-	 * Returns the number of ldap mappings where EntEleveStructRattachId = &#63;.
-	 *
-	 * @param EntEleveStructRattachId the ent eleve struct rattach ID
-	 * @return the number of matching ldap mappings
-	 */
-	public static int countByEntEleveStructRattachId(
-		String EntEleveStructRattachId) {
-
-		return getPersistence().countByEntEleveStructRattachId(
-			EntEleveStructRattachId);
-	}
-
-	/**
-	 * Returns the ldap mapping where EntPersonJointure = &#63; or throws a <code>NoSuchLDAPMappingException</code> if it could not be found.
-	 *
-	 * @param EntPersonJointure the ent person jointure
-	 * @return the matching ldap mapping
-	 * @throws NoSuchLDAPMappingException if a matching ldap mapping could not be found
-	 */
-	public static LDAPMapping findByEntPersonJointure(String EntPersonJointure)
-		throws com.weprode.facile.user.exception.NoSuchLDAPMappingException {
-
-		return getPersistence().findByEntPersonJointure(EntPersonJointure);
-	}
-
-	/**
-	 * Returns the ldap mapping where EntPersonJointure = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param EntPersonJointure the ent person jointure
-	 * @return the matching ldap mapping, or <code>null</code> if a matching ldap mapping could not be found
-	 */
-	public static LDAPMapping fetchByEntPersonJointure(
-		String EntPersonJointure) {
-
-		return getPersistence().fetchByEntPersonJointure(EntPersonJointure);
-	}
-
-	/**
-	 * Returns the ldap mapping where EntPersonJointure = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param EntPersonJointure the ent person jointure
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching ldap mapping, or <code>null</code> if a matching ldap mapping could not be found
-	 */
-	public static LDAPMapping fetchByEntPersonJointure(
-		String EntPersonJointure, boolean useFinderCache) {
-
-		return getPersistence().fetchByEntPersonJointure(
-			EntPersonJointure, useFinderCache);
-	}
-
-	/**
-	 * Removes the ldap mapping where EntPersonJointure = &#63; from the database.
-	 *
-	 * @param EntPersonJointure the ent person jointure
-	 * @return the ldap mapping that was removed
-	 */
-	public static LDAPMapping removeByEntPersonJointure(
-			String EntPersonJointure)
-		throws com.weprode.facile.user.exception.NoSuchLDAPMappingException {
-
-		return getPersistence().removeByEntPersonJointure(EntPersonJointure);
-	}
-
-	/**
-	 * Returns the number of ldap mappings where EntPersonJointure = &#63;.
-	 *
-	 * @param EntPersonJointure the ent person jointure
-	 * @return the number of matching ldap mappings
-	 */
-	public static int countByEntPersonJointure(String EntPersonJointure) {
-		return getPersistence().countByEntPersonJointure(EntPersonJointure);
-	}
-
-	/**
 	 * Caches the ldap mapping in the entity cache if it is enabled.
 	 *
 	 * @param ldapMapping the ldap mapping
@@ -443,24 +197,24 @@ public class LDAPMappingUtil {
 	/**
 	 * Creates a new ldap mapping with the primary key. Does not add the ldap mapping to the database.
 	 *
-	 * @param UserId the primary key for the new ldap mapping
+	 * @param userId the primary key for the new ldap mapping
 	 * @return the new ldap mapping
 	 */
-	public static LDAPMapping create(long UserId) {
-		return getPersistence().create(UserId);
+	public static LDAPMapping create(long userId) {
+		return getPersistence().create(userId);
 	}
 
 	/**
 	 * Removes the ldap mapping with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping that was removed
 	 * @throws NoSuchLDAPMappingException if a ldap mapping with the primary key could not be found
 	 */
-	public static LDAPMapping remove(long UserId)
+	public static LDAPMapping remove(long userId)
 		throws com.weprode.facile.user.exception.NoSuchLDAPMappingException {
 
-		return getPersistence().remove(UserId);
+		return getPersistence().remove(userId);
 	}
 
 	public static LDAPMapping updateImpl(LDAPMapping ldapMapping) {
@@ -470,24 +224,24 @@ public class LDAPMappingUtil {
 	/**
 	 * Returns the ldap mapping with the primary key or throws a <code>NoSuchLDAPMappingException</code> if it could not be found.
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping
 	 * @throws NoSuchLDAPMappingException if a ldap mapping with the primary key could not be found
 	 */
-	public static LDAPMapping findByPrimaryKey(long UserId)
+	public static LDAPMapping findByPrimaryKey(long userId)
 		throws com.weprode.facile.user.exception.NoSuchLDAPMappingException {
 
-		return getPersistence().findByPrimaryKey(UserId);
+		return getPersistence().findByPrimaryKey(userId);
 	}
 
 	/**
 	 * Returns the ldap mapping with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param UserId the primary key of the ldap mapping
+	 * @param userId the primary key of the ldap mapping
 	 * @return the ldap mapping, or <code>null</code> if a ldap mapping with the primary key could not be found
 	 */
-	public static LDAPMapping fetchByPrimaryKey(long UserId) {
-		return getPersistence().fetchByPrimaryKey(UserId);
+	public static LDAPMapping fetchByPrimaryKey(long userId) {
+		return getPersistence().fetchByPrimaryKey(userId);
 	}
 
 	/**

@@ -47,7 +47,7 @@ public class UserContactCacheModel
 		UserContactCacheModel userContactCacheModel =
 			(UserContactCacheModel)object;
 
-		if (contactId == userContactCacheModel.contactId) {
+		if (userId == userContactCacheModel.userId) {
 			return true;
 		}
 
@@ -56,39 +56,23 @@ public class UserContactCacheModel
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, contactId);
+		return HashUtil.hash(0, userId);
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(11);
 
-		sb.append("{contactId=");
-		sb.append(contactId);
-		sb.append(", userId=");
+		sb.append("{userId=");
 		sb.append(userId);
-		sb.append(", middleNames=");
-		sb.append(middleNames);
-		sb.append(", birthName=");
-		sb.append(birthName);
 		sb.append(", address=");
 		sb.append(address);
-		sb.append(", isAddressAuthorized=");
-		sb.append(isAddressAuthorized);
-		sb.append(", mail=");
-		sb.append(mail);
-		sb.append(", isMailAuthorized=");
-		sb.append(isMailAuthorized);
 		sb.append(", mobilePhone=");
 		sb.append(mobilePhone);
-		sb.append(", mobilePhoneSMS=");
-		sb.append(mobilePhoneSMS);
 		sb.append(", homePhone=");
 		sb.append(homePhone);
 		sb.append(", proPhone=");
 		sb.append(proPhone);
-		sb.append(", familyLink=");
-		sb.append(familyLink);
 		sb.append("}");
 
 		return sb.toString();
@@ -98,22 +82,7 @@ public class UserContactCacheModel
 	public UserContact toEntityModel() {
 		UserContactImpl userContactImpl = new UserContactImpl();
 
-		userContactImpl.setContactId(contactId);
 		userContactImpl.setUserId(userId);
-
-		if (middleNames == null) {
-			userContactImpl.setMiddleNames("");
-		}
-		else {
-			userContactImpl.setMiddleNames(middleNames);
-		}
-
-		if (birthName == null) {
-			userContactImpl.setBirthName("");
-		}
-		else {
-			userContactImpl.setBirthName(birthName);
-		}
 
 		if (address == null) {
 			userContactImpl.setAddress("");
@@ -122,29 +91,11 @@ public class UserContactCacheModel
 			userContactImpl.setAddress(address);
 		}
 
-		userContactImpl.setIsAddressAuthorized(isAddressAuthorized);
-
-		if (mail == null) {
-			userContactImpl.setMail("");
-		}
-		else {
-			userContactImpl.setMail(mail);
-		}
-
-		userContactImpl.setIsMailAuthorized(isMailAuthorized);
-
 		if (mobilePhone == null) {
 			userContactImpl.setMobilePhone("");
 		}
 		else {
 			userContactImpl.setMobilePhone(mobilePhone);
-		}
-
-		if (mobilePhoneSMS == null) {
-			userContactImpl.setMobilePhoneSMS("");
-		}
-		else {
-			userContactImpl.setMobilePhoneSMS(mobilePhoneSMS);
 		}
 
 		if (homePhone == null) {
@@ -161,13 +112,6 @@ public class UserContactCacheModel
 			userContactImpl.setProPhone(proPhone);
 		}
 
-		if (familyLink == null) {
-			userContactImpl.setFamilyLink("");
-		}
-		else {
-			userContactImpl.setFamilyLink(familyLink);
-		}
-
 		userContactImpl.resetOriginalValues();
 
 		return userContactImpl;
@@ -175,43 +119,16 @@ public class UserContactCacheModel
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
-		contactId = objectInput.readLong();
-
 		userId = objectInput.readLong();
-		middleNames = objectInput.readUTF();
-		birthName = objectInput.readUTF();
 		address = objectInput.readUTF();
-
-		isAddressAuthorized = objectInput.readBoolean();
-		mail = objectInput.readUTF();
-
-		isMailAuthorized = objectInput.readBoolean();
 		mobilePhone = objectInput.readUTF();
-		mobilePhoneSMS = objectInput.readUTF();
 		homePhone = objectInput.readUTF();
 		proPhone = objectInput.readUTF();
-		familyLink = objectInput.readUTF();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
-		objectOutput.writeLong(contactId);
-
 		objectOutput.writeLong(userId);
-
-		if (middleNames == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(middleNames);
-		}
-
-		if (birthName == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(birthName);
-		}
 
 		if (address == null) {
 			objectOutput.writeUTF("");
@@ -220,29 +137,11 @@ public class UserContactCacheModel
 			objectOutput.writeUTF(address);
 		}
 
-		objectOutput.writeBoolean(isAddressAuthorized);
-
-		if (mail == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(mail);
-		}
-
-		objectOutput.writeBoolean(isMailAuthorized);
-
 		if (mobilePhone == null) {
 			objectOutput.writeUTF("");
 		}
 		else {
 			objectOutput.writeUTF(mobilePhone);
-		}
-
-		if (mobilePhoneSMS == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(mobilePhoneSMS);
 		}
 
 		if (homePhone == null) {
@@ -258,27 +157,12 @@ public class UserContactCacheModel
 		else {
 			objectOutput.writeUTF(proPhone);
 		}
-
-		if (familyLink == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(familyLink);
-		}
 	}
 
-	public long contactId;
 	public long userId;
-	public String middleNames;
-	public String birthName;
 	public String address;
-	public boolean isAddressAuthorized;
-	public String mail;
-	public boolean isMailAuthorized;
 	public String mobilePhone;
-	public String mobilePhoneSMS;
 	public String homePhone;
 	public String proPhone;
-	public String familyLink;
 
 }

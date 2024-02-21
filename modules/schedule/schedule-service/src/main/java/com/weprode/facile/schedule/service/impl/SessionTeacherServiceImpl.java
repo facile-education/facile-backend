@@ -73,7 +73,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 		if (!RoleUtilsLocalServiceUtil.isDirectionMember(user) &&
 				!RoleUtilsLocalServiceUtil.isDoyen(user) &&
 				!RoleUtilsLocalServiceUtil.isSecretariat(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets session teachers and substitutes");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets session teachers and substitutes");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 
@@ -182,7 +182,7 @@ public class SessionTeacherServiceImpl extends SessionTeacherServiceBaseImpl {
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
 		}
 		if (!SessionTeacherLocalServiceUtil.canSaveTeacherSubstitutes(user)) {
-			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves teacher substitute");
+			logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves teacher substitute");
 			return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
 		}
 

@@ -55,7 +55,7 @@ public interface AgendaService extends BaseService {
 		String title, String description, String location, String startDate,
 		String endDate, String populations);
 
-	@JSONWebService(method = "GET", value = "delete-event")
+	@JSONWebService(method = "DELETE", value = "delete-event")
 	public JSONObject deleteEvent(long eventId);
 
 	@JSONWebService(method = "GET", value = "get-event-details")

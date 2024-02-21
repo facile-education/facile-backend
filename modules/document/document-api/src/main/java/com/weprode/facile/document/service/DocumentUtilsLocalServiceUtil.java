@@ -52,12 +52,6 @@ public class DocumentUtilsLocalServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static String getWebDavUrl(
-		com.liferay.portal.kernel.model.User user) {
-
-		return getService().getWebDavUrl(user);
-	}
-
 	public static DocumentUtilsLocalService getService() {
 		return _service;
 	}

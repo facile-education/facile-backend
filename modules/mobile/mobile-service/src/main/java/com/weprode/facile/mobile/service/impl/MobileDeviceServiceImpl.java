@@ -63,7 +63,7 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		// Parameter cannot be '0'
 		if (userId == 0) {
 			result.put("success", false);
-			result.put("exception", "The list of ENTPersonJointure can't be 0");
+			result.put("exception", "The userId can't be 0");
 			return result;
 		}
 
@@ -102,7 +102,7 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		// Parameter cannot be '0'
 		if (userId == 0) {
 			result.put("success", false);
-			result.put("exception", "The list of ENTPersonJointure can't be 0");
+			result.put("exception", "The userId can't be 0");
 			return result;
 		}
 
@@ -139,7 +139,7 @@ public class MobileDeviceServiceImpl extends MobileDeviceServiceBaseImpl {
 		return result;
 	}
 
-	@JSONWebService(value = "delete-user-device", method = "DEL")
+	@JSONWebService(value = "delete-user-device", method = "DELETE")
 	public JSONObject deleteUserDevice(String deviceId) {
 		JSONObject result = new JSONObject();
 

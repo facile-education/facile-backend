@@ -281,7 +281,7 @@ public interface SessionContentLocalService
 	public int getSessionContentsCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getSessionFolder(long sessionId)
+	public Folder getSessionFolder(long sessionId, boolean doCreate)
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

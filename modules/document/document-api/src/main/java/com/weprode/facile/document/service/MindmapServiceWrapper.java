@@ -34,11 +34,6 @@ public class MindmapServiceWrapper
 		_mindmapService = mindmapService;
 	}
 
-	/**
-	 * Returns the content of the given mindmap file
-	 *
-	 * @return JSONObject - the mindmap file name and content
-	 */
 	@Override
 	public org.json.JSONObject getMindFile(long fileVersionId) {
 		return _mindmapService.getMindFile(fileVersionId);

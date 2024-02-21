@@ -46,6 +46,13 @@ public class ContactCompletionLocalServiceWrapper
 			query, user, includeLists);
 	}
 
+	@Override
+	public org.json.JSONArray getContactsForMessaging(
+		com.liferay.portal.kernel.model.User user) {
+
+		return _contactCompletionLocalService.getContactsForMessaging(user);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

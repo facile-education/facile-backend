@@ -95,6 +95,12 @@ public class UserOrgsLocalServiceUtil {
 		return getService().getStudentClassName(student);
 	}
 
+	public static String getStudentVolee(
+		com.liferay.portal.kernel.model.User student) {
+
+		return getService().getStudentVolee(student);
+	}
+
 	public static List<com.liferay.portal.kernel.model.Organization>
 		getUserClasses(
 			com.liferay.portal.kernel.model.User user, boolean withArchive) {

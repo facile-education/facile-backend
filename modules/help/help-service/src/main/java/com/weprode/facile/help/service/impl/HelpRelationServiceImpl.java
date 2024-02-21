@@ -71,7 +71,7 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " saves help relation");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " saves help relation");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -87,7 +87,7 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "delete-relation", method = "GET")
+    @JSONWebService(value = "delete-relation", method = "DELETE")
     public JSONObject deleteRelation(long relationId) {
 
         JSONObject result = new JSONObject();
@@ -102,7 +102,7 @@ public class HelpRelationServiceImpl extends HelpRelationServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " deletes help relation");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " deletes help relation");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

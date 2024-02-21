@@ -108,32 +108,33 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		final User user = UserLocalServiceUtil.getUser(userId);
 
 		final FileEntry originFile = DLAppServiceUtil.getFileEntry(fileId);
-		// Using LocalService here to avoid VIEW permission exception
-		// Example : Sender (!= userId) is copying attached file to recipient folder
 		final Folder destFolder = DLAppLocalServiceUtil.getFolder(destFolderId);
 
-		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
-			boolean isSignet = false;
+		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)
+			|| RoleUtilsLocalServiceUtil.isAdministrator(user)) {
 
-			// Ajout des permissions
+			boolean isSignet = false;
 			ServiceContext serviceContext = new ServiceContext();
 			serviceContext.setAddGroupPermissions(true);
-
 			FileEntry newFileEntry;
-			InputStream is;
+			InputStream is = null;
 
-			if (copyFileContent) {
-				// Use the getContentStream from FileEntryUtil because the same methods on
-				// FileEntry check the permission, in some case this throw and error
-				isSignet = originFile.getExtension().equals("html") && originFile.getMimeType().equals("text/bmk");
-				is = DLFileEntryLocalServiceUtil.getFileAsStream(originFile.getFileEntryId(), originFile.getVersion());
-			} else {
-				// on sauve un fichier vide!!!
-				is = new ByteArrayInputStream("".getBytes());
+			try {
+				if (copyFileContent) {
+					isSignet = originFile.getExtension().equals("html") && originFile.getMimeType().equals("text/bmk");
+					is = DLFileEntryLocalServiceUtil.getFileAsStream(originFile.getFileEntryId(), originFile.getVersion());
+				} else {
+					// Save empty file
+					is = new ByteArrayInputStream("".getBytes());
+				}
+
+				newFileEntry = DLAppUtil.addFileEntry(user, destFolder, originFile.getTitle(), is, mode);
+
+			} finally {
+				if (is != null) {
+					is.close();
+				}
 			}
-
-			newFileEntry = DLAppUtil.addFileEntry(user, destFolder, originFile.getTitle(), is, mode);
-
 			if (isSignet) {
 				DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getDLFileEntry(newFileEntry.getFileEntryId());
 				dlFileEntry.setMimeType("text/bmk");
@@ -146,6 +147,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 			return newFileEntry;
 		} else {
+			logger.error("User " + user.getFullName() + " (" + user.getUserId() + ") has not the right to copy file " + fileId + " in folder " + destFolderId);
 			throw new NoSuchResourcePermissionException();
 		}
 	}
@@ -169,9 +171,13 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(user.getUserId(), originFile, ActionKeys.DELETE)
 				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(user.getUserId(), destFolder, PermissionConstants.ADD_OBJECT)) {
 
-			// Ajout des permissions
+			// Add permissions
 			ServiceContext serviceContext = new ServiceContext();
 			serviceContext.setAddGroupPermissions(true);
+
+			// Check the activity type before moving the file
+			FileEntry fileToMove = DLAppServiceUtil.getFileEntry(fileId);
+			int activityType = fileToMove.getGroupId() != destFolder.getGroupId() ? ActivityConstants.TYPE_FILE_CREATION : ActivityConstants.TYPE_FILE_MOVE;
 
 			boolean finished = false;
 			int count = 0;
@@ -199,9 +205,17 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 					finished = true;
 
-					// Register activity
+					// Register activity in target group
 					DLFolder folder = DLFolderLocalServiceUtil.getFolder(fileEntry.getFolderId());
-					ActivityLocalServiceUtil.addActivity(fileEntry.getFileEntryId(), fileEntry.getFolderId(), user.getUserId(), fileEntry.getGroupId(), fileEntry.getTitle(), folder.getName(), ActivityConstants.TYPE_FILE_MOVE);
+					ActivityLocalServiceUtil.addActivity(
+							fileEntry.getFileEntryId(),
+							fileEntry.getFolderId(),
+							user.getUserId(),
+							fileEntry.getGroupId(),
+							fileEntry.getTitle(),
+							folder.getName(),
+							activityType
+					);
 
 				} catch (DuplicateFileEntryException e) {
 					logger.error("File " + originFile.getTitle() + " (" + fileId + ") already exists in target folder " + destFolderId);
@@ -358,9 +372,11 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 				break;
 			case "Office":
-				String token = UUID.randomUUID().toString();
-				LoolTokenLocalServiceUtil.createLoolToken(userId, token);
-				// TODO Handle locked files?
+				String token = "";
+				if (userId != 0) {
+					token = UUID.randomUUID().toString();
+					LoolTokenLocalServiceUtil.createLoolToken(userId, token);
+				}
 
 				String versionName;
 				try {
@@ -411,18 +427,21 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 	}
 
 	public File convertAudioToMP3 (String fileName, File audioFile) throws SystemException, IOException {
-		InputStream is = new FileInputStream(audioFile);
 
-		String[] splitFN = FileNameUtil.splitFileName(fileName);
-		String originalTitle = splitFN[0];
-		String extension = splitFN[1];
-		String targetExtension = "mp3";
+		// Properly closes the stream
+		try (InputStream is = new FileInputStream(audioFile)) {
 
-		// Do not use cache
-		Map<String, String> parameters = new HashMap<>();
-		parameters.put("forceConversion", "true");
+			String[] splitFN = FileNameUtil.splitFileName(fileName);
+			String originalTitle = splitFN[0];
+			String extension = splitFN[1];
+			String targetExtension = "mp3";
 
-		return ENTDocumentConversionUtil.convert(originalTitle, is, extension, targetExtension, parameters);
+			// Do not use cache
+			Map<String, String> parameters = new HashMap<>();
+			parameters.put("forceConversion", "true");
+
+			return ENTDocumentConversionUtil.convert(originalTitle, is, extension, targetExtension, parameters);
+		}
 	}
 
 	public FileEntry createGeogebraFile (User user, long folderId, String name) throws SystemException, PortalException {
@@ -438,9 +457,11 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		// Create file
 		Folder folder = DLAppServiceUtil.getFolder(folderId);
 		String initFileContent = MindMapConstants.MINDMAP_NEW_FILE_START + name + MindMapConstants.MINDMAP_NEW_FILE_END;
-		InputStream stream = new ByteArrayInputStream(initFileContent.getBytes(StandardCharsets.UTF_8));
 
+		InputStream stream = new ByteArrayInputStream(initFileContent.getBytes(StandardCharsets.UTF_8));
 		return DLAppUtil.addFileEntry(user, folder, name + ".mind", stream, DocumentConstants.MODE_RENAME);
+//		byte[] byteArray = initFileContent.getBytes(StandardCharsets.UTF_8);
+//		return DLAppUtil.addFileEntry(user, folder, name + ".mind", byteArray, DocumentConstants.MODE_RENAME);
 	}
 
 	public FileEntry createScratchFile (User user, long folderId, String name) throws PortalException, SystemException {
@@ -529,8 +550,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		try {
 			// Keep html meta info if existing
 			String header = "";
-			String bodyStartTag = bodyOpening;
-			int bodyIndex = content.indexOf(bodyStartTag);
+            int bodyIndex = content.indexOf(bodyOpening);
 
 			if (bodyIndex > -1) {
 				header = content.substring(0, bodyIndex -1);
@@ -625,15 +645,35 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 		return formattedFile;
 	}
 
-	private void addCommonsFields(JSONObject formattedFile, FileEntry fileEntry, User user, boolean withDetails) {
+	public JSONObject formatWithOnlyMandatoryFields (long fileId) {
+		try {
+			return formatWithOnlyMandatoryFields (DLAppServiceUtil.getFileEntry(fileId));
+		} catch (PortalException e) {
+			logger.error(e);
+			return new JSONObject();
+		}
+	}
+
+	public JSONObject formatWithOnlyMandatoryFields (FileEntry fileEntry) {
+		JSONObject formattedFolder = new JSONObject();
+
+		addMandatoryFields(formattedFolder, fileEntry);
+
+		return formattedFolder;
+	}
+
+	private void addMandatoryFields (JSONObject formattedFile, FileEntry fileEntry) {
 		formattedFile.put(JSONConstants.ID, String.valueOf(fileEntry.getFileEntryId()));
 		formattedFile.put(JSONConstants.NAME, fileEntry.getTitle());
-		formattedFile.put(JSONConstants.TYPE, "File");
+		formattedFile.put(JSONConstants.TYPE, JSONConstants.FILE_TYPE);
 		formattedFile.put(JSONConstants.SIZE, (int) fileEntry.getSize());
 		formattedFile.put(JSONConstants.EXTENSION, fileEntry.getExtension().toLowerCase());
-		formattedFile.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getModifiedDate()));
+		formattedFile.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(fileEntry.getModifiedDate()));
 		formattedFile.put(JSONConstants.URL, FileUtilsLocalServiceUtil.getDownloadUrl(fileEntry));
+	}
 
+	private void addCommonsFields(JSONObject formattedFile, FileEntry fileEntry, User user, boolean withDetails) {
+		addMandatoryFields(formattedFile, fileEntry);
 
 		// Permissions
 		if (user != null) { // No specific user for News attachedFiles or what (maybe we should?)
@@ -652,7 +692,7 @@ public class FileUtilsLocalServiceImpl extends FileUtilsLocalServiceBaseImpl {
 
 		if (withDetails) {
 			formattedFile.put(JSONConstants.CREATION_DATE,
-					new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(fileEntry.getCreateDate()));
+					new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(fileEntry.getCreateDate()));
 			formattedFile.put(JSONConstants.CREATOR, fileEntry.getUserName());
 			formattedFile.put(JSONConstants.VERSION, fileEntry.getVersion());
 		}

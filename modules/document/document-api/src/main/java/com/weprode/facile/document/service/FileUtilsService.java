@@ -85,10 +85,10 @@ public interface FileUtilsService extends BaseService {
 	public JSONObject getResource(
 		long fileId, long versionId, boolean readOnly);
 
-	@JSONWebService(method = "GET")
+	@JSONWebService(method = "DELETE")
 	public JSONObject removeLock(long fileId);
 
-	@JSONWebService(method = "POST")
+	@JSONWebService(method = "DELETE")
 	public JSONObject removeLoolToken(String token);
 
 	@JSONWebService(method = "POST")

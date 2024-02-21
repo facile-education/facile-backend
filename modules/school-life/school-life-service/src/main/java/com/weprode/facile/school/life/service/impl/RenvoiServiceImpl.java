@@ -74,14 +74,14 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets pending renvois");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets pending renvois");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         JSONArray jsonRenvois = new JSONArray();
         try {
             User teacher = getGuestOrUser();
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
             List<Renvoi> pendingRenvois = RenvoiLocalServiceUtil.getTeacherPendingRenvois(teacher.getUserId());
             for (Renvoi pendingRenvoi : pendingRenvois) {
@@ -125,7 +125,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "register-student-renvoi", method = "GET")
+    @JSONWebService(value = "register-student-renvoi", method = "POST")
     public JSONObject registerStudentRenvoi(long schoollifeSessionId, long sourceTeacherId, long studentId, long sourceSessionId, long sourceSchoollifeSessionId, String registrationDate) {
         JSONObject result = new JSONObject();
 
@@ -142,13 +142,13 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " registers student renvoi");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " registers student renvoi");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
             User teacher = getGuestOrUser();
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
             
             logger.info("Teacher " + teacher.getUserId() + " registers student " + studentId + " in schoollifeSessionId " + schoollifeSessionId + " with sourceTeacherId " + sourceTeacherId + ", sourceSessionId=" + sourceSessionId + ", sourceSchoollifeSessionId=" + sourceSchoollifeSessionId);
             SchoollifeSession session = SchoollifeSessionLocalServiceUtil.getSchoollifeSession(schoollifeSessionId);
@@ -186,7 +186,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " sets renvoi reason");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " sets renvoi reason");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -204,7 +204,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
         return result;
     }
 
-    @JSONWebService(value = "unregister-student-renvoi", method = "GET")
+    @JSONWebService(value = "unregister-student-renvoi", method = "POST")
     public JSONObject unregisterStudentRenvoi(long schoollifeSessionId, long studentId) {
         JSONObject result = new JSONObject();
 
@@ -221,7 +221,7 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " unregisters student renvoi");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " unregisters student renvoi");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -263,12 +263,12 @@ public class RenvoiServiceImpl extends RenvoiServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isDoyen(user) &&
                 !RoleUtilsLocalServiceUtil.isSecretariat(user) &&
                 !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets candidate sessions");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets candidate sessions");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
         try {
-            DateFormat df = new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT);
+            DateFormat df = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
             // minDate is 7AM of the session's day
             // maxDate is the schoollife session's end date

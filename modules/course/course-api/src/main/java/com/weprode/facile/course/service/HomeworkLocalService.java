@@ -32,17 +32,13 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
-
 import com.weprode.facile.course.model.Homework;
+import org.json.JSONArray;
+import org.osgi.annotation.versioning.ProviderType;
 
 import java.io.Serializable;
-
 import java.util.Date;
 import java.util.List;
-
-import org.json.JSONArray;
-
-import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Provides the local service interface for Homework. Methods of this
@@ -241,11 +237,11 @@ public interface HomeworkLocalService
 	public Homework getHomework(long homeworkId) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getHomeworkDropFolder(long homeworkId)
+	public Folder getHomeworkDropFolder(long homeworkId, boolean doCreate)
 		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Folder getHomeworkFolder(long homeworkId)
+	public Folder getHomeworkFolder(long homeworkId, boolean doCreate)
 		throws PortalException, SystemException;
 
 	/**

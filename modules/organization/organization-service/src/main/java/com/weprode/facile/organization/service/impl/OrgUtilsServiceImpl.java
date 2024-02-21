@@ -100,7 +100,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
                 !RoleUtilsLocalServiceUtil.isPersonal(user) &&
                 !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user) &&
                 !RoleUtilsLocalServiceUtil.isAdministrator(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets all schools");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets all schools");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -142,7 +142,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
                 && !RoleUtilsLocalServiceUtil.isPersonal(user)
                 && !RoleUtilsLocalServiceUtil.isCollectivityAdmin(user)
                 && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets school classes");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets school classes");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -195,7 +195,7 @@ public class OrgUtilsServiceImpl extends OrgUtilsServiceBaseImpl {
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.AUTH_EXCEPTION);
         }
         if (!RoleUtilsLocalServiceUtil.isPersonal(user) && !RoleUtilsLocalServiceUtil.isTeacher(user)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets school volees");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets school volees");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

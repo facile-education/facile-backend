@@ -36,12 +36,12 @@ public interface UserContact extends PersistedModel, UserContactModel {
 	 *
 	 * Never modify this interface directly. Add methods to <code>com.weprode.facile.user.model.impl.UserContactImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public static final Accessor<UserContact, Long> CONTACT_ID_ACCESSOR =
+	public static final Accessor<UserContact, Long> USER_ID_ACCESSOR =
 		new Accessor<UserContact, Long>() {
 
 			@Override
 			public Long get(UserContact userContact) {
-				return userContact.getContactId();
+				return userContact.getUserId();
 			}
 
 			@Override

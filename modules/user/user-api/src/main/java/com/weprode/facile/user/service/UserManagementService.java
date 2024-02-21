@@ -55,7 +55,7 @@ public interface UserManagementService extends BaseService {
 		String lastName, String firstName, String email, long roleId,
 		long schoolId);
 
-	@JSONWebService(method = "GET", value = "delete-manual-user")
+	@JSONWebService(method = "DELETE", value = "delete-manual-user")
 	public JSONObject deleteManualUser(long userId);
 
 	@JSONWebService(method = "POST", value = "edit-manual-user")
@@ -80,12 +80,12 @@ public interface UserManagementService extends BaseService {
 		String password, String confirmPassword, String ticketKey);
 
 	@JSONWebService(
-		method = "GET", value = "update-password-after-reinit-by-manager"
+		method = "POST", value = "update-password-after-reinit-by-manager"
 	)
 	public JSONObject updatePasswordAfterReinitByManager(
 		String password, String confirmPassword);
 
-	@JSONWebService(method = "GET", value = "update-password-by-manager")
+	@JSONWebService(method = "POST", value = "update-password-by-manager")
 	public JSONObject updatePasswordByManager(long userId, String password);
 
 }

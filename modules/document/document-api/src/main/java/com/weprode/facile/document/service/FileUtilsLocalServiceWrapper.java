@@ -175,6 +175,18 @@ public class FileUtilsLocalServiceWrapper
 	}
 
 	@Override
+	public org.json.JSONObject formatWithOnlyMandatoryFields(
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry) {
+
+		return _fileUtilsLocalService.formatWithOnlyMandatoryFields(fileEntry);
+	}
+
+	@Override
+	public org.json.JSONObject formatWithOnlyMandatoryFields(long fileId) {
+		return _fileUtilsLocalService.formatWithOnlyMandatoryFields(fileId);
+	}
+
+	@Override
 	public String getDisplayUrl(
 			com.liferay.portal.kernel.repository.model.FileEntry file,
 			long versionId, long userId, boolean readOnly)

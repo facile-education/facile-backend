@@ -33,8 +33,6 @@ public class MessagingUtil {
         throw new IllegalStateException("Utility class");
     }
     private static final Log logger = LogFactoryUtil.getLog(MessagingUtil.class);
-
-    public static final String messagingDateFormat = "yyyy/MM/dd HH:mm:ss SSS";
     
     public static List<Long> jsonArrayStringToList(String idArray) {
         List<Long> idList = new ArrayList<>();

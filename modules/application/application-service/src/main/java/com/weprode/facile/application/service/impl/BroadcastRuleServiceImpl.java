@@ -69,7 +69,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " gets application rules");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " gets application rules");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 
@@ -148,7 +148,7 @@ public class BroadcastRuleServiceImpl extends BroadcastRuleServiceBaseImpl {
         if (!RoleUtilsLocalServiceUtil.isAdministrator(user)
                 && !RoleUtilsLocalServiceUtil.isDirectionMember(user)
                 && !RoleUtilsLocalServiceUtil.isSchoolAdmin(user, schoolId)) {
-            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + "User " + user.getFullName() + " updates broadcast rules");
+            logger.error(JSONConstants.UNAUTHORIZED_ACCESS_LOG + user.getFullName() + " updates broadcast rules");
             return JSONProxy.getJSONReturnInErrorCase(JSONConstants.NOT_ALLOWED_EXCEPTION);
         }
 

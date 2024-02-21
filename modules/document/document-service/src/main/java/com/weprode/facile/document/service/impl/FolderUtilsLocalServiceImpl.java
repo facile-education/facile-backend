@@ -54,7 +54,6 @@ import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.base.FolderUtilsLocalServiceBaseImpl;
 import com.weprode.facile.document.utils.DLAppUtil;
 import com.weprode.facile.document.utils.DocumentUtil;
-import com.weprode.facile.document.utils.ENTWebDAVUtil;
 import com.weprode.facile.document.utils.FileNameUtil;
 import com.weprode.facile.group.constants.ActivityConstants;
 import com.weprode.facile.group.model.CommunityInfos;
@@ -63,7 +62,6 @@ import com.weprode.facile.organization.constants.OrgConstants;
 import com.weprode.facile.organization.service.OrgDetailsLocalServiceUtil;
 import com.weprode.facile.organization.service.OrgUtilsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
-import com.weprode.facile.preference.service.UserPropertiesLocalServiceUtil;
 import com.weprode.facile.role.service.RoleUtilsLocalServiceUtil;
 import com.weprode.facile.user.service.NewsAdminLocalServiceUtil;
 import org.json.JSONObject;
@@ -274,10 +272,33 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		logger.info("User " + userId + " moves folder " + folder.getName() + " from folder " + folder.getParentFolderId() + " to destination folder " + targetFolderId + " in mode " + mode);
 		ServiceContext serviceContext = new ServiceContext();
 		serviceContext.setScopeGroupId(folder.getGroupId());
+		serviceContext.setUserId(userId);
 		final Folder destFolder = DLAppServiceUtil.getFolder(targetFolderId);
+
+		// Check that the moved folder is not a group root folder or a user root folder
+		if (folder.getParentFolderId() == 0) {
+			logger.info("Trying to move a root folder -> forbidden");
+			throw new PortalException();
+		}
 
 		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.DELETE)
 				&& PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
+
+			// Check if target folder is not a child of the folder to move
+			if (isParentFolder(folder, destFolder) || targetFolderId == folder.getFolderId()) {
+				throw new PortalException();
+			}
+
+			if (mode == DocumentConstants.MODE_REPLACE) { // Cannot replace a folder by it child or itself (theoretically possible but in fact we delete the folder before replace him)
+				Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), targetFolderId, folder.getName());
+				if (isParentFolder(folderThatCauseConflict, folder) || folderThatCauseConflict.getFolderId() == folder.getFolderId()) {
+					throw new PortalException();
+				}
+			}
+
+			// Check the activity type before moving the folder
+			int activityType = folder.getGroupId() != destFolder.getGroupId() ? ActivityConstants.TYPE_FOLDER_CREATION : ActivityConstants.TYPE_FOLDER_MOVE;
+
 
 			boolean success = false;
 			int nbTry = 0;
@@ -295,11 +316,17 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					PermissionUtilsLocalServiceUtil.setParentPermissionToFolder(folder);
 
 					// Register activity
-					ActivityLocalServiceUtil.addActivity(0, folder.getFolderId(), userId, folder.getGroupId(), "", folder.getName(), ActivityConstants.TYPE_FOLDER_MOVE);
+					ActivityLocalServiceUtil.addActivity(
+							0,
+							folder.getFolderId(),
+							userId,
+							folder.getGroupId(),
+							"",
+							folder.getName(),
+							activityType
+					);
 
-				} catch (Exception e) {
-					logger.error("An error happened during folder move at nbTry=" + nbTry, e);
-
+				} catch (DuplicateFolderNameException e) {
 					if (mode == DocumentConstants.MODE_NORMAL) {
 						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
 						for (DLFolder dlFolder : dlFolders) {
@@ -314,20 +341,19 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 						}
 					} else if (mode == DocumentConstants.MODE_RENAME) {
 						String suffix = " (" + nbTry + ")";
-						DLAppServiceUtil.updateFolder(
+						// Perform both renaming and move in the same operation, to avoid OptimisticLockException
+						folder = DLAppLocalServiceUtil.updateFolder(
 								folder.getFolderId(),
+								targetFolderId,
 								originalTitle + suffix,
 								folder.getDescription(),
 								serviceContext
 						);
+						success = true;
+						logger.info("Successfully moved (and renamed) folder " + folder.getName() + " (id " + folder.getFolderId() + ")");
 					} else if (mode == DocumentConstants.MODE_REPLACE) {
-						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
-						for (DLFolder dlFolder : dlFolders) {
-							Folder subFolder = DLAppServiceUtil.getFolder(dlFolder.getFolderId());
-							if (subFolder.getName().equals(folder.getName())) {
-								FolderUtilsLocalServiceUtil.deleteFolder(userId, subFolder.getFolderId());
-							}
-						}
+						Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), destFolder.getFolderId(), folder.getName());
+						FolderUtilsLocalServiceUtil.deleteFolder(userId, folderThatCauseConflict.getFolderId());
 					} else if (mode == DocumentConstants.MODE_MERGE) {
 						// Return the folder which already exist
 						List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(destFolder.getGroupId(), targetFolderId); // Search him by name
@@ -341,7 +367,10 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 					} else {
 						logger.error("No mode existing with value " + mode);
 					}
-				}
+				} catch (Exception e) {
+                    logger.error("An error happened during folder move at nbTry=" + nbTry, e);
+                    return null;
+                }
 			}
 
 			return null;
@@ -355,13 +384,24 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		final Folder folder = DLAppServiceUtil.getFolder(folderId);
 		final Folder destFolder = DLAppServiceUtil.getFolder(destFolderId);
 
+		// Check that the moved folder is not a group root folder or a user root folder
+		if (folder.getParentFolderId() == 0) {
+			logger.info("Trying to copy a root folder -> forbidden");
+			throw new PortalException();
+		}
+
 		if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, destFolder, PermissionConstants.ADD_OBJECT)) {
 
-			long currFolderId = destFolder.getFolderId();
-			while (currFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-				if (currFolderId == folderId)
-					return null;
-				currFolderId = DLAppServiceUtil.getFolder(currFolderId).getParentFolderId();
+			// Check if target folder is not a child of the folder to copy
+			if (isParentFolder(folder, destFolder) || destFolderId == folderId) {
+				throw new PortalException();
+			}
+
+			if (mode == DocumentConstants.MODE_REPLACE) { // Cannot replace a folder by it child or itself (theoretically possible but in fact we delete the folder before replace him)
+				Folder folderThatCauseConflict = DLAppLocalServiceUtil.getFolder(destFolder.getGroupId(), destFolderId, folder.getName());
+				if (isParentFolder(folderThatCauseConflict, folder) || folderThatCauseConflict.getFolderId() == folderId) {
+					throw new PortalException();
+				}
 			}
 
 			// Add permissions
@@ -370,14 +410,22 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 
 			Folder newFolder = DLAppUtil.addFolder(userId, destFolder.getGroupId(), destFolder.getFolderId(), folder.getName(), mode);
 
-			List<DLFolder> dlFolders = DLFolderLocalServiceUtil.getFolders(folder.getGroupId(), folderId);
-			for (DLFolder dlFolder : dlFolders) {
-				copyFolder(userId, dlFolder.getFolderId(), newFolder.getFolderId(), DocumentConstants.MODE_RENAME);
+			List<Folder> subFolders = DLAppServiceUtil.getFolders(folder.getGroupId(), folderId);
+			for (Folder subFolder : subFolders) {
+				if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, subFolder, ActionKeys.VIEW)) {
+					copyFolder(userId, subFolder.getFolderId(), newFolder.getFolderId(), DocumentConstants.MODE_RENAME);
+				} else {
+					logger.warn("User " + userId + " try to copy subFolder "  + subFolder.getFolderId() + " without the required view permission");
+				}
 			}
 			List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(folder.getGroupId(), folderId);
 			for (FileEntry fileEntry : fileEntries) {
 				try {
-					FileUtilsLocalServiceUtil.copyFileEntry(userId, fileEntry.getFileEntryId(), newFolder.getFolderId(), true, DocumentConstants.MODE_RENAME);
+					if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW)) {
+						FileUtilsLocalServiceUtil.copyFileEntry(userId, fileEntry.getFileEntryId(), newFolder.getFolderId(), true, DocumentConstants.MODE_RENAME);
+					} else {
+						logger.warn("User " + userId + " try to copy subFile "  + fileEntry.getFileEntryId() + " without the required view permission");
+					}
 				} catch (IOException e) {
 					logger.error(e);
 				}
@@ -400,12 +448,32 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 
 			List<FileEntry> fileList = DLAppServiceUtil.getFileEntries(folder.getGroupId(), folderId);
 			for (FileEntry file : fileList) {
-				FileUtilsLocalServiceUtil.deleteFile(userId, file.getFileEntryId());
+				try {
+					FileUtilsLocalServiceUtil.deleteFile(userId, file.getFileEntryId());
+				} catch (NoSuchResourcePermissionException e) {
+					String fileIdThatCauseProblem;
+					if (PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, file, ActionKeys.VIEW)) {
+						fileIdThatCauseProblem = String.valueOf(file.getFileEntryId());
+					} else {
+						fileIdThatCauseProblem = "-1";
+					}
+					throw new NoSuchResourcePermissionException(fileIdThatCauseProblem, e);
+				}
 			}
 
 			List<Folder> subFolders = DLAppServiceUtil.getFolders(folder.getGroupId(), folderId);
 			for (Folder subFolder : subFolders) {
-				deleteFolder(userId, subFolder.getFolderId());
+				try {
+					deleteFolder(userId, subFolder.getFolderId());
+				} catch (NoSuchResourcePermissionException e) {
+					String folderIdThatCauseProblem;
+					if (PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW)) {
+						folderIdThatCauseProblem = String.valueOf(folder.getFolderId());
+					} else {
+						folderIdThatCauseProblem = "-1";
+					}
+					throw new NoSuchResourcePermissionException(folderIdThatCauseProblem, e);
+				}
 			}
 
 			Folder parentFolder = folder.getParentFolder();
@@ -426,7 +494,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		}
 	}
 
-	private boolean isParentFolder (Folder potentialParentFolder, Folder potentialChildFolder) {
+	public boolean isParentFolder (Folder potentialParentFolder, Folder potentialChildFolder) {
 		if (potentialChildFolder.getParentFolderId() == potentialParentFolder.getFolderId()) {
 			return true;
 		} else {
@@ -611,20 +679,32 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 		return formattedFolder;
 	}
 
-	private void addCommonsFields(JSONObject formattedFolder, Folder folder, User user, boolean withDetails) {
+	public JSONObject formatWithOnlyMandatoryFields (long folderId) {
+		try {
+			return formatWithOnlyMandatoryFields (DLAppServiceUtil.getFolder(folderId));
+		} catch (PortalException e) {
+			logger.error(e);
+			return new JSONObject();
+		}
+	}
+
+	public JSONObject formatWithOnlyMandatoryFields (Folder folder) {
+		JSONObject formattedFolder = new JSONObject();
+
+		addMandatoryFields(formattedFolder, folder);
+
+		return formattedFolder;
+	}
+
+	private void addMandatoryFields (JSONObject formattedFolder, Folder folder) {
 		formattedFolder.put(JSONConstants.ID, String.valueOf(folder.getFolderId()));
 		formattedFolder.put(JSONConstants.NAME, folder.getName());
-		formattedFolder.put(JSONConstants.TYPE, "Folder");
-		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT)
-				.format(folder.getModifiedDate()));
+		formattedFolder.put(JSONConstants.TYPE, JSONConstants.FOLDER_TYPE);
+		formattedFolder.put(JSONConstants.LAST_MODIFIED_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(folder.getModifiedDate()));
+	}
 
-		try {
-			if (UserPropertiesLocalServiceUtil.getUserProperties(user.getUserId()).getWebdavActivated()) {
-				formattedFolder.put(JSONConstants.URL_WEBDAV, ENTWebDAVUtil.getWebDavUrl(folder.getGroupId(), folder));
-			}
-		} catch (Exception e) {
-			logger.error(e);
-		}
+	private void addCommonsFields (JSONObject formattedFolder, Folder folder, User user, boolean withDetails) {
+		addMandatoryFields(formattedFolder, folder);
 
 		// Permissions
 		// Directors and school admins have all rights on institutional groups
@@ -649,7 +729,7 @@ public class FolderUtilsLocalServiceImpl extends FolderUtilsLocalServiceBaseImpl
 				logger.error(e.getMessage());
 				formattedFolder.put(JSONConstants.SIZE, "error when computing size");
 			}
-			formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(JSONConstants.FULL_ENGLISH_FORMAT).format(folder.getCreateDate()));
+			formattedFolder.put(JSONConstants.CREATION_DATE, new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT).format(folder.getCreateDate()));
 		}
 	}
 

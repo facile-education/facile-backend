@@ -15,14 +15,19 @@
 
 package com.weprode.facile.access.service.impl;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.weprode.facile.access.AccessConstants;
 import com.weprode.facile.access.model.Access;
 import com.weprode.facile.access.model.AccessCategory;
@@ -33,6 +38,7 @@ import com.weprode.facile.access.service.AccessProfileLocalServiceUtil;
 import com.weprode.facile.access.service.base.AccessLocalServiceBaseImpl;
 import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.document.service.FileUtilsLocalServiceUtil;
+import com.weprode.facile.document.service.PermissionUtilsLocalServiceUtil;
 import com.weprode.facile.document.service.ThumbnailsLocalServiceUtil;
 import com.weprode.facile.organization.service.UserOrgsLocalServiceUtil;
 import org.json.JSONArray;
@@ -242,7 +248,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		List<Access> userCategoryAccesses = new ArrayList<>();
 		List<Access> categoryAccesses = accessPersistence.findBycategoryId(categoryId);
 		for (Access categoryAccess : categoryAccesses) {
-			if (AccessProfileLocalServiceUtil.hasUserAccess(userId, categoryAccess.getAccessId())) {
+			if (AccessProfileLocalServiceUtil.hasUserAccess(userId, categoryAccess.getAccessId())) { // && hasUserViewPermission(userId, categoryAccess)) {
 				userCategoryAccesses.add(categoryAccess);
 			}
 		}
@@ -253,11 +259,46 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		List<Access> userCategoryAccesses = new ArrayList<>();
 		List<Access> categoryAccesses = accessPersistence.findBycategoryId(categoryId);
 		for (Access categoryAccess : categoryAccesses) {
-			if (AccessProfileLocalServiceUtil.hasRoleAccess(roleId, categoryAccess.getAccessId())) {
+			if (AccessProfileLocalServiceUtil.hasRoleAccess(roleId, categoryAccess.getAccessId())) { // && hasRoleViewPermission(roleId, categoryAccess)) {
 				userCategoryAccesses.add(categoryAccess);
 			}
 		}
 		return userCategoryAccesses;
+	}
+
+	private boolean hasUserViewPermission(long userId, Access access) {
+		// Use DLAppServiceUtil to use current user permissions
+		try {
+			if (access.getFileId() != 0) {
+				FileEntry fileEntry = DLAppServiceUtil.getFileEntry(access.getFileId());
+				return PermissionUtilsLocalServiceUtil.hasUserFilePermission(userId, fileEntry, ActionKeys.VIEW);
+			} else if (access.getFolderId() != 0) {
+				Folder folder = DLAppServiceUtil.getFolder(access.getFolderId());
+				return PermissionUtilsLocalServiceUtil.hasUserFolderPermission(userId, folder, ActionKeys.VIEW);
+			}
+		} catch (Exception e) {
+			logger.info("Skipping access " + access.getAccessId() + " due to permissions");
+			return false;
+		}
+		return true;
+	}
+
+	private boolean hasRoleViewPermission(long roleId, Access access) {
+		// Use DLAppLocalServiceUtil to get rid of current user's permissions
+		try {
+			Role role = RoleLocalServiceUtil.getRole(roleId);
+			if (access.getFileId() != 0) {
+				FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(access.getFileId());
+				return PermissionUtilsLocalServiceUtil.hasRoleFilePermission(role, fileEntry, ActionKeys.VIEW);
+			} else if (access.getFolderId() != 0) {
+				Folder folder = DLAppLocalServiceUtil.getFolder(access.getFolderId());
+				return PermissionUtilsLocalServiceUtil.hasRoleFolderPermission(role, folder, ActionKeys.VIEW);
+			}
+		} catch (Exception e) {
+			logger.info("Skipping access " + access.getAccessId() + " due to permissions");
+			return false;
+		}
+		return true;
 	}
 
 	public JSONObject convertToJson(Access access) {
@@ -279,7 +320,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 		jsonAccess.put(AccessConstants.FILE_ID, access.getFileId());
 		if (access.getFileId() > 0) {
 			try {
-				jsonAccess.put(AccessConstants.FOLDER_NAME, DLAppServiceUtil.getFileEntry(access.getFileId()).getFileName());
+				jsonAccess.put(AccessConstants.FILE_NAME, DLAppServiceUtil.getFileEntry(access.getFileId()).getFileName());
 			} catch (Exception e) {
 				// File is not accessible anymore -> return null to skip the access
 				logger.error("File " + access.getFileId() + " may have been deleted -> skipping this access");
@@ -297,7 +338,7 @@ public class AccessLocalServiceImpl extends AccessLocalServiceBaseImpl {
 				logger.error("Cannot retrieve thumbnail for access " + access.getAccessId() + ", thumbnail fileId = " + access.getThumbnailId(), e);
 			}
 		} else {
-			jsonAccess.put(AccessConstants.THUMBNAIL_URL, JSONConstants.ACCESS_DEFAULT_THUMBNAIL);
+			jsonAccess.put(AccessConstants.THUMBNAIL_URL, "");
 		}
 		jsonAccess.put(AccessConstants.THUMBNAIL_ID, access.getThumbnailId());
 		return jsonAccess;

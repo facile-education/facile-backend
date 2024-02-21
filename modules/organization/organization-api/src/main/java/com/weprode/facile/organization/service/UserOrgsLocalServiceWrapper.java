@@ -107,6 +107,13 @@ public class UserOrgsLocalServiceWrapper
 	}
 
 	@Override
+	public String getStudentVolee(
+		com.liferay.portal.kernel.model.User student) {
+
+		return _userOrgsLocalService.getStudentVolee(student);
+	}
+
+	@Override
 	public java.util.List<com.liferay.portal.kernel.model.Organization>
 		getUserClasses(
 			com.liferay.portal.kernel.model.User user, boolean withArchive) {

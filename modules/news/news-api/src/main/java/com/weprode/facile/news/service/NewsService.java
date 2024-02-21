@@ -56,7 +56,7 @@ public interface NewsService extends BaseService {
 		long imageId, String publicationDate, String population,
 		String attachFiles);
 
-	@JSONWebService(method = "GET", value = "delete-news")
+	@JSONWebService(method = "DELETE", value = "delete-news")
 	public JSONObject deleteNews(long newsId);
 
 	@JSONWebService(method = "POST", value = "edit-news")
@@ -89,6 +89,11 @@ public interface NewsService extends BaseService {
 	@JSONWebService(method = "GET", value = "get-school-news-broadcast-groups")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getSchoolNewsBroadcastGroups();
+
+	@JSONWebService(method = "GET", value = "get-unread-group-news")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getUnreadGroupNews(
+		long groupId, String maxDate, int nbResults);
 
 	@JSONWebService(method = "GET", value = "set-news-read")
 	public JSONObject setNewsRead(long newsId);

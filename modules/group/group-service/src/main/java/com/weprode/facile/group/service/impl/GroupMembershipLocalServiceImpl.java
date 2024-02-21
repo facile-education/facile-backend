@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.weprode.facile.commons.constants.JSONConstants;
 import com.weprode.facile.group.model.GroupMembership;
 import com.weprode.facile.group.service.base.GroupMembershipLocalServiceBaseImpl;
 import org.osgi.service.component.annotations.Component;
@@ -40,7 +41,7 @@ public class GroupMembershipLocalServiceImpl extends GroupMembershipLocalService
     private final Log logger = LogFactoryUtil.getLog(GroupMembershipLocalServiceImpl.class);
 
     public GroupMembership addMembership(long userId, long groupId, Date startDate, Date endDate) {
-        DateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+        DateFormat sdf = new SimpleDateFormat(JSONConstants.DATE_EXCHANGE_FORMAT);
 
         logger.info("Adding membership for userId " + userId + ", groupId " + groupId +
                 " ,startDate = " + sdf.format(startDate) + " ,endDate = " + sdf.format(endDate));
